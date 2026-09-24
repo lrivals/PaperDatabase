@@ -169,7 +169,8 @@ def write_external(path, rows):
             w.writerow({k: (schema.NR if r[k] in (None, "") else r[k]) for k in refs.EXTERNAL_FIELDS})
 
 
-def main():
+def run():
+    """Régénère INDEX.md et external_refs.csv. Retourne 1 si une incohérence est trouvée."""
     problems, notes = [], []
     papers = load_papers(problems, notes)
     rows = load_benchmarks(problems)
@@ -194,7 +195,11 @@ def main():
         print(f"note    {n}")
     for pb in problems:
         print(f"erreur  {pb}")
-    sys.exit(1 if problems else 0)
+    return 1 if problems else 0
+
+
+def main():
+    sys.exit(run())
 
 
 if __name__ == "__main__":

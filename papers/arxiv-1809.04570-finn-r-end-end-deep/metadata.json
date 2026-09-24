@@ -42,25 +42,31 @@
   "url": "https://arxiv.org/abs/1809.04570",
   "type": "journal",
   "axes": [
-    "yolo-fpga",
     "toolflows",
+    "yolo-fpga",
     "platforms"
   ],
   "tags": [
     "finn",
     "pynq",
-    "quantization"
+    "ultra96",
+    "aws-f1",
+    "zynq",
+    "quantization",
+    "bnn",
+    "pruning",
+    "tincy-yolo",
+    "vivado-hls",
+    "dataflow"
   ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

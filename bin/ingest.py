@@ -32,6 +32,20 @@ AXIS_RULES = (
     ("toolflows", r"hls4ml|\bFINN\b|vitis ai|fpga ai suite|\bSATAY\b|tool ?flow|codesign workflow"),
     ("platforms", r"zynq|kria|kv260|zcu ?10[24]|pynq|versal|ultrascale|jetson"),
 )
+# Découverte (bin/discover.py) : un candidat est « dans le sujet » s'il correspond à
+# TOPIC_RE (contexte matériel) ou relève d'un des HARDWARE_AXES ; un axe thématique seul
+# (autoencodeur, YOLO sans matériel) ne suffit pas. AXIS_QUERIES sert de requête par défaut
+# pour `discover --axis`. À redéfinir avec les axes pour un autre sujet de recherche.
+HARDWARE_AXES = ("toolflows", "platforms")
+TOPIC_RE = r"\bFPGAs?\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\bHLS\b|high-level synthesis|\bSoC\b|edge (?:ai|devices?|inference)|embedded"
+AXIS_QUERIES = {
+    "surveys": "survey FPGA deep learning accelerator",
+    "yolo-fpga": "YOLO object detection FPGA accelerator",
+    "autoencoder-fpga": "autoencoder FPGA",
+    "continual-learning": "continual learning on-device FPGA",
+    "toolflows": "FPGA neural network toolflow hls4ml FINN",
+    "platforms": "Zynq UltraScale Kria neural network inference",
+}
 TAG_RULES = (
     (r"\byolo ?v?(\d+)(-?tiny)?", lambda m: f"yolov{m.group(1)}" + ("-tiny" if m.group(2) else "")),
     (r"hls4ml", "hls4ml"), (r"\bFINN\b", "finn"), (r"vitis ai", "vitis-ai"),
@@ -147,6 +161,10 @@ def merge_metadata(arx, header, backend, warnings):
         if arx.get("journal_ref"):
             meta["venue"] = arx["journal_ref"]
             warnings.append(f"publié ailleurs selon arXiv (journal_ref : {arx['journal_ref']}) : "
+                            "type journal/conference à préciser")
+        elif arx.get("venue_openalex"):  # ajout par DOI (bin/add.py) : version éditeur connue
+            meta["venue"] = arx["venue_openalex"]
+            warnings.append(f"publié ailleurs selon OpenAlex ({arx['venue_openalex']}, DOI {meta['doi']}) : "
                             "type journal/conference à préciser")
         else:
             meta["venue"] = "arXiv preprint"
@@ -299,7 +317,7 @@ def run(pdfs=None, force=False):
         print(f"{status:7} {pdf.name} → {msg}")
     print(f"\n{counts['ingéré']} ingéré(s), {counts['ignoré']} ignoré(s), {counts['erreur']} erreur(s).")
     if counts["ingéré"]:
-        print("Penser à lancer : .venv/bin/python bin/reindex.py")
+        print("Penser à lancer : bin/pdb reindex (fait automatiquement par bin/pdb add et bin/pdb ingest)")
     return counts["erreur"]
 
 

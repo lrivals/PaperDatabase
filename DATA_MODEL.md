@@ -309,3 +309,31 @@ au plus ancien) : c'est la liste des lectures candidates à ajouter via `/paper-
 
 Les données viennent du parsing GROBID des bibliographies : titre, année et identifiants sont
 à vérifier au moment de l'ajout, jamais cités tels quels.
+
+---
+
+## 10. `candidates.csv` et `candidates_arxiv.txt`
+
+**Générés par `bin/discover.py` (`bin/pdb discover`) — ne pas éditer à la main, non
+versionnés.** Candidats à l'ajout trouvés via OpenAlex, papiers déjà en base exclus, triés
+« dans le sujet » d'abord puis par score décroissant.
+
+| Colonne | Contenu |
+|---|---|
+| `rank` | rang |
+| `score` | 3 × liens de citation avec le corpus + liens « related » + 2 si trouvé par requête + 2 × axes probables + log10(citations + 1) |
+| `in_topic` | `oui` si le titre ou le résumé correspond à `ingest.TOPIC_RE` (contexte matériel) ou relève d'un axe de `ingest.HARDWARE_AXES` ; un axe thématique seul (autoencodeur, YOLO logiciel) ne suffit pas |
+| `reasons` | lien avec le corpus : `cite N papier(s) du corpus`, `cité par N papiers du corpus`, `lié à N papier(s) du corpus (OpenAlex)`, requête ou axe, séparés par ` ; ` |
+| `title`, `year`, `venue` | d'après OpenAlex (versions arXiv et éditeur fusionnées ; la venue éditeur prime) |
+| `doi` | DOI éditeur (jamais le DOI arXiv 10.48550), sinon `n/r` |
+| `arxiv_id` | identifiant arXiv d'une des versions, sinon `n/r` |
+| `oa_url` | lien open access légal signalé par OpenAlex, sinon `n/r` |
+| `cited_by_count` | citations selon OpenAlex |
+| `axes_guess` | axes devinés par `ingest.classify`, séparés par `;` |
+| `openalex_id` | identifiant OpenAlex (`W…`) |
+
+`candidates_arxiv.txt` : les premiers candidats `in_topic = oui` disponibles sur arXiv, un
+par ligne (`<arxiv_id>  # titre (année) — raisons`), lisible par `bin/pdb add --from`.
+
+Métadonnées OpenAlex : à vérifier au moment de l'ajout, jamais citées telles quelles.
+

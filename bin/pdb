@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Point d'entrée unique de PaperDatabase : bin/pdb <commande>. Voir docs/GUIDE.md.
+ROOT="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
+PY="$ROOT/.venv/bin/python"
+if [ ! -x "$PY" ]; then
+  echo "Environnement Python absent : lancer d'abord  bash $ROOT/bin/setup.sh" >&2
+  exit 1
+fi
+exec "$PY" "$ROOT/bin/pdb.py" "$@"

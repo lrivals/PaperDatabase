@@ -43,6 +43,8 @@ PaperDatabase/
 ├── DATA_MODEL.md           # schémas et conventions
 ├── INDEX.md                # GÉNÉRÉ — table de tous les papiers
 ├── external_refs.csv       # GÉNÉRÉ — travaux hors base les plus cités par le corpus
+├── candidates.csv          # GÉNÉRÉ par discover, non versionné — candidats OpenAlex
+├── candidates_arxiv.txt    # GÉNÉRÉ par discover, non versionné — liste pour add --from
 ├── benchmarks.csv          # une ligne par configuration rapportée
 ├── gaps.md                 # carte des verrous et zones non couvertes
 ├── basicStart.txt          # bibliographie de départ (source d'amorçage)
@@ -50,12 +52,16 @@ PaperDatabase/
 ├── requirements-viz.txt    # optionnel : dépendances de la visualisation
 ├── requirements-embed.txt  # optionnel : embeddings (sentence-transformers) pour la visualisation
 ├── .venv/                  # non versionné
+├── .cache/                 # non versionné : embeddings, réponses OpenAlex
+├── docs/GUIDE.md           # guide d'utilisation (prise en main, extension du corpus)
 ├── bin/                    # scripts du pipeline
+│   ├── pdb, pdb.py         # point d'entrée unique (status, add, ingest, discover…)
 │   ├── setup.sh
 │   ├── grobid.sh
 │   ├── add.py
 │   ├── ingest.py
 │   ├── reindex.py
+│   ├── discover.py         # candidats à l'ajout via OpenAlex
 │   └── viz.py              # app Dash : graphe 3D et généalogie du corpus
 ├── lib/                    # code partagé
 │   ├── ids.py
@@ -64,6 +70,8 @@ PaperDatabase/
 │   ├── pdftext.py          # extraction de repli PyMuPDF
 │   ├── schema.py
 │   ├── refs.py             # rapprochement des références, classement des externes
+│   ├── openalex.py         # client OpenAlex (DOI → arXiv, citations, recherche), cache
+│   ├── status.py           # état de la base et prochaines actions (pdb status)
 │   ├── graph.py            # nœuds, liens et positions du graphe 3D
 │   ├── lineage.py          # généalogie : sous-graphe de citations sur une frise
 │   ├── vizfig.py           # figures Plotly et panneau de détail de viz.py
@@ -77,8 +85,10 @@ PaperDatabase/
 │   ├── test_graph.py
 │   ├── test_lineage.py
 │   ├── test_viz.py
-│   └── test_embed.py
-├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps
+│   ├── test_embed.py
+│   ├── test_openalex.py    # OpenAlex simulé : découverte, ajout par DOI / liste
+│   └── test_status.py
+├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover
 ├── inbox/                  # dépôt des PDF à ingérer
 └── papers/
     └── <paper_id>/
@@ -91,14 +101,16 @@ PaperDatabase/
         └── fiche.md        # fiche de lecture
 ```
 
-Les commandes Claude Code (`/paper-add`, `/paper-fiche`, `/paper-gaps`) vivent dans
+Les commandes Claude Code (`/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover`) vivent dans
 `.claude/commands/` : ce dossier est lui-même la racine du projet Claude Code (il porte
 `CLAUDE.md`).
 
 Tests : `.venv/bin/python -m unittest discover tests` — parsing TEI sur une sortie GROBID
 réelle (`test_tei.py`), conformité DATA_MODEL (`test_schema.py`), conservation des axes et
 tags à la ré-extraction (`test_ingest.py`), rapprochement des références et
-`external_refs.csv` (`test_refs.py`) et graphe sur un mini-corpus synthétique (`test_graph.py`, ignoré si
+`external_refs.csv` (`test_refs.py`), découverte OpenAlex, ajout par DOI et par liste
+sur des réponses simulées (`test_openalex.py`), état et prochaines actions
+(`test_status.py`), et graphe sur un mini-corpus synthétique (`test_graph.py`, ignoré si
 `requirements-viz.txt` n'est pas installé).
 
 ---
@@ -212,7 +224,23 @@ les fiches et le CSV sont versionnés.
 ## 5. Les scripts
 
 Référence de ce que fait chaque script (tous implémentés). Chaque script a un rôle unique ;
-en cas de modification, garder cette section à jour.
+en cas de modification, garder cette section à jour. Au quotidien, on passe par `bin/pdb`
+(ci-dessous) ; le guide d'utilisation est [docs/GUIDE.md](docs/GUIDE.md).
+
+### `bin/pdb <commande>`
+
+Point d'entrée unique. Wrapper bash qui lance `bin/pdb.py` avec le Python de `.venv` (et
+dit de lancer `setup.sh` s'il manque) ; utilisable via un lien symbolique dans le `PATH`.
+Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
+
+| Commande | Délègue à | En plus |
+|---|---|---|
+| `status` | `lib/status.py` | état de l'environnement (venv, Docker, GROBID, dépendances optionnelles) et du corpus (papiers par axe, fiches à faire, extractions `ok: false`, benchmarks, gaps, `inbox/`, git), puis au plus 3 actions suggérées par ordre de priorité |
+| `add …` | `add.run` | propose de démarrer GROBID s'il est arrêté (`--start-grobid` : sans question), puis `reindex.run` |
+| `ingest [--force] [pdf…]` | `ingest.run` | idem |
+| `reindex` | `reindex.run` | |
+| `discover …` | `discover.run` | |
+| `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
 
 ### `bin/setup.sh`
 
@@ -226,17 +254,19 @@ Crée le venv et installe `requirements.txt`. Idempotent : ne recrée pas un ven
 - `status` : code de sortie 0 si GROBID répond, 1 sinon. Les autres scripts s'en servent
   pour décider du repli.
 
-### `bin/add.py <arxiv-id|url|chemin.pdf>`
+### `bin/add.py <arxiv-id|url|doi|chemin.pdf>… [--from liste.txt]`
 
-Acquisition. Trois formes d'entrée :
+Acquisition. Quatre formes d'entrée :
 
 | Entrée | Comportement |
 |---|---|
 | `2507.18174` ou une URL `arxiv.org/abs/...` / `/pdf/...` | interroge l'API `export.arxiv.org/api/query` (titre, auteurs, date de v1, abstract, DOI si présent), télécharge le PDF dans `inbox/`, écrit un `<nom>.meta.json` compagnon |
+| DOI (`10.…`, `doi:10.…`, `https://doi.org/10.…`) | résolu par OpenAlex (`lib/openalex.py`) : s'il a une version arXiv, traité comme un id arXiv, avec le DOI éditeur et la venue d'OpenAlex (`venue_openalex` dans le `.meta.json`, avertissement « type à préciser ») ; sinon refus avec le titre, l'éventuel lien open access légal et la procédure `inbox/`. Aucun téléchargement hors arXiv. DOI déjà présent dans un `metadata.json` : refusé |
 | chemin vers un PDF local | copie dans `inbox/`, sans métadonnées compagnon |
 | URL non-arXiv | refuse avec un message expliquant de télécharger le PDF à la main et de le déposer dans `inbox/` |
 
-Enchaîne ensuite sur `ingest.py` pour le fichier concerné.
+`--from liste.txt` lit un identifiant par ligne (texte après `#` ignoré) : c'est le format
+de `candidates_arxiv.txt`. Enchaîne ensuite sur `ingest.py` pour les fichiers acquis.
 
 Cas d'erreur à traiter explicitement : id arXiv inexistant, réseau indisponible, PDF déjà
 présent dans `inbox/` ou déjà ingéré.
@@ -295,6 +325,31 @@ même référence (ligature perdue, coquille, titre tronqué par GROBID) y sont 
 `lib/refs.py`.
 
 Ne modifie jamais `benchmarks.csv` ni les fiches — il ne fait que lire et régénérer l'index.
+
+### `bin/discover.py [--forward] [--backward] [--related] [--query "…"] [--axis A] [--since AAAA]`
+
+Découverte de candidats via OpenAlex. Chaque papier du corpus est d'abord retrouvé dans
+OpenAlex par son DOI éditeur **et** son DOI arXiv (`10.48550/arxiv.<id>`), car les deux
+versions y sont souvent deux travaux distincts. Puis, selon les modes (défaut :
+`--forward --backward`) :
+
+- `--forward` : pour chaque version, les `--limit` (50) travaux citants les plus cités,
+  depuis `--since` ;
+- `--backward` : travaux référencés par au moins `--min-links` (2) papiers du corpus ;
+- `--related` : `related_works` d'OpenAlex ;
+- `--query` / `--axis` : recherche plein texte (`AXIS_QUERIES` de `ingest.py` pour un axe).
+
+Les papiers déjà en base sont exclus (clés de `lib/refs.py`), les versions d'un même travail
+fusionnées par titre normalisé. Chaque candidat reçoit ses axes probables
+(`ingest.classify`), un drapeau `in_topic` (`TOPIC_RE` ou axe de `HARDWARE_AXES`) et un score
+(3 × liens de citation avec le corpus + liens « related » + 2 si trouvé par requête
++ 2 × axes + log10 des citations). Sorties : `candidates.csv` (DATA_MODEL §10) et
+`candidates_arxiv.txt` (les `--top` premiers candidats dans le sujet disponibles sur arXiv,
+pour `add --from`). Un mode en échec (HTTP 503 de la recherche anonyme, par exemple)
+n'empêche pas les autres ; sans aucun candidat, les fichiers ne sont pas réécrits.
+
+Réseau : `lib/openalex.py` met les réponses en cache dans `.cache/openalex/` et lit
+`OPENALEX_API_KEY` et `OPENALEX_MAILTO` dans l'environnement (facultatifs).
 
 ### `bin/viz.py [--port 8050] [--debug]`
 
@@ -435,46 +490,29 @@ schéma bouge.
 
 ## 6. Flux de travail quotidien
 
-**Ajouter un article arXiv :**
+Version pas à pas, avec la stratégie d'extension du corpus : [docs/GUIDE.md](docs/GUIDE.md).
 
 ```bash
-.venv/bin/python bin/add.py 2509.04153
+bin/pdb status                          # où en est la base, quoi faire ensuite
+bin/pdb add 2509.04153                  # arXiv ; aussi un DOI, un PDF local, --from liste.txt
+cp ~/Téléchargements/article.pdf inbox/ && bin/pdb ingest   # article sous paywall
+bin/pdb discover --forward --backward   # candidats → candidates.csv, candidates_arxiv.txt
+bin/pdb viz                             # visualisation, http://127.0.0.1:8050
 ```
 
-**Ajouter un article sous paywall** (IEEE, Elsevier, Springer, PMC) — télécharge le PDF via
-l'accès de l'université, puis :
+`add` et `ingest` réindexent d'eux-mêmes ; après une fiche remplie ou une ligne de benchmark
+ajoutée à la main : `bin/pdb reindex`.
 
-```bash
-cp ~/Téléchargements/article.pdf inbox/
-.venv/bin/python bin/ingest.py
-```
-
-**Ficher un article** — dans Claude Code :
+Dans Claude Code :
 
 ```
-/paper-fiche arxiv-2507.18174-yolo-edge-fpga
+/paper-fiche arxiv-2507.18174-real-time-object-detection-classification
+/paper-discover autoencoder-fpga        # propose des papiers, ajoute après accord
+/paper-gaps                             # toutes les 3 à 5 fiches
 ```
 
-L'agent lit `fulltext.md`, remplit `fiche.md` et ajoute les lignes dans `benchmarks.csv`, en
-citant la section source de chaque chiffre.
-
-**Après toute modification du corpus :**
-
-```bash
-.venv/bin/python bin/reindex.py
-```
-
-**Visualiser le corpus** (après `pip install -r requirements-viz.txt`) :
-
-```bash
-.venv/bin/python bin/viz.py          # puis http://127.0.0.1:8050
-```
-
-**Faire le point sur les gaps**, une fois une dizaine de fiches faites :
-
-```
-/paper-gaps
-```
+`/paper-fiche` lit `fulltext.md`, remplit `fiche.md` et ajoute les lignes de
+`benchmarks.csv`, avec la section source de chaque chiffre.
 
 ---
 
@@ -545,24 +583,44 @@ dédoublonnés) ; 42 tests. Corpus : ajout de FINN, FINN-R et fpgaConvNet (toolf
 vérification §8.1-8.5, 9 fiches rédigées, 15 lignes de benchmark, venues et DOI vérifiés
 (arXiv + Crossref).
 
+**Bilan du 24/09/2026 (prise en main).** Point d'entrée unique `bin/pdb` (`status` avec
+prochaines actions, `add`/`ingest` qui réindexent), ajout par DOI (résolu vers arXiv via
+OpenAlex) et par lot (`--from`), découverte de candidats `bin/pdb discover` +
+`/paper-discover`, guide d'utilisation [docs/GUIDE.md](docs/GUIDE.md) ; 77 tests.
+
+**Bilan du 24/09/2026 (fiches et gaps).** Fiches FINN (8 lignes de benchmark) et FINN-R
+(12 lignes) : 11 fiches `done` sur 12, 35 lignes. `gaps.md` réécrit par `/paper-gaps` :
+14 gaps, dont 10 étayés. `/paper-discover autoencoder-fpga` : le gap autoencodeurs est
+reformulé en « anomalie visuelle » (la compression d'image apprise sur FPGA existe) ; liste
+courte en attente de validation (ci-dessous). `discover` : `in_topic` exige désormais un
+contexte matériel (`HARDWARE_AXES`, `TOPIC_RE`).
+
 ### Prochaines étapes prioritaires
 
-1. [ ] **`/paper-gaps`** : reporter dans `gaps.md` les gaps relevés par les fiches — étayer
-   le gap autoencodeurs (2602.15751, 2512.01463 : AE sur signaux 1D, pas d'images) et
-   proposer : absence de protocole de mesure commun pour YOLO sur FPGA (2507.18174,
-   2509.04153) ; CL sur FPGA peu précis et sans mesure d'énergie sur carte (2604.21280) ;
-   pas de comparaison MCU / FPGA / Jetson pour un même algorithme de CL (2403.07851) ;
-   RTOS et interaction PS-PL sur SoC FPGA (2509.04153 §III-B) ; FPGA absents des surveys
-   « embarqué » (2411.01431).
-2. [ ] **Ficher FINN puis FINN-R** (`/paper-fiche arxiv-1612.07119-…`, puis
-   `arxiv-1809.04570-…`) : fondations de la chaîne dataflow quantifiée, à comparer à
-   hls4ml (2103.05579, 2512.01463) ; puis fpgaConvNet (`arxiv-1711.08740-…`).
+1. [ ] **Valider la liste courte autoencodeurs** (`/paper-discover autoencoder-fpga`,
+   24/09/2026, métadonnées OpenAlex à vérifier) :
+   - sur arXiv, ajoutable par `bin/pdb add` : *Autoencoders on field-programmable gate
+     arrays for real-time, unsupervised new physics detection at 40 MHz at the LHC*
+     (Nature Machine Intelligence 2022, arXiv 2108.03986) ;
+   - sous paywall IEEE (accès université puis `inbox/`) : F-LIC (A-SSCC 2022, DOI
+     10.1109/a-sscc56115.2022.9980666) ; FPGA Codec System of Learned Image Compression
+     (JETCAS 2024, DOI 10.1109/jetcas.2024.3386328) ; Low Latency Variational Autoencoder
+     on FPGAs (JETCAS 2024, DOI 10.1109/jetcas.2024.3389660) ; Edge-Compatible CAE on FPGA
+     (IEEE Sensors Letters 2022, DOI 10.1109/lsens.2022.3159972) ; An Efficient
+     FPGA-based Architecture for Contractive Autoencoders (FCCM 2020, DOI
+     10.1109/fccm48280.2020.00062, entraînement en ligne sur Zynq : lien avec l'axe CL) ;
+   - en open access (OJCAS) : An Energy Efficient EdgeAI Autoencoder Accelerator for
+     Reinforcement Learning (DOI 10.1109/ojcas.2020.3043737) — FPGA ou ASIC : à vérifier.
+2. [ ] **Ficher fpgaConvNet** (`/paper-fiche arxiv-1711.08740-…`), puis relancer
+   `/paper-gaps` (gap « réseaux qui ne tiennent pas on-chip »).
 3. [ ] **Expérience à reproduire** : YOLOv5 INT8 via Vitis AI sur Kria KV260, avec mAP sur
    le split officiel (COCO val), résolution et variante déclarées, puissance mesurée au
-   wattmètre (carte) et via la télémétrie de la puce, latence et FPS à batch 1 — pour
-   combler le défaut de protocole relevé dans 2507.18174 et 2509.04153, et servir de
-   baseline aux travaux de thèse. Ajouter une comparaison Jetson (Orin Nano) dans les mêmes
-   conditions.
+   wattmètre (carte) et via la télémétrie de la puce (modèle : P_chip / P_wall de FINN,
+   arxiv-1612.07119 §5.1), latence et FPS à batch 1 — pour combler le gap « protocole de
+   mesure YOLO » de `gaps.md`, et servir de baseline aux travaux de thèse. Ajouter une
+   comparaison Jetson (Orin Nano) dans les mêmes conditions.
+4. [ ] **Convention puissance** dans DATA_MODEL §7 : préciser puce / carte / estimée pour
+   `power_w` (gap « Puissance » de `gaps.md`).
 
 ### En place
 
@@ -575,20 +633,24 @@ vérification §8.1-8.5, 9 fiches rédigées, 15 lignes de benchmark, venues et 
 | Références (`lib/refs.py`) | rapprochement par clés exactes + fusion des titres quasi identiques (ligatures perdues, coquilles, titres tronqués ; ±1 an), titre d'affichage le moins abîmé ; testé (`test_refs.py`) ; utilisé par la vue 3D et `reindex.py` |
 | Classement des références externes | `external_refs.csv` : 89 travaux hors base cités par ≥ 2 papiers (DATA_MODEL §9) |
 | Hiérarchie des titres de `fulltext.md` | titres parasites filtrés, niveau 3 géré, sections non détectées par GROBID signalées dans `extraction.warnings` |
-| Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps` | écrites (`.claude/commands/`) ; `/paper-fiche` rodé sur 9 papiers |
+| Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover` | écrites (`.claude/commands/`) ; `/paper-fiche` rodé sur 9 papiers ; `/paper-discover` ajoutée le 24/09/2026, pas encore rodée |
+| Point d'entrée `bin/pdb` et `status` (`lib/status.py`) | depuis le 24/09/2026 ; testé (`test_status.py`) ; vérifié sur le vrai corpus (12 papiers, 3 fiches à faire, axe `autoencoder-fpga` signalé) |
+| Découverte (`bin/discover.py`, `lib/openalex.py`) et ajout par DOI / `--from` | depuis le 24/09/2026 ; testé sur réponses simulées (`test_openalex.py`) ; vérifié en réel : 12/12 papiers retrouvés dans OpenAlex, ~290 candidats (`--forward --backward`), DOI 10.1088/1748-0221/13/07/P07027 → arXiv 1804.06913. La recherche plein texte anonyme (`--query`, `--axis`) était suspendue par OpenAlex (HTTP 503) le jour du test |
 | Corpus | 12 papiers arXiv (dont 3 ajoutés le 24/09/2026 : FINN, FINN-R, fpgaConvNet toolflow), tous via GROBID ; 1381 références extraites ; venues et DOI éditeur vérifiés (commentaires arXiv + Crossref) |
-| Fiches de lecture | 9 / 12 `done` (le 24/09/2026) ; restent FINN, FINN-R, fpgaConvNet |
-| `benchmarks.csv` | 15 lignes (2507.18174, 2604.21280, 2403.07851, 2602.15751, 2512.01463) ; aucune ligne pour les 3 surveys ni pour hls4ml 2021 (Table 1 non extraite, justifié dans la fiche — `reindex.py` affiche une note attendue) |
-| `gaps.md` | 1 gap, au statut *hypothèse* ; les fiches `done` contiennent de nouveaux gaps non encore reportés (`/paper-gaps` à lancer) |
-| Visualisation (`viz.py`, `lib/graph.py`, `lib/lineage.py`, `lib/vizfig.py`, `lib/embed.py`) | terminée le 24/09/2026 : graphe 3D (recherche, filtres, surlignage des liens, détail avec fiche et benchmarks, export HTML) et onglet Généalogie (papier ou sujet, suite probable déduite) ; embeddings optionnels ; testée (`test_graph.py`, `test_lineage.py`, `test_viz.py`, `test_embed.py`, 63 tests au total) ; 10 citations internes, 89 références externes co-citées |
+| Fiches de lecture | 11 / 12 `done` (le 24/09/2026) ; reste fpgaConvNet |
+| `benchmarks.csv` | 35 lignes (2507.18174, 2604.21280, 2403.07851, 2602.15751, 2512.01463, FINN 1612.07119, FINN-R 1809.04570) ; aucune ligne pour les 3 surveys ni pour hls4ml 2021 (Table 1 non extraite, justifié dans la fiche — `reindex.py` affiche une note attendue) |
+| `gaps.md` | 14 gaps, dont 10 étayés (`/paper-gaps` du 24/09/2026, 11 fiches `done`) |
+| Visualisation (`viz.py`, `lib/graph.py`, `lib/lineage.py`, `lib/vizfig.py`, `lib/embed.py`) | terminée le 24/09/2026 : graphe 3D (recherche, filtres, surlignage des liens, détail avec fiche et benchmarks, export HTML) et onglet Généalogie (papier ou sujet, suite probable déduite) ; embeddings optionnels ; testée (`test_graph.py`, `test_lineage.py`, `test_viz.py`, `test_embed.py` ; 77 tests au total avec ceux du 24/09/2026) ; 10 citations internes, 89 références externes co-citées |
 | Versionnage | dépôt git + remote GitHub ; visualisation commitée (6f04a6b) ; travaux du 24/09/2026 non commités |
 
 ### Tâches — corpus
 
 - [x] **Ficher les 9 papiers initiaux** (`/paper-fiche`). Fait le 24/09/2026, en commençant
   par 2507.18174 (test de bout en bout). Axes confirmés, warnings retirés.
-- [ ] Ficher FINN, FINN-R et fpgaConvNet : voir « Prochaines étapes prioritaires » (2).
-- [ ] Lancer `/paper-gaps` : voir « Prochaines étapes prioritaires » (1).
+- [x] Ficher FINN et FINN-R (24/09/2026). Reste fpgaConvNet : « Prochaines étapes » (2).
+- [x] `/paper-gaps` (24/09/2026) : 14 gaps. À relancer après fpgaConvNet.
+- [ ] FINN, Table 3 : colonne BRAM mal extraite (SFC-max 4,5 contre 130,5 en §5.2.3) ; FINN-R :
+  Table 4 (précision des réseaux) absente — vérifier sur le PDF.
 - [ ] **Vérifications contre le PDF, à faire à la main** (le PDF est exclu du travail de
   l'agent par CLAUDE.md) :
   - 2512.01463 : sections 1, 5, 6, 8, 10, 11 non détectées ; Tables 3, 6, 7 absentes ;
@@ -614,6 +676,15 @@ vérification §8.1-8.5, 9 fiches rédigées, 15 lignes de benchmark, venues et 
 - [ ] Prochains candidats d'`external_refs.csv` (à vérifier avant ajout) : *Fast inference
   of deep neural networks in FPGAs for particle physics* (arXiv 1804.06913, 4 citants),
   *Latency-Driven Design for FPGA-based Convolutional Neural Networks* (FPL 2017).
+- [ ] Trier les candidats de `bin/pdb discover` (premier passage le 24/09/2026, métadonnées
+  OpenAlex non vérifiées) via `/paper-discover`. En tête : *Fast convolutional neural
+  networks on FPGAs with hls4ml* (arXiv 2101.05108, cite 4 papiers du corpus) ;
+  *Autoencoders on field-programmable gate arrays for real-time, unsupervised new physics
+  detection at 40 MHz at the LHC* (arXiv 2108.03986) pour l'axe `autoencoder-fpga`, qui
+  n'a qu'un papier ; *A TinyML Platform for On-Device Continual Learning With Quantized
+  Latent Replays* (arXiv 2110.10486) pour la comparaison MCU / FPGA en apprentissage continu.
+- [ ] Obtenir une clé OpenAlex gratuite (`OPENALEX_API_KEY`) pour que `--query` et `--axis`
+  ne dépendent plus de la disponibilité de la recherche anonyme.
 - [x] Vérification du §8, points 1 à 5 (24/09/2026) :
   1. métadonnées de 2507.18174 correctes ;
   2. texte : ordre des sections, en-têtes, bibliographie et légendes corrects, mais la
@@ -647,6 +718,16 @@ vérification §8.1-8.5, 9 fiches rédigées, 15 lignes de benchmark, venues et 
   à confronter à la vue 3D.
 
 ### Tâches — outillage
+
+- [x] **Point d'entrée unique et état de la base** (24/09/2026) : `bin/pdb`, `pdb status`
+  (prochaines actions), réindexation automatique après `add`/`ingest`.
+- [x] **Ajout par DOI et par lot** (24/09/2026) : `add.py` résout un DOI vers sa version
+  arXiv (OpenAlex) et lit `--from liste.txt`.
+- [x] **Découverte de candidats** (24/09/2026) : `bin/discover.py`, `lib/openalex.py`,
+  `/paper-discover`, `candidates.csv` ; guide `docs/GUIDE.md`.
+- [ ] **Roder `/paper-discover`** sur un axe et un gap, et ajuster `TOPIC_RE` / le score si
+  le tri laisse passer trop de hors-sujet (ex. SqueezeNet est classé « dans le sujet » car
+  son résumé mentionne l'embarqué).
 
 - [x] **Axes et tags stables à la ré-extraction** (24/09/2026) : `keep_classification`
   dans `ingest.py`, testé par `test_ingest.py`.

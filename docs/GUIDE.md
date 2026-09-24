@@ -1,0 +1,299 @@
+# Guide d'utilisation de PaperDatabase
+
+PaperDatabase transforme des PDF d'articles scientifiques en une base de connaissance en
+texte que Claude Code sait parcourir : il y retrouve un chiffre, compare des travaux, repère
+les zones non couvertes. Ce guide montre comment s'en servir au quotidien. Le corpus sur la
+vision embarquée sur FPGA sert d'exemple, mais le pipeline ne dépend pas du domaine.
+
+Pour le fonctionnement interne, voir [SETUP.md](../SETUP.md) ; pour les formats de
+fichiers, [DATA_MODEL.md](../DATA_MODEL.md).
+
+---
+
+## 1. Le système en un coup d'œil
+
+```
+  arXiv id / DOI / PDF
+          │  bin/pdb add          (téléchargement arXiv, ou dépôt manuel dans inbox/)
+          ▼
+  papers/<id>/  metadata.json · fulltext.md · sections.jsonl · refs.jsonl
+          │  /paper-fiche         (Claude lit fulltext.md, écrit la fiche et les chiffres)
+          ▼
+  fiche.md + lignes de benchmarks.csv
+          │  bin/pdb reindex      (automatique après add / ingest)
+          ▼
+  INDEX.md · external_refs.csv          /paper-gaps → gaps.md
+          │
+          ▼
+  vos questions à Claude, et bin/pdb discover / /paper-discover pour trouver la suite
+```
+
+La répartition des rôles :
+
+| Qui | Fait quoi |
+|---|---|
+| **Vous** | choisir les articles, récupérer les PDF sous paywall, valider les ajouts proposés, relire une fiche de temps en temps contre le PDF |
+| **Les scripts** (`bin/pdb`) | télécharger, extraire le texte (GROBID), indexer, vérifier la cohérence, chercher des candidats |
+| **Claude** (`/paper-…`) | lire, ficher, chiffrer, comparer, relever les gaps, trier les candidats |
+
+---
+
+## 2. Installation (10 minutes)
+
+Prérequis : Python 3.12, Docker, Claude Code.
+
+```bash
+bash bin/setup.sh          # crée .venv et installe les dépendances
+bin/pdb grobid start       # lance GROBID (conteneur Docker, port 8070)
+bin/pdb status             # vérifie que tout est vert
+```
+
+`bin/pdb` est le point d'entrée unique : `bin/pdb help` liste les commandes. Pour le taper
+depuis n'importe quel dossier :
+
+```bash
+ln -s "$PWD/bin/pdb" ~/.local/bin/pdb
+```
+
+Facultatif :
+
+- `.venv/bin/pip install -r requirements-viz.txt` pour la visualisation ;
+- `requirements-embed.txt` pour la similarité par embeddings ;
+- une clé OpenAlex gratuite pour la découverte (§4.3).
+
+---
+
+## 3. Premier article, de bout en bout
+
+**1. Ajouter.**
+
+```bash
+bin/pdb add 2507.18174                 # identifiant arXiv
+bin/pdb add 10.1088/1748-0221/13/07/P07027   # DOI : sa version arXiv est cherchée via OpenAlex
+bin/pdb add ~/Téléchargements/article.pdf    # PDF local
+```
+
+La commande télécharge, extrait, range dans `papers/<paper_id>/` et réindexe. Si GROBID est
+arrêté, elle propose de le démarrer. Relisez les **avertissements** qu'elle affiche
+(métadonnées douteuses, sections non détectées) : ils sont aussi enregistrés dans
+`metadata.json`.
+
+**2. Ficher.** Dans Claude Code :
+
+```
+/paper-fiche arxiv-2507.18174-real-time-object-detection-classification
+```
+
+Claude lit `fulltext.md` en entier et produit deux choses :
+
+- `fiche.md` : problème, méthode, résultats, limites, pertinence, et ce qui a été lu ou déduit ;
+- une ligne de `benchmarks.csv` par configuration mesurée, chaque chiffre avec sa section
+  source, et `n/r` quand l'article ne donne pas la valeur.
+
+**3. Interroger.** Posez vos questions en langage naturel dans Claude Code, depuis ce
+dossier. Claude lit dans cet ordre : `INDEX.md`, `benchmarks.csv`, les fiches, puis
+`fulltext.md` en dernier recours. Il n'ouvre jamais le PDF. Exemples de questions :
+
+- « Quels papiers dépassent 25 FPS sous 5 W, et avec quel toolflow ? »
+- « Compare hls4ml et FINN : quantification supportée, ressources, latence. »
+- « Qu'est-ce qui a été publié sur l'apprentissage continu sur FPGA, et avec quelles mesures d'énergie ? »
+- « Synthèse de 2604.21280 pour ma thèse. »
+- « Quels gaps ressortent sur la mesure de puissance ? »
+
+Les réponses citent la section source de chaque chiffre, signalent les preprints et les
+valeurs `confidence: low`, et séparent ce qui est lu de ce qui est déduit. Si une réponse
+ne le fait pas, demandez-lui de le faire.
+
+---
+
+## 4. Faire grandir le corpus de manière pertinente
+
+Ajouter des papiers ne sert que s'ils répondent à une question : combler un axe maigre,
+étayer un gap, compléter une lignée de travaux. Viser 15 à 20 fiches solides vaut mieux que
+200 PDF non lus.
+
+### 4.1 Les quatre sources, de la plus sûre à la plus large
+
+| Source | Commande | Ce qu'elle trouve | Piège |
+|---|---|---|---|
+| **Références du corpus** (en arrière) | `external_refs.csv` (généré), `bin/pdb discover --backward` | les travaux que vos papiers citent tous : fondations, toolflows de référence | beaucoup de classiques génériques (ResNet, Batch Norm) : à ignorer |
+| **Citations du corpus** (en avant) | `bin/pdb discover --forward --since 2020` | ce qui a été construit depuis sur vos papiers : l'état de l'art récent | les papiers très cités dominent ; `--since` recentre sur le récent |
+| **Recherche par axe ou par gap** | `bin/pdb discover --axis autoencoder-fpga`, `--query "convolutional autoencoder image FPGA"` | les axes maigres, les verrous de `gaps.md` | vocabulaire trop large : formuler en anglais, avec les termes techniques |
+| **Veille ciblée** | à la main | les actes des conférences de référence (FPGA, FCCM, FPL, DATE, ACM TRETS, TinyML), les pages des labos (LIRMM, IETR, LAAS, CEA-List) | papiers sous paywall : PDF à déposer dans `inbox/` |
+
+### 4.2 La boucle recommandée
+
+Dans Claude Code :
+
+```
+/paper-discover                     # citations du corpus
+/paper-discover autoencoder-fpga    # un axe maigre (bin/pdb status les signale par ⚠)
+/paper-discover "mesure de puissance YOLO FPGA"   # un gap
+```
+
+Claude lance la recherche, lit `candidates.csv`, écarte le hors-sujet et propose 5 à 10
+papiers, chacun avec sa justification. **Il n'ajoute rien sans votre accord.**
+
+Sans Claude, la même chose à la main :
+
+```bash
+bin/pdb discover --forward --backward --since 2019
+# lire candidates.csv (trié : dans le sujet d'abord, puis par score)
+# éditer candidates_arxiv.txt : ne garder que les lignes pertinentes
+bin/pdb add --from candidates_arxiv.txt
+```
+
+Comment lire `candidates.csv` :
+
+- `in_topic` : « oui » si le titre ou le résumé mentionne un contexte matériel (FPGA,
+  accélérateur, embarqué…) ou un toolflow / une plateforme ; un autoencodeur purement
+  logiciel reste « non » ;
+- `reasons` : le lien avec le corpus (« cite 4 papiers du corpus », « cité par 3 papiers du
+  corpus ») ;
+- `axes_guess` : l'axe probable ;
+- `arxiv_id` vide : pas de version arXiv trouvée. `oa_url` donne alors un éventuel lien
+  open access légal ; sinon, passer par l'accès de l'université.
+
+### 4.3 Clé OpenAlex
+
+La découverte interroge [OpenAlex](https://openalex.org), une base bibliographique ouverte.
+Sans clé, la recherche par mots-clés (`--query`, `--axis`) est parfois suspendue quand le
+service est chargé (erreur HTTP 503). Les modes par citations (`--forward`, `--backward`)
+fonctionnent en général. Avec une clé gratuite :
+
+```bash
+export OPENALEX_API_KEY=...          # dans ~/.bashrc
+export OPENALEX_MAILTO=vous@exemple.fr   # facultatif, quotas plus larges
+```
+
+Les réponses sont mises en cache dans `.cache/openalex/`. Pour forcer une nouvelle
+interrogation, supprimer ce dossier.
+
+### 4.4 Critères avant d'ajouter un papier
+
+- **Garder** : il relève d'un axe ; il étaye ou contredit un gap ; il est cité par au moins
+  2 papiers du corpus ; il donne des mesures sur carte (FPS, W, ressources).
+- **Écarter** : les classiques génériques (le corpus n'a pas besoin de ResNet) ; les
+  travaux sans rapport avec l'embarqué ; une seconde version d'un papier déjà présent
+  (version arXiv et version éditeur).
+- **Équilibrer** : `bin/pdb status` affiche le nombre de papiers par axe. Un axe à 1 ou 2
+  papiers ne permet aucune comparaison, et c'est souvent là qu'est le gap intéressant.
+- **Vérifier** : les métadonnées d'OpenAlex et de `basicStart.txt` peuvent être
+  approximatives. Après l'ajout, `/paper-add` compare la note de départ au PDF réel ; un
+  écart signale une référence à corriger.
+
+### 4.5 Articles sous paywall
+
+Aucun contournement. Téléchargez le PDF via l'accès de l'université, puis :
+
+```bash
+cp ~/Téléchargements/article.pdf inbox/
+bin/pdb ingest
+```
+
+GROBID retrouve seul le titre, les auteurs et l'année. Vérifiez-les dans `metadata.json` et
+précisez `type` et `venue` si l'avertissement le demande.
+
+---
+
+## 5. Routine de travail
+
+**À chaque session (2 minutes)**
+
+```bash
+bin/pdb status
+```
+
+La commande dit où en est la base et propose les trois prochaines actions : GROBID à
+démarrer, PDF en attente, fiche à rédiger, gaps à mettre à jour, axe à étoffer, commit.
+
+**Chaque semaine**
+
+1. `/paper-discover` sur un axe maigre ou un gap, puis valider 3 à 5 ajouts.
+2. `/paper-fiche` sur chaque nouveau papier.
+3. Toutes les 3 à 5 fiches : `/paper-gaps`, qui met à jour `gaps.md`, matière première de la
+   problématique de thèse.
+4. `git add -A && git commit`, car la base est versionnée.
+
+**De temps en temps**
+
+- `bin/pdb viz`, onglet Généalogie : suivre la lignée d'un sujet (`hls4ml`, `finn|binar`,
+  `yolo`) et repérer les maillons manquants à ajouter.
+- Relire une fiche contre le PDF lu vous-même (§6).
+
+---
+
+## 6. Contrôle qualité
+
+L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Trois réflexes :
+
+1. **Les avertissements d'ingestion** (`bin/pdb status` liste les extractions à vérifier) :
+   une section non détectée ou une table absente de `fulltext.md` signifie que ses chiffres
+   manquent aussi dans la fiche. Ouvrez alors le PDF vous-même et complétez la fiche.
+2. **Recouper une fiche sur cinq** avec le PDF : chaque chiffre de `benchmarks.csv` doit
+   exister dans le papier, à la section indiquée.
+3. **`bin/pdb reindex`** doit finir sans `erreur`. Une `note` est une remarque, pas un
+   blocage.
+
+Procédure complète : [SETUP.md §8](../SETUP.md#8-vérification).
+
+---
+
+## 7. Dépannage
+
+| Symptôme | Cause probable | Solution |
+|---|---|---|
+| `Environnement Python absent` | `.venv` non créé | `bash bin/setup.sh` |
+| `GROBID ne répond pas`, backend `pymupdf` | conteneur arrêté | `bin/pdb grobid start`, puis `bin/pdb ingest --force <pdf>` pour ré-extraire |
+| Premier démarrage de GROBID très long | téléchargement de l'image Docker (~1 Go) | patienter, ou `docker logs grobid` |
+| `déjà ingéré` | même id arXiv, même DOI ou même PDF | rien à faire ; `--force` pour ré-extraire (la fiche n'est jamais écrasée) |
+| `pas de version arXiv pour <DOI>` | article sous paywall | §4.5 |
+| `OpenAlex HTTP 503` | recherche anonyme suspendue | réessayer plus tard, ou clé gratuite (§4.3) ; `--forward --backward` fonctionnent sans recherche |
+| Mots coupés (« classi cation ») | ligatures perdues à l'extraction | `grep` sur un fragment plus court ; défaut connu (SETUP §9) |
+| `reindex` signale `fiche.md dit … metadata.json dit …` | statut modifié d'un seul côté | aligner `fiche:` dans `fiche.md` et `status.fiche` dans `metadata.json` |
+
+---
+
+## 8. Adapter à un autre sujet
+
+Le pipeline ne dépend pas du domaine. Pour en changer, il faut redéfinir :
+
+- les axes (`lib/schema.py`) ;
+- les règles de pré-classement, `TOPIC_RE`, `HARDWARE_AXES` et `AXIS_QUERIES`
+  (`bin/ingest.py`) ;
+- les colonnes de benchmark ;
+- les règles de travail (`CLAUDE.md`).
+
+Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
+
+---
+
+## 9. Aide-mémoire
+
+| Terminal | Effet |
+|---|---|
+| `bin/pdb status` | état et prochaines actions |
+| `bin/pdb add <arxiv \| doi \| pdf>…` | ajoute, ingère, réindexe |
+| `bin/pdb add --from liste.txt` | ajout par lot (un identifiant par ligne, `#` pour commenter) |
+| `bin/pdb ingest [--force] [pdf…]` | ingère `inbox/` et réindexe |
+| `bin/pdb discover [--forward] [--backward] [--related] [--axis A] [--query "…"] [--since AAAA]` | candidats → `candidates.csv`, `candidates_arxiv.txt` |
+| `bin/pdb reindex` | régénère `INDEX.md`, `external_refs.csv`, vérifie |
+| `bin/pdb grobid start\|stop\|status` | GROBID |
+| `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
+| `bin/pdb test` | tests |
+
+| Claude Code | Effet |
+|---|---|
+| `/paper-add <arxiv \| doi \| pdf>` | ajoute et compare à la note de départ |
+| `/paper-fiche <paper_id>` | fiche de lecture et lignes de benchmark |
+| `/paper-gaps` | met à jour `gaps.md` |
+| `/paper-discover [axe \| gap \| mots-clés]` | propose des papiers à ajouter et attend votre accord |
+
+| Fichier | Rôle | Qui l'écrit |
+|---|---|---|
+| `INDEX.md` | liste des papiers par axe | `reindex` (généré) |
+| `benchmarks.csv` | tous les chiffres, avec section source | `/paper-fiche` |
+| `papers/<id>/fiche.md` | lecture critique | `/paper-fiche` |
+| `gaps.md` | zones non couvertes | `/paper-gaps` |
+| `external_refs.csv` | travaux cités mais absents | `reindex` (généré) |
+| `candidates.csv`, `candidates_arxiv.txt` | candidats à l'ajout | `discover` (généré, non versionné) |

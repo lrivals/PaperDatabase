@@ -108,19 +108,20 @@ distinguer le lu du déduit, relever les comparaisons biaisées. Trois commandes
 
 ## Démarrage rapide
 
-Prérequis : Python 3.12, Docker.
+Prérequis : Python 3.12, Docker. **Guide d'utilisation pas à pas : [docs/GUIDE.md](docs/GUIDE.md).**
 
 ```bash
-bash bin/setup.sh                          # crée .venv, installe requirements.txt
-bash bin/grobid.sh start                   # GROBID sur localhost:8070
-.venv/bin/python bin/add.py 2507.18174     # ajoute un article arXiv
-cp article.pdf inbox/ && .venv/bin/python bin/ingest.py   # ou un PDF local
-.venv/bin/python bin/reindex.py            # régénère INDEX.md et external_refs.csv, vérifie la cohérence
-.venv/bin/python -m unittest discover tests
+bash bin/setup.sh              # crée .venv, installe requirements.txt
+bin/pdb grobid start           # GROBID sur localhost:8070
+bin/pdb status                 # état de la base et prochaines actions
+bin/pdb add 2507.18174         # un article arXiv (ou un DOI, un PDF local, --from liste.txt)
+bin/pdb discover               # papiers candidats à l'ajout (OpenAlex) → candidates.csv
 ```
 
-Ensuite, dans Claude Code, `/paper-fiche <paper_id>` produit la fiche de lecture. Le détail de
-l'installation et de chaque script est dans [SETUP.md](SETUP.md).
+`add` et `ingest` réindexent d'eux-mêmes (`INDEX.md`, `external_refs.csv`). Ensuite, dans
+Claude Code : `/paper-fiche <paper_id>` produit la fiche de lecture, `/paper-discover`
+propose des papiers à ajouter, `/paper-gaps` met à jour la carte des gaps. Le détail de
+chaque script est dans [SETUP.md](SETUP.md).
 
 ---
 
@@ -130,8 +131,8 @@ Le pipeline ne dépend pas du domaine. Pour changer de sujet :
 
 1. Définir les axes de veille dans `lib/schema.py` (`AXES`) et leurs titres dans
    `bin/reindex.py` (`AXIS_TITLES`).
-2. Adapter la pré-classification automatique (`AXIS_RULES`, `TAG_RULES`) dans
-   `bin/ingest.py`.
+2. Adapter la pré-classification automatique (`AXIS_RULES`, `TAG_RULES`) et la découverte
+   (`TOPIC_RE`, `HARDWARE_AXES`, `AXIS_QUERIES`) dans `bin/ingest.py`.
 3. Redéfinir les colonnes de `benchmarks.csv` (`BENCHMARK_COLUMNS`, `NUMERIC_COLUMNS` dans
    `lib/schema.py`) et le template de fiche.
 4. Réécrire les règles de travail de [CLAUDE.md](CLAUDE.md) pour le domaine.
@@ -175,10 +176,12 @@ PaperDatabase/
 ├── README.md  CLAUDE.md  SETUP.md  DATA_MODEL.md
 ├── INDEX.md  external_refs.csv   # générés
 ├── benchmarks.csv  gaps.md  basicStart.txt
-├── bin/                    # setup.sh, grobid.sh, add.py, ingest.py, reindex.py, viz.py
-├── lib/                    # ids, tei, doc, pdftext, schema, refs, graph
+├── docs/GUIDE.md           # guide d'utilisation
+├── bin/                    # pdb (point d'entrée), setup.sh, grobid.sh, add.py, ingest.py,
+│                           # reindex.py, discover.py, viz.py
+├── lib/                    # ids, tei, doc, pdftext, schema, refs, openalex, status, graph…
 ├── tests/
-├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps
+├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover
 ├── inbox/                  # PDF en attente d'ingestion
 └── papers/<paper_id>/      # un dossier par article
 ```
@@ -187,12 +190,13 @@ PaperDatabase/
 
 ## État et documentation
 
-Au 24/09/2026 : 12 articles arXiv ingérés (tous via GROBID), 9 fiches rédigées,
-15 lignes dans `benchmarks.csv`. L'avancement et les tâches à faire sont dans
+Au 24/09/2026 : 12 articles arXiv ingérés (tous via GROBID), 11 fiches rédigées,
+35 lignes dans `benchmarks.csv`, 14 gaps dans `gaps.md`. L'avancement et les tâches à faire sont dans
 [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire).
 
 | Document | Contenu |
 |---|---|
+| [docs/GUIDE.md](docs/GUIDE.md) | guide d'utilisation : prise en main, routine, extension du corpus, dépannage |
 | [SETUP.md](SETUP.md) | installation, rôle de chaque script, flux de travail, vérification, tâches |
 | [DATA_MODEL.md](DATA_MODEL.md) | schémas : `paper_id`, `metadata.json`, `sections.jsonl`, `refs.jsonl`, `benchmarks.csv`, fiche |
 | [CLAUDE.md](CLAUDE.md) | mode d'emploi et règles de travail de l'agent |

@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """Acquisition d'un article, puis ingestion.
 
-usage : add.py <arxiv-id | url arXiv | chemin.pdf> [...]
+usage : add.py <arxiv-id | url arXiv | doi | chemin.pdf> [...] [--from liste.txt]
 
 - id ou URL arXiv : métadonnées via l'API arXiv, PDF téléchargé dans inbox/ ;
+- DOI             : résolu par OpenAlex ; s'il existe une version arXiv, elle est
+                    téléchargée, sinon la procédure de dépôt manuel est rappelée ;
 - PDF local       : copié dans inbox/ ;
 - autre URL       : refusée — télécharger le PDF à la main et le déposer dans inbox/.
+
+--from liste.txt : un identifiant par ligne ; lignes vides et texte après # ignorés
+(format de candidates_arxiv.txt, produit par bin/discover.py).
 """
 import json
 import shutil
@@ -21,7 +26,7 @@ import requests  # noqa: E402
 from lxml import etree  # noqa: E402
 
 import ingest  # noqa: E402
-from lib import ids  # noqa: E402
+from lib import ids, openalex  # noqa: E402
 
 INBOX = ROOT / "inbox"
 PAPERS = ROOT / "papers"
@@ -87,15 +92,18 @@ def download_pdf(arxiv_id, dest):
     dest.write_bytes(r.content)
 
 
-def add_arxiv(arxiv_id):
+def add_arxiv(arxiv_id, doi=None, venue=None):
     stem = f"arxiv-{arxiv_id.replace('/', '_')}"
     pdf, meta_path = INBOX / f"{stem}.pdf", INBOX / f"{stem}.meta.json"
     done = sorted(PAPERS.glob(ids.arxiv_dir_prefix(arxiv_id) + "*"))
     if done:
         raise AddError(f"{arxiv_id} déjà ingéré : papers/{done[0].name}")
     if pdf.exists():
-        raise AddError(f"{pdf.name} déjà présent dans inbox/ : lancer .venv/bin/python bin/ingest.py")
+        raise AddError(f"{pdf.name} déjà présent dans inbox/ : lancer bin/pdb ingest")
     meta = arxiv_metadata(arxiv_id)
+    meta["doi"] = meta["doi"] or doi
+    if venue and not meta["journal_ref"]:
+        meta["venue_openalex"] = venue
     print(f"arXiv {arxiv_id} : {meta['title']} ({meta['year']})")
     download_pdf(arxiv_id, pdf)
     meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n")
@@ -111,7 +119,7 @@ def add_local(path):
             raise AddError(f"{src.name} n'est pas un PDF")
     dest = INBOX / src.name
     if dest.exists():
-        raise AddError(f"{dest.name} déjà présent dans inbox/ : lancer .venv/bin/python bin/ingest.py")
+        raise AddError(f"{dest.name} déjà présent dans inbox/ : lancer bin/pdb ingest")
     digest = ingest.sha256(src)
     for p in PAPERS.glob("*/paper.pdf"):
         if ingest.sha256(p) == digest:
@@ -120,30 +128,84 @@ def add_local(path):
     return dest
 
 
+MANUAL = ("  Télécharge le PDF à la main (accès université), puis :\n"
+          "    cp ~/Téléchargements/article.pdf inbox/ && bin/pdb ingest")
+
+
+def add_doi(doi, client=None):
+    """DOI → version arXiv via OpenAlex. Aucun téléchargement hors arXiv."""
+    for path in PAPERS.glob("*/metadata.json"):
+        if (json.loads(path.read_text()).get("doi") or "").lower() == doi.lower():
+            raise AddError(f"DOI {doi} déjà ingéré : papers/{path.parent.name}")
+    try:
+        work, arxiv_id = openalex.resolve_doi(client or openalex.Client(), doi)
+    except openalex.OpenAlexError as e:
+        raise AddError(str(e))
+    if arxiv_id:
+        print(f"DOI {doi} → arXiv {arxiv_id}")
+        if not work:  # DOI arXiv 10.48550/arXiv.…
+            return add_arxiv(arxiv_id)
+        return add_arxiv(arxiv_id, doi=openalex.doi_of(work), venue=openalex.venue_of(work))
+    if not work:
+        raise AddError(f"DOI inconnu d'OpenAlex : {doi}. Vérifier le DOI, ou déposer le PDF :\n{MANUAL}")
+    oa = openalex.oa_url_of(work)
+    raise AddError(
+        f"pas de version arXiv pour {doi} ({work.get('title')}, {work.get('publication_year')}).\n"
+        + (f"  Lien open access signalé par OpenAlex : {oa}\n" if oa else "")
+        + MANUAL)
+
+
+def read_id_list(path):
+    """Identifiants d'un fichier : un par ligne, texte après # ignoré."""
+    out = []
+    for line in Path(path).expanduser().read_text().splitlines():
+        line = line.split("#", 1)[0].strip()
+        if line:
+            out.append(line)
+    return out
+
+
 def acquire(arg):
     arxiv_id = ids.find_arxiv_id(arg)
     if arxiv_id:
         return add_arxiv(arxiv_id)
+    doi = ids.find_doi(arg)
+    if doi:
+        return add_doi(doi)
     if arg.startswith(("http://", "https://")) or arg.startswith("www."):
         if ids.is_arxiv_url(arg):
             raise AddError(f"URL arXiv sans identifiant reconnaissable : {arg}")
         raise AddError(
             "URL non-arXiv : pas de téléchargement automatique (ni contournement de paywall).\n"
-            "  Télécharge le PDF à la main (accès université), puis :\n"
-            "    cp ~/Téléchargements/article.pdf inbox/ && .venv/bin/python bin/ingest.py"
-        )
+            + MANUAL)
     return add_local(arg)
 
 
-def main():
-    args = sys.argv[1:]
-    if not args or args[0] in ("-h", "--help"):
-        print(__doc__)
-        sys.exit(0 if args else 2)
+def expand_args(args):
+    """Arguments de la ligne de commande, `--from liste.txt` remplacé par son contenu."""
+    out, it = [], iter(args)
+    for a in it:
+        if a == "--from":
+            path = next(it, None)
+            if path is None:
+                raise AddError("--from attend un fichier")
+            out += read_id_list(path)
+        else:
+            out.append(a)
+    return out
+
+
+def run(args):
+    """Acquiert puis ingère. Retourne le nombre d'échecs."""
+    try:
+        args = expand_args(args)
+    except (AddError, OSError) as e:
+        print(f"erreur  {e}", file=sys.stderr)
+        return 1
     INBOX.mkdir(exist_ok=True)
     pdfs, failed = [], 0
     for i, arg in enumerate(args):
-        if i and ids.find_arxiv_id(arg):
+        if i and (ids.find_arxiv_id(arg) or ids.find_doi(arg)):
             time.sleep(API_DELAY)
         try:
             pdfs.append(acquire(arg))
@@ -152,7 +214,15 @@ def main():
             print(f"erreur  {arg} : {e}", file=sys.stderr)
     if pdfs:
         failed += ingest.run(pdfs)
-    sys.exit(1 if failed else 0)
+    return failed
+
+
+def main():
+    args = sys.argv[1:]
+    if not args or args[0] in ("-h", "--help"):
+        print(__doc__)
+        sys.exit(0 if args else 2)
+    sys.exit(1 if run(args) else 0)
 
 
 if __name__ == "__main__":

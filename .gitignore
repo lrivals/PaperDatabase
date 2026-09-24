@@ -5,3 +5,5 @@ inbox/*.meta.json
 .venv/
 __pycache__/
 .cache/
+candidates.csv
+candidates_arxiv.txt

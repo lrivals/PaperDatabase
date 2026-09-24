@@ -12,6 +12,7 @@ _ARXIV_URL_RE = re.compile(
     rf"arxiv\.org/(?:abs|pdf|html)/{_ARXIV_ID}(?:\.pdf)?", re.IGNORECASE
 )
 _ARXIV_BARE_RE = re.compile(rf"^(?:arxiv:)?{_ARXIV_ID}$", re.IGNORECASE)
+_DOI_RE = re.compile(r"^(?:doi:\s*|https?://(?:dx\.)?doi\.org/)?(?P<doi>10\.\d{4,9}/\S+)$", re.IGNORECASE)
 
 STOPWORDS = set("""
 a an and are as at be by for from in into is its of on or over the to toward towards
@@ -25,6 +26,12 @@ def find_arxiv_id(s):
     s = s.strip()
     m = _ARXIV_BARE_RE.match(s) or _ARXIV_URL_RE.search(s)
     return m.group("id") if m else None
+
+
+def find_doi(s):
+    """DOI (sans préfixe doi: ni https://doi.org/) si s en est un, sinon None."""
+    m = _DOI_RE.match(s.strip())
+    return m.group("doi").rstrip(".") if m else None
 
 
 def is_arxiv_url(s):

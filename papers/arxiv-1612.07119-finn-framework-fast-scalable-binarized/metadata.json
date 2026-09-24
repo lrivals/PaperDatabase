@@ -38,22 +38,26 @@
   "url": "https://arxiv.org/abs/1612.07119",
   "type": "conference",
   "axes": [
-    "toolflows"
+    "toolflows",
+    "platforms"
   ],
   "tags": [
     "finn",
-    "zc706"
+    "zc706",
+    "zynq",
+    "bnn",
+    "quantization",
+    "vivado-hls",
+    "dataflow"
   ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

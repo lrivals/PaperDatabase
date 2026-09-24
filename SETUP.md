@@ -87,6 +87,7 @@ PaperDatabase/
 │   ├── test_viz.py
 │   ├── test_embed.py
 │   ├── test_openalex.py    # OpenAlex simulé : découverte, ajout par DOI / liste
+│   ├── test_citation.py    # exports .bib / .ris éditeur : lecture, appariement, priorité
 │   └── test_status.py
 ├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover
 ├── inbox/                  # dépôt des PDF à ingérer
@@ -94,6 +95,7 @@ PaperDatabase/
     └── <paper_id>/
         ├── paper.pdf       # PDF d'origine, conservé comme preuve
         ├── grobid.tei.xml  # sortie brute de GROBID, trace d'extraction
+        ├── citation.bib    # export de citation éditeur (.bib ou .ris), s'il a été déposé
         ├── metadata.json   # titre, auteurs, année, venue, DOI, axes, statut
         ├── fulltext.md     # texte nettoyé, sections en ## / ###
         ├── sections.jsonl  # une ligne par section, avec page
@@ -212,6 +214,8 @@ l'art diffable : on voit la bibliographie se construire et les fiches évoluer.
 **/grobid.tei.xml
 inbox/*.pdf
 inbox/*.meta.json
+inbox/*.bib
+inbox/*.ris
 .venv/
 __pycache__/
 ```
@@ -285,9 +289,14 @@ Pour chaque PDF :
    PyMuPDF : texte page par page, découpage en sections par heuristique sur les titres
    numérotés (`^\d+\.?\s+[A-Z]`). `extraction.backend` vaut alors `pymupdf` et
    `extraction.warnings` contient `"métadonnées à vérifier à la main"`.
-3. **Fusion des métadonnées**, par ordre de confiance décroissant :
-   `.meta.json` arXiv > `teiHeader` GROBID > vide. Les champs restés vides sont laissés à
-   `null` — jamais devinés.
+3. **Fusion des métadonnées**, par ordre de confiance décroissant : export de citation
+   éditeur (`.bib` / `.ris`) > `.meta.json` arXiv > `teiHeader` GROBID > vide. Les champs
+   restés vides sont laissés à `null` — jamais devinés. L'export de citation
+   (`lib/citation.py`, sans dépendance) est cherché à côté du PDF et dans `inbox/`, et
+   apparié par DOI, sinon par titre (≥ 0,9) : son nom de fichier est libre. Il fixe titre,
+   auteurs, année, venue, DOI et type, prime aussi sur un `metadata.json` existant lors
+   d'un `--force`, puis est rangé dans `papers/<paper_id>/citation.bib|.ris` (copié et non
+   déplacé s'il décrit plusieurs papiers).
 4. **Nettoyage** du corps, dans cet ordre :
    - suppression des lignes identiques réapparaissant sur ≥ 3 pages (en-têtes/pieds de page) ;
    - suppression des numéros de page isolés et des mentions de copyright / DOI de bas de page ;
@@ -573,7 +582,7 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 24/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 24/09/2026 (fin de journée). À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
 
 **Bilan du 24/09/2026.** Outillage : conservation des axes/tags à la ré-extraction,
@@ -595,14 +604,40 @@ reformulé en « anomalie visuelle » (la compression d'image apprise sur FPGA e
 courte en attente de validation (ci-dessous). `discover` : `in_topic` exige désormais un
 contexte matériel (`HARDWARE_AXES`, `TOPIC_RE`).
 
+**Bilan du 24/09/2026 (fpgaConvNet, puissance).** Ajout de arxiv-2108.03986 (autoencodeurs
+sur FPGA au LHC, Nature Machine Intelligence 2022) ; fiche fpgaConvNet (aucune ligne de
+benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`chip` |
+`board` | `board-dynamic` | `estimated` | `unspecified`, validée par `lib/schema.py`) ;
+`/paper-gaps` relancé : gaps « réseaux hors on-chip » et « puissance » réécrits ; 78 tests.
+
+**Bilan du 24/09/2026 (vision embarquée hors FPGA).**
+- Élargissement du corpus au-delà du FPGA : Jetson, VPU, Edge TPU, Hailo-8, MCU / TinyML.
+  Passage de 13 à 28 papiers : 15 ajouts (8 par arXiv, 7 par dépôt manuel dans `inbox/`).
+- 13 fiches rédigées : 24 `done` sur 28, dont Feng 2022, 2211.11647, Zhai 2023,
+  El Zeinaty 2025, MCUNetV2, TinyissimoYOLO, 2108.03986 (LHC), Shuvo 2023, Mittal 2024,
+  Hozhabr 2025, Rey 2025 (Orin, TensorRT INT8) et Alqahtani (mAP COCO sur Orin et Hailo).
+- `benchmarks.csv` passe de 35 à 109 lignes. Premières lignes `chip` (14) et premières mAP
+  COCO (15, sur Jetson et Hailo, aucune sur FPGA).
+- `gaps.md`, 5e passage : 16 gaps, dont 12 étayés. Nouveaux :
+  - « précision non vérifiée sur la cible après compilation » ;
+  - « passerelle MCU ↔ FPGA ».
+  Reformulé : « surveys *embarqué* sans FPGA, ou *FPGA* sans comparaison chiffrée ». Le
+  gap « baseline Jetson » est partiellement comblé.
+- Outillage : `lib/citation.py`. Un export `.bib` ou `.ris` déposé dans `inbox/` est
+  apparié au PDF par DOI, sinon par titre ; ses champs priment sur l'en-tête GROBID, puis
+  il est rangé dans `papers/<id>/citation.*`.
+- Nouveaux fichiers : [labs.md](labs.md) (labos et encadrants, INSA Rennes / IETR à
+  vérifier) et le protocole [docs/experiences/kv260-map-sur-cible.md](docs/experiences/kv260-map-sur-cible.md).
+- Clé `OPENALEX_API_KEY` configurée dans `~/.bashrc`.
+- 89 tests.
+
 ### Prochaines étapes prioritaires
 
-1. [ ] **Valider la liste courte autoencodeurs** (`/paper-discover autoencoder-fpga`,
+1. [ ] **Liste courte autoencodeurs** : 2108.03986 ajouté (fiche à faire :
+   `/paper-fiche arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised`). Reste (`/paper-discover autoencoder-fpga`,
    24/09/2026, métadonnées OpenAlex à vérifier) :
-   - sur arXiv, ajoutable par `bin/pdb add` : *Autoencoders on field-programmable gate
-     arrays for real-time, unsupervised new physics detection at 40 MHz at the LHC*
-     (Nature Machine Intelligence 2022, arXiv 2108.03986) ;
-   - sous paywall IEEE (accès université puis `inbox/`) : F-LIC (A-SSCC 2022, DOI
+   à déposer dans `inbox/` (aucun n'a de version arXiv) :
+   - **prioritaire**, sous paywall IEEE (accès université) : F-LIC (A-SSCC 2022, DOI
      10.1109/a-sscc56115.2022.9980666) ; FPGA Codec System of Learned Image Compression
      (JETCAS 2024, DOI 10.1109/jetcas.2024.3386328) ; Low Latency Variational Autoencoder
      on FPGAs (JETCAS 2024, DOI 10.1109/jetcas.2024.3389660) ; Edge-Compatible CAE on FPGA
@@ -611,16 +646,46 @@ contexte matériel (`HARDWARE_AXES`, `TOPIC_RE`).
      10.1109/fccm48280.2020.00062, entraînement en ligne sur Zynq : lien avec l'axe CL) ;
    - en open access (OJCAS) : An Energy Efficient EdgeAI Autoencoder Accelerator for
      Reinforcement Learning (DOI 10.1109/ojcas.2020.3043737) — FPGA ou ASIC : à vérifier.
-2. [ ] **Ficher fpgaConvNet** (`/paper-fiche arxiv-1711.08740-…`), puis relancer
-   `/paper-gaps` (gap « réseaux qui ne tiennent pas on-chip »).
+2. [x] **Ficher fpgaConvNet** et relancer `/paper-gaps` (24/09/2026). Suite logique :
+   ajouter l'article FCCM 2016 (DOI 10.1109/FCCM.2016.22, paywall, 6 citants) pour les
+   chiffres absolus absents du papier de workshop.
 3. [ ] **Expérience à reproduire** : YOLOv5 INT8 via Vitis AI sur Kria KV260, avec mAP sur
    le split officiel (COCO val), résolution et variante déclarées, puissance mesurée au
    wattmètre (carte) et via la télémétrie de la puce (modèle : P_chip / P_wall de FINN,
    arxiv-1612.07119 §5.1), latence et FPS à batch 1 — pour combler le gap « protocole de
    mesure YOLO » de `gaps.md`, et servir de baseline aux travaux de thèse. Ajouter une
-   comparaison Jetson (Orin Nano) dans les mêmes conditions.
-4. [ ] **Convention puissance** dans DATA_MODEL §7 : préciser puce / carte / estimée pour
-   `power_w` (gap « Puissance » de `gaps.md`).
+   comparaison Jetson (Orin Nano) dans les mêmes conditions. Protocole détaillé (24/09/2026,
+   non exécuté) : [docs/experiences/kv260-map-sur-cible.md](docs/experiences/kv260-map-sur-cible.md).
+   Il mesure la mAP COCO val sur la carte, NMS compris, et la compare au modèle flottant et
+   au modèle quantifié simulé (gap « précision non vérifiée sur la cible »).
+4. [x] **Convention puissance** (24/09/2026) : colonne `power_scope`, DATA_MODEL §7,
+   `/paper-fiche` ; 35 lignes renseignées (16 `board`, 4 `unspecified`, 3 `estimated`,
+   0 `chip`).
+5. [ ] **Fiches restantes (4)** : `2023-cui-…` (survey d'anomalie visuelle industrielle,
+   prioritaire pour l'axe `autoencoder-fpga`), arxiv-2010.15277, arxiv-2206.15472,
+   arxiv-2409.07114 (apprentissage continu et entraînement sur MCU).
+6. [ ] **Baseline Jetson complète** : aucune source ne réunit Orin + TensorRT INT8
+   déclaré + mAP COCO + puissance de carte en W.
+   - Rey et al. (arxiv-2502.15737) donnent INT8 et une puissance par télémétrie, sur un
+     jeu privé.
+   - Alqahtani et al. (arxiv-2409.16808) donnent la mAP COCO et une énergie hors repos,
+     précision non déclarée.
+   Il faut soit la mesurer (volet Orin du protocole KV260), soit déposer dans `inbox/`
+   *Benchmarking YOLOv8 Variants… on Jetson Orin NX* (Computers 2026, DOI
+   10.3390/computers15020074) avec son `.bib`.
+7. [ ] **PDF à récupérer à la main (accès université, avec export `.bib`)** :
+   - *Embedded AI performances of Nvidia's Jetson Orin SoC series* (HAL 2023) ;
+   - *Review of large YOLOv8 and RT-DETR energy efficiency on edge devices* (Sci. Rep.
+     2026, DOI 10.1038/s41598-026-46453-6) ;
+   - *Accelerating Deep Learning Inference: A Comparative Analysis…* (Electronics 2025,
+     DOI 10.3390/electronics14152977) ;
+   - Anupreetham et al. [67] (NMS pipeliné sur FPGA) et D. Zhang et al. [86] (détecteur
+     entièrement sur FPGA), cités par 2025-hozhabr : références dans son `refs.jsonl`.
+8. [ ] **Vérifications contre le PDF** des chiffres lus en figures seulement : 2211.11647
+   (Fig. 6, 7 et 12) ; tableaux perdus à l'extraction dans 2025-hozhabr (Tables 9-10) et
+   2023-shuvo (Tables 6-10).
+9. [ ] **labs.md** : vérifier le rattachement IETR de l'équipe INSA Rennes (Menard, Herrou)
+   et récupérer le dépôt public annoncé par 2025-el-zeinaty.
 
 ### En place
 
@@ -631,17 +696,18 @@ contexte matériel (`HARDWARE_AXES`, `TOPIC_RE`).
 | Axes et tags à la ré-extraction | conservés depuis le 24/09/2026 : fiche `done` → inchangés ; fiche `todo` → union anciens + nouveaux (`keep_classification`) |
 | Index et contrôle de cohérence (`reindex.py`) | fonctionnel, 0 erreur ; contrôle de conformité DATA_MODEL complet (`test_schema.py`) ; génère aussi `external_refs.csv` |
 | Références (`lib/refs.py`) | rapprochement par clés exactes + fusion des titres quasi identiques (ligatures perdues, coquilles, titres tronqués ; ±1 an), titre d'affichage le moins abîmé ; testé (`test_refs.py`) ; utilisé par la vue 3D et `reindex.py` |
-| Classement des références externes | `external_refs.csv` : 89 travaux hors base cités par ≥ 2 papiers (DATA_MODEL §9) |
+| Classement des références externes | `external_refs.csv` : 319 travaux hors base cités par ≥ 2 papiers (DATA_MODEL §9) |
 | Hiérarchie des titres de `fulltext.md` | titres parasites filtrés, niveau 3 géré, sections non détectées par GROBID signalées dans `extraction.warnings` |
-| Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover` | écrites (`.claude/commands/`) ; `/paper-fiche` rodé sur 9 papiers ; `/paper-discover` ajoutée le 24/09/2026, pas encore rodée |
+| Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover` | écrites (`.claude/commands/`) ; `/paper-fiche` rodé sur 24 papiers (surveys, benchmarks multi-plateformes, MCU) ; `/paper-discover` rodée le 24/09/2026 (vision embarquée, baseline Orin), avec la clé OpenAlex |
+| Fichiers de citation éditeur (`lib/citation.py`) | depuis le 24/09/2026 : lecture `.bib` / `.ris` sans dépendance, appariement au PDF par DOI puis par titre, priorité sur l'en-tête GROBID, conservation dans `papers/<id>/citation.*` ; testé (`test_citation.py`) et vérifié en réel sur 6 exports (IEEE, ACM, MDPI, Springer) |
 | Point d'entrée `bin/pdb` et `status` (`lib/status.py`) | depuis le 24/09/2026 ; testé (`test_status.py`) ; vérifié sur le vrai corpus (12 papiers, 3 fiches à faire, axe `autoencoder-fpga` signalé) |
 | Découverte (`bin/discover.py`, `lib/openalex.py`) et ajout par DOI / `--from` | depuis le 24/09/2026 ; testé sur réponses simulées (`test_openalex.py`) ; vérifié en réel : 12/12 papiers retrouvés dans OpenAlex, ~290 candidats (`--forward --backward`), DOI 10.1088/1748-0221/13/07/P07027 → arXiv 1804.06913. La recherche plein texte anonyme (`--query`, `--axis`) était suspendue par OpenAlex (HTTP 503) le jour du test |
-| Corpus | 12 papiers arXiv (dont 3 ajoutés le 24/09/2026 : FINN, FINN-R, fpgaConvNet toolflow), tous via GROBID ; 1381 références extraites ; venues et DOI éditeur vérifiés (commentaires arXiv + Crossref) |
-| Fiches de lecture | 11 / 12 `done` (le 24/09/2026) ; reste fpgaConvNet |
-| `benchmarks.csv` | 35 lignes (2507.18174, 2604.21280, 2403.07851, 2602.15751, 2512.01463, FINN 1612.07119, FINN-R 1809.04570) ; aucune ligne pour les 3 surveys ni pour hls4ml 2021 (Table 1 non extraite, justifié dans la fiche — `reindex.py` affiche une note attendue) |
-| `gaps.md` | 14 gaps, dont 10 étayés (`/paper-gaps` du 24/09/2026, 11 fiches `done`) |
+| Corpus | 28 papiers (le 24/09/2026) : 21 par arXiv, 7 déposés à la main avec leur export de citation (Feng 2022, Zhai 2023, El Zeinaty 2025, Shuvo 2023, Mittal 2024, Hozhabr 2025, Cui 2023) ; tous extraits par GROBID ; périmètre élargi à Jetson, VPU, Edge TPU, Hailo et MCU |
+| Fiches de lecture | 24 / 28 `done` (le 24/09/2026) ; restent 2023-cui, arxiv-2010.15277, arxiv-2206.15472 et arxiv-2409.07114 |
+| `benchmarks.csv` | 109 lignes (le 24/09/2026) : 16 `board`, 14 `chip` (Rey et al., Jetson et RPi), 24 `unspecified`, 3 `estimated`, 52 sans puissance ; 71 lignes de détection, dont 15 avec mAP COCO (Alqahtani et al., Jetson et Hailo), aucune ligne FPGA avec mAP COCO ; aucune ligne pour les surveys, hls4ml 2021 ni fpgaConvNet (justifié dans les fiches) |
+| `gaps.md` | 16 gaps, dont 12 étayés (5e passage, le 24/09/2026, 24 fiches `done`) |
 | Visualisation (`viz.py`, `lib/graph.py`, `lib/lineage.py`, `lib/vizfig.py`, `lib/embed.py`) | terminée le 24/09/2026 : graphe 3D (recherche, filtres, surlignage des liens, détail avec fiche et benchmarks, export HTML) et onglet Généalogie (papier ou sujet, suite probable déduite) ; embeddings optionnels ; testée (`test_graph.py`, `test_lineage.py`, `test_viz.py`, `test_embed.py` ; 77 tests au total avec ceux du 24/09/2026) ; 10 citations internes, 89 références externes co-citées |
-| Versionnage | dépôt git + remote GitHub ; visualisation commitée (6f04a6b) ; travaux du 24/09/2026 non commités |
+| Versionnage | dépôt git + remote GitHub ; travaux du 24/09/2026 commités et poussés |
 
 ### Tâches — corpus
 
@@ -683,8 +749,9 @@ contexte matériel (`HARDWARE_AXES`, `TOPIC_RE`).
   detection at 40 MHz at the LHC* (arXiv 2108.03986) pour l'axe `autoencoder-fpga`, qui
   n'a qu'un papier ; *A TinyML Platform for On-Device Continual Learning With Quantized
   Latent Replays* (arXiv 2110.10486) pour la comparaison MCU / FPGA en apprentissage continu.
-- [ ] Obtenir une clé OpenAlex gratuite (`OPENALEX_API_KEY`) pour que `--query` et `--axis`
-  ne dépendent plus de la disponibilité de la recherche anonyme.
+- [x] Clé OpenAlex gratuite (`OPENALEX_API_KEY`) configurée dans `~/.bashrc` le
+  24/09/2026 : `--query` et `--axis` ne dépendent plus de la recherche anonyme (HTTP 429 et
+  503 constatés sans clé).
 - [x] Vérification du §8, points 1 à 5 (24/09/2026) :
   1. métadonnées de 2507.18174 correctes ;
   2. texte : ordre des sections, en-têtes, bibliographie et légendes corrects, mais la

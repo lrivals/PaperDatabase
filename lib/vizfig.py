@@ -43,7 +43,7 @@ COLOR_BY = {
 }
 
 BENCH_COLUMNS = (("model", "modèle"), ("platform", "plateforme"), ("quantization", "quantif."),
-                 ("fps", "FPS"), ("latency_ms", "latence (ms)"), ("power_w", "W"),
+                 ("fps", "FPS"), ("latency_ms", "latence (ms)"), ("power_w", "W"), ("power_scope", "portée W"),
                  ("source_section", "source"))
 
 

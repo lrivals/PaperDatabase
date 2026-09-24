@@ -108,6 +108,18 @@ class TestSchema(unittest.TestCase):
         row["fps"] = "~30"
         self.assertTrue(schema.validate_benchmark_row(row))
 
+    def test_power_scope(self):
+        row = {c: "n/r" for c in schema.BENCHMARK_COLUMNS}
+        row["confidence"] = "high"
+        row["power_scope"] = "board"          # portée sans valeur de puissance
+        self.assertTrue(schema.validate_benchmark_row(row))
+        row["power_w"] = "3.5"
+        self.assertEqual(schema.validate_benchmark_row(row), [])
+        row["power_scope"] = "n/r"            # puissance sans portée
+        self.assertTrue(schema.validate_benchmark_row(row))
+        row["power_scope"] = "carte"          # hors vocabulaire
+        self.assertTrue(schema.validate_benchmark_row(row))
+
 
 if __name__ == "__main__":
     unittest.main()

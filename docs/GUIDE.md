@@ -187,12 +187,21 @@ interrogation, supprimer ce dossier.
 Aucun contournement. Téléchargez le PDF via l'accès de l'université, puis :
 
 ```bash
-cp ~/Téléchargements/article.pdf inbox/
+cp ~/Téléchargements/article.pdf ~/Téléchargements/citation.bib inbox/
 bin/pdb ingest
 ```
 
-GROBID retrouve seul le titre, les auteurs et l'année. Vérifiez-les dans `metadata.json` et
-précisez `type` et `venue` si l'avertissement le demande.
+**Déposez aussi l'export de citation de l'éditeur** (BibTeX `.bib` ou RIS `.ris` : bouton
+« Cite » / « Export citation » d'IEEE Xplore, ACM DL, MDPI, Springer). Sur un PDF sans
+arXiv, GROBID se trompe souvent de premier auteur ou d'année, ce qui fausse le `paper_id`.
+Le nom du fichier importe peu : l'ingestion l'apparie au PDF par DOI, sinon par titre. Ses
+champs (titre, auteurs, année, venue, DOI, type) priment alors sur l'en-tête lu par
+GROBID, et le fichier est rangé dans `papers/<paper_id>/citation.bib` comme preuve. Un
+export groupé (plusieurs entrées) sert à plusieurs PDF.
+
+Sans fichier de citation, GROBID retrouve seul le titre, les auteurs et l'année :
+vérifiez-les dans `metadata.json` et précisez `type` et `venue` si l'avertissement le
+demande.
 
 ---
 

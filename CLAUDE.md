@@ -76,7 +76,8 @@ Tout chiffre avancé porte sa section source. Quand `confidence` vaut `low` dans
 inférence. Signaler les preprints non relus par les pairs (`type: preprint`).
 
 **Esprit critique.** Relever les comparaisons biaisées, les métriques non comparables d'un
-papier à l'autre (conditions de mesure, batch size, mesure de puissance puce vs carte),
+papier à l'autre (conditions de mesure, batch size, mesure de puissance puce vs carte — colonne
+`power_scope` de `benchmarks.csv`),
 l'absence de code ou de bitstream publiés. Comparer à un baseline GPU / Jetson / MCU quand
 c'est pertinent.
 
@@ -96,4 +97,4 @@ particules, peu sur images.
 
 Livrables récurrents attendus : fiche de lecture par article, tableau comparatif, carte des
 gaps, brouillon de pré-projet de thèse, liste de labos et d'encadrants (France : LIRMM,
-IETR, LAAS, CEA-List…).
+IETR, LAAS, CEA-List…) — tenue dans [labs.md](labs.md).

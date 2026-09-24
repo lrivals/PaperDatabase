@@ -19,11 +19,13 @@ sys.path.insert(0, str(ROOT))
 
 import requests  # noqa: E402
 
-from lib import doc, ids, pdftext, schema, tei  # noqa: E402
+from lib import citation, doc, ids, pdftext, schema, tei  # noqa: E402
 
 INBOX = ROOT / "inbox"
 PAPERS = ROOT / "papers"
 GROBID_URL = "http://localhost:8070/api/processFulltextDocument"
+# Champs qu'un fichier de citation éditeur (.bib / .ris, lib/citation.py) fixe dans metadata.json
+CITATION_KEYS = ("title", "authors", "year", "venue", "doi", "type")
 
 AXIS_RULES = (
     ("yolo-fpga", r"\byolo"),
@@ -184,6 +186,42 @@ def merge_metadata(arx, header, backend, warnings):
     return meta
 
 
+def apply_citation(meta, cit, warnings):
+    """Fichier de citation éditeur (lib/citation.py) : ses champs non vides priment."""
+    for k in CITATION_KEYS:
+        if cit.get(k) not in (None, []):
+            meta[k] = cit[k]
+    if cit.get("doi") and not meta.get("arxiv_id"):
+        meta["url"] = f"https://doi.org/{cit['doi']}"
+    resolved = ("type de publication", "publié ailleurs") if cit.get("type") else ()
+    warnings[:] = [w for w in warnings if not w.startswith(resolved) and w != schema.WARN_MANUAL_METADATA]
+    return meta
+
+
+def find_citation(pdf, doi, title):
+    """Fichier de citation qui correspond au PDF, à côté de lui ou dans inbox/."""
+    for d in dict.fromkeys((pdf.parent, INBOX)):
+        if d.is_dir():
+            found = citation.find(d, doi=doi, title=title)
+            if found:
+                return found
+    return None
+
+
+def store_citation(path, out):
+    """Conserve le fichier de citation dans papers/<id>/ comme preuve des métadonnées.
+
+    Déplacé s'il ne décrit que ce papier, copié s'il en décrit plusieurs (export groupé).
+    """
+    target = out / f"citation{path.suffix.lower()}"
+    if path.resolve() == target.resolve():
+        return
+    if len(citation.parse(path)) > 1:
+        shutil.copyfile(path, target)
+    else:
+        shutil.move(str(path), target)
+
+
 def check_missing(meta, warnings):
     for k in ("title", "year"):
         if meta[k] is None:
@@ -227,6 +265,10 @@ def process(pdf, force=False, use_grobid=True):
                 meta[k] = old[k]
         meta["status"]["fiche"] = old.get("status", {}).get("fiche", "todo")
         warnings[:] = [w for w in warnings if not w.startswith(("type de publication", "publié ailleurs"))]
+    cit = find_citation(pdf, (arx or {}).get("doi") or header.get("doi"),
+                        (arx or {}).get("title") or header.get("title"))
+    if cit:  # déposé exprès pour corriger l'en-tête : prime aussi sur l'ancien metadata.json
+        apply_citation(meta, cit[1], warnings)
     check_missing(meta, warnings)
     abstract = (arx or {}).get("abstract") or header.get("abstract") or ""
     title_kw = " ".join([meta["title"] or "", " ".join(header.get("keywords", []))])
@@ -289,6 +331,8 @@ def process(pdf, force=False, use_grobid=True):
         shutil.move(str(pdf), target)
     if meta_json.exists():
         meta_json.unlink()
+    if cit:
+        store_citation(cit[0], out)
     note = f" [{backend}]" + (f" — {len(warnings)} avertissement(s)" if warnings else "")
     return "ingéré", f"papers/{paper_id}{note}"
 

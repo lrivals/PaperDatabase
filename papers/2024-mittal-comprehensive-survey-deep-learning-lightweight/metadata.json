@@ -1,0 +1,36 @@
+{
+  "id": "2024-mittal-comprehensive-survey-deep-learning-lightweight",
+  "title": "A comprehensive survey of deep learning-based lightweight object detection models for edge devices",
+  "authors": [
+    {
+      "given": "Payal",
+      "family": "Mittal"
+    }
+  ],
+  "year": 2024,
+  "venue": "Artificial Intelligence Review 57(9), 242",
+  "doi": "10.1007/s10462-024-10877-1",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1007/s10462-024-10877-1",
+  "type": "journal",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [
+    "lightweight-detection",
+    "yolo",
+    "mobilenet",
+    "shufflenet",
+    "edge"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

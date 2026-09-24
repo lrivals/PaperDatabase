@@ -11,7 +11,8 @@ Ajoute l'article `$ARGUMENTS` à PaperDatabase.
 2. `.venv/bin/python bin/add.py $ARGUMENTS` (un DOI est résolu vers sa version arXiv via
    OpenAlex). Si la commande refuse une URL non-arXiv ou un DOI sans version arXiv, ne
    cherche **aucun** moyen de contourner un paywall : rappelle la procédure de dépôt manuel
-   dans `inbox/` et arrête-toi.
+   dans `inbox/` (le PDF, plus l'export de citation `.bib` / `.ris` de l'éditeur, qui fixe
+   auteurs, année et venue ; docs/GUIDE.md §4.5) et arrête-toi.
 3. Lis `papers/<paper_id>/metadata.json` du papier ingéré et rapporte :
    - titre, auteurs, année, venue, type, axes ;
    - chaque entrée de `extraction.warnings` ;

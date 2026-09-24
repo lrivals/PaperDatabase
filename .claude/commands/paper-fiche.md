@@ -24,7 +24,8 @@ Remplace chaque paragraphe d'instruction du template par le contenu, en gardant 
 - Chaque chiffre porte sa source entre parenthèses : `(Table 2)`, `(§IV-A)`, `(Fig. 5)`.
 - Une valeur non rapportée s'écrit `n/r`. Jamais d'estimation, jamais de valeur reprise d'un
   autre papier.
-- **Plateforme** : puce exacte ; puissance mesurée puce ou carte, et comment (sinon `n/r`) ;
+- **Plateforme** : puce exacte ; puissance mesurée puce ou carte, et comment (sinon `n/r`) —
+  c'est ce qui fixe `power_scope` dans `benchmarks.csv` ;
   code/bitstream publiés, avec lien, ou « non publiés ».
 - **Limites et critique** : comparaisons biaisées (baselines anciennes, batch sizes ou
   précisions différentes, puissance puce vs carte), métriques non comparables, absence de
@@ -44,6 +45,9 @@ dire dans la fiche). Colonnes et vocabulaires : `DATA_MODEL.md` §7.
 - Toute cellule sans valeur rapportée vaut `n/r`. Colonnes numériques : un nombre sans unité.
 - `source_section` : tableau, figure ou section exacte. `confidence` : `high` (tableau),
   `medium` (texte), `low` (déduit — à éviter, et à signaler).
+- `power_scope` : `chip`, `board`, `board-dynamic`, `estimated` ou `unspecified` d'après la
+  méthode décrite par les auteurs (DATA_MODEL §7) ; `n/r` si `power_w` vaut `n/r`. Ne jamais
+  deviner la portée : une puissance sans méthode décrite est `unspecified`.
 - Échappe par des guillemets toute cellule contenant une virgule.
 - Reporte dans la section « Résultats » de la fiche la liste des lignes ajoutées.
 

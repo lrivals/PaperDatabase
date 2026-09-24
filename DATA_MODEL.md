@@ -85,6 +85,11 @@ Un fichier par article, à la racine de `papers/<paper_id>/`.
 
 Un champ inconnu vaut `null`, jamais une chaîne vide ni une valeur devinée.
 
+Quand un export de citation éditeur a été déposé avec le PDF, il est conservé à côté, dans
+`citation.bib` ou `citation.ris` : c'est la source de `title`, `authors`, `year`, `venue`,
+`doi` et `type` (SETUP.md §5, `ingest.py`). En cas d'écart avec `metadata.json`, l'export
+fait foi, sauf correction manuelle ultérieure.
+
 ---
 
 ## 3. Axes de veille
@@ -218,7 +223,8 @@ Colonnes, dans cet ordre :
 | `fps` | `55` | |
 | `gops` | `808.6` | |
 | `latency_ms` | `n/r` | |
-| `power_w` | `2.13` | préciser dans la fiche s'il s'agit de la puce ou de la carte |
+| `power_w` | `2.13` | en W, telle que rapportée ; sa portée va dans `power_scope` |
+| `power_scope` | `board` | portée de `power_w` : `chip` (rails de la puce : PMBus, télémétrie) \| `board` (carte entière, wattmètre) \| `board-dynamic` (carte, puissance de repos soustraite) \| `estimated` (outil ou modèle, pas une mesure) \| `unspecified` (mesure dont la portée n'est pas dite) ; `n/r` si et seulement si `power_w` vaut `n/r` |
 | `luts` | `41200` | |
 | `dsps` | `220` | |
 | `bram` | `140` | en blocs, pas en Mo |
@@ -227,6 +233,11 @@ Colonnes, dans cet ordre :
 | `baseline` | `RTX 2080Ti, GTX 1650` | comparaisons données par le papier, `n/r` si aucune |
 | `source_section` | `Table 4` | d'où vient la ligne : section, tableau ou figure |
 | `confidence` | `high` | `high` = lu dans un tableau ; `medium` = dans le texte ; `low` = déduit, à revérifier |
+
+Deux puissances de portées différentes ne se comparent pas : une carte ZC706 consomme ~7 W au
+repos (arxiv-1612.07119, §5.2.2), qu'une mesure `board` inclut et qu'une mesure `chip` ou
+`board-dynamic` exclut. Quand un papier donne plusieurs portées (P_chip et P_wall), `power_w`
+prend la mesure `board` et la fiche donne les autres.
 
 `source_section` et `confidence` ne sont pas décoratifs : ils permettent de rouvrir le bon
 passage en cas de doute et de repérer d'un coup d'œil les chiffres fragiles.

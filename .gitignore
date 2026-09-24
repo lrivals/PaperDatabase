@@ -2,6 +2,8 @@
 **/grobid.tei.xml
 inbox/*.pdf
 inbox/*.meta.json
+inbox/*.bib
+inbox/*.ris
 .venv/
 __pycache__/
 .cache/

@@ -22,6 +22,9 @@ BACKENDS = ("grobid", "pymupdf")
 FICHE_STATUS = ("todo", "done")
 SECTION_KINDS = ("abstract", "section", "figure", "table")
 CONFIDENCE = ("high", "medium", "low")
+# Portée de power_w (DATA_MODEL §7) : puce, carte, carte moins le repos, estimation par outil,
+# ou mesure dont la portée n'est pas dite. n/r quand power_w vaut n/r.
+POWER_SCOPES = ("chip", "board", "board-dynamic", "estimated", "unspecified")
 
 BENCHMARK_COLUMNS = (
     "paper_id",
@@ -35,6 +38,7 @@ BENCHMARK_COLUMNS = (
     "gops",
     "latency_ms",
     "power_w",
+    "power_scope",
     "luts",
     "dsps",
     "bram",
@@ -145,6 +149,11 @@ def validate_benchmark_row(row):
                 errs.append(f"{c} = {v!r} : nombre ou n/r attendu")
     if row["confidence"] not in CONFIDENCE:
         errs.append(f"confidence = {row['confidence']!r} : high | medium | low")
+    scope, power = (row["power_scope"] or "").strip(), (row["power_w"] or "").strip()
+    if power == NR and scope != NR:
+        errs.append(f"power_scope = {scope!r} alors que power_w = n/r : n/r attendu")
+    elif power not in (NR, "") and scope not in POWER_SCOPES:
+        errs.append(f"power_scope = {scope!r} : {' | '.join(POWER_SCOPES)}")
     return errs
 
 

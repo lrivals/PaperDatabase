@@ -1,0 +1,15 @@
+TY  - JOUR
+AU  - Mittal, Payal
+PY  - 2024
+DA  - 2024/08/10
+TI  - A comprehensive survey of deep learning-based lightweight object detection models for edge devices
+JO  - Artificial Intelligence Review
+SP  - 242
+VL  - 57
+IS  - 9
+AB  - This study concentrates on deep learning-based lightweight object detection models on edge devices. Designing such lightweight object recognition models is more difficult than ever due to the growing demand for accurate, quick, and low-latency models for various edge devices. The most recent deep learning-based lightweight object detection methods are comprehensively described in this work. Information on the lightweight backbone architectures used by these object detectors has been listed. The training and inference processes concerning to deep learning applications on edge devices is being discussed. To raise readers’ awareness of this developing domain, a variety of applications for deep learning-based lightweight object detectors and related utilities have been offered. Designing potent, lightweight object detectors based on deep learning has been suggested as a counter to such problems. On well-known datasets such as MS-COCO and PASCAL-VOC, we thoroughly examine the performance of certain conventional deep learning-based lightweight object detectors.
+SN  - 1573-7462
+UR  - https://doi.org/10.1007/s10462-024-10877-1
+DO  - 10.1007/s10462-024-10877-1
+ID  - Mittal2024
+ER  - 

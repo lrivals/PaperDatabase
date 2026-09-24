@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-2010.15277-class-incremental-learning-survey-performance",
+  "title": "Class-incremental learning: survey and performance evaluation on image classification",
+  "authors": [
+    {
+      "given": "Marc",
+      "family": "Masana"
+    },
+    {
+      "given": "Xialei",
+      "family": "Liu"
+    },
+    {
+      "given": "Bartlomiej",
+      "family": "Twardowski"
+    },
+    {
+      "given": "Mikel",
+      "family": "Menta"
+    },
+    {
+      "given": "Andrew D.",
+      "family": "Bagdanov"
+    },
+    {
+      "given": "Joost van de",
+      "family": "Weijer"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2010.15277",
+  "url": "https://arxiv.org/abs/2010.15277",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

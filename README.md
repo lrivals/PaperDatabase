@@ -41,7 +41,8 @@ PDF local ───────────────────────�
 - **`add.py`** récupère un article arXiv (métadonnées via l'API, puis le PDF) ou copie un
   PDF local dans `inbox/`, puis lance l'ingestion.
 - **`ingest.py`** passe chaque PDF de `inbox/` dans GROBID :
-  - il fusionne les métadonnées (arXiv, puis GROBID ; un champ inconnu reste `null`) ;
+  - il fusionne les métadonnées (export de citation `.bib` / `.ris` déposé à côté, puis
+    arXiv, puis GROBID ; un champ inconnu reste `null`) ;
   - il nettoie le corps (en-têtes, numéros de page, bibliographie) ;
   - il garde les légendes de figures et de tableaux, qui portent souvent les chiffres ;
   - il écrit les fichiers ci-dessous.
@@ -190,8 +191,16 @@ PaperDatabase/
 
 ## État et documentation
 
-Au 24/09/2026 : 12 articles arXiv ingérés (tous via GROBID), 11 fiches rédigées,
-35 lignes dans `benchmarks.csv`, 14 gaps dans `gaps.md`. L'avancement et les tâches à faire sont dans
+Au 24/09/2026, le corpus couvre la vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo
+et MCU :
+- 28 articles ingérés, tous via GROBID : 21 par arXiv, 7 déposés à la main avec leur export
+  de citation ;
+- 24 fiches rédigées ;
+- 109 lignes dans `benchmarks.csv` ;
+- 16 gaps dans `gaps.md`, dont 12 étayés.
+
+S'y ajoutent une liste de labos ([labs.md](labs.md)) et un protocole d'expérience
+([docs/experiences/](docs/experiences/)). L'avancement et les tâches à faire sont dans
 [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire).
 
 | Document | Contenu |

@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-1806.01683-accelerating-cnn-inference-fpgas-survey",
+  "title": "Accelerating CNN inference on FPGAs: A Survey",
+  "authors": [
+    {
+      "given": "Kamel",
+      "family": "Abdelouahab"
+    },
+    {
+      "given": "Maxime",
+      "family": "Pelcat"
+    },
+    {
+      "given": "Jocelyn",
+      "family": "Serot"
+    },
+    {
+      "given": "François",
+      "family": "Berry"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1806.01683",
+  "url": "https://arxiv.org/abs/1806.01683",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "id": "arxiv-2602.15751-enabling-low-latency-machine-learning",
+  "title": "Enabling Low-Latency Machine learning on Radiation-Hard FPGAs with hls4ml",
+  "authors": [
+    {
+      "given": "Katya",
+      "family": "Govorkova"
+    },
+    {
+      "given": "Julian Garcia",
+      "family": "Pardinas"
+    },
+    {
+      "given": "Vladimir",
+      "family": "Loncar"
+    },
+    {
+      "given": "Victoria",
+      "family": "Nguyen"
+    },
+    {
+      "given": "Sebastian",
+      "family": "Schmitt"
+    },
+    {
+      "given": "Marco",
+      "family": "Pizzichemi"
+    },
+    {
+      "given": "Loris",
+      "family": "Martinazzoli"
+    },
+    {
+      "given": "Eluned Anne",
+      "family": "Smith"
+    }
+  ],
+  "year": 2026,
+  "venue": "Machine Learning: Science and Technology 7 (2026) 045024",
+  "doi": "10.1088/2632-2153/ae8218",
+  "arxiv_id": "2602.15751",
+  "url": "https://arxiv.org/abs/2602.15751",
+  "type": null,
+  "axes": [
+    "autoencoder-fpga",
+    "toolflows"
+  ],
+  "tags": [
+    "hls4ml",
+    "quantization",
+    "autoencoder"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "publié ailleurs selon arXiv (journal_ref : Machine Learning: Science and Technology 7 (2026) 045024) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

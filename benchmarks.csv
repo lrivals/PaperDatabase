@@ -1,0 +1,1 @@
+paper_id,model,task,platform,quantization,accuracy_metric,accuracy_value,fps,gops,latency_ms,power_w,luts,dsps,bram,dataset,toolflow,baseline,source_section,confidence

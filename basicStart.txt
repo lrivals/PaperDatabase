@@ -1,0 +1,109 @@
+Bibliographie de départ : vision embarquée sur FPGA (YOLO, autoencodeurs)
+
+Je n'ai lu que les résumés et extraits, pas les articles complets. Vérifie les références sur Google Scholar avant de les citer.
+
+1. Surveys et toolflows (à lire en premier)
+« Real-Time FPGA-Based CNNs for Detection, Classification, and Tracking » (arXiv 2509.04153) est un survey des implémentations FPGA de CNN pour la vision, qui couvre pruning, quantification, plateformes SoC/ACAP et outils comme Vitis AI, FINN et Intel FPGA AI Suite. 
+arxiv
+« Real-Time Object Detection and Classification using YOLO for Edge FPGAs » (arXiv 2507.18174) passe en revue plusieurs travaux YOLO/FPGA, dont SATAY, un outil qui génère automatiquement des accélérateurs FPGA pour YOLOv3 à YOLOv8. 
+arxiv
+Abdelouahab et al. (2018), « Accelerating CNN inference on FPGAs: a survey » (arXiv 1806.01683) est cité comme référence de survey sur les toolflows CNN→FPGA. 
+mit
+hls4ml : « A Flexible, Open-Source Platform for Deep Learning Acceleration on Reconfigurable Hardware » (arXiv 2512.01463) compare hls4ml aux autres plateformes (Vitis AI, Intel FPGA AI Suite, FPGAConvNet, HPIPE…). 
+arxiv
+Aarrestad et al. (2021), « Fast convolutional neural networks on FPGAs with hls4ml » est l'article fondateur pour les CNN. Le papier situe aussi FINN comme framework orienté inférence de CNN quantifiés avec architectures dataflow. 
+mit
+« hls4ml: An Open-Source Codesign Workflow… » (TinyML Research Symposium 2021, arXiv 2103.05579) est à lire pour ton axe TinyML.
+« Efficient Deep Learning Infrastructures for Embedded Computing Systems » (arXiv 2411.01431) est un survey large sur le deep learning embarqué, avec une section sur l'apprentissage continu sur appareil. 
+arxiv
+2. YOLO sur FPGA
+Kim & Kim (2025), « Design and Implementation of a YOLOv2 Accelerator on a Zynq-7000 FPGA », Sensors (DOI 10.3390/s25206359), propose un accélérateur YOLOv2 optimisé pour le SoC Zynq-7000. 
+nih
+« End-to-end acceleration of the YOLO object detection framework on FPGA-only devices » (Neural Computing & Applications, 2023) atteint 525 GOP/s en batch 1 sur un Xilinx V7-690T, et accélère aussi le post-traitement pour réduire la latence. 
+researchgate
+Nguyen et al., YOLOv4 sur ZCU104 utilise Vitis AI avec pruning et quantification, et atteint 29 FPS avec une meilleure efficacité énergétique que des GPU RTX 2080Ti et GTX 1650. 
+arxiv
+Valadanzoj et al., YOLOv4-tiny utilise un format virgule fixe 8 bits pour les données et 5 bits pour les poids, à 55 FPS en 416×416 pour 79 % de précision. 
+researchgate
+« Low-Cost FPGA-Enhanced CNN Accelerator for Real-Time YOLO… » (IEEE) est intéressant pour le low-cost : YOLOv3-Tiny compressé sur Kria KV260, 24,3 FPS pour 2,13 W. 
+ieee
+« FPGA-based accelerator for YOLOv5… for edge deployment » (ScienceDirect, 2025) cible le XCZU15EG (Zynq UltraScale+ MPSoC). 
+sciencedirect
+« An FPGA-Based YOLOv5 Accelerator for Real-Time Industrial Vision Applications » (PMC11434529) rapporte 808,6 GOPS sur ZCU102, soit 29 % de plus que Vitis AI. 
+nih
+3. Autoencodeurs sur FPGA
+
+Dans mes résultats, ces travaux portent surtout sur des séries temporelles et de la physique des particules, pas sur des images. C'est un manque à combler avec des recherches ciblées (« convolutional autoencoder image FPGA », « VAE video anomaly detection FPGA »), et c'est peut-être une niche pour ta thèse.
+
+« Edge-Compatible Convolutional Autoencoder Implemented on FPGA for Anomaly Detection in Vibration Condition-Based Monitoring » (IEEE) implémente un CAE de moins de 10 000 paramètres sur PYNQ-Z2, avec les séries 1D encodées en images (scalogrammes). 
+researchgate
+« FPGA-Based Anomaly Detection for Medical IoT: Trade-Offs Between hls4ml and FINN » montre que hls4ml obtient environ 10× moins de latence et 3× plus de débit que FINN pour des autoencodeurs. 
+springer
+« Enabling Low-Latency ML on Radiation-Hard FPGAs with hls4ml » (arXiv 2602.15751) est un autoencodeur de compression avec étude de quantification consciente du hardware. 
+iop
+« Variational autoencoders for at-source data reduction… » (IOP, 2025) n'implémente que l'encodeur du VAE en front-end, avec un score d'anomalie basé sur le KLD dans l'espace latent. C'est une idée de conception réutilisable. 
+iop
+Le repo GitHub LorenzoValente3/Autoencoder-for-FPGA est un exemple pratique avec hls4ml, compression et quantification incluses. 
+github
+4. Apprentissage incrémental / continu sur FPGA
+
+Cet axe prolonge directement ton travail TinyML sur l'incremental learning et peut différencier ta thèse.
+
+« Accelerating Continual Learning on Edge FPGA » (IEEE) propose un accélérateur SLDA (streaming LDA) pour la classification incrémentale par classe, combiné à un CNN sur DPU Xilinx. La thèse NTU associée (« FPGA acceleration of continual learning at the edge ») en est la version longue. 
+ieee
+Chameleon (TCAD 2024) utilise deux buffers de replay, l'un en mémoire on-chip et l'autre off-chip, avec un modèle analytique FPGA. 
+nus
+ImageHD (arXiv 2604.21280) est présenté comme le premier accélérateur FPGA de bout en bout pour l'apprentissage continu non supervisé (MobileNetV2 INT8 + encodage hyperdimensionnel). 
+arxiv
+« 12 mJ per Class On-Device Online Few-Shot Class-Incremental Learning » (arXiv 2403.07851) est plus proche du MCU que du FPGA, mais utile comme point de comparaison.
+Instructions à donner au projet
+
+À coller dans les instructions du projet « Embedded Computervision » :
+
+Contexte
+Je suis Léonard, étudiant en informatique à l'Université de Montpellier,
+avec une expérience en TinyML (apprentissage incrémental sur microcontrôleur :
+contraintes mémoire/énergie, quantification INT8, MACs/FLOPs, EWC).
+Ce projet sert à préparer une thèse en vision par ordinateur embarquée / Edge AI
+(déploiement de modèles type YOLO et autoencodeurs sur FPGA).
+
+Objectif
+1. Constituer et maintenir un état de l'art rigoureux (surveys, YOLO/FPGA,
+   autoencodeurs/FPGA, apprentissage continu embarqué, toolflows).
+2. Identifier des verrous scientifiques et des angles de thèse originaux.
+3. Me préparer à contacter des laboratoires/directeurs de thèse et à
+   rédiger un pré-projet de thèse.
+
+Règles de travail
+- Langue : français par défaut ; termes techniques et titres d'articles en anglais.
+- Sources : ne jamais inventer de référence. Pour chaque article, donner titre,
+  auteurs, année, venue, lien/DOI. Si tu n'es pas sûr, dis-le et cherche sur le web.
+- Distinguer clairement ce que tu as lu (résumé vs texte complet) de ce que
+  tu déduis. Signaler les preprints non revus par les pairs.
+- Pour chaque article, extraire dans un tableau : modèle, plateforme FPGA,
+  précision/quantification, débit (FPS/GOPS), latence, puissance, dataset, toolflow.
+- Toujours comparer avec un baseline (GPU/Jetson/MCU) quand c'est pertinent.
+- Signaler les limites et les zones non couvertes (gaps) : c'est la matière
+  première d'une problématique de thèse.
+- Être critique : relever les comparaisons biaisées, métriques non comparables,
+  absence de reproductibilité (code/bitstream non publiés).
+
+Axes de veille
+- Détection : YOLOv3→v11, versions tiny, quantification, pruning, post-traitement (NMS) sur FPGA.
+- Autoencodeurs : CAE/VAE pour compression, détection d'anomalies visuelle, latence.
+- Toolflows : hls4ml, FINN, Vitis AI, Intel FPGA AI Suite, SATAY.
+- Apprentissage continu/incrémental embarqué (SLDA, replay, HDC).
+- Plateformes : Zynq, Kria KV260, ZCU102/104, PYNQ, Versal ; comparaison MCU/NPU/GPU embarqué.
+- Métriques : mAP, FPS, latence, GOPS/W, ressources (LUT/DSP/BRAM), RAM.
+
+Format des réponses
+- Réponses structurées, concises, avec tableaux pour les comparaisons.
+- En fin de réponse : 2-3 pistes concrètes de suite (papier à lire, expérience à reproduire).
+- Quand je demande une synthèse : problème, méthode, résultats, limites, pertinence pour ma thèse.
+
+Livrables récurrents
+- Fiche de lecture par article, tableau comparatif, carte des gaps,
+  brouillon de pré-projet de thèse, liste de labos/encadrants
+  (France : LIRMM, IETR, LAAS, CEA-List, etc.).
+
+Si tu veux, je peux transformer cette bibliographie en tableau comparatif (modèle, FPGA, FPS, puissance, quantification) pour repérer les vrais gaps de recherche.

@@ -1,0 +1,6 @@
+**/paper.pdf
+**/grobid.tei.xml
+inbox/*.pdf
+inbox/*.meta.json
+.venv/
+__pycache__/

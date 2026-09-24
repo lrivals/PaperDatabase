@@ -1,0 +1,413 @@
+---
+id: arxiv-1806.01683-accelerating-cnn-inference-fpgas-survey
+title: "Accelerating CNN inference on FPGAs: A Survey"
+year: 2018
+backend: grobid
+---
+
+## Abstract
+
+Convolutional Neural Networks (CNNs) are currently adopted to solve an ever greater number of problems, ranging from speech recognition to image classi cation and segmentation. The large amount of processing required by CNNs calls for dedicated and tailored hardware support methods. Moreover, CNN workloads have a streaming nature, well suited to recon gurable hardware architectures such as FPGAs.
+
+The amount and diversity of research on the subject of CNN FPGA acceleration within the last 3 years demonstrates the tremendous industrial and academic interest. This paper presents a state-of-the-art of CNN inference accelerators over FPGAs. The computational workloads, their parallelism and the involved memory accesses are analyzed. At the level of neurons, optimizations of the convolutional and fully connected layers are explained and the performances of the di erent methods compared. At the network level, approximate computing and datapath optimization methods are covered and state-of-the-art approaches compared. The methods and tools investigated in this survey represent the recent trends in FPGA CNN inference accelerators and will fuel the future advances on e cient hardware deep learning.
+
+## 1. Introduction
+
+The exponential growth of big data during the last decade motivates for innovative methods to extract high semantic information from raw sensor data such as videos, images and speech sequences. Among the proposed methods, Convolutional Neural Networks (CNNs) [1] have become the de-facto standard by delivering near-human accuracy in many applications related to machine vision (e.g classi cation [2], detection [3], segmentation [4]) and speech recognition [5].
+
+This performance comes at the price of a large computational cost as CNNs require up to 38 GOP/s to classify a single frame [6]. As a result, dedicated hardware is required to accelerate their execution. Graphics Processing Units (GPUs), are the most widely used platform to implement CNNs as they o er the best performance in terms of pure computational throughput, reaching up 11 TFLOP/s [7]. Nevertheless, in terms of power consumption, Field-Programmable Gate Array (FPGA) solutions are known to be more energy e cient (vs GPUs). As a result, numerous FPGA-Based CNN accelerators have been proposed, targeting both High Performance Computing (HPC) data-centers [8] and embedded applications [9].
+
+While GPU implementations have demonstrated state-of-the-art computational performance, CNN acceleration is shortly moving towards FPGAs for two reasons. First, recent improvements in FPGA technology put FPGA performance within striking distance to GPUs with a reported performance of 9.2 TFLOP/s for the latter [10]. Second, recent trends in CNN development increase the sparsity of CNNs and use extreme compact data types. These trends favorize FPGA devices which are designed to handle irregular parallelism and custom data types. As a result, next generation CNN accelerators are expected to deliver up to x5.4 better computational throughput than GPUs. [7].
+
+As an in ection point in the development of CNN accelerators might be near, we conduct a survey on FPGA-Based CNN accelerators. While a similar survey can be found in [11], we focus in this paper on the recent techniques that were not covered in the previous works. Moreover, a recent review of e cient processing techniques for deep learning is proposed in [12], but focuses on Application Speci c Integrated Circuits (ASIC) accelerators for CNNs while our work is mainly related to FPGA-based implementations.
+
+The rest of the paper is organized as follows, section 2 recalls the main features of CNNs, focusing on computations and workload issues. Section 3 studies the computational transforms exploited to accelerate CNNs on FPGAs. Section 4 reviews the contributions that attempt to optimize the data-path of FPGA-Based CNN accelerators. Section 5 shows how approximate computing is a key in the acceleration of CNNs on FPGAs and overviews the main contributions implementing these techniques. Finally, section 6 concludes the paper.
+
+## 2. Background on CNNs
+
+This section overviews the main features of CNNs and focuses on the computations and parallelism patterns involved during their inference.
+
+### 2.1. General Overview:
+
+CNNs are feed-forward, deep, sparsely connected neural networks that implement weight sharing. A typical CNN structure consists of a pipeline of layers. Each layer inputs a set of data, known as a Feature Map (FM), and produces a new set of FMs with higher-level semantics.
+
+### 2.2. Inference vs Training:
+
+As typical Machine Learning (ML) algorithms, CNNs are deployed in two phases. First, the training stage works on a known set of annotated data samples to create a model with a modeling power (i.e. which semantics extrapolates to natural data outside the training set). This phase implements the back-propagation algorithm [13] which iteratively updates CNN parameters such as convolution weights to improve the predictive power of the model. CNN Models can also be ne-tuned. When ne-tuning a model, weights of a previously-trained network are used to initialize the parameters of a new training. These weights are then adjusted for a new constrain, such as a di erent dataset or a reduced precision.
+
+The second phase, known as inference, uses the learned model to classify new data samples (i.e inputs that were not previously seen by the model). In a typical setup, CNNs are trained/ ne-tuned only once, on large GPU/FPGA clusters. By contrast, the inference is implemented each time a new data sample has to be classied. As a consequence, the literature mostly focuses on accelerating the inference phase. As a result, this paper overviews the main methods employed to accelerate the inference 1 . Moreover, since most of the CNN accelerators benchmark their performance on models trained for image classi cation, we focus on this paper on this application. Nonetheless, the methods studied in this survey can be employed to accelerate CNNs for other applications such object detection, image segmentation and speech recognition.
+
+### 2.3. Inference of CNNs
+
+CNN inference refers to the feed-forward propagation of B input images across L layers. This section details the computations involved in the major types of these layers. A common practice is to manipulate layer parameters and FMs using tensors. The tensors and variables used in this work are listed in table 1.
+
+Table 1: Tensors Involved in the inference of a given layer with their dimensions
+
+X Input FMs B × C × H × W Y Output FMs B × N × V × U Θ Learned Filters N × C × × K β Learned biases N B Batch size (Number of input frames) W /H /C
+
+Width / Height / Depth of Input FMs U /V /N Width / Height / Depth of Output FMs K/ Horizontal / Vertical Kernel size
+
+### 2.3.1. Convolution layers:
+
+A convolution layer (conv) carries out the feature extraction process by applying -as illustrated in gure 1-a set of 3D-convolution lters Θ conv to a set of B input volumes X conv . Each input volume has a depth C and can be a color image (in the case of the rst conv layer), or an output generated by previous layers in the network. Applying a 3D-lter to 3D-input results in a 2D Feature Map (FM) and, each conv layer outputs a set of N two-dimensional features maps. In some CNN models, a learned o set β conv -called a bias-is added to the 3D-conv results, but this practice is discarded in recent models [6]. The computations involved in feed-forward propagation of conv layers are detailed in equation 1.
+
+∀ {b, n, u, } ∈ [1, B] × [1, N ] × [1, V ] × [1, U ] Y conv [b, n, , u] = β conv [n] + C c=1 j=1 K k =1 X conv [b, c, + j, u + k].Θ conv [n, c, j, k](1)
+
+3 2 -2 -1 -2 1 4 2 1 1 4 -2 1 1 1 2 4 -2 1 4 3 -2 1 -2 1 4 2 1 1 1 1 3 4 3 1 -1 2 1 -3 -2 1 4 2 1 1 1 1 4 4 3 1 4 2 1 1 -2 1 4 3 1 1 1 1 -1 4 -2 1 4 2 1 1 -2 1 1 2 3 -1 1 2 -1 3 2 0 0 - 2 1 4 2 1 1 4 0 1 1 1 2 4 0 1 4 3 0 1 - 2 1 4 2 1 1 1 1 3 4 3 1 0 2 1 0 - 2 1 4 2 1 1 1 1 4 4 3 1 4 2 1 1 - 2 1 4 3 1 1 1 1 0 4 0 1 4 2 1 1 0 1 1 2 3 0 1 2 0 3 0 1 2 4 0 1 3 2 3 1 4 4 3 1 3 4 2 3 4 J K C C W H N V … conv weights ϴ conv Y conv Y pool Input FMs X conv U N Y act
+
+### 2.3.2. Activation Layers:
+
+Each conv layer of a CNN is usually followed by an activation layer that applies a non-linear function to all the values of FMs. Early CNNs were trained with TanH or Sigmoid functions but recent models employ the Recti ed Linear Unit (ReLU) function that grants faster training times and less computational complexity, as highlighted in [14].
+
+∀ {b, n, u, } ∈ [1, B] × [1, N ] × [1, V ] × [1, U ] Y act [b, n, h, w] = act X act [b, n, h, w] | act := TanH, Sigmoid, ReLU ...(2)
+
+### 2.3.3. Pooling layers:
+
+The convolutional and activation parts of a CNN are directly inspired by the cells of visual cortex in neuroscience [15]. This is also the case of pooling layers, which are periodically inserted in-between successive conv layers. As shown in equation 3, pooling sub-samples each channel of the input FMs by selecting the average, or, more commonly, the maximum of a given neighborhood K. As a results, the dimensionality of a FMs is reduced, as illustrated in gure 1
+
+∀ {b, n, u, } ∈ [1, B] × [1, N ] × [1, V ] × [1, U ] Y pool [b, n, , u] = max p,q ∈[1:K ] X pool [b, n, + p, u + q](3)
+
+### 2.3.4. Fully Connected Layers:
+
+When deployed for classi cation tasks, the CNNs pipeline is often terminated by Fully Connected (FC) layers. These layers can be seen as conv layers with no weight sharing (i.e W = K and H = ). Moreover, in a same way as conv layers, a non-linear function is applied to the outputs of FC Layers.
+
+∀ {b, n} ∈ [1, B] × [1, N ] Y fc [b, n] = β fc [n] + C c=1 H h=1 W w =1 X fc [b, c, h, w].Θ fc [n, c, h, w](4)
+
+### 2.3.5. Batch-Normalization Layers:
+
+Batch-Normalization is introduced in [16] to speed up training by linearly shifting and scaling the distribution of a given batch of inputs B to have zero mean and unit variance. These layers nd also there interest when implementing Binary Neural Network (BNN) (cf section 5.1.3) by reducing the quantization error compared to an arbitrary input distribution, as highlighted in [17]. Equation 5 details the processing of batch norm layers, where µ and σ are statistic collected during the training, α , ϵ and γ parameters are training hyper-parameters. The accuracy of CNN models have been increasing since their breakthrough in 2012 [14]. However, this accuracy comes at the price of a high computational cost. The main challenge that faces CNN developers is to improve classi cation accuracy while maintaining a tolerable computational workload. As shown in table 2, this challenge was successfully addressed by Inception [18] and ResNet models [19], with their use of bottleneck 1 × 1 convolutions that reduce both model size and computations while increasing depth and accuracy.
+
+∀ {b, n, u, } ∈ [1, B] × [1, N ] × [1, V ] × [1, U ] Y BN [b, n, , u] = X BN [b, n, u, ] -µ √ σ 2 + ϵ γ + α (5)
+
+### 2.4. Workload of a CNNs inference
+
+### 2.4.1. Computational Workload:
+
+The computational workload of a CNN inference is the result of an intensive use of the Multiply Accumulate (MAC) operation. Most of these MACs occur on the convolutional parts of the network, as shown in tab 2. As a consequence, conv layers are responsible, in a typical implementation, of more than 90% of execution time during the inference [20]. Conversely to computations, and as shown in tab 2, most of the CNN weights are included on the FC-layers. Due to this unbalanced computation to memory ratio, CNNs accelerators follow di erent strategies when implementing the convolutional and fully connected parts of inference.
+
+### 2.4.2. Parallelism in CNNs:
+
+Because of the high number of required computations, inferring CNNs with real-time constraints is a challenge, especially on low-energy embedded devices. A solution to this challenge is to take advantage of the extensive concurrency exhibited by CNNs. These sources can be formalized as:
+
+• Batch Parallelism: CNN implementations can simultaneously classify multiple frames grouped as a batch B in order to reuses the lters in each layer and minimize the external memory accesses. As a result, the inference bene ts from a signi cant acceleration when implementing batch processing.
+
+• Inter-layer Parallelism: CNNs have a feed-forward hierarchical structure consisting of a succession of data-dependent layers. These layers can be executed in a pipelined fashion by launching layer ( ) before ending the execution of layer ( -1).
+
+Moreover, the computation of each conv layer, described in eq 1, exhibits four sources of concurrency that are detailed above.
+
+• Inter-FM Parallelism: Each output FM plane of a conv layer can be processed separately from the others.
+
+This means that P N elements of Y conv can be computed in parallel (0 < P N < N ).
+
+• Intra-FM Parallelism: Multiple pixels of a single output FM plane can be processed concurrently by evaluating
+
+P V × T U Values of Y conv [n] (0 < P V × P U < V × U )
+
+• Inter-convolution Parallelism: 3D-convolutions occurring in conv layers can be expressed as a sum of 2D convolutions as shown in equation 6. These 2D convolutions can be evaluated simultaneously by computing concurrently P C elements of eq 6 (0 < P C < C).
+
+• Intra-convolution Parallelism: The 2D-convolutions involved in the processing of conv layers can be implemented in a pipelined fashion as in [21]. In this case P × P K multiplications are implemented concurrently (0
+
+< P × P K < × K). ∀ {b, n} ∈ [1, B] × [1, N ] Y conv [n] = b[n] + C c=1 conv2D X conv [c], Θ conv [n, c](6)
+
+### 2.4.3. Memory Accesses in CNNs:
+
+The CNN inference shows large vectorization opportunities that are exploited by allocating multiple computational resources to accelerate the processing. However, this method may be ine cient if no caching strategy is implemented.
+
+In fact, memory bandwidth is often the bottleneck when processing CNNs. For the FC parts, execution can be memory-bounded because of the high number of weights that these layers contain, and consequently, the high number of memory reads engendered. For the conv parts, the high number of MAC operations results in a high amount of memory accesses because each MAC requires at least 2 memory reads and 1 memory write to be performed 2 . If all these accesses are towards external memory (for instance, Dynamic Random Access Memory (DRAM)), throughput and energy consumption will be highly impacted since a DRAM access engenders signi cantly more of latency and energy consumption than the computation it self [22] The number of these DRAM accesses, and thus latency and energy consumption, can be reduced by implementing a memory caching hierarchy using on-chip memories. As discussed in section 4, Hardware accelerators for CNNs usually employ two levels of caches. The rst level is implemented by means of large on-chip bu ers while the second level involves local register les implemented at the nearest of the computational capabilities. The latency and energy consumption that result from memory access toward these 2 cache levels is several order of magnitude less then external memory access, as pointed-out in [12].
+
+### 2.4.4. Hardware, libraries and frameworks:
+
+In order to catch the parallelism of CNNs, dedicated hardware accelerators are developed. Most of them are based on GPU, which that are known to perform well on regular parallelism patterns thanks to a Single Instruction on Multiple Data (SIMD) and Single Instruction on Multiple Threads (SIMD) execution models, a dense collection of oating-point computing elements that peaks at 12 TFLOPs, and high capacity/bandwidth on/o -chip memories [23]. To support these hardware accelerators, specialized libraries for deep learning are developed to provide the necessary programming abstraction, such as CudNN on Nvidia GPUs [24] and DeepCL on heterogeneous hardware through OpenCL standard [25]. Built-upon these libraries, dedicated frameworks for deep learning are proposed to improve productivity of conceiving, training and deploying CNNs, such as Ca e [26] and Tensor-Flow [27].
+
+Beside GPU implementations, numerous FPGA accelerators for CNNs have been proposed. FPGAs are negrain programmable devices that can catch the CNN parallelism patterns with no memory bottleneck, tanks to 1. A High density of hard-wired Digital Signal Processing (DSP) blocs that are able to achieve up to 20 (8 TFLOPs) TMACs [10].
+
+## 2. A collection of
+
+In-situ on-chip memories, located next to DSPs, that can be exploited to signi cantly reduce the number of external memory accesses.
+
+When porting a CNN to an FPGA device, the problem boils down to nding an e cient mapping between the computational model of the former and the execution model supported by the latter. In the the following sections, the main strategies explored by the literature to address this mapping problem are reviewed. In particular, we show that current FPGA-based accelerators for CNNs rely on one (or a combination) of three main optimizations to e ciently infer CNNs.
+
+### FPGA Acceleration of CNNs
+
+Algorithmic Optimization GEMM [20,28,7,29] Winograd [30,31] FFT [32,33] Datapath In order to accelerate the execution of conv and FC layers, computational transforms are employed on the FMs and kernels in order to vectorize the implementations and reduce the number of arithmetic operations occurring during inference. These computational transforms are mainly deployed in CPUs and GPU and are implemented by means of variety of software libraries such OpenBlas CPUs and cuBLAS for GPUs. Beside this, various implementations make use of such transforms to map CNNs on FPGAs.
+
+### 3.1. GEMM Transformation
+
+In Central Processing Units (CPUs) and GPUs, a common way to process CNNs is to map conv and FC layers as General Matrix Multiplications (GEMMs). The OpenCL standard generalizes this approach to FPGAs-based implementations [63,64].
+
+For FC layers, in which the processing boils down to a matrix-vector multiplication problem, the GEMMbased implementations nd its interest when processing a batch of FMs. In this case, the batch is concatenated onto a CHW × B matrix, as shown in g 3a.
+
+As mentioned in section 2.4.1, most of the weights of CNNs are employed in the FC parts. Instead of loading these weights multiple times to classify multiple inputs, feature maps of FC layers are batched in a way that FC weights are loaded only one time per batch. This vectorization is employed in [65,66,30] to increase the computational throughput in FC layers while maintaining a constant memory bandwidth utilization. Moreover, the e ciency of this method increases as the sparsity of Θ fc grows (cf. sec 5.2). 3D Convolutions can also be mapped as GEMMs using, for instance, the computational transform introduced in [29]. Suda et al. [28] and more recently, Zhang et al. [61] leverage on this GEMMs transcription of 3D convolution to derive OpenCL-based FPGA Accelerators for CNNs. In these works, a transformation attens all the lters of a given conv layer onto an N ×CK matrix Θ and re-arranges input FMs onto a CK ×UV matrix X . The output FMs, Ỹ , is the result of the multiplication of the two former matrices, as illustrated in Fig 3b . The mapping of conv layers as GEMMs can also be performed using a relaxed form of the Toeplitz matrix [67]. However, the downside for using GEMMs for the layers is the introduction of redundant data in the input FMs. This redundancy, as pointed-out in [12], can lead to either ine ciency in storage or complex memory access patterns. As a result, other strategies to map convolutions are considered.
+
+Ỹ conv = Θconv × X conv (7)
+
+### 3.2. Winograd Transform
+
+Winograd minimal lter algorithm, introduced in [68], is a computational transform that can be applied to convolutions when the stride is 1. Winograd convolutions are particularly e cient when processing small convolutions (K ≤ 3), as demonstrated in [69]. In this works, authors report an acceleration up to x7.28 when compared to classical GEMM based implementation of convolutions when executing VGG16 on a TitanX GPU. In Winograd ltering, data is processed by blocs referred as tiles, as following:
+
+1. An input FM tile x of size (u × u) is pre-processed: x = A T xA 2. In a same way, θ the lter tile of size
+
+(k × k) is transformed into θ : θ = B T xB 3. Winograd ltering algorithm, denoted F (u × u, k × k), outputs a tile of size (u × u) that is computed according to equation 8 = C T θ x C(8)
+
+where A, B, C are transformation matrices de ned in the Winograd algorithm [68] and denotes the Hadamard product or Element-Wise Matrix Multiplication (EWMM). While a standard ltering requires u 2 ×k 2 multiplications, Winograd algorithm F (u×u, k×k) requires (u+k-1) 2 multiplications [68]. In the case of tiles of a size u = 2 and kernels of size k = 3, this corresponds to an arithmetic complexity reduction of x2.25 [69]. In return, the number of additions is increased.
+
+Beside this complexity reduction, implementing Winograd ltering in FPGA-Based CNN accelerators has two advantages. First, transformation matrices A, B, C can be generated o -line once u and k are determined. As a result, these transforms become multiplications with the constants that can be implemented by means of Lookup Table (LUT) and shift registers, as proposed in [70].
+
+Second, Winograd ltering can employ the loop optimization techniques discussed in section 4.2 to vectorize the implementation. On one hand, the computational throughput is increased when unrolling the computation of the EWMMs parts on an array of DSP blocs. On the other hand, memory bandwidth is optimized using loop tiling to determine the size FM tiles and lter bu ers.
+
+First utilization of Winograd ltering in FPGA-Based CNN accelerators is proposed in [31] and delivers a computational throughput of 46 GOPs when executing AlexNet convolution layers. This performance is signi cantly by a factor of x42 in [30] when optimizing the datapath to support Winograd convolutions (by employing loop unrolling and tiling strategies), and storing the intermediate FM in on-chip bu ers (cf sec 4). The same methodology is employed in [70] to derive a CNN accelerator on a Xilinx ZCU102 device. This accelerator delivers a throughput of 2.94 TOPs on VGG convolutional layers, which corresponds to half of the performance of a TitanX device, with x5.7 less power consumption [23] foot_2 .
+
+### 3.3. Fast Fourier Transform
+
+Fast Fourier Transofrm (FFT) is a well known algorithm to transform the 2D convolutions into EWMM in the frequency domain, as shown in equation 9:
+
+conv2D(X [c], Θ[n, c]) = IFFT FFT(X [c]) FFT(Θ[n, c])(9)
+
+Using FFT to process 2D convolutions reduces the arithmetic complexity to O(W 2 lo 2 (W )), which is exploited to derive FPGA-based accelerators to train CNNs [33]. When compared to standard ltering and Winograd algorithm, FFT nds its interest in convolutions with large kernel size (K > 5), as demonstrated in [69,63]. The computational complexity of FFT convolutions can be further reduced to O(W lo 2 (K)) using the Overlap-and-Add Method [71] that can be applied when the signal size is much larger than the lter size, which is the case in conv layers (W >> K). Works in [32] exploit this method to implement frequency domain acceleration for conv layers on FPGA, which results in a computational throughput of 83 GOPs for AlexNet.
+
+## 4. Data-path Optimizations for FPGA-Based CNN Accelerators
+
+As highlighted in sec 2.4.2, the execution of CNNs exhibit numerous sources of parallelism. However, because of the resource limitation of FPGAs devices, it is impossible to fully exploit all the parallelism patterns, especially with the sheer volume of operations involved in deep topologies. In other words, the execution of recent CNN models can not fully be "Unrolled", sometimes, not even for a single conv layer. To address this problem, the main approach that state-of-the-art implementations advocates, is to map a limited number of Processing Elements (PEs) on the FPGA. These PEs are reused by temporally iterating data through them.
+
+### 4.1. Systolic Arrays
+
+Early FPGA-based accelerators for CNNs implemented systolic arrays to accelerate the 2D ltering in convolutions layers [72,73,74,75,76]. As illustrated in gure 4a, systolic arrays employ a static collection of PEs, typically
+
+L N L V L U L C L L K Unroll factor P L P N P V P U P C P P K Tiling Factor T L T N T U T U T C T T K
+
+arranged in a 2-dimensional grid, that operates under the control of a CPU. This static collection of PEs is agnostic to the CNN model con guration. It can only support convolutions with a kernel size K that is smaller than a given maximum size K m (i.e support only convolutions such K ≤ K m where , for instance, K m = 7 in [73] and K m = 10 in [76]). Moreover, when performing convolutions with a smaller kernel size then K m (K << K m ), only a small part of computing capabilities is used. For instance in [76], processing 3 × 3 convolutions uses only 9% of DSP Blocs. Finally, these systolic arrays do not implement data caching and requires to fetch inputs from o -chip memory. As a result, their performance is bounded by memory bandwidth of the device.
+
+### 4.2. SIMD Accelerators and Loop Optimization
+
+Due to ine ciency of static systolic arrays, exible SIMD accelerators for CNNs on FPGAs were proposed. The general computation ow in these accelerators -illustrated in Fig. 4c-a-is to fetch FMs and weights from DRAM to on-chip bu ers. These data are then streamed into the PEs. At the end of the PE computation, results are transferred back to on-chip bu ers and, if necessary, to the external memory in order to be fetched in their turn to process the next layers. Each PE -as depicted in Fig. 4c-b-is con gurable and has its own computational capabilities by means of DSP blocs, and its own data caching capabilities by means of on-chip registers. With this paradigm, the problem of CNN mapping boils down to nding the optimal architectural con guration of PEs (number of PEs, number of DSP blocs per PE, size of data caches), as well as the optimal temporal scheduling of data that maximizes the computational throughput T.
+
+For convolution layers, in which the processing is described in listing 6a, nding the optimal PE con guration can be seen as a loop optimization problem [39, 9, 28] [77, 65, 40, 78, 36, 79, 80, 43]. This problem is addressed by applying loop optimization techniques such loop unrolling, loop tiling or loop interchange to the 7 nested loops of listing 6a. In this case, setting the unroll and tiling factors (resp. P i and T i ) determines the number of PEs, the computational resources and on-chip memory allocated to each PE in addition to the size of on-chip bu er and the amount of DRAM accesses.
+
+### 4.2.1. Loop Unrolling:
+
+Unrolling a loop L i with an unrolling factor P i (P i ≤ i, i ∈ {L, V , U , N , C, , K }) accelerates its execution at the expense of resource utilization. Each of the parallelism patterns listed in section 2.4.2 can be implemented by unrolling one of the loops of listing 6a, as summarized in table 4. For con guration given in gure 4c, the unrolling factor P N determines the number of PEs. On the other hand, unrolling factors P C , P K , P determine the number of multipliers and adders, as well as the size of registers contained in each PE.
+
+### 4.2.2. Loop Tiling:
+
+In general, the capacity of on-chip memory in current FPGAs is not large enough to store all the weights and intermediate FMs of all CNN layersAs a consequence, FPGA based accelerators resort to external DRAMs to store this data. As mentioned in section 2.4.3, DRAM accesses are costly in terms of energy and latency, and data caches Figure 5: Loop tiling and unrolling must be implemented by means of on-chip bu ers and local registers. The challenge is to con gure the data-path in a way that every data transferred from DRAM is reused as much as possible.
+
+For conv layers, this challenge can be addressed by tiling the nested loops of listing 6a. Loop tiling [81] divides the FMs and weights of each layer into multiple blocks that can t into the on-chip bu ers. For the con guration given in gure 4c, sizes of bu ers containing input FM, weights and output FM are determined by the tiling factors detailed in table 4, according to equation 10 In order to nd the optimal unrolling and tiling factors, a large exploration of the design space is needed. In a general way, an analytical model is built. Inputs of this model are loop factors P i ,T i and outputs are a theoretical prediction of the allocated resources, the computational throughout and the memory bandwidth used. This model is parametrized by the available resources of a given FPGA platform and the workload of the CNN.
+
+M conv = T C T H T W + T N T C T T K + T N T V T U(10)
+
+Given this model, the objective is to nd the design parameters that minimize the memory access while maximizing the resource utilization. To address this optimization problem, a brute force exploration is performed, such in [39,28,77,65,40,78]. This exploration is usually driven by the Roo ine method [82] in order to select the feasible design solutions that matches with the maximum computational throughput and the maximum memory bandwidth a given platform can deliver [39,40,41]. The design space can also be explored by means of heuristic search algorithms, as proposed for instance in [35].
+
+### 4.2.4. FPGA Implementations:
+
+Employing loop optimizations to derive FPGA-based CNN accelerator was rst investigated in [39]. In this work, Zhang et al. report a computational throughput of 61.62 GOPs in the execution of AlexNet convolutional layers by unrolling loops L C and L N . This accelerator was built using HLS tools and rely on 32 oating point arithmetic. Works in [78] follow the same unrolling scheme and implement the FC part of the inference. Moreover, design [78] features 16 bits xed point arithmetic and RTL conception, resulting in a x2.2 improvement in terms of computational throughput. Finally, the same unrolling and tiling scheme are employed in recent works [65] were authors report a x13,4 improvement over their original works in [39], thanks to a deeply pipelined FPGA cluster of four Virtex7-XV960t devices and a 16 bits xed point arithmetic.
+
+In all these implementations, loops L and L K are not unrolled because and K are usually small, especially in recent topologies (cf Table 2). Works of Motamedi et al. [40] study the impact of unrolling these loops in AlexNet, where the rst convolution layers use 11 × 11 and 5 × 5 lters. Expanding loop unrolling and tiling to loops L and L K results in a x1.36 improvement in computational throughput vs [39] on the same VX485T device when using 32 oating point arithmetic. In a same way, implementations in [28,9,36] tile and unroll loops L N , L C , L , L K and demonstrate higher acceleration on AlexNet and VGG when using xed point arithmetic. Nevertheless, and as pointed out in [80], unrolling loops L and L K is ine ective for recent CNN models that employ small convolution kernels. In addition, Tiling loops L and L K requires PEs to be con gured di erently for di erent layers, increasing thus the control complexity.
+
+The values of U , V , N can be very large in CNN models. Consequently, unrolling and tiling loops L U , L V , L N can be e cient only for devices with high computational capabilities (i.e DSP Blocs). This is demonstrated in works of Rahman et al. [77] that report an improvement of ×1.22 over [39] when enlarging the design space exploration to loops L U , L V , L N
+
+In order to keep data in on-chip bu er after the execution of a given layer, [79] investigates fused-layer CNN Accelerators by tiling across layer L L . As a result, authors report a reduction of 95% of DRAM accesses at the cost of 362KB of extra on-chip memory.
+
+In all these approaches, loops L N , L C , L , L K are unrolled in a same way they are tilled (i.e T i = P i ). By contrast, the works of Ma et al. [80,83] fully explore all the design variables searching for optimal loop unroll and tiling factors. More particularly, authors demonstrate that the input FMs and weights are optimally reused when unrolling only computations within a single input FM (i.e when P C = P = P k = 1). Tiling factors are set in way that all the data required to compute an element of Y are fully bu ered (i.e T C = C,T K = K,T = ). The remaining design parameters are derived after a brute force design exploration. The same authors leverage on these loop optimizations to build an RTL compiler for CNNs in [84]. To the best of our knowledge, this accelerator outperforms all the previous implementations that are based on loop optimization in terms of computational throughput.
+
+### 4.3. Data ow MoC For CNNs
+
+Feed-forward propagation is by nature a streaming based applications in which the execution is purely datadriven. In fact, the CNN layout is in contrast with Von Neumann execution models and a CNN implementation can easily be memory-bounded if it has to fetch every instruction from memory. This motivated multiple approaches to investigate the applicability of the data-ow Model of Computation (MoC) to accelerate CNNs on FPGAs.
+
+The foundations of the data-ow MoC were formalized by [86] in order to create an architecture where multiple fragments of instructions can process simultaneously streams of data. Programs respecting data ow semantics are described as Data-ow Process Networks (DPNs). Each node of this network corresponds to a fundamental processing unit called an actor and each edge corresponds to a communication FIFO channel. Actors exchange abstract data -known as tokens-through these FIFOs. Each actor follows a purely data-driven execution model wherein the ring (execution) is triggered only by the availability of input operands. This is typically the case in CNNs, where the execution of each layer is only triggered by the availability of input FM.
+
+Applying the data-ow MoC to accelerate CNN implementations on FPGAs is investigated in [87]. In this work, authors demonstrate the e ciency of the proposed lightweight data-ow methodology [88] by mapping A special case of data-ow, referred as Static Data-Flow (SDF) [89], is a paradigm in which the number of tokens produced and consumed by each actor can be speci ed a priori, as it is the case in the CNN execution. SDF model is employed in [34,90] to optimize the mapping of CNN graphs on FPGAs. In this works, the CNN graph is modeled as a topology matrix that contains the the number of incoming streams, the size of tokens and the consumption rates of each actor. Instead of exploring the design space of unrolling and tiling parameters (cf. sec 4.2), authors explore the design space of the topology matrix components. These optimal components are used to derive the con guration of the PE and bu ers that either minimizes the computation latency or energy consumption. Moreover, and in contrast with classical implementations where data is streamed in and out of layers using o -chip data transfers, authors exploit partial dynamic recon guration of FPGAs to process di erent layers.
+
+Finally, works in [38] optimize the direct hardware mapping of CNN graphs. In this approach, each actor of the DPN is physically mapped on the device with its own speci c instance, while each edge is mapped as a signal. As all the computations are unrolled, applicability of this method can rapidly be limited by the resource of the device or the size of the CNN, preventing this approach from implementing deep models.
+
+## 5. Approximate Computing of CNN Models
+
+Beside the computational transforms and data-path optimizations, the CNN execution can be accelerated when employing approximate computing which is known to perform e ciently on FPGAs [92].
+
+In this approach, a minimal amount of the CNN accuracy is traded to improve the computational throughput and energy e ciency of the execution. Two main strategies are employed. This rst implements approximate arithmetic to process the CNN layers with a reduced precision while the second aims to reduce the number of operations occurring in CNN models without critically a ecting the modeling performance. Both of these methods can be integrated in the learning phase to jointly maximize the accuracy and minimize the workload of a given CNN model.
+
+### 5.1. Approximate Arithmetic for CNNs
+
+Several studies have demonstrated that the precision of both operations and operands in CNNsfoot_3 can be reduced without critically a ecting their predictive performance. This reduction can be achieved by quantizing either or both of the CNN inputs, weights and/or FMs using a xed point numerical representation and implementing approximate multipliers and adders.
+
+### 5.1.1. Fixed point arithmetic:
+
+In a general way, CNN models are deployed in CPUs and GPUs using the same numerical precision they were trained with, relying on simple-precision oating point representation. This format employs 32 bits, arranged according to the IEEE754 standard. In FPGAs, implementations such [39,79,77] employ this data representation.
+
+Nonetheless, several studies in [93,46,94] demonstrate that inference of CNNs can be achieved with a reduced precision of operands. In addition, works in [48,95,96,97] demonstrate the applicability of xed-point arithmetic to train CNNs. In both cases, FMs and/or weights are quantized using a xed point representation scheme. In simplest version of this format, numbers are encoded with the same bit-width (bw) that is set according to the numerical range and the desired precision. More particularly, all the operands share the same exponent (i.e scale factor) that can be seen as as the position of the radix point. In this paper, we refer to this representation as Static Fixed Point (SFP).
+
+When compared to oating point, SFP computing with compact bit-width is known to be more e cient in terms of hardware utilization and power consumption. This is especially true in FPGAs [98], where a single DSP block can either implement one 32bits oating point multiplication, two 18×19 bits multiplications, or three 18×19 multiplications [10].
+
+This motivated early implementations to employ SFP in building FPGA-Based CNN accelerators, such in [72,73,74], or in [75,76], where authors use a 16 bits (Q8.8) format to represent FMs and weights. To prevent over ow, the bit-width is expanded when computing the weighted-sums of convolutions and inner-products. If b X bits are used to quantize the FM and b Θ bits are used to quantize the weights, an accumulator of size b acc is used, according to equation 11, which corresponds to accumulators of 48 bits in [73,74].
+
+b acc = b x + b Θ + max ≤L log 2 C K 2 (11)
+
+### 5.1.2. Dynamic Fixed Point for CNNs:
+
+In deep topologies, it can be observed that distinct parts of a network can have a signi cantly di erent numerical range of data. More particularly, the FMs of deep layers tend to have larger numerical range than rst FMs, while the weights are generally much smaller than the FMs. As a consequence, the bit-width is expanded to keep the same precision while preventing over ow, as in [74]. As a result, and as pointed-out [48], SFP with its unique shared xed exponent, is ill-suited to deep learning.
+
+To address this problem, works in [48,49] advocates the use of Dynamic Fixed Point (DFP) [99] foot_4 . In DFP, di erent scaling factors are used to process di erent parts of the network. More particularly, weights, weighted sums and outputs of each layer are assigned distinct scale factors. The optimal scale factors and bit-widths (i.e the ones that deliver the best trade-o between accuracy loss and computational load) for each layer can be derived after a brute force exploration using dedicated frameworks that supports DFP such [49,100] for Ca e and [96] for TensorFlow. In addition, these tools can ne-tune the CNN model to improve the accuracy of the quantized network.
+
+The FPGA-Based CNN Accelerator proposed in [28] is build upon this quanti cation scheme and employs di erent bit-widths to represent the FM, the convolution kernels and the FC weights with resp. 16,8,10 bits. Without ne-tuning, authors report a drop of 1% in classi cation accuracy of AlexNet. For the same network, works of [78] employs 10 bits for FMs, 8 bits for both conv and FC weights and report an accuracy drop of 0.4%. In a same way, Qiu et al. employ DFP to quantize the VGG with 8,8 and 4 bits while reporting 2% of accuracy drop. In these accelerators, dynamic quantization is supported by means of data shift modules [9]. Finally, the accelerator in [42] rely on the Ristretto framework [49] to derive an AlexNet model wherein the data is quantized in 16 bits with distinct scale factors per layer 6 .
+
+### 5.1.3. Extreme quanti cation with Binary and pseudo-Binary Nets:
+
+Beside xed point quanti cation, training and inferring CNNs with extremely compact data representations, is a research area that is gaining interest. In particular, works in BinaryConnect [50] investigate the applicability of binary weights (i.e weights with either a value of -θ or θ ) to train CNNs, which lowers both bandwidth requirements and accuracy on ImageNet by respectively 3200% and 19.2% (vs AlexNet Float32 Model). The same authors go further by implementing BNNs [17], with a 1bit representation for both FM and weights. In these networks, negative data is represented as 0 while positive values are represented as 1. As a consequence, the computation of MACs boils down to an XNOR operation followed by a pop-count, as shown in gure 8b. Moreover, Batch normalization is performed before applying of the si n activation function in order to reduce the information lost during binarization, as shown in gure 8a. However, a classi cation accuracy drop of 29.8% is observed on ImageNet when using BNNs. In an attempt to lower the accuracy drop of BNNs, Rastegari et al. proposed XNOR-Nets [51] which use di erent scale factors for binary weights (i.e -θ 1 or +θ 2 ). Moreover, Pseudo-Binary Networks, such DoReFa-Net [101] and QNNs [102] reduce the accuracy drop to 6.5% by employing a slightly expanded bitwidth (2 bits) to represent the intermediate FMs. Finally, in Trained Ternary Quantization (TTQ) [103], weights are constrained to three values -θ 1 , 0, -θ 2 (2 bits), but FM are represented in a 32bits oat scheme. As a consequence, the e ciency gain of TTQ is not as high as in BNNs.But in turn, TTQ achieves comparable accuracy on ImageNet, within 0.7% of full-precision.
+
+In FPGAs, BNNs bene t from a signi cant acceleration as the processing of "binary" convolutions can be mapped on XNOR gates followed by a pop count operation, as depicted in gure 8b. Furthermore, and as suggested in [7], pop count operation can be implemented using lookup tables in a way that convolutions are processed only with logical elements. The DSPs blocs are can thus be used to process the batch norm calculation (eq 5, which can be formulated as a linear transform reduces in order reduce the number of operations. This approach is followed in the implementation of [104] to derive an FPGA-Based accelerator for BNNs that achieves 207.8 GOP/s while only consuming 4.7 W and 3 DSP Blocs to classify the Cifar10 dataset. For the same task, works in [52,105] use a smaller network con guration 7 and reaches a throughput of 2.4 TOP/s when using a larger Zynq 7Z045 Device with 11W Power consumption. For ImageNet classi cation, Binary Net implementation of [106] delivers an overall throughput 1.9 TOP/s on a Stratix V GSD device. In all these works, the rst layer is not binerized to achieve better classi cation accuracy. As pointed-out in [106], the performance in this layer can be improved when using a higher amount of DSP blocs. Finally, an accelerator for ternary neural networks is proposed in [107] and achieves a peak performance of 8.36 TMAC/s at 13W power consumption for Cifar10 Classi cation.
+
+conv (bin) pool BN act (sign) X conv X conv Z ϴ conv X conv X conv Z X conv X conv X conv Z Y conv
+
+### 5.1.4. Stochastic Computing:
+
+Stochastic Computing (SC) is a low-cost design technique that has been successfully applied in numerous image processing algorithms [108].
+
+In SC, numbers are represented as a random sequence of s bits. In the basic "unipolar" format, the number of ones appearing in the sequence s determines the value of x, i.e the numerical value of a given number x is s 1 /s, where x is the number of ones appearing in s. The advantage of stochastic arithmetic is that operations are performed with an ultra-small circuitry. For instance, a single AND gate can map a multiplication. Works in [60,59,58] demonstrate the feasibility of stochastic arithmetic to accelerate CNNs. More particularly, Ardakani et al. propose an FPGA accelerator to classify the MNIST dataset, where multiplications are processed only using AND gates and activation functions (TanH) are implemented in the stochastic domain using FSMs. Such an implementation delivers a computational throughput of 15.44 TOP/s with a misclassi cation rate of 2.40% on MNIST. However, one the of weakness of SC are long bit-stream. In fact, to represent an n bits number, a bit-stream s of 2 n is required. As a result, stochastic arithmetic su ers from long run-times to perform operations. Moreover, the generation of this bit-streams resorts to dedicated circuitry known as Stochastic Number Generators (SNGs), which add more overhead to the implementation. As a result, SC-based accelerators implement only shallow neural networks with a limited depth.
+
+### 5.2. Reduce Computations in CNNs
+
+In addition to approximate arithmetic, several studies attempt to the reduce the number of operations involved in CNNs. For FPGA-Based implementation, two main strategies are investigated: weight pruning, which increases the sparsity of the model, and low-rank approximation of lters, which reduces the number of multiplications occurring in the inference.
+
+### 5.2.1. Weight Pruning:
+
+As highlighted in [109], CNNs as over-parametrized networks and a large amount of the weights can be removed -or pruned-without critically a ecting the classi cation accuracy. In its simplest form, pruning is performed according to the magnitude such as the lowest values of the weights are truncated to zero [110]. In a more recent approach, weights removal is driven by energy consumption of a given node of the graph, which is 1.74x more e cient than magnitude-based approaches [111]. In both approaches, pruning is followed by a ne-tuning of the remaining weights in order to improve the classi cation accuracy. This is for instance the case in [112], where pruning removes respectively 53% and 85% of the weights in AlexNet conv and FC layers for less then 0.5% accuracy loss.
+
+### 5.2.2. Low Rank Approximation:
+
+Another way to reduce the computations occurring in CNNs is to maximize the number of of separable lters in CNN models. A 2D-separable lter θ sep has a unitary rank (i.e rank (θ sep ) = 1), and can be expressed as two successive 1D lters θ ×1 and θ 1×K . When expanding this to 3D lters, a separable 3D convolution requires C + + K multiplications while a standard 3D convolution requires C × × K multiplications. Nonetheless, only a small proportion of the lters in CNN Models are separable. To increase this proportion, a rst approach is to force the convolution kernels to be separable by penalizing high rank lters when training the network [113]. Alternatively, and after the training, the weights Θ of a given layer can be approximated into a small set of r low rank lters that can be implemented as a succession of fully separable lters. In this case, r × (C + + K) multiplications are required to process a single 3D-convolution.
+
+For FC layers, in which the processing boils down to a vector-matrix product, low rank approximation can be achieved by employing, for instance, the SVD decomposition of the weight matrix Θfc (cf. sec 3.1). Finally, and in a same way to pruning, low rank approximation of weights is followed by a ne-tuning in order counterbalance the classi cation accuracy drop.
+
+### 5.2.3. FPGA Implementations:
+
+In FPGA Implementations, low rank approximation is applied on FC layer to signi cantly reduce the number of weight, such as in [9], where authors derive a VGG16-SVD model that achieves 87.96% accuracy on ImageNet with 63% less parameters.
+
+Sparsity in pruned CNNs can be exploited in FPGA implementations by fully unrolling the processing of a given layer, and skipping (i.e not mapping) the multiplications with zero weights. This approach is investigated in [38], but can be infeasible when the resource of a given device doesn't match with computational requirements of a given layer. Instead, sparsity and pruning can be exploited when processing conv and fc layers as GEMM (c.f 3.1. In this case, the challenge is to determine the optimal format of matrices that maximizes the chance to detect and skip zero computations, such compressed sparse column (CRC) or compressed sparse row (CSR) formats 8 . Based on previous studied related to sparse GEMM implementation on FPGAs in [114], Sze et al. [12] advocates the use of the CRC to process CNNs because this format provides a lower memory bandwidth when the output matrix is smaller then the input, which is typically the case in CNNs where N < C K in Fig 3b.
+
+However, this e ciency of CRC format is only valid for extremely sparse matrices (typically with ≤ 1% of non zeros), while pruned CNN matrices are not that sparse (typically, ≤ 4 -80% of non zeros). Therefore, works in [7] use a zero skip scheduler, which is an on-chip data manager thanks to which zero elements are identi ed and not scheduled onto the MAC processing. As a result, the number of cycles required to compute the sparse GEMM is reduced, which corresponds to a 4x speedup in cycle count for and 85% sparse AlexNet layers. Finally, authors report to a projected throughput of 12 TOP/s for pruned CNNs in the next Intel Stratix10 FPGAs, which outperforms and the computational throughput of state-of-the-art GPU implementations by 10%.
+
+## 6. Conclusion
+
+In this paper, a number of methods and tools have been compared that aim at porting Convolutional Neural Networks onto FPGAs. At the network level, approximate computing and datapath optimization methods have been covered while at the neuron level, the optimizations of convolutional and fully connected layers have been detailed and compared. All the di erent degrees of freedom o ered by FPGAs (custom data types, local data streams, dedicated processors, etc.) are exploited by the presented methods. Moreover, algorithmic and datapath optimizations can a should be jointly implemented, resulting in additive hardware performance gains.
+
+CNNs are by nature overparameterized and support particularly well approximate computing techniques such as weight pruning and xed point computation. Approximate computing already constitutes a key to CNN acceleration over hardware and will certainly continue driving the performance gains in the years to come.
+
+## Figures et tableaux
+
+**Figure 1:** Feed forward propagation in conv, act and pool layers (Batch size B=1, bias β omitted)
+
+**Figure 2:** Main Approaches to Accelerate CNN inference on FPGAs
+
+**Figure 3:** GEMM Based processing of: a-FC layers, b-conv layers.
+
+**Figure 4:** Generic Data-paths of FPGA-based CNN accelerators
+
+**Figure 6:** Loop Tiling in conv layers: a-Before tiling, b-After tiling
+
+**Figure 7:** An example of a graph representation of a convolution layer (C = 3, N = 5)
+
+**Figure 8:** Binary Neural Networks: a-Processing Pipeline, b-Binary Convolutions
+
+**Table 2:** Popular CNN models with their computational workload. Accuracy measured on single-crops of Ima-geNet test-set.
+
+    Model | AlexNet [14] GoogleNet [18] VGG16 [6] VGG19 [6] ResNet50 [19] ResNet101 [19] ResNet-152 [19]
+    Top1 err | 42.9 % | 31.3 % | 28.1 % | 27.3 % | 24.7% | 23.6% % | 23.0%
+    Top5 err | 19.80 % | 10.07 % | 9.90 % | 9.00 % | 7.8 % | 7.1 % | 6.7 %
+    conv layers | 5 | 57 | 13 | 16 | 53 | 104 | 155
+    conv workload (MACs) | 666 M | 1.58 G | 15.3 G | 19.5 G | 3.86 G | 7.57 G | 11.3 G
+    conv parameters | 2.33 M | 5.97 M | 14.7 M | 20 M | 23.5 M | 42.4 M | 58 M
+    Activation layers |  |  |  | ReLU |  |  | 
+    pool layers | 3 | 14 | 5 | 5 | 2 | 2 | 2
+    FC layers | 3 | 1 | 3 | 3 | 1 | 1 | 1
+    FC workload (MACs) | 58.6 M | 1.02 M | 124 M | 124 M | 2.05 M | 2.05 M | 2.05 M
+    FC parametrs | 58.6 M | 1.02 M | 124 M | 124 M | 2.05 M | 2.05 M | 2.05 M
+    Total workload (MACs) | 724 M | 1.58 G | 15.5 G | 19.6 G | 3.86 G | 7.57 G | 11.3 G
+    Total parameters | 61 M | 6.99 M | 138 M | 144 M | 25.5 M | 44.4 M | 60 M
+
+**Table 3:** FPGA-Based CNN accelerators employing computational transform to accelerate conv layers
+
+     |  |  | Network Workload |  |  |  | Freq | Through Power LUT |  | Memory
+     |  | Network | Comp. (GOP) Param. (M) | Bitwidth | Desc. | Device | (MHz) | (GOPs) | (W) | (K) | DSP | (MB)
+     | [31] AlexNet-C | 1.3 | 2.3 | Float 32 | OpenCL Virtex7 VX690T | 200 | 46 |  | 505 3683 | 56.3
+     | [30] AlexNet-C | 1.3 | 2.3 | Float16 | OpenCL Arria10 GX1150 | 303 | 1382 | 44.3 | 246 1576 | 49.7
+    Winograd |  | VGG16-C | 30.7 | 14.7 |  |  |  |  | 3045 |  |  | 
+     | [70] | AlexNet-C | 1.3 | 2.3 | Fixed 16 | HLS | Zynq ZU9EG | 200 | 855 | 23.6 | 600 2520 | 32.8
+     |  | AlexNet-C | 1.3 | 2.3 |  |  |  |  | 83 |  |  | 
+    FFT | [32] | VGG19-C | 30.6 | 14.7 | Float 32 |  | Stratix5 QPI | 200 | 123 | 13.2 | 201 | 224 | 4.0
+     | [28] AlexNet-C | 1.3 | 2.3 | Fixed 16 OpenCL Stratix5 GXA7 | 194 | 66 | 33.9 | 228 | 256 | 37.9
+     |  |  |  |  |  |  | Kintex KU060 | 200 | 365 | 25.0 | 150 1058 | 14.1
+    GEMM | [66] VGG16-F | 31.1 | 138.0 | Fixed 16 | HLS | Virtex7 VX960T | 150 | 354 | 26.0 | 351 2833 | 22.5
+     |  |  |  |  | Fixed 16 OpenCL |  | 370 | 866 | 41.7 | 437 1320 | 25.0
+     | [61] VGG16-F | 31.1 | 138.0 | Float 32 | OpenCL | Arria10 GX1150 | 385 | 1790 | 37.5 |  | 2756 | 29.0
+
+**Table 4:** Loop Optimization Parameters P i and T i
+
+    Parallelism | Intra-layer Inter-FM Intra-FM Inter-Convolution Intra-Convolution
+    Loop | L L
+
+**Table 5:** FPGA-based CNN accelerators implementing loop optimization
+
+     |  | Network Workload |  |  |  | Freq | Through Power LUT |  | Memory
+     | Network | Comp. (GOP) Param. (M) | Bitwidth | Desc. | Device | (MHz) | (GOPs) | (W) | (K) | DSP | (MB)
+    [39] | AlexNet-C | 1.3 | 2.3 | Float 32 | HLS | Virtex7 VX485T | 100 | 61.62 | 18.61 | 186 | 2240 | 18.4
+    [9] VGG16SVD-F | 30.8 | 50.2 | Fixed 16 | HDL | Zynq Z7045 | 150 | 136.97 | 9.63 | 183 | 780 | 17.5
+     | AlexNet-C | 1.3 | 2.3 |  |  |  |  | 187.24 |  | 138 | 635 | 18.2
+    [28] | AlexNet-F VGG16-F | 1.4 31.1 | 61.0 138.0 | Fixed 16 OpenCL | Stratix5 GSD8 | 120 | 71.64 117.9 | 33.93 | 272 524 | 752 1963 | 30.1 51.4
+    [77] | AlexNet-C | 1.3 | 2.3 | Float 32 | HLS | Virtex7 VX485T | 100 | 75.16 |  | 28 | 2695 | 19.5
+     | AlexNet-F | 1.4 | 61.0 |  |  |  |  | 825.6 | 126.00 |  | 14400 | 
+    [65] | VGG16-F | 31.1 | 138.0 | Fixed 16 | HLS | Virtex7 VX690T | 150 | 1280.3 | 160.00 |  | 21600 | 
+     | NIN-F | 2.2 | 61.0 |  |  |  |  | 114.5 | 19.50 | 224 | 256 | 46.6
+    [78] | AlexNet-F | 1.5 | 7.6 | Fixed 16 | HDL | Stratix5 GXA7 | 100 | 134.1 | 19.10 | 242 | 256 | 31.0
+    [36] | AlexNet-F | 1.4 | 61.0 | Fixed 16 |  | Virtex7 VX690T | 156 | 565.94 | 30.20 | 274 | 2144 | 34.8
+    [79] | AlexNet-C | 1.3 | 2.3 | Float 32 | HLS | Virtex7 VX690T | 100 | 61.62 |  | 273 | 2401 | 20.2
+    [80] | VGG16-F | 31.1 | 138.0 | Fixed 16 | HDL | Arria10 GX1150 | 150 | 645.25 | 50.00 | 322 | 1518 | 38.0
+     | AlexNet-F | 1.4 | 61.0 |  |  |  | 239.6 | 360.4 |  | 700 | 1290 | 47.2
+    [43] | VGG-F | 31.1 | 138.0 | Fixed 16 OpenCL Arria10 GT1150 | 221.65 | 460.5 |  | 708 | 1340 | 49.3
+     | VGG-F | 31.1 | 138.0 |  |  |  | 231.85 | 1171.3 |  | 626 | 1500 | 33.4
+     |  | 1.3 | 2.3 |  |  | Cyclone5 SEM | 100 | 12.11 |  | 22 | 28 | 0.2
+    [42] | AlexNet-C | 1.3 | 2.3 | Fixed 16 | HDL | Virtex7 VX485T | 100 | 445 |  |  | 2800 | 
+     | NiN | 20.2 | 7.6 |  |  |  |  | 282.67 |  | 453 | 256 | 30.2
+     | VGG16-F | 31.1 | 138.0 |  |  | Stratix5 GXA7 | 150 | 352.24 |  | 424 | 256 | 44.0
+     | ResNet-50 | 7.8 | 25.5 |  |  |  |  | 250.75 |  | 347 | 256 | 39.3
+    [84] | NiN | 20.2 | 7.6 | Fixed 16 | HDL |  |  | 587.63 |  | 320 | 1518 | 30.4
+     | VGG16-F | 31.1 | 138.0 |  |  | Arria10 GX1150 | 200 | 720.15 |  | 263 | 1518 | 44.5
+     | ResNet-50 | 7.8 | 25.5 |  |  |  |  | 619.13 |  | 437 | 1518 | 38.5
+     | AlexNet-F | 1.5 | 7.6 |  |  |  |  | 445.6 | 24.80 | 207 | 2872 | 37
+    [85] | VGG16SVD-F | 30.8 | 50.2 | Float 32 |  | Virtex7 VX690T | 100 | 473.4 | 25.60 | 224 | 2950 | 47
+
+**Table 6:** FPGA-Based CNN accelerators employing the data-ow MoC
+
+     |  | Network Workload |  |  |  | Freq | Through Power LUT |  | Memory
+     | Network | Comp. (GOP) Param. (M) | Bitwidth Desc. | Device | (MHz) | (GOPs) | (W) | (K) | DSP | (KB)
+    [91] | CarType-C | 0.16 | 0.03 | Float 32 | HDL | Zynq Z7045 | 100 | 0.47 | 0.23 | 68 | 24 | 1440.0
+     | LeNet5-C | 0.04 | 0.03 |  |  |  |  | 0.48 |  | 14 | 4 | 42.7
+    [34] | SignRecog-C | 4.03 | 0.04 | Fixed 16 | HLS | Zynq Z7020 | 100 | 6.03 | 0.75 | 26 | 144 | 38.2
+    [90] | VGG16-F | 31.10 | 138.00 | Fixed 16 | HLS | Zynq Z7045 | 125 | 123.12 |  | 219 | 900 | 2400.0
+     | SVHN-C | 0.02 | 0.08 | Fixed 5 |  |  |  | 170.73 |  | 40 | 0 | 10.9
+    [38] | LeNet5-C | 0.04 | 0.03 | Fixed 3 | HDL Cyclone5 GX 63.96 | 2438.46 |  | 8 | 0 | 0.2
+    conv layers with variable clock-domains in a Zynq ZC706 device. |  |  |  |  |  | 
+
+**Table 7:** FPGA-Based CNN accelerators employing Approximate arithmetic
+
+     |  |  | Network Workload |  | Bitwidth |  |  |  | Freq | Through. Power LUT |  | Memory
+     |  | Dataset | Comp. (GOP) Param. (M) In/Out FMs W-C W-FC | Acc | Device | (MHz) | (GOPs) | (W) | (K) | DSP | (MB)
+    FP32 [61] ImageNet | 30.8 | 138.0 | 32 | 32 | 32 | 32 | 90.1 Arria10 GX1150 | 370 | 866 | 41.7 | 437 1320 | 25.0
+    FP16 [30] ImageNet | 1.4 | 61.0 | 16 | 16 | 16 | 16 | 79.2 Arria10 GX1150 | 303 | 1382 | 44.3 | 246 1576 | 49.7
+     | [80] ImageNet | 30.8 | 138.0 | 16 | 16 | 8 | 8 | 88.1 Arria10 GX1150 | 150 | 645 |  | 322 1518 | 38.0
+    DFP | [84] ImageNet | 30.8 | 138.0 | 16 | 16 | 16 | 16 |  | Arria10 GX1150 | 200 | 720 |  | 132 1518 | 44.5
+     | [61] ImageNet | 30.8 | 138.0 | 16 | 16 | 16 | 16 |  | Arria10 GX1150 |  | 1790 |  | 437 2756 | 29.0
+     | [104] | Cifar10 | 1.2 | 13.4 | 20 | 2 | 1 | 1 | 87.7 | Zynq Z7020 | 143 | 208 | 4.7 | 47 | 3
+     | [52] | Cifar10 | 0.3 | 5.6 | 20/16 | 2 | 1 | 1 | 80.1 | Zynq Z7045 | 200 | 2465 | 11.7 | 83 |  | 7.1
+    BNN |  | MNIST | 0.0 | 9.6 | 8 | 2 | 1 | 1 | 98.2 |  |  | 5905 |  | 364 | 20
+     | [106] | Cifar10 | 1.2 | 13.4 | 8 | 8 | 1 | 1 | 86.3 | Stratix5 GSD8 | 150 | 9396 | 26.2 | 438 | 20 | 44.2
+     |  | ImageNet | 2.3 | 87.1 | 8 | 32 | 1a | 1 | 66.8 |  |  | 1964 |  | 462 | 384
+     |  | Cifar10 | 1.2 | 13.4 |  |  |  |  | 89.4 |  |  | 10962 | 13.6 | 275 |  | 39.4
+    TNN [107] | SVHN | 0.3 | 5.6 | 8 | 2 | 2 | 2 | 97.6 | Xilinx7 VX690T | 250 | 86124 | 7.1 | 155 |  | 12.2
+     |  | GTSRB | 0.3 | 5.6 |  |  |  |  | 99.0 |  |  | 86124 | 6.6 | 155 |  | 12.2
+
+**Table 8:** FPGA-Based CNN accelerators employing pruning and low rank approximation
+
+     |  |  | Network Workload | Removed |  | Acc |  | Freq | Through. Power LUT | Memory
+     |  | Dataset | Comp. (GOP) Param. (M) Param. (%) | Bitwidth | (%) | Device | (MHz) | (GOPs) | (W) | (K) | DSP | (MB)
+    SVD | [9] ImageNet | 30.5 | 138.0 | 63.6 | 16 Fixed 87.96 | Zynq 7Z045 | 150 | 137 | 9.6 | 183 | 780 | 17.5
+     | [45] | Cifar10 | 0.3 | 132.9 | 89.3 | 8 Fixed | 91.53 Kintex 7K325T | 100 | 8621 | 7.0 | 17 | 145 | 15.1
+    Pruning | [7] ImageNet | 1.4 | 61.0 | 85.0 | 32 Float | 79.70 | Stratix 10 | 500 | 12000 | 141.2 |

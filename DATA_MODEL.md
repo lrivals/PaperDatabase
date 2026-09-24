@@ -1,0 +1,264 @@
+# PaperDatabase — modèle de données
+
+Contrat de données de la base. Toute modification de schéma se répercute dans
+`lib/schema.py`, qui est le seul endroit où il est codé.
+
+Convention qui prime sur toutes les autres : **une valeur non rapportée par les auteurs
+s'écrit `n/r`**. Jamais une estimation, jamais une valeur reprise d'un autre papier, jamais
+un blanc ambigu. C'est la traduction opérationnelle de la règle « ne jamais inventer ».
+
+---
+
+## 1. `paper_id`
+
+Identifiant stable, lisible et triable, utilisé comme nom de dossier et comme clé dans
+`benchmarks.csv`.
+
+| Cas | Forme | Exemple |
+|---|---|---|
+| Article arXiv | `arxiv-<id>-<slug-titre-court>` | `arxiv-2507.18174-yolo-edge-fpga` |
+| Autre | `<annee>-<premier-auteur>-<slug-titre-court>` | `2025-kim-yolov2-zynq7000` |
+
+Le slug fait 3 à 5 mots, en minuscules, sans accents, mots vides retirés. Il est là pour la
+lisibilité humaine : c'est l'`id` arXiv ou le couple auteur-année qui porte l'unicité.
+
+Un `paper_id` ne change jamais une fois créé — il est référencé depuis `benchmarks.csv`,
+`INDEX.md` et les fiches.
+
+---
+
+## 2. `metadata.json`
+
+Un fichier par article, à la racine de `papers/<paper_id>/`.
+
+```json
+{
+  "id": "arxiv-2507.18174-yolo-edge-fpga",
+  "title": "Real-Time Object Detection and Classification using YOLO for Edge FPGAs",
+  "authors": [
+    {"given": "Rashed Al", "family": "Amin"},
+    {"given": "Roman", "family": "Obermaisser"}
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2507.18174",
+  "url": "https://arxiv.org/abs/2507.18174",
+  "type": "preprint",
+  "axes": ["yolo-fpga", "surveys"],
+  "tags": ["yolov8", "satay", "quantization"],
+  "added": "2026-09-21",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}
+```
+
+| Champ | Type | Notes |
+|---|---|---|
+| `id` | string | = nom du dossier |
+| `title` | string | tel qu'imprimé sur le PDF |
+| `authors` | array | `{given, family}`, dans l'ordre du papier |
+| `year` | int \| null | année de publication ; pour arXiv, année de la v1 |
+| `venue` | string \| null | journal, conférence, ou `"arXiv preprint"` |
+| `doi` | string \| null | sans préfixe URL |
+| `arxiv_id` | string \| null | |
+| `url` | string \| null | lien canonique |
+| `type` | enum | `preprint` \| `journal` \| `conference` \| `thesis` \| `repo` |
+| `axes` | array | voir §3 ; plusieurs valeurs possibles |
+| `tags` | array | libre : modèles, plateformes, toolflows cités |
+| `added` | date ISO | date d'ingestion |
+| `extraction.backend` | enum | `grobid` \| `pymupdf` |
+| `extraction.ok` | bool | false si l'extraction a produit un résultat douteux |
+| `extraction.warnings` | array | messages destinés à la relecture humaine |
+| `status.extracted` | bool | |
+| `status.fiche` | enum | `todo` \| `done` |
+
+Un champ inconnu vaut `null`, jamais une chaîne vide ni une valeur devinée.
+
+---
+
+## 3. Axes de veille
+
+Repris de `basicStart.txt`. Valeurs fermées — en ajouter une demande de mettre à jour
+`lib/schema.py` et `reindex.py`.
+
+| Axe | Contenu |
+|---|---|
+| `surveys` | surveys et toolflows généraux |
+| `yolo-fpga` | détection YOLO v3→v11 et variantes tiny sur FPGA |
+| `autoencoder-fpga` | CAE/VAE : compression, détection d'anomalies |
+| `continual-learning` | apprentissage incrémental / continu embarqué (SLDA, replay, HDC) |
+| `toolflows` | hls4ml, FINN, Vitis AI, Intel FPGA AI Suite, SATAY |
+| `platforms` | Zynq, Kria, ZCU102/104, PYNQ, Versal ; comparaisons MCU/NPU/GPU |
+
+---
+
+## 4. `fulltext.md`
+
+Front-matter YAML minimal, puis le corps en sections.
+
+```markdown
+---
+id: arxiv-2507.18174-yolo-edge-fpga
+title: Real-Time Object Detection and Classification using YOLO for Edge FPGAs
+year: 2025
+backend: grobid
+---
+
+## Abstract
+
+...
+
+## 1. Introduction
+
+...
+
+### 1.1 Motivation
+
+...
+
+## 3. Experimental Results
+
+...
+
+**Table 2.** Comparison of FPGA-based YOLO accelerators ...
+```
+
+Règles : la numérotation d'origine des sections est conservée (elle sert de référence dans
+les fiches) ; les légendes de figures et de tableaux sont gardées en gras ; la bibliographie
+n'y figure pas.
+
+---
+
+## 5. `sections.jsonl`
+
+Une ligne JSON par section ou sous-section, dans l'ordre du papier.
+
+```json
+{"id": "arxiv-2507.18174-yolo-edge-fpga#012", "paper_id": "arxiv-2507.18174-yolo-edge-fpga", "kind": "section", "section": "3. Experimental Results", "subsection": null, "order": 12, "page": 7, "text": "..."}
+```
+
+| Champ | Notes |
+|---|---|
+| `id` | `<paper_id>#<order sur 3 chiffres>` |
+| `kind` | `abstract` \| `section` \| `figure` \| `table` |
+| `section` | titre de la section de rattachement, numérotation comprise |
+| `subsection` | titre de sous-section, ou `null` |
+| `order` | position dans le papier, à partir de 0 |
+| `page` | page du PDF, pour retrouver le passage à l'œil |
+| `text` | texte nettoyé |
+
+Une section dépassant ~6000 caractères est découpée en plusieurs lignes qui partagent le
+même `section` — le découpage suit les paragraphes, jamais un compte de tokens aveugle.
+
+---
+
+## 6. `refs.jsonl`
+
+Une ligne par référence citée. Non chargé par défaut par l'agent : c'est une réserve pour un
+éventuel graphe de citations.
+
+```json
+{"paper_id": "arxiv-2507.18174-yolo-edge-fpga", "raw": "[12] J. Redmon and A. Farhadi, ...", "title": "YOLOv3: An Incremental Improvement", "authors": ["Redmon", "Farhadi"], "year": 2018, "doi": null, "arxiv_id": "1804.02767"}
+```
+
+---
+
+## 7. `benchmarks.csv`
+
+Le tableau comparatif, à la racine de `PaperDatabase/`. **Une ligne par configuration
+rapportée** : un papier qui présente trois variantes (INT8, INT4, pruned) produit trois
+lignes.
+
+Colonnes, dans cet ordre :
+
+| Colonne | Exemple | Notes |
+|---|---|---|
+| `paper_id` | `2025-kim-yolov2-zynq7000` | |
+| `model` | `YOLOv2` | tel que nommé par les auteurs |
+| `task` | `object detection` | `detection` \| `classification` \| `anomaly detection` \| ... |
+| `platform` | `Zynq-7000 XC7Z020` | référence exacte de la puce, pas seulement la famille |
+| `quantization` | `INT8 W / INT5 A` | poids et activations séparés si différents |
+| `accuracy_metric` | `mAP@0.5` | |
+| `accuracy_value` | `79.0` | en %, sans unité |
+| `fps` | `55` | |
+| `gops` | `808.6` | |
+| `latency_ms` | `n/r` | |
+| `power_w` | `2.13` | préciser dans la fiche s'il s'agit de la puce ou de la carte |
+| `luts` | `41200` | |
+| `dsps` | `220` | |
+| `bram` | `140` | en blocs, pas en Mo |
+| `dataset` | `COCO` | |
+| `toolflow` | `Vitis AI` | `hls4ml` \| `FINN` \| `Vitis AI` \| `SATAY` \| `custom HLS` \| `custom RTL` |
+| `baseline` | `RTX 2080Ti, GTX 1650` | comparaisons données par le papier, `n/r` si aucune |
+| `source_section` | `Table 4` | d'où vient la ligne : section, tableau ou figure |
+| `confidence` | `high` | `high` = lu dans un tableau ; `medium` = dans le texte ; `low` = déduit, à revérifier |
+
+`source_section` et `confidence` ne sont pas décoratifs : ils permettent de rouvrir le bon
+passage en cas de doute et de repérer d'un coup d'œil les chiffres fragiles.
+
+---
+
+## 8. Template de `fiche.md`
+
+Généré par `ingest.py` avec les champs vides, rempli par `/paper-fiche`.
+
+```markdown
+---
+id: <paper_id>
+fiche: todo
+date: <date de rédaction>
+---
+
+# <Titre>
+
+<Auteurs>, <année>, <venue>. <DOI ou URL>
+Type : <preprint non relu par les pairs | article de journal | conférence>
+
+## Problème
+
+Quel verrou le papier attaque-t-il, tel que les auteurs le posent.
+
+## Méthode
+
+Architecture, quantification, stratégie de mapping sur le FPGA, post-traitement (NMS…).
+Toolflow employé.
+
+## Plateforme et implémentation
+
+Puce exacte, fréquence, ressources consommées, mémoire. Code ou bitstream publiés ? Où ?
+
+## Résultats
+
+Les chiffres, avec la section ou le tableau source. Baseline de comparaison.
+→ reportés dans `benchmarks.csv` : <lignes ajoutées>
+
+## Limites et critique
+
+Comparaisons biaisées, métriques non comparables d'un papier à l'autre, conditions de mesure
+non précisées, absence de reproductibilité. Ce que le papier ne mesure pas.
+
+## Pertinence pour la thèse
+
+Ce que ce travail apporte à l'axe visé, et ce qu'il laisse ouvert.
+
+## Gaps identifiés
+
+Points à reporter dans `gaps.md`.
+
+## Statut de lecture
+
+Résumé seul | sections lues : <liste> | papier complet.
+Ce qui suit est déduit et non affirmé par les auteurs : <…>
+```
+
+La section **Statut de lecture** est obligatoire : elle matérialise la distinction entre ce
+qui a été lu et ce qui a été déduit, et empêche une fiche partielle de passer pour une
+lecture complète.

@@ -1,0 +1,4 @@
+pymupdf
+lxml
+requests
+python-slugify

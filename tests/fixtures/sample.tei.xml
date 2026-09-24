@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Real-Time Object Detection and Classification using YOLO for Edge FPGAs</title>
+				<funder ref="#_uck5dXU">
+					<orgName type="full">Freiraum program of Stiftung Innovation in der Hochschullehre</orgName>
+				</funder>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author>
+							<persName><forename type="first">Rashed</forename><surname>Al Amin</surname></persName>
+							<email>rashed.amin@uni-siegen.de</email>
+							<affiliation key="aff0">
+								<orgName type="department">Institute for Embedded Systems</orgName>
+								<orgName type="institution">University of Siegen Siegen</orgName>
+								<address>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">Roman</forename><surname>Obermaisser</surname></persName>
+							<email>roman.obermaisser@uni-siegen.de</email>
+							<affiliation key="aff1">
+								<orgName type="department">Institute for Embedded Systems</orgName>
+								<orgName type="institution">University of Siegen Siegen</orgName>
+								<address>
+									<country key="DE">Germany</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Real-Time Object Detection and Classification using YOLO for Edge FPGAs</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">F3A4A14B14EF29F4D578BA4100785B36</idno>
+					<note type="submission">This paper has been accepted for the 67th International Symposium on ELMAR 2025.</note>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.8.1" ident="GROBID" when="2026-09-24T09:50+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<textClass>
+				<keywords>
+					<term>Object detection and classification</term>
+					<term>YOLO</term>
+					<term>FPGAs</term>
+					<term>edge computing</term>
+				</keywords>
+			</textClass>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p coords="1,118.56,158.93,178.56,7.41;1,68.52,168.65,228.72,7.41;1,68.52,178.37,228.72,7.41;1,68.52,188.09,228.55,7.41;1,68.52,197.81,228.52,7.41;1,68.52,207.65,228.58,7.41;1,68.52,217.25,228.61,7.41;1,68.52,226.97,228.56,7.41;1,68.52,236.69,228.61,7.41;1,68.52,246.53,228.79,7.41;1,68.52,256.25,228.60,7.41;1,68.52,265.97,228.53,7.41;1,68.52,275.57,228.44,7.41;1,68.52,285.41,228.66,7.41;1,68.52,295.13,228.67,7.41;1,68.52,304.85,228.62,7.41;1,68.52,314.57,228.61,7.41;1,68.52,324.41,228.56,7.41;1,68.52,334.01,228.67,7.41;1,68.52,343.73,228.76,7.41;1,68.52,353.45,228.68,7.41;1,68.52,363.41,86.50,7.41">Object detection and classification are crucial tasks across various application domains, particularly in the development of safe and reliable Advanced Driver Assistance Systems (ADAS). Existing deep learning-based methods such as Convolutional Neural Networks (CNNs), Single Shot Detectors (SSDs), and You Only Look Once (YOLO) have demonstrated high performance in terms of accuracy and computational speed when deployed on Field-Programmable Gate Arrays (FPGAs). However, despite these advances, state-of-the-art YOLO-based object detection and classification systems continue to face challenges in achieving resource efficiency suitable for edge FPGA platforms. To address this limitation, this paper presents a resource-efficient real-time object detection and classification system based on YOLOv5 optimized for FPGA deployment. The proposed system is trained on the COCO and GTSRD datasets and implemented on the Xilinx Kria KV260 FPGA board. Experimental results demonstrate a classification accuracy of 99%, with a power consumption of 3.5W and a processing speed of 9 frames per second (FPS). These findings highlight the effectiveness of the proposed approach in enabling real-time, resource-efficient object detection and classification for edge computing applications.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<facsimile>
+		<surface n="1" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+		<surface n="2" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+		<surface n="3" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+		<surface n="4" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+	</facsimile>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head coords="1,146.40,409.73,70.23,8.20">I. INTRODUCTION</head><p coords="1,82.08,423.65,215.14,8.20;1,68.52,433.97,228.85,8.20;1,68.52,444.29,228.75,8.20;1,68.52,454.61,228.59,8.20;1,68.52,464.81,228.70,8.20;1,68.52,475.13,228.67,8.20;1,68.52,485.45,228.67,8.20;1,68.52,495.65,228.78,8.20;1,68.52,505.97,228.77,8.20;1,68.52,516.17,228.76,8.20;1,68.52,526.49,228.66,8.20;1,68.52,536.69,228.81,8.20;1,68.52,547.01,228.62,8.20;1,68.52,557.21,228.74,8.20;1,68.52,567.53,95.90,8.20;1,176.50,567.53,120.68,8.20;1,68.52,577.73,228.76,8.20;1,68.52,588.05,228.65,8.20;1,68.52,598.25,211.12,8.20;1,293.96,598.25,3.31,8.20;1,68.52,608.57,228.66,8.20;1,68.52,618.89,228.59,8.20;1,68.52,629.09,228.67,8.20;1,68.52,639.41,148.34,8.20">The rapid advancement of computer vision technologies has led to a growing demand for robust and efficient object detection and classification systems across various application domains, including autonomous driving, healthcare, surveillance, robotics, and smart cities. This increasing demand has, in turn, stimulated significant research interest from both academia and industry. Object detection and classification remain challenging, especially in real-time scenarios with critical computational and energy constraints. Various deep learning-based approaches have been developed to improve accuracy, robustness, and speed. Among the prominent methods in this area are CNN and SSD, which have shown better performance in terms of classification accuracy. However, both approaches face limitations in detecting small or densely packed objects <ref type="bibr" target="#b0">[1]</ref>, which are often encountered in real-world scenes. In contrast, the YOLO family of algorithms has demonstrated high performance in real-time applications, offering a good balance between speed and accuracy <ref type="bibr" target="#b1">[2]</ref>. Despite their advantages, these deep learning models typically require substantial computational power and high energy consumption, which restricts their deployment in edge devices and resource-constrained environments.</p><p coords="1,82.08,655.25,215.21,8.20;1,68.52,665.57,228.70,8.20;1,68.52,675.77,228.56,8.20;1,68.52,686.09,228.55,8.20;1,68.52,696.29,171.17,8.20;1,254.20,696.29,42.97,8.20;1,68.52,706.61,228.61,8.20;1,314.16,158.69,175.85,8.20;1,504.98,158.69,37.76,8.20;1,314.16,169.01,42.33,8.20;1,371.82,169.01,108.88,8.20;1,496.10,169.01,46.59,8.20;1,314.16,179.33,39.19,8.20;1,370.07,179.33,122.78,8.20;1,509.55,179.33,33.31,8.20;1,314.16,189.65,76.07,8.20;1,408.43,189.65,134.35,8.20;1,314.16,199.85,45.05,8.20;1,392.06,199.85,150.74,8.20;1,314.16,210.17,228.59,8.20;1,314.16,220.37,228.52,8.20;1,314.16,230.69,228.70,8.20;1,314.16,241.01,228.64,8.20;1,314.16,251.21,214.58,8.20">To overcome these limitations, FPGAs have emerged as a promising hardware platform for accelerating deep learning inference tasks. FPGAs offer re-programmability, high parallelism, and energy efficiency, making them suitable for real-time object detection and classification <ref type="bibr" target="#b2">[3]</ref>. They are increasingly adopted in a variety of domains, including advanced driver assistance systems (ADAS) <ref type="bibr" target="#b3">[4]</ref>, medical informatics <ref type="bibr" target="#b4">[5]</ref>, traffic light classification <ref type="bibr" target="#b5">[6]</ref>, waveform generation <ref type="bibr" target="#b6">[7]</ref>, structural health monitoring <ref type="bibr" target="#b7">[8]</ref>, superresolution imaging <ref type="bibr" target="#b8">[9]</ref>, and general object detection applications <ref type="bibr" target="#b9">[10,</ref><ref type="bibr" target="#b10">11]</ref>. These capabilities have prompted the integration of YOLO-based models with FPGA platforms to leverage their combined strengths. Nevertheless, achieving resource efficiency and maintaining high performance remain key research challenges, particularly when deploying such systems on edge FPGAs with limited hardware resources.</p><p coords="1,327.72,267.17,215.05,8.20;1,314.16,277.37,228.62,8.20;1,314.16,287.69,228.50,8.20;1,314.16,297.89,228.60,8.20;1,314.16,308.21,228.47,8.20;1,314.16,318.41,228.65,8.20;1,314.16,328.73,228.66,8.20;1,314.16,338.93,228.53,8.20;1,314.16,349.25,228.56,8.20;1,314.16,359.57,228.53,8.20;1,314.16,369.77,228.61,8.20;1,314.16,380.09,228.61,8.20;1,314.16,390.29,228.63,8.20;1,314.16,400.61,228.57,8.20;1,314.16,410.81,228.56,8.20;1,314.16,421.13,228.51,8.20;1,314.16,431.33,201.77,8.20">This study proposes a resource-efficient real-time object detection and classification system that integrates the YOLO v5 architecture with FPGA hardware, targeting edge applications. The proposed system leverages the Common Objects in Context (COCO) dataset for general-purpose object detection and the German Traffic Sign Recognition Benchmark (GTSRB) dataset for specialized traffic signal detection and classification. These datasets ensure that the model can perform broad and domain-specific tasks with high accuracy. The system is implemented and evaluated on the Xilinx Kria KV260 FPGA board, a representative edge computing platform. Experimental results demonstrate that the proposed system achieves high classification accuracy while maintaining low power consumption and satisfactory computational speed, highlighting its suitability for real-time deployment in resource-constrained environments. The key contributions of this paper are summarized as follows:</p><p coords="1,331.08,447.29,211.61,8.20;1,348.00,457.49,184.47,8.20">1. Developing a resource-efficient object detection and classification system using YOLO v5 for FPGAs.</p><p coords="1,331.08,473.45,211.62,8.20;1,348.00,483.65,154.55,8.20">2. Optimization of the YOLO model to ensure compatibility with edge FPGA platforms.</p><p coords="1,331.08,499.73,211.62,8.20;1,348.00,509.93,194.78,8.20;1,348.00,520.25,183.45,8.20">3. Performance evaluation and comparison of the proposed system against state-of-the-art FPGAbased object detection and classification systems.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head coords="1,387.96,538.49,76.74,8.20">II. RELATED WORK</head><p coords="1,327.72,552.53,36.87,8.20;1,385.18,552.53,157.53,8.20;1,314.16,562.73,228.64,8.20;1,314.16,573.17,228.64,8.20;1,314.16,583.37,228.69,8.20;1,314.16,593.69,228.52,8.20;1,314.16,603.89,228.56,8.20;1,314.16,614.21,228.60,8.20;1,314.16,624.53,228.74,8.20;1,314.16,634.73,228.58,8.20;1,314.16,645.05,228.54,8.20;1,314.16,655.25,228.46,8.20;1,314.16,665.57,228.67,8.20;1,314.16,675.77,228.63,8.20;1,314.16,686.09,228.63,8.20;1,314.16,696.29,228.71,8.20;1,314.16,706.61,228.79,8.20;2,68.52,52.97,228.74,8.20;2,68.52,63.17,228.71,8.20;2,68.52,73.49,228.77,8.20;2,68.52,83.69,135.09,8.20">Ngo et al. <ref type="bibr" target="#b11">[12]</ref> present a real-time traffic sign recognition system implemented on the Xilinx Kria KV260 FPGA platform using the YOLOv3-Tiny network. The system has been designed to address the limitations of GPU-based approaches, such as high power consumption and inefficiency in mobile environments, by leveraging the Deep Learning Processing Unit (DPU) on the FPGA. The authors trained the YOLOv3-Tiny model using a custom VN-ICC dataset of 40 Vietnamese traffic sign classes, achieving a mean Average Precision (mAP) of 94.06% in software and 91.87% on hardware with up to 29 FPS. The implementation process includes model training, conversion to TensorFlow format, quantization to 8-bit integers for performance optimization, and compilation for the DPU. Experimental results demonstrate that the proposed system outperforms comparable processing speed and accuracy implementations while maintaining energy efficiency. The study highlights the viability of deploying lightweight deep learning models on FPGA platforms for real-time embedded vision applications in intelligent transportation systems.</p><p coords="2,82.08,99.65,43.91,8.20;2,146.37,99.65,150.67,8.20;2,68.52,109.85,228.48,8.20;2,68.52,120.17,228.70,8.20;2,68.52,130.37,228.60,8.20;2,68.52,140.69,228.52,8.20;2,68.52,150.89,228.67,8.20;2,68.52,161.21,228.58,8.20;2,68.52,171.53,228.52,8.20;2,68.52,181.73,228.77,8.20;2,68.52,192.05,228.59,8.20;2,68.52,202.25,228.75,8.20;2,68.52,212.69,228.59,8.20;2,68.52,222.89,228.56,8.20;2,68.52,233.21,228.66,8.20;2,68.52,243.41,228.68,8.20;2,68.52,253.73,203.93,8.20">Heller et al. <ref type="bibr" target="#b12">[13]</ref> explore the deployment of YOLO-based deep learning models for real-time marine object detection on embedded edge devices. The authors train and optimize YOLOv4 and YOLOv4-Tiny models using techniques like structured pruning, quantization (INT8 and FP16), and architecture modifications to improve inference speed while maintaining accuracy. These models have been deployed on Nvidia Jetson Xavier AGX, AMD-Xilinx Kria KV260, and Intel Movidius Myriad X VPU. Results show that YOLOv4-Tiny on Jetson Xavier achieved up to 90 FPS with minimal accuracy loss, while the Movidius VPU offered the best performance-per-watt efficiency. The Kria KV260 provided a strong balance of speed and energy efficiency, making it suitable for low-power applications. The study demonstrates the feasibility of efficient, high-speed object detection on resource-constrained devices for marine environments.</p><p coords="2,82.08,269.57,111.68,8.20;2,216.87,269.57,80.28,8.20;2,68.52,279.89,228.61,8.20;2,68.52,290.09,228.60,8.20;2,68.52,300.41,228.59,8.20;2,68.52,310.61,228.73,8.20;2,68.52,320.93,228.66,8.20;2,68.52,331.25,228.54,8.20;2,68.52,341.45,228.73,8.20;2,68.52,351.77,228.69,8.20;2,68.52,361.97,228.59,8.20;2,68.52,372.29,228.76,8.20;2,68.52,382.49,228.76,8.20;2,68.52,392.81,228.54,8.20;2,68.52,403.01,228.58,8.20;2,68.52,413.33,203.57,8.20">Montgomerie-Corcoran et al. <ref type="bibr" target="#b13">[14]</ref> introduce SATAY, a tool flow for automatically generating high-performance FPGA-based accelerators for YOLO object detection models, supporting versions from YOLOv3 to YOLOv8. Unlike previous approaches that rely on heterogeneous architectures, SATAY implements fully on-chip, deeply pipelined streaming designs that minimize off-chip communication and maximize parallelism. It incorporates novel hardware components for YOLO-specific operations, applies quantization and buffer optimization to reduce resource usage, and performs automated design space exploration. The evaluation shows that SATAY-generated designs outperform existing FPGA accelerators and achieve competitive energy efficiency compared to embedded GPUs and CPUs, marking the first reported YOLOv8 implementation on FPGAs.</p><p coords="2,82.08,429.17,49.45,8.20;2,151.25,429.17,145.84,8.20;2,68.52,439.49,228.70,8.20;2,68.52,449.81,228.74,8.20;2,68.52,460.01,228.75,8.20;2,68.52,470.33,228.72,8.20;2,68.52,480.53,228.79,8.20;2,68.52,490.85,228.82,8.20;2,68.52,501.05,228.66,8.20;2,68.52,511.37,228.73,8.20;2,68.52,521.57,228.62,8.20;2,68.52,532.01,228.72,8.20;2,68.52,542.21,228.74,8.20;2,68.52,552.53,228.66,8.20;2,68.52,562.73,228.71,8.20;2,68.52,573.05,228.56,8.20;2,68.52,583.25,77.97,8.20;2,82.08,599.21,69.39,8.20;2,178.04,599.21,119.17,8.20;2,68.52,609.53,228.79,8.20;2,68.52,619.73,228.74,8.20;2,68.52,630.05,228.58,8.20;2,68.52,640.25,228.70,8.20;2,68.52,650.57,228.62,8.20;2,68.52,660.77,228.73,8.20;2,68.52,671.09,228.68,8.20;2,68.52,681.29,228.65,8.20;2,68.52,691.61,228.54,8.20;2,68.52,701.81,228.67,8.20;2,68.52,712.13,228.78,8.20;2,314.16,52.97,228.59,8.20;2,314.16,63.17,228.57,8.20;2,314.16,73.49,47.21,8.20">Nguyen et al. <ref type="bibr" target="#b14">[15]</ref> propose an FPGA-SoC implementation of the YOLOv4 object detection model for real-time flyingobject detection, particularly UAVs and aircraft. The authors adapt and optimize YOLOv4 and YOLOv4-Tiny for deployment on the Xilinx ZCU104 FPGA platform using Vitis AI. Key contributions include network pruning, quantization, and architectural modifications to accommodate FPGA constraints, such as replacing unsupported layers and adding a YOLO detection layer for better small-object detection. The pruned YOLOv4 model achieves performance close to the original while significantly reducing model size and improving frame rate (29 FPS). The implementation demonstrates superior power efficiency-2-3× over RTX 2080Ti and 3-4× over GTX 1650-making it suitable for embedded applications requiring real-time processing and low energy consumption. Valadanzoj et al. <ref type="bibr" target="#b15">[16]</ref> propose a novel FPGA-based accelerator for the YOLOv4-Tiny object detection model, targeting real-time performance in self-driving automotive applications. The architecture leverages low-precision quantization (8-bit for data and 5-bit for weights) and introduces a double-multiplication technique using a single DSP block to increase parallelism and reduce resource usage. A Genetic Algorithm (GA) optimizes layer-specific quantization parameters, maintaining model accuracy. Implemented on a Xilinx Zynq ZC706 FPGA, the design achieves 55 FPS at 79% mAP, representing a 13% speed increase over prior work with only a 3% drop in accuracy. The system also demonstrates reduced DSP and memory usage, enhancing cost-effectiveness for embedded automotive applications.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head coords="2,383.64,91.73,83.77,8.20">III. IMPLEMENTATION</head><p coords="2,327.72,105.77,215.09,8.20;2,314.16,116.09,228.51,8.20;2,314.16,126.41,94.59,8.20;2,425.45,126.41,117.30,8.20;2,314.16,136.61,46.08,8.20">Implementing the proposed object detection and classification system for edge FPGAs comprises several structured steps. Figure <ref type="figure" target="#fig_0">1</ref> illustrates the overall system architecture.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head coords="2,314.16,152.93,91.03,8.20">A. Dataset Preparation</head><p coords="2,327.72,166.13,215.20,8.20;2,314.16,176.45,228.48,8.20;2,314.16,186.65,228.63,8.20;2,333.00,196.97,209.58,8.20;2,314.16,207.29,228.60,8.20;2,314.16,217.49,228.60,8.20;2,314.16,227.81,228.46,8.20;2,314.16,238.01,228.64,8.20;2,314.16,248.33,228.53,8.20;2,314.16,258.53,210.11,8.20;2,314.16,268.85,228.53,8.20;2,314.16,279.05,228.60,8.20;2,314.16,289.37,228.59,8.20;2,314.16,299.57,228.59,8.20;2,314.16,309.89,228.49,8.20;2,314.16,320.09,228.55,8.20;2,314.16,330.41,228.54,8.20;2,314.16,340.73,228.66,8.20;2,314.16,350.93,228.52,8.20;2,314.16,361.37,228.54,8.20;2,314.16,371.57,130.67,8.20">The proposed system utilizes two widely recognized datasets to support general-purpose and application-specific object detection and classification tasks. The COCO dataset <ref type="bibr" target="#b16">[17]</ref> is a large-scale benchmark dataset for object detection, segmentation, and captioning. It contains over 200,000 labeled images with over 80 object categories, capturing various real-world scenarios with varying scales, occlusions, and lighting conditions. COCO is particularly valuable for training deep learning models to perform robust detection in complex environments. In contrast, the GTSRB dataset <ref type="bibr" target="#b17">[18]</ref> focuses on a specific application domain-traffic sign recognition. It comprises over 50,000 images of traffic signs categorized into 43 different classes, collected under realworld driving conditions. The dataset presents challenges such as motion blur, varying illumination, and partial occlusions, making it ideal for evaluating the system's performance in intelligent transportation applications. By employing the COCO and GTSRB datasets, the proposed system is trained to achieve high accuracy in general object detection and domain-specific classification tasks, enhancing its versatility and applicability in edge scenarios.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head coords="2,314.16,387.89,72.64,8.20">B. Model Training</head><p coords="2,327.72,400.97,215.11,8.20;2,314.16,411.29,228.62,8.20;2,314.16,421.61,228.48,8.20;2,314.16,431.93,228.58,8.20;2,314.16,442.25,228.78,8.20;2,314.16,452.45,228.71,8.20;2,314.16,462.77,228.48,8.20;2,314.16,472.97,228.49,8.20;2,314.16,483.29,228.47,8.20;2,314.16,493.49,228.52,8.20;2,314.16,503.81,228.52,8.20;2,314.16,514.01,228.54,8.20;2,314.16,524.33,228.47,8.20;2,314.16,534.53,228.51,8.20;2,314.16,544.85,228.63,8.20;2,314.16,555.05,228.46,8.20;2,314.16,565.37,228.70,8.20">This study selects YOLOv5 for the proposed object detection and classification system due to its favorable tradeoff between detection accuracy and computational efficiency, making it suitable for deployment on resource-constrained edge devices. The model training has been conducted using the PyTorch framework, with YOLOv5 initialized using pretrained weights to accelerate convergence and enhance performance. The training process involved fine-tuning the model on two benchmark datasets: COCO for general object detection and GTSRB for traffic sign classification. Appropriate data augmentation techniques were applied during training to improve the model's ability to generalize to diverse environments. The training configuration included a learning rate of 0.01, batch size of 32, and 100 training epochs, using the stochastic gradient descent (SGD) optimizer with a momentum of 0.937 and weight decay of 0.0005. These hyperparameters were empirically selected to balance training  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head coords="3,68.52,130.85,154.70,8.20">C. Model Quantization and Compilation</head><p coords="3,82.08,144.05,215.06,8.20;3,68.52,154.37,228.71,8.20;3,68.52,164.57,228.70,8.20;3,68.52,174.89,228.56,8.20;3,68.52,185.09,228.83,8.20;3,68.52,195.41,228.71,8.20;3,68.52,205.61,228.67,8.20;3,68.52,215.93,228.60,8.20;3,68.52,226.13,228.53,8.20;3,68.52,236.45,228.74,8.20;3,68.52,246.77,228.76,8.20;3,68.52,256.97,228.66,8.20;3,68.52,267.29,228.77,8.20;3,68.52,277.61,228.70,8.20;3,68.52,287.93,228.61,8.20;3,68.52,298.13,228.57,8.20;3,68.52,308.45,228.68,8.20;3,68.52,318.65,228.58,8.20;3,68.52,328.97,228.63,8.20;3,68.52,339.17,228.69,8.20;3,68.52,349.49,228.72,8.20;3,68.52,359.69,228.92,8.20;3,68.52,370.01,228.75,8.20;3,68.52,380.21,89.31,8.20">A post-training quantization and compilation workflow was applied using the Vitis AI development environment to enable efficient deployment of the trained YOLOv5 model on the Xilinx Kria KV260 FPGA. The quantization process involved converting the model's 32-bit floating-point weights and activations into 8-bit integer (INT8) representations using the Vitis AI toolchain. This step significantly reduced the model's memory footprint and improved data transfer efficiency. It lowered computational complexity, all of which are essential for meeting the strict resource and power constraints of edge FPGAs. Quantization-aware techniques ensured that the reduction in numerical precision introduced minimal impact on the model's detection accuracy. The YOLO model has been compiled following quantization into a hardware-friendly format specifically optimized for execution on the Deep Processing Unit (DPU) of the KV260 FPGA. This compilation step involved graph-level optimizations, operator mapping, and memory allocation tailored to the architecture of the target platform. The combined quantization and compilation process allowed the YOLOv5 model to achieve real-time inference performance with low latency and power consumption, demonstrating its suitability for object detection and classification tasks in edge computing applications.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head coords="3,121.92,398.57,115.67,8.20">IV. RESULTS AND DISCUSSION</head><p coords="3,82.08,412.61,215.08,8.20;3,68.52,422.93,228.60,8.20;3,68.52,433.13,228.75,8.20;3,68.52,443.45,228.76,8.20;3,68.52,453.65,228.74,8.20;3,68.52,463.97,228.62,8.20;3,68.52,474.17,228.76,8.20;3,68.52,484.49,228.73,8.20;3,68.52,494.81,228.76,8.20;3,68.52,505.01,228.62,8.20;3,68.52,515.33,228.51,8.20;3,68.52,525.53,228.67,8.20;3,68.52,535.85,228.74,8.20;3,68.52,546.05,200.87,8.20">The optimized YOLOv5 model was deployed onto the Xilinx Kria KV260 FPGA board to enable real-time inference on an edge device following the quantization and compilation stages. The model execution was carried out on the board's integrated DPU, which is specifically designed to accelerate deep learning workloads. Input images were supplied to the board, and the system performed object detection and classification directly on the edge device without reliance on external processing. The deployed model was then evaluated to assess its performance in inference latency, resource utilization, and operational efficiency under real-world scenarios. The results demonstrated that the edge deployment maintained consistent detection accuracy while meeting the latency constraints required for real-time applications.  </p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head coords="3,314.16,197.81,93.65,8.20">A. Experimental Results</head><p coords="3,327.72,211.01,214.99,8.20;3,314.16,221.21,228.69,8.20;3,314.16,231.53,228.63,8.20;3,314.16,241.73,228.62,8.20;3,314.16,252.05,228.60,8.20;3,314.16,262.25,228.60,8.20;3,314.16,272.57,228.51,8.20;3,314.16,282.77,228.45,8.20;3,314.16,293.09,228.48,8.20;3,314.16,303.29,228.67,8.20;3,314.16,313.61,228.57,8.20;3,314.16,323.81,176.62,8.20">The proposed object detection and classification system has been evaluated using two standard benchmark datasets: COCO for general object detection and classification and GTSRB for traffic sign detection and classification. These datasets were selected to validate the system's effectiveness across generic and application-specific tasks. A total of 72 test images were curated to represent diverse real-world scenarios, including variations in lighting conditions, object scales, background complexity, and occlusions. These images were then processed by the Xilinx Kria KV260 FPGA board, where the optimized and quantized YOLOv5 model was deployed for inference using the board's integrated DPU.</p><p coords="3,327.72,339.77,214.93,8.20;3,314.16,350.09,228.57,8.20;3,314.16,360.41,228.63,8.20;3,314.16,370.73,228.54,8.20;3,314.16,380.93,228.60,8.20;3,314.16,391.25,228.53,8.20;3,314.16,401.45,189.48,8.20;3,512.23,401.45,30.39,8.20;3,314.16,411.77,228.57,8.20;3,314.16,421.97,221.94,8.20;3,314.16,432.29,228.54,8.20;3,314.16,442.49,228.74,8.20;3,314.16,452.81,228.51,8.20;3,314.16,463.01,211.42,8.20">The primary objective of the evaluation was to assess the feasibility and efficiency of executing the object detection and classification system on a resource-constrained edge FPGA platform. The deployed system achieved a classification accuracy of 98.6% while maintaining an inference speed of 9 FPS, demonstrating its capability to perform real-time processing under edge deployment constraints. Fig. <ref type="figure" target="#fig_2">2</ref> presents representative output samples from the object detection and classification task using the COCO dataset. In addition, Fig. <ref type="figure" target="#fig_3">3</ref> illustrates output examples for traffic sign detection and classification using the GTSRB dataset. These results highlight the system's potential for accurate and efficient deployment in real-world edge computing environments.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head coords="3,314.16,479.45,135.84,8.20">B. Comparison with Related Works</head><p coords="3,327.72,492.65,21.18,8.20;3,357.79,492.65,185.04,8.20;3,314.16,502.85,228.55,8.20;3,314.16,513.17,228.76,8.20;3,314.16,523.37,228.62,8.20;3,314.16,533.69,228.55,8.20;3,314.16,543.89,228.56,8.20;3,314.16,554.21,228.49,8.20;3,314.16,564.41,228.50,8.20;3,314.16,574.73,144.01,8.20;3,479.94,574.73,62.76,8.20;3,314.16,585.05,228.67,8.20;3,314.16,595.25,228.52,8.20;3,328.41,605.57,214.35,8.20;3,314.16,615.77,228.61,8.20;3,314.16,626.09,208.64,8.20;3,539.08,626.09,3.53,8.20;3,314.16,636.29,228.58,8.20;3,314.16,646.61,228.57,8.20;3,314.16,656.81,228.58,8.20;3,314.16,667.13,228.57,8.20;3,314.16,677.33,228.58,8.20;3,314.16,687.65,228.65,8.20;3,314.16,697.97,228.64,8.20;3,314.16,708.17,30.13,8.20;4,82.08,199.37,206.67,8.20;4,68.52,209.57,220.28,8.20;4,68.52,219.89,220.28,8.20;4,68.52,230.09,220.26,8.20;4,68.52,240.41,220.36,8.20;4,68.52,250.61,220.28,8.20;4,68.52,260.93,220.15,8.20;4,68.52,271.13,220.21,8.20;4,68.52,281.45,220.36,8.20;4,68.52,291.77,220.21,8.20;4,68.52,301.97,220.14,8.20;4,68.52,312.29,220.24,8.20;4,68.52,322.49,220.25,8.20;4,68.52,332.81,220.18,8.20;4,68.52,343.01,220.09,8.20;4,68.52,353.33,220.33,8.20;4,68.52,363.53,220.26,8.20;4,68.52,373.97,107.10,8.20">Table <ref type="table">1</ref> presents a comparative analysis of various FPGAbased object detection systems using different YOLO model variants across multiple studies. While prior works predominantly utilized YOLOv3 or YOLOv4 Tiny models on FPGA platforms such as ZC706, ZCU104, and Kria KV260, the proposed work employs YOLOv5 on the Kria KV260 board. In terms of classification accuracy, the proposed system achieves 98.6%, which is competitive with the highest reported value of 99% by Amin et al. <ref type="bibr" target="#b18">[19]</ref> and significantly higher than the rest. Although the inference speed (9 FPS) is lower than other implementations-particularly Nguyen et al. <ref type="bibr" target="#b14">[15]</ref>, which achieved 125 FPS-it reflects a trade-off between speed and accuracy. The proposed system maintains a low power consumption of 3.5 W, comparable to Amin et al. <ref type="bibr" target="#b18">[19]</ref>, and favorable for edge deployment. In terms of efficiency measured as frames per second per watt (FPS/W), the system achieves 2.6 FPS/W, indicating balanced performance with a strong emphasis on accuracy and power efficiency for edge computing scenarios. Despite the slightly reduced inference speed, the system's better accuracy and power efficiency make it a viable solution for resource-constrained edge devices. This study introduced a resource-efficient, real-time object detection and classification system based on the YOLOv5 model, optimized for deployment on edge FPGA platforms. The system has been successfully implemented on the Xilinx Kria KV260 board by leveraging model quantization and compilation techniques, achieving a balance between accuracy, power consumption, and realtime performance. Evaluation of standard datasets demonstrated the system's effectiveness for general and application-specific tasks. Compared to existing works, the proposed approach offers improved accuracy and energy efficiency, making it well-suited for edge applications such as intelligent transportation and embedded vision. Future studies will focus on improving the inference speed of the system while preserving accuracy and resource efficiency. Additionally, the model will be extended to support multiclass detection tasks and evaluated under more diverse realworld deployment scenarios.</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0" coords="2,330.36,707.57,196.15,6.62;2,396.24,716.21,64.36,6.62"><head>Fig. 1 .</head><label>1</label><figDesc>Fig. 1. Overall architecture of the proposed object detection and classification system.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1" coords="3,68.52,52.97,228.73,8.20;3,68.52,63.17,228.70,8.20;3,68.52,73.49,228.75,8.20;3,68.52,83.69,228.74,8.20;3,68.52,94.01,228.66,8.20;3,68.52,104.21,228.76,8.20;3,68.52,114.53,79.49,8.20"><head></head><label></label><figDesc>stability, convergence speed, and final model accuracy. Early stopping and model checkpointing strategies were also employed to prevent overfitting and ensure the retention of the best-performing model weights. This training process effectively prepared YOLOv5 for integration into the proposed FPGA-based real-time object detection and classification system.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2" coords="3,76.44,702.41,212.94,6.62;3,68.64,565.32,229.32,128.76"><head>Fig. 2 .</head><label>2</label><figDesc>Fig. 2. Object detection and classification result using COCO dataset.</figDesc><graphic coords="3,68.64,565.32,229.32,128.76" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3" coords="3,320.28,179.21,216.30,6.62;3,321.48,50.52,214.32,120.36"><head>Fig. 3 .</head><label>3</label><figDesc>Fig. 3. Object detection and classification result using GTSRB dataset.</figDesc><graphic coords="3,321.48,50.52,214.32,120.36" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0" coords="4,71.04,57.77,468.75,135.65"><head>TABLE I .</head><label>I</label><figDesc>COMPARISON OF THE PROPOSED SYSTEM WITH OTHER RELATED WORKS.Evaluation Metrics / Author Valadanzoj et al.<ref type="bibr" target="#b15">[16]</ref> Nguyen et al.<ref type="bibr" target="#b14">[15]</ref> Heller et al.<ref type="bibr" target="#b12">[13]</ref> Amin et al.<ref type="bibr" target="#b18">[19]</ref> Ngo et al.<ref type="bibr" target="#b11">[12]</ref> This Work</figDesc><table coords="4,82.44,88.01,457.35,105.41"><row><cell>Model</cell><cell>YOLO v4 Tiny</cell><cell>YOLO v4 Tiny</cell><cell>YOLO v4 Tiny</cell><cell>YOLO v3 Tiny</cell><cell>YOLO v3 Tiny</cell><cell>YOLO v5</cell></row><row><cell>FPGA Board</cell><cell>ZC 706</cell><cell>ZCU 104</cell><cell>Kria KV 260</cell><cell>Kria KV 260</cell><cell>Kria KV 260</cell><cell>Kria KV 260</cell></row><row><cell>Accuracy (%)</cell><cell>79</cell><cell>78</cell><cell>75</cell><cell>99</cell><cell>91.87</cell><cell>98.6</cell></row><row><cell>Inference Speed (FPS)</cell><cell>55</cell><cell>125</cell><cell>15</cell><cell>15</cell><cell>25</cell><cell>9</cell></row><row><cell>Power (W)</cell><cell>13.6</cell><cell>26.4</cell><cell>8</cell><cell>3.5</cell><cell>7.9</cell><cell>3.5</cell></row><row><cell>Efficiency (FPS/W)</cell><cell>4</cell><cell>4.7</cell><cell>1.87</cell><cell>4.2</cell><cell>3.1</cell><cell>2.6</cell></row><row><cell cols="2">V. CONCLUSION AND FUTURE WORK</cell><cell></cell><cell></cell><cell></cell><cell></cell><cell></cell></row></table></figure>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div><head coords="4,140.40,392.21,76.70,8.20">ACKNOWLEDGMENT</head><p coords="4,82.08,406.25,206.54,8.20;4,68.52,416.45,220.32,8.20;4,68.52,426.77,126.91,8.20">This research work is part of the <rs type="projectName">IGNITE</rs> project, financially supported by the <rs type="funder">Freiraum program of Stiftung Innovation in der Hochschullehre</rs>.</p></div>
+			</div>
+			<listOrg type="funding">
+				<org type="funded-project" xml:id="_uck5dXU">
+					<orgName type="project" subtype="full">IGNITE</orgName>
+				</org>
+			</listOrg>
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct coords="4,85.44,458.69,203.26,6.62;4,85.44,467.21,203.33,6.62;4,85.44,475.61,134.15,6.62" xml:id="b0">
+	<monogr>
+		<title level="m" type="main">Traffic sign and light detection using deep learning for automotive applications</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Naimi</surname></persName>
+		</author>
+		<imprint>
+			<date type="published" when="2021">2021</date>
+			<pubPlace>Windsor, ON, Canada</pubPlace>
+		</imprint>
+		<respStmt>
+			<orgName>Dept. Elect. Comput. Eng., Univ.Windsor</orgName>
+		</respStmt>
+	</monogr>
+	<note type="report_type">Ph.D. thesis</note>
+	<note type="raw_reference">H. Naimi, &apos;&apos;Traffic sign and light detection using deep learning for automotive applications,&apos;&apos; Ph.D. thesis, Dept. Elect. Comput. Eng., Univ.Windsor, Windsor, ON, Canada, 2021.</note>
+</biblStruct>
+
+<biblStruct coords="4,85.44,486.53,203.26,6.62;4,85.44,494.93,203.29,6.62;4,85.44,503.45,197.30,6.62" xml:id="b1">
+	<analytic>
+		<title level="a" type="main">You only look once: Unified, real-time object detection</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Redmon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Divvala</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Girshick</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Farhadi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR)</title>
+		<meeting>IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR)</meeting>
+		<imprint>
+			<date type="published" when="2016-06">Jun. 2016</date>
+			<biblScope unit="page" from="779" to="788" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Redmon, S. Divvala, R. Girshick, and A. Farhadi, &apos;&apos;You only look once: Unified, real-time object detection,&apos;&apos; in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2016, pp. 779-788.</note>
+</biblStruct>
+
+<biblStruct coords="4,85.20,514.25,203.45,6.62;4,85.20,522.65,203.44,6.62;4,85.20,531.17,203.47,6.62;4,85.20,539.57,203.55,6.62;4,85.20,548.09,16.90,6.62" xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Towards Resource Efficient and Low Latency CNN Accelerator for FPGAs: Review and Evaluation</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Obermaisser</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2024 3rd International Conference on Embedded Systems and Artificial Intelligence (ESAI)</title>
+		<meeting><address><addrLine>Fez, Morocco</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="1" to="10" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. A. Amin and R. Obermaisser, &quot;Towards Resource Efficient and Low Latency CNN Accelerator for FPGAs: Review and Evaluation,&quot; 2024 3rd International Conference on Embedded Systems and Artificial Intelligence (ESAI), Fez, Morocco, pp. 1-10, 2024.</note>
+</biblStruct>
+
+<biblStruct coords="4,85.44,558.89,203.23,6.62;4,85.44,567.41,203.36,6.62;4,85.44,575.81,203.39,6.62;4,85.44,584.33,142.34,6.62" xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Towards AI-Powered Edge Intelligence for Object Detection in Self-Driving Cars: Enhancing IoV Efficiency and Safety</title>
+		<author>
+			<persName><forename type="first">I</forename><surname>Ahmed</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Ahmad</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">U R</forename><surname>Siddiqi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Chehri</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><surname>Jeon</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Internet of Things Journal, Early Access</title>
+		<imprint>
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">I. Ahmed, M. Ahmad, M. U. R. Siddiqi, A. Chehri and G. Jeon, &quot;Towards AI-Powered Edge Intelligence for Object Detection in Self-Driving Cars: Enhancing IoV Efficiency and Safety,&quot; IEEE Internet of Things Journal, Early Access, 2025.</note>
+</biblStruct>
+
+<biblStruct coords="4,85.44,595.13,203.38,6.62;4,85.44,603.53,203.39,6.62;4,85.44,612.05,203.23,6.62;4,85.44,620.45,203.41,6.62;4,85.44,628.97,119.32,6.62" xml:id="b4">
+	<analytic>
+		<title level="a" type="main">Resource-Efficient FPGA Implementation for Real-Time Breast Cancer Classification Using Custom CNNs</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Obermaisser</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2024 International Conference on Intelligent Computing, Communication, Networking and Services (ICCNS)</title>
+		<meeting><address><addrLine>Dubrovnik, Croatia</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="177" to="182" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. A. Amin and R. Obermaisser, &quot;Resource-Efficient FPGA Implementation for Real-Time Breast Cancer Classification Using Custom CNNs,&quot; 2024 International Conference on Intelligent Computing, Communication, Networking and Services (ICCNS), Dubrovnik, Croatia, pp. 177-182, 2024.</note>
+</biblStruct>
+
+<biblStruct coords="4,85.44,639.65,203.30,6.62;4,85.44,648.17,203.33,6.62;4,85.44,656.57,203.45,6.62;4,339.48,182.45,203.29,6.62;4,339.48,190.97,199.31,6.62" xml:id="b5">
+	<analytic>
+		<title level="a" type="main">Power Efficient Real-Time Traffic Signal Classification for Autonomous Driving Using FPGAs</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">S A</forename><surname>Hossain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">L</forename><surname>Schmid</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Wiese</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Obermaisser</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">6th International Conference on Communications, Signal Processing, and their Applications (ICCSPA)</title>
+		<meeting><address><addrLine>Istanbul, Turkey</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="1" to="6" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. A. Amin, M. S. A. Hossain, L. Schmid, V. Wiese and R. Obermaisser, &quot;Power Efficient Real-Time Traffic Signal Classification for Autonomous Driving Using FPGAs,&quot; 6th International Conference on Communications, Signal Processing, and their Applications (ICCSPA), Istanbul, Turkey, pp. 1-6, 2024.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,201.77,203.35,6.62;4,339.48,210.29,203.33,6.62;4,339.48,218.69,203.38,6.62;4,339.48,227.21,71.74,6.62" xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Design and Evaluation of Guided Wave Signal Generation for System-On-Chip Platform on FPGA</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Wiese</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">48th Annual Conference of the Industrial Electronics Society (IECON)</title>
+		<meeting><address><addrLine>Brussels, Belgium</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="page" from="1" to="5" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">V. Wiese et al., &quot;Design and Evaluation of Guided Wave Signal Generation for System-On-Chip Platform on FPGA,&quot; 48th Annual Conference of the Industrial Electronics Society (IECON), Brussels, Belgium, pp. 1-5, 2022.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,238.01,203.37,6.62;4,339.48,246.41,203.24,6.62;4,339.48,254.93,203.29,6.62;4,339.48,263.33,99.59,6.62" xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Functional Safety of a System-On-Chip based Safety-Critical Structural Health Monitoring System</title>
+		<author>
+			<persName><forename type="first">V</forename><surname>Wiese</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">6th International Conference on System Reliability and Safety (ICSRS)</title>
+		<meeting><address><addrLine>Venice, Italy</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2022">2022</date>
+			<biblScope unit="page" from="539" to="547" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">V. Wiese et al., &quot;Functional Safety of a System-On-Chip based Safety-Critical Structural Health Monitoring System,&quot; 6th International Conference on System Reliability and Safety (ICSRS), Venice, Italy, pp. 539-547, 2022.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,274.25,203.35,6.62;4,339.48,282.65,203.34,6.62;4,339.48,291.17,203.32,6.62;4,339.48,299.57,167.79,6.62" xml:id="b8">
+	<analytic>
+		<title level="a" type="main">BiDSRS+: Resource Efficient Reconfigurable Real Time Bidirectional Super Resolution System for FPGAs</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Obermaisser</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Journal on Emerging and Selected Topics in Circuits and Systems</title>
+		<imprint>
+			<biblScope unit="volume">15</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="120" to="132" />
+			<date type="published" when="2025">2025</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. A. Amin and R. Obermaisser, &quot;BiDSRS+: Resource Efficient Reconfigurable Real Time Bidirectional Super Resolution System for FPGAs,&quot; IEEE Journal on Emerging and Selected Topics in Circuits and Systems, vol. 15, no. 1, pp. 120-132, 2025.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,310.25,203.43,6.62;4,339.48,318.77,203.40,6.62;4,339.48,327.17,16.97,6.62" xml:id="b9">
+	<analytic>
+		<title level="a" type="main">A Survey of FPGA-Based Vision Systems for Autonomous Cars</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Castells-Rufas</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<biblScope unit="page" from="132525" to="132563" />
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Castells-Rufas et al., &quot;A Survey of FPGA-Based Vision Systems for Autonomous Cars,&quot; IEEE Access, vol. 10, pp. 132525-132563, 2022.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,338.09,203.14,6.62;4,339.48,346.49,203.41,6.62;4,339.48,355.01,203.43,6.62;4,339.48,363.41,203.29,6.62;4,339.48,371.93,75.41,6.62" xml:id="b10">
+	<analytic>
+		<title level="a" type="main">HePiLUT: Resource Efficient Heterogeneous Pipelined CNN Accelerator for FPGAs</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">S A</forename><surname>Hossain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Obermaisser</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2024 International Conference on Intelligent Computing, Communication, Networking and Services (ICCNS)</title>
+		<meeting><address><addrLine>Dubrovnik, Croatia</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="32" to="37" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. A. Amin, M. S. A. Hossain and R. Obermaisser, &quot;HePiLUT: Resource Efficient Heterogeneous Pipelined CNN Accelerator for FPGAs,&quot; 2024 International Conference on Intelligent Computing, Communication, Networking and Services (ICCNS), Dubrovnik, Croatia, pp. 32-37, 2024.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,382.73,203.24,6.62;4,339.48,391.13,203.38,6.62;4,339.48,399.65,203.29,6.62;4,339.48,408.05,203.36,6.62;4,339.48,416.57,100.96,6.62" xml:id="b11">
+	<analytic>
+		<title level="a" type="main">A Traffic Sign Recognition System using FPGA-Based YOLOv3-Tiny Network</title>
+		<author>
+			<persName><forename type="first">H. -T</forename><surname>Ngo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Le</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N. -T</forename><surname>Vo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X. -D</forename><surname>Nguyen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">2024 5th International Conference on Communications, Information, Electronic and Energy Systems (CIEES)</title>
+		<meeting><address><addrLine>Veliko Tarnovo, Bulgaria</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2024">2024</date>
+			<biblScope unit="page" from="1" to="6" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">H. -T. Ngo, D. Le, N. -T. Vo and X. -D. Nguyen, &quot;A Traffic Sign Recognition System using FPGA-Based YOLOv3-Tiny Network,&quot; 2024 5th International Conference on Communications, Information, Electronic and Energy Systems (CIEES), Veliko Tarnovo, Bulgaria, pp. 1-6, 2024.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,427.37,203.35,6.62;4,339.48,435.89,203.39,6.62;4,339.48,444.29,203.26,6.62;4,339.48,452.81,65.42,6.62" xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Marine objects detection using deep learning on embedded edge devices</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Heller</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Rizk</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Douguet</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Baghdadi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J.-P</forename><surname>Diguet</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE International Workshop Rapid System Prototyping</title>
+		<imprint>
+			<biblScope unit="page" from="1" to="7" />
+			<date type="published" when="2022">2022</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D. Heller, M. Rizk, R. Douguet, A. Baghdadi, and J.-P. Diguet, &apos;&apos;Marine objects detection using deep learning on embedded edge devices,&apos;&apos; IEEE International Workshop Rapid System Prototyping (RSP), pp. 1-7, 2022.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,463.61,203.24,6.62;4,339.48,472.01,203.26,6.62;4,339.48,480.53,203.24,6.62;4,339.48,488.93,199.62,6.62" xml:id="b13">
+	<analytic>
+		<title level="a" type="main">SATAY: A streaming architecture toolflow for accelerating YOLO models on FPGA devices</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Montgomerie-Corcoran</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Toupas</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Yu</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C.-S</forename><surname>Bouganis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International Conference Field Programable Technology</title>
+		<meeting><address><addrLine>Yokohama, Japan</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2023">2023</date>
+			<biblScope unit="page" from="179" to="187" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">A. Montgomerie-Corcoran, P. Toupas, Z. Yu, and C.-S. Bouganis, &apos;&apos;SATAY: A streaming architecture toolflow for accelerating YOLO models on FPGA devices,&apos;&apos; International Conference Field Programable Technology, Yokohama, Japan, , pp. 179-187, 2023.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,499.85,203.38,6.62;4,339.48,508.25,203.35,6.62;4,339.48,516.77,203.30,6.62;4,339.48,525.17,35.83,6.62" xml:id="b14">
+	<analytic>
+		<title level="a" type="main">FPGA-SoC implementation of YOLOv4 for flying-object detection</title>
+		<author>
+			<persName><forename type="first">D.-D</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D.-T</forename><surname>Nguyen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M.-T</forename><surname>Le</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Q.-C</forename><surname>Nguyen</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Journal of Real-Time Image Processing</title>
+		<imprint>
+			<biblScope unit="volume">21</biblScope>
+			<biblScope unit="issue">3</biblScope>
+			<biblScope unit="page">63</biblScope>
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">D.-D. Nguyen, D.-T. Nguyen, M.-T. Le, and Q.-C. Nguyen, &apos;&apos;FPGA-SoC implementation of YOLOv4 for flying-object detection,&apos;&apos; Journal of Real-Time Image Processing, vol. 21, no. 3, p. 63, 2024.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,535.85,203.25,6.62;4,339.48,544.37,203.29,6.62;4,339.48,552.77,161.80,6.62" xml:id="b15">
+	<analytic>
+		<title level="a" type="main">High-speed YOLOv4-tiny hardware accelerator for self-driving automotive</title>
+		<author>
+			<persName><forename type="first">Z</forename><surname>Valadanzoj</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Daryanavard</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><surname>Harifi</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">J. Supercomput</title>
+		<imprint>
+			<biblScope unit="volume">80</biblScope>
+			<biblScope unit="issue">5</biblScope>
+			<biblScope unit="page" from="6699" to="6724" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">Z. Valadanzoj, H. Daryanavard, and A. Harifi, &apos;&apos;High-speed YOLOv4-tiny hardware accelerator for self-driving automotive,&apos;&apos; J. Supercomput., vol. 80, no. 5, pp. 6699-6724, 2024.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,563.69,203.43,6.62;4,339.48,572.09,203.37,6.62;4,339.48,580.61,148.28,6.62" xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Microsoft COCO: Common objects in context</title>
+		<author>
+			<persName><forename type="first">T.-Y</forename><surname>Lin</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Computer vision-ECCV 2014: 13th European conference</title>
+		<meeting><address><addrLine>zurich, Switzerland</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2014-12">September 6-12. 2014</date>
+			<biblScope unit="page" from="740" to="755" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">T.-Y. Lin et al., &quot;Microsoft COCO: Common objects in context,&quot; Computer vision-ECCV 2014: 13th European conference, zurich, Switzerland, September 6-12, pp. 740-755, 2014.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,591.41,203.39,6.62;4,339.48,599.81,203.40,6.62;4,339.48,608.33,203.37,6.62;4,339.48,616.73,160.54,6.62" xml:id="b17">
+	<analytic>
+		<title level="a" type="main">The German Traffic Sign Recognition Benchmark: A multi-class classification competition</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Stallkamp</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Schlipsing</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Salmen</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Igel</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">The 2011 International Joint Conference on Neural Networks</title>
+		<meeting><address><addrLine>San Jose, CA, USA</addrLine></address></meeting>
+		<imprint>
+			<date type="published" when="2011">2011</date>
+			<biblScope unit="page" from="1453" to="1460" />
+		</imprint>
+	</monogr>
+	<note type="raw_reference">J. Stallkamp, M. Schlipsing, J. Salmen and C. Igel, &quot;The German Traffic Sign Recognition Benchmark: A multi-class classification competition,&quot; The 2011 International Joint Conference on Neural Networks, San Jose, CA, USA, pp. 1453-1460, 2011.</note>
+</biblStruct>
+
+<biblStruct coords="4,339.48,627.65,203.15,6.62;4,339.48,636.05,203.38,6.62;4,339.48,644.57,203.22,6.62;4,339.48,652.97,39.53,6.62" xml:id="b18">
+	<analytic>
+		<title level="a" type="main">FPGA-Based Real-Time Object Detection and Classification System Using YOLO for Edge Computing</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Amin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Hasan</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">V</forename><surname>Wiese</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Obermaisser</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">IEEE Access</title>
+		<imprint>
+			<biblScope unit="volume">12</biblScope>
+			<biblScope unit="page" from="73268" to="73278" />
+			<date type="published" when="2024">2024</date>
+		</imprint>
+	</monogr>
+	<note type="raw_reference">R. A. Amin, M. Hasan, V. Wiese and R. Obermaisser, &quot;FPGA- Based Real-Time Object Detection and Classification System Using YOLO for Edge Computing,&quot; IEEE Access, vol. 12, pp. 73268- 73278, 2024.</note>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>

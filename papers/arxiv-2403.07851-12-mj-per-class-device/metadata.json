@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-2403.07851-12-mj-per-class-device",
+  "title": "12 mJ per Class On-Device Online Few-Shot Class-Incremental Learning",
+  "authors": [
+    {
+      "given": "Yoga Esa",
+      "family": "Wibowo"
+    },
+    {
+      "given": "Cristian",
+      "family": "Cioflan"
+    },
+    {
+      "given": "Thorir Mar",
+      "family": "Ingolfsson"
+    },
+    {
+      "given": "Michael",
+      "family": "Hersche"
+    },
+    {
+      "given": "Leo",
+      "family": "Zhao"
+    },
+    {
+      "given": "Abbas",
+      "family": "Rahimi"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2403.07851",
+  "url": "https://arxiv.org/abs/2403.07851",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

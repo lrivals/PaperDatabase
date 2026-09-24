@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded",
+  "title": "Efficient Deep Learning Infrastructures for Embedded Computing Systems: A Comprehensive Survey and Future Envision",
+  "authors": [
+    {
+      "given": "Xiangzhong",
+      "family": "Luo"
+    },
+    {
+      "given": "Di",
+      "family": "Liu"
+    },
+    {
+      "given": "Hao",
+      "family": "Kong"
+    },
+    {
+      "given": "Shuo",
+      "family": "Huai"
+    },
+    {
+      "given": "Hui",
+      "family": "Chen"
+    },
+    {
+      "given": "Guochu",
+      "family": "Xiong"
+    },
+    {
+      "given": "Weichen",
+      "family": "Liu"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2411.01431",
+  "url": "https://arxiv.org/abs/2411.01431",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

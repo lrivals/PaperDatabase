@@ -1,0 +1,299 @@
+#!/usr/bin/env python3
+"""Ingestion des PDF de inbox/ : extraction, nettoyage, écriture de papers/<paper_id>/.
+
+usage : ingest.py [--force] [chemin.pdf ...]
+Sans chemin, traite tous les PDF de inbox/. Voir SETUP.md §5.
+"""
+import argparse
+import difflib
+import hashlib
+import json
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+import requests  # noqa: E402
+
+from lib import doc, ids, pdftext, schema, tei  # noqa: E402
+
+INBOX = ROOT / "inbox"
+PAPERS = ROOT / "papers"
+GROBID_URL = "http://localhost:8070/api/processFulltextDocument"
+
+AXIS_RULES = (
+    ("yolo-fpga", r"\byolo"),
+    ("autoencoder-fpga", r"auto-?encoder|\bVAEs?\b|\bCAEs?\b"),
+    ("continual-learning", r"continual|incremental|lifelong|\breplay\b|few-shot"),
+    ("toolflows", r"hls4ml|\bFINN\b|vitis ai|fpga ai suite|\bSATAY\b|tool ?flow|codesign workflow"),
+    ("platforms", r"zynq|kria|kv260|zcu ?10[24]|pynq|versal|ultrascale|jetson"),
+)
+TAG_RULES = (
+    (r"\byolo ?v?(\d+)(-?tiny)?", lambda m: f"yolov{m.group(1)}" + ("-tiny" if m.group(2) else "")),
+    (r"hls4ml", "hls4ml"), (r"\bFINN\b", "finn"), (r"vitis ai", "vitis-ai"),
+    (r"\bSATAY\b", "satay"), (r"fpga ai suite", "intel-fpga-ai-suite"),
+    (r"kv ?260", "kv260"), (r"zcu ?102", "zcu102"), (r"zcu ?104", "zcu104"),
+    (r"zc ?706", "zc706"), (r"pynq", "pynq"), (r"versal", "versal"), (r"zynq", "zynq"),
+    (r"quantiz", "quantization"), (r"prun", "pruning"), (r"\bINT8\b", "int8"),
+    (r"hyperdimensional|\bHDC\b", "hdc"), (r"\bSLDA\b|streaming lda", "slda"),
+    (r"auto-?encoder", "autoencoder"), (r"\bVAEs?\b|variational auto", "vae"),
+    (r"anomaly", "anomaly-detection"), (r"mobilenet", "mobilenet"),
+)
+
+
+# --- utilitaires ----------------------------------------------------------------------
+
+def sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def grobid_alive():
+    r = subprocess.run(["bash", str(ROOT / "bin" / "grobid.sh"), "status"], capture_output=True)
+    return r.returncode == 0
+
+
+def grobid_extract(pdf):
+    with open(pdf, "rb") as f:
+        r = requests.post(
+            GROBID_URL,
+            files={"input": (pdf.name, f, "application/pdf")},
+            data={
+                "consolidateHeader": "0",
+                "consolidateCitations": "0",
+                "includeRawCitations": "1",
+                "teiCoordinates": ["p", "head", "figure", "biblStruct"],
+            },
+            timeout=300,
+        )
+    if r.status_code != 200:
+        raise RuntimeError(f"GROBID HTTP {r.status_code} : {r.text[:200]}")
+    return r.content
+
+
+def find_existing(arxiv_id, digest):
+    """Dossier papers/ déjà occupé par cet article (même id arXiv ou même PDF)."""
+    if arxiv_id:
+        hits = sorted(PAPERS.glob(ids.arxiv_dir_prefix(arxiv_id) + "*"))
+        if hits:
+            return hits[0]
+    for p in PAPERS.glob("*/paper.pdf"):
+        if sha256(p) == digest:
+            return p.parent
+    return None
+
+
+SURVEY_RE = r"\bsurvey|\breview\b|\boverview\b|state of the art\b"  # titre et mots-clés seulement
+
+
+def classify(text, title_kw=""):
+    axes = [a for a, rx in AXIS_RULES if re.search(rx, text, re.IGNORECASE)]
+    if re.search(SURVEY_RE, title_kw, re.IGNORECASE):
+        axes.insert(0, "surveys")
+    tags = []
+    for rx, name in TAG_RULES:
+        for m in re.finditer(rx, text, re.IGNORECASE):
+            t = name(m) if callable(name) else name
+            if t not in tags:
+                tags.append(t)
+            if not callable(name):
+                break
+    return axes, tags
+
+
+def _full(a):
+    return re.sub(r"[^a-z]", "", " ".join(x for x in (a.get("given"), a.get("family")) if x).lower())
+
+
+def _best_split(arx_author, tei_authors):
+    """arXiv ne donne que le nom complet (« Rashed Al Amin ») : on reprend la séparation
+    prénom/nom de GROBID quand le nom complet est identique."""
+    for t in tei_authors:
+        if _full(t) == _full(arx_author):
+            return {"given": t["given"], "family": t["family"]}
+    return arx_author
+
+
+def merge_metadata(arx, header, backend, warnings):
+    """.meta.json arXiv > teiHeader GROBID > null. Rien n'est deviné."""
+    meta = schema.new_metadata()
+    for k in ("title", "authors", "year", "venue", "doi", "arxiv_id"):
+        v = (arx or {}).get(k) or header.get(k)
+        meta[k] = v if v not in ("", []) else ([] if k == "authors" else None)
+    if arx and header.get("authors"):
+        meta["authors"] = [_best_split(a, header["authors"]) for a in meta["authors"]]
+
+    if arx:
+        meta["url"] = f"https://arxiv.org/abs/{arx['arxiv_id']}"
+        if arx.get("journal_ref"):
+            meta["venue"] = arx["journal_ref"]
+            warnings.append(f"publié ailleurs selon arXiv (journal_ref : {arx['journal_ref']}) : "
+                            "type journal/conference à préciser")
+        else:
+            meta["venue"] = "arXiv preprint"
+            meta["type"] = "preprint"
+        if header.get("title") and arx.get("title"):
+            ratio = difflib.SequenceMatcher(None, header["title"].lower(), arx["title"].lower()).ratio()
+            if ratio < 0.8:
+                warnings.append(f"titre du PDF ≠ titre arXiv : « {header['title']} »")
+    else:
+        if meta["doi"]:
+            meta["url"] = f"https://doi.org/{meta['doi']}"
+        warnings.append("type de publication à préciser")
+    if backend == "pymupdf" and schema.WARN_MANUAL_METADATA not in warnings:
+        warnings.insert(0, schema.WARN_MANUAL_METADATA)
+    return meta
+
+
+def check_missing(meta, warnings):
+    for k in ("title", "year"):
+        if meta[k] is None:
+            warnings.append(f"{k} introuvable")
+    if not meta["authors"]:
+        warnings.append("auteurs introuvables")
+    return meta
+
+
+# --- traitement d'un PDF --------------------------------------------------------------
+
+def process(pdf, force=False, use_grobid=True):
+    """Retourne ('ingéré' | 'ignoré', message)."""
+    pdf = Path(pdf).resolve()
+    meta_json = pdf.with_suffix(".meta.json")
+    arx = json.loads(meta_json.read_text()) if meta_json.exists() else None
+    digest = sha256(pdf)
+
+    existing = find_existing((arx or {}).get("arxiv_id"), digest)
+    if existing and not force:
+        return "ignoré", f"déjà ingéré dans papers/{existing.name} (--force pour ré-extraire ; sinon supprimer le PDF de inbox/)"
+
+    warnings, tei_bytes = [], None
+    if use_grobid:
+        try:
+            tei_bytes = grobid_extract(pdf)
+            header, blocks, refs = tei.parse(tei_bytes)
+            backend = "grobid"
+        except Exception as e:  # repli sur PyMuPDF
+            warnings.append(f"GROBID a échoué ({e}) : repli PyMuPDF")
+            tei_bytes = None
+    if tei_bytes is None:
+        header, blocks, refs = pdftext.extract(pdf)
+        backend = "pymupdf"
+
+    old = json.loads((existing / "metadata.json").read_text()) if existing else None
+    meta = merge_metadata(arx, header, backend, warnings)
+    if old:  # ré-extraction : les métadonnées déjà validées (ou corrigées à la main) priment
+        for k in ("title", "authors", "year", "venue", "doi", "arxiv_id", "url", "type", "added"):
+            if old.get(k) not in (None, []):
+                meta[k] = old[k]
+        meta["status"]["fiche"] = old.get("status", {}).get("fiche", "todo")
+        warnings[:] = [w for w in warnings if not w.startswith(("type de publication", "publié ailleurs"))]
+    check_missing(meta, warnings)
+    abstract = (arx or {}).get("abstract") or header.get("abstract") or ""
+    title_kw = " ".join([meta["title"] or "", " ".join(header.get("keywords", []))])
+    axes, tags = classify(f"{title_kw} {abstract}", title_kw)
+    meta["axes"], meta["tags"] = axes, tags
+    warnings.append(schema.WARN_AXES_GUESSED if axes else "aucun axe détecté : à classer dans /paper-fiche")
+
+    if existing:
+        paper_id = existing.name  # un paper_id ne change jamais
+    else:
+        paper_id, w = ids.make_paper_id(meta)
+        warnings += w
+        if (PAPERS / paper_id).exists():
+            return "ignoré", f"papers/{paper_id} existe déjà pour un autre PDF : conflit à résoudre à la main"
+    meta["id"] = paper_id
+
+    body_chars = sum(len(t) for b in blocks if b.kind == "section" for t, _ in b.paras)
+    if not any(b.kind == "section" and b.heading for b in blocks):
+        warnings.append("aucune section détectée")
+    if body_chars < 2000:
+        warnings.append(f"corps très court ({body_chars} caractères) : extraction douteuse")
+    meta["extraction"] = {
+        "backend": backend,
+        "ok": backend == "grobid" and body_chars >= 2000,
+        "warnings": warnings,
+    }
+    meta["status"]["extracted"] = True
+
+    out = PAPERS / paper_id
+    if old and meta["status"]["fiche"] == "done":  # axes et tags confirmés lors de la fiche
+        meta["axes"], meta["tags"] = old.get("axes", axes), old.get("tags", tags)
+        meta["extraction"]["warnings"] = [w for w in warnings if w != schema.WARN_AXES_GUESSED]
+
+    errs = schema.validate_metadata(meta)
+    if errs:
+        raise ValueError("metadata.json non conforme : " + "; ".join(errs))
+
+    out.mkdir(parents=True, exist_ok=True)
+    tei_path = out / "grobid.tei.xml"
+    if tei_bytes is not None:
+        tei_path.write_bytes(tei_bytes)
+    elif tei_path.exists():
+        tei_path.unlink()  # trace d'une extraction précédente, plus d'actualité
+    (out / "fulltext.md").write_text(doc.render_fulltext(meta, blocks))
+    with open(out / "sections.jsonl", "w") as f:
+        for row in doc.to_sections(paper_id, blocks):
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+    with open(out / "refs.jsonl", "w") as f:
+        for r in refs:
+            f.write(json.dumps({"paper_id": paper_id, **r}, ensure_ascii=False) + "\n")
+    (out / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n")
+    if not (out / "fiche.md").exists():
+        (out / "fiche.md").write_text(schema.render_fiche(meta))
+
+    target = out / "paper.pdf"
+    if pdf != target:
+        shutil.move(str(pdf), target)
+    if meta_json.exists():
+        meta_json.unlink()
+    note = f" [{backend}]" + (f" — {len(warnings)} avertissement(s)" if warnings else "")
+    return "ingéré", f"papers/{paper_id}{note}"
+
+
+def run(pdfs=None, force=False):
+    """Ingère les PDF donnés (ou tout inbox/). Retourne le nombre d'erreurs."""
+    if pdfs:
+        pdfs = [Path(p) for p in pdfs]
+    else:
+        pdfs = sorted(INBOX.glob("*.pdf"))
+    if not pdfs:
+        print("inbox/ est vide : rien à ingérer.")
+        return 0
+
+    use_grobid = grobid_alive()
+    if not use_grobid:
+        print("GROBID ne répond pas (bash bin/grobid.sh start) : repli PyMuPDF, métadonnées à vérifier.")
+
+    counts = {"ingéré": 0, "ignoré": 0, "erreur": 0}
+    for pdf in pdfs:
+        try:
+            status, msg = process(pdf, force=force, use_grobid=use_grobid)
+        except Exception as e:
+            status, msg = "erreur", f"{type(e).__name__}: {e}"
+        counts[status] += 1
+        print(f"{status:7} {pdf.name} → {msg}")
+    print(f"\n{counts['ingéré']} ingéré(s), {counts['ignoré']} ignoré(s), {counts['erreur']} erreur(s).")
+    if counts["ingéré"]:
+        print("Penser à lancer : .venv/bin/python bin/reindex.py")
+    return counts["erreur"]
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--force", action="store_true",
+                    help="ré-extrait un article déjà ingéré (fiche.md n'est jamais écrasée)")
+    ap.add_argument("pdfs", nargs="*", help="PDF à ingérer (défaut : tout inbox/)")
+    args = ap.parse_args()
+    sys.exit(1 if run(args.pdfs, force=args.force) else 0)
+
+
+if __name__ == "__main__":
+    main()

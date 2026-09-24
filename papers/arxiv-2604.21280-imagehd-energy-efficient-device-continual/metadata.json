@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2604.21280-imagehd-energy-efficient-device-continual",
+  "title": "ImageHD: Energy-Efficient On-Device Continual Learning of Visual Representations via Hyperdimensional Computing",
+  "authors": [
+    {
+      "given": "Jebacyril",
+      "family": "Arockiaraj"
+    },
+    {
+      "given": "Dhruv",
+      "family": "Parikh"
+    },
+    {
+      "given": "Viktor",
+      "family": "Prasanna"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2604.21280",
+  "url": "https://arxiv.org/abs/2604.21280",
+  "type": "preprint",
+  "axes": [
+    "continual-learning",
+    "platforms"
+  ],
+  "tags": [
+    "zcu104",
+    "zynq",
+    "quantization",
+    "hdc"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

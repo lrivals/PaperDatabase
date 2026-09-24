@@ -1,10 +1,11 @@
-# PaperDatabase — guide de mise en place
+# PaperDatabase — guide technique
 
 Base de connaissance d'articles scientifiques (vision embarquée sur FPGA), conçue pour être
 interrogée par Claude Code.
 
-Ce document décrit **quoi construire et comment le mettre en route**. Les schémas de données
-exacts sont dans [DATA_MODEL.md](DATA_MODEL.md). Le mode d'emploi destiné à l'agent est dans
+Ce document décrit **ce qui est en place, comment le réinstaller et le faire tourner, et ce
+qui reste à faire** (§9). Les schémas de données exacts sont dans
+[DATA_MODEL.md](DATA_MODEL.md). Le mode d'emploi destiné à l'agent est dans
 [CLAUDE.md](CLAUDE.md).
 
 ---
@@ -32,10 +33,11 @@ nettoyé et découpé en sections, une fiche de lecture et une ou plusieurs lign
 
 ---
 
-## 2. Arborescence cible
+## 2. Arborescence
 
 ```
 PaperDatabase/
+├── README.md               # présentation du projet
 ├── CLAUDE.md               # mode d'emploi de la base pour l'agent
 ├── SETUP.md                # ce fichier
 ├── DATA_MODEL.md           # schémas et conventions
@@ -44,17 +46,27 @@ PaperDatabase/
 ├── gaps.md                 # carte des verrous et zones non couvertes
 ├── basicStart.txt          # bibliographie de départ (source d'amorçage)
 ├── requirements.txt
+├── requirements-viz.txt    # optionnel : dépendances de la visualisation 3D
 ├── .venv/                  # non versionné
 ├── bin/                    # scripts du pipeline
 │   ├── setup.sh
 │   ├── grobid.sh
 │   ├── add.py
 │   ├── ingest.py
-│   └── reindex.py
+│   ├── reindex.py
+│   └── viz.py              # app Dash : graphe 3D du corpus
 ├── lib/                    # code partagé
 │   ├── ids.py
 │   ├── tei.py
-│   └── schema.py
+│   ├── doc.py              # représentation commune GROBID / PyMuPDF
+│   ├── pdftext.py          # extraction de repli PyMuPDF
+│   ├── schema.py
+│   └── graph.py            # nœuds, liens et positions du graphe 3D
+├── tests/
+│   ├── fixtures/sample.tei.xml
+│   ├── test_tei.py
+│   └── test_graph.py
+├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps
 ├── inbox/                  # dépôt des PDF à ingérer
 └── papers/
     └── <paper_id>/
@@ -71,10 +83,9 @@ Les commandes Claude Code (`/paper-add`, `/paper-fiche`, `/paper-gaps`) vivent d
 `.claude/commands/` : ce dossier est lui-même la racine du projet Claude Code (il porte
 `CLAUDE.md`).
 
-S'y ajoutent `lib/doc.py` (représentation intermédiaire commune aux deux backends, écriture
-de `fulltext.md` / `sections.jsonl`), `lib/pdftext.py` (extraction de repli PyMuPDF) et
-`tests/` (tests du parsing TEI sur une sortie GROBID réelle :
-`.venv/bin/python -m unittest discover tests`).
+Tests : `.venv/bin/python -m unittest discover tests` — parsing TEI sur une sortie GROBID
+réelle (`test_tei.py`) et graphe sur un mini-corpus synthétique (`test_graph.py`, ignoré si
+`requirements-viz.txt` n'est pas installé).
 
 ---
 
@@ -103,7 +114,10 @@ projets.
 
 ---
 
-## 4. Mise en place pas à pas
+## 4. Installation (ou réinstallation) pas à pas
+
+Tout est déjà en place sur cette machine. Cette section sert à reconstruire l'environnement
+(nouvelle machine, venv supprimé) et à vérifier qu'il fonctionne.
 
 ### Étape 1 — environnement Python
 
@@ -114,6 +128,13 @@ bash bin/setup.sh          # crée .venv s'il n'existe pas, installe requirement
 
 **Critère de réussite :** `.venv/bin/python -c "import pymupdf, lxml, requests; print('ok')"`
 affiche `ok`.
+
+Optionnel, pour la visualisation 3D (`bin/viz.py`) — dépendances séparées pour garder le
+pipeline d'ingestion léger :
+
+```bash
+.venv/bin/pip install -r requirements-viz.txt   # dash, plotly, numpy, scikit-learn, networkx
+```
 
 ### Étape 2 — GROBID
 
@@ -137,20 +158,25 @@ curl -s localhost:8070/api/isalive    # -> true
 Compte quelques dizaines de secondes au premier démarrage, le temps que le service charge
 ses modèles.
 
-### Étape 3 — premier article de test
+### Étape 3 — contrôle sur un article
+
+Le corpus contient déjà `papers/arxiv-2507.18174-.../`. Sur une installation neuve, un
+`add.py` sur un id déjà ingéré est ignoré ; pour tester l'extraction de bout en bout,
+réingérer sans toucher à la fiche :
 
 ```bash
-.venv/bin/python bin/add.py 2507.18174
+.venv/bin/python bin/ingest.py --force papers/arxiv-2507.18174-*/paper.pdf
 ```
 
-**Critère de réussite :** un dossier `papers/arxiv-2507.18174-.../` contient `metadata.json`,
-`fulltext.md`, `sections.jsonl` et `fiche.md`. Voir §7 pour la relecture à faire.
+**Critère de réussite :** le dossier contient `metadata.json`, `fulltext.md`,
+`sections.jsonl`, `refs.jsonl` et `fiche.md`, et `metadata.json` indique
+`extraction.backend = "grobid"`. Voir §8 pour la relecture à faire.
 
-### Étape 4 — versionnage (recommandé)
+### Étape 4 — versionnage
 
-Le dossier est un dépôt git (remote : `https://github.com/lrivals/PaperDatabase.git`). Le
-versionnage rend l'état de l'art diffable : on voit la bibliographie se construire et les
-fiches évoluer.
+Le dossier est un dépôt git (remote : `https://github.com/lrivals/PaperDatabase.git`,
+premier commit : mise en place du pipeline et amorçage arXiv). Le versionnage rend l'état de
+l'art diffable : on voit la bibliographie se construire et les fiches évoluer.
 
 `.gitignore` :
 
@@ -168,9 +194,10 @@ les fiches et le CSV sont versionnés.
 
 ---
 
-## 5. Les scripts à écrire
+## 5. Les scripts
 
-Cette section est la spécification d'implémentation. Chaque script a un rôle unique.
+Référence de ce que fait chaque script (tous implémentés). Chaque script a un rôle unique ;
+en cas de modification, garder cette section à jour.
 
 ### `bin/setup.sh`
 
@@ -246,6 +273,53 @@ signe d'un oubli, sauf pour les surveys).
 
 Ne modifie jamais `benchmarks.csv` ni les fiches — il ne fait que lire et régénérer l'index.
 
+### `bin/viz.py [--port 8050] [--debug]`
+
+Application Dash locale (http://127.0.0.1:8050) : un nuage 3D où chaque point est un papier
+de `papers/`. Lecture seule, ne touche à aucun fichier. Le calcul (`lib/graph.py`) est fait au
+démarrage ; le bouton « Recharger le corpus » relit `papers/` après une ingestion sans
+relancer l'app.
+
+**Liens** (cochables, un trait coloré par type, épaisseur = poids relatif au lien le plus
+fort du même type) :
+
+| Type | Source | Poids |
+|---|---|---|
+| Citations | `refs.jsonl` rapproché des papiers du corpus (arXiv id → DOI → titre normalisé) | 1 |
+| Références partagées | couplage bibliographique : références communes à deux papiers | cosinus de Salton \|A∩B\| / √(\|A\|·\|B\|) |
+| Similarité textuelle | TF-IDF sur le texte de `sections.jsonl` (abstract + sections) | cosinus, filtré par un seuil réglable |
+| Thèmes communs | axes ∪ tags de `metadata.json` | Jaccard |
+
+**Placement** : *force* (force-directed 3D sur les liens cochés : les papiers liés se
+rapprochent, la vue change quand on coche/décoche) ou *sémantique* (PCA 3D du TF-IDF,
+positions fixes : la proximité = vocabulaire commun).
+
+**Couleur** : axe principal (premier axe de `metadata.json` ; l'infobulle liste tous les
+axes), tag principal, année, type de publication ou statut de fiche. Palette à 8 couleurs
+fixes doublées d'un symbole ; au-delà de 8 catégories, le reste est en gris. **Surligner**
+un axe ou un tag estompe les autres papiers.
+
+**Références externes** (option) : travaux cités par ≥ 2 papiers du corpus mais absents de
+la base, en petits points gris. Ce sont des candidats naturels à `/paper-add`.
+
+Un clic sur un point affiche le détail : métadonnées, lien arXiv/DOI, chemin de la fiche,
+et la liste de ses liens avec leur poids.
+
+Limites à garder en tête avant d'interpréter la vue :
+- la similarité TF-IDF est **lexicale**, pas sémantique : deux papiers qui disent la même
+  chose avec un vocabulaire différent paraîtront éloignés ;
+- le couplage et les citations dépendent de la qualité d'extraction des références par
+  GROBID : une référence mal parsée (titre tronqué, sans identifiant) ne se rapproche de
+  rien ;
+- les titres de moins de 4 mots ne servent pas de clé de rapprochement (trop ambigus) ;
+- avec une dizaine de papiers, les positions sont surtout illustratives.
+
+### `lib/graph.py`
+
+Couche données de la visualisation, sans Dash : chargement du corpus, clés de rapprochement
+des références (`ref_keys`), construction des liens, positions sémantiques (PCA) et
+force-directed (`networkx.spring_layout`). Testé par `tests/test_graph.py`.
+
 ### `lib/ids.py`
 
 Construction du `paper_id` (voir [DATA_MODEL.md](DATA_MODEL.md)), slugification, détection
@@ -253,8 +327,8 @@ d'un identifiant arXiv dans une chaîne ou une URL.
 
 ### `lib/tei.py`
 
-Parsing du TEI GROBID — la brique la plus délicate, à écrire et tester en premier sur un TEI
-réel :
+Parsing du TEI GROBID — la brique la plus délicate, testée par `tests/test_tei.py` sur un
+TEI réel (arXiv 2507.18174, GROBID 0.8.1) :
 
 - `teiHeader` → titre, auteurs (nom + prénom séparés), date de publication, DOI, venue,
   abstract ;
@@ -300,6 +374,12 @@ citant la section source de chaque chiffre.
 .venv/bin/python bin/reindex.py
 ```
 
+**Visualiser le corpus** (après `pip install -r requirements-viz.txt`) :
+
+```bash
+.venv/bin/python bin/viz.py          # puis http://127.0.0.1:8050
+```
+
 **Faire le point sur les gaps**, une fois une dizaine de fiches faites :
 
 ```
@@ -310,8 +390,8 @@ citant la section source de chaque chiffre.
 
 ## 7. Amorçage depuis la bibliographie de départ
 
-[basicStart.txt](basicStart.txt) contient une vingtaine d'articles. Neuf portent un
-identifiant arXiv et sont donc ingérables sans intervention :
+[basicStart.txt](basicStart.txt) contient une vingtaine d'articles. Les neuf qui portent un
+identifiant arXiv **sont ingérés** (tous par GROBID), avec cette boucle :
 
 ```bash
 for id in 2509.04153 2507.18174 1806.01683 2512.01463 2103.05579 \
@@ -325,7 +405,8 @@ end-to-end (*Neural Computing & Applications* 2023), YOLOv4-tiny de Valadanzoj e
 YOLOv3-Tiny sur Kria KV260 (IEEE), l'accélérateur YOLOv5 (ScienceDirect 2025), le YOLOv5 sur
 ZCU102 (PMC11434529), le CAE sur PYNQ-Z2 (IEEE), le comparatif hls4ml/FINN (Springer),
 Chameleon (TCAD 2024) et l'accélérateur SLDA (IEEE) — sont derrière des paywalls ou des
-plateformes sans API : PDF à récupérer à la main, puis dépôt dans `inbox/`.
+plateformes sans API : PDF à récupérer à la main, puis dépôt dans `inbox/`. **Pas encore
+fait** — voir §9.
 
 ⚠️ `basicStart.txt` prévient que ces références ont été collectées à partir de résumés
 seulement. **Chaque référence est à vérifier** (titre exact, auteurs, année, venue) au moment
@@ -337,7 +418,8 @@ le signal qu'une référence était approximative.
 ## 8. Vérification
 
 À faire une fois, sérieusement, avant d'ingérer tout le corpus — une erreur d'extraction non
-détectée se propage à toutes les fiches.
+détectée se propage à toutes les fiches. Les points 1 à 5 concernent l'ingestion (déjà
+utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche au §9.
 
 1. **Métadonnées.** Ouvre `papers/arxiv-2507.18174-*/metadata.json` : titre exact, liste
    d'auteurs complète et dans l'ordre, année cohérente avec l'identifiant arXiv.
@@ -361,13 +443,70 @@ détectée se propage à toutes les fiches.
 
 ---
 
-## 9. Extensions, plus tard
+## 9. État actuel et tâches à faire
 
-- **Graphe de connaissance.** Une fois 15-20 papiers fichés, `/graphify PaperDatabase/papers`
-  produit un graphe, des communautés et une vue des liens entre travaux — utile pour nourrir
-  `gaps.md`. Inutile avant d'avoir de la matière.
-- **Recherche sémantique.** Au-delà de ~200 papiers, si `grep` ne suffit plus, ajouter un
-  index local (sentence-transformers + ChromaDB) **par-dessus** `sections.jsonl`, sans rien
-  changer à l'arborescence. C'est un ajout, jamais un remplacement.
-- **Graphe de citations.** `refs.jsonl` est déjà produit et inutilisé : de quoi repérer les
-  articles les plus cités du corpus et les manques évidents dans la bibliographie.
+Point au 24/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+« En place »).
+
+### En place
+
+| Brique | État |
+|---|---|
+| Pipeline d'ingestion (`add.py`, `ingest.py`, `grobid.sh`, repli PyMuPDF) | fonctionnel, testé (`test_tei.py`) |
+| Index et contrôle de cohérence (`reindex.py`) | fonctionnel, 0 erreur |
+| Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps` | écrites (`.claude/commands/`) |
+| Corpus | 9 papiers arXiv ingérés, tous via GROBID ; 1266 références extraites |
+| Fiches de lecture | 0 / 9 `done` |
+| `benchmarks.csv` | en-tête seul, aucune ligne |
+| `gaps.md` | 1 gap, au statut *hypothèse* (autoencodeurs sur images) |
+| Visualisation 3D (`viz.py`, `lib/graph.py`) | fonctionnelle, testée (`test_graph.py`) ; 2 citations internes, 52 références externes co-citées |
+| Versionnage | dépôt git + remote GitHub ; la visualisation n'est pas encore commitée |
+
+### Tâches — corpus
+
+- [ ] **Ficher les 9 papiers** (`/paper-fiche`) : c'est le goulot, tout le reste
+  (benchmarks, gaps, vue 3D exploitable) en dépend.
+- [ ] Confirmer les axes pendant le fichage : les 9 `metadata.json` portent le warning
+  « axes déduits automatiquement ».
+- [ ] `arxiv-2602.15751-…` : arXiv signale une publication dans *Machine Learning: Science and
+  Technology* 7 (2026) 045024 — passer `type` de `preprint` à `journal` et renseigner `venue`
+  après vérification.
+- [ ] Récupérer à la main les ~10 articles sous paywall de `basicStart.txt` (§7), les
+  déposer dans `inbox/`, `ingest.py`, et vérifier chaque référence contre le PDF réel.
+- [ ] Ajouter les références externes les plus co-citées du corpus, repérées dans la vue 3D
+  (données lues dans les `refs.jsonl`, à vérifier au moment de l'ajout) :
+  - *FINN: A Framework for Fast, Scalable Binarized Neural Network Inference* — Umuroglu et
+    al., FPGA 2017, arXiv 1612.07119 (cité par 3 papiers) → `/paper-add 1612.07119` ;
+  - *FINN-R: An End-to-End Deep-Learning Framework for Fast Exploration of Quantized Neural
+    Networks* — Blott et al., ACM TRETS 2018, arXiv 1809.04570 (3 papiers) ;
+  - *fpgaConvNet: A Framework for Mapping Convolutional Neural Networks on FPGAs* —
+    Venieris & Bouganis, FCCM 2016, DOI 10.1109/FCCM.2016.22 (3 papiers ; paywall IEEE,
+    une version toolflow existe sur arXiv 1711.08740).
+- [ ] Dérouler la vérification du §8 (points 1-5 dès maintenant, 6-7 après la première
+  fiche).
+- [ ] Commiter la visualisation (`bin/viz.py`, `lib/graph.py`, `requirements-viz.txt`,
+  `tests/test_graph.py`, docs).
+
+### Tâches — analyse
+
+- [ ] Une fois 15-20 fiches `done` : repasser sur la vue 3D (placement *force*, liens
+  *thèmes communs* + *références partagées*) et relever les axes isolés ou peu reliés entre
+  eux — candidats à reporter dans `gaps.md` via `/paper-gaps`.
+- [ ] Au même stade, `/graphify PaperDatabase/papers` pour une détection de communautés,
+  à confronter à la vue 3D.
+
+### Tâches — outillage (plus tard)
+
+- [ ] **Embeddings dans la vue 3D.** Remplacer ou compléter le TF-IDF de `lib/graph.py`
+  (similarité lexicale seulement) par des embeddings sentence-transformers, en même temps
+  que l'index sémantique ci-dessous.
+- [ ] **Recherche sémantique.** Au-delà de ~200 papiers, si `grep` ne suffit plus, ajouter
+  un index local (sentence-transformers + ChromaDB) **par-dessus** `sections.jsonl`, sans
+  rien changer à l'arborescence. C'est un ajout, jamais un remplacement.
+- [ ] **Classement des références externes.** Export (CSV ou section de `gaps.md`) des
+  travaux absents de la base les plus cités par le corpus ; aujourd'hui visible seulement
+  dans la vue 3D.
+- [ ] **Fusion des variantes d'une même référence.** Un même travail cité sous deux titres
+  sans identifiant commun (ex. les versions FCCM 2016 et TNNLS 2019 de fpgaConvNet) reste en
+  deux nœuds : c'est correct pour deux publications distinctes, mais une référence mal
+  parsée par GROBID produit le même effet.

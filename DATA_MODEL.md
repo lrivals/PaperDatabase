@@ -162,12 +162,24 @@ même `section` — le découpage suit les paragraphes, jamais un compte de toke
 
 ## 6. `refs.jsonl`
 
-Une ligne par référence citée. Non chargé par défaut par l'agent : c'est une réserve pour un
-éventuel graphe de citations.
+Une ligne par référence citée. Non chargé par l'agent pour répondre aux questions ; lu par
+`lib/graph.py` pour la visualisation 3D (`bin/viz.py`).
 
 ```json
 {"paper_id": "arxiv-2507.18174-yolo-edge-fpga", "raw": "[12] J. Redmon and A. Farhadi, ...", "title": "YOLOv3: An Incremental Improvement", "authors": ["Redmon", "Farhadi"], "year": 2018, "doi": null, "arxiv_id": "1804.02767"}
 ```
+
+Rapprochement d'une référence avec un papier (`lib/graph.ref_keys`) : une référence et un
+`metadata.json` produisent chacun des clés normalisées, comparées dans cet ordre :
+
+| Clé | Normalisation |
+|---|---|
+| `arxiv:<id>` | minuscules, suffixe de version (`v2`) retiré |
+| `doi:<doi>` | minuscules |
+| `title:<slug>` | titre slugifié (sans accents, ponctuation ni casse) ; ignoré sous 4 mots |
+
+Deux références qui partagent une clé désignent le même travail. Une référence qui ne
+produit aucune clé (ni identifiant ni titre exploitable) est ignorée par le graphe.
 
 ---
 

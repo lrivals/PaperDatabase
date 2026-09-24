@@ -225,19 +225,28 @@
     "toolflows"
   ],
   "tags": [
-    "hls4ml"
+    "hls4ml",
+    "hgq",
+    "da4ml",
+    "qkeras",
+    "qonnx",
+    "quantization",
+    "pruning",
+    "vitis-hls",
+    "oneapi",
+    "catapult",
+    "autoencoder"
   ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 1, 5, 6, 8, 10, 11 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

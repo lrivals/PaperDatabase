@@ -1,0 +1,38 @@
+{
+  "id": "arxiv-1711.08740-fpgaconvnet-toolflow-mapping-diverse-convolutional",
+  "title": "fpgaConvNet: A Toolflow for Mapping Diverse Convolutional Neural Networks on Embedded FPGAs",
+  "authors": [
+    {
+      "given": "Stylianos I",
+      "family": "Venieris"
+    },
+    {
+      "given": "Christos-Savvas",
+      "family": "Bouganis"
+    }
+  ],
+  "year": 2017,
+  "venue": "NIPS 2017 Workshop on Machine Learning on the Phone and other Consumer Devices",
+  "doi": null,
+  "arxiv_id": "1711.08740",
+  "url": "https://arxiv.org/abs/1711.08740",
+  "type": "conference",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente",
+      "article de workshop (commentaire arXiv) : version toolflow de fpgaConvNet, distincte de l'article FCCM 2016 (DOI 10.1109/FCCM.2016.22) cité par le corpus"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

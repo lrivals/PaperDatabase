@@ -32,25 +32,31 @@
     }
   ],
   "year": 2024,
-  "venue": "arXiv preprint",
-  "doi": null,
+  "venue": "2024 Design, Automation & Test in Europe Conference & Exhibition (DATE)",
+  "doi": "10.23919/DATE58400.2024.10546598",
   "arxiv_id": "2403.07851",
   "url": "https://arxiv.org/abs/2403.07851",
-  "type": "preprint",
+  "type": "conference",
   "axes": [
-    "continual-learning"
+    "continual-learning",
+    "platforms"
   ],
-  "tags": [],
+  "tags": [
+    "mcu",
+    "gap9",
+    "mobilenet",
+    "int8",
+    "quantization",
+    "fscil"
+  ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

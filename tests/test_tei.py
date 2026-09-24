@@ -65,6 +65,24 @@ class TestTei(unittest.TestCase):
 
 
 class TestIds(unittest.TestCase):
+    def test_header_cleaning(self):
+        # en-tête FINN-R (arXiv 1809.04570, gabarit ACM) tel que GROBID 0.8.1 le produit
+        authors = tei.clean_authors([
+            {"given": "Thomas B", "family": "Preusser"},
+            {"given": "Giulio", "family": tei._dehyphen("Gam- Bardella")},
+            {"given": "Xilinx", "family": "Research"},
+            {"given": "Thomas B", "family": "Preußer"},
+            {"given": "Giulio", "family": "Gambardella"},
+            {"given": "Miriam", "family": "Leeser"},
+        ])
+        self.assertEqual([a["family"] for a in authors], ["Preusser", "Gambardella", "Leeser"])
+        self.assertIsNone(tei.clean_doi("10.1145/nnnnnnn.nnnnnnn"))
+        self.assertIsNone(tei.clean_doi("not a doi"))
+        self.assertEqual(tei.clean_doi("10.1145/3242897"), "10.1145/3242897")
+        self.assertEqual(tei.clean_doi("10.1561/1000000005"), "10.1561/1000000005")
+        self.assertEqual(tei.clean_arxiv("arXiv:1809.04570v1[cs.AR]"), "1809.04570")
+        self.assertEqual(tei.clean_arxiv("arXiv:2507.18174"), "2507.18174")
+
     def test_find_arxiv_id(self):
         self.assertEqual(ids.find_arxiv_id("2507.18174"), "2507.18174")
         self.assertEqual(ids.find_arxiv_id("https://arxiv.org/abs/2507.18174v2"), "2507.18174")

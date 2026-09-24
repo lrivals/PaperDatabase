@@ -108,6 +108,18 @@ def classify(text, title_kw=""):
     return axes, tags
 
 
+def keep_classification(old, axes, tags):
+    """Axes et tags d'une ré-extraction : ceux d'une fiche `done` priment (confirmés à la
+    lecture) ; sinon union ordonnée des anciens puis des nouveaux, pour ne pas perdre une
+    correction manuelle quand l'abstract ré-extrait diffère."""
+    if not old:
+        return axes, tags
+    old_axes, old_tags = old.get("axes") or [], old.get("tags") or []
+    if old.get("status", {}).get("fiche") == "done":
+        return old_axes, old_tags
+    return (list(dict.fromkeys(old_axes + axes)), list(dict.fromkeys(old_tags + tags)))
+
+
 def _full(a):
     return re.sub(r"[^a-z]", "", " ".join(x for x in (a.get("given"), a.get("family")) if x).lower())
 
@@ -144,7 +156,9 @@ def merge_metadata(arx, header, backend, warnings):
             if ratio < 0.8:
                 warnings.append(f"titre du PDF ≠ titre arXiv : « {header['title']} »")
     else:
-        if meta["doi"]:
+        if meta["arxiv_id"]:  # tampon arXiv du PDF, lu par GROBID
+            meta["url"] = f"https://arxiv.org/abs/{meta['arxiv_id']}"
+        elif meta["doi"]:
             meta["url"] = f"https://doi.org/{meta['doi']}"
         warnings.append("type de publication à préciser")
     if backend == "pymupdf" and schema.WARN_MANUAL_METADATA not in warnings:
@@ -199,7 +213,7 @@ def process(pdf, force=False, use_grobid=True):
     abstract = (arx or {}).get("abstract") or header.get("abstract") or ""
     title_kw = " ".join([meta["title"] or "", " ".join(header.get("keywords", []))])
     axes, tags = classify(f"{title_kw} {abstract}", title_kw)
-    meta["axes"], meta["tags"] = axes, tags
+    meta["axes"], meta["tags"] = keep_classification(old, axes, tags)
     warnings.append(schema.WARN_AXES_GUESSED if axes else "aucun axe détecté : à classer dans /paper-fiche")
 
     if existing:
@@ -229,7 +243,6 @@ def process(pdf, force=False, use_grobid=True):
 
     out = PAPERS / paper_id
     if old and meta["status"]["fiche"] == "done":  # axes et tags confirmés lors de la fiche
-        meta["axes"], meta["tags"] = old.get("axes", axes), old.get("tags", tags)
         meta["extraction"]["warnings"] = [w for w in warnings if w != schema.WARN_AXES_GUESSED]
 
     errs = schema.validate_metadata(meta)

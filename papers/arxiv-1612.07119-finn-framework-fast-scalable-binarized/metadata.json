@@ -1,0 +1,59 @@
+{
+  "id": "arxiv-1612.07119-finn-framework-fast-scalable-binarized",
+  "title": "FINN: A Framework for Fast, Scalable Binarized Neural Network Inference",
+  "authors": [
+    {
+      "given": "Yaman",
+      "family": "Umuroglu"
+    },
+    {
+      "given": "Nicholas J.",
+      "family": "Fraser"
+    },
+    {
+      "given": "Giulio",
+      "family": "Gambardella"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    },
+    {
+      "given": "Philip",
+      "family": "Leong"
+    },
+    {
+      "given": "Magnus",
+      "family": "Jahre"
+    },
+    {
+      "given": "Kees",
+      "family": "Vissers"
+    }
+  ],
+  "year": 2016,
+  "venue": "FPGA '17: ACM/SIGDA International Symposium on Field-Programmable Gate Arrays",
+  "doi": "10.1145/3020078.3021744",
+  "arxiv_id": "1612.07119",
+  "url": "https://arxiv.org/abs/1612.07119",
+  "type": "conference",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn",
+    "zc706"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

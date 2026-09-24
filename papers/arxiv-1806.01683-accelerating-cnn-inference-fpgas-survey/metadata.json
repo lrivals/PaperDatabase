@@ -20,7 +20,7 @@
     }
   ],
   "year": 2018,
-  "venue": "arXiv preprint",
+  "venue": "Technical Report, Université Clermont Auvergne (HAL), 2018",
   "doi": null,
   "arxiv_id": "1806.01683",
   "url": "https://arxiv.org/abs/1806.01683",
@@ -28,18 +28,27 @@
   "axes": [
     "surveys"
   ],
-  "tags": [],
+  "tags": [
+    "winograd",
+    "fft",
+    "gemm",
+    "loop-optimization",
+    "dataflow",
+    "bnn",
+    "quantization",
+    "pruning",
+    "fixed-point"
+  ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

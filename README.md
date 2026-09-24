@@ -74,6 +74,7 @@ L'agent lit **du résumé vers le détail** et s'arrête dès qu'il a la répons
 | 3 | `papers/<id>/fiche.md` | lire l'analyse critique d'un article |
 | 4 | `fulltext.md`, `sections.jsonl` | lire le texte intégral ; `grep` sur `papers/*/sections.jsonl` pour chercher dans tout le corpus |
 | 5 | `gaps.md` | consulter les zones non couvertes par le corpus, chacune appuyée par des `paper_id` |
+| — | `external_refs.csv` | repérer les travaux absents de la base les plus cités par le corpus (généré par `reindex.py`) : les prochaines lectures |
 
 **Liens entre articles :**
 
@@ -114,7 +115,7 @@ bash bin/setup.sh                          # crée .venv, installe requirements.
 bash bin/grobid.sh start                   # GROBID sur localhost:8070
 .venv/bin/python bin/add.py 2507.18174     # ajoute un article arXiv
 cp article.pdf inbox/ && .venv/bin/python bin/ingest.py   # ou un PDF local
-.venv/bin/python bin/reindex.py            # régénère INDEX.md, vérifie la cohérence
+.venv/bin/python bin/reindex.py            # régénère INDEX.md et external_refs.csv, vérifie la cohérence
 .venv/bin/python -m unittest discover tests
 ```
 
@@ -164,10 +165,10 @@ Détails et limites : [SETUP.md §5](SETUP.md#binvizpy---port-8050---debug).
 ```
 PaperDatabase/
 ├── README.md  CLAUDE.md  SETUP.md  DATA_MODEL.md
-├── INDEX.md                # généré
+├── INDEX.md  external_refs.csv   # générés
 ├── benchmarks.csv  gaps.md  basicStart.txt
 ├── bin/                    # setup.sh, grobid.sh, add.py, ingest.py, reindex.py, viz.py
-├── lib/                    # ids, tei, doc, pdftext, schema, graph
+├── lib/                    # ids, tei, doc, pdftext, schema, refs, graph
 ├── tests/
 ├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps
 ├── inbox/                  # PDF en attente d'ingestion
@@ -178,8 +179,8 @@ PaperDatabase/
 
 ## État et documentation
 
-Au 24/09/2026 : 9 articles arXiv ingérés (tous via GROBID), 0 fiche rédigée,
-`benchmarks.csv` encore vide. L'avancement et les tâches à faire sont dans
+Au 24/09/2026 : 12 articles arXiv ingérés (tous via GROBID), 9 fiches rédigées,
+15 lignes dans `benchmarks.csv`. L'avancement et les tâches à faire sont dans
 [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire).
 
 | Document | Contenu |

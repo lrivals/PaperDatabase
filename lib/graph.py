@@ -13,21 +13,18 @@ Types de liens :
 import csv
 import json
 import random
-import re
 from collections import defaultdict
 from itertools import combinations
 from pathlib import Path
 
 import networkx as nx
 import numpy as np
-from slugify import slugify
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from lib import schema
+from lib import refs, schema
 
 LINK_TYPES = ("citation", "coupling", "text", "themes")
 TEXT_KINDS = ("abstract", "section")
-MIN_TITLE_WORDS = 4   # un titre plus court est trop ambigu pour servir de clé
 
 
 # ---------------------------------------------------------------- chargement
@@ -60,26 +57,6 @@ def load_corpus(root):
             "benchmarks": bench.get(meta["id"], []),
         })
     return papers
-
-
-# ---------------------------------------------------------- clés de références
-
-def title_key(title):
-    words = slugify(title or "", separator=" ").split()
-    return "title:" + "-".join(words) if len(words) >= MIN_TITLE_WORDS else None
-
-
-def ref_keys(d):
-    """Clés de rapprochement d'une référence ou d'un metadata : arxiv → doi → titre."""
-    keys = []
-    if d.get("arxiv_id"):
-        keys.append("arxiv:" + re.sub(r"v\d+$", "", d["arxiv_id"].lower()))
-    if d.get("doi"):
-        keys.append("doi:" + d["doi"].lower())
-    tk = title_key(d.get("title"))
-    if tk:
-        keys.append(tk)
-    return keys
 
 
 # ---------------------------------------------------------------------- graphe
@@ -121,36 +98,10 @@ class CorpusGraph:
             }
 
     def _resolve_refs(self, min_citers):
-        """Rattache chaque référence à un papier du corpus ou à un groupe externe."""
-        corpus_key = {}
-        for p in self.papers:
-            for k in ref_keys(p):
-                corpus_key[k] = p["id"]
-
-        group_of, group_info = {}, {}
-        self.cites = defaultdict(set)      # paper_id → cibles (paper_id ou ext:<clé>)
-        for p in self.papers:
-            for r in p["refs"]:
-                keys = ref_keys(r)
-                if not keys:
-                    continue
-                target = next((corpus_key[k] for k in keys if k in corpus_key), None)
-                if target is None:
-                    target = next((group_of[k] for k in keys if k in group_of), None)
-                    if target is None:
-                        target = "ext:" + keys[0]
-                        group_info[target] = {"title": r.get("title"), "year": r.get("year"),
-                                              "keys": keys, "raw": r.get("raw")}
-                    for k in keys:
-                        group_of.setdefault(k, target)
-                if target != p["id"]:
-                    self.cites[p["id"]].add(target)
-
-        citers = defaultdict(set)
-        for pid, targets in self.cites.items():
-            for t in targets:
-                citers[t].add(pid)
-        for gid, info in group_info.items():
+        """Rattache chaque référence à un papier du corpus ou à un groupe externe (lib/refs.py)."""
+        self.cites, groups = refs.group_refs(self.papers)   # paper_id → cibles
+        citers = refs.citers_of(self.cites)
+        for gid, info in groups.items():
             if len(citers[gid]) >= min_citers:
                 self.nodes[gid] = {
                     "id": gid,

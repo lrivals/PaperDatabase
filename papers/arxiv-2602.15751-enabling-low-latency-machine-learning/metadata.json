@@ -47,20 +47,24 @@
   ],
   "tags": [
     "hls4ml",
+    "autoencoder",
+    "qkeras",
+    "qat",
     "quantization",
-    "autoencoder"
+    "polarfire",
+    "radiation-hard",
+    "smarthls"
   ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 4 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

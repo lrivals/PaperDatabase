@@ -32,25 +32,36 @@
     }
   ],
   "year": 2024,
-  "venue": "arXiv preprint",
-  "doi": null,
+  "venue": "ACM Transactions on Embedded Computing Systems",
+  "doi": "10.1145/3701728",
   "arxiv_id": "2411.01431",
   "url": "https://arxiv.org/abs/2411.01431",
-  "type": "preprint",
+  "type": "journal",
   "axes": [
-    "surveys"
+    "surveys",
+    "continual-learning",
+    "platforms"
   ],
-  "tags": [],
+  "tags": [
+    "nas",
+    "pruning",
+    "quantization",
+    "distillation",
+    "on-device-learning",
+    "jetson",
+    "edge-tpu",
+    "vit",
+    "llm",
+    "mobilenet"
+  ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

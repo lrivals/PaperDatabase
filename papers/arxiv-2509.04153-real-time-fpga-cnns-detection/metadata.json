@@ -23,6 +23,7 @@
   "type": "preprint",
   "axes": [
     "surveys",
+    "yolo-fpga",
     "toolflows",
     "platforms"
   ],
@@ -30,21 +31,26 @@
     "finn",
     "vitis-ai",
     "intel-fpga-ai-suite",
+    "hls4ml",
     "versal",
+    "kv260",
+    "zcu102",
     "quantization",
-    "pruning"
+    "pruning",
+    "dsp-packing",
+    "tracking",
+    "dpu"
   ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

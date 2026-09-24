@@ -16,31 +16,32 @@
     }
   ],
   "year": 2026,
-  "venue": "arXiv preprint",
-  "doi": null,
+  "venue": "2026 IEEE 34th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)",
+  "doi": "10.1109/FCCM68464.2026.00041",
   "arxiv_id": "2604.21280",
   "url": "https://arxiv.org/abs/2604.21280",
-  "type": "preprint",
+  "type": "conference",
   "axes": [
     "continual-learning",
     "platforms"
   ],
   "tags": [
+    "hdc",
+    "mobilenet",
     "zcu104",
     "zynq",
+    "int8",
     "quantization",
-    "hdc"
+    "vitis-hls"
   ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

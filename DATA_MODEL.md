@@ -174,13 +174,13 @@ même `section` — le découpage suit les paragraphes, jamais un compte de toke
 ## 6. `refs.jsonl`
 
 Une ligne par référence citée. Non chargé par l'agent pour répondre aux questions ; lu par
-`lib/graph.py` pour la visualisation 3D (`bin/viz.py`).
+`lib/refs.py`, qui alimente la visualisation 3D (`bin/viz.py`) et `external_refs.csv` (§9).
 
 ```json
 {"paper_id": "arxiv-2507.18174-yolo-edge-fpga", "raw": "[12] J. Redmon and A. Farhadi, ...", "title": "YOLOv3: An Incremental Improvement", "authors": ["Redmon", "Farhadi"], "year": 2018, "doi": null, "arxiv_id": "1804.02767"}
 ```
 
-Rapprochement d'une référence avec un papier (`lib/graph.ref_keys`) : une référence et un
+Rapprochement d'une référence avec un papier (`lib/refs.ref_keys`) : une référence et un
 `metadata.json` produisent chacun des clés normalisées, comparées dans cet ordre :
 
 | Clé | Normalisation |
@@ -189,8 +189,12 @@ Rapprochement d'une référence avec un papier (`lib/graph.ref_keys`) : une réf
 | `doi:<doi>` | minuscules |
 | `title:<slug>` | titre slugifié (sans accents, ponctuation ni casse) ; ignoré sous 4 mots |
 
-Deux références qui partagent une clé désignent le même travail. Une référence qui ne
-produit aucune clé (ni identifiant ni titre exploitable) est ignorée par le graphe.
+Deux références qui partagent une clé désignent le même travail. À défaut de clé commune,
+deux titres quasi identiques (ligature perdue — « E cient » pour « Efficient » —, coquille,
+titre tronqué d'au moins 6 mots) désignent aussi le même travail, si leurs années diffèrent
+d'au plus un an (`lib/refs.same_title`, ratio `SequenceMatcher` ≥ 0,92). Deux publications
+aux titres réellement différents (fpgaConvNet FCCM 2016 et TNNLS 2019) restent distinctes.
+Une référence qui ne produit aucune clé (ni identifiant ni titre exploitable) est ignorée.
 
 ---
 
@@ -285,3 +289,23 @@ Ce qui suit est déduit et non affirmé par les auteurs : <…>
 La section **Statut de lecture** est obligatoire : elle matérialise la distinction entre ce
 qui a été lu et ce qui a été déduit, et empêche une fiche partielle de passer pour une
 lecture complète.
+
+---
+
+## 9. `external_refs.csv`
+
+**Généré par `bin/reindex.py` — ne pas éditer à la main.** Travaux absents de la base
+cités par au moins deux papiers du corpus, du plus cité au moins cité (puis du plus récent
+au plus ancien) : c'est la liste des lectures candidates à ajouter via `/paper-add`.
+
+| Colonne | Contenu |
+|---|---|
+| `rank` | rang (1 = le plus cité) |
+| `n_citers` | nombre de papiers du corpus qui le citent |
+| `title` | titre le moins abîmé parmi les variantes rencontrées dans les `refs.jsonl` |
+| `year` | année de la première référence qui la donne, sinon `n/r` |
+| `arxiv_id`, `doi` | identifiants trouvés dans les références, sinon `n/r` |
+| `citers` | `paper_id` citants, séparés par `;` |
+
+Les données viennent du parsing GROBID des bibliographies : titre, année et identifiants sont
+à vérifier au moment de l'ajout, jamais cités tels quels.

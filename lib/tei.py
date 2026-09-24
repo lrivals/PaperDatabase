@@ -6,6 +6,7 @@ un en-tête (métadonnées), une liste de blocs ordonnés, une liste de référe
 import re
 
 from lxml import etree
+from slugify import slugify
 
 from lib.doc import Block, heading_level, is_junk_heading
 from lib.ids import find_arxiv_id
@@ -59,10 +60,53 @@ def load(path_or_bytes):
 
 # --- teiHeader ------------------------------------------------------------------------
 
+# Un « auteur » dont le nom contient l'un de ces mots est une affiliation mal découpée
+# (ex. forename « Xilinx », surname « Research »).
+_ORG_WORDS = re.compile(r"\b(research|university|universit[éy]|institute|laborator(y|ies)|labs?|"
+                        r"inc|corporation|department|school|college|centre|center)\b", re.IGNORECASE)
+# DOI gabarit laissé par un modèle d'éditeur (ACM : 10.1145/nnnnnnn.nnnnnnn).
+_PLACEHOLDER_DOI = re.compile(r"n{4,}|x{4,}", re.IGNORECASE)
+
+
+def _dehyphen(name):
+    """« Gam- Bardella » (césure en fin de ligne) → « Gambardella »."""
+    return re.sub(r"(\w)- (\w)", lambda m: m.group(1) + m.group(2).lower(), name) if name else name
+
+
 def _person(pers):
     given = " ".join(t for t in (_text(f) for f in _x(pers, "tei:forename")) if t) or None
     family = _text(_first(pers, "tei:surname"))
-    return {"given": given, "family": family}
+    return {"given": _dehyphen(given), "family": _dehyphen(family)}
+
+
+def clean_authors(authors):
+    """Retire les affiliations prises pour des auteurs et les doublons (même nom de famille
+    et même initiale, translittération comprise : Preusser = Preußer)."""
+    out, seen = [], set()
+    for a in authors:
+        full = " ".join(x for x in (a.get("given"), a.get("family")) if x)
+        if not a.get("family") or _ORG_WORDS.search(full):
+            continue
+        key = (slugify(a["family"]), slugify(a.get("given") or "")[:1])
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(a)
+    return out
+
+
+def clean_doi(doi):
+    """DOI plausible (10.<registrant>/<suffixe>) et non gabarit, sinon None."""
+    if not doi or not re.match(r"^10\.\d{4,9}/\S+$", doi) or _PLACEHOLDER_DOI.search(doi):
+        return None
+    return doi
+
+
+def clean_arxiv(idno):
+    """« arXiv:1809.04570v1[cs.AR] » → « 1809.04570 »."""
+    if not idno:
+        return None
+    return find_arxiv_id(re.sub(r"^arxiv:|\[.*$", "", idno.strip(), flags=re.IGNORECASE).strip())
 
 
 def parse_header(root):
@@ -73,9 +117,8 @@ def parse_header(root):
     authors = []
     if bibl is not None:
         for pers in _x(bibl, "tei:analytic/tei:author/tei:persName"):
-            a = _person(pers)
-            if a["family"]:
-                authors.append(a)
+            authors.append(_person(pers))
+        authors = clean_authors(authors)
 
     year = None
     for path in (
@@ -90,9 +133,8 @@ def parse_header(root):
 
     doi = arxiv_id = venue = None
     if bibl is not None:
-        doi = _text(_first(bibl, ".//tei:idno[@type='DOI']"))
-        arx = _text(_first(bibl, ".//tei:idno[@type='arXiv']"))
-        arxiv_id = find_arxiv_id(arx.replace("arXiv:", "")) if arx else None
+        doi = clean_doi(_text(_first(bibl, ".//tei:idno[@type='DOI']")))
+        arxiv_id = clean_arxiv(_text(_first(bibl, ".//tei:idno[@type='arXiv']")))
         venue = _text(_first(bibl, "tei:monogr/tei:title[@level='j' or @level='m']"))
 
     abstract = _text(_first(h, "tei:profileDesc/tei:abstract"))
@@ -217,7 +259,7 @@ def parse_refs(root):
             "title": title,
             "authors": authors,
             "year": _year(_first(b, ".//tei:imprint/tei:date/@when")),
-            "doi": _text(_first(b, ".//tei:idno[@type='DOI']")),
+            "doi": clean_doi(_text(_first(b, ".//tei:idno[@type='DOI']"))),
             "arxiv_id": find_arxiv_id(arx.replace("arXiv:", "")) if arx else None,
         })
     return refs

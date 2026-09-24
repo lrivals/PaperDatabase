@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Régénère INDEX.md depuis papers/*/metadata.json et vérifie la cohérence de la base.
+"""Régénère INDEX.md et external_refs.csv depuis papers/ et vérifie la cohérence de la base.
 
 Ne modifie jamais benchmarks.csv ni les fiches. Code de sortie 1 si une incohérence est trouvée.
 """
@@ -11,11 +11,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from lib import schema  # noqa: E402
+from lib import refs, schema  # noqa: E402
 
 PAPERS = ROOT / "papers"
 BENCH = ROOT / "benchmarks.csv"
 INDEX = ROOT / "INDEX.md"
+EXTERNAL = ROOT / "external_refs.csv"
 
 AXIS_TITLES = {
     "surveys": "Surveys et toolflows généraux",
@@ -159,6 +160,15 @@ def render(papers):
     return "\n".join(out)
 
 
+def write_external(path, rows):
+    """Travaux absents de la base cités par au moins deux papiers (DATA_MODEL §9)."""
+    with open(path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=refs.EXTERNAL_FIELDS, lineterminator="\n")
+        w.writeheader()
+        for r in rows:
+            w.writerow({k: (schema.NR if r[k] in (None, "") else r[k]) for k in refs.EXTERNAL_FIELDS})
+
+
 def main():
     problems, notes = [], []
     papers = load_papers(problems, notes)
@@ -175,8 +185,11 @@ def main():
             notes.append(f"{p['id']} : fiche done sans ligne dans benchmarks.csv (oubli ?)")
 
     INDEX.write_text(render(papers) + "\n")
+    ext = refs.external_ranking(refs.load_papers(ROOT))
+    write_external(EXTERNAL, ext)
     todo = sum(1 for p in papers if p.get("status", {}).get("fiche") != "done")
     print(f"INDEX.md régénéré : {len(papers)} papiers, {todo} fiches à faire, {len(rows)} lignes de benchmark.")
+    print(f"external_refs.csv régénéré : {len(ext)} travaux hors base cités par au moins 2 papiers.")
     for n in notes:
         print(f"note    {n}")
     for pb in problems:

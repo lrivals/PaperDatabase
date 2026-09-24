@@ -24,8 +24,13 @@ Lis du résumé vers le détail, et arrête-toi dès que tu as la réponse.
 5. **`papers/<id>/paper.pdf`** — ne l'ouvre pas. Il est conservé comme preuve, pas comme
    source de travail ; tout ce qu'il contient est déjà dans `fulltext.md`.
 
+**Quoi lire ensuite ?** [external_refs.csv](external_refs.csv) (généré) classe les travaux
+absents de la base par nombre de papiers du corpus qui les citent. Données issues du parsing
+des bibliographies : à vérifier avant de les citer.
+
 `refs.jsonl` et `grobid.tei.xml` ne servent pas à répondre aux questions : le premier
-alimente la visualisation 3D (`bin/viz.py`), le second est la trace brute d'extraction.
+alimente la visualisation 3D (`bin/viz.py`) et `external_refs.csv`, le second est la trace
+brute d'extraction.
 
 ---
 
@@ -39,7 +44,7 @@ alimente la visualisation 3D (`bin/viz.py`), le second est la trace brute d'extr
 | `.venv/bin/python bin/viz.py` | graphe 3D du corpus (app Dash, http://127.0.0.1:8050) : couleur par thème, liens citations / références partagées / similarité TF-IDF / thèmes communs. Dépendances : `requirements-viz.txt`. Détails : [SETUP.md](SETUP.md) §5 |
 
 Après toute modification du corpus (ingestion, fiche remplie, ligne de benchmark ajoutée) :
-`.venv/bin/python bin/reindex.py`.
+`.venv/bin/python bin/reindex.py` (régénère `INDEX.md` et `external_refs.csv`).
 
 Pour ajouter un article sous paywall, il faut déposer le PDF dans `inbox/` à la main, puis
 `.venv/bin/python bin/ingest.py`. Aucun contournement de paywall.

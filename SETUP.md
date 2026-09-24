@@ -42,6 +42,7 @@ PaperDatabase/
 ├── SETUP.md                # ce fichier
 ├── DATA_MODEL.md           # schémas et conventions
 ├── INDEX.md                # GÉNÉRÉ — table de tous les papiers
+├── external_refs.csv       # GÉNÉRÉ — travaux hors base les plus cités par le corpus
 ├── benchmarks.csv          # une ligne par configuration rapportée
 ├── gaps.md                 # carte des verrous et zones non couvertes
 ├── basicStart.txt          # bibliographie de départ (source d'amorçage)
@@ -61,10 +62,14 @@ PaperDatabase/
 │   ├── doc.py              # représentation commune GROBID / PyMuPDF
 │   ├── pdftext.py          # extraction de repli PyMuPDF
 │   ├── schema.py
+│   ├── refs.py             # rapprochement des références, classement des externes
 │   └── graph.py            # nœuds, liens et positions du graphe 3D
 ├── tests/
 │   ├── fixtures/sample.tei.xml
 │   ├── test_tei.py
+│   ├── test_schema.py
+│   ├── test_ingest.py
+│   ├── test_refs.py
 │   └── test_graph.py
 ├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps
 ├── inbox/                  # dépôt des PDF à ingérer
@@ -84,7 +89,9 @@ Les commandes Claude Code (`/paper-add`, `/paper-fiche`, `/paper-gaps`) vivent d
 `CLAUDE.md`).
 
 Tests : `.venv/bin/python -m unittest discover tests` — parsing TEI sur une sortie GROBID
-réelle (`test_tei.py`) et graphe sur un mini-corpus synthétique (`test_graph.py`, ignoré si
+réelle (`test_tei.py`), conformité DATA_MODEL (`test_schema.py`), conservation des axes et
+tags à la ré-extraction (`test_ingest.py`), rapprochement des références et
+`external_refs.csv` (`test_refs.py`) et graphe sur un mini-corpus synthétique (`test_graph.py`, ignoré si
 `requirements-viz.txt` n'est pas installé).
 
 ---
@@ -259,7 +266,10 @@ Pour chaque PDF :
 
 Idempotent : un PDF dont le `paper_id` existe déjà est ignoré, sauf `--force` qui réécrit
 tout sauf `fiche.md` (le travail de lecture ne doit jamais être écrasé par une
-ré-extraction).
+ré-extraction). Les métadonnées déjà présentes priment ; les axes et tags d'une fiche `done`
+sont conservés tels quels, ceux d'une fiche `todo` sont l'union des anciens et des nouveaux
+(`keep_classification`, testé par `test_ingest.py`) : une correction manuelle survit à la
+ré-extraction.
 
 ### `bin/reindex.py`
 
@@ -270,6 +280,11 @@ fiche`. Ajoute en tête un compteur (`N papiers, M fiches à faire`).
 Vérifie aussi la cohérence : tout `paper_id` apparaissant dans `benchmarks.csv` doit exister
 dans `papers/`, et signale les fiches `done` qui n'ont aucune ligne de benchmark (souvent le
 signe d'un oubli, sauf pour les surveys).
+
+Régénère aussi `external_refs.csv` ([DATA_MODEL.md](DATA_MODEL.md) §9) : les travaux absents
+de la base cités par au moins deux papiers, du plus cité au moins cité. Les variantes d'une
+même référence (ligature perdue, coquille, titre tronqué par GROBID) y sont fusionnées par
+`lib/refs.py`.
 
 Ne modifie jamais `benchmarks.csv` ni les fiches — il ne fait que lire et régénérer l'index.
 
@@ -316,9 +331,17 @@ Limites à garder en tête avant d'interpréter la vue :
 
 ### `lib/graph.py`
 
-Couche données de la visualisation, sans Dash : chargement du corpus, clés de rapprochement
-des références (`ref_keys`), construction des liens, positions sémantiques (PCA) et
+Couche données de la visualisation, sans Dash : chargement du corpus, construction des
+liens (rapprochement des références délégué à `lib/refs.py`), positions sémantiques (PCA) et
 force-directed (`networkx.spring_layout`). Testé par `tests/test_graph.py`.
+
+### `lib/refs.py`
+
+Rapprochement des références, sans dépendance de visualisation : clés exactes
+(`ref_keys` : arXiv → DOI → titre normalisé), puis fusion des titres quasi identiques à un an
+près (`same_title`), choix du titre d'affichage le moins abîmé (`best_title`) et classement
+des travaux hors base (`external_ranking`). Utilisé par `lib/graph.py` et `reindex.py`.
+Testé par `tests/test_refs.py`.
 
 ### `lib/ids.py`
 
@@ -448,54 +471,104 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 Point au 24/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
 
+**Bilan du 24/09/2026.** Outillage : conservation des axes/tags à la ré-extraction,
+`lib/refs.py` (rapprochement et fusion des variantes de références), `external_refs.csv`,
+nettoyage des en-têtes GROBID (DOI gabarit, identifiant arXiv du tampon, auteurs
+dédoublonnés) ; 42 tests. Corpus : ajout de FINN, FINN-R et fpgaConvNet (toolflow),
+vérification §8.1-8.5, 9 fiches rédigées, 15 lignes de benchmark, venues et DOI vérifiés
+(arXiv + Crossref).
+
+### Prochaines étapes prioritaires
+
+1. [ ] **`/paper-gaps`** : reporter dans `gaps.md` les gaps relevés par les fiches — étayer
+   le gap autoencodeurs (2602.15751, 2512.01463 : AE sur signaux 1D, pas d'images) et
+   proposer : absence de protocole de mesure commun pour YOLO sur FPGA (2507.18174,
+   2509.04153) ; CL sur FPGA peu précis et sans mesure d'énergie sur carte (2604.21280) ;
+   pas de comparaison MCU / FPGA / Jetson pour un même algorithme de CL (2403.07851) ;
+   RTOS et interaction PS-PL sur SoC FPGA (2509.04153 §III-B) ; FPGA absents des surveys
+   « embarqué » (2411.01431).
+2. [ ] **Ficher FINN puis FINN-R** (`/paper-fiche arxiv-1612.07119-…`, puis
+   `arxiv-1809.04570-…`) : fondations de la chaîne dataflow quantifiée, à comparer à
+   hls4ml (2103.05579, 2512.01463) ; puis fpgaConvNet (`arxiv-1711.08740-…`).
+3. [ ] **Expérience à reproduire** : YOLOv5 INT8 via Vitis AI sur Kria KV260, avec mAP sur
+   le split officiel (COCO val), résolution et variante déclarées, puissance mesurée au
+   wattmètre (carte) et via la télémétrie de la puce, latence et FPS à batch 1 — pour
+   combler le défaut de protocole relevé dans 2507.18174 et 2509.04153, et servir de
+   baseline aux travaux de thèse. Ajouter une comparaison Jetson (Orin Nano) dans les mêmes
+   conditions.
+
 ### En place
 
 | Brique | État |
 |---|---|
-| Pipeline d'ingestion (`add.py`, `ingest.py`, `grobid.sh`, repli PyMuPDF) | fonctionnel, testé (`test_tei.py`) |
-| Index et contrôle de cohérence (`reindex.py`) | fonctionnel, 0 erreur ; contrôle de conformité DATA_MODEL complet (tous les fichiers de `papers/<id>/`, testé par `test_schema.py`) depuis le 24/09/2026 |
-| Hiérarchie des titres de `fulltext.md` | titres parasites filtrés, niveau 3 géré, sections non détectées par GROBID signalées dans `extraction.warnings` (1806.01683, 2509.04153, 2512.01463, 2602.15751) ; corpus ré-extrait le 24/09/2026 |
-| Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps` | écrites (`.claude/commands/`) |
-| Corpus | 9 papiers arXiv ingérés, tous via GROBID ; 1266 références extraites |
-| Fiches de lecture | 0 / 9 `done` |
-| `benchmarks.csv` | en-tête seul, aucune ligne |
-| `gaps.md` | 1 gap, au statut *hypothèse* (autoencodeurs sur images) |
-| Visualisation 3D (`viz.py`, `lib/graph.py`) | fonctionnelle, testée (`test_graph.py`) ; 2 citations internes, 52 références externes co-citées |
-| Versionnage | dépôt git + remote GitHub ; la visualisation n'est pas encore commitée |
+| Pipeline d'ingestion (`add.py`, `ingest.py`, `grobid.sh`, repli PyMuPDF) | fonctionnel, testé (`test_tei.py`, `test_ingest.py`) ; repli PyMuPDF et PDF sans métadonnées vérifiés en réel (§8.3-8.4) le 24/09/2026 |
+| Nettoyage de l'en-tête GROBID (`lib/tei.py`) | depuis le 24/09/2026 : DOI gabarit rejeté (`10.1145/nnnnnnn.nnnnnnn`), identifiant arXiv lu dans le tampon du PDF (`arXiv:1809.04570v1[cs.AR]`), auteurs dédoublonnés (Preusser = Preußer), césures réparées (« Gam- Bardella »), affiliations prises pour des auteurs retirées |
+| Axes et tags à la ré-extraction | conservés depuis le 24/09/2026 : fiche `done` → inchangés ; fiche `todo` → union anciens + nouveaux (`keep_classification`) |
+| Index et contrôle de cohérence (`reindex.py`) | fonctionnel, 0 erreur ; contrôle de conformité DATA_MODEL complet (`test_schema.py`) ; génère aussi `external_refs.csv` |
+| Références (`lib/refs.py`) | rapprochement par clés exactes + fusion des titres quasi identiques (ligatures perdues, coquilles, titres tronqués ; ±1 an), titre d'affichage le moins abîmé ; testé (`test_refs.py`) ; utilisé par la vue 3D et `reindex.py` |
+| Classement des références externes | `external_refs.csv` : 89 travaux hors base cités par ≥ 2 papiers (DATA_MODEL §9) |
+| Hiérarchie des titres de `fulltext.md` | titres parasites filtrés, niveau 3 géré, sections non détectées par GROBID signalées dans `extraction.warnings` |
+| Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps` | écrites (`.claude/commands/`) ; `/paper-fiche` rodé sur 9 papiers |
+| Corpus | 12 papiers arXiv (dont 3 ajoutés le 24/09/2026 : FINN, FINN-R, fpgaConvNet toolflow), tous via GROBID ; 1381 références extraites ; venues et DOI éditeur vérifiés (commentaires arXiv + Crossref) |
+| Fiches de lecture | 9 / 12 `done` (le 24/09/2026) ; restent FINN, FINN-R, fpgaConvNet |
+| `benchmarks.csv` | 15 lignes (2507.18174, 2604.21280, 2403.07851, 2602.15751, 2512.01463) ; aucune ligne pour les 3 surveys ni pour hls4ml 2021 (Table 1 non extraite, justifié dans la fiche — `reindex.py` affiche une note attendue) |
+| `gaps.md` | 1 gap, au statut *hypothèse* ; les fiches `done` contiennent de nouveaux gaps non encore reportés (`/paper-gaps` à lancer) |
+| Visualisation 3D (`viz.py`, `lib/graph.py`) | fonctionnelle, testée (`test_graph.py`) ; 10 citations internes, 89 références externes co-citées |
+| Versionnage | dépôt git + remote GitHub ; visualisation commitée (6f04a6b) ; travaux du 24/09/2026 non commités |
 
 ### Tâches — corpus
 
-- [ ] **Ficher les 9 papiers** (`/paper-fiche`) : c'est le goulot, tout le reste
-  (benchmarks, gaps, vue 3D exploitable) en dépend.
-- [ ] Commencer par `/paper-fiche arxiv-2507.18174-real-time-object-detection-classification` :
-  structure propre (aucune section manquante), bon test de bout en bout du fichage avec les
-  nouveaux contrôles de `reindex.py`.
-- [ ] Confirmer les axes pendant le fichage : les 9 `metadata.json` portent le warning
-  « axes déduits automatiquement ».
-- [ ] Pendant le fichage de `arxiv-2512.01463-…` (hls4ml 2025), vérifier contre le PDF les
-  sections 1, 5, 6, 8, 10 et 11 non détectées par GROBID : leur texte est rattaché à la
-  section précédente dans `sections.jsonl`, donc un `grep` sur le champ `section` ne les
-  trouve pas, et une fiche ne doit pas citer ces numéros d'après `fulltext.md`. Même
-  vérification, plus légère, pour 2509.04153 (I), 1806.01683 (3) et 2602.15751 (4).
+- [x] **Ficher les 9 papiers initiaux** (`/paper-fiche`). Fait le 24/09/2026, en commençant
+  par 2507.18174 (test de bout en bout). Axes confirmés, warnings retirés.
+- [ ] Ficher FINN, FINN-R et fpgaConvNet : voir « Prochaines étapes prioritaires » (2).
+- [ ] Lancer `/paper-gaps` : voir « Prochaines étapes prioritaires » (1).
+- [ ] **Vérifications contre le PDF, à faire à la main** (le PDF est exclu du travail de
+  l'agent par CLAUDE.md) :
+  - 2512.01463 : sections 1, 5, 6, 8, 10, 11 non détectées ; Tables 3, 6, 7 absentes ;
+  - 2103.05579 : Table 1 (ressources FPGA PTQ vs QAT) absente — seuls chiffres propres du
+    papier, donc aucune ligne de benchmark ;
+  - 2602.15751 : corps de la Table 1 absent (chiffres pris dans le texte, `medium`) ;
+  - 2604.21280 : Tables III (résolutions d'entrée) et V absentes ;
+  - 2509.04153 (I), 1806.01683 (3) : titres non détectés, sans impact sur les fiches.
 - [x] `arxiv-2602.15751-…` : `type: journal`, `venue` : *Machine Learning: Science and
-  Technology* (d'après le `journal_ref` arXiv : 7 (2026) 045024 ; DOI 10.1088/2632-2153/ae8218). Fait le 24/09/2026.
+  Technology* (DOI 10.1088/2632-2153/ae8218). Fait le 24/09/2026.
+- [x] Venues et DOI des autres papiers (24/09/2026) : ELMAR 2025 (2507.18174), DATE 2024
+  (2403.07851), FCCM 2026 (2604.21280), ACM TECS 2024 (2411.01431), TinyML Research
+  Symposium 2021 (2103.05579, sans DOI), rapport technique HAL (1806.01683). Acceptation
+  lue dans les commentaires arXiv, DOI confirmés par Crossref ; les fiches précisent que le
+  texte lu est la version arXiv.
 - [ ] Récupérer à la main les ~10 articles sous paywall de `basicStart.txt` (§7), les
   déposer dans `inbox/`, `ingest.py`, et vérifier chaque référence contre le PDF réel.
-- [ ] Ajouter les références externes les plus co-citées du corpus, repérées dans la vue 3D
-  (données lues dans les `refs.jsonl`, à vérifier au moment de l'ajout) :
-  - *FINN: A Framework for Fast, Scalable Binarized Neural Network Inference* — Umuroglu et
-    al., FPGA 2017, arXiv 1612.07119 (cité par 3 papiers) → `/paper-add 1612.07119` ;
-  - *FINN-R: An End-to-End Deep-Learning Framework for Fast Exploration of Quantized Neural
-    Networks* — Blott et al., ACM TRETS 2018, arXiv 1809.04570 (3 papiers) ;
-  - *fpgaConvNet: A Framework for Mapping Convolutional Neural Networks on FPGAs* —
-    Venieris & Bouganis, FCCM 2016, DOI 10.1109/FCCM.2016.22 (3 papiers ; paywall IEEE,
-    une version toolflow existe sur arXiv 1711.08740).
-- [ ] Dérouler la vérification du §8 (points 1-5 dès maintenant, 6-7 après la première
-  fiche).
-- [ ] Commiter la visualisation (`bin/viz.py`, `lib/graph.py`, `requirements-viz.txt`,
-  `tests/test_graph.py`, docs).
+- [x] Ajouter les références externes les plus co-citées (24/09/2026) : FINN (1612.07119,
+  FPGA '17, DOI 10.1145/3020078.3021744), FINN-R (1809.04570, ACM TRETS 11(3), DOI
+  10.1145/3242897), fpgaConvNet **toolflow** (1711.08740, workshop NIPS 2017 — ce n'est
+  pas l'article FCCM 2016, qui reste en tête d'`external_refs.csv`, cité par 6 papiers,
+  paywall IEEE).
+- [ ] Prochains candidats d'`external_refs.csv` (à vérifier avant ajout) : *Fast inference
+  of deep neural networks in FPGAs for particle physics* (arXiv 1804.06913, 4 citants),
+  *Latency-Driven Design for FPGA-based Convolutional Neural Networks* (FPL 2017).
+- [x] Vérification du §8, points 1 à 5 (24/09/2026) :
+  1. métadonnées de 2507.18174 correctes ;
+  2. texte : ordre des sections, en-têtes, bibliographie et légendes corrects, mais la
+     fin de §III-B est classée en « figure sans légende » et le titre « V. CONCLUSION » est
+     absorbé par la Table I ; césures perdues (« FPGAbased ») ;
+  3. repli PyMuPDF (GROBID arrêté, FINN) : `backend = "pymupdf"`, `ok: false`, warnings
+     explicites, aucune section détectée ; ré-extraction GROBID ensuite par `--force` ;
+  4. PDF sans métadonnées : le PDF éditeur ACM est bloqué (403 anti-bot), test fait avec le
+     PDF arXiv de FINN-R sans `.meta.json` ; a révélé les défauts d'en-tête corrigés dans
+     `lib/tei.py` (voir « En place ») ;
+  5. `INDEX.md` : comptes justes, papiers rangés sous leurs axes.
+- [ ] §8.6-8.7, à faire par l'utilisateur : recouper une fiche avec un PDF lu soi-même ;
+  poser une question quantitative dans une session neuve et vérifier qu'aucun PDF n'est
+  rouvert.
+- [x] Commiter la visualisation : déjà fait (commit 6f04a6b).
 
 ### Tâches — analyse
+
+- [ ] Expérience de référence YOLOv5 INT8 sur KV260 avec protocole de mesure complet :
+  voir « Prochaines étapes prioritaires » (3). Consigner les résultats dans
+  `benchmarks.csv` sous un `paper_id` dédié aux mesures propres (convention à définir
+  dans DATA_MODEL.md).
 
 - [ ] Une fois 15-20 fiches `done` : repasser sur la vue 3D (placement *force*, liens
   *thèmes communs* + *références partagées*) et relever les axes isolés ou peu reliés entre
@@ -503,22 +576,27 @@ Point au 24/09/2026. À mettre à jour à chaque étape franchie (cocher, dater,
 - [ ] Au même stade, `/graphify PaperDatabase/papers` pour une détection de communautés,
   à confronter à la vue 3D.
 
-### Tâches — outillage (plus tard)
+### Tâches — outillage
 
-- [ ] **Axes et tags stables à la ré-extraction.** `ingest.py --force` reclasse à partir de
-  l'abstract GROBID (le `.meta.json` arXiv n'existe plus) : au 24/09/2026, 2103.05579 a
-  perdu les tags `quantization` et `pruning`, restaurés à la main. Conserver les axes/tags
-  existants (ou en faire l'union) quand `status.fiche` vaut `todo`.
+- [x] **Axes et tags stables à la ré-extraction** (24/09/2026) : `keep_classification`
+  dans `ingest.py`, testé par `test_ingest.py`.
+- [x] **Classement des références externes** (24/09/2026) : `external_refs.csv`, généré par
+  `reindex.py`.
+- [x] **Fusion des variantes d'une même référence** (24/09/2026) : `lib/refs.py` fusionne
+  les titres quasi identiques (ratio ≥ 0,92, ou préfixe ≥ 6 mots, années à ±1 an) ; les
+  publications distinctes (fpgaConvNet FCCM 2016 / TNNLS 2019) restent séparées.
+- [ ] **Ligatures perdues à l'extraction.** Dans 1806.01683, « fi », « ff », « fl »
+  disparaissent (« classi cation », « e cient ») : un `grep` sur ces mots rate le papier.
+  Détecter le cas (warning dans `extraction.warnings`) et, si possible, restaurer depuis
+  PyMuPDF ou un dictionnaire.
+- [ ] **Texte classé en figure par GROBID.** Un paragraphe coupé par une figure peut
+  finir en « [figure sans légende identifiée] » (2507.18174, 2403.07851) : le recoller à la
+  section de la page correspondante quand il ne ressemble pas à une légende.
+- [ ] **Note `reindex.py` pour une fiche `done` sans benchmark** : permettre de marquer
+  l'absence de ligne comme justifiée (ex. hls4ml 2021) pour éviter une note permanente.
 - [ ] **Embeddings dans la vue 3D.** Remplacer ou compléter le TF-IDF de `lib/graph.py`
   (similarité lexicale seulement) par des embeddings sentence-transformers, en même temps
   que l'index sémantique ci-dessous.
 - [ ] **Recherche sémantique.** Au-delà de ~200 papiers, si `grep` ne suffit plus, ajouter
   un index local (sentence-transformers + ChromaDB) **par-dessus** `sections.jsonl`, sans
   rien changer à l'arborescence. C'est un ajout, jamais un remplacement.
-- [ ] **Classement des références externes.** Export (CSV ou section de `gaps.md`) des
-  travaux absents de la base les plus cités par le corpus ; aujourd'hui visible seulement
-  dans la vue 3D.
-- [ ] **Fusion des variantes d'une même référence.** Un même travail cité sous deux titres
-  sans identifiant commun (ex. les versions FCCM 2016 et TNNLS 2019 de fpgaConvNet) reste en
-  deux nœuds : c'est correct pour deux publications distinctes, mais une référence mal
-  parsée par GROBID produit le même effet.

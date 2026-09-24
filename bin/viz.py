@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Visualisation 3D du corpus : nuage de papiers, coloré par thème, relié par citations,
-références partagées, similarité textuelle ou thèmes communs.
+"""Visualisation du corpus : graphe 3D (papiers colorés par thème, reliés par citations,
+références partagées, similarité textuelle ou thèmes communs) et généalogie (frise des
+citations d'un papier ou d'un sujet).
 
     .venv/bin/pip install -r requirements-viz.txt     # une fois
+    .venv/bin/pip install -r requirements-embed.txt   # optionnel : similarité par embeddings
     .venv/bin/python bin/viz.py [--port 8050] [--debug]
 
-puis ouvrir http://127.0.0.1:8050. Lecture seule : ne modifie aucun fichier de la base.
+puis ouvrir http://127.0.0.1:8050. Lecture seule : ne modifie aucun fichier de la base
+(seul le cache des embeddings est écrit, dans .cache/).
 """
 import argparse
 import sys
@@ -15,263 +18,24 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 import plotly.graph_objects as go  # noqa: E402
-from dash import Dash, Input, Output, ctx, dcc, html, no_update  # noqa: E402
+from dash import Dash, Input, Output, State, ctx, dcc, html, no_update  # noqa: E402
 
-from lib import graph, schema  # noqa: E402
-
-# Palette catégorielle à ordre fixe (dataviz, thème clair). Au-delà de 8 catégories, le
-# reste est regroupé dans « autre ». Le symbole double la couleur : sur un nuage de points
-# toutes les paires de couleurs se côtoient, la couleur seule ne suffit pas à distinguer.
-PALETTE = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"]
-SYMBOLS = ["circle", "diamond", "square", "circle-open", "diamond-open", "square-open", "cross", "x"]
-OTHER_COLOR = "#8a8a86"
-EXTERNAL_COLOR = "#b5b4ad"
-SURFACE = "#fcfcfb"
-INK = "#1f1f1e"
-INK_MUTED = "#6b6a64"
-YEAR_SCALE = [[0, "#cde2fb"], [0.5, "#3987e5"], [1, "#0d366b"]]
-
-LINK_STYLE = {
-    # traits pleins seulement : les tirets de Scatter3d se fragmentent en 3D
-    "citation": {"label": "Citations", "color": "#e34948", "dash": "solid"},
-    "coupling": {"label": "Références partagées", "color": "#4a3aa7", "dash": "solid"},
-    "text": {"label": "Similarité textuelle (TF-IDF)", "color": "#2a78d6", "dash": "solid"},
-    "themes": {"label": "Thèmes communs (axes + tags)", "color": "#1baf7a", "dash": "solid"},
-}
-WIDTHS = (1.5, 3.5, 6)       # faible / moyen / fort, relatif au poids max du type
-
-COLOR_BY = {
-    "axis": "Axe principal",
-    "tag": "Tag principal",
-    "year": "Année",
-    "type": "Type de publication",
-    "fiche": "Statut de la fiche",
-}
+from lib import embed, graph, lineage, schema, vizfig  # noqa: E402
+from lib.vizfig import COLOR_BY, LINK_STYLE  # noqa: E402
 
 G = graph.build(ROOT)
+EMBED_OK = embed.available()
 
 
-# ------------------------------------------------------------------ couleurs
-
-def category(node, color_by):
-    if color_by == "axis":
-        return node["axes"][0] if node["axes"] else "non classé"
-    if color_by == "tag":
-        return node["tags"][0] if node["tags"] else "sans tag"
-    if color_by == "type":
-        return node["type"] or schema.NR
-    if color_by == "fiche":
-        return node["fiche"]
-    return None
+def year_bounds():
+    years = [n["year"] for n in G.nodes.values() if n["kind"] == "paper" and n["year"]]
+    return (min(years), max(years)) if years else (2000, 2030)
 
 
-def category_order(nodes, color_by):
-    """Ordre fixe : axes dans l'ordre de schema.AXES, sinon par fréquence puis nom."""
-    if color_by == "axis":
-        return list(schema.AXES) + ["non classé"]
-    if color_by == "fiche":
-        return list(schema.FICHE_STATUS)
-    if color_by == "type":
-        return list(schema.TYPES) + [schema.NR]
-    counts = {}
-    for n in nodes:
-        c = category(n, color_by)
-        counts[c] = counts.get(c, 0) + 1
-    return sorted(counts, key=lambda c: (-counts[c], c))
+def year_marks(lo, hi):
+    step = max(1, (hi - lo) // 4)
+    return {y: str(y) for y in range(lo, hi + 1, step)} | {hi: str(hi)}
 
-
-def style_map(order):
-    """catégorie → (couleur, symbole) ; tout ce qui dépasse 8 tombe dans « autre »."""
-    return {c: (PALETTE[i], SYMBOLS[i]) if i < len(PALETTE) else (OTHER_COLOR, "circle")
-            for i, c in enumerate(order)}
-
-
-def highlighted(node, highlight):
-    if not highlight:
-        return True
-    kind, _, value = highlight.partition(":")
-    return value in node.get("axes" if kind == "axis" else "tags", [])
-
-
-# ------------------------------------------------------------------- figure
-
-def hover(n):
-    if n["kind"] == "external":
-        return (f"<b>{_wrap(n['title'])}</b><br>{n['year'] or schema.NR} · absent de la base"
-                f"<br>cité par {len(n['citers'])} papiers du corpus")
-    pre = " · <i>preprint</i>" if n["type"] == "preprint" else ""
-    return (f"<b>{_wrap(n['title'])}</b><br>{n['authors']}, {n['year'] or schema.NR}{pre}"
-            f"<br>axes : {', '.join(n['axes']) or '—'}<br>tags : {', '.join(n['tags']) or '—'}"
-            f"<br>fiche : {n['fiche']}")
-
-
-def _wrap(s, width=70):
-    words, lines, cur = s.split(), [], ""
-    for w in words:
-        if cur and len(cur) + len(w) > width:
-            lines.append(cur)
-            cur = ""
-        cur = f"{cur} {w}".strip()
-    return "<br>".join(lines + [cur])
-
-
-def link_traces(links, pos):
-    traces = []
-    for t in graph.LINK_TYPES:
-        ls = [l for l in links if l["type"] == t and l["source"] in pos and l["target"] in pos]
-        if not ls:
-            continue
-        wmax = max(l["weight"] for l in ls) or 1.0
-        bins = [[], [], []]
-        for l in ls:
-            bins[min(2, int(3 * l["weight"] / wmax - 1e-9))].append(l)
-        st = LINK_STYLE[t]
-        for i, group in enumerate(bins):
-            if not group:
-                continue
-            xs, ys, zs = [], [], []
-            for l in group:
-                a, b = pos[l["source"]], pos[l["target"]]
-                xs += [a[0], b[0], None]
-                ys += [a[1], b[1], None]
-                zs += [a[2], b[2], None]
-            traces.append(go.Scatter3d(
-                x=xs, y=ys, z=zs, mode="lines", hoverinfo="skip",
-                line={"color": st["color"], "width": WIDTHS[i], "dash": st["dash"]},
-                opacity=0.35 + 0.2 * i,
-                name=st["label"], legendgroup=f"link-{t}", showlegend=(i == max(
-                    k for k, g in enumerate(bins) if g)),
-                legendrank=900,
-            ))
-    return traces
-
-
-def node_traces(nodes, pos, color_by, highlight):
-    papers = [n for n in nodes if n["kind"] == "paper" and n["id"] in pos]
-    externals = [n for n in nodes if n["kind"] == "external" and n["id"] in pos]
-    traces = []
-
-    def scatter(group, name, opacity, showlegend, **marker):
-        return go.Scatter3d(
-            x=[pos[n["id"]][0] for n in group], y=[pos[n["id"]][1] for n in group],
-            z=[pos[n["id"]][2] for n in group],
-            mode="markers+text" if opacity == 1 else "markers",
-            text=[_short(n) for n in group] if opacity == 1 else None,
-            textposition="top center", textfont={"size": 10, "color": INK_MUTED},
-            customdata=[n["id"] for n in group],
-            hovertext=[hover(n) for n in group], hoverinfo="text",
-            marker={"size": 9, "line": {"width": 2, "color": SURFACE}, **marker},
-            opacity=opacity, name=name, legendgroup=name, showlegend=showlegend,
-        )
-
-    if color_by == "year":
-        years = [n["year"] for n in papers if n["year"]]
-        lo, hi = (min(years), max(years)) if years else (0, 1)
-        for hl in (True, False):
-            group = [n for n in papers if highlighted(n, highlight) is hl]
-            if group:
-                traces.append(scatter(
-                    group, "papiers", 1 if hl else 0.15, False,
-                    color=[n["year"] or lo for n in group], colorscale=YEAR_SCALE,
-                    cmin=lo, cmax=hi if hi > lo else lo + 1, symbol="circle",
-                    colorbar={"title": "année", "thickness": 12, "len": 0.5} if hl else None,
-                    showscale=hl))
-    else:
-        order = category_order(papers, color_by)
-        styles = style_map(order)
-        for cat in order:
-            color, symbol = styles[cat]
-            for hl in (True, False):
-                group = [n for n in papers
-                         if category(n, color_by) == cat and highlighted(n, highlight) is hl]
-                if group:
-                    traces.append(scatter(group, cat, 1 if hl else 0.15, hl,
-                                          color=color, symbol=symbol))
-
-    if externals:
-        traces.append(go.Scatter3d(
-            x=[pos[n["id"]][0] for n in externals], y=[pos[n["id"]][1] for n in externals],
-            z=[pos[n["id"]][2] for n in externals], mode="markers",
-            customdata=[n["id"] for n in externals],
-            hovertext=[hover(n) for n in externals], hoverinfo="text",
-            marker={"size": 4, "color": EXTERNAL_COLOR, "symbol": "circle"},
-            opacity=0.7, name="référence externe co-citée",
-        ))
-    return traces
-
-
-def _short(n):
-    """Étiquette courte : 1er auteur + année."""
-    first = n["authors"].split(",")[0].replace(" et al.", "").split()[-1] if n["authors"] != schema.NR else "?"
-    return f"{first} {n['year'] or ''}".strip()
-
-
-def make_figure(color_by, highlight, types, threshold, layout, show_ext):
-    links = G.links_for(types, threshold, show_ext)
-    if layout == "force":
-        pos = G.force_positions(types, threshold, show_ext)
-    else:
-        pos = G.semantic_positions(show_ext)
-    nodes = G.visible_nodes(show_ext)
-    fig = go.Figure(link_traces(links, pos) + node_traces(nodes, pos, color_by, highlight))
-    axis = {"showgrid": False, "zeroline": False, "showticklabels": False,
-            "showbackground": False, "title": ""}
-    fig.update_layout(
-        paper_bgcolor=SURFACE, font={"color": INK, "family": "system-ui, sans-serif"},
-        margin={"l": 0, "r": 0, "t": 0, "b": 0},
-        scene={"xaxis": axis, "yaxis": axis, "zaxis": axis, "bgcolor": SURFACE},
-        legend={"title": {"text": COLOR_BY[color_by]}, "itemsizing": "constant",
-                "bgcolor": "rgba(252,252,251,0.85)", "x": 0, "y": 1},
-        hoverlabel={"bgcolor": "white", "font": {"color": INK}},
-        uirevision=layout,      # garde l'angle de caméra tant que le placement ne change pas
-    )
-    return fig
-
-
-# ------------------------------------------------------------------ détails
-
-def details(node_id):
-    n = G.nodes.get(node_id)
-    if n is None:
-        return html.P("Cliquer sur un point pour afficher le détail.", className="muted")
-    if n["kind"] == "external":
-        citers = [html.Li(G.nodes[c]["title"]) for c in n["citers"]]
-        return [
-            html.H3(n["title"]),
-            html.P(f"{n['year'] or schema.NR} · clés : {', '.join(n['keys'])}", className="muted"),
-            html.P(html.B("Absent de la base — candidat à /paper-add.")),
-            html.P(f"Cité par {len(n['citers'])} papiers du corpus :"),
-            html.Ul(citers),
-        ]
-    rows = []
-    for l in G.links:
-        if node_id not in (l["source"], l["target"]):
-            continue
-        other = l["target"] if l["source"] == node_id else l["source"]
-        if l["type"] == "citation":
-            verb = "cite" if l["source"] == node_id else "est cité par"
-        else:
-            verb = LINK_STYLE[l["type"]]["label"].lower()
-        rows.append((l["type"], -l["weight"], verb, G.nodes[other]["title"], l["label"]))
-    rows.sort()
-    link_items = [html.Li([html.Span(f"{verb} ", className="muted"), title,
-                           html.Span(f" — {label}", className="muted")])
-                  for _, _, verb, title, label in rows[:40]]
-    return [
-        html.H3(n["title"]),
-        html.P(f"{n['authors']} · {n['year'] or schema.NR} · {n['venue'] or schema.NR}"),
-        html.P(html.B("Preprint non relu par les pairs.")) if n["type"] == "preprint" else None,
-        html.P([html.A(n["url"], href=n["url"], target="_blank")]) if n["url"] else None,
-        html.P(f"Axes : {', '.join(n['axes']) or '—'}  ·  Tags : {', '.join(n['tags']) or '—'}"),
-        html.P([f"Fiche : {n['fiche']}  ·  ", html.Code(f"papers/{n['id']}/fiche.md")]),
-        html.P(f"{n['n_refs']} références extraites · {n['n_bench']} ligne(s) dans benchmarks.csv",
-               className="muted"),
-        html.H4(f"Liens ({len(rows)})"),
-        html.Ul(link_items),
-    ]
-
-
-# ------------------------------------------------------------------------ app
 
 def highlight_options():
     axes = sorted({a for n in G.visible_nodes() for a in n["axes"]})
@@ -280,54 +44,17 @@ def highlight_options():
             + [{"label": f"tag : {t}", "value": f"tag:{t}"} for t in tags])
 
 
-def control(label, component):
-    return html.Div([html.Label(label, className="ctl-label"), component], className="ctl")
+def paper_options():
+    papers = sorted((n for n in G.nodes.values() if n["kind"] == "paper"),
+                    key=lambda n: (n["year"] or 0, n["title"]))
+    return [{"label": vizfig.option_label(n), "value": n["id"]} for n in papers]
 
 
-app = Dash(__name__, title="PaperDatabase — graphe 3D")
-app.index_string = app.index_string.replace("</head>", """<style>
-body { margin: 0; background: #fcfcfb; color: #1f1f1e; font-family: system-ui, sans-serif; font-size: 14px; }
-.wrap { display: grid; grid-template-columns: 280px 1fr 360px; height: 100vh; }
-.side { padding: 16px; overflow-y: auto; border-right: 1px solid #e4e3dd; }
-.detail { padding: 16px; overflow-y: auto; border-left: 1px solid #e4e3dd; }
-.ctl { margin-bottom: 18px; } .ctl-label { display: block; font-weight: 600; margin-bottom: 6px; }
-.muted { color: #6b6a64; } h1 { font-size: 18px; margin: 0 0 4px; } h3 { font-size: 15px; }
-.detail ul { padding-left: 18px; } .detail li { margin-bottom: 4px; }
-button { padding: 6px 12px; border: 1px solid #c3c2b7; background: white; border-radius: 6px; cursor: pointer; }
-@media (max-width: 1000px) { .wrap { grid-template-columns: 1fr; height: auto; } #graph { height: 70vh !important; } }
-</style></head>""")
-
-app.layout = html.Div(className="wrap", children=[
-    html.Div(className="side", children=[
-        html.H1("Corpus en 3D"),
-        html.P(id="summary", className="muted"),
-        control("Couleur par", dcc.Dropdown(
-            id="color-by", value="axis", clearable=False,
-            options=[{"label": v, "value": k} for k, v in COLOR_BY.items()])),
-        control("Surligner", dcc.Dropdown(id="highlight", options=highlight_options(),
-                                          placeholder="un axe ou un tag…")),
-        control("Liens affichés", dcc.Checklist(
-            id="link-types", value=["citation", "coupling"],
-            options=[{"label": " " + LINK_STYLE[t]["label"], "value": t} for t in graph.LINK_TYPES],
-            labelStyle={"display": "block"})),
-        control("Seuil de similarité textuelle", dcc.Slider(
-            id="threshold", min=0, max=1, step=0.05, value=0.25,
-            marks={0: "0", 0.25: "0.25", 0.5: "0.5", 0.75: "0.75", 1: "1"})),
-        control("Placement", dcc.RadioItems(
-            id="layout", value="force",
-            options=[{"label": " force (suit les liens cochés)", "value": "force"},
-                     {"label": " sémantique (PCA du TF-IDF)", "value": "semantic"}],
-            labelStyle={"display": "block"})),
-        control("Références externes", dcc.Checklist(
-            id="show-ext", value=[],
-            options=[{"label": " afficher les travaux cités par ≥ 2 papiers", "value": "on"}])),
-        html.Button("Recharger le corpus", id="reload"),
-        html.P("Épaisseur d'un lien : poids relatif au lien le plus fort du même type.",
-               className="muted", style={"marginTop": "18px"}),
-    ]),
-    dcc.Graph(id="graph", style={"height": "100vh"}, config={"displaylogo": False}),
-    html.Div(id="detail", className="detail", children=details(None)),
-])
+def search_options(show_ext):
+    ext = sorted((n for n in G.nodes.values() if n["kind"] == "external"),
+                 key=lambda n: n["title"].lower())
+    return paper_options() + ([{"label": vizfig.option_label(n), "value": n["id"]} for n in ext]
+                              if show_ext else [])
 
 
 def summary():
@@ -337,24 +64,243 @@ def summary():
     return f"{len(papers)} papiers · {cit} citations internes · {ext} références externes co-citées"
 
 
-@app.callback(Output("graph", "figure"), Output("summary", "children"),
-              Output("highlight", "options"),
-              Input("color-by", "value"), Input("highlight", "value"),
-              Input("link-types", "value"), Input("threshold", "value"),
-              Input("layout", "value"), Input("show-ext", "value"), Input("reload", "n_clicks"))
-def update(color_by, hl, types, threshold, layout, show_ext, reload_clicks):
+def control(label, component):
+    return html.Div([html.Label(label, className="ctl-label"), component], className="ctl")
+
+
+def radio(id_, value, options):
+    return dcc.RadioItems(id=id_, value=value, options=options, labelStyle={"display": "block"})
+
+
+LO, HI = year_bounds()
+TYPES_PRESENT = [t for t in (*schema.TYPES, schema.NR)
+                 if any((n["type"] or schema.NR) == t for n in G.nodes.values() if n["kind"] == "paper")]
+
+app = Dash(__name__, title="PaperDatabase — corpus")
+app.index_string = app.index_string.replace("</head>", """<style>
+body { margin: 0; background: #fcfcfb; color: #1f1f1e; font-family: system-ui, sans-serif; font-size: 14px; }
+.wrap { display: grid; grid-template-columns: 290px 1fr 380px; height: 100vh; }
+.side { padding: 16px; overflow-y: auto; border-right: 1px solid #e4e3dd; }
+.center { display: flex; flex-direction: column; min-width: 0; overflow: auto; }
+.detail { padding: 16px; overflow-y: auto; border-left: 1px solid #e4e3dd; }
+.ctl { margin-bottom: 16px; } .ctl-label { display: block; font-weight: 600; margin-bottom: 6px; }
+.group { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: #6b6a64; margin: 22px 0 10px; }
+.muted { color: #6b6a64; } h1 { font-size: 18px; margin: 0 0 4px; } h3 { font-size: 15px; } h4 { margin: 16px 0 6px; }
+.detail ul { padding-left: 18px; } .detail li { margin-bottom: 4px; }
+.fiche { font-size: 13px; border-left: 3px solid #e4e3dd; padding-left: 10px; }
+.fiche h1 { font-size: 15px; } .fiche h2 { font-size: 14px; }
+details summary { cursor: pointer; font-weight: 600; margin: 8px 0; }
+.bench-wrap { overflow-x: auto; } table.bench { border-collapse: collapse; font-size: 12px; }
+.bench th, .bench td { border-bottom: 1px solid #e4e3dd; padding: 3px 6px; text-align: left; vertical-align: top; }
+.bench tr.low td { background: #fdf0d5; }
+.lin-bar { display: flex; flex-wrap: wrap; gap: 16px; padding: 12px 16px; border-bottom: 1px solid #e4e3dd; align-items: flex-end; }
+.lin-bar .ctl { margin: 0; min-width: 160px; }
+button { padding: 6px 12px; border: 1px solid #c3c2b7; background: white; border-radius: 6px; cursor: pointer; margin: 0 6px 6px 0; }
+button:disabled { opacity: .45; cursor: default; }
+input[type=text] { padding: 6px 8px; border: 1px solid #c3c2b7; border-radius: 4px; width: 220px; }
+@media (max-width: 1100px) { .wrap { grid-template-columns: 1fr; height: auto; } #graph { height: 70vh !important; } }
+</style></head>""")
+
+embed_label = ("embeddings (sentence-transformers)" if EMBED_OK
+               else "embeddings — pip install -r requirements-embed.txt")
+
+sidebar = html.Div(className="side", children=[
+    html.H1("Corpus"),
+    html.P(id="summary", className="muted"),
+    control("Rechercher", dcc.Dropdown(id="search", options=search_options(False),
+                                       placeholder="titre ou auteur…", optionHeight=50)),
+
+    html.Div("Graphe 3D", className="group"),
+    control("Couleur par", dcc.Dropdown(
+        id="color-by", value="axis", clearable=False,
+        options=[{"label": v, "value": k} for k, v in COLOR_BY.items()])),
+    control("Surligner", dcc.Dropdown(id="highlight", options=highlight_options(),
+                                      placeholder="un axe ou un tag…")),
+    control("Liens affichés", dcc.Checklist(
+        id="link-types", value=["citation", "coupling"],
+        options=[{"label": " " + LINK_STYLE[t]["label"], "value": t} for t in graph.LINK_TYPES],
+        labelStyle={"display": "block"})),
+    control("Seuil de similarité textuelle", dcc.Slider(
+        id="threshold", min=0, max=1, step=0.05, value=0.25,
+        marks={0: "0", 0.25: "0.25", 0.5: "0.5", 0.75: "0.75", 1: "1"})),
+    control("Placement", radio("layout", "force", [
+        {"label": " force (suit les liens cochés)", "value": "force"},
+        {"label": " sémantique (PCA de la similarité)", "value": "semantic"}])),
+    control("Affichage", dcc.Checklist(
+        id="show-ext", value=[],
+        options=[{"label": " références externes citées par ≥ 2 papiers", "value": "on"}])),
+
+    html.Div("Filtres (graphe 3D)", className="group"),
+    control("Années", dcc.RangeSlider(id="years", min=LO, max=HI, step=1, value=[LO, HI],
+                                      marks=year_marks(LO, HI),
+                                      tooltip={"placement": "bottom"})),
+    control("Fiche", dcc.Checklist(id="fiche-filter", value=list(schema.FICHE_STATUS), inline=True,
+                                   options=[{"label": f" {s} ", "value": s}
+                                            for s in schema.FICHE_STATUS])),
+    control("Type", dcc.Checklist(id="type-filter", value=TYPES_PRESENT,
+                                  options=[{"label": f" {t}", "value": t} for t in TYPES_PRESENT],
+                                  labelStyle={"display": "block"})),
+
+    html.Div("Commun aux deux vues", className="group"),
+    control("Similarité textuelle", radio("similarity", "tfidf", [
+        {"label": " TF-IDF (lexicale)", "value": "tfidf"},
+        {"label": " " + embed_label, "value": "embed", "disabled": not EMBED_OK}])),
+    control("Étiquettes", dcc.Checklist(id="labels", value=["on"],
+                                        options=[{"label": " afficher", "value": "on"}])),
+    html.Button("Recharger le corpus", id="reload"),
+    html.Button("Exporter la vue (HTML)", id="export"),
+    dcc.Download(id="download"),
+    html.P("Épaisseur d'un lien : poids relatif au lien le plus fort du même type.",
+           className="muted", style={"marginTop": "12px"}),
+])
+
+lineage_bar = html.Div(className="lin-bar", children=[
+    control("Point de départ", dcc.RadioItems(
+        id="lin-mode", value="subject", inline=True,
+        options=[{"label": " sujet ", "value": "subject"}, {"label": " papier", "value": "paper"}])),
+    control("Sujet (mot-clé, regex, axis:x, tag:x)",
+            dcc.Input(id="lin-subject", type="text", value="hls4ml", debounce=True,
+                      placeholder="yolo|you only look once")),
+    control("Papier racine", dcc.Dropdown(id="lin-root", options=paper_options(),
+                                          placeholder="choisir…", style={"width": "320px"})),
+    control("Profondeur (papier)", dcc.Slider(id="lin-depth", min=1, max=3, step=1, value=2,
+                                              marks={1: "1", 2: "2", 3: "3"})),
+    control("Options", dcc.Checklist(
+        id="lin-inter", value=["on"],
+        options=[{"label": " intermédiaires (sujet)", "value": "on"}])),
+    control("Suite probable (déduite) : seuil", dcc.Slider(
+        id="lin-infer", min=0, max=0.8, step=0.05, value=0,
+        marks={0: "off", 0.2: "0.2", 0.4: "0.4", 0.6: "0.6", 0.8: "0.8"})),
+    html.P(id="lin-summary", className="muted", style={"margin": 0, "flexBasis": "100%"}),
+])
+
+app.layout = html.Div(className="wrap", children=[
+    sidebar,
+    html.Div(className="center", children=[
+        dcc.Tabs(id="tabs", value="3d", children=[
+            dcc.Tab(label="Graphe 3D", value="3d", children=[
+                dcc.Loading(dcc.Graph(id="graph", style={"height": "calc(100vh - 50px)"},
+                                      config={"displaylogo": False}))]),
+            dcc.Tab(label="Généalogie", value="lineage", children=[
+                lineage_bar,
+                dcc.Loading(dcc.Graph(id="lineage-graph", config={"displaylogo": False}))]),
+        ]),
+    ]),
+    html.Div(className="detail", children=[
+        html.Button("Voir sa généalogie", id="to-lineage", disabled=True),
+        html.Div(id="detail", children=vizfig.details(G, None, ROOT)),
+    ]),
+    dcc.Store(id="selected"),
+    dcc.Store(id="version", data=0),
+])
+
+
+# ----------------------------------------------------------------- callbacks
+# Seul le callback `corpus` modifie G (rechargement, mode de similarité) ; les autres
+# dépendent de `version` et ne font que lire.
+
+@app.callback(Output("version", "data"), Output("similarity", "value"),
+              Input("reload", "n_clicks"), Input("similarity", "value"), State("version", "data"))
+def corpus(_, similarity, version):
     global G
     if ctx.triggered_id == "reload":
         G = graph.build(ROOT)
-    fig = make_figure(color_by, hl, types or [], threshold, layout, bool(show_ext))
-    return fig, summary(), highlight_options()
+    effective = G.set_similarity(similarity)
+    return (version or 0) + 1, effective
 
 
-@app.callback(Output("detail", "children"), Input("graph", "clickData"))
-def show_detail(click):
-    if not click:
-        return no_update
-    return details(click["points"][0].get("customdata"))
+@app.callback(Output("selected", "data"), Output("search", "value"),
+              Input("graph", "clickData"), Input("lineage-graph", "clickData"),
+              Input("search", "value"), prevent_initial_call=True)
+def select(click3d, click_lin, search):
+    if ctx.triggered_id == "search":
+        return search, no_update
+    click = click3d if ctx.triggered_id == "graph" else click_lin
+    nid = (click or {}).get("points", [{}])[0].get("customdata")
+    if not nid:
+        return no_update, no_update
+    return nid, nid
+
+
+def _filters(years, bounds, fiche, types):
+    """keep (ids retenus) ou None si aucun filtre n'est actif."""
+    full_years = list(years or []) == list(bounds)
+    all_fiche = set(fiche or []) >= set(schema.FICHE_STATUS)
+    all_types = set(types or []) >= set(TYPES_PRESENT)
+    if full_years and all_fiche and all_types:
+        return None
+    return G.filter_ids(None if full_years else years, None if all_fiche else set(fiche or []),
+                        None if all_types else set(types or []))
+
+
+@app.callback(Output("graph", "figure"), Output("summary", "children"),
+              Output("highlight", "options"), Output("highlight", "value"),
+              Output("search", "options"), Output("lin-root", "options"),
+              Output("years", "min"), Output("years", "max"), Output("years", "marks"),
+              Output("years", "value"),
+              Input("color-by", "value"), Input("highlight", "value"),
+              Input("link-types", "value"), Input("threshold", "value"),
+              Input("layout", "value"), Input("show-ext", "value"), Input("labels", "value"),
+              Input("years", "value"), Input("fiche-filter", "value"), Input("type-filter", "value"),
+              Input("selected", "data"), Input("version", "data"),
+              State("years", "min"), State("years", "max"))
+def update(color_by, hl, types, threshold, layout, show_ext, labels, years, fiche, ptypes,
+           selected, _, ymin, ymax):
+    lo, hi = year_bounds()
+    if list(years or []) == [ymin, ymax]:      # plage complète : suit les nouvelles années
+        years = [lo, hi]
+    options = highlight_options()
+    if hl not in {o["value"] for o in options}:
+        hl = None
+    keep = _filters(years, (lo, hi), fiche, ptypes)
+    fig = vizfig.make_figure(G, color_by, hl, types or [], threshold, layout, bool(show_ext),
+                             keep, selected, bool(labels))
+    return (fig, summary(), options, hl, search_options(bool(show_ext)), paper_options(),
+            lo, hi, year_marks(lo, hi), years)
+
+
+@app.callback(Output("detail", "children"), Output("to-lineage", "disabled"),
+              Input("selected", "data"), Input("version", "data"))
+def show_detail(selected, _):
+    n = G.node(selected) if selected else None
+    return vizfig.details(G, selected, ROOT), not (n and n["kind"] == "paper")
+
+
+@app.callback(Output("tabs", "value"), Output("lin-mode", "value"), Output("lin-root", "value"),
+              Input("to-lineage", "n_clicks"), State("selected", "data"), prevent_initial_call=True)
+def to_lineage(_, selected):
+    return "lineage", "paper", selected
+
+
+@app.callback(Output("lineage-graph", "figure"), Output("lin-summary", "children"),
+              Input("lin-mode", "value"), Input("lin-root", "value"), Input("lin-subject", "value"),
+              Input("lin-depth", "value"), Input("lin-inter", "value"), Input("lin-infer", "value"),
+              Input("labels", "value"), Input("selected", "data"), Input("version", "data"))
+def update_lineage(mode, root, subject, depth, inter, infer, labels, selected, _):
+    if mode == "paper":
+        L = lineage.build(G, root=root if root in G.nodes else None, depth=depth,
+                          infer_threshold=infer or 0)
+    else:
+        L = lineage.build(G, subject=(subject or "").strip() or None,
+                          intermediates=bool(inter), infer_threshold=infer or 0)
+    nodes = L["nodes"].values()
+    n_pap = sum(1 for n in nodes if n["kind"] == "paper")
+    n_cit = sum(1 for e in L["edges"] if e["kind"] == "citation")
+    n_inf = len(L["edges"]) - n_cit
+    text = (f"{n_pap} papier(s) du corpus · {len(L['nodes']) - n_pap} référence(s) externe(s) · "
+            f"{n_cit} citation(s) lue(s)"
+            + (f" · {n_inf} suite(s) probable(s), déduite(s)" if n_inf else "")
+            + " · les références externes n'ont pas de bibliographie connue.") if nodes else ""
+    return vizfig.lineage_figure(L, selected, bool(labels)), text
+
+
+@app.callback(Output("download", "data"), Input("export", "n_clicks"),
+              State("tabs", "value"), State("graph", "figure"), State("lineage-graph", "figure"),
+              prevent_initial_call=True)
+def export(_, tab, fig3d, fig_lin):
+    fig = go.Figure(fig_lin if tab == "lineage" else fig3d)
+    name = "genealogie.html" if tab == "lineage" else "graphe-3d.html"
+    return {"content": fig.to_html(include_plotlyjs="cdn"), "filename": name}
 
 
 def main():

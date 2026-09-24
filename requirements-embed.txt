@@ -1,0 +1,3 @@
+# Optionnel : similarité par embeddings dans bin/viz.py (lib/embed.py).
+# Installe torch (lourd). Sans ce paquet, la visualisation reste au TF-IDF.
+sentence-transformers

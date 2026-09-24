@@ -4,3 +4,4 @@ inbox/*.pdf
 inbox/*.meta.json
 .venv/
 __pycache__/
+.cache/

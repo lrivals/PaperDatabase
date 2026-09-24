@@ -138,18 +138,26 @@ Le pipeline ne dépend pas du domaine. Pour changer de sujet :
 
 ---
 
-## Visualisation 3D (outil secondaire)
+## Visualisation (outil secondaire)
 
 Cet outil est une vue d'ensemble destinée à l'utilisateur. **Le LLM ne s'en sert pas.**
 
-`bin/viz.py` est une application Dash locale qui affiche le corpus en nuage de points 3D :
+`bin/viz.py` est une application Dash locale à deux onglets.
+
+**Graphe 3D** — le corpus en nuage de points :
 
 - la couleur donne le thème (axe, tag, année, type ou statut de fiche) ;
 - les liens montrent les citations, les références partagées, la similarité textuelle
-  (TF-IDF) ou les thèmes communs ;
+  (TF-IDF, ou embeddings si `requirements-embed.txt` est installé) ou les thèmes communs ;
 - le placement est soit force-directed, soit sémantique ;
+- recherche par titre ou auteur, filtres par année, statut de fiche et type ;
+- un clic affiche la fiche de lecture et les lignes de `benchmarks.csv` du papier ;
 - en option, les travaux cités par plusieurs articles mais absents de la base apparaissent,
   comme candidats à l'ajout.
+
+**Généalogie** — l'historique d'un sujet ou d'un papier sur une frise chronologique, le long
+des citations : ce qu'il cite, ce qui le cite, et, en option, les « suites probables »
+déduites de la similarité textuelle (signalées comme inférées).
 
 ```bash
 .venv/bin/pip install -r requirements-viz.txt   # dépendances séparées, optionnelles

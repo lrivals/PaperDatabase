@@ -47,7 +47,8 @@ PaperDatabase/
 ├── gaps.md                 # carte des verrous et zones non couvertes
 ├── basicStart.txt          # bibliographie de départ (source d'amorçage)
 ├── requirements.txt
-├── requirements-viz.txt    # optionnel : dépendances de la visualisation 3D
+├── requirements-viz.txt    # optionnel : dépendances de la visualisation
+├── requirements-embed.txt  # optionnel : embeddings (sentence-transformers) pour la visualisation
 ├── .venv/                  # non versionné
 ├── bin/                    # scripts du pipeline
 │   ├── setup.sh
@@ -55,7 +56,7 @@ PaperDatabase/
 │   ├── add.py
 │   ├── ingest.py
 │   ├── reindex.py
-│   └── viz.py              # app Dash : graphe 3D du corpus
+│   └── viz.py              # app Dash : graphe 3D et généalogie du corpus
 ├── lib/                    # code partagé
 │   ├── ids.py
 │   ├── tei.py
@@ -63,14 +64,20 @@ PaperDatabase/
 │   ├── pdftext.py          # extraction de repli PyMuPDF
 │   ├── schema.py
 │   ├── refs.py             # rapprochement des références, classement des externes
-│   └── graph.py            # nœuds, liens et positions du graphe 3D
+│   ├── graph.py            # nœuds, liens et positions du graphe 3D
+│   ├── lineage.py          # généalogie : sous-graphe de citations sur une frise
+│   ├── vizfig.py           # figures Plotly et panneau de détail de viz.py
+│   └── embed.py            # optionnel : embeddings avec cache (.cache/)
 ├── tests/
 │   ├── fixtures/sample.tei.xml
 │   ├── test_tei.py
 │   ├── test_schema.py
 │   ├── test_ingest.py
 │   ├── test_refs.py
-│   └── test_graph.py
+│   ├── test_graph.py
+│   ├── test_lineage.py
+│   ├── test_viz.py
+│   └── test_embed.py
 ├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps
 ├── inbox/                  # dépôt des PDF à ingérer
 └── papers/
@@ -141,6 +148,7 @@ pipeline d'ingestion léger :
 
 ```bash
 .venv/bin/pip install -r requirements-viz.txt   # dash, plotly, numpy, scikit-learn, networkx
+.venv/bin/pip install -r requirements-embed.txt # encore plus optionnel : sentence-transformers (torch)
 ```
 
 ### Étape 2 — GROBID
@@ -290,8 +298,10 @@ Ne modifie jamais `benchmarks.csv` ni les fiches — il ne fait que lire et rég
 
 ### `bin/viz.py [--port 8050] [--debug]`
 
-Application Dash locale (http://127.0.0.1:8050) : un nuage 3D où chaque point est un papier
-de `papers/`. Lecture seule, ne touche à aucun fichier. Le calcul (`lib/graph.py`) est fait au
+Application Dash locale (http://127.0.0.1:8050), deux onglets : **Graphe 3D** (un nuage où
+chaque point est un papier de `papers/`) et **Généalogie** (frise des citations d'un papier
+ou d'un sujet). Lecture seule : ne touche à aucun fichier de la base (seul le cache des
+embeddings est écrit, dans `.cache/`, non versionné). Le calcul (`lib/graph.py`) est fait au
 démarrage ; le bouton « Recharger le corpus » relit `papers/` après une ingestion sans
 relancer l'app.
 
@@ -302,38 +312,95 @@ fort du même type) :
 |---|---|---|
 | Citations | `refs.jsonl` rapproché des papiers du corpus (arXiv id → DOI → titre normalisé) | 1 |
 | Références partagées | couplage bibliographique : références communes à deux papiers | cosinus de Salton \|A∩B\| / √(\|A\|·\|B\|) |
-| Similarité textuelle | TF-IDF sur le texte de `sections.jsonl` (abstract + sections) | cosinus, filtré par un seuil réglable |
+| Similarité textuelle | TF-IDF (ou embeddings, voir plus bas) sur le texte de `sections.jsonl` (abstract + sections) | cosinus, filtré par un seuil réglable |
 | Thèmes communs | axes ∪ tags de `metadata.json` | Jaccard |
 
 **Placement** : *force* (force-directed 3D sur les liens cochés : les papiers liés se
-rapprochent, la vue change quand on coche/décoche) ou *sémantique* (PCA 3D du TF-IDF,
-positions fixes : la proximité = vocabulaire commun).
+rapprochent, la vue change quand on coche/décoche) ou *sémantique* (PCA 3D de la similarité
+textuelle, positions fixes : la proximité = vocabulaire ou sens commun).
 
 **Couleur** : axe principal (premier axe de `metadata.json` ; l'infobulle liste tous les
 axes), tag principal, année, type de publication ou statut de fiche. Palette à 8 couleurs
 fixes doublées d'un symbole ; au-delà de 8 catégories, le reste est en gris. **Surligner**
-un axe ou un tag estompe les autres papiers.
+un axe ou un tag estompe les autres papiers et les liens qui ne les touchent pas.
+
+**Recherche** : liste déroulante filtrable (« auteur année — titre ») sur les papiers et,
+si elles sont affichées, les références externes. Choisir un papier (ou cliquer un point)
+le sélectionne : anneau sombre, voisins directs mis en avant, reste estompé. La sélection
+survit au rechargement.
+
+**Filtres** (graphe 3D) : plage d'années, statut de fiche, type de publication. Les papiers
+filtrés sont retirés avant le placement ; un papier sans année n'est jamais exclu par le
+filtre d'années. En placement sémantique, filtrer ne déplace pas les autres papiers.
 
 **Références externes** (option) : travaux cités par ≥ 2 papiers du corpus mais absents de
 la base, en petits points gris. Ce sont des candidats naturels à `/paper-add`.
 
-Un clic sur un point affiche le détail : métadonnées, lien arXiv/DOI, chemin de la fiche,
-et la liste de ses liens avec leur poids.
+**Panneau de détail** (clic ou recherche) : métadonnées, lien arXiv/DOI, fiche de lecture
+rendue en Markdown (repliable), lignes de `benchmarks.csv` du papier (les lignes
+`confidence: low` sont surlignées), liste des liens avec leur poids. Pour une référence
+externe : liens arXiv/DOI (sinon recherche Google Scholar), commande `/paper-add` prête à
+copier, rang dans `external_refs.csv`. Le bouton « Voir sa généalogie » ouvre l'onglet
+Généalogie avec ce papier comme racine.
+
+**Généalogie** (`lib/lineage.py`) : frise où x = année de parution (une colonne par année
+présente, échelle **non proportionnelle** ; colonne « n/r » en premier pour les années
+inconnues), flèches du travail cité vers le travail qui le cite. Deux points de départ :
+- *papier* : ses ancêtres (ce qu'il cite, récursivement via les papiers du corpus) et ses
+  descendants (ce qui le cite), profondeur 1 à 3. Toutes ses références directes sont
+  montrées, même citées une seule fois ; plus loin, seules les externes co-citées ;
+- *sujet* : mot-clé ou regex (insensible à la casse) sur les titres des papiers et des
+  références externes et sur les axes/tags des papiers, ou `axis:x` / `tag:x`. Option
+  « intermédiaires » : ajoute les papiers du corpus hors sujet situés sur une chaîne de
+  citations entre deux nœuds du sujet. Exemple : `yolo|you only look once` (le titre de
+  YOLOv1 ne contient pas « yolo »).
+
+Option **suite probable** (seuil > 0) : arête en tirets entre deux papiers du corpus sans
+citation entre eux, d'années croissantes, de similarité textuelle ≥ seuil (au plus une par
+papier, vers le prédécesseur le plus proche). C'est une **inférence**, pas une donnée lue ;
+la légende le dit.
+
+**Similarité : TF-IDF ou embeddings.** Avec `requirements-embed.txt` installé
+(sentence-transformers, modèle `all-MiniLM-L6-v2`), le bouton « embeddings » remplace le
+TF-IDF pour les liens *similarité textuelle*, le placement sémantique et la suite probable.
+Chaque papier = moyenne des embeddings de morceaux de ~200 mots ; cache
+`.cache/embeddings/<modèle>.npz` indexé par id + sha1 du texte (un papier ré-extrait est
+recalculé). Sans la dépendance, le bouton est grisé et tout reste au TF-IDF.
+
+**Exporter** : télécharge la vue courante (3D ou généalogie) en HTML autonome (plotly.js
+chargé depuis le CDN), dans le dossier de téléchargement du navigateur.
 
 Limites à garder en tête avant d'interpréter la vue :
 - la similarité TF-IDF est **lexicale**, pas sémantique : deux papiers qui disent la même
-  chose avec un vocabulaire différent paraîtront éloignés ;
+  chose avec un vocabulaire différent paraîtront éloignés (les embeddings atténuent ce
+  défaut, sans le supprimer : `all-MiniLM-L6-v2` n'est pas entraîné sur des articles
+  scientifiques) ;
 - le couplage et les citations dépendent de la qualité d'extraction des références par
-  GROBID : une référence mal parsée (titre tronqué, sans identifiant) ne se rapproche de
-  rien ;
+  GROBID : une référence mal parsée (titre tronqué, sans identifiant, année erronée) ne se
+  rapproche de rien ou tombe dans la mauvaise colonne de la frise ;
 - les titres de moins de 4 mots ne servent pas de clé de rapprochement (trop ambigus) ;
+- **généalogie** : une référence externe n'a pas de bibliographie connue, donc aucune
+  flèche n'en part vers une autre externe. L'histoire d'un modèle hors corpus (YOLOv1 →
+  v3 → v5) n'est visible qu'à travers les papiers du corpus qui citent ces versions ;
 - avec une dizaine de papiers, les positions sont surtout illustratives.
 
 ### `lib/graph.py`
 
 Couche données de la visualisation, sans Dash : chargement du corpus, construction des
-liens (rapprochement des références délégué à `lib/refs.py`), positions sémantiques (PCA) et
-force-directed (`networkx.spring_layout`). Testé par `tests/test_graph.py`.
+liens (rapprochement des références délégué à `lib/refs.py`), filtres (`filter_ids`,
+paramètre `keep`), similarité TF-IDF ou embeddings (`set_similarity`), positions
+sémantiques (PCA) et force-directed (`networkx.spring_layout`). Garde toutes les références
+(`groups`, `citers`), y compris celles citées une seule fois, pour la généalogie. Testé par
+`tests/test_graph.py`.
+
+### `lib/lineage.py`, `lib/vizfig.py`, `lib/embed.py`
+
+`lineage.py` : sous-graphe généalogique (papier racine ou sujet) et placement par couches
+(Sugiyama simplifié, déterministe), sans Dash ; testé par `tests/test_lineage.py`.
+`vizfig.py` : figures Plotly (3D, frise) et panneau de détail, appelables sans serveur ;
+testé par `tests/test_viz.py`. `embed.py` : embeddings sentence-transformers avec cache,
+optionnel ; testé par `tests/test_embed.py` (encodeur simulé, sans la dépendance). Réutilisable
+pour la future recherche sémantique.
 
 ### `lib/refs.py`
 
@@ -513,7 +580,7 @@ vérification §8.1-8.5, 9 fiches rédigées, 15 lignes de benchmark, venues et 
 | Fiches de lecture | 9 / 12 `done` (le 24/09/2026) ; restent FINN, FINN-R, fpgaConvNet |
 | `benchmarks.csv` | 15 lignes (2507.18174, 2604.21280, 2403.07851, 2602.15751, 2512.01463) ; aucune ligne pour les 3 surveys ni pour hls4ml 2021 (Table 1 non extraite, justifié dans la fiche — `reindex.py` affiche une note attendue) |
 | `gaps.md` | 1 gap, au statut *hypothèse* ; les fiches `done` contiennent de nouveaux gaps non encore reportés (`/paper-gaps` à lancer) |
-| Visualisation 3D (`viz.py`, `lib/graph.py`) | fonctionnelle, testée (`test_graph.py`) ; 10 citations internes, 89 références externes co-citées |
+| Visualisation (`viz.py`, `lib/graph.py`, `lib/lineage.py`, `lib/vizfig.py`, `lib/embed.py`) | terminée le 24/09/2026 : graphe 3D (recherche, filtres, surlignage des liens, détail avec fiche et benchmarks, export HTML) et onglet Généalogie (papier ou sujet, suite probable déduite) ; embeddings optionnels ; testée (`test_graph.py`, `test_lineage.py`, `test_viz.py`, `test_embed.py`, 63 tests au total) ; 10 citations internes, 89 références externes co-citées |
 | Versionnage | dépôt git + remote GitHub ; visualisation commitée (6f04a6b) ; travaux du 24/09/2026 non commités |
 
 ### Tâches — corpus
@@ -570,6 +637,9 @@ vérification §8.1-8.5, 9 fiches rédigées, 15 lignes de benchmark, venues et 
   `benchmarks.csv` sous un `paper_id` dédié aux mesures propres (convention à définir
   dans DATA_MODEL.md).
 
+- [ ] Généalogies à relever dès maintenant (onglet Généalogie) : `hls4ml`, `finn|binar`,
+  `yolo|you only look once` — lignées de toolflows et points où le corpus ne couvre pas un
+  maillon (candidats à `/paper-add`).
 - [ ] Une fois 15-20 fiches `done` : repasser sur la vue 3D (placement *force*, liens
   *thèmes communs* + *références partagées*) et relever les axes isolés ou peu reliés entre
   eux — candidats à reporter dans `gaps.md` via `/paper-gaps`.
@@ -594,9 +664,11 @@ vérification §8.1-8.5, 9 fiches rédigées, 15 lignes de benchmark, venues et 
   section de la page correspondante quand il ne ressemble pas à une légende.
 - [ ] **Note `reindex.py` pour une fiche `done` sans benchmark** : permettre de marquer
   l'absence de ligne comme justifiée (ex. hls4ml 2021) pour éviter une note permanente.
-- [ ] **Embeddings dans la vue 3D.** Remplacer ou compléter le TF-IDF de `lib/graph.py`
-  (similarité lexicale seulement) par des embeddings sentence-transformers, en même temps
-  que l'index sémantique ci-dessous.
+- [x] **Embeddings dans la vue 3D** (24/09/2026) : `lib/embed.py` (sentence-transformers,
+  cache `.cache/embeddings/`), bouton TF-IDF / embeddings dans `viz.py`. Pas encore testé
+  avec le vrai modèle (dépendance non installée) : à faire après
+  `pip install -r requirements-embed.txt`. Réutilisable pour la recherche sémantique
+  ci-dessous.
 - [ ] **Recherche sémantique.** Au-delà de ~200 papiers, si `grep` ne suffit plus, ajouter
   un index local (sentence-transformers + ChromaDB) **par-dessus** `sections.jsonl`, sans
   rien changer à l'arborescence. C'est un ajout, jamais un remplacement.

@@ -105,6 +105,27 @@ class TestGraph(unittest.TestCase):
                 self.assertEqual(len(v), 3)
                 self.assertTrue(np.isfinite(v).all())
 
+    def test_all_groups_kept(self):
+        # ONLY_C n'est pas un nœud 3D mais reste accessible (vue généalogie)
+        gid = next(g for g, info in self.g.groups.items() if info["title"] == ONLY_C["title"])
+        self.assertEqual(self.g.node(gid)["citers"], ["pc"])
+        self.assertIsNone(self.g.node(gid)["rank"])
+        ranks = sorted(n["rank"] for n in self.g.nodes.values() if n["kind"] == "external")
+        self.assertEqual(ranks, [1, 2])
+
+    def test_keep_filter(self):
+        keep = self.g.filter_ids(fiche={"todo"}, types={"journal"})
+        self.assertEqual(keep, set())
+        keep = {"pa", "pb"}
+        self.assertEqual({n["id"] for n in self.g.visible_nodes(False, keep)}, keep)
+        links = self.g.links_for(graph.LINK_TYPES, 0.0, True, keep)
+        self.assertTrue(all(l["source"] in keep or self.g.nodes[l["source"]]["kind"] == "external"
+                            for l in links))
+        self.assertNotIn("pc", self.g.force_positions(graph.LINK_TYPES, 0.0, True, keep))
+        self.assertNotIn("pc", self.g.semantic_positions(True, keep))
+        # une externe reste visible si l'un de ses citants l'est
+        self.assertEqual(len(self.g.visible_nodes(True, keep)), 4)
+
 
 if __name__ == "__main__":
     unittest.main()

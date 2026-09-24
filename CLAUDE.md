@@ -41,7 +41,7 @@ brute d'extraction.
 | `/paper-add <arxiv-id \| url \| chemin.pdf>` | acquisition + ingestion + réindexation |
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches `done` et `benchmarks.csv` |
-| `.venv/bin/python bin/viz.py` | graphe 3D du corpus (app Dash, http://127.0.0.1:8050) : couleur par thème, liens citations / références partagées / similarité TF-IDF / thèmes communs. Dépendances : `requirements-viz.txt`. Détails : [SETUP.md](SETUP.md) §5 |
+| `.venv/bin/python bin/viz.py` | visualisation du corpus (app Dash, http://127.0.0.1:8050) : graphe 3D (couleur par thème, liens citations / références partagées / similarité textuelle / thèmes communs, recherche, filtres, détail avec fiche et benchmarks) et onglet Généalogie (frise des citations d'un papier ou d'un sujet). Dépendances : `requirements-viz.txt` (+ `requirements-embed.txt`, optionnel). Détails : [SETUP.md](SETUP.md) §5 |
 
 Après toute modification du corpus (ingestion, fiche remplie, ligne de benchmark ajoutée) :
 `.venv/bin/python bin/reindex.py` (régénère `INDEX.md` et `external_refs.csv`).

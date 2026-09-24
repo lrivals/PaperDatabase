@@ -9,6 +9,9 @@ Types de liens :
               |A∩B| / √(|A|·|B|), moins écrasé que Jaccard par les surveys à 600 réfs
   text      — similarité cosinus TF-IDF sur le texte intégral
   themes    — axes et tags communs, poids = Jaccard
+
+La similarité textuelle (liens `text`, placement sémantique) vient du TF-IDF, ou des
+embeddings de lib/embed.py si sentence-transformers est installé (set_similarity).
 """
 import csv
 import json
@@ -68,11 +71,14 @@ class CorpusGraph:
     l'affichage (links_for).
     """
 
-    def __init__(self, papers, min_citers=2):
+    def __init__(self, papers, min_citers=2, root=None):
         self.papers = papers
+        self.root = Path(root) if root else None
         self.nodes = {}
         self.links = []
         self.tfidf = None
+        self.similarity = "tfidf"
+        self._matrices = {}         # "tfidf" | "embed" → matrice lignes normalisées
         self._build_nodes()
         self._resolve_refs(min_citers)
         self._build_links()
@@ -93,24 +99,49 @@ class CorpusGraph:
                 "tags": p.get("tags") or [],
                 "fiche": (p.get("status") or {}).get("fiche", "todo"),
                 "url": (f"https://doi.org/{p['doi']}" if p.get("doi") else p.get("url")),
+                "arxiv_id": p.get("arxiv_id"),
+                "doi": p.get("doi"),
                 "n_refs": len(p["refs"]),
                 "n_bench": len(p["benchmarks"]),
+                "benchmarks": p["benchmarks"],
             }
 
     def _resolve_refs(self, min_citers):
-        """Rattache chaque référence à un papier du corpus ou à un groupe externe (lib/refs.py)."""
-        self.cites, groups = refs.group_refs(self.papers)   # paper_id → cibles
-        citers = refs.citers_of(self.cites)
-        for gid, info in groups.items():
-            if len(citers[gid]) >= min_citers:
-                self.nodes[gid] = {
-                    "id": gid,
-                    "kind": "external",
-                    "title": info["title"] or info["raw"] or gid,
-                    "year": info["year"],
-                    "keys": info["keys"],
-                    "citers": sorted(citers[gid]),
-                }
+        """Rattache chaque référence à un papier du corpus ou à un groupe externe (lib/refs.py).
+
+        self.groups et self.citers couvrent toutes les références (vue généalogie) ; seules
+        celles citées par ≥ min_citers papiers deviennent des nœuds du graphe 3D.
+        """
+        self.cites, self.groups = refs.group_refs(self.papers)   # paper_id → cibles
+        self.citers = refs.citers_of(self.cites)
+        ranked = sorted((gid for gid in self.groups if len(self.citers[gid]) >= min_citers),
+                        key=lambda gid: (-len(self.citers[gid]), -(self.groups[gid]["year"] or 0),
+                                         (self.groups[gid]["title"] or "").lower()))
+        for rank, gid in enumerate(ranked, 1):
+            self.nodes[gid] = self.external_node(gid)
+            self.nodes[gid]["rank"] = rank     # même ordre que external_refs.csv
+
+    def external_node(self, gid):
+        info = self.groups[gid]
+        return {
+            "id": gid,
+            "kind": "external",
+            "title": info["title"] or info["raw"] or gid,
+            "year": info["year"],
+            "arxiv_id": info["arxiv_id"],
+            "doi": info["doi"],
+            "keys": info["keys"],
+            "citers": sorted(self.citers[gid]),
+            "rank": None,
+        }
+
+    def node(self, nid):
+        """Nœud du graphe, ou nœud externe construit à la volée (référence citée une fois)."""
+        if nid in self.nodes:
+            return self.nodes[nid]
+        if nid in self.groups:
+            return self.external_node(nid)
+        return None
 
     # -- liens
 
@@ -147,30 +178,86 @@ class CorpusGraph:
             except ValueError:          # aucun terme exploitable
                 self.tfidf = None
         if self.tfidf is not None:
-            sim = (self.tfidf @ self.tfidf.T).toarray()
+            self._matrices["tfidf"] = self.tfidf.toarray()
+        self._build_text_links()
+
+    def _build_text_links(self):
+        # nouvelle liste assignée d'un coup : les callbacks Dash lisent self.links en parallèle
+        links = [l for l in self.links if l["type"] != "text"]
+        X = self.text_matrix()
+        if X is not None:
+            ids_ = [p["id"] for p in self.papers]
+            sim = X @ X.T
             for i, j in combinations(range(len(ids_)), 2):
                 if sim[i, j] > 0:
-                    self.links.append({"source": ids_[i], "target": ids_[j], "type": "text",
-                                       "weight": float(sim[i, j]), "external": False,
-                                       "label": f"cosinus {sim[i, j]:.2f}"})
+                    links.append({"source": ids_[i], "target": ids_[j], "type": "text",
+                                  "weight": float(min(sim[i, j], 1.0)), "external": False,
+                                  "label": f"cosinus {sim[i, j]:.2f}"})
+        self.links = links
 
-    def links_for(self, types, text_threshold=0.0, show_external=False):
+    def text_matrix(self):
+        """Matrice papiers × dimensions (lignes normalisées) de la similarité courante."""
+        return self._matrices.get(self.similarity)
+
+    def set_similarity(self, kind):
+        """'tfidf' ou 'embed'. Retourne le mode effectif ('tfidf' si les embeddings sont
+        indisponibles)."""
+        if kind == "embed" and "embed" not in self._matrices:
+            from lib import embed
+            if not embed.available():
+                kind = "tfidf"
+            else:
+                cache = self.root / ".cache" / "embeddings" if self.root else None
+                self._matrices["embed"] = embed.embed_papers(self.papers, cache_dir=cache)
+        if kind != self.similarity:
+            self.similarity = kind
+            self._build_text_links()
+        return self.similarity
+
+    # -- filtres
+
+    def filter_ids(self, years=None, fiche=None, types=None):
+        """Ids des papiers retenus par les filtres (None = pas de filtre). Un papier sans
+        année passe le filtre d'années : l'absence de donnée n'est pas une exclusion."""
+        keep = set()
+        for n in self.nodes.values():
+            if n["kind"] != "paper":
+                continue
+            if years and n["year"] is not None and not years[0] <= n["year"] <= years[1]:
+                continue
+            if fiche is not None and n["fiche"] not in fiche:
+                continue
+            if types is not None and (n["type"] or schema.NR) not in types:
+                continue
+            keep.add(n["id"])
+        return keep
+
+    def _visible(self, nid, show_external, keep):
+        n = self.nodes[nid]
+        if n["kind"] == "external":
+            return show_external and (keep is None or any(c in keep for c in n["citers"]))
+        return keep is None or nid in keep
+
+    def links_for(self, types, text_threshold=0.0, show_external=False, keep=None):
         return [l for l in self.links
                 if l["type"] in types
                 and (show_external or not l["external"])
-                and (l["type"] != "text" or l["weight"] >= text_threshold)]
+                and (l["type"] != "text" or l["weight"] >= text_threshold)
+                and (keep is None or (self._visible(l["source"], show_external, keep)
+                                      and self._visible(l["target"], show_external, keep)))]
 
-    def visible_nodes(self, show_external=False):
-        return [n for n in self.nodes.values() if show_external or n["kind"] == "paper"]
+    def visible_nodes(self, show_external=False, keep=None):
+        return [n for n in self.nodes.values() if self._visible(n["id"], show_external, keep)]
 
     # -- positions
 
-    def semantic_positions(self, show_external=False):
-        """PCA 3D du TF-IDF ; externes au barycentre de leurs citants (+ jitter fixe)."""
+    def semantic_positions(self, show_external=False, keep=None):
+        """PCA 3D de la similarité courante ; externes au barycentre de leurs citants
+        (+ jitter fixe). Calculée sur tout le corpus : filtrer ne déplace pas les papiers."""
         paper_ids = [p["id"] for p in self.papers]
         coords = np.zeros((len(paper_ids), 3))
-        if self.tfidf is not None and len(paper_ids) >= 2:
-            X = self.tfidf.toarray()
+        X = self.text_matrix()
+        if X is not None and len(paper_ids) >= 2:
             X = X - X.mean(axis=0)
             U, S, _ = np.linalg.svd(X, full_matrices=False)
             k = min(3, len(S))
@@ -183,13 +270,13 @@ class CorpusGraph:
                     rng = random.Random(n["id"])
                     base = np.mean([pos[c] for c in n["citers"]], axis=0)
                     pos[n["id"]] = base + np.array([rng.uniform(-.08, .08) for _ in range(3)])
-        return pos
+        return {k: v for k, v in pos.items() if self._visible(k, show_external, keep)}
 
-    def force_positions(self, types, text_threshold=0.0, show_external=False):
+    def force_positions(self, types, text_threshold=0.0, show_external=False, keep=None):
         """Placement force-directed 3D sur les liens actifs (poids sommés par paire)."""
         g = nx.Graph()
-        g.add_nodes_from(n["id"] for n in self.visible_nodes(show_external))
-        for l in self.links_for(types, text_threshold, show_external):
+        g.add_nodes_from(n["id"] for n in self.visible_nodes(show_external, keep))
+        for l in self.links_for(types, text_threshold, show_external, keep):
             w = g.get_edge_data(l["source"], l["target"], {"weight": 0})["weight"]
             g.add_edge(l["source"], l["target"], weight=w + l["weight"])
         if not g.number_of_nodes():
@@ -211,4 +298,4 @@ def _normalize(pos):
 
 
 def build(root, min_citers=2):
-    return CorpusGraph(load_corpus(root), min_citers=min_citers)
+    return CorpusGraph(load_corpus(root), min_citers=min_citers, root=root)

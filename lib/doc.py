@@ -23,30 +23,105 @@ class Block:
     page: int | None = None
 
 
-def heading_level(title, n=None, current_numbered=False):
+_ROMAN_HEADING = re.compile(r"^([IVX]+)\.\s")
+_LETTER_HEADING = re.compile(r"^([A-Z])\.\s")
+_ARABIC_HEADING = re.compile(r"^(\d+(?:\.\d+)*)\.?\s+\S")
+_ROMAN_VALUES = {"I": 1, "V": 5, "X": 10}
+
+
+def roman_to_int(s):
+    total = 0
+    for c, nxt in zip(s, s[1:] + " "):
+        v = _ROMAN_VALUES[c]
+        total += -v if nxt in _ROMAN_VALUES and _ROMAN_VALUES[nxt] > v else v
+    return total
+
+
+def is_junk_heading(title):
+    """Titre parasite détecté par l'extracteur : cellule de tableau, symbole isolé, mesure.
+
+    Règles volontairement conservatrices : un titre de paragraphe non numéroté mais lisible
+    (« Layer fusion ») n'est jamais considéré comme parasite.
+    """
+    t = title.strip()
+    if sum(c.isalpha() for c in t) < 3:          # « 𝑜 », « 4. »
+        return True
+    if not t[0].isalnum():                       # « * Corresponding author »
+        return True
+    if "|" in t:                                 # cellules de tableau : « 2021. | ViT Variants »
+        return True
+    m = re.match(r"^(\d+)\.", t)
+    if m and int(m.group(1)) >= 100:             # une année, pas un numéro de section
+        return True
+    return bool(re.match(r"^\d+(\.\d+)?[a-zA-Z%×]", t))  # une mesure : « 13.9x larger »
+
+
+def heading_level(title, n=None, section=None, subsection=None):
     """Niveau d'un titre d'après sa numérotation : 'III.' → 1, 'A.' → 2, '3.2' → 2.
 
-    Un titre non numéroté vaut 1, sauf au sein d'un papier numéroté où il est traité comme
-    sous-section (sauf mots de premier niveau : Conclusion, Acknowledgment…).
+    section et subsection sont les titres courants (subsection : dernier titre de niveau 2).
+    - Un titre non numéroté vaut 1, sauf au sein d'un papier numéroté où il est traité comme
+      sous-section (sauf mots de premier niveau : Conclusion, Acknowledgment…).
+    - Dans un papier numéroté en chiffres romains, un titre en chiffres arabes (« 1. ») est
+      un niveau sous la sous-section courante.
+    - « I. », « V. », « X. » sont des lettres de sous-section quand ils suivent H, U ou W.
     """
+    roman_paper = bool(section and _ROMAN_HEADING.match(section))
+    m = _ROMAN_HEADING.match(title)
+    prev = _LETTER_HEADING.match(subsection or "")
+    if m and len(m.group(1)) == 1 and prev and ord(m.group(1)) == ord(prev.group(1)) + 1:
+        return 2
     if n:
-        return len([p for p in n.strip(".").split(".") if p])
-    if re.match(r"^[IVX]+\.\s", title):
+        level = len([p for p in n.strip(".").split(".") if p])
+    elif m:
         return 1
-    if re.match(r"^[A-Z]\.\s", title):
+    elif _LETTER_HEADING.match(title):
         return 2
-    m = re.match(r"^(\d+(?:\.\d+)*)\.?\s+\S", title)
-    if m:
-        return len(m.group(1).split("."))
-    if re.match(r"^\d+\)\s", title):
+    elif _ARABIC_HEADING.match(title):
+        level = len(_ARABIC_HEADING.match(title).group(1).split("."))
+    elif re.match(r"^\d+\)\s", title):
         return 2
-    if current_numbered and not _TOP_LEVEL_WORDS.match(title):
+    elif is_numbered(section) and not _TOP_LEVEL_WORDS.match(title):
         return 2
-    return 1
+    else:
+        return 1
+    if roman_paper:
+        return level + (2 if subsection else 1)
+    return level
 
 
 def is_numbered(title):
     return bool(title and re.match(r"^([IVX]+\.|\d+(\.\d+)*\.?)\s", title))
+
+
+def numbering_gaps(blocks):
+    """Numéros de sections de premier niveau absents de la séquence 1…max.
+
+    Le style (romain ou arabe) est celui de la majorité des titres de premier niveau.
+    Retourne les numéros manquants tels qu'ils seraient imprimés : ['1', '5'] ou ['I'].
+    """
+    roman, arabic = set(), set()
+    for b in blocks:
+        if b.kind != "section" or b.level != 1 or not b.heading:
+            continue
+        m = _ROMAN_HEADING.match(b.heading)
+        if m:
+            roman.add(m.group(1))
+            continue
+        m = re.match(r"^(\d+)\.?\s", b.heading)
+        if m:
+            arabic.add(int(m.group(1)))
+    if len(roman) > len(arabic):
+        seen = {roman_to_int(r): r for r in roman}
+        labels = {v: k for k, v in _ROMAN_LABELS.items()}
+        return [labels.get(k, str(k)) for k in range(1, max(seen) + 1) if k not in seen]
+    if arabic:
+        return [str(k) for k in range(1, max(arabic) + 1) if k not in arabic]
+    return []
+
+
+_ROMAN_LABELS = {r: roman_to_int(r) for r in (
+    "I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI XVII XVIII XIX XX".split())}
 
 
 def split_paragraphs(paras, limit=MAX_SECTION_CHARS):
@@ -125,7 +200,7 @@ def render_fulltext(meta, blocks):
                 if current_section != b.section:
                     out += [f"## {b.section}", ""]
                     current_section = b.section
-                out += [f"### {b.heading}", ""]
+                out += [f"{'#' * (min(b.level or 2, 3) + 1)} {b.heading}", ""]
         for t, _ in b.paras:
             out += [t, ""]
     return "\n".join(out).rstrip() + "\n"

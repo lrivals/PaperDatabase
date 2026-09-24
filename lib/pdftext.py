@@ -8,7 +8,7 @@ from collections import Counter
 
 import pymupdf
 
-from lib.doc import Block, heading_level, is_numbered
+from lib.doc import Block, heading_level, is_junk_heading
 
 HEADING_RE = re.compile(r"^(\d+(\.\d+)*\.?|[IVX]+\.)\s+[A-Z]")
 SUBHEADING_RE = re.compile(r"^[A-H]\.\s+[A-Z][a-z]")  # « A. Deployment », une fois une section ouverte
@@ -81,7 +81,7 @@ def extract(pdf_path):
     repeated = _repeated_lines(raw_blocks)
 
     blocks, ref_paras = [], []
-    section, subsection = None, None
+    section, subsection, sub2 = None, None, None  # sub2 : dernier titre de niveau 2
     cur = None
     in_refs = False
     for pno, lines in raw_blocks:
@@ -105,12 +105,14 @@ def extract(pdf_path):
             blocks.append(Block(kind, section or "(préambule)", subsection, None, [(text, pno)], page=pno))
             continue
         is_heading = HEADING_RE.match(text) or (section and SUBHEADING_RE.match(text))
-        if len(lines) <= 2 and len(text) < 100 and is_heading:
-            level = heading_level(text, current_numbered=is_numbered(section))
+        if len(lines) <= 2 and len(text) < 100 and is_heading and not is_junk_heading(text):
+            level = heading_level(text, section=section, subsection=sub2)
             if level == 1 or section is None:
-                section, subsection, level = text, None, 1
+                section, subsection, sub2, level = text, None, None, 1
             else:
                 subsection = text
+                if level == 2:
+                    sub2 = text
             cur = Block("section", section, subsection, level, [], heading=text, page=pno)
             blocks.append(cur)
             continue

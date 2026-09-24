@@ -1,7 +1,10 @@
 # PaperDatabase — modèle de données
 
 Contrat de données de la base. Toute modification de schéma se répercute dans
-`lib/schema.py`, qui est le seul endroit où il est codé.
+`lib/schema.py`, qui est le seul endroit où il est codé. `bin/reindex.py` vérifie chaque
+fichier décrit ici (forme du `paper_id`, `metadata.json`, front-matter de `fulltext.md` et
+`fiche.md`, chaque ligne de `sections.jsonl`, `refs.jsonl` et `benchmarks.csv`) et sort en
+erreur au premier écart.
 
 Convention qui prime sur toutes les autres : **une valeur non rapportée par les auteurs
 s'écrit `n/r`**. Jamais une estimation, jamais une valeur reprise d'un autre papier, jamais
@@ -134,6 +137,14 @@ backend: grobid
 Règles : la numérotation d'origine des sections est conservée (elle sert de référence dans
 les fiches) ; les légendes de figures et de tableaux sont gardées en gras ; la bibliographie
 n'y figure pas.
+
+Les niveaux de titre suivent la numérotation : `##` pour une section, `###` pour une
+sous-section, `####` au-delà (par exemple `1.` sous `IV.B` dans un papier numéroté en
+chiffres romains). Les titres parasites produits par l'extracteur (cellule de tableau,
+symbole isolé, année, mesure comme `13.9x`) sont rendus comme de simples paragraphes. Quand
+des numéros de section manquent dans la séquence, c'est que l'extracteur n'a pas détecté
+leur titre : leur texte est rattaché à la section précédente, et `extraction.warnings` le
+signale (« sections numérotées non détectées : … »).
 
 ---
 

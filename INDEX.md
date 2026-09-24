@@ -24,7 +24,7 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
-| [arxiv-2602.15751-enabling-low-latency-machine-learning](papers/arxiv-2602.15751-enabling-low-latency-machine-learning/fiche.md) | Enabling Low-Latency Machine learning on Radiation-Hard FPGAs with hls4ml | Govorkova et al. | 2026 | Machine Learning: Science and Technology 7 (2026) 045024 | n/r | todo |
+| [arxiv-2602.15751-enabling-low-latency-machine-learning](papers/arxiv-2602.15751-enabling-low-latency-machine-learning/fiche.md) | Enabling Low-Latency Machine learning on Radiation-Hard FPGAs with hls4ml | Govorkova et al. | 2026 | Machine Learning: Science and Technology | journal | todo |
 
 ## Apprentissage continu / incrémental embarqué (`continual-learning`)
 
@@ -37,7 +37,7 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
-| [arxiv-2602.15751-enabling-low-latency-machine-learning](papers/arxiv-2602.15751-enabling-low-latency-machine-learning/fiche.md) | Enabling Low-Latency Machine learning on Radiation-Hard FPGAs with hls4ml | Govorkova et al. | 2026 | Machine Learning: Science and Technology 7 (2026) 045024 | n/r | todo |
+| [arxiv-2602.15751-enabling-low-latency-machine-learning](papers/arxiv-2602.15751-enabling-low-latency-machine-learning/fiche.md) | Enabling Low-Latency Machine learning on Radiation-Hard FPGAs with hls4ml | Govorkova et al. | 2026 | Machine Learning: Science and Technology | journal | todo |
 | [arxiv-2509.04153-real-time-fpga-cnns-detection](papers/arxiv-2509.04153-real-time-fpga-cnns-detection/fiche.md) | Real Time FPGA Based CNNs for Detection, Classification, and Tracking in Autonomous Systems: State of the Art Designs and Optimizations | Safa Mohammed Sali, Mahmoud Meribout, Ashiyana Abdul Majeed | 2025 | arXiv preprint | preprint | todo |
 | [arxiv-2512.01463-hls4ml-flexible-open-source-platform](papers/arxiv-2512.01463-hls4ml-flexible-open-source-platform/fiche.md) | hls4ml: A Flexible, Open-Source Platform for Deep Learning Acceleration on Reconfigurable Hardware | Schulte et al. | 2025 | arXiv preprint | preprint | todo |
 | [arxiv-2103.05579-hls4ml-open-source-codesign-workflow](papers/arxiv-2103.05579-hls4ml-open-source-codesign-workflow/fiche.md) | hls4ml: An Open-Source Codesign Workflow to Empower Scientific Low-Power Machine Learning Devices | Fahim et al. | 2021 | arXiv preprint | preprint | todo |

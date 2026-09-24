@@ -63,35 +63,35 @@ MobileNets [34,87,88] are a family of lightweight convolutional networks, includ
 
 ShuffleNets [36,37] are a family of efficient convolutional networks, including ShuffleNetV1 [37] and ShuffleNetV2 [36], which exploit channel shuffling to reduce the network complexity while maintaining competitive accuracy. Specifically, ShuffleNetV1, for the first time, introduces channel shuffling to enhance the information flow across different channels. In practice, the channel shuffling operation is inserted after the 3 × 3 depthwise convolutional layer to shuffle the feature maps from different groups, which is capable of generating richer and more diverse feature maps while not increasing the number of FLOPs and parameters. With 292 M FLOPs and 3.4 M parameters, ShuffleNetV1 achieves 71.5% top-1 accuracy on ImageNet, which is +0.9% higher than MobileNetV1 under comparable settings of FLOPs. Furthermore, ShuffleNetV2 improves the accuracy and efficiency of ShuffleNetV1 with several architectural modifications. Specifically, ShuffleNetV2 first leverages channel splitting to divide the input feature maps into two parallel branches, one of which is fed into three convolutional layers, including one 1 × 1 pointwise convolutional layer, one 3 × 3 depthwise convolutional layer, and one 1 × 1 pointwise convolutional layer. After that,
 
-### 2017.6. | Transformer [90]
+2017.6. | Transformer [90]
 
 The first network based on attention mechanisms, and achieves strong performance in NLP tasks.
 
-### 2018.10. | BERT [91]
+2018.10. | BERT [91]
 
 Pre-trained transformers show promising performance in NLP tasks and begin to dominate the field of NLP.
 
-### 2020.5. | GPT-3 [48]
+2020.5. | GPT-3 [48]
 
 An autoregressive transformer with 175 billion parameters, and takes a big step towards general NLP solutions.
 
-### 2020.5. | DETR [106]
+2020.5. | DETR [106]
 
 A simple yet effective transformer for end-to-end object detection, and achieves promising detection performance.
 
-### 2020.10. | ViT [107]
+2020.10. | ViT [107]
 
 A pure transformer, and demonstrates surprisingly strong performance in various vision tasks.
 
-### Early 2021 | YOLOS/HRViT
+Early 2021 | YOLOS/HRViT
 
 Applications of transformer in low-level vision tasks like object detection and segmentation begin to flourish, such as YOLOS [111] and HRViT [115].
 
-## 2021. | ViT Variants
+2021. | ViT Variants
 
 A myriad of ViT variants emerge, such as DeiT [133] and Swin [108], and push forward the performance in a wide range of vision tasks.
 
-## 2022. to Now | Efficient ViTs
+2022. to Now | Efficient ViTs
 
 The community begins to pay attention to the prohibitive complexity of ViTs, and design efficient ViTs, such as EfficientViT [125] and FastViT [129].
 
@@ -111,7 +111,7 @@ FasterNets [86] are built upon the partial convolution. In contrast to the above
 
 Nonetheless, it is quite challenging to deploy powerful transformers on embedded computing systems due to the computational gap between computation-intensive transformers and computationlimited embedded computing systems. For example, as pointed out in [95], to translate a short sentence with only 30 words, a typical transformer model needs to execute 13 G FLOPs, which takes 20 seconds on a Raspberry Pi device. This significantly hinders the user experience in realworld embedded scenarios. To tackle this issue, a series of computation-efficient transformers have emerged, among which TinyBERT [96], MobileBERT [97], DistilBERT [98], Linformer [99], and Reformer [100] are some of the most representative ones. The main intuition behind these efficient transformers is to resolve the memory bottleneck and increase the parallelism, making it possible to deploy NLP workloads on resource-constrained embedded computing systems. Note that, compared with computer vision tasks like image classification and object detection, running NLP workloads on embedded computing systems is less common due to the high inference latency. For example, as demonstrated in [95], running language translation workloads with hardware-tailored transformers on a Raspberry Pi device takes even seconds, whereas running image classification workloads typically takes milliseconds per image. More recently, inspired by the remarkable success of GPTs [50,51], transformer-based large language models have become increasingly popular in the NLP community. To optimize the efficiency of transformer-based large language models, a plethora of efficient transformer-based large language models have been proposed, which typically focus on improving the training efficiency [101][102][103], the inference efficiency [104,105], and the fine-tuning efficiency [106,107] of transformers in the context of large language models. For example, to optimize the inference efficiency of transformer-based large language models, [104] partitions large language models over different hardware chips in order to fit weights and activation tensors into memory and run computation and memory workloads within the given latency constraint, which also features a simple yet effective strategy to alleviate the communication overheads among different hardware chips for cost-effective and latency-efficient inference.
 
-### 2.2.2. Transformer for Vision.
+#### 2.2.2. Transformer for Vision.
 
 Inspired by the tremendous success of transformer in the field of NLP, researchers have recently applied transformer to vision tasks, which achieves surprisingly strong performance (see Fig. 4). This opens up a new direction and further challenges the dominant role of convolutional networks in vision tasks. Specifically, DETR [108] and Vision Transformer (ViT) [109] are the very early transformers in vision tasks, among which ViT is the most representative one. These early pioneers have motivated a myriad of subsequent transformers in various vision tasks, such as image classification [109][110][111], object detection [112][113][114], semantic segmentation [115][116][117][118], and video analysis [119][120][121]. For example, ViT is first proposed in June 2020, which has since gained over 20,000 citations as shown in Google Scholar. In particular, the main intuition behind ViT is surprisingly simple and straightforward, which (1) splits the input image into a series of fixed-size patches, (2) linearly embeds each of them, and (3) feeds the resulting sequence of vectors into the standard transformer encoder as illustrated in Fig. 5. However, there is no free lunch. The surprisingly strong performance of ViT and its variants comes at the cost of prohibitive computational complexity, which significantly hinders the practical deployments of ViT and its variants on embedded computing systems with limited computational resources.
 
@@ -199,7 +199,7 @@ minimize 𝛼 L 𝑣𝑎𝑙 (𝑤 * (𝛼), 𝛼) 𝑠.𝑡 ., 𝑤 * (𝛼) = 
 
 where L 𝑡𝑟𝑎𝑖𝑛 (•) and L 𝑣𝑎𝑙 (•) are the loss functions on the training and validation datasets, respectively. Once the differentiable search process terminates, DARTS determines the optimal architecture candidate by reserving the strongest operator 𝛼 (𝑖,𝑗 )
 
-### 𝑜
+𝑜
 
 and removing other operators between 𝑥 𝑖 and 𝑥 𝑗 , in which the operator strength is defined as exp 𝛼 (𝑖,𝑗 )
 
@@ -289,7 +289,7 @@ As demonstrated in [332], directly pruning 𝑝% of the network weights may lead
 
 Semi-Structured Pruning. In contrast to the above mainstream non-structured pruning methods that introduce considerable irregular network sparsity, semi-structured pruning focuses on removing the less important consecutive weight connections [343]. The resulting semi-structured sparse networks can exhibit less irregular network sparsity than non-structured pruning, which are well supported by some existing deep learning libraries (e.g., cuSPARSElt [344] and TVM [345]) and thus can maintain much higher parallelism and speedups on modern embedded computing systems than non-structured pruning. For example, popular BERT models can achieve about 1.3x to 1.6 runtime inference speedups on Nvidia A100 GPUs using the optimized sparse tensor cores [344,346]. Thanks to its superior accuracy-efficiency trade-offs over non-structured pruning, semi-structured pruning has been widely employed to optimize the computational complexity of convolutional networks [347,348], transformers [346,349], and large language models [350,351]. For example, [348] introduces an effective channel permutation scheme to optimize the attainable accuracy of the resulting semi-structured sparse convolutional network. [347] introduces sparse-refined straight-through estimator (SR-STE) to explore the optimal semi-structured sparse convolutional network. In addition to convolutional networks, [346] and [349] introduce alternating direction method of multipliers (ADMM) and progressive gradient flow to explore the optimal semi-structured sparse transformer for real-world language processing tasks. More recently, [350,351] investigate semi-structured sparsity to enhance the inference efficiency of large language models. In parallel to the above semi-structured pruning methods that optimize the inference efficiency, [352,353] instead focus on optimizing the training efficiency of semi-structured sparse networks. Furthermore, [354][355][356] also focus on exploring dedicated hardware accelerators to further enhance the runtime inference efficiency of semi-structured sparse networks.
 
-### 4.1.2. Structured Pruning.
+#### 4.1.2. Structured Pruning.
 
 In parallel to non-structured pruning, structured pruning, including channel pruning 6 and layer pruning, is another popular branch, which removes the less important channels or layers to reduce the network complexity as shown in Fig. 17. In practice, layer pruning Non-Structured Pruning Weight Importance [31,310,[315][316][317][318][319][320] Sparse Acceleration [309,[322][323][324][325][326][327][328][329][330][331] Sparse Training [31,91,[333][334][335][336] Lottery Ticket Hypothesis [332, 337-340, 340, 341, 341, 342, 342] Semi-Structured Pruning [343,[346][347][348][349][350][351][352][353][354][355][356] Structured Pruning
 
@@ -327,7 +327,7 @@ tickets here are more environment-friendly with less carbon emission, while at t
 
 Different from network pruning that aims to reduce the network complexity at the structure level, network quantization instead focuses on representing the network weights and activations with lower bits, which is able to significantly reduce the network complexity at the precision level. Therefore, the resulting quantized network maintains the same network structure (i.e., the same number of layers and channels), but with lower-bit network weights and activations. In practice, network quantization can be traced back to the 1990s, when early quantization works pioneer to quantize the network weights for Boltzmann machines [451], optical networks [452], and multi-layer perceptrons (MLPs) [453]. Note that quantization has the potential to significantly trim down the network size to accommodate the limited storage in real-world embedded scenarios. For example, Deep Compression [91] is able to reduce the network size of VGGNet by ×49 times, from 552 MB to 11.3 MB, while delivering comparable accuracy on ImageNet [82]. Thanks to its surprisingly strong performance in reducing the computational complexity and alleviating the storage requirements, renewed research interest in network quantization has emerged since the 2010s [413], which demonstrates that, compared with full-precision weights (i.e., 32 bits), 8-bit quantized weights can effectively accelerate the network inference on mainstream CPUs without significant accuracy degradation. To this end, we, in this section, discuss recent advances in the field of network quantization, including representative quantized networks and popular quantizationrelated extensions/implementations, which are also summarized in Fig. 21.
 
-### 4.2.1. Quantized
+#### 4.2.1. Quantized
 
 Networks. Below we introduce several representative quantized networks, including binarized networks, ternarized networks, INT8 networks, and mixed-precision networks. Binarized Networks. Binarized networks are built upon only 1-bit weights, which are constrained to be either +1 or -1 during forward and backward propagations [26,27]. This can effectively eliminate computation-intensive multiply-accumulate operations and allows to replace multiply-accumulate operations with cheap additions and subtractions, and as a result, can lead to significant performance improvement in terms of latency and energy consumption as demonstrated in [26]. In the relevant literature, BinaryConnect [26] and BinaryNet [27] are the very early seminal binarized networks, which pioneer to investigate the efficacy of 1-bit weights in order to reduce the computational complexity and alleviate the storage bottleneck. Specifically, BinaryConnect [26] introduces the first binarized network, which explores both deterministic binarization:
 
@@ -355,7 +355,7 @@ where 𝑛 is the number of elements within 𝑤. To boost the ternarization acc
 
 Mixed-Precision Networks. Mixed-precision quantization is another well-established branch of network quantization. As shown in [419], mixed-precision quantization allows more fine-grained quantization schemes across different weights and activations, and as a result, can usually achieve better accuracy-efficiency trade-offs than conventional fixed-precision quantization, such as binarized (1-bit), ternarized (2-bit), and INT8 (8-bit) quantization. For example, TBN [419], as the very first mixed-precision network, proposes to combine layer-wise ternarized inputs and binarized weights, which delivers surprisingly better accuracy-efficiency trade-offs than stand-alone binarized networks and ternarized networks. The success of TBN has motivated several subsequent mixed-precision quantization works [420,421] to continue improving the quantization accuracy. For example, SYQ [420] proposes to quantize the network weights with 1/2 bits and the intermediate activation with 8 bits, whereas PACT [421] allows 2-bit activations and 2/3/4/5-bit weights. These early mixed-precision quantization works have demonstrated promising performance. Later, we will introduce automated mixed-precision quantization, which exploits automated techniques to search for the optimal bit allocation and can achieve more fine-grained quantization. Furthermore, [422][423][424][425] also consider to leverage mixed-precision quantization to improve the training efficiency of full-precision networks, which can significantly accelerate the training process, and more importantly, achieve comparable accuracy to the full-precision training.
 
-### 4.2.2. Quantization Extensions and Implementations.
+#### 4.2.2. Quantization Extensions and Implementations.
 
 Below we introduce several quantization extensions and implementations, including quantization-aware training, automated mixed-precision quantization, and quantization-aware hardware accelerators.
 
@@ -397,7 +397,7 @@ Teacher-Free Knowledge Distillation. Despite the promising accuracy improvement,
 
 Privileged Knowledge Distillation. Privileged knowledge distillation is a special case of knowledge distillation, where the student network has access to additional information or features that are not available to the teacher network during the training process [486]. In contrast to the standard knowledge distillation paradigm [11], privileged knowledge distillation allows the student network to learn from both the teacher network and the additional information that is only available to the student network, which has the potential to further improve the attainable accuracy as demonstrated in [486]. The rationale behind privileged knowledge distillation is that the student network can leverage the additional information to improve its ability to mimic the behavior of the pre-trained teacher network. Furthermore, inspired by [486], several privileged knowledge distillation works [487][488][489][490][491] have been recently proposed to improve the performance of the student network in various tasks. For example, [488] explores progressive privileged knowledge distillation to embrace better online action detection. In addition, [491] introduces privileged feature distillation to improve the product recommendations of Taobao. These privileged knowledge distillation works clearly demonstrate that the student network may benefit from the additional information and knowledge to achieve better training accuracy on target task.
 
-### 4.3.2. Data-Efficient Knowledge Distillation.
+#### 4.3.2. Data-Efficient Knowledge Distillation.
 
 In this section, we introduce GANs-based knowledge distillation and few-sample knowledge distillation, which are of high data efficiency and can perform teacher-student distillation using a small amount of training data.
 
@@ -429,7 +429,7 @@ Efficient On-Device Training. The key difference between on-device training and 
 
 Inference, bs=1 Energy 20.0 Table 2 SRAM Access Training, bs=8 Energy 20 890.82
 
-### 13.9x larger
+13.9x larger
 
 Activation is the main bottleneck, not parameters. We note that the aforementioned strategies can be also combined to further reduce the overall memory consumption during training and accelerate the training process. For example, we can easily combine gradient checkpointing and low-bit training to further reduce the training memory consumption from 𝑂 ( √ 𝑛) to 𝑂 ( √ 𝑛/32), where 𝑛 is the number of network layers.
 
@@ -455,7 +455,7 @@ To further alleviate the prohibitive training memory consumption, [46] introduce
 
 ### Full
 
-### 4.6x memory saving
+4.6x memory saving
 
 Fig. 28. Comparisons of various on-device transfer learning methods including TinyTL [46], FT-Norm+Last [541], FT-Last [540], and FT-Full [552]. Among them, TinyTL freezes the weights and only optimizes the bias modules. FT-Norm+Last fine-tunes the normalization layers and the last linear layer, whereas FT-Last fine-tunes the last linear layer and FT-Full fine-tunes the full network. (figure from [46]) [46] introduces an effective lite residual learning scheme, which leverages generalized memoryefficient bias modules to refine memory-intensive intermediate activations. In particular, the lite residual learning scheme can improve the attainable accuracy on target task, and more importantly, at the cost of negligible memory overheads. Finally, [46] reduces the training memory consumption from more than 250 MB to only 16 MB, making it possible to explore in-memory computing infrastructures to perform memory-efficient transfer learning. Note that we can easily integrate recent advances from the lens of on-device training (see Section 5.1) into the aforementioned transfer learning works towards boosted on-device transfer learning performance.
 
@@ -495,7 +495,7 @@ Hardware-Aware Efficient Attention. In parallel to the above efficient attention
 
 In addition to designing LLMs with efficient architectures, another promising direction is to explore efficient LLM compression techniques to optimize the computational complexity of existing computation-intensive LLMs. With this in mind, we, in this section, further discuss recent state-ofthe-art compression techniques for LLMs, including efficient LLM pruning in Section 6.3.1, efficient LLM quantization in Section 6.3.2, and efficient LLM distillation in Section 6.3.3.
 
-### 6.3.1. Efficient LLM Pruning.
+#### 6.3.1. Efficient LLM Pruning.
 
 Pruning is one of the most effective strategies to optimize the computational efficiency of LLMs, which removes the less important parameters of LLMs while incurring minimal accuracy loss. Recent state-of-the-art LLM pruning methods can be divided into two main categories, including non-structured LLM pruning and structured LLM pruning as follows:
 

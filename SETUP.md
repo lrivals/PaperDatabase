@@ -453,7 +453,8 @@ Point au 24/09/2026. À mettre à jour à chaque étape franchie (cocher, dater,
 | Brique | État |
 |---|---|
 | Pipeline d'ingestion (`add.py`, `ingest.py`, `grobid.sh`, repli PyMuPDF) | fonctionnel, testé (`test_tei.py`) |
-| Index et contrôle de cohérence (`reindex.py`) | fonctionnel, 0 erreur |
+| Index et contrôle de cohérence (`reindex.py`) | fonctionnel, 0 erreur ; contrôle de conformité DATA_MODEL complet (tous les fichiers de `papers/<id>/`, testé par `test_schema.py`) depuis le 24/09/2026 |
+| Hiérarchie des titres de `fulltext.md` | titres parasites filtrés, niveau 3 géré, sections non détectées par GROBID signalées dans `extraction.warnings` (1806.01683, 2509.04153, 2512.01463, 2602.15751) ; corpus ré-extrait le 24/09/2026 |
 | Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps` | écrites (`.claude/commands/`) |
 | Corpus | 9 papiers arXiv ingérés, tous via GROBID ; 1266 références extraites |
 | Fiches de lecture | 0 / 9 `done` |
@@ -466,11 +467,18 @@ Point au 24/09/2026. À mettre à jour à chaque étape franchie (cocher, dater,
 
 - [ ] **Ficher les 9 papiers** (`/paper-fiche`) : c'est le goulot, tout le reste
   (benchmarks, gaps, vue 3D exploitable) en dépend.
+- [ ] Commencer par `/paper-fiche arxiv-2507.18174-real-time-object-detection-classification` :
+  structure propre (aucune section manquante), bon test de bout en bout du fichage avec les
+  nouveaux contrôles de `reindex.py`.
 - [ ] Confirmer les axes pendant le fichage : les 9 `metadata.json` portent le warning
   « axes déduits automatiquement ».
-- [ ] `arxiv-2602.15751-…` : arXiv signale une publication dans *Machine Learning: Science and
-  Technology* 7 (2026) 045024 — passer `type` de `preprint` à `journal` et renseigner `venue`
-  après vérification.
+- [ ] Pendant le fichage de `arxiv-2512.01463-…` (hls4ml 2025), vérifier contre le PDF les
+  sections 1, 5, 6, 8, 10 et 11 non détectées par GROBID : leur texte est rattaché à la
+  section précédente dans `sections.jsonl`, donc un `grep` sur le champ `section` ne les
+  trouve pas, et une fiche ne doit pas citer ces numéros d'après `fulltext.md`. Même
+  vérification, plus légère, pour 2509.04153 (I), 1806.01683 (3) et 2602.15751 (4).
+- [x] `arxiv-2602.15751-…` : `type: journal`, `venue` : *Machine Learning: Science and
+  Technology* (d'après le `journal_ref` arXiv : 7 (2026) 045024 ; DOI 10.1088/2632-2153/ae8218). Fait le 24/09/2026.
 - [ ] Récupérer à la main les ~10 articles sous paywall de `basicStart.txt` (§7), les
   déposer dans `inbox/`, `ingest.py`, et vérifier chaque référence contre le PDF réel.
 - [ ] Ajouter les références externes les plus co-citées du corpus, repérées dans la vue 3D
@@ -497,6 +505,10 @@ Point au 24/09/2026. À mettre à jour à chaque étape franchie (cocher, dater,
 
 ### Tâches — outillage (plus tard)
 
+- [ ] **Axes et tags stables à la ré-extraction.** `ingest.py --force` reclasse à partir de
+  l'abstract GROBID (le `.meta.json` arXiv n'existe plus) : au 24/09/2026, 2103.05579 a
+  perdu les tags `quantization` et `pruning`, restaurés à la main. Conserver les axes/tags
+  existants (ou en faire l'union) quand `status.fiche` vaut `todo`.
 - [ ] **Embeddings dans la vue 3D.** Remplacer ou compléter le TF-IDF de `lib/graph.py`
   (similarité lexicale seulement) par des embeddings sentence-transformers, en même temps
   que l'index sémantique ci-dessous.

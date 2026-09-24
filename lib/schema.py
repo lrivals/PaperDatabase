@@ -3,6 +3,9 @@
 Seul endroit où le contrat de DATA_MODEL.md est codé. Toute évolution du schéma se fait ici.
 """
 import datetime as _dt
+import re
+
+from lib import ids
 
 NR = "n/r"
 
@@ -143,6 +146,94 @@ def validate_benchmark_row(row):
     if row["confidence"] not in CONFIDENCE:
         errs.append(f"confidence = {row['confidence']!r} : high | medium | low")
     return errs
+
+
+# --- paper_id, sections.jsonl, refs.jsonl, front-matter -------------------------------
+
+_SLUG = r"[a-z0-9]+(?:-[a-z0-9]+)*"
+PAPER_ID_RE = re.compile(
+    rf"^(?:arxiv-(?:\d{{4}}\.\d{{4,5}}|[a-z\-]+(?:\.[A-Za-z]{{2}})?_\d{{7}})-{_SLUG}"
+    rf"|(?:\d{{4}}|unknown)-{_SLUG})$"
+)
+
+SECTION_KEYS = ("id", "paper_id", "kind", "section", "subsection", "order", "page", "text")
+REF_KEYS = ("paper_id", "raw", "title", "authors", "year", "doi", "arxiv_id")
+
+
+def validate_paper_id(pid, meta):
+    """DATA_MODEL §1. Liste des problèmes ; vide si conforme."""
+    if not PAPER_ID_RE.match(pid or ""):
+        return [f"paper_id {pid!r} : forme arxiv-<id>-<slug> ou <annee>-<auteur>-<slug> attendue"]
+    arxiv_id = meta.get("arxiv_id")
+    if arxiv_id and not pid.startswith(ids.arxiv_dir_prefix(arxiv_id)):
+        return [f"paper_id {pid!r} ne commence pas par {ids.arxiv_dir_prefix(arxiv_id)!r}"]
+    if not arxiv_id and pid.startswith("arxiv-"):
+        return [f"paper_id {pid!r} de forme arXiv, mais arxiv_id vaut null"]
+    return []
+
+
+def _no_empty_strings(row, keys):
+    return [f"{k} vaut \"\" : utiliser null" for k in keys if row.get(k) == ""]
+
+
+def validate_section_row(row, paper_id, order):
+    """Une ligne de sections.jsonl (DATA_MODEL §5), attendue à la position order."""
+    if tuple(sorted(row)) != tuple(sorted(SECTION_KEYS)):
+        return [f"clés {sorted(row)} ≠ {sorted(SECTION_KEYS)}"]
+    errs = _no_empty_strings(row, ("subsection",))
+    if row["paper_id"] != paper_id:
+        errs.append(f"paper_id = {row['paper_id']!r}")
+    if row["order"] != order:
+        errs.append(f"order = {row['order']!r}, {order} attendu")
+    if row["id"] != f"{paper_id}#{order:03d}":
+        errs.append(f"id = {row['id']!r}, {paper_id}#{order:03d} attendu")
+    if row["kind"] not in SECTION_KINDS:
+        errs.append(f"kind inconnu : {row['kind']!r}")
+    if not isinstance(row["section"], str) or not row["section"].strip():
+        errs.append("section vide")
+    page = row["page"]
+    if page is not None and (not isinstance(page, int) or isinstance(page, bool) or page < 1):
+        errs.append(f"page = {page!r} : entier ≥ 1 ou null")
+    if not isinstance(row["text"], str) or not row["text"].strip():
+        errs.append("text vide")
+    return errs
+
+
+def validate_ref_row(row, paper_id):
+    """Une ligne de refs.jsonl (DATA_MODEL §6)."""
+    if tuple(sorted(row)) != tuple(sorted(REF_KEYS)):
+        return [f"clés {sorted(row)} ≠ {sorted(REF_KEYS)}"]
+    errs = _no_empty_strings(row, ("raw", "title", "doi", "arxiv_id"))
+    if row["paper_id"] != paper_id:
+        errs.append(f"paper_id = {row['paper_id']!r}")
+    if not isinstance(row["authors"], list):
+        errs.append("authors doit être une liste")
+    year = row["year"]
+    if year is not None and (not isinstance(year, int) or isinstance(year, bool)):
+        errs.append(f"year = {year!r} : entier ou null")
+    return errs
+
+
+def read_front_matter(text):
+    """Front-matter `clé: valeur` d'un fichier Markdown ; {} s'il n'y en a pas.
+
+    Les valeurs restent des chaînes, guillemets retirés ; `null` et une valeur vide donnent None.
+    """
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return {}
+    out = {}
+    for line in lines[1:]:
+        if line.strip() == "---":
+            return out
+        key, sep, value = line.partition(":")
+        if not sep:
+            continue
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] == '"':
+            value = value[1:-1].replace('\\"', '"').replace("\\\\", "\\")
+        out[key.strip()] = None if value in ("", "null") else value
+    return {}  # front-matter non refermé
 
 
 FICHE_TEMPLATE = """\

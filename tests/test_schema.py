@@ -1,0 +1,136 @@
+"""Tests des validateurs de DATA_MODEL.md (§1, §5, §6, §8) et de la hiérarchie des titres (§4).
+
+.venv/bin/python -m unittest discover tests
+"""
+import sys
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+from lib import doc, schema  # noqa: E402
+from lib.doc import Block  # noqa: E402
+
+PID = "arxiv-2507.18174-yolo-edge-fpga"
+
+
+def section_row(order=0, **kw):
+    row = {"id": f"{PID}#{order:03d}", "paper_id": PID, "kind": "section",
+           "section": "3. Experimental Results", "subsection": None, "order": order,
+           "page": 7, "text": "..."}
+    row.update(kw)
+    return row
+
+
+def ref_row(**kw):
+    row = {"paper_id": PID, "raw": "[12] J. Redmon and A. Farhadi, ...",
+           "title": "YOLOv3: An Incremental Improvement", "authors": ["Redmon", "Farhadi"],
+           "year": 2018, "doi": None, "arxiv_id": "1804.02767"}
+    row.update(kw)
+    return row
+
+
+class TestPaperId(unittest.TestCase):
+    def test_valid(self):
+        self.assertEqual(schema.validate_paper_id(PID, {"arxiv_id": "2507.18174"}), [])
+        self.assertEqual(schema.validate_paper_id("2025-kim-yolov2-zynq7000", {"arxiv_id": None}), [])
+        self.assertEqual(schema.validate_paper_id("unknown-unknown-some-title", {"arxiv_id": None}), [])
+        self.assertEqual(schema.validate_paper_id("arxiv-cs_0101001-old-paper", {"arxiv_id": "cs/0101001"}), [])
+
+    def test_invalid(self):
+        self.assertTrue(schema.validate_paper_id(PID, {"arxiv_id": "2507.99999"}))
+        self.assertTrue(schema.validate_paper_id(PID, {"arxiv_id": None}))
+        self.assertTrue(schema.validate_paper_id("Kim_YOLOv2", {"arxiv_id": None}))
+        self.assertTrue(schema.validate_paper_id("2025-kim-Yolo-Zynq", {"arxiv_id": None}))
+
+
+class TestSectionRow(unittest.TestCase):
+    def test_valid(self):
+        self.assertEqual(schema.validate_section_row(section_row(12), PID, 12), [])
+        self.assertEqual(schema.validate_section_row(section_row(page=None), PID, 0), [])
+
+    def test_invalid(self):
+        row = section_row()
+        del row["page"]
+        self.assertTrue(schema.validate_section_row(row, PID, 0))
+        self.assertTrue(schema.validate_section_row(section_row(1), PID, 0))  # order décalé
+        self.assertTrue(schema.validate_section_row(section_row(id=f"{PID}#12"), PID, 0))
+        self.assertTrue(schema.validate_section_row(section_row(kind="caption"), PID, 0))
+        self.assertTrue(schema.validate_section_row(section_row(subsection=""), PID, 0))
+        self.assertTrue(schema.validate_section_row(section_row(page=0), PID, 0))
+        self.assertTrue(schema.validate_section_row(section_row(text="  "), PID, 0))
+
+
+class TestRefRow(unittest.TestCase):
+    def test_valid(self):
+        self.assertEqual(schema.validate_ref_row(ref_row(), PID), [])
+
+    def test_invalid(self):
+        row = ref_row()
+        del row["raw"]
+        self.assertTrue(schema.validate_ref_row(row, PID))
+        self.assertTrue(schema.validate_ref_row(ref_row(doi=""), PID))
+        self.assertTrue(schema.validate_ref_row(ref_row(year="2018"), PID))
+        self.assertTrue(schema.validate_ref_row(ref_row(paper_id="autre"), PID))
+
+
+class TestFrontMatter(unittest.TestCase):
+    def test_read(self):
+        text = '---\nid: x\ntitle: "A \\"quoted\\" title: yes"\nyear: null\ndate:\n---\n\n# body\n'
+        self.assertEqual(schema.read_front_matter(text),
+                         {"id": "x", "title": 'A "quoted" title: yes', "year": None, "date": None})
+
+    def test_absent_or_unclosed(self):
+        self.assertEqual(schema.read_front_matter("# titre\n"), {})
+        self.assertEqual(schema.read_front_matter("---\nid: x\n"), {})
+
+    def test_fiche_template(self):
+        meta = {"id": PID, "title": "T", "authors": [], "year": 2025, "venue": None,
+                "doi": None, "url": None, "type": "preprint"}
+        text = schema.render_fiche(meta)
+        self.assertEqual(schema.read_front_matter(text)["fiche"], "todo")
+        self.assertIn("\n## Statut de lecture", text)
+
+
+class TestHeadings(unittest.TestCase):
+    def test_levels(self):
+        self.assertEqual(doc.heading_level("II. RELATED WORK"), 1)
+        self.assertEqual(doc.heading_level("3.2 Training"), 2)
+        self.assertEqual(doc.heading_level("3.2. Training", "3.2"), 2)
+        # chiffres arabes dans un papier en chiffres romains : sous la sous-section courante
+        self.assertEqual(doc.heading_level("1. Spatial Dataflow", "1.", section="IV. FPGA",
+                                           subsection="B. Optimization"), 3)
+        self.assertEqual(doc.heading_level("1. Spatial Dataflow", "1.", section="IV. FPGA"), 2)
+        # I. après H. : la lettre I, pas la section I
+        self.assertEqual(doc.heading_level("I. Comparison", section="VII. EVALUATION",
+                                           subsection="H. End-to-End"), 2)
+        self.assertEqual(doc.heading_level("II. RELATED WORK", section="I. INTRODUCTION",
+                                           subsection="H. End-to-End"), 1)
+        self.assertEqual(doc.heading_level("Layer fusion", section="IV. FPGA"), 2)
+        self.assertEqual(doc.heading_level("Conclusion", section="IV. FPGA"), 1)
+
+    def test_junk(self):
+        for t in ("2021. | ViT Variants", "2017.6. | Transformer [90]", "𝑜", "4.",
+                  "13.9x larger", "* Corresponding author"):
+            self.assertTrue(doc.is_junk_heading(t), t)
+        for t in ("Layer fusion", "3.2 Training", "IV. FPGA-BASED CNN IMPLEMENTATION",
+                  "A. Deployment", "12. Related work"):
+            self.assertFalse(doc.is_junk_heading(t), t)
+
+    def test_numbering_gaps(self):
+        def sec(h, level=1):
+            return Block("section", h, None, level, [("x", 1)], heading=h)
+        blocks = [Block("abstract", "Abstract", None, 1, [("x", 1)]),
+                  sec("2. Background"), sec("2.1. Sub", 2), sec("4. Results"), sec("Conclusion")]
+        self.assertEqual(doc.numbering_gaps(blocks), ["1", "3"])
+        roman = [sec("II. RELATED WORK"), sec("III. METHOD"), sec("V. RESULTS")]
+        self.assertEqual(doc.numbering_gaps(roman), ["I", "IV"])
+        self.assertEqual(doc.numbering_gaps([sec("Introduction")]), [])
+
+    def test_roman_to_int(self):
+        self.assertEqual([doc.roman_to_int(r) for r in ("I", "IV", "IX", "XIV")], [1, 4, 9, 14])
+
+
+if __name__ == "__main__":
+    unittest.main()

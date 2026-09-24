@@ -7,7 +7,7 @@ import re
 
 from lxml import etree
 
-from lib.doc import Block, heading_level, is_numbered
+from lib.doc import Block, heading_level, is_junk_heading
 from lib.ids import find_arxiv_id
 
 NS = {"tei": "http://www.tei-c.org/ns/1.0"}
@@ -145,27 +145,32 @@ def parse_body(root):
     if body is None:
         return blocks
 
-    section = None
+    section = sub2 = None  # sub2 : dernier titre de niveau 2, pour numéroter le niveau 3
     for div in _x(body, "tei:div"):
         head = _first(div, "tei:head")
         head_text = _text(head)
         n = head.get("n") if head is not None else None
+        title = level = None
+        junk = None
         if head_text:
             title = f"{n.rstrip('.')}. {head_text}" if n else head_text
-            level = heading_level(title, n, current_numbered=is_numbered(section))
-        else:
-            title, level = None, None
+            if is_junk_heading(title):
+                junk, title = title, None  # gardé comme paragraphe, n'ouvre pas de section
+            else:
+                level = heading_level(title, n, section=section, subsection=sub2)
 
         if level == 1 or (title and section is None):
-            section, subsection = title, None
+            section, subsection, sub2 = title, None, None
             level = 1
         elif level:
             subsection = title
+            if level == 2:
+                sub2 = title
         else:
             # div sans titre : suite de la section courante
             subsection = blocks[-1].subsection if blocks and blocks[-1].kind == "section" else None
 
-        paras = []
+        paras = [(junk, _page(head) or last_page)] if junk else []
         for p in _paragraph_nodes(div):
             t = _text(p)
             if not t:

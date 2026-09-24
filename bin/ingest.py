@@ -214,6 +214,10 @@ def process(pdf, force=False, use_grobid=True):
     body_chars = sum(len(t) for b in blocks if b.kind == "section" for t, _ in b.paras)
     if not any(b.kind == "section" and b.heading for b in blocks):
         warnings.append("aucune section détectée")
+    gaps = doc.numbering_gaps(blocks)
+    if gaps:
+        warnings.append(f"sections numérotées non détectées : {', '.join(gaps)} — "
+                        "leur texte est rattaché à la section précédente")
     if body_chars < 2000:
         warnings.append(f"corps très court ({body_chars} caractères) : extraction douteuse")
     meta["extraction"] = {

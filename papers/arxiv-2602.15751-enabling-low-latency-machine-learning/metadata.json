@@ -36,11 +36,11 @@
     }
   ],
   "year": 2026,
-  "venue": "Machine Learning: Science and Technology 7 (2026) 045024",
+  "venue": "Machine Learning: Science and Technology",
   "doi": "10.1088/2632-2153/ae8218",
   "arxiv_id": "2602.15751",
   "url": "https://arxiv.org/abs/2602.15751",
-  "type": null,
+  "type": "journal",
   "axes": [
     "autoencoder-fpga",
     "toolflows"
@@ -55,8 +55,8 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "publié ailleurs selon arXiv (journal_ref : Machine Learning: Science and Technology 7 (2026) 045024) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 4 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {

@@ -26,14 +26,72 @@ AXIS_TITLES = {
     "platforms": "Plateformes",
 }
 UNCLASSIFIED = "Non classé"
+assert set(AXIS_TITLES) == set(schema.AXES), "AXIS_TITLES à aligner sur schema.AXES"
+
+REQUIRED_FILES = ("metadata.json", "fulltext.md", "sections.jsonl", "refs.jsonl", "fiche.md")
 
 
 def cell(v):
     return str(v if v not in (None, "") else "n/r").replace("|", "\\|").replace("\n", " ")
 
 
-def load_papers(problems):
+def _jsonl(path, problems, pid):
+    rows = []
+    for i, line in enumerate(path.read_text().splitlines(), start=1):
+        try:
+            rows.append(json.loads(line))
+        except json.JSONDecodeError as e:
+            problems.append(f"{pid} : {path.name} ligne {i} illisible ({e})")
+    return rows
+
+
+def check_paper_files(folder, meta, problems, notes):
+    """Conformité des fichiers d'un papier à DATA_MODEL §1, §4, §5, §6 et §8."""
+    pid = folder.name
+    missing = [f for f in REQUIRED_FILES if not (folder / f).exists()]
+    for f in missing:
+        problems.append(f"{pid} : {f} absent")
+    if not (folder / "paper.pdf").exists():
+        notes.append(f"{pid} : paper.pdf absent (gitignoré : normal dans un clone neuf)")
+    for err in schema.validate_paper_id(pid, meta):
+        problems.append(f"{pid} : {err}")
+
+    if "fulltext.md" not in missing:
+        fm = schema.read_front_matter((folder / "fulltext.md").read_text())
+        expected = {
+            "id": pid,
+            "year": None if meta.get("year") is None else str(meta["year"]),
+            "backend": (meta.get("extraction") or {}).get("backend"),
+        }
+        for k, v in expected.items():
+            if fm.get(k) != v:
+                problems.append(f"{pid} : fulltext.md, front-matter {k} = {fm.get(k)!r}, {v!r} attendu")
+
+    if "sections.jsonl" not in missing:
+        for order, row in enumerate(_jsonl(folder / "sections.jsonl", problems, pid)):
+            for err in schema.validate_section_row(row, pid, order):
+                problems.append(f"{pid} : sections.jsonl ligne {order + 1} : {err}")
+
+    if "refs.jsonl" not in missing:
+        for i, row in enumerate(_jsonl(folder / "refs.jsonl", problems, pid), start=1):
+            for err in schema.validate_ref_row(row, pid):
+                problems.append(f"{pid} : refs.jsonl ligne {i} : {err}")
+
+    if "fiche.md" not in missing:
+        text = (folder / "fiche.md").read_text()
+        fiche = schema.read_front_matter(text).get("fiche")
+        status = (meta.get("status") or {}).get("fiche")
+        if fiche != status:
+            problems.append(f"{pid} : fiche.md dit fiche: {fiche}, metadata.json dit status.fiche: {status}")
+        if "\n## Statut de lecture" not in text:
+            problems.append(f"{pid} : fiche.md sans section « Statut de lecture » (obligatoire)")
+
+
+def load_papers(problems, notes):
     papers = []
+    for folder in sorted(p for p in PAPERS.iterdir() if p.is_dir()):
+        if not (folder / "metadata.json").exists():
+            problems.append(f"{folder.name} : metadata.json absent")
     for path in sorted(PAPERS.glob("*/metadata.json")):
         try:
             meta = json.loads(path.read_text())
@@ -44,6 +102,7 @@ def load_papers(problems):
             problems.append(f"{path.parent.name} : {err}")
         if meta.get("id") != path.parent.name:
             problems.append(f"{path.parent.name} : id ≠ nom du dossier ({meta.get('id')})")
+        check_paper_files(path.parent, meta, problems, notes)
         papers.append(meta)
     return papers
 
@@ -102,7 +161,7 @@ def render(papers):
 
 def main():
     problems, notes = [], []
-    papers = load_papers(problems)
+    papers = load_papers(problems, notes)
     rows = load_benchmarks(problems)
 
     ids_ = {p["id"] for p in papers if "id" in p}

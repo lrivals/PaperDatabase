@@ -103,7 +103,7 @@ By distributing MAC operations across a 2-D array of PEs and overlapping data fe
 
 Exploiting the spatial parallelism of FPGAs under strict BRAM, DSP, and bandwidth constraints demands careful algorithmhardware co-design. This section outlines key optimization strategies that make real-time deep learning models viable for realtime FPGA deployment.
 
-## 1. Spatial Dataflow & Pipelining
+#### 1. Spatial Dataflow & Pipelining
 
 Spatial dataflow pipelining sustains continuous operation by overlapping computation and data movement, allowing new inputs every clock cycle while reusing intermediate activations on-chip to reduce DRAM access [72]. Critical techniques include layer fusion, balanced pipeline stage partitioning, and shared arithmetic resource reuse, all crucial for deep CNNs and detection networks under latency constraints. Different types of parallelism techniques are illustrated in the table VI. Intra-layer pipelining/unrolling Unrolls and pipelines operations within a single layer (e.g., convolutions across pixels/channels) so that each new computation begins every clock cycle (II = 1).
 
@@ -113,11 +113,11 @@ Combines multiple operations like conv + BN + ReLU into a single hardware block,
 
 Fig. 9 shows H2PIPE, a high-throughput spatial pipeline [73]. where convolution, depthwise, and pointwise layers are mapped to dedicated hardware modules connected by activation buffers in an assembly-line dataflow. On Intel Stratix 10 NX, H2PIPE achieves >1000 FPS on ResNet-50 and <1.1 ms latency on ResNet-18, demonstrating that spatial mapping and careful pipelining enable real-time inference for large models. However, these gains come with trade-offs. Layer-level pipelining demands large activation buffers between stages, which can significantly increase BRAM usage and overall latency if not properly tuned. Variations in layer complexity also make pipeline balancing difficult, potentially leading to stalling or underutilization of hardware resources. Intra-layer optimizations such as loop unrolling exploit fine-grained parallelism but can quickly exhaust DSPs and routing resources, especially for wide channels or large feature maps. While layer fusion helps reduce latency and off-chip memory traffic, it also introduces control complexity and reduces design modularity, complicating debugging and hardware reuse. These challenges are critical on resource-constrained FPGAs, making automated design-space exploration with resource-aware performance models essential.
 
-## 2. Precision Scaling & Quantization
+#### 2. Precision Scaling & Quantization
 
 Precision scaling is critical for real-time FPGA inference, reducing weights, activations, and intermediate signals from Despite these gains, quantization presents notable challenges. Aggressive precision reduction can significantly degrade accuracy, particularly in early layers and residual paths. While QAT can mitigate this, it introduces additional training complexity and tuning overhead. Ultra-low precisions (binary/INT2) often fall back to bit-serial or LUT arithmetic, reducing DSP utilization and increasing latency. Mixed-precision designs improve flexibility but may fragment resources due to DSP/BRAM granularity. Future progress relies on quantization-friendly networks, bit-accurate simulation, and compiler automation to enable workload-aware precision mapping and efficient FPGA utilization.
 
-## 3. DSP Packing and Low-Bitwidth Arithmetic Optimization
+#### 3. DSP Packing and Low-Bitwidth Arithmetic Optimization
 
 DSP packing leverages low-bitwidth quantization (e.g., INT4/INT8) to execute multiple MACs per DSP slice, boosting compute density. Langhammer et al. [75] demonstrated an architecture in their patent with multiple weight-register columns and a bank of parallel multipliers, enabling each weight to be multiplied concurrently with all elements of an input vector, effectively doubling or more the MACs per cycle without extra DSP slices. This approach maximizes multiplier utilization and reduces off-chip memory traffic for CNN inference.
 
@@ -127,7 +127,7 @@ While packing is highly effective for fixed-precision (INT8) networks, it is les
 
 Despite these limitations, DSP packing remains a key FPGA optimization for CNN inference, offering high compute density, power efficiency, and deterministic latency. Combined with quantization and systolic dataflows, it enables high-throughput designs under tight resource budgets.
 
-## 4. Pruning & Sparsity
+#### 4. Pruning & Sparsity
 
 Pruning reduces CNN complexity by removing redundant weights, thereby lowering compute cost and memory access. This introduces sparsity, the condition where many weights or activations are zero, enabling optimizations like zero-skipping. Unstructured pruning zeroes individual weights, achieving high sparsity but causing irregular memory access that degrades FPGA performance. Structured pruning, which removes entire filters, channels, or blocks, aligns better with FPGA spatial parallelism and regular memory access, supporting predictable high-throughput inference for tasks such as classification and object detection.
 

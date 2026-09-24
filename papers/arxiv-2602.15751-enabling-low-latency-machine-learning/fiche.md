@@ -7,7 +7,7 @@ date:
 # Enabling Low-Latency Machine learning on Radiation-Hard FPGAs with hls4ml
 
 Katya Govorkova, Julian Garcia Pardinas, Vladimir Loncar, Victoria Nguyen, Sebastian Schmitt, Marco Pizzichemi, Loris Martinazzoli, Eluned Anne Smith, 2026, Machine Learning: Science and Technology 7 (2026) 045024. https://doi.org/10.1088/2632-2153/ae8218
-Type : n/r
+Type : article de journal
 
 ## Problème
 

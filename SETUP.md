@@ -12,16 +12,14 @@ qui reste à faire** (§9). Les schémas de données exacts sont dans
 
 ## 1. Principe
 
-Le consommateur final de cette base n'est pas un moteur de recherche vectoriel : c'est
-**Claude Code**, qui dispose déjà de `grep`, `glob` et `read`. Sur un corpus de quelques
-dizaines à quelques centaines d'articles, une arborescence bien nommée avec un index et un
-CSV greppable fait mieux qu'un index d'embeddings — et reste lisible, diffable et réparable
-à la main.
+Le consommateur final est **Claude Code**. Les fichiers texte restent la source de vérité.
+Un index RAG dérivé aide désormais l'agent à trouver les passages exacts, y compris quand
+la question emploie un autre vocabulaire ou une autre langue.
 
 D'où trois règles de conception :
 
-1. **Tout est du texte.** Pas de base de données, pas de vector store, pas de format binaire
-   à part le PDF d'origine conservé comme preuve.
+1. **Les sources sont du texte.** L'index SQLite et ses vecteurs dans `.cache/rag/` se
+   reconstruisent à partir des fichiers versionnés ; le PDF d'origine reste la preuve.
 2. **Chaque chiffre est traçable.** Toute valeur du tableau comparatif porte la section de
    l'article d'où elle vient. Une valeur non rapportée par les auteurs s'écrit `n/r`, jamais
    une estimation.
@@ -51,8 +49,9 @@ PaperDatabase/
 ├── requirements.txt
 ├── requirements-viz.txt    # optionnel : dépendances de la visualisation
 ├── requirements-embed.txt  # optionnel : embeddings (sentence-transformers) pour la visualisation
+├── requirements-rag.txt    # optionnel : modèles Qwen pour la recherche de passages
 ├── .venv/                  # non versionné
-├── .cache/                 # non versionné : embeddings, réponses OpenAlex
+├── .cache/                 # non versionné : index RAG, embeddings, réponses OpenAlex
 ├── docs/GUIDE.md           # guide d'utilisation (prise en main, extension du corpus)
 ├── bin/                    # scripts du pipeline
 │   ├── pdb, pdb.py         # point d'entrée unique (status, add, ingest, discover…)
@@ -62,6 +61,7 @@ PaperDatabase/
 │   ├── ingest.py
 │   ├── reindex.py
 │   ├── discover.py         # candidats à l'ajout via OpenAlex
+│   ├── rag_cli.py          # recherche et acquisition sourcées
 │   └── viz.py              # app Dash : graphe 3D et généalogie du corpus
 ├── lib/                    # code partagé
 │   ├── ids.py
@@ -71,6 +71,9 @@ PaperDatabase/
 │   ├── schema.py
 │   ├── refs.py             # rapprochement des références, classement des externes
 │   ├── openalex.py         # client OpenAlex (DOI → arXiv, citations, recherche), cache
+│   ├── rag.py              # index, recherche, benchmarks, contrôle de citations
+│   ├── rag_models.py       # Qwen3 Embedding/Reranker locaux
+│   ├── rag_external.py     # acquisition PDF bornée et mise en staging
 │   ├── status.py           # état de la base et prochaines actions (pdb status)
 │   ├── graph.py            # nœuds, liens et positions du graphe 3D
 │   ├── lineage.py          # généalogie : sous-graphe de citations sur une frise
@@ -103,7 +106,7 @@ PaperDatabase/
         └── fiche.md        # fiche de lecture
 ```
 
-Les commandes Claude Code (`/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover`) vivent dans
+Les commandes Claude Code (`/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover`, `/paper-ask`) vivent dans
 `.claude/commands/` : ce dossier est lui-même la racine du projet Claude Code (il porte
 `CLAUDE.md`).
 
@@ -817,6 +820,47 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
   avec le vrai modèle (dépendance non installée) : à faire après
   `pip install -r requirements-embed.txt`. Réutilisable pour la recherche sémantique
   ci-dessous.
-- [ ] **Recherche sémantique.** Au-delà de ~200 papiers, si `grep` ne suffit plus, ajouter
-  un index local (sentence-transformers + ChromaDB) **par-dessus** `sections.jsonl`, sans
-  rien changer à l'arborescence. C'est un ajout, jamais un remplacement.
+- [x] **Recherche RAG locale** (25/09/2026). SQLite FTS5 et vecteurs Qwen3 dérivés de
+  `sections.jsonl`, des fiches terminées et de `benchmarks.csv`, sans changement du schéma
+  source. Les questions, sources et évaluations sont décrites ci-dessous.
+
+## 10. Recherche RAG et vérification des réponses
+
+Installer `.venv/bin/pip install -r requirements-rag.txt`, puis lancer
+`bin/pdb rag index --download`. Cette première exécution télécharge les versions épinglées
+de Qwen3-Embedding-4B et Qwen3-Reranker-4B ; les suivantes se font depuis le cache local.
+La commande nécessite un GPU CUDA compatible pour les modes `dense` et `hybrid`. Sur une
+machine sans GPU, `bin/pdb rag index --mode lexical` et
+`bin/pdb rag search "question" --mode lexical` restent disponibles. Les dépendances de
+`requirements-embed.txt` concernent uniquement la visualisation et sont indépendantes.
+
+L'index `.cache/rag/index.sqlite3` est un instantané des fichiers sources. Après une
+modification manuelle de `sections.jsonl`, `fiche.md`, `metadata.json` ou `benchmarks.csv`,
+relancer `bin/pdb rag index`. Une recherche sur un index périmé échoue explicitement.
+`bin/pdb rag search "question"` renvoie des identifiants de passage, leurs pages, sections,
+types, empreintes de source et scores ; `bin/pdb rag evidence ID --parent` affiche aussi la
+section parente. Les faits rapportés doivent venir de `abstract`, `section`, `table` ou
+`figure` ; les fiches guident la navigation et les lignes de benchmark sont des
+transcriptions à vérifier contre l'original.
+
+`bin/pdb rag benchmarks --filter-json '[{"field":"fps","op":"gte","value":25}]'`
+parcourt toutes les configurations sans limite de résultats. Une valeur `n/r` n'entre pas
+dans un filtre numérique. `computed_fps_per_w` apparaît uniquement quand FPS et puissance
+sont tous deux rapportés ; le `power_scope` est conservé. Pour vérifier les identifiants et
+les extraits d'une réponse, enregistrer un JSON contenant `snapshot` et
+`claims: [{"text": "...", "citations": [{"id": "...", "excerpt": "..."}]}]`, puis lancer
+`bin/pdb rag check-answer réponse.json`. Ce contrôle est structurel : l'agent doit encore
+vérifier que le passage soutient réellement la phrase.
+
+Dans Claude Code, `/paper-ask <question>` effectue une rédaction suivie d'une liste de
+trois lacunes au maximum, de recherches complémentaires, puis d'un contrôle des sources.
+Quand le corpus ne suffit pas, `bin/pdb rag acquire "requête" --run identifiant` interroge
+OpenAlex et arXiv, met les PDF en staging, vérifie qu'un passage extrait répond à la requête,
+importe les nouveaux articles et reconstruit les index. Chaque ajout conserve
+`acquisition.json` ; la fiche reste `todo`. Le budget partagé d'un run est huit recherches,
+huit PDF, 50 Mo par PDF, 200 Mo au total et quinze minutes. Les échecs de téléchargement ou
+d'extraction sont rapportés, jamais interprétés comme absence de travaux.
+
+La base d'évaluation pilote et les commandes d'ablation sont dans
+`docs/RAG_IMPLEMENTATION_PLAN.md`. L'étude bibliographique qui motive ces choix est dans
+`docs/research/rag-improvement-study-2026-09-25.md`.

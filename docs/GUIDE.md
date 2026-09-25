@@ -59,6 +59,8 @@ Facultatif :
 
 - `.venv/bin/pip install -r requirements-viz.txt` pour la visualisation ;
 - `requirements-embed.txt` pour la similarité par embeddings ;
+- `.venv/bin/pip install -r requirements-rag.txt` puis `bin/pdb rag index --download` pour
+  la recherche de passages avec les modèles Qwen locaux (GPU CUDA) ;
 - une clé OpenAlex gratuite pour la découverte (§4.3).
 
 ---
@@ -90,9 +92,11 @@ Claude lit `fulltext.md` en entier et produit deux choses :
 - une ligne de `benchmarks.csv` par configuration mesurée, chaque chiffre avec sa section
   source, et `n/r` quand l'article ne donne pas la valeur.
 
-**3. Interroger.** Posez vos questions en langage naturel dans Claude Code, depuis ce
-dossier. Claude lit dans cet ordre : `INDEX.md`, `benchmarks.csv`, les fiches, puis
-`fulltext.md` en dernier recours. Il n'ouvre jamais le PDF. Exemples de questions :
+**3. Interroger.** Dans Claude Code, lancez `/paper-ask <question>`. Claude recherche des
+passages dans le corpus, lit les sources originales et vérifie les comparaisons chiffrées.
+Il peut ajouter un article libre d'accès pertinent si la base ne suffit pas. Sans l'index
+RAG facultatif, l'ordre manuel reste `INDEX.md`, `benchmarks.csv`, fiches, puis
+`fulltext.md`. Il n'ouvre jamais le PDF. Exemples de questions :
 
 - « Quels papiers dépassent 25 FPS sous 5 W, et avec quel toolflow ? »
 - « Compare hls4ml et FINN : quantification supportée, ressources, latence. »

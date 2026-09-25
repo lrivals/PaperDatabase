@@ -23,9 +23,9 @@ métadonnées vérifiées, références extraites, fiche de lecture et chiffres 
 Ces fichiers s'organisent en couches, du résumé au texte intégral. L'agent lit la couche la
 plus haute qui répond à sa question et ne descend que si nécessaire.
 
-Il n'y a ni base de données ni index vectoriel. Sur quelques dizaines à quelques centaines
-d'articles, une arborescence bien nommée et greppable suffit, et elle reste lisible, diffable
-et réparable à la main.
+L'arborescence reste la source de vérité, lisible et réparable à la main. Un index de
+recherche dérivé et reconstruisible dans `.cache/rag/` combine recherche lexicale,
+embeddings locaux et reclassement pour trouver les passages à vérifier.
 
 ---
 
@@ -93,6 +93,7 @@ distinguer le lu du déduit, relever les comparaisons biaisées. Trois commandes
 | `/paper-add <arxiv-id \| url \| chemin.pdf>` | acquisition, ingestion et réindexation |
 | `/paper-fiche <paper_id>` | remplit la fiche et ajoute les lignes de `benchmarks.csv`, chaque chiffre avec sa section source |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches terminées et les benchmarks |
+| `/paper-ask <question>` | recherche des passages sourcés, vérifie les chiffres et complète éventuellement le corpus avec des PDF en libre accès |
 
 ---
 
@@ -123,6 +124,19 @@ bin/pdb discover               # papiers candidats à l'ajout (OpenAlex) → can
 Claude Code : `/paper-fiche <paper_id>` produit la fiche de lecture, `/paper-discover`
 propose des papiers à ajouter, `/paper-gaps` met à jour la carte des gaps. Le détail de
 chaque script est dans [SETUP.md](SETUP.md).
+
+Pour la recherche RAG locale sur GPU, installer les dépendances séparées puis construire
+l'index dérivé :
+
+```bash
+.venv/bin/pip install -r requirements-rag.txt
+bin/pdb rag index --download       # télécharge une fois les modèles Qwen épinglés
+bin/pdb rag search "KV260 power consumption"
+```
+
+`/paper-ask` utilise cet index et peut chercher de nouveaux PDF via OpenAlex/arXiv quand
+la base ne suffit pas. Les papiers importés gardent un PDF et une trace d'acquisition ;
+leurs fiches restent à faire. Voir [le plan RAG](docs/RAG_IMPLEMENTATION_PLAN.md).
 
 ---
 

@@ -9,6 +9,7 @@
   discover [options]        cherche des papiers candidats (OpenAlex) → candidates.csv
   grobid start|stop|status  pilote le conteneur GROBID
   viz [--port N]            visualisation du corpus (http://127.0.0.1:8050)
+  rag <command>             recherche, preuves, benchmarks et acquisition scientifique
   test                      lance les tests
 
 Guide : docs/GUIDE.md. Détail des scripts : SETUP.md §5.
@@ -95,9 +96,15 @@ def cmd_test(args):
                           cwd=ROOT).returncode
 
 
+def cmd_rag(args):
+    import rag_cli
+    return rag_cli.run(args)
+
+
 COMMANDS = {
     "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
+    "rag": cmd_rag,
 }
 
 

@@ -1,0 +1,13 @@
+---
+description: Answer a research question with local and open-access paper evidence
+argument-hint: <research question>
+allowed-tools: Read, Write, Grep, Glob, Bash(bin/pdb rag *), Bash(bin/pdb reindex)
+---
+
+Answer: $ARGUMENTS
+
+Follow `CLAUDE.md` and `DATA_MODEL.md`. Use `bin/pdb rag index` when the index is missing or stale. Use `bin/pdb rag search "$ARGUMENTS"`; route questions about a paper's contribution through `--kind abstract` and numerical configurations through `--kind benchmark` plus exhaustive `bin/pdb rag benchmarks --filter-json ...`. Search both English and French formulations when appropriate. Results label original text, benchmark transcription, and curated notes. Treat notes as navigation and interpretation. For a selected benchmark or fiche, search its `paper_id` again with `--kind section` or `--kind table` and read the original source using `bin/pdb rag evidence ID --parent` before reporting the fact.
+
+Draft an answer with evidence IDs. Make one prioritized list of at most three unsupported claims, missing conditions, or gaps in paper coverage. For each information gap, search a self-contained follow-up query. When the local corpus is insufficient, call `bin/pdb rag acquire "QUERY" --run RUN_ID` to discover open-access full texts and automatically import validated papers used as evidence. This changes the library; report the new paper IDs. Use at most three acquisition/follow-up rounds and respect the command's shared budget. Unavailable PDFs and failed extraction are limitations, not evidence of absence.
+
+Check every final claim against its exact source passage, including claims in the initial draft. Compare task, metric, dataset, platform, precision, timing and power scope before numerical comparisons. A value marked `n/r` stays unknown; a computed FPS/W must name the source inputs and power scope. Record `snapshot`, `claims: [{text, citations: [{id, excerpt}]}]` in a JSON answer record and run `bin/pdb rag check-answer RECORD.json` when writing a research artifact. Each excerpt must occur in its cited passage. The checker verifies source identities/excerpts; assess semantic support yourself. Narrow, qualify, or remove unsupported claims. State when the answer is limited to the searched corpus and newly acquired papers.

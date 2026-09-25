@@ -274,6 +274,9 @@ L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Tro
 1. **Les avertissements d'ingestion** (`bin/pdb status` liste les extractions à vérifier) :
    une section non détectée ou une table absente de `fulltext.md` signifie que ses chiffres
    manquent aussi dans la fiche. Ouvrez alors le PDF vous-même et complétez la fiche.
+   La ligne « tableaux à vérifier » donne, par papier, les tableaux réduits à leur légende
+   (« sans corps ») et ceux reconstruits automatiquement depuis le PDF (« reconstruits »,
+   marqués « à vérifier » dans `fulltext.md` : colonnes décalées possibles).
 2. **Recouper une fiche sur cinq** avec le PDF : chaque chiffre de `benchmarks.csv` doit
    exister dans le papier, à la section indiquée.
 3. **`bin/pdb reindex`** doit finir sans `erreur`. Une `note` est une remarque, pas un

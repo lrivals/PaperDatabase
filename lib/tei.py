@@ -36,6 +36,17 @@ def _text(node):
     return t or None
 
 
+def _bbox(node):
+    """(page, x0, y0, x1, y1) de la première zone de coords, en points PDF, origine en haut
+    à gauche (comme PyMuPDF) ; None sans coords exploitables."""
+    c = node.get("coords")
+    try:
+        p, x, y, w, h = (float(v) for v in c.split(";", 1)[0].split(","))
+    except (AttributeError, ValueError):
+        return None
+    return int(p), x, y, x + w, y + h
+
+
 def _page(node):
     """Page du PDF d'après l'attribut coords (« page,x,y,w,h;… »)."""
     c = node.get("coords")
@@ -287,7 +298,8 @@ def parse_body(root):
                 continue
             caption = f"[figure sans légende identifiée] {caption}"
         paras = [(caption, page)] + [(line, page) for line in lines]
-        blocks.append(Block(kind, FIGURES_SECTION, None, 1, paras, page=page))
+        blocks.append(Block(kind, FIGURES_SECTION, None, 1, paras, page=page,
+                            bbox=_bbox(fig) if kind == "table" else None))
     return blocks
 
 

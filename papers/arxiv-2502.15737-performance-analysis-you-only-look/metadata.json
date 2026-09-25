@@ -54,7 +54,9 @@
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": []
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 6"
+    ]
   },
   "status": {
     "extracted": true,

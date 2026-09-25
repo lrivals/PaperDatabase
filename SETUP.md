@@ -69,6 +69,7 @@ PaperDatabase/
 │   ├── doc.py              # représentation commune GROBID / PyMuPDF
 │   ├── pdftext.py          # extraction de repli PyMuPDF
 │   ├── ligatures.py        # réparation des ligatures perdues (« classi cation »)
+│   ├── tables.py           # tableaux réduits à leur légende : reconstruction PyMuPDF
 │   ├── citation.py         # exports .bib / .ris éditeur
 │   ├── schema.py
 │   ├── refs.py             # rapprochement des références, classement des externes, citations
@@ -86,6 +87,7 @@ PaperDatabase/
 │   ├── test_schema.py
 │   ├── test_ingest.py
 │   ├── test_ligatures.py
+│   ├── test_tables.py      # tableaux réduits à leur légende : PDF synthétique PyMuPDF
 │   ├── test_refs.py
 │   ├── test_reindex.py     # notes benchmarks, mesures propres own-…
 │   ├── test_query.py
@@ -322,6 +324,12 @@ Pour chaque PDF :
      dans ≥ 2 papiers du corpus ou dans une liste intégrée) et que le fragment ne l'est
      pas ; le nombre de réparations et les fragments restants vont dans
      `extraction.warnings` ;
+   - un tableau dont GROBID n'a gardé que la légende (corps < 150 caractères) est cherché
+     sur sa page par `page.find_tables()` de PyMuPDF (tableaux à filets seulement), collé à
+     la légende et dans la même colonne (`lib/tables.py`) ; un tableau reconstruit porte la
+     mention « [corps du tableau reconstruit par PyMuPDF : à vérifier] », et les tableaux
+     reconstruits ou restés sans corps sont listés dans `extraction.warnings` puis par
+     `pdb status` (« tableaux à vérifier ») ;
    - un paragraphe que GROBID a classé en figure sans légende est rendu au corps quand il
      ressemble à de la prose (`tei.looks_like_prose`) : il est réinséré après le paragraphe
      coupé en pleine phrase de la même page (ou du bas de la précédente), sinon après le
@@ -623,7 +631,7 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 25/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 26/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
 
 **Bilan du 24/09/2026.** Outillage : conservation des axes/tags à la ré-extraction,
@@ -695,6 +703,29 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
 - `discover` : `in_topic` plus strict (titre, axe matériel, ou deux mentions).
 - 133 tests.
 
+**Bilan du 26/09/2026 (tableaux perdus).**
+- Constat : 52 tableaux sur 148 n'ont que leur légende dans le TEI. GROBID localise la
+  légende (6 à 9 pt de haut) sans le corps : découper la page aux coordonnées TEI ne suffit
+  donc pas.
+- `lib/tables.py` : repli `find_tables()` de PyMuPDF sur la page entière, tableau à filets
+  collé à la légende. La stratégie « text » est écartée : elle découpait la prose en
+  colonnes, 0 tableau exploitable sur 44. Résultat : 3 tableaux reconstruits (2108.03986
+  Tables I et IV, 2411.01431 Table 2), 49 signalés « sans corps » dans `pdb status`.
+- Recherche de passages inchangée après `ingest --reparse` : recall@5 EN 0,90, 1,00 avec
+  rerank. 143 tests.
+- **Essai de Docling** (2.130, installé dans `.venv`, pas encore dans les requirements),
+  sur 6 papiers, entre 25 et 100 s par papier sur CPU :
+  - sans OCR, bons tableaux pour zhai (9), 2512.01463 (10, dont les Tables 3 à 9 absentes
+    du TEI) et FINN (4). Erreurs restantes : décalage de colonnes de FINN Table 3 (BRAM
+    SFC-max 4.5, non corrigé) ; DSP et LUT apparemment inversés sur 2 lignes de
+    2512.01463 Table 3 ; cellules manquantes dans zhai Table 9 ;
+  - shuvo, cui et hozhabr (IEEE Access) : tableaux en image ou en tracés vectoriels, sans
+    texte extractible (grilles 0×0 sans OCR) ;
+  - avec OCR (RapidOCR, pleine page) : tableaux propres pour shuvo Table 8 et cui
+    Tables 5 à 9 ; échec sur hozhabr Tables 9-10 (paysage pivoté : transposé et illisible).
+  - Conclusion : utile en second backend pour les tableaux seulement, jamais sans la
+    mention « à vérifier ». À brancher si l'on accepte la dépendance (voir tâches).
+
 ### Prochaines étapes prioritaires
 
 1. [ ] **Liste courte autoencodeurs** : 2108.03986 ajouté (fiche à faire :
@@ -745,12 +776,17 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
      DOI 10.3390/electronics14152977) ;
    - Anupreetham et al. [67] (NMS pipeliné sur FPGA) et D. Zhang et al. [86] (détecteur
      entièrement sur FPGA), cités par 2025-hozhabr : références dans son `refs.jsonl`.
-8. [ ] **Vérifications contre le PDF** des chiffres lus en figures seulement : 2211.11647
+8. [ ] **Tableaux encore vides** (49, liste à jour dans `bin/pdb status`, « tableaux à
+   vérifier ») : brancher Docling (tâche outillage) puis vérifier à la main ce qu'il ne lit
+   pas. Déjà repérés : hozhabr Tables 9-10 (paysage pivoté, illisibles même par OCR),
+   FINN Table 3 (colonnes décalées, BRAM SFC-max), 2512.01463 Table 3 (DSP/LUT inversés
+   par Docling sur 2 lignes ?).
+9. [ ] **Vérifications contre le PDF** des chiffres lus en figures seulement : 2211.11647
    (Fig. 6, 7 et 12) ; tableaux perdus à l'extraction dans 2025-hozhabr (Tables 9-10) et
    2023-shuvo (Tables 6-10).
-9. [ ] **labs.md** : vérifier le rattachement IETR de l'équipe INSA Rennes (Menard, Herrou)
+10. [ ] **labs.md** : vérifier le rattachement IETR de l'équipe INSA Rennes (Menard, Herrou)
    et récupérer le dépôt public annoncé par 2025-el-zeinaty.
-10. [ ] **Recherche de passages et requêtes sans génération** (spécification du 25/09/2026 :
+11. [ ] **Recherche de passages et requêtes sans génération** (spécification du 25/09/2026 :
     [docs/RAG.md](docs/RAG.md)). Ordre proposé :
     - [x] `pdb bench` et `pdb paper` (N0, indépendants de l'index), `lib/query.py`,
       `tests/test_query.py` (25/09/2026, 101 tests) ;
@@ -780,6 +816,7 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
 | Index et contrôle de cohérence (`reindex.py`) | fonctionnel, 0 erreur ; contrôle de conformité DATA_MODEL complet (`test_schema.py`) ; génère aussi `external_refs.csv` |
 | Références (`lib/refs.py`) | rapprochement par clés exactes + fusion des titres quasi identiques (ligatures perdues, coquilles, titres tronqués ; ±1 an), titre d'affichage le moins abîmé ; testé (`test_refs.py`) ; utilisé par la vue 3D et `reindex.py` |
 | Classement des références externes | `external_refs.csv` : 319 travaux hors base cités par ≥ 2 papiers (DATA_MODEL §9) |
+| Tableaux réduits à leur légende (`lib/tables.py`) | depuis le 26/09/2026 : repli `find_tables()` PyMuPDF (tableaux à filets), testé (`test_tables.py`, PDF synthétique), appliqué au corpus : 3 reconstruits sur 52, vérifiés à l'œil ; les 49 autres signalés par `pdb status`. **Manque** : les tableaux sans filets, en image ou pivotés (voir la tâche Docling) |
 | Hiérarchie des titres de `fulltext.md` | titres parasites filtrés, niveau 3 géré, sections non détectées par GROBID signalées dans `extraction.warnings` |
 | Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover` | écrites (`.claude/commands/`) ; `/paper-fiche` rodé sur 24 papiers (surveys, benchmarks multi-plateformes, MCU) ; `/paper-discover` rodée le 24/09/2026 (vision embarquée, baseline Orin), avec la clé OpenAlex |
 | Fichiers de citation éditeur (`lib/citation.py`) | depuis le 24/09/2026 : lecture `.bib` / `.ris` sans dépendance, appariement au PDF par DOI puis par titre, priorité sur l'en-tête GROBID, conservation dans `papers/<id>/citation.*` ; testé (`test_citation.py`) et vérifié en réel sur 6 exports (IEEE, ACM, MDPI, Springer) |
@@ -910,6 +947,27 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
   avec le vrai modèle (dépendance non installée) : à faire après
   `pip install -r requirements-embed.txt`. Réutilisable pour la recherche sémantique
   ci-dessous.
+- [ ] **Pistes d'amélioration du 26/09/2026, non commencées** (analyse de la doc et du
+  corpus ; ordre proposé) :
+  1. traçabilité : colonne `chunk_id` dans `benchmarks.csv` et `pdb bench --check`, qui
+     vérifie que chaque valeur numérique apparaît dans son passage source ;
+  2. économie de tokens : `pdb outline <id>`, `pdb digest <id>` (abstract, contributions,
+     résultats, conclusion, tableaux) et `pdb numbers <id>` (nombres + unités avec
+     `chunk_id`). Réécrire ensuite `/paper-fiche` pour partir de ces sorties au lieu de lire
+     `fulltext.md` en entier (15 à 275 Ko par papier), et rendre `/paper-gaps` incrémental
+     (liste `gaps:` dans le front-matter des fiches) ;
+  3. découverte : score sémantique des candidats (bge-small sur titre + résumé OpenAlex,
+     comparé au corpus, aux axes et à `gaps.md`), couplage bibliographique,
+     `candidates_decisions.csv` pour ne plus reproposer les rejets, et `discover --short N` ;
+  4. généricité : profil de corpus `corpus.toml` (axes, regex, requêtes, colonnes de
+     benchmark propres au domaine, template de fiche), aujourd'hui codé en dur dans
+     `bin/ingest.py` et `lib/schema.py`, et `pdb init --profile` ;
+  5. références consolidées via `referenced_works` d'OpenAlex (10 citations internes
+     seulement) ; jeu d'évaluation RAG généré par corpus.
+- [ ] **Docling en second backend pour les tableaux** (essai du 26/09/2026, bilan
+  ci-dessus) : `bin/pdb ingest --tables docling [id…]` pour les tableaux « sans corps »,
+  OCR réservé aux pages sans texte, rapprochement par page et libellé de légende, mention
+  « reconstruit par Docling : à vérifier » ; `requirements-docling.txt` optionnel.
 - [x] **Recherche sémantique** (25/09/2026) : `lib/rag.py`, index local **par-dessus**
   `sections.jsonl` (BM25 + sentence-transformers bge-small, fusion RRF), sans rien changer
   à l'arborescence. Pas de ChromaDB : une recherche exhaustive en numpy suffit jusqu'à

@@ -23,7 +23,7 @@ sys.path.insert(0, str(ROOT))
 
 import requests  # noqa: E402
 
-from lib import citation, doc, ids, ligatures, pdftext, schema, tei  # noqa: E402
+from lib import citation, doc, ids, ligatures, pdftext, schema, tables, tei  # noqa: E402
 
 INBOX = ROOT / "inbox"
 PAPERS = ROOT / "papers"
@@ -215,7 +215,8 @@ def resolved_by_citation(warnings, cit):
 # Avertissements recalculés à chaque extraction ; les autres (métadonnées, notes manuelles)
 # appartiennent à l'utilisateur une fois le papier ingéré : une ré-extraction les conserve.
 EXTRACTION_WARNINGS = ("GROBID a échoué", "ligatures perdues", "aucune section détectée",
-                       "sections numérotées non détectées", "corps très court")
+                       "sections numérotées non détectées", "corps très court",
+                       schema.WARN_TABLES_RECOVERED, schema.WARN_TABLES_LOST)
 AXES_WARNINGS = (schema.WARN_AXES_GUESSED, "aucun axe détecté")
 
 
@@ -333,6 +334,13 @@ def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None):
         warnings.append(f"ligatures perdues à l'extraction : {fixed} mot(s) réparé(s) (lib/ligatures.py)")
     if left:
         warnings.append(f"ligatures perdues : {left} fragment(s) non réparé(s) (« classi cation »…)")
+
+    if backend == "grobid":
+        recovered, lost = tables.recover(pdf, blocks)
+        if recovered:
+            warnings.append(f"{schema.WARN_TABLES_RECOVERED} : {', '.join(recovered)}")
+        if lost:
+            warnings.append(f"{schema.WARN_TABLES_LOST} : {', '.join(lost)}")
 
     body_chars = sum(len(t) for b in blocks if b.kind == "section" for t, _ in b.paras)
     if not any(b.kind == "section" and b.heading for b in blocks):

@@ -242,6 +242,7 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 2, [figure sans légende identifié",
       "sections numérotées non détectées : 1, 5, 6, 8, 10, 11 — leur texte est rattaché à la section précédente"
     ]
   },

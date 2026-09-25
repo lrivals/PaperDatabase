@@ -46,6 +46,7 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE V",
       "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
     ]
   },

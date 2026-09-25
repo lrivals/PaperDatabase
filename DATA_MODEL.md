@@ -158,6 +158,13 @@ des numéros de section manquent dans la séquence, c'est que l'extracteur n'a p
 leur titre : leur texte est rattaché à la section précédente, et `extraction.warnings` le
 signale (« sections numérotées non détectées : … »).
 
+Tableaux : quand GROBID n'a gardé que la légende d'un tableau, `lib/tables.py` tente de
+reconstruire son corps depuis le PDF. Un corps reconstruit suit une légende terminée par
+« [corps du tableau reconstruit par PyMuPDF : à vérifier] ». `extraction.warnings` liste
+les tableaux reconstruits (« tableaux reconstruits par PyMuPDF, chiffres à vérifier : … »)
+et ceux restés vides (« tableaux sans corps extrait (légende seule) : … ») ; ces deux
+avertissements sont recalculés à chaque extraction.
+
 ---
 
 ## 5. `sections.jsonl`

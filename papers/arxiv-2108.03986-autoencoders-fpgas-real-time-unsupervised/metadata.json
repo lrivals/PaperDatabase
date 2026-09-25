@@ -84,7 +84,10 @@
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": []
+    "warnings": [
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE I, TABLE IV",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
   },
   "status": {
     "extracted": true,

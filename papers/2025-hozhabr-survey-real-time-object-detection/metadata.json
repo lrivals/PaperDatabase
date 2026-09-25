@@ -36,6 +36,7 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE 1, TABLE 3, TABLE 4, TABLE 5, TABLE 6, TABLE 7, TABLE 8",
       "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
     ]
   },

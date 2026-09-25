@@ -637,7 +637,25 @@ In this survey, we focus on summarizing recent efficient deep learning infrastru
 
 **Fig. 30.** Milestones of early convolutional networks [637].
 
-**Table 2.** Comparisons of different NAS benchmarks. Note that ImageNet-16-120 is a subset of ImageNet that consists of 120 object categories, in which the input image resolution is fixed to 16×16[227].
+**Table 2.** Comparisons of different NAS benchmarks. Note that ImageNet-16-120 is a subset of ImageNet that consists of 120 object categories, in which the input image resolution is fixed to 16×16[227]. [corps du tableau reconstruit par PyMuPDF : à vérifier]
+
+    Benchmark | Search Space |  | Queryable |  | Tasks | Datasets | Metrics
+     | Size | Type | Tabular | Surrogate |  |  | 
+    NAS-Bench-101 [226] | 423k | Cell-Based | ✓ | ✗ | Image Classification | CIFAR-10 | Training Accuracy, Validation Accuracy, Testing Accuracy, Training Time, and Number of Parameters
+    NAS-Bench-201 [227] | 15.6k | Cell-Based | ✓ | ✗ | Image Classification | CIFAR-10, CIFAR-100, and ImageNet-16-120 | Training Accuracy, Validation Accuracy, Testing Accuracy, Training Loss, Validation Loss, Testing Loss, Training Time, Number of FLOPs, and Number of Parameters
+    NATS-Bench [264] | 39.3k | Cell-Based | ✓ | ✗ | Image Classification | CIFAR-10, CIFAR-100, and ImageNet-16-120 | Training Accuracy, Validation Accuracy, Testing Accuracy, Training Loss, Validation Loss, Testing Loss, Training Time, Number of FLOPs, and Number of Parameters
+    NAS-Bench-301 [265] | 1018 | Cell-Based | ✗ | ✓ | Image Classification | CIFAR-10 | Validation Accuracy
+    NAS-Bench-360 [266] | N/A | Cell- and Block-Based | ✓ | ✗ | 10 Diverse Tasks | 10 Diverse Datasets | N/A
+    NAS-Bench-1Shot1 [267] | 399k | Cell-Based | ✓ | ✗ | Image Classification | CIFAR-10 | Validation Accuracy
+    NAS-Bench-ASR [268] | 8.2k | Cell-Based | ✓ | ✗ | Automatic Speech Recognition | TIMIT | CTC Loss, Phoneme Error Rate (PER), On-Device Latency, Number of FLOPs, and Number of Parameters
+    NAS-Bench-Graph [269] | 26.2k | Cell-Based | ✓ | ✗ | 9 Graph Tasks | 9 Graph Datasets | Training Loss, Validation Loss, Testing Loss, Validation Accuracy, On-Device Latency, and Number of Parameters
+    NAS-Bench-NLP [228] | 14k | Cell-Based | ✓ | ✗ | Language Understanding | PTB and WikiText-2 | Testing Perplexity, Training Time, and Number of Parameters
+    NAS-Bench-111 [236] | 423k | Cell-Based | ✗ | ✓ | Image Classification | CIFAR-10 | Training Accuracy, Validation Accuracy, Testing Accuracy, Training Loss, Validation Loss, and Testing Loss
+    NAS-Bench-311 [236] | 1018 | Cell-Based | ✗ | ✓ | Image Classification | CIFAR-10 | Same as NAS-Bench-111
+    NAS-Bench-NLP11 [236] | 1053 | Cell-Based | ✗ | ✓ | Language Understanding | PTB | Same as NAS-Bench-111
+    NAS-Bench-Suite [270] | N/A | Cell-Based | ✓ | ✓ | A suite of 11 tabular and surrogate NAS benchmarks |  | 
+    HW-NAS-Bench [217] | 15.6k | Cell-Based | ✓ | ✗ | Image Classification | CIFAR-10, CIFAR-100, and ImageNet-16-120 | On-Device Latency
+    HW-NAS-Bench [217] | 1021 | Block-Based | ✗ | ✓ | Image Classification | CIFAR-100 and ImageNet | On-Device Latency
 
 **Table 3** 
 

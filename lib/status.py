@@ -47,6 +47,14 @@ def read_gaps(path):
     return len(entries), backed
 
 
+def _count_tables(paper, prefix):
+    """Nombre de tableaux listés dans l'avertissement « <prefix> : Table 3, Table 4 »."""
+    for w in (paper.get("extraction") or {}).get("warnings") or []:
+        if w.startswith(prefix):
+            return len(w.split(" : ", 1)[-1].split(", "))
+    return 0
+
+
 def collect(root, check_services=True):
     root = Path(root)
     papers = []
@@ -82,6 +90,10 @@ def collect(root, check_services=True):
             (p["id"], len((p.get("extraction") or {}).get("warnings") or []))
             for p in papers
             if p.get("broken") or not (p.get("extraction") or {}).get("ok", True)),
+        "tables": sorted(
+            (p["id"], _count_tables(p, schema.WARN_TABLES_LOST), _count_tables(p, schema.WARN_TABLES_RECOVERED))
+            for p in papers
+            if _count_tables(p, schema.WARN_TABLES_LOST) or _count_tables(p, schema.WARN_TABLES_RECOVERED)),
         "n_bench": n_bench,
         "n_gaps": n_gaps,
         "n_gaps_backed": n_backed,
@@ -137,6 +149,10 @@ def render(s):
         out.append(f"  fiche à faire         {pid}")
     for pid, n in s["extraction_issues"]:
         out.append(f"  extraction à vérifier {pid} ({n} avertissement(s))")
+    for pid, lost, rec in s.get("tables", []):
+        detail = ", ".join(x for x in (f"{lost} sans corps" if lost else "",
+                                       f"{rec} reconstruit(s)" if rec else "") if x)
+        out.append(f"  tableaux à vérifier   {pid} ({detail})")
     if s["git_dirty"]:
         out.append(f"  git                   {s['git_dirty']} fichier(s) non commité(s)")
     acts = next_actions(s)

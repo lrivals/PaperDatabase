@@ -16,14 +16,23 @@ Lis du résumé vers le détail, et arrête-toi dès que tu as la réponse.
 
 1. **[INDEX.md](INDEX.md)** — quels papiers existent, sur quel axe, fichés ou non.
 2. **[benchmarks.csv](benchmarks.csv)** — tous les chiffres (FPS, GOPS, W, LUT/DSP/BRAM,
-   quantification, toolflow). `grep` dessus pour toute question quantitative. Une ligne par
-   configuration rapportée, avec sa section source.
+   quantification, toolflow). Pour toute question quantitative, interroge-le avec
+   `bin/pdb bench` plutôt que de le lire en entier ou de faire un `grep`. Exemple :
+   `bin/pdb bench --platform kv260 --has power_w --cols model,fps,power_w`, et `-h` pour
+   les filtres. La sortie garde `source_section`, `confidence` et `power_scope`. Une ligne
+   par configuration rapportée, avec sa section source.
+   Pour l'identité d'un papier (auteurs, venue, preprint ou non, statut de la fiche) :
+   `bin/pdb paper <id court | mot du titre>`, sans ouvrir `metadata.json`.
 3. **`papers/<id>/fiche.md`** — la lecture critique : problème, méthode, limites, pertinence.
 4. **`papers/<id>/fulltext.md`** — le texte intégral, en dernier recours seulement. Pour une
    recherche ciblée dans le corpus entier, `grep` sur `papers/*/sections.jsonl` (chaque ligne
    porte sa section et sa page).
 5. **`papers/<id>/paper.pdf`** — ne l'ouvre pas. Il est conservé comme preuve, pas comme
    source de travail ; tout ce qu'il contient est déjà dans `fulltext.md`.
+
+**À venir : recherche de passages ([docs/RAG.md](docs/RAG.md), pas encore implémentée).**
+Une fois en place, `bin/pdb search` suivi de `bin/pdb show <chunk_id>` remplacera l'étape 4,
+avant tout recours à `fulltext.md`. `bin/pdb verify` contrôlera chaque citation textuelle.
 
 **Quoi lire ensuite ?** [external_refs.csv](external_refs.csv) (généré) classe les travaux
 absents de la base par nombre de papiers du corpus qui les citent. Données issues du parsing
@@ -42,6 +51,8 @@ brute d'extraction.
 | Commande | Effet |
 |---|---|
 | `bin/pdb status` | état de la base et prochaines actions suggérées |
+| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ([docs/RAG.md](docs/RAG.md) §5.1) |
+| `bin/pdb paper <id \| mot>` | fiche d'identité d'un papier : métadonnées, preprint, statut de la fiche, nombre de benchmarks (`--bench` pour les lignes) |
 | `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition + ingestion + réindexation (un DOI est résolu vers sa version arXiv via OpenAlex) |
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches `done` et `benchmarks.csv` |

@@ -245,6 +245,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `reindex` | `reindex.run` | |
 | `discover …` | `discover.run` | |
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
+| `bench [filtres]`, `paper <requête>` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 
 ### `bin/setup.sh`
 
@@ -686,6 +687,15 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
    2023-shuvo (Tables 6-10).
 9. [ ] **labs.md** : vérifier le rattachement IETR de l'équipe INSA Rennes (Menard, Herrou)
    et récupérer le dépôt public annoncé par 2025-el-zeinaty.
+10. [ ] **Recherche de passages et requêtes sans génération** (spécification du 25/09/2026 :
+    [docs/RAG.md](docs/RAG.md)). Ordre proposé :
+    - [x] `pdb bench` et `pdb paper` (N0, indépendants de l'index), `lib/query.py`,
+      `tests/test_query.py` (25/09/2026, 101 tests) ;
+    - `lib/rag.py` (passages, BM25 + embeddings, fusion RRF, cache `.cache/rag/`) et
+      `tests/test_rag.py` ;
+    - `pdb search`, `show`, `verify`, `cites`, `cited-by` ;
+    - branchement dans `reindex.py`, skill `/paper-ask`, jeu d'évaluation
+      `tests/fixtures/rag_eval.jsonl`.
 
 ### En place
 

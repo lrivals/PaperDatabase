@@ -1,10 +1,10 @@
 # Recherche de passages (RAG) et requêtes sans génération
 
 Spécification de la couche de recherche de PaperDatabase : ce qu'elle doit faire, comment la
-construire, comment s'en servir. **Statut : partiellement en place** (voir [SETUP.md §9](../SETUP.md#9-état-actuel-et-tâches-à-faire)).
-En place depuis le 25/09/2026 : `pdb bench` (§5.1) et `pdb paper` (§5.4), dans
-[lib/query.py](../lib/query.py). Le reste (index de passages, `search`, `show`, `verify`,
-`cites`, `/paper-ask`) est à implémenter.
+construire, comment s'en servir. **Statut : en place depuis le 25/09/2026**, sauf
+`pdb cites` / `cited-by` (§5.5, à faire). Code : [lib/query.py](../lib/query.py) (N0),
+[lib/rag.py](../lib/rag.py) (N1), [bin/pdb.py](../bin/pdb.py) (commandes), skill
+[/paper-ask](../.claude/commands/paper-ask.md). Suivi : [SETUP.md §9](../SETUP.md#9-état-actuel-et-tâches-à-faire).
 
 Objectifs, par ordre de priorité :
 
@@ -34,7 +34,7 @@ l'outillage actuel reste le même (skills, `CLAUDE.md`).
 
 ---
 
-## 2. Ce qui existe déjà et ce qui manque
+## 2. Point de départ (avant implémentation)
 
 | Brique | Existant | Manque |
 |---|---|---|
@@ -74,76 +74,91 @@ pour retrouver un fait.
 
 - Unité de base : une entrée de `sections.jsonl` (elle respecte déjà les paragraphes, DATA_MODEL §5).
 - Une entrée de plus de 250 mots est coupée en fenêtres de 200 mots avec 40 mots de
-  recouvrement. `all-MiniLM-L6-v2` tronque au-delà de 256 tokens, soit environ 200 mots, et
-  une entrée non découpée perdrait donc sa fin.
+  recouvrement : les modèles d'embeddings tronquent au-delà de 256 à 512 tokens, et une
+  entrée non découpée perdrait sa fin.
 - Identifiant de passage : `chunk_id = <id de la section>.<k>`, par exemple
-  `arxiv-1612.07119-finn-framework-fast-scalable-binarized#014.2`. `k` commence à 0 ; une
-  section non découpée a le seul passage `.0`.
-- Chaque passage garde : `chunk_id`, `paper_id`, `kind`, `section`, `subsection`, `page`,
-  `text`, et `sha1` du texte.
-- Le texte encodé est préfixé du titre de section (`"3. Experimental Results — …"`). Cela
-  donne du contexte au vecteur sans modifier le texte renvoyé.
+  `arxiv-1612.07119-finn-framework-fast-scalable-binarized#019.3`, `1612.07119#019.3` en
+  forme courte. `k` commence à 0 ; une section non découpée a le seul passage `.0`. Un id de
+  section sans `.k` (`1612.07119#019`) désigne son premier passage.
+- Chaque passage garde : `chunk_id`, `section_id`, `paper_id`, `kind`, `section`,
+  `subsection`, `page`, `text`, et le `sha1` du texte.
+- Le texte encodé (dense et BM25) est préfixé du titre de section et de sous-section. Cela
+  donne du contexte sans modifier le texte renvoyé.
 
-Volume attendu : ~2 000 passages pour le corpus actuel.
+Volume : 2 405 passages pour les 28 papiers du 25/09/2026.
 
 ### 4.2 Deux index, une fusion
 
 | Index | Rôle | Implémentation |
 |---|---|---|
-| Dense | proximité de sens, synonymes, reformulations | `all-MiniLM-L6-v2` via `lib/embed._encode` (vecteurs normalisés, produit scalaire = cosinus). Variante plus précise : `BAAI/bge-small-en-v1.5` (même taille de vecteur, 384) |
-| Lexical (BM25) | termes exacts : noms de cartes (`ZCU104`), de modèles (`YOLOv5n`), sigles, nombres | BM25 écrit à la main (~40 lignes, `k1=1.5`, `b=0.75`), avec une tokenisation qui conserve les jetons alphanumériques (`int8`, `kv260`, `yolov5`) |
+| Dense | proximité de sens, reformulations, requête dans une autre langue | `BAAI/bge-small-en-v1.5` (384 dimensions) via `lib/embed._encode`, vecteurs normalisés. La requête (pas les passages) reçoit le préfixe recommandé par le modèle (`rag.QUERY_PREFIX`) |
+| Lexical (BM25) | termes exacts : noms de cartes (`ZCU104`), de modèles (`YOLOv5n`), sigles, nombres | BM25 écrit à la main (`k1=1.5`, `b=0.75`), jetons `[a-z0-9]+` en minuscules |
 
 **Fusion par *Reciprocal Rank Fusion* :** `score(d) = Σ 1 / (60 + rang_i(d))` sur les deux
 classements. Cette méthode ne dépend pas de l'échelle des scores, ne demande aucun réglage,
 et elle est déterministe. En cas d'égalité, le `chunk_id` le plus petit passe en premier.
 
+Le score RRF ne dit rien de la pertinence absolue : `search` renvoie toujours k passages.
+La sortie affiche donc aussi le **cosinus** entre la requête et chaque passage. Si le
+meilleur cosinus est sous `rag.LOW_COS` (0,60), un avertissement `# pertinence faible` est
+affiché. Ce seuil a été calibré à la main sur quelques requêtes : hors sujet 0,45 à 0,55,
+pertinentes 0,73 à 0,90. Il est indicatif.
+
+Choix du modèle et du mode par défaut : voir l'évaluation (§10). `all-MiniLM-L6-v2`, que
+la vue 3D utilise, s'y montre nettement plus faible.
+
 Filtres appliqués **avant** le classement : `--paper`, `--axis` (lu dans `metadata.json`),
-`--kind`, `--section` (sous-chaîne, insensible à la casse), `--since`.
+`--kind` et `--section` (sous-chaîne du titre de section ou de sous-section, insensible à
+la casse).
 
 ### 4.3 Stockage et mise à jour
 
-- Emplacement : `.cache/rag/`, déjà ignoré par git. L'index est dérivé de la base et
+- Emplacement : `.cache/rag/<modèle>.npz`, déjà ignoré par git. Il contient les clés
+  `chunk_id:sha1` et la matrice des vecteurs. L'index est dérivé de la base et
   reconstructible ; il ne va jamais dans `papers/`.
-  - `chunks.jsonl` : les passages (§4.1) ;
-  - `<modèle>.npz` : matrice des vecteurs, clés `chunk_id:sha1` (même principe que le cache de `lib/embed.py`) ;
-  - `bm25.json` : fréquences documentaires et longueurs ;
-  - `manifest.json` : modèle, date, nombre de passages, sha1 de chaque `sections.jsonl`.
-- Mise à jour incrémentale : seuls les papiers dont le sha1 de `sections.jsonl` a changé sont
-  redécoupés et réencodés. Le BM25 est recalculé en entier, ce qui prend moins d'une seconde.
-- Déclenchement : `bin/reindex.py` appelle `rag.build_index()` quand `sentence_transformers`
-  est présent (`embed.available()`). Sinon, seul le BM25 est construit et `search` le signale
-  en tête de sortie (`# mode: lexical seul`). `add` et `ingest` passent déjà par `reindex`.
+- Les passages et le BM25 sont recalculés à chaque commande depuis `sections.jsonl`, en
+  moins d'une seconde : rien d'autre à stocker.
+- Mise à jour incrémentale : seuls les passages dont la clé `chunk_id:sha1` est absente du
+  cache sont encodés. Construction complète : ~3 min pour bge-small sur 22 cœurs CPU ;
+  sans changement : 0,2 s.
+- Déclenchement : `bin/reindex.py` appelle `rag.build_index()`, donc `add` et `ingest`
+  aussi. Un échec de l'index devient une note, sans bloquer la réindexation. Sans
+  sentence-transformers, ou si l'index est périmé, `search` passe en lexical seul et le
+  signale en tête de sortie (`# mode: lexical seul`).
+- Le modèle est chargé hors ligne s'il est déjà en cache (`rag.quiet_model_loading`) : aucune
+  requête au Hub à chaque recherche.
+- Temps d'une commande `search` / `show` / `verify` : environ 7 s, dont l'essentiel est
+  l'import de torch.
 
-### 4.4 Module `lib/rag.py` — API proposée
+### 4.4 Module `lib/rag.py`
 
 ```python
-build_index(root, model=DEFAULT_MODEL, force=False) -> dict      # manifest
-search(query, k=8, filters=None, mode="hybrid") -> list[Hit]      # Hit: chunk_id, paper_id, section, page, score, snippet, sha1
-get(chunk_id, context=0) -> list[Chunk]                            # passage exact, ± voisins
-verify(chunk_id, quote) -> tuple[str, float]                       # ("OK"|"APPROX"|"ABSENT", ratio)
+load_chunks(root) -> list[dict]                   # passages (§4.1)
+build_index(root, chunks=None, model=DEFAULT_MODEL, force=False) -> dict   # manifeste
+Index(root, model=DEFAULT_MODEL)                  # passages + BM25 + vecteurs
+Index.search(q, k=8, mode="hybrid", paper_ids=None, axis=None, kind=None, section=None)
+Index.get(chunk_id, context=0)                    # passage exact ± voisins du même papier
+Index.resolve_chunk(cid) / Index.short_chunk_id(chunk_id)
+verify(index, chunk_id, quote, expect_sha=None) -> (statut, ratio, chunk_id où trouvée)
+evaluate(index, questions, k=5) -> {mode: {recall, mrr, paper, misses}}
 ```
-
-Réutiliser : `embed._encode`, `embed.available`, `embed._digest` ([lib/embed.py](../lib/embed.py)) ;
-le chargement du corpus de `lib/graph.load_corpus` pour les métadonnées (axes, titres).
 
 ---
 
 ## 5. Commandes sans génération
 
-Les sorties montrées ci-dessous sont **illustratives** (format visé) ; les `chunk_id` et
-scores y sont fictifs, sauf la ligne de `bench`, tirée de `benchmarks.csv`.
+Les exemples ci-dessous sont des sorties réelles du 25/09/2026, tronquées.
 
-Toutes les commandes s'ajoutent au dictionnaire `COMMANDS` de [bin/pdb.py](../bin/pdb.py) et à
-sa docstring. Conventions communes à toutes les sorties :
+Toutes les commandes sont dans `COMMANDS` de [bin/pdb.py](../bin/pdb.py) ; `-h` donne les
+options. Conventions communes :
 
-- sortie en TSV par défaut, `--format md|json` à la demande ;
-- première ligne = en-tête de colonnes, et rien d'autre : pas de bannière ni de texte d'aide ;
-- `--max-chars N` tronque la sortie totale et termine par `# tronqué : N lignes omises` ;
-- papiers désignés par un **identifiant court** (`finn`, `2507.18174`, `hozhabr25`…) quand une
-  colonne le répète. Une légende `# ids: court=paper_id` en fin de sortie donne la
-  correspondance, une fois par identifiant ;
-- code de sortie 0 si des résultats existent, 1 sinon. Claude peut ainsi enchaîner sans lire
-  une sortie vide.
+- sortie en TSV par défaut ; `--format md|json` selon la commande ;
+- première ligne = en-tête de colonnes, pas de bannière. Les lignes qui commencent par `#`
+  sont des notes (troncature, avertissement, légende) ;
+- papiers désignés par un **identifiant court** : l'`arxiv_id` (`1612.07119`), sinon
+  `année-auteur` (`2022-feng`), sinon l'id complet en cas de collision. La légende
+  `# ids: court=paper_id` en fin de sortie donne la correspondance ;
+- code de sortie 0 si des résultats existent, 1 sinon, 2 pour une erreur d'argument.
 
 ### 5.1 `pdb bench` — N0 sur `benchmarks.csv`
 
@@ -187,17 +202,20 @@ Coût : ~40 tokens par ligne, contre ~10 000 pour lire `benchmarks.csv` en entie
 
 ```
 bin/pdb search "<question>" [-k 8] [--paper ID] [--axis A] [--section S] [--kind K]
-               [--mode hybrid|dense|lexical] [--ids-only]
+               [--mode hybrid|dense|lexical] [--ids-only] [--format tsv|json]
 ```
 
-Une ligne par passage : `chunk_id  section  p.  score  extrait`. L'extrait fait ~160 caractères
-et il est centré sur le terme de la requête le mieux représenté, mis entre `«»`.
+Une ligne par passage : `chunk`, `section`, `page`, `cos` (cosinus avec la requête, `n/r` en
+lexical), `snippet`. L'extrait fait ~160 caractères ; il est centré sur le terme de la
+requête le plus rare présent, et les termes rares sont mis entre `«»`.
 
 ```
-$ bin/pdb search "power measured at the wall vs chip" -k 3
-chunk	section	page	score	snippet
-finn#021.0	5.1 Experimental Setup	7	0.032	…we report «power» both at the «wall» (P_wall) and on-«chip» (P_chip) using…
-…
+$ bin/pdb search "power measured at the wall versus the FPGA rails" -k 3
+chunk	section	page	cos	snippet
+1612.07119#022.0	5. EVALUATION / 5.2.2. Energy Efficiency	8	0.78	…FPS per Watt for the prototypes for both the «wall» «power» and «FPGA» «power» readings…
+2025-hozhabr#051.1	V. RESULTS ANALYSIS AND OPTIMIZATION / B. COMPARATIVE ANALYSIS…	31	0.77	…
+1612.07119#019.3	5. EVALUATION / 5.1. Experimental Setup	7	0.73	…the PMBus interface to monitor the «FPGA» «power» supply «rails», and P «wall» using a «wall» «power» meter…
+# ids: 2025-hozhabr=2025-hozhabr-survey-real-time-object-detection 1612.07119=arxiv-1612.07119-finn-framework-fast-scalable-binarized
 ```
 
 Coût : ~70 tokens par résultat, soit ~600 pour `-k 8`. `--ids-only` descend à ~15 tokens par
@@ -210,8 +228,8 @@ bin/pdb show <chunk_id>… [--context N]
 ```
 
 Affiche pour chaque passage un en-tête `## <chunk_id> — <section> — p. <page> — sha1:<8 car.>`,
-suivi du texte exact. `--context 1` ajoute le passage précédent et le suivant. Coût : ~270
-tokens par passage de 200 mots.
+suivi du texte exact. `--context 1` ajoute les passages voisins du même papier, marqués
+`(contexte)`. Coût : ~270 tokens par passage de 200 mots.
 
 ### 5.4 `pdb paper` — fiche d'identité d'un papier
 
@@ -229,30 +247,43 @@ bin/pdb paper <id|court|sous-chaîne> [--fields a,b,…] [--bench] [--format tsv
 - Id court : l'`arxiv_id` s'il existe, sinon `année-auteur` (`2022-feng`) ; l'id complet en
   cas de collision.
 
-### 5.5 `pdb cites` / `pdb cited-by` — graphe de citations
+### 5.5 `pdb cites` / `pdb cited-by` — graphe de citations (à faire)
 
 ```
 bin/pdb cites <id>        # références du papier présentes dans la base
 bin/pdb cited-by <id>     # papiers de la base qui le citent
 ```
 
-Réutilise `lib/refs.ref_keys` et le rapprochement de DATA_MODEL §6. L'option `--external`
-inclut les références hors base (titre, année, nombre de citants, comme `external_refs.csv`).
+Réutilisera `lib/refs.ref_keys` et le rapprochement de DATA_MODEL §6. L'option `--external`
+inclura les références hors base (titre, année, nombre de citants, comme `external_refs.csv`).
 
 ### 5.6 `pdb verify` — contrôle d'une citation
 
 ```
-bin/pdb verify <chunk_id> "<citation textuelle>"
+bin/pdb verify <chunk_id> "<citation textuelle>" [--sha1 X]
 ```
 
-- Normalise les deux textes avant de comparer : casse, espaces, ligatures (`ﬁ`→`fi`, et
-  ligatures perdues comme « E cient »), tirets et césures, guillemets.
+- Normalise les deux textes avant de comparer : ligatures (`ﬁ`→`fi`), casse, césures
+  (`energy- efficient`), puis retrait de tout ce qui n'est ni lettre ni chiffre (espaces,
+  ponctuation, tirets, guillemets).
 - Recherche exacte, puis, à défaut, meilleure fenêtre `difflib.SequenceMatcher`.
-- Sortie sur une ligne :
-  - `OK` : présente telle quelle ;
-  - `APPROX 0.93` : ratio ≥ 0,85, avec la fenêtre trouvée ;
-  - `ABSENT` : ratio < 0,85.
-- `--sha1 <8 car.>` signale `MODIFIÉ` si le passage a changé depuis que la citation a été prise.
+- Sortie sur une ligne `statut<TAB>ratio<TAB>chunk_id` :
+  - `OK` : présente telle quelle (après normalisation) ;
+  - `APPROX` : ressemblance ≥ 0,85 (`rag.VERIFY_MIN`) ;
+  - `ABSENT` : ressemblance < 0,85 ;
+  - `MODIFIÉ` : le passage a changé depuis que `--sha1` a été relevé avec `pdb show`.
+- Une citation absente du passage indiqué, mais présente ailleurs dans le papier, est
+  signalée avec `trouvée dans <chunk_id>`, et le code de sortie vaut 1 : la source citée
+  était fausse.
+- Une ligature perdue à l'extraction (« E cient » pour « Efficient ») n'est pas réparée : elle
+  donne `APPROX`.
+
+```
+$ bin/pdb verify 1612.07119#019.3 "P-wall using a wall-power meter for the whole board power consumption"
+APPROX	0.95	1612.07119#019.3
+$ bin/pdb verify 1612.07119#019.0 "Figure 10 plots the achieved FPS per Watt"
+OK	1.00	1612.07119#019.0	trouvée dans 1612.07119#022.0
+```
 
 ---
 
@@ -272,9 +303,9 @@ Règles d'usage, reprises dans la skill `/paper-ask` (§8) :
 2. **Filtrer à la source** : `--paper`, `--section`, `--cols` plutôt que de filtrer après lecture.
 3. **Ne pas reformuler une sortie suffisante** : une sortie N0/N1 qui répond déjà est
    transmise telle quelle, avec les sources.
-4. **Budget explicite** : `--max-chars 4000` par défaut dans la skill.
-5. Le cache HTTP ou de réponses n'est **pas** nécessaire : les commandes sont locales et
-   s'exécutent en moins d'une seconde une fois l'index chargé.
+4. **Budget explicite** : `bench --max-chars`, `search -k`.
+5. Pas de cache de réponses : les commandes sont locales. `bench` et `paper` répondent
+   instantanément, `search`, `show` et `verify` en ~7 s (import de torch).
 
 ---
 
@@ -292,74 +323,96 @@ Ce qui ne se vérifie pas automatiquement : les paraphrases, les rapprochements 
 et les inférences. Elles sont étiquetées **déduit** dans la réponse, selon la règle « Lu vs
 déduit » de `CLAUDE.md`.
 
-Format de citation dans les réponses rédigées : `[finn#021.0]`, et la légende des
+Format de citation dans les réponses rédigées : `[1612.07119#019.3]`, et la légende des
 identifiants courts en fin de réponse.
 
 ---
 
 ## 8. Skill `/paper-ask`
 
-Fichier `.claude/commands/paper-ask.md`, sur le modèle de `paper-gaps.md` :
-
-```markdown
----
-description: Répond à une question sur le corpus par recherche de passages sourcés (sans lire fulltext.md)
-allowed-tools: Read, Bash(bin/pdb bench:*), Bash(bin/pdb search:*), Bash(bin/pdb show:*), Bash(bin/pdb paper:*), Bash(bin/pdb cites:*), Bash(bin/pdb cited-by:*), Bash(bin/pdb verify:*)
----
-```
-
-Déroulé demandé à Claude :
+Fichier [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md). Outils autorisés :
+`Read`, `bin/pdb bench|search|show|paper|verify`. Déroulé demandé à Claude :
 
 1. Question chiffrée : `pdb bench` d'abord (N0).
-2. Sinon, ou en complément : `pdb search` avec 1 ou 2 formulations en anglais (le corpus est
-   en anglais), `-k 8`.
-3. `pdb show` sur les 2 ou 3 passages les plus prometteurs seulement.
+2. Sinon, ou en complément : `pdb search` avec une ou deux formulations **en anglais**, `-k 8` ;
+   `# pertinence faible` → le dire, ne pas combler.
+3. `pdb show` sur les 2 ou 3 passages les plus prometteurs seulement ; jamais `fulltext.md`.
 4. Réponse avec citations `[chunk_id]` ; `pdb verify` sur chaque citation textuelle ; toute
-   citation `ABSENT` est retirée.
+   citation `ABSENT` est retirée, et un `chunk_id` faux est corrigé.
 5. Structure : **Lu** (sourcé), puis **Déduit**, puis **Non trouvé dans la base**.
    Signalements obligatoires : `confidence: low`, `preprint`, `power_scope` hétérogènes.
 6. 2 ou 3 pistes (règle de `CLAUDE.md`).
 
 ---
 
-## 9. Mise en place, pas à pas
+## 9. Installation et reconstruction
 
-1. **Dépendances** : `.venv/bin/pip install -r requirements-embed.txt`, déjà fait sur la
-   machine actuelle. Le premier appel télécharge le modèle (~90 Mo).
-2. **Écrire `lib/rag.py`** (§4) et `tests/test_rag.py`, avec un encodeur factice comme
-   `fake_encode` dans [tests/test_embed.py](../tests/test_embed.py) : les tests ne doivent pas
-   dépendre de sentence-transformers.
-3. **Ajouter les commandes** `bench`, `search`, `show`, `paper`, `cites`, `cited-by` et
-   `verify` à `bin/pdb.py` (§5). `bench` et `paper` sont indépendantes de l'index et peuvent
-   être écrites en premier : ce sont celles qui économisent le plus.
-4. **Brancher `build_index()` dans `bin/reindex.py`** (§4.3).
-5. **Construire et tester** :
+1. **Dépendances** : `.venv/bin/pip install -r requirements-embed.txt`. Le premier
+   `bin/pdb reindex` télécharge `bge-small-en-v1.5` (~130 Mo) et encode tout le corpus
+   (~3 min). Sans cette dépendance, tout fonctionne en lexical seul.
+2. **Construire ou mettre à jour** : `bin/pdb reindex`. `add` et `ingest` le font d'eux-mêmes.
+3. **Contrôler** :
    ```bash
-   bin/pdb reindex
    bin/pdb search "binarized neural network streaming architecture" -k 5
    bin/pdb show <chunk_id renvoyé>
    bin/pdb verify <chunk_id> "<phrase copiée>"      # → OK
-   bin/pdb test
+   bin/pdb test          # tests unitaires (encodeur factice)
+   bin/pdb test --rag    # évaluation sur le vrai modèle (§10)
    ```
-6. **Écrire `.claude/commands/paper-ask.md`** (§8).
-7. **Mettre à jour la documentation** :
-   - `CLAUDE.md` (« Comment chercher ici » ; déjà fait) ;
-   - SETUP.md §5 : nouvelles commandes ; SETUP.md §9 : cocher les tâches ;
-   - docs/GUIDE.md : exemples d'usage.
-   Passer le statut en tête de ce fichier à « en place ».
+4. **Changer de modèle** : `rag.DEFAULT_MODEL` (et `QUERY_PREFIX` si le modèle en demande
+   un), puis `bin/pdb reindex` et `bin/pdb test --rag` pour comparer. L'ancien cache reste
+   dans `.cache/rag/` ; il peut être supprimé.
 
 ---
 
 ## 10. Évaluation
 
-- `tests/fixtures/rag_eval.jsonl` contient ~20 questions écrites à la main. Chacune donne les
-  `chunk_id` qui y répondent et le niveau attendu (N0/N1) :
-  `{"q": "…", "expect": ["finn#021.0"], "level": "N1"}`.
-- Métriques : **recall@5** (au moins un passage attendu dans les 5 premiers) et **MRR**.
-  Seuil d'acceptation proposé : recall@5 ≥ 0,8.
-- Comparaison `--mode dense | lexical | hybrid` pour justifier la fusion et le choix du modèle.
-- Le script d'évaluation est lancé à la main (`bin/pdb test --rag`) : il a besoin du vrai
-  modèle, contrairement aux tests unitaires.
+**Jeu** : [tests/fixtures/rag_eval.jsonl](../tests/fixtures/rag_eval.jsonl), 20 questions en
+anglais, chacune avec :
+- `expect` : les sections pertinentes (`paper#order`, indépendant du découpage en fenêtres) ;
+- `papers` et `pattern` : la manière dont elles ont été choisies. Ce sont les sections des
+  papiers cibles dont le texte contient le motif, par exemple `r"reuse factor"` dans les
+  deux papiers hls4ml.
+
+Les questions reformulent le sujet sans reprendre le motif quand c'était possible (« removes
+duplicate bounding boxes » pour NMS), afin de tester la recherche par le sens. Deux motifs ont
+été élargis après lecture des passages renvoyés : DAGM et BTAD pour les jeux de défauts de
+surface, « SIMD lanes » pour le folding de FINN. Les passages renvoyés y répondaient bien à la
+question, et les motifs d'origine étaient trop étroits.
+
+**Métriques** : `recall@5` (au moins une section attendue dans les 5 premiers passages),
+`MRR` (inverse du rang de la première bonne section) et `paper@5` (un passage d'un papier
+cible dans les 5 premiers).
+
+**Résultats du 25/09/2026** (2 405 passages) :
+
+| Modèle | Mode | recall@5 EN | MRR EN | recall@5 FR (8 q.) | MRR FR |
+|---|---|---|---|---|---|
+| — | lexical (BM25) | **0,95** | **0,82** | 0,25 | 0,11 |
+| all-MiniLM-L6-v2 | dense | 0,75 | 0,65 | 0,38 | 0,25 |
+| all-MiniLM-L6-v2 | hybride | 0,95 | 0,74 | 0,50 | 0,25 |
+| bge-small-en-v1.5 | dense | 0,90 | 0,79 | **0,62** | **0,46** |
+| bge-small-en-v1.5 | hybride (défaut) | 0,90 | 0,79 | 0,50 | 0,33 |
+
+La colonne FR porte sur 8 des questions, traduites à la main en français
+([tests/fixtures/rag_eval_fr.jsonl](../tests/fixtures/rag_eval_fr.jsonl), mêmes `expect`,
+question anglaise d'origine dans `en`). `bin/pdb test --rag` évalue les deux jeux.
+
+Lecture :
+- **En anglais, les modes se valent** : sur 20 questions, un écart de 0,05 est une seule
+  question. Le lexical est légèrement devant, ce qu'on attend puisque les sections attendues
+  ont été choisies par mots-clés : l'évaluation favorise BM25.
+- **En français, le lexical s'effondre** (0,25), et la recherche dense multilingue par
+  accident de bge-small tient mieux.
+- **Choix retenu : hybride avec bge-small**, le mode le plus robuste quand on ne sait pas
+  comment la question sera formulée. La skill `/paper-ask` fait reformuler en anglais.
+- **Échec persistant** : « Is the post-processing step that removes duplicate bounding boxes
+  run on the CPU or in programmable logic? ». Les passages attendus disent « NMS » ou
+  « non-maximum suppression », jamais « duplicate bounding boxes ». Aucun mode ne relie les
+  deux.
+
+Seuil d'acceptation proposé : recall@5 ≥ 0,8 en anglais. À relancer (`bin/pdb test --rag`)
+après tout changement de modèle, de découpage ou de fusion, et quand le corpus grossit.
 
 ---
 
@@ -371,13 +424,18 @@ Déroulé demandé à Claude :
 - **Tableaux et figures** : ils sont mal extraits (SETUP §9, tâche 8). Un chiffre absent de
   `benchmarks.csv` et pris dans une table cassée ne sera pas retrouvé de façon fiable, et
   `bench` reste la source de référence pour les chiffres.
-- **Langue** : le corpus et le modèle sont en anglais. Une question en français est reformulée
-  en anglais par Claude avant `search`. Sinon, on peut passer à
-  `paraphrase-multilingual-MiniLM-L12-v2`, ce qui demande de reconstruire l'index.
+- **Langue** : corpus et modèle en anglais. En français, la recherche perd beaucoup (§10) :
+  une question en français doit être reformulée en anglais avant `search`, ce que fait la
+  skill `/paper-ask`. Autre voie : un modèle multilingue
+  (`paraphrase-multilingual-MiniLM-L12-v2`, `bge-m3`), puis `bin/pdb reindex` et
+  `bin/pdb test --rag` pour comparer.
 - **Reclassement** (*reranking*) par un cross-encoder (`cross-encoder/ms-marco-MiniLM-L-6-v2`)
   sur les 30 premiers résultats : à envisager seulement si l'évaluation (§10) le justifie.
 - **Serveur MCP** : exposer `search`, `show`, `bench` et `verify` comme outils MCP, pour les
   utiliser hors de ce dossier ou depuis une autre application. Même `lib/rag.py`, autre interface.
-- **Généricité** : rien ici ne dépend du domaine FPGA. Seuls `bench` (colonnes de
-  `benchmarks.csv`) et les axes sont propres au corpus, et `bench` devrait lire les colonnes
-  depuis l'en-tête du CSV plutôt que les coder en dur.
+- **Généricité** : rien ici ne dépend du domaine FPGA. `bench` lit ses colonnes dans
+  l'en-tête du CSV. Seuls ses raccourcis de filtre (`--platform`, `--quant`…) et le jeu
+  d'évaluation sont propres au corpus.
+- **Coût de démarrage** : ~7 s par commande `search`/`show`/`verify`, dû à l'import de torch.
+  Si cela gêne, un processus résident (serveur MCP ci-dessus) le paierait une seule fois.
+  `show` et `verify` pourraient aussi se passer du modèle.

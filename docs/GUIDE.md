@@ -245,7 +245,20 @@ bin/pdb paper 1612.07119 --bench    # métadonnées + lignes de benchmark
 ```
 
 Dans la sortie, `!` marque une ligne de confiance `low`, et les ids courts sont expliqués en
-pied de sortie. Détails : [RAG.md](RAG.md) §5.
+pied de sortie.
+
+Pour le texte, `search` trouve les passages par le sens et par les mots, `show` affiche un
+passage exact, et `verify` contrôle qu'une citation y figure bien :
+
+```bash
+bin/pdb search "power measured at the wall versus the FPGA rails" -k 5
+bin/pdb show 1612.07119#019.3
+bin/pdb verify 1612.07119#019.3 "P wall using a wall power meter"   # OK
+```
+
+Formulez les requêtes en anglais, la langue du corpus : en français, la recherche perd
+environ la moitié de ses bonnes réponses. Dans Claude Code, `/paper-ask <question>` enchaîne
+ces commandes et rend une réponse sourcée. Détails : [RAG.md](RAG.md) §5.
 
 ---
 
@@ -306,6 +319,8 @@ Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
 | `bin/pdb reindex` | régénère `INDEX.md`, `external_refs.csv`, vérifie |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (`-h` pour les filtres) |
 | `bin/pdb paper <id \| mot>` | identité d'un papier (`--bench` : ses lignes) |
+| `bin/pdb search "<q>"`, `show <id>`, `verify <id> "<cit.>"` | passages, texte exact, contrôle d'une citation |
+| `bin/pdb test --rag` | évaluation de la recherche |
 | `bin/pdb grobid start\|stop\|status` | GROBID |
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
 | `bin/pdb test` | tests |
@@ -316,6 +331,7 @@ Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
 | `/paper-fiche <paper_id>` | fiche de lecture et lignes de benchmark |
 | `/paper-gaps` | met à jour `gaps.md` |
 | `/paper-discover [axe \| gap \| mots-clés]` | propose des papiers à ajouter et attend votre accord |
+| `/paper-ask <question>` | réponse sourcée et vérifiée depuis la base |
 
 | Fichier | Rôle | Qui l'écrit |
 |---|---|---|

@@ -12,11 +12,18 @@
                             filtre benchmarks.csv (sans LLM) ; bench -h pour les filtres
   paper <id|court|mot> [--fields a,b] [--bench]
                             fiche d'identité d'un papier (métadonnées, statut, benchmarks)
+  search "<question>" [-k 8] [--paper ID] [--section S] [--mode M]
+                            passages pertinents, avec chunk_id, section, page (sans LLM)
+  show <chunk_id>… [--context N]
+                            texte exact d'un passage (id court accepté : 1612.07119#019.0)
+  verify <chunk_id> "<citation>" [--sha1 X]
+                            la citation figure-t-elle dans le passage ? OK | APPROX | ABSENT
   viz [--port N]            visualisation du corpus (http://127.0.0.1:8050)
   test                      lance les tests
 
 Guide : docs/GUIDE.md. Détail des scripts : SETUP.md §5. Requêtes : docs/RAG.md.
 """
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -206,15 +213,143 @@ def cmd_paper(args):
     return 0
 
 
+def _rag_index():
+    from lib import rag
+    return rag, rag.Index(ROOT)
+
+
+def cmd_search(args):
+    import argparse
+    from lib import query
+    p = argparse.ArgumentParser(prog="pdb search", description=(
+        "Passages pertinents (BM25 + embeddings, fusion RRF). Sortie : chunk_id court, "
+        "section, page, score, extrait. Le corpus est en anglais : formuler en anglais. "
+        "Lire ensuite un passage avec pdb show <chunk_id>."))
+    p.add_argument("query")
+    p.add_argument("-k", type=int, default=8)
+    p.add_argument("--paper", metavar="ID", help="id complet, court, ou mot du titre")
+    p.add_argument("--axis")
+    p.add_argument("--section", help="sous-chaîne du titre de section")
+    p.add_argument("--kind", choices=("abstract", "section", "figure", "table"))
+    p.add_argument("--mode", choices=("hybrid", "dense", "lexical"), default="hybrid")
+    p.add_argument("--ids-only", action="store_true")
+    p.add_argument("--format", choices=("tsv", "json"), default="tsv")
+    a = p.parse_args(args)
+
+    rag, ix = _rag_index()
+    ids = None
+    if a.paper:
+        found = query.resolve(a.paper, ix.metas)
+        if not found:
+            print(f"pdb search : aucun papier ne correspond à {a.paper!r}", file=sys.stderr)
+            return 1
+        ids = {m["id"] for m in found}
+    hits = ix.search(a.query, k=a.k, mode=a.mode, paper_ids=ids, axis=a.axis,
+                     kind=a.kind, section=a.section)
+    if not hits:
+        print("# aucun passage", file=sys.stderr)
+        return 1
+    if a.format == "json":
+        print(json.dumps([{k: h[k] for k in ("chunk_id", "paper_id", "section", "subsection",
+                                              "page", "score", "cos", "sha1")} for h in hits],
+                         ensure_ascii=False, indent=1))
+        return 0
+    if hits[0]["mode"] != a.mode:
+        print(f"# mode: {hits[0]['mode']} seul (embeddings indisponibles ou index à reconstruire : bin/pdb reindex)")
+    best = max((h["cos"] for h in hits if h["cos"] is not None), default=None)
+    if best is not None and best < rag.LOW_COS:
+        print(f"# pertinence faible : meilleur cos {best:.2f} < {rag.LOW_COS} ; "
+              "la base ne traite sans doute pas ce sujet")
+    if a.ids_only:
+        print("\n".join(ix.short_chunk_id(h["chunk_id"]) for h in hits))
+    else:
+        print("chunk\tsection\tpage\tcos\tsnippet")
+        for h in hits:
+            sec = " / ".join(x for x in (h["section"], h.get("subsection")) if x)
+            cos = "n/r" if h["cos"] is None else f"{h['cos']:.2f}"
+            print(f"{ix.short_chunk_id(h['chunk_id'])}\t{sec}\t{h['page'] or 'n/r'}\t"
+                  f"{cos}\t{rag.snippet(h['text'], a.query, ix.bm25.idf)}")
+    used = sorted({h["paper_id"] for h in hits if ix.short.get(h["paper_id"]) != h["paper_id"]})
+    if used:
+        print("# ids: " + " ".join(f"{ix.short[p]}={p}" for p in used))
+    return 0
+
+
+def cmd_show(args):
+    import argparse
+    p = argparse.ArgumentParser(prog="pdb show", description=(
+        "Texte exact d'un ou plusieurs passages. En-tête : chunk_id, section, page, "
+        "sha1 (8 caractères, pour pdb verify --sha1)."))
+    p.add_argument("chunk_ids", nargs="+")
+    p.add_argument("--context", type=int, default=0, help="passages voisins de part et d'autre")
+    a = p.parse_args(args)
+    rag, ix = _rag_index()
+    rc = 0
+    for cid in a.chunk_ids:
+        full = ix.resolve_chunk(cid)
+        if not full:
+            print(f"pdb show : passage inconnu : {cid}", file=sys.stderr)
+            rc = 1
+            continue
+        for c in ix.get(full, a.context):
+            sec = " / ".join(x for x in (c["section"], c.get("subsection")) if x)
+            mark = "" if c["chunk_id"] == full else " (contexte)"
+            print(f"## {ix.short_chunk_id(c['chunk_id'])} — {sec} — p. {c['page'] or 'n/r'} "
+                  f"— sha1:{c['sha1'][:8]}{mark}")
+            print(c["text"])
+            print()
+    return rc
+
+
+def cmd_verify(args):
+    import argparse
+    p = argparse.ArgumentParser(prog="pdb verify", description=(
+        "Vérifie qu'une citation figure dans un passage (casse, espaces, ponctuation, "
+        "ligatures et césures ignorées). OK = exacte, APPROX = ressemblance ≥ 0,85, "
+        "ABSENT sinon. Une citation trouvée ailleurs dans le papier est signalée."))
+    p.add_argument("chunk_id")
+    p.add_argument("quote")
+    p.add_argument("--sha1", help="préfixe du sha1 relevé par pdb show : MODIFIÉ s'il a changé")
+    a = p.parse_args(args)
+    rag, ix = _rag_index()
+    full = ix.resolve_chunk(a.chunk_id)
+    if not full:
+        print(f"pdb verify : passage inconnu : {a.chunk_id}", file=sys.stderr)
+        return 2
+    status, ratio, where = rag.verify(ix, full, a.quote, a.sha1)
+    elsewhere = f"\ttrouvée dans {ix.short_chunk_id(where)}" if where != full else ""
+    print(f"{status}\t{ratio:.2f}\t{ix.short_chunk_id(full)}{elsewhere}")
+    return 0 if status in ("OK", "APPROX") and where == full else 1
+
+
 def cmd_test(args):
+    if "--rag" in args:
+        return rag_eval()
     return subprocess.run([sys.executable, "-m", "unittest", "discover", "tests", *args],
                           cwd=ROOT).returncode
+
+
+def rag_eval():
+    """Évaluation de la recherche sur tests/fixtures/rag_eval.jsonl (demande le vrai modèle)."""
+    rag, ix = _rag_index()
+    print(f"{len(ix.chunks)} passages, modèle {ix.model}"
+          + ("" if ix.dense else " (index dense absent : lexical seul)"))
+    print("jeu\tmode\trecall@5\tMRR\tpaper@5")
+    for name in ("rag_eval", "rag_eval_fr"):
+        path = ROOT / "tests" / "fixtures" / f"{name}.jsonl"
+        questions = [json.loads(l) for l in path.read_text().splitlines() if l.strip()]
+        for mode, r in rag.evaluate(ix, questions).items():
+            print(f"{name} ({len(questions)} q.)\t{mode}\t{r['recall']:.2f}\t{r['mrr']:.2f}\t{r['paper']:.2f}")
+            for q in r["misses"]:
+                print(f"#   manqué ({name}, {mode}) : {q}")
+    return 0
 
 
 COMMANDS = {
     "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
-    "bench": cmd_bench, "paper": cmd_paper,
+    "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
+    "verify": cmd_verify,
 }
 
 

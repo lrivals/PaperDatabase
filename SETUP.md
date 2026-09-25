@@ -245,6 +245,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `reindex` | `reindex.run` | |
 | `discover …` | `discover.run` | |
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
+| `search`, `show`, `verify`, `test --rag` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF), texte exact, contrôle de citation, évaluation sur `tests/fixtures/rag_eval*.jsonl` ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5 et §10 |
 | `bench [filtres]`, `paper <requête>` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 
 ### `bin/setup.sh`
@@ -691,11 +692,13 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
     [docs/RAG.md](docs/RAG.md)). Ordre proposé :
     - [x] `pdb bench` et `pdb paper` (N0, indépendants de l'index), `lib/query.py`,
       `tests/test_query.py` (25/09/2026, 101 tests) ;
-    - `lib/rag.py` (passages, BM25 + embeddings, fusion RRF, cache `.cache/rag/`) et
-      `tests/test_rag.py` ;
-    - `pdb search`, `show`, `verify`, `cites`, `cited-by` ;
-    - branchement dans `reindex.py`, skill `/paper-ask`, jeu d'évaluation
-      `tests/fixtures/rag_eval.jsonl`.
+    - [x] `lib/rag.py` (passages, BM25 + embeddings bge-small, fusion RRF, cache
+      `.cache/rag/`), `tests/test_rag.py` ; `pdb search`, `show`, `verify`, `test --rag` ;
+      branchement dans `reindex.py` ; skill `/paper-ask` ; jeux d'évaluation
+      `tests/fixtures/rag_eval.jsonl` (20 q.) et `rag_eval_fr.jsonl` (8 q.) (25/09/2026,
+      110 tests). Évaluation : recall@5 0,90 en anglais, 0,50 en français (RAG.md §10) ;
+    - [ ] `pdb cites` / `cited-by` (RAG.md §5.5) ;
+    - [ ] requête NMS paraphrasée toujours manquée (RAG.md §10) : piste reranking.
 
 ### En place
 

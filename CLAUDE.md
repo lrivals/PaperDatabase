@@ -24,15 +24,15 @@ Lis du résumé vers le détail, et arrête-toi dès que tu as la réponse.
    Pour l'identité d'un papier (auteurs, venue, preprint ou non, statut de la fiche) :
    `bin/pdb paper <id court | mot du titre>`, sans ouvrir `metadata.json`.
 3. **`papers/<id>/fiche.md`** — la lecture critique : problème, méthode, limites, pertinence.
-4. **`papers/<id>/fulltext.md`** — le texte intégral, en dernier recours seulement. Pour une
-   recherche ciblée dans le corpus entier, `grep` sur `papers/*/sections.jsonl` (chaque ligne
-   porte sa section et sa page).
+4. **Passages** — `bin/pdb search "<question en anglais>"`, qui renvoie des passages avec
+   `chunk_id`, section, page et extrait, puis `bin/pdb show <chunk_id>` sur 2 ou 3 d'entre
+   eux. Vérifie chaque citation textuelle avec `bin/pdb verify <chunk_id> "<citation>"`.
+   `# pertinence faible` en tête de sortie = la base ne traite probablement pas le sujet.
+   La skill `/paper-ask` enchaîne tout cela ; détails dans [docs/RAG.md](docs/RAG.md).
+   `grep` sur `papers/*/sections.jsonl` reste utile pour une chaîne exacte.
+   `papers/<id>/fulltext.md`, le texte intégral, en dernier recours seulement.
 5. **`papers/<id>/paper.pdf`** — ne l'ouvre pas. Il est conservé comme preuve, pas comme
    source de travail ; tout ce qu'il contient est déjà dans `fulltext.md`.
-
-**À venir : recherche de passages ([docs/RAG.md](docs/RAG.md), pas encore implémentée).**
-Une fois en place, `bin/pdb search` suivi de `bin/pdb show <chunk_id>` remplacera l'étape 4,
-avant tout recours à `fulltext.md`. `bin/pdb verify` contrôlera chaque citation textuelle.
 
 **Quoi lire ensuite ?** [external_refs.csv](external_refs.csv) (généré) classe les travaux
 absents de la base par nombre de papiers du corpus qui les citent. Données issues du parsing
@@ -52,6 +52,8 @@ brute d'extraction.
 |---|---|
 | `bin/pdb status` | état de la base et prochaines actions suggérées |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ([docs/RAG.md](docs/RAG.md) §5.1) |
+| `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM, texte exact, contrôle d'une citation ([docs/RAG.md](docs/RAG.md) §5) |
+| `/paper-ask <question>` | réponse sourcée et vérifiée : `bench`, puis `search`, `show`, `verify` |
 | `bin/pdb paper <id \| mot>` | fiche d'identité d'un papier : métadonnées, preprint, statut de la fiche, nombre de benchmarks (`--bench` pour les lignes) |
 | `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition + ingestion + réindexation (un DOI est résolu vers sa version arXiv via OpenAlex) |
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |

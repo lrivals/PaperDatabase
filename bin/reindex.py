@@ -191,6 +191,16 @@ def run():
     todo = sum(1 for p in papers if p.get("status", {}).get("fiche") != "done")
     print(f"INDEX.md régénéré : {len(papers)} papiers, {todo} fiches à faire, {len(rows)} lignes de benchmark.")
     print(f"external_refs.csv régénéré : {len(ext)} travaux hors base cités par au moins 2 papiers.")
+    try:
+        from lib import rag
+        m = rag.build_index(ROOT)
+        if m["dense"]:
+            print(f"Index de passages : {m['chunks']} passages, {m['encoded']} (ré)encodés ({m['model']}).")
+        else:
+            print(f"Index de passages : {m['chunks']} passages, lexical seul "
+                  "(requirements-embed.txt absent).")
+    except Exception as e:  # l'index est dérivé : son échec ne bloque pas le reste
+        notes.append(f"index de passages non reconstruit : {e}")
     for n in notes:
         print(f"note    {n}")
     for pb in problems:

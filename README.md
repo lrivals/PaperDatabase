@@ -23,9 +23,10 @@ métadonnées vérifiées, références extraites, fiche de lecture et chiffres 
 Ces fichiers s'organisent en couches, du résumé au texte intégral. L'agent lit la couche la
 plus haute qui répond à sa question et ne descend que si nécessaire.
 
-Il n'y a ni base de données ni index vectoriel. Sur quelques dizaines à quelques centaines
-d'articles, une arborescence bien nommée et greppable suffit, et elle reste lisible, diffable
-et réparable à la main.
+Il n'y a pas de base de données. La source de vérité est une arborescence de fichiers texte
+bien nommés et greppables, lisible, diffable et réparable à la main. Un index de passages
+local (BM25 + embeddings, dans `.cache/`, régénérable) s'ajoute par-dessus pour la recherche
+par le sens, sans rien changer aux fichiers.
 
 ---
 
@@ -33,21 +34,29 @@ et réparable à la main.
 
 ```
 arXiv id / URL ──► bin/add.py ──► inbox/ ──► bin/ingest.py ──► papers/<paper_id>/
-PDF local ────────────────────────► inbox/        │
-                                                  ├─ GROBID (Docker) : structure, métadonnées, références
+DOI ──► OpenAlex ──► version arXiv ─┘              │
+PDF local (+ .bib/.ris) ──────────► inbox/        ├─ GROBID (Docker) : structure, métadonnées, références
+                                                  ├─ PyMuPDF : tableaux réduits à leur légende
                                                   └─ repli PyMuPDF si GROBID est indisponible
 ```
 
-- **`add.py`** récupère un article arXiv (métadonnées via l'API, puis le PDF) ou copie un
-  PDF local dans `inbox/`, puis lance l'ingestion.
+- **`add.py`** récupère un article arXiv (métadonnées via l'API, puis le PDF), résout un DOI
+  vers sa version arXiv via OpenAlex, ou copie un PDF local dans `inbox/`, puis lance
+  l'ingestion. `--from liste.txt` traite un lot.
 - **`ingest.py`** passe chaque PDF de `inbox/` dans GROBID :
   - il fusionne les métadonnées (export de citation `.bib` / `.ris` déposé à côté, puis
     arXiv, puis GROBID ; un champ inconnu reste `null`) ;
-  - il nettoie le corps (en-têtes, numéros de page, bibliographie) ;
-  - il garde les légendes de figures et de tableaux, qui portent souvent les chiffres ;
+  - il nettoie le corps (en-têtes, numéros de page, bibliographie), répare les ligatures
+    perdues (« classi cation ») et rend au corps les paragraphes que GROBID prenait pour
+    des figures ;
+  - il garde les légendes et le contenu des tableaux, qui portent souvent les chiffres ;
+    quand GROBID n'a gardé que la légende, il tente de reconstruire le tableau depuis le
+    PDF (marqué « à vérifier »), sinon il le signale ;
   - il écrit les fichiers ci-dessous.
 
   Il est idempotent, et `--force` réextrait sans jamais écraser une fiche déjà rédigée.
+  `--reparse` ré-extrait tout le corpus depuis les TEI conservés, sans GROBID, après une
+  amélioration du parsing.
 - Les articles sous paywall se déposent **à la main** dans `inbox/`. L'outil ne contourne
   aucun paywall.
 
@@ -73,9 +82,25 @@ L'agent lit **du résumé vers le détail** et s'arrête dès qu'il a la répons
 | 1 | `INDEX.md` | savoir quels articles existent, par axe, fichés ou non (généré par `reindex.py`) |
 | 2 | `benchmarks.csv` | trouver tous les chiffres, une ligne par configuration rapportée, avec section source et niveau de confiance |
 | 3 | `papers/<id>/fiche.md` | lire l'analyse critique d'un article |
-| 4 | `fulltext.md`, `sections.jsonl` | lire le texte intégral ; `grep` sur `papers/*/sections.jsonl` pour chercher dans tout le corpus |
+| 4 | passages (`bin/pdb search`, `show`, `verify`) | trouver les 2-3 passages qui répondent, les lire en texte exact, vérifier chaque citation |
+| — | `fulltext.md` | texte intégral, en dernier recours seulement |
 | 5 | `gaps.md` | consulter les zones non couvertes par le corpus, chacune appuyée par des `paper_id` |
 | — | `external_refs.csv` | repérer les travaux absents de la base les plus cités par le corpus (généré par `reindex.py`) : les prochaines lectures |
+
+**Requêtes sans LLM** (`bin/pdb`, bibliothèque standard ou index local ; sortie compacte,
+colonnes de source toujours affichées) :
+
+| Commande | Effet |
+|---|---|
+| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (plateforme, colonne renseignée, tri, `--count`) |
+| `bin/pdb paper <id \| mot>` | fiche d'identité d'un papier : métadonnées, preprint, statut de fiche, benchmarks |
+| `bin/pdb search "<question>"` | passages classés (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), avec `chunk_id`, section et page |
+| `bin/pdb show <chunk_id>` / `verify <chunk_id> "<citation>"` | texte exact d'un passage / contrôle qu'une citation y figure |
+| `bin/pdb cites <id>` / `cited-by <id>` | graphe de citations internes, références hors base (`--external`) |
+
+Sur un essai réel (répondre à une question sur la mesure de puissance), cette chaîne a lu
+~2 500 tokens au lieu des textes intégraux. Évaluation de la recherche : recall@5 de 0,90 en
+anglais (1,00 avec `--rerank`), 0,50 en français ([docs/RAG.md](docs/RAG.md) §10).
 
 **Liens entre articles :**
 
@@ -85,13 +110,15 @@ L'agent lit **du résumé vers le détail** et s'arrête dès qu'il a la répons
 
 **Mode d'emploi de l'agent :** [CLAUDE.md](CLAUDE.md) donne l'ordre de lecture et les règles
 de travail : ne jamais inventer de référence, écrire `n/r` pour une valeur non rapportée,
-distinguer le lu du déduit, relever les comparaisons biaisées. Trois commandes Claude Code
+distinguer le lu du déduit, relever les comparaisons biaisées. Cinq commandes Claude Code
 (`.claude/commands/`) automatisent le travail :
 
 | Commande | Effet |
 |---|---|
-| `/paper-add <arxiv-id \| url \| chemin.pdf>` | acquisition, ingestion et réindexation |
+| `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition, ingestion et réindexation |
 | `/paper-fiche <paper_id>` | remplit la fiche et ajoute les lignes de `benchmarks.csv`, chaque chiffre avec sa section source |
+| `/paper-ask <question>` | réponse sourcée : `bench`, puis `search`, `show`, `verify` ; chaque citation vérifiée |
+| `/paper-discover [axe \| gap \| mots-clés]` | candidats via OpenAlex (citations du corpus, recherche), liste courte, ajout après accord |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches terminées et les benchmarks |
 
 ---
@@ -177,10 +204,11 @@ PaperDatabase/
 ├── README.md  CLAUDE.md  SETUP.md  DATA_MODEL.md
 ├── INDEX.md  external_refs.csv   # générés
 ├── benchmarks.csv  gaps.md  basicStart.txt
-├── docs/GUIDE.md           # guide d'utilisation
+├── docs/                   # GUIDE.md (utilisation), RAG.md (recherche), experiences/
 ├── bin/                    # pdb (point d'entrée), setup.sh, grobid.sh, add.py, ingest.py,
 │                           # reindex.py, discover.py, viz.py
-├── lib/                    # ids, tei, doc, pdftext, ligatures, schema, refs, query, rag, openalex…
+├── lib/                    # ids, tei, doc, pdftext, ligatures, tables, schema, refs, query, rag,
+│                           # openalex, citation, status…
 ├── tests/
 ├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask
 ├── inbox/                  # PDF en attente d'ingestion
@@ -191,13 +219,43 @@ PaperDatabase/
 
 ## État et documentation
 
-Au 24/09/2026, le corpus couvre la vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo
+Au 26/09/2026, le corpus couvre la vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo
 et MCU :
 - 28 articles ingérés, tous via GROBID : 21 par arXiv, 7 déposés à la main avec leur export
   de citation ;
 - 24 fiches rédigées ;
 - 109 lignes dans `benchmarks.csv` ;
 - 16 gaps dans `gaps.md`, dont 12 étayés.
+
+### Ce qui marche (testé : 143 tests unitaires, et essais sur le vrai corpus)
+
+- acquisition arXiv, DOI (via OpenAlex), PDF local, par lot ; exports `.bib` / `.ris`
+  éditeur prioritaires sur l'en-tête GROBID (vérifié sur 6 exports IEEE, ACM, MDPI,
+  Springer) ;
+- extraction GROBID avec repli PyMuPDF, nettoyage d'en-tête, ligatures, hiérarchie des
+  titres, ré-extraction sans GROBID ; axes, tags et avertissements manuels conservés ;
+- requêtes sans LLM (`bench`, `paper`, `search`, `show`, `verify`, `cites`) et skill
+  `/paper-ask`, essayée en réel ;
+- découverte de candidats OpenAlex, `external_refs.csv`, `pdb status` avec prochaines
+  actions ;
+- tableaux réduits à leur légende : reconstruction PyMuPDF des tableaux à filets (3 sur 52),
+  signalement des autres dans `pdb status`.
+
+### Ce qui manque encore
+
+- **Tableaux** : 49 restent sans corps (tableaux sans filets, en image ou pivotés). Docling,
+  essayé le 26/09/2026, en lit une bonne partie (avec OCR pour les images), mais n'est pas
+  encore branché ; certains tableaux devront être vérifiés à la main.
+- **Généricité** : axes, regex de classification et colonnes de benchmark sont encore codés
+  en dur (voir ci-dessus) ; un profil de corpus (`corpus.toml`) est prévu.
+- **Économie de tokens** : `/paper-fiche` lit encore `fulltext.md` en entier ; un digest
+  déterministe et une pré-extraction des nombres sont prévus.
+- **Traçabilité automatique** : lier chaque ligne de `benchmarks.csv` à un `chunk_id` et
+  vérifier que la valeur y figure.
+- **Découverte** : score sémantique des candidats et mémoire des rejets ; références
+  consolidées via OpenAlex (10 citations internes seulement aujourd'hui).
+
+Détail et ordre proposé : [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire).
 
 S'y ajoutent une liste de labos ([labs.md](labs.md)) et un protocole d'expérience
 ([docs/experiences/](docs/experiences/)). L'avancement et les tâches à faire sont dans
@@ -207,6 +265,7 @@ S'y ajoutent une liste de labos ([labs.md](labs.md)) et un protocole d'expérien
 |---|---|
 | [docs/GUIDE.md](docs/GUIDE.md) | guide d'utilisation : prise en main, routine, extension du corpus, dépannage |
 | [SETUP.md](SETUP.md) | installation, rôle de chaque script, flux de travail, vérification, tâches |
+| [docs/RAG.md](docs/RAG.md) | requêtes sans LLM et recherche de passages : spécification, évaluation, essai réel |
 | [DATA_MODEL.md](DATA_MODEL.md) | schémas : `paper_id`, `metadata.json`, `sections.jsonl`, `refs.jsonl`, `benchmarks.csv`, fiche |
 | [CLAUDE.md](CLAUDE.md) | mode d'emploi et règles de travail de l'agent |
 | [INDEX.md](INDEX.md) | index des articles |

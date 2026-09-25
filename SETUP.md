@@ -51,9 +51,13 @@ PaperDatabase/
 ├── requirements.txt
 ├── requirements-viz.txt    # optionnel : dépendances de la visualisation
 ├── requirements-embed.txt  # optionnel : embeddings (sentence-transformers) pour la visualisation
+├── requirements-docling.txt # optionnel : Docling pour les tableaux sans corps
+├── eval/                   # banc d'évaluation : thresholds.json, results/<date>-<commit>.json
 ├── .venv/                  # non versionné
 ├── .cache/                 # non versionné : embeddings, réponses OpenAlex
 ├── docs/GUIDE.md           # guide d'utilisation (prise en main, extension du corpus)
+├── docs/RAG.md             # requêtes sans LLM et recherche de passages
+├── docs/EVAL.md            # banc d'évaluation du logiciel (pdb eval) et résultats
 ├── bin/                    # scripts du pipeline
 │   ├── pdb, pdb.py         # point d'entrée unique (status, add, ingest, discover…)
 │   ├── setup.sh
@@ -70,11 +74,13 @@ PaperDatabase/
 │   ├── pdftext.py          # extraction de repli PyMuPDF
 │   ├── ligatures.py        # réparation des ligatures perdues (« classi cation »)
 │   ├── tables.py           # tableaux réduits à leur légende : reconstruction PyMuPDF
+│   ├── docling_tables.py   # optionnel : second repli Docling (OCR en option)
 │   ├── citation.py         # exports .bib / .ris éditeur
 │   ├── schema.py
 │   ├── refs.py             # rapprochement des références, classement des externes, citations
 │   ├── query.py            # requêtes N0 sans LLM (pdb bench, paper, cites)
 │   ├── rag.py              # recherche de passages (pdb search, show, verify)
+│   ├── evaluation.py       # banc d'évaluation (pdb eval)
 │   ├── openalex.py         # client OpenAlex (DOI → arXiv, citations, recherche), cache
 │   ├── status.py           # état de la base et prochaines actions (pdb status)
 │   ├── graph.py            # nœuds, liens et positions du graphe 3D
@@ -83,11 +89,13 @@ PaperDatabase/
 │   └── embed.py            # optionnel : embeddings avec cache (.cache/)
 ├── tests/
 │   ├── fixtures/sample.tei.xml
+│   ├── fixtures/rag_eval*.jsonl  # questions d'évaluation : dev, holdout, FR, hors corpus
 │   ├── test_tei.py
 │   ├── test_schema.py
 │   ├── test_ingest.py
 │   ├── test_ligatures.py
-│   ├── test_tables.py      # tableaux réduits à leur légende : PDF synthétique PyMuPDF
+│   ├── test_tables.py      # tableaux réduits à leur légende : PDF synthétique, rapprochement Docling
+│   ├── test_evaluation.py  # métriques du banc sur de petits cas construits
 │   ├── test_refs.py
 │   ├── test_reindex.py     # notes benchmarks, mesures propres own-…
 │   ├── test_query.py
@@ -105,6 +113,7 @@ PaperDatabase/
     └── <paper_id>/
         ├── paper.pdf       # PDF d'origine, conservé comme preuve
         ├── grobid.tei.xml  # sortie brute de GROBID, trace d'extraction
+        ├── docling_tables.json # tableaux lus par Docling, s'il a été lancé (trace)
         ├── citation.bib    # export de citation éditeur (.bib ou .ris), s'il a été déposé
         ├── metadata.json   # titre, auteurs, année, venue, DOI, axes, statut
         ├── fulltext.md     # texte nettoyé, sections en ## / ###
@@ -122,8 +131,11 @@ réelle (`test_tei.py`), conformité DATA_MODEL (`test_schema.py`), conservation
 tags à la ré-extraction (`test_ingest.py`), rapprochement des références et
 `external_refs.csv` (`test_refs.py`), découverte OpenAlex, ajout par DOI et par liste
 sur des réponses simulées (`test_openalex.py`), état et prochaines actions
-(`test_status.py`), et graphe sur un mini-corpus synthétique (`test_graph.py`, ignoré si
-`requirements-viz.txt` n'est pas installé).
+(`test_status.py`), recherche de passages et `verify` (`test_rag.py`), tableaux et
+rapprochement Docling sans Docling installé (`test_tables.py`), métriques du banc
+(`test_evaluation.py`), et graphe sur un mini-corpus synthétique (`test_graph.py`, ignoré
+si `requirements-viz.txt` n'est pas installé). La qualité sur le vrai corpus se mesure à
+part : `bin/pdb eval` ([docs/EVAL.md](docs/EVAL.md)).
 
 ---
 
@@ -256,7 +268,8 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `reindex` | `reindex.run` | |
 | `discover …` | `discover.run` | |
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
-| `search`, `show`, `verify`, `test --rag` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), texte exact, contrôle de citation, évaluation sur `tests/fixtures/rag_eval*.jsonl` ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5 et §10 |
+| `search`, `show`, `verify` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), texte exact, contrôle de citation (statut `NOMBRES` si un nombre diffère) ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5 |
+| `eval [--extract\|--rag\|--speed] [--save] [--compare [JSON]]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; runs dans `eval/results/`, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
 
@@ -523,6 +536,24 @@ près (`same_title`), choix du titre d'affichage le moins abîmé (`best_title`)
 des travaux hors base (`external_ranking`), qui cite qui (`citations`, pour `pdb cites` /
 `cited-by`). Utilisé par `lib/graph.py`, `reindex.py` et `bin/pdb.py`.
 Testé par `tests/test_refs.py`.
+
+### `lib/docling_tables.py`
+
+Second repli pour les tableaux restés sans corps après `lib/tables.py`, optionnel
+(`requirements-docling.txt`). `extract(pdf, ocr)` lance Docling (TableFormer ACCURATE) ;
+`recover(blocks, found)` rapproche ses tableaux des blocs vides par numéro de légende (arabe
+ou romain, à une page près), sinon par rang vertical parmi les tableaux sans légende de la
+même page. Il n'accepte que des grilles ≥ 2 × 2 à moitié remplies (`usable`) et marque la
+légende « reconstruit par Docling : à vérifier ». Sortie mise en cache dans
+`papers/<id>/docling_tables.json`. Testé par `tests/test_tables.py`, sans Docling. Apport
+mesuré : [docs/EVAL.md](docs/EVAL.md) §6.
+
+### `lib/evaluation.py`
+
+Banc `bin/pdb eval` : métriques d'extraction (couverture du texte, tableaux, en-tête GROBID,
+valeurs de `benchmarks.csv`), de recherche (recall, MRR, nDCG, jeux dev / holdout / FR),
+de pertinence (seuil calibré puis validé), de `verify` (citations modifiées) et de temps ;
+`flatten`, `compare`, `check_thresholds` pour `--compare`. Protocole : [docs/EVAL.md](docs/EVAL.md).
 
 ### `lib/ligatures.py`
 
@@ -859,7 +890,7 @@ Défauts mis au jour, à corriger (tâche 12) :
 | Index et contrôle de cohérence (`reindex.py`) | fonctionnel, 0 erreur ; contrôle de conformité DATA_MODEL complet (`test_schema.py`) ; génère aussi `external_refs.csv` |
 | Références (`lib/refs.py`) | rapprochement par clés exactes + fusion des titres quasi identiques (ligatures perdues, coquilles, titres tronqués ; ±1 an), titre d'affichage le moins abîmé ; testé (`test_refs.py`) ; utilisé par la vue 3D et `reindex.py` |
 | Classement des références externes | `external_refs.csv` : 319 travaux hors base cités par ≥ 2 papiers (DATA_MODEL §9) |
-| Tableaux réduits à leur légende (`lib/tables.py`) | depuis le 26/09/2026 : repli `find_tables()` PyMuPDF (tableaux à filets), testé (`test_tables.py`, PDF synthétique), appliqué au corpus : 3 reconstruits sur 52, vérifiés à l'œil ; les 49 autres signalés par `pdb status`. **Manque** : les tableaux sans filets, en image ou pivotés (voir la tâche Docling) |
+| Tableaux réduits à leur légende (`lib/tables.py`, `lib/docling_tables.py`) | depuis le 26/09/2026 : repli `find_tables()` PyMuPDF (tableaux à filets, 3 reconstruits), puis Docling (41 reconstruits, OCR pour shuvo, cui, hozhabr) ; tableaux avec corps 0,66 → 0,90 (EVAL.md §6) ; testé (`test_tables.py`) ; 12 restent sans corps, dont au moins 7 faux tableaux. **Manque** : relecture des tableaux reconstruits (erreurs de colonnes, fragments d'OCR) |
 | Hiérarchie des titres de `fulltext.md` | titres parasites filtrés, niveau 3 géré, sections non détectées par GROBID signalées dans `extraction.warnings` |
 | Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover` | écrites (`.claude/commands/`) ; `/paper-fiche` rodé sur 24 papiers (surveys, benchmarks multi-plateformes, MCU) ; `/paper-discover` rodée le 24/09/2026 (vision embarquée, baseline Orin), avec la clé OpenAlex |
 | Fichiers de citation éditeur (`lib/citation.py`) | depuis le 24/09/2026 : lecture `.bib` / `.ris` sans dépendance, appariement au PDF par DOI puis par titre, priorité sur l'en-tête GROBID, conservation dans `papers/<id>/citation.*` ; testé (`test_citation.py`) et vérifié en réel sur 6 exports (IEEE, ACM, MDPI, Springer) |
@@ -870,8 +901,8 @@ Défauts mis au jour, à corriger (tâche 12) :
 | `benchmarks.csv` | 109 lignes (le 24/09/2026) : 16 `board`, 14 `chip` (Rey et al., Jetson et RPi), 24 `unspecified`, 3 `estimated`, 52 sans puissance ; 71 lignes de détection, dont 15 avec mAP COCO (Alqahtani et al., Jetson et Hailo), aucune ligne FPGA avec mAP COCO ; aucune ligne pour les surveys, hls4ml 2021 ni fpgaConvNet (justifié dans les fiches) |
 | `gaps.md` | 16 gaps, dont 12 étayés (5e passage, le 24/09/2026, 24 fiches `done`) |
 | Visualisation (`viz.py`, `lib/graph.py`, `lib/lineage.py`, `lib/vizfig.py`, `lib/embed.py`) | terminée le 24/09/2026 : graphe 3D (recherche, filtres, surlignage des liens, détail avec fiche et benchmarks, export HTML) et onglet Généalogie (papier ou sujet, suite probable déduite) ; embeddings optionnels ; testée (`test_graph.py`, `test_lineage.py`, `test_viz.py`, `test_embed.py` ; 77 tests au total avec ceux du 24/09/2026) ; 10 citations internes, 89 références externes co-citées |
-| Requêtes et recherche de passages (`lib/query.py`, `lib/rag.py`, `pdb bench`/`paper`/`search`/`show`/`verify`) | depuis le 25/09/2026 : BM25 + embeddings bge-small, fusion RRF, reranking optionnel, index incrémental ; testé (`test_query.py`, `test_rag.py`) et évalué (RAG.md §10) ; skill `/paper-ask` essayée en réel (RAG.md §12) |
-| Banc d'évaluation (`bin/pdb eval`, `lib/evaluation.py`) | depuis le 26/09/2026 : extraction, recherche (dev, holdout, FR, hors corpus), `verify`, temps ; `--save` / `--compare` et seuils ; testé (`test_evaluation.py`) ; rapport de référence dans [docs/EVAL.md](docs/EVAL.md) §5 |
+| Requêtes et recherche de passages (`lib/query.py`, `lib/rag.py`, `pdb bench`/`paper`/`search`/`show`/`verify`) | depuis le 25/09/2026 : BM25 + embeddings bge-small, fusion RRF, reranking optionnel, index incrémental ; `verify` contrôle les nombres et l'alerte « pertinence faible » est retirée (26/09/2026) ; testé (`test_query.py`, `test_rag.py`) et évalué (RAG.md §10, EVAL.md) ; skill `/paper-ask` essayée en réel (RAG.md §12) |
+| Banc d'évaluation (`bin/pdb eval`, `lib/evaluation.py`) | depuis le 26/09/2026 : extraction, recherche (dev, holdout, FR, hors corpus), `verify`, temps ; `--save` / `--compare` et seuils ; testé (`test_evaluation.py`) ; rapport de référence dans [docs/EVAL.md](docs/EVAL.md) §5, corrections mesurées (§6) |
 | Versionnage | dépôt git + remote GitHub ; travaux du 24/09/2026 commités et poussés |
 
 ### Tâches — corpus

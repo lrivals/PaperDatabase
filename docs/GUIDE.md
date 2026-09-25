@@ -261,26 +261,39 @@ bin/pdb show 1612.07119#019.3
 bin/pdb verify 1612.07119#019.3 "P wall using a wall power meter"   # OK
 ```
 
-Formulez les requêtes en anglais, la langue du corpus : en français, la recherche perd
-environ la moitié de ses bonnes réponses. Dans Claude Code, `/paper-ask <question>` enchaîne
+`verify` répond `OK` (citation exacte), `APPROX` (ressemblance d'au moins 0,85), `NOMBRES`
+(le texte ressemble, mais un nombre diffère du passage : la citation est fausse) ou
+`ABSENT`. Il renvoie le code 0 seulement pour `OK` et `APPROX`.
+
+`search` renvoie toujours des passages, même quand la base ne traite pas le sujet. Aucun
+score ne permet de le détecter de façon fiable : jugez sur les extraits
+([EVAL.md](EVAL.md) §6). Formulez les requêtes en anglais, la langue du corpus : en
+français, la recherche perd environ la moitié de ses bonnes réponses. Dans Claude Code, `/paper-ask <question>` enchaîne
 ces commandes et rend une réponse sourcée. Détails : [RAG.md](RAG.md) §5.
 
 ---
 
 ## 6. Contrôle qualité
 
-L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Trois réflexes :
+L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Quatre réflexes :
 
 1. **Les avertissements d'ingestion** (`bin/pdb status` liste les extractions à vérifier) :
    une section non détectée ou une table absente de `fulltext.md` signifie que ses chiffres
    manquent aussi dans la fiche. Ouvrez alors le PDF vous-même et complétez la fiche.
    La ligne « tableaux à vérifier » donne, par papier, les tableaux réduits à leur légende
    (« sans corps ») et ceux reconstruits automatiquement depuis le PDF (« reconstruits »,
-   marqués « à vérifier » dans `fulltext.md` : colonnes décalées possibles).
+   marqués « à vérifier » dans `fulltext.md` : colonnes décalées ou perdues, fragments d'OCR
+   possibles). Pour les tableaux encore sans corps, `bin/pdb ingest --reparse --tables
+   docling <id>` essaie Docling, et `--ocr` s'ils sont en image (plusieurs minutes par
+   papier).
 2. **Recouper une fiche sur cinq** avec le PDF : chaque chiffre de `benchmarks.csv` doit
    exister dans le papier, à la section indiquée.
 3. **`bin/pdb reindex`** doit finir sans `erreur`. Une `note` est une remarque, pas un
    blocage.
+4. **Après une modification du logiciel** (extraction, recherche, `verify`), lancez
+   `bin/pdb eval --compare` : il compare la qualité et les temps au dernier run enregistré,
+   et signale les seuils non atteints. `bin/pdb eval --save` enregistre un nouveau run de
+   référence. Protocole et résultats : [EVAL.md](EVAL.md).
 
 Procédure complète : [SETUP.md §8](../SETUP.md#8-vérification).
 
@@ -331,7 +344,7 @@ Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
 | `bin/pdb ingest --reparse [id…]` | ré-extrait les papiers déjà ingérés depuis leur TEI, sans GROBID |
 | `bin/pdb ingest --reparse --tables docling [--ocr] [id…]` | idem, et Docling pour les tableaux restés sans corps (lent, optionnel : `requirements-docling.txt`) |
 | `bin/pdb search "<q>"`, `show <id>`, `verify <id> "<cit.>"` | passages, texte exact, contrôle d'une citation |
-| `bin/pdb test --rag` | évaluation de la recherche |
+| `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
 | `bin/pdb grobid start\|stop\|status` | GROBID |
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
 | `bin/pdb test` | tests |

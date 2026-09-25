@@ -158,12 +158,24 @@ des numéros de section manquent dans la séquence, c'est que l'extracteur n'a p
 leur titre : leur texte est rattaché à la section précédente, et `extraction.warnings` le
 signale (« sections numérotées non détectées : … »).
 
-Tableaux : quand GROBID n'a gardé que la légende d'un tableau, `lib/tables.py` tente de
-reconstruire son corps depuis le PDF. Un corps reconstruit suit une légende terminée par
-« [corps du tableau reconstruit par PyMuPDF : à vérifier] ». `extraction.warnings` liste
-les tableaux reconstruits (« tableaux reconstruits par PyMuPDF, chiffres à vérifier : … »)
-et ceux restés vides (« tableaux sans corps extrait (légende seule) : … ») ; ces deux
+Tableaux : quand GROBID n'a gardé que la légende d'un tableau, deux replis tentent de
+reconstruire son corps depuis le PDF, dans cet ordre :
+- `lib/tables.py` (PyMuPDF, tableaux à filets) ;
+- `lib/docling_tables.py` (Docling, OCR en option), seulement si
+  `ingest --reparse --tables docling` a été lancé ou si `docling_tables.json` existe.
+
+Un corps reconstruit suit une légende terminée par « [corps du tableau reconstruit par
+PyMuPDF : à vérifier] » ou « [corps du tableau reconstruit par Docling : à vérifier] ».
+`extraction.warnings` liste les tableaux reconstruits (« tableaux reconstruits par PyMuPDF,
+chiffres à vérifier : … », « tableaux reconstruits par Docling, chiffres à vérifier : … »)
+et ceux restés vides (« tableaux sans corps extrait (légende seule) : … »). Ces
 avertissements sont recalculés à chaque extraction.
+
+`papers/<paper_id>/docling_tables.json` (facultatif) est la trace brute de Docling, comme
+`grobid.tei.xml`, et ne sert pas à répondre aux questions. Format :
+`{"docling": version, "ocr": bool, "tables": [{"page", "bbox", "caption", "rows"}]}`, avec
+`bbox` en points PDF (origine en haut à gauche) et `rows[0]` la ligne d'en-tête lue par
+Docling.
 
 ---
 

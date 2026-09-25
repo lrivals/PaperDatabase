@@ -41,9 +41,11 @@ des bibliographies : à vérifier avant de les citer. Au-delà des références,
 (ou `bin/pdb discover`) produit `candidates.csv` depuis OpenAlex : citations entrantes,
 recherche par axe ou par gap (DATA_MODEL §10). Métadonnées OpenAlex, non vérifiées.
 
-`refs.jsonl` et `grobid.tei.xml` ne servent pas à répondre aux questions : le premier
-alimente la visualisation 3D (`bin/viz.py`) et `external_refs.csv`, le second est la trace
-brute d'extraction.
+`refs.jsonl`, `grobid.tei.xml` et `docling_tables.json` ne servent pas à répondre aux
+questions : le premier alimente la visualisation 3D (`bin/viz.py`) et `external_refs.csv`,
+les deux autres sont des traces brutes d'extraction. Un tableau dont la légende porte
+« reconstruit par PyMuPDF » ou « reconstruit par Docling : à vérifier » n'est pas fiable
+chiffre à chiffre ([docs/EVAL.md](docs/EVAL.md) §6).
 
 ---
 

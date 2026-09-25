@@ -9,3 +9,10 @@ __pycache__/
 .cache/
 candidates.csv
 candidates_arxiv.txt
+docs/article/*.aux
+docs/article/*.bbl
+docs/article/*.blg
+docs/article/*.log
+docs/article/*.out
+docs/article/*.toc
+docs/article/*.pdf

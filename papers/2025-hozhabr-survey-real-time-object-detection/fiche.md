@@ -33,8 +33,11 @@ Survey, sans expérience propre. Il couvre :
 ## Plateforme et implémentation
 
 Pas d'implémentation propre. Les plateformes recensées sont uniquement AMD-Xilinx et
-Intel-Altera (§V-B, Table 10). La Table 6 (cartes FPGA et ressources) est perdue à
-l'extraction.
+Intel-Altera (§V-B, Table 10). La Table 6 (cartes FPGA et ressources) était perdue à
+l'extraction. *Mise à jour du 26/09/2026* : elle est reconstruite par Docling avec OCR,
+comme les Tables 1 et 3 à 8. Tout est à vérifier : la Table 5 contient des fragments d'OCR
+illisibles. Les Tables 2 et 9 à 11 ne sont pas repérées comme tableaux par GROBID, et donc
+absentes de `sections.jsonl` (les Tables 9-10 sont en paysage pivoté).
 
 ## Résultats
 
@@ -58,7 +61,8 @@ l'extraction.
 Le comparatif principal (Tables 9 et 10, Fig. 18-19) n'est **pas dans le texte extrait**.
 
 → reportés dans `benchmarks.csv` : aucune ligne. C'est un survey : les travaux cités sont
-à ficher à la source, et ses tableaux comparatifs sont perdus à l'extraction.
+à ficher à la source. Ses tableaux comparatifs, reconstruits par OCR le 26/09/2026, ne
+sont pas relus ; les Tables 2 et 9 à 11 restent absentes.
 
 ## Limites et critique
 

@@ -13,9 +13,9 @@ construire, comment s'en servir. Suivi des tâches : [SETUP.md §9](../SETUP.md#
 | Passages, BM25, embeddings bge-small, fusion RRF, filtres | [lib/rag.py](../lib/rag.py) | [tests/test_rag.py](../tests/test_rag.py) (10, encodeur factice) | oui : 2 405 passages ; évaluation §10 |
 | `pdb search` : colonne `cos` (alerte `# pertinence faible` retirée le 26/09/2026) | `lib/rag.py`, `bin/pdb.py` | idem | oui : aucun seuil fiable, ni cosinus ni cross-encoder (EVAL.md §5) |
 | `pdb show` : texte exact, sha1, `--context` | idem | idem | oui |
-| `pdb verify` : OK / APPROX / ABSENT / MODIFIÉ, « trouvée dans » | idem | idem | oui : 5 cas manuels (§5.6), 7 citations de l'essai de `/paper-ask` (§12) |
+| `pdb verify` : OK / APPROX / NOMBRES / ABSENT / MODIFIÉ, « trouvée dans » | idem | idem | oui : 5 cas manuels (§5.6), 7 citations de l'essai de `/paper-ask` (§12), 158 citations générées par `pdb eval` (EVAL.md §6) |
 | Index incrémental, branché dans `reindex` | `lib/rag.build_index`, [bin/reindex.py](../bin/reindex.py) | idem (réencodage d'un seul passage modifié) | oui : 0,2 s sans changement, ~3 min pour une construction complète |
-| Évaluation `bin/pdb test --rag` | `lib/rag.evaluate`, `bin/pdb.py` | idem | oui : 20 questions EN et 8 FR (§10) |
+| Évaluation `bin/pdb eval --rag` (alias `test --rag`) | `lib/evaluation.py`, `bin/pdb.py` | `test_evaluation.py` | oui : 20 questions dev, 25 holdout, 8 FR, 20 hors corpus (§10, [EVAL.md](EVAL.md)) |
 | Skill `/paper-ask` | [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md) | — | oui : un essai réel (§12) |
 | `pdb cites` / `cited-by`, `--external` | `lib/refs.citations`, `lib/query.citation_lines`, `bin/pdb.py` | `test_refs.py`, `test_query.py` | oui : `cited-by 1612.07119` (4 papiers), `cites 2025-hozhabr --external` (2 dans la base, 286 hors base) |
 | Reranking par cross-encoder (`search --rerank`) | `lib/rag.py` (`_cross_scores`, `Index.search(rerank=True)`) | idem (cross-encoder factice) | oui : évaluation §10, +1,2 s par recherche ; activé dans `/paper-ask` |
@@ -150,8 +150,9 @@ la casse).
   ligne vaut pour tout le processus. Un index qui fera du reranking doit donc le déclarer
   (`Index(..., rerank=True)`), faute de quoi le cross-encoder ne pourrait pas être
   téléchargé au premier appel (bug rencontré et corrigé le 25/09/2026).
-- Temps d'une commande `search` / `show` / `verify` : environ 7 s, dont l'essentiel est
-  l'import de torch.
+- Temps d'une commande à froid (mesuré par `pdb eval --speed`, EVAL.md §5) : `search` 5,8 s,
+  dont l'essentiel est l'import de torch et le chargement du modèle ; `show` et `verify`
+  environ 0,3 s, sans modèle.
 
 ### 4.4 Module `lib/rag.py`
 
@@ -165,7 +166,10 @@ Index.search(q, k=8, mode="hybrid", paper_ids=None, axis=None, kind=None, sectio
 Index.get(chunk_id, context=0)                    # passage exact ± voisins du même papier
 Index.resolve_chunk(cid) / Index.short_chunk_id(chunk_id)
 verify(index, chunk_id, quote, expect_sha=None) -> (statut, ratio, chunk_id où trouvée)
+numbers_match(text, quote) -> bool               # contrôle des nombres de verify (§5.6)
+relevance_score(index, q) -> float               # meilleur score du cross-encoder (EVAL.md §6)
 evaluate(index, questions, k=5) -> {mode: {recall, mrr, paper, misses}}
+                                                 # remplacé par lib/evaluation.evaluate_set
 ```
 
 ---
@@ -364,7 +368,7 @@ Règles d'usage, reprises dans la skill `/paper-ask` (§8) :
    transmise telle quelle, avec les sources.
 4. **Budget explicite** : `bench --max-chars`, `search -k`.
 5. Pas de cache de réponses : les commandes sont locales. `bench` et `paper` répondent
-   instantanément, `search`, `show` et `verify` en ~7 s (import de torch).
+   instantanément, `show` et `verify` en ~0,3 s, `search` en ~6 s (import de torch).
 
 ---
 
@@ -416,10 +420,10 @@ Fichier [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md). Outil
    bin/pdb show <chunk_id renvoyé>
    bin/pdb verify <chunk_id> "<phrase copiée>"      # → OK
    bin/pdb test          # tests unitaires (encodeur factice)
-   bin/pdb test --rag    # évaluation sur le vrai modèle (§10)
+   bin/pdb eval --rag    # évaluation sur le vrai modèle (§10)
    ```
 4. **Changer de modèle** : `rag.DEFAULT_MODEL` (et `QUERY_PREFIX` si le modèle en demande
-   un), puis `bin/pdb reindex` et `bin/pdb test --rag` pour comparer. L'ancien cache reste
+   un), puis `bin/pdb reindex` et `bin/pdb eval --rag` pour comparer. L'ancien cache reste
    dans `.cache/rag/` ; il peut être supprimé.
 
 ---
@@ -461,7 +465,7 @@ BM25 en français monte (0,25 → 0,38).
 
 La colonne FR porte sur 8 des questions, traduites à la main en français
 ([tests/fixtures/rag_eval_fr.jsonl](../tests/fixtures/rag_eval_fr.jsonl), mêmes `expect`,
-question anglaise d'origine dans `en`). `bin/pdb test --rag` évalue les deux jeux.
+question anglaise d'origine dans `en`). `bin/pdb eval --rag` évalue les deux jeux.
 
 Lecture :
 - **En anglais, les modes se valent** : sur 20 questions, un écart de 0,05 est une seule
@@ -482,7 +486,7 @@ Lecture :
 - **Réserve** : ces 20 questions ont servi à décider ; aucun réglage n'a été fait dessus,
   mais un jeu plus grand et écrit par quelqu'un d'autre confirmerait le gain.
 
-Seuil d'acceptation proposé : recall@5 ≥ 0,8 en anglais. À relancer (`bin/pdb test --rag`)
+Seuil d'acceptation proposé : recall@5 ≥ 0,8 en anglais. À relancer (`bin/pdb eval --rag`)
 après tout changement de modèle, de découpage ou de fusion, et quand le corpus grossit.
 
 **Mise à jour du 26/09/2026** : ce jeu fait désormais partie du banc `bin/pdb eval`
@@ -506,18 +510,19 @@ accepte (APPROX) une citation dont un chiffre a été modifié (EVAL.md §5).
   une question en français doit être reformulée en anglais avant `search`, ce que fait la
   skill `/paper-ask`. Autre voie : un modèle multilingue
   (`paraphrase-multilingual-MiniLM-L12-v2`, `bge-m3`), puis `bin/pdb reindex` et
-  `bin/pdb test --rag` pour comparer.
+  `bin/pdb eval --rag` pour comparer.
 - **Reclassement** (*reranking*) : en place en option (§5.2, §10). Évolution possible : un
   cross-encoder multilingue (`BAAI/bge-reranker-base`, plus lourd) pour ne plus dégrader
-  le français. À évaluer avec `bin/pdb test --rag`.
+  le français. À évaluer avec `bin/pdb eval --rag`.
 - **Serveur MCP** : exposer `search`, `show`, `bench` et `verify` comme outils MCP, pour les
   utiliser hors de ce dossier ou depuis une autre application. Même `lib/rag.py`, autre interface.
 - **Généricité** : rien ici ne dépend du domaine FPGA. `bench` lit ses colonnes dans
   l'en-tête du CSV. Seuls ses raccourcis de filtre (`--platform`, `--quant`…) et le jeu
   d'évaluation sont propres au corpus.
-- **Coût de démarrage** : ~7 s par commande `search`/`show`/`verify`, dû à l'import de torch.
-  Si cela gêne, un processus résident (serveur MCP ci-dessus) le paierait une seule fois.
-  `show` et `verify` pourraient aussi se passer du modèle.
+- **Coût de démarrage** : ~6 s par commande `search` (0,1 s à chaud), dû à l'import de torch
+  et au chargement du modèle ; `show` et `verify` s'en passent déjà (~0,3 s). Si cela gêne,
+  un processus résident (serveur MCP ci-dessus) le paierait une seule fois. Le rerank
+  ajoute ~1,4 s à chaud (EVAL.md §5).
 
 ---
 

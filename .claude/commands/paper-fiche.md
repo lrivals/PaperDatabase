@@ -45,7 +45,9 @@ dire dans la fiche). Colonnes et vocabulaires : `DATA_MODEL.md` §7.
 - Toute cellule sans valeur rapportée vaut `n/r`. Colonnes numériques : un nombre sans unité.
 - `source_section` : tableau, figure ou section exacte. `confidence` : `high` (tableau),
   `medium` (texte), `low` (déduit — à éviter, et à signaler).
-- Tableau dont la légende porte « [corps du tableau reconstruit par PyMuPDF : à vérifier] » :
+- Tableau dont la légende porte « [corps du tableau reconstruit par PyMuPDF : à vérifier] »
+  ou « … par Docling : à vérifier » (Docling décale parfois les colonnes, perd des colonnes,
+  et produit des fragments illisibles en OCR, docs/EVAL.md §6) :
   ses chiffres peuvent être décalés d'une colonne. `confidence: medium` au plus, et
   recoupe avec le texte quand il redonne la valeur. Tableau listé « sans corps extrait »
   dans `extraction.warnings` : ses chiffres manquent, dis-le dans « Statut de lecture » et

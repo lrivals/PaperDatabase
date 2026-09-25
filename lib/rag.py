@@ -78,6 +78,8 @@ def _database(path):
 
 def build(root, mode="hybrid", download=False):
     root = Path(root).resolve()
+    if download and mode != "lexical":
+        rag_models.download_models()
     fp = fingerprint(root)
     final = index_path(root)
     final.parent.mkdir(parents=True, exist_ok=True)

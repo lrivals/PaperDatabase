@@ -9,6 +9,13 @@ RERANK_REV = "22e683669bc0f0bd69640a1354a6d0aebcfeede5"
 TASK = "Given a web search query, retrieve relevant passages that answer the query"
 
 
+def download_models():
+    """Populate the local cache for both models used by default hybrid search."""
+    from huggingface_hub import snapshot_download
+    snapshot_download(EMBED, revision=EMBED_REV)
+    snapshot_download(RERANK, revision=RERANK_REV)
+
+
 def tokenizer(download=False):
     from transformers import AutoTokenizer
     return AutoTokenizer.from_pretrained(EMBED, revision=EMBED_REV,

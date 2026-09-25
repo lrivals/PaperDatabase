@@ -91,9 +91,11 @@ def collect(root, check_services=True):
             for p in papers
             if p.get("broken") or not (p.get("extraction") or {}).get("ok", True)),
         "tables": sorted(
-            (p["id"], _count_tables(p, schema.WARN_TABLES_LOST), _count_tables(p, schema.WARN_TABLES_RECOVERED))
+            (p["id"], _count_tables(p, schema.WARN_TABLES_LOST),
+             _count_tables(p, schema.WARN_TABLES_RECOVERED) + _count_tables(p, schema.WARN_TABLES_DOCLING))
             for p in papers
-            if _count_tables(p, schema.WARN_TABLES_LOST) or _count_tables(p, schema.WARN_TABLES_RECOVERED)),
+            if _count_tables(p, schema.WARN_TABLES_LOST) or _count_tables(p, schema.WARN_TABLES_RECOVERED)
+            or _count_tables(p, schema.WARN_TABLES_DOCLING)),
         "n_bench": n_bench,
         "n_gaps": n_gaps,
         "n_gaps_backed": n_backed,

@@ -339,10 +339,11 @@ CNNs are by nature overparameterized and support particularly well approximate c
      |  |  |  |  | Fixed 16 OpenCL |  | 370 | 866 | 41.7 | 437 1320 | 25.0
      | [61] VGG16-F | 31.1 | 138.0 | Float 32 | OpenCL | Arria10 GX1150 | 385 | 1790 | 37.5 |  | 2756 | 29.0
 
-**Table 4:** Loop Optimization Parameters P i and T i
+**Table 4:** Loop Optimization Parameters P i and T i [corps du tableau reconstruit par Docling : à vérifier]
 
-    Parallelism | Intra-layer Inter-FM Intra-FM Inter-Convolution Intra-Convolution
-    Loop | L L
+    Parallelism.Loop | Intra-layer.LL | Inter-FM.LN | Intra-FM.LV | Intra-FM.LU | Inter-Convolution.LC | Intra-Convolution.LJ | Intra-Convolution.LK
+    Unroll factor | PL | PN | PV | PU | PC | PJ | PK
+    Tiling Factor | TL | TN | TU | TU | TC | TJ | TK
 
 **Table 5:** FPGA-based CNN accelerators implementing loop optimization
 

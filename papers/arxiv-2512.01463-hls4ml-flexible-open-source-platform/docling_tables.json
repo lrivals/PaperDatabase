@@ -1,0 +1,906 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 7,
+   "bbox": [
+    91.4,
+    126.7,
+    481.0,
+    235.4
+   ],
+   "caption": "Table 1. Support for different NN layers or types in the hls4ml front ends. Support is indicated by ✓, while not supported layers are marked ✓. Layers not supported in the respective NN frameworks are marked -.",
+   "rows": [
+    [
+     "Layer",
+     "Front end.Keras2",
+     "Front end.QKeras",
+     "Front end.HGQ",
+     "Front end.Keras3",
+     "Front end.HGQ2",
+     "Front end.PyTorch",
+     "Front end.ONNX",
+     "Front end.QONNX"
+    ],
+    [
+     "Linear/Dense",
+     "✓",
+     "",
+     "",
+     "✓✓✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "1D/2DConvolution",
+     "✓",
+     "",
+     "✓✓✓",
+     "",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "LSTM/GRU",
+     "✓",
+     "✓",
+     "-",
+     "✓",
+     "-",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "Einsum",
+     "✓",
+     "-",
+     "-",
+     "",
+     "✓✓",
+     "✓",
+     "✓",
+     "-"
+    ],
+    [
+     "MultiheadAttention",
+     "✓",
+     "-",
+     "-",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "-"
+    ],
+    [
+     "BatchNormalization",
+     "✓",
+     "",
+     "✓✓✓",
+     "",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "LayerNormalization",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "GNN",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    159.9,
+    271.3,
+    412.9,
+    379.5
+   ],
+   "caption": "Table 2. Support for different layers in the hls4ml back ends. Support is indicated by ✓, while not supported layers are marked ✓.",
+   "rows": [
+    [
+     "Layer",
+     "Back end.Vitis/Vivado",
+     "Back end.Quartus/oneAPI",
+     "Back end.Catapult"
+    ],
+    [
+     "Linear/Dense",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "1D/2D Convolution",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "LSTM/GRU",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "Einsum",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "MultiheadAttention",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "BatchNormalization",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "LayerNormalization",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "GNN",
+     "✓",
+     "✓",
+     "✓"
+    ]
+   ]
+  },
+  {
+   "page": 19,
+   "bbox": [
+    104.1,
+    404.5,
+    471.1,
+    506.2
+   ],
+   "caption": "Table 3. Accuracy, resource consumption, latency, and initiation intervals (IIs) of the jet tagging models. Resources are reported after out of context place-and-route with an AMD XCVU9P FPGA. The clock period used is 5 ns for all designs shown, except for the design marked with *, which used 7 ns. All designs use no BRAM. The results for QKeras trained models are cited from [31] and for HGQ cited from [113].",
+   "rows": [
+    [
+     "Trainer",
+     "Strategy",
+     "Accuracy",
+     "Latency(cc)",
+     "DSP",
+     "LUT",
+     "FF",
+     "II"
+    ],
+    [
+     "QKeras[98] ∗",
+     "Latency",
+     "76.3%",
+     "15[105ns]",
+     "5,504",
+     "175",
+     "3,036",
+     "2"
+    ],
+    [
+     "QKeras[93]",
+     "Latency",
+     "76.1%",
+     "10[50ns]",
+     "13,042",
+     "70",
+     "N/A",
+     "1"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "76.9%",
+     "5(23.6ns)",
+     "55[0.8%]",
+     "13,303[1.1%]",
+     "2,374[0.1%]",
+     "1"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "76.5%",
+     "5(23.1ns)",
+     "30[0.4%]",
+     "6,715[0.6%]",
+     "1,348[0.1%]",
+     "1"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "75.9%",
+     "3(12.7ns)",
+     "15[0.2%]",
+     "3,044[0.3%]",
+     "641[0.0%]",
+     "1"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "76.9%",
+     "5(23.4ns)",
+     "0",
+     "11,978[1.0%]",
+     "2,117[0.1%]",
+     "1"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "76.5%",
+     "4(18.0ns)",
+     "0",
+     "6,067[0.5%]",
+     "1,178[0.0%]",
+     "1"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "75.9%",
+     "3(12.1ns)",
+     "0",
+     "2,891[0.2%]",
+     "651[0.0%]",
+     "1"
+    ]
+   ]
+  },
+  {
+   "page": 19,
+   "bbox": [
+    98.2,
+    573.5,
+    476.4,
+    652.8
+   ],
+   "caption": "Table 4. Accuracy, resource consumption, latency, and Fmax of the jet tagging models trained in HGQ [20] when targeting 1GHz clock. Resource reported are after out of context place-and-route with an AMD XCVU9P FPGA (part number: xcvu9p-flga2104-2L-e). All designs use no BRAM and have an II of one cycle.",
+   "rows": [
+    [
+     "Trainer",
+     "Strategy",
+     "Fmax",
+     "Accuracy",
+     "Latency(cc)",
+     "DSP",
+     "LUT",
+     "FF"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "739MHz",
+     "76.9%",
+     "37(50.1ns)",
+     "57[0.8%]",
+     "14,624[1.2%]",
+     "21,365[0.9%]"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "705MHz",
+     "76.5%",
+     "31(44.0ns)",
+     "30[0.4%]",
+     "7,656[0.6%]",
+     "11,513[0.5%]"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "694MHz",
+     "75.9%",
+     "30(43.2ns)",
+     "17[0.2%]",
+     "3,765[0.3%]",
+     "5,845[0.2%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "713 MHz",
+     "76.9%",
+     "28(39.3ns)",
+     "0",
+     "12,465[1.1%]",
+     "18,004[0.8%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "719 MHz",
+     "76.5%",
+     "23(32.0ns)",
+     "0",
+     "6,297[0.5%]",
+     "9,524[0.4%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "756 MHz",
+     "75.9%",
+     "21(27.8ns)",
+     "0",
+     "2,886[0.2%]",
+     "4,667[0.2%]"
+    ]
+   ]
+  },
+  {
+   "page": 20,
+   "bbox": [
+    128.3,
+    135.7,
+    520.1,
+    215.8
+   ],
+   "caption": "Table 5. Accuracy, resource consumption, latency, and Fmax of the jet tagging models trained in HGQ [20]. Resource reported are after out of context place-and-route with an AMD XC7A35T FPGA (part number: xc7a35tlcsg325-2L). All designs use no BRAM and have an II of one cycle.",
+   "rows": [
+    [
+     "Trainer",
+     "Strategy",
+     "Fmax",
+     "Accuracy",
+     "Latency(cc)",
+     "DSP",
+     "LUT",
+     "FF"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "-",
+     "76.9%",
+     "Place failed",
+     "Place failed",
+     "Place failed",
+     "Place failed"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "187MHz",
+     "76.5%",
+     "53(284.0ns)",
+     "30[33.3%]",
+     "11,091[53.3%]",
+     "24,649[59.3%]"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "182MHz",
+     "76.0%",
+     "45(246.7ns)",
+     "17[18.9%]",
+     "5,565[26.8%]",
+     "11,330[27.2%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "172 MHz",
+     "76.9%",
+     "58(337.4ns)",
+     "0",
+     "19,467[93.6%]",
+     "36,995[88.9%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "185 MHz",
+     "76.5%",
+     "50(270.1ns)",
+     "0",
+     "10,692[51.4%]",
+     "20,407[49.1%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "176 MHz",
+     "75.9%",
+     "46(261.1ns)",
+     "0",
+     "5,455[26.2%]",
+     "9,952[23.9%]"
+    ]
+   ]
+  },
+  {
+   "page": 20,
+   "bbox": [
+    132.5,
+    414.6,
+    516.5,
+    460.6
+   ],
+   "caption": "Table 6. Resource consumption, latency, and Fmax of the jet tagging QKeras models using oneAPI. All designs have an accuracy of 76.9%. Resources reported are after out of context place-and-route, as reported by Quartus, with an Altera Agilex7 FPGA (part number: AGFB014R24A2E2V). The latency is measured first input to first output, reported both in clock cycles and in nanoseconds if running at Fmax. The optimization target is an option given to the icpx compiler, unrelated to the hls4ml strategy. The default option, obtained by not explicitly specifying an optimization target, optimizes for maximum frequency, and turns on hyper-optimized handshaking. All designs shown have negligible MLAB, RAM, and DSP usage (less than 0.01%) and an II of one.",
+   "rows": [
+    [
+     "Opt.Target",
+     "TargetFmax",
+     "Fmax",
+     "Latency(cc)",
+     "ALM",
+     "ALUT",
+     "FF"
+    ],
+    [
+     "Latency",
+     "200 MHz",
+     "341MHz",
+     "21[62ns]",
+     "11,434[2.3%]",
+     "21,471[2.2%]",
+     "8,864[0.45%]"
+    ],
+    [
+     "Latency",
+     "480 MHz",
+     "614MHz",
+     "50[81ns]",
+     "12,085[2.5%]",
+     "22,551[2.3%]",
+     "31,243[1.6%]"
+    ],
+    [
+     "Default",
+     "480 MHz",
+     "782MHz",
+     "90[115ns]",
+     "13,576[2.8%]",
+     "24,319[2.5%]",
+     "40,051[2.1%]"
+    ]
+   ]
+  },
+  {
+   "page": 21,
+   "bbox": [
+    82.9,
+    136.0,
+    492.2,
+    238.1
+   ],
+   "caption": "Table 7. Accuracy, resource usage, and latency of the SVHN classifier models. Reported resource usage after out of context place-androute with an AMD XCVU9P FPGA. The clock period used is 5 ns. The results for QKeras trained models are cited from [2], and the HGQ trained models are cited from [20].",
+   "rows": [
+    [
+     "Trainer",
+     "",
+     "StrategyAccuracy",
+     "Latency(cc)",
+     "DSP",
+     "LUT (k)",
+     "FF (k)",
+     "BRAM",
+     "II(cc)"
+    ],
+    [
+     "QKeras",
+     "Latency",
+     "94.%",
+     "1,035[5.2𝜇s]",
+     "174[2.54%]",
+     "111[9.4%]",
+     "33[1.4%]",
+     "67.0[3.1%]",
+     "1,030"
+    ],
+    [
+     "QKeras",
+     "Latency",
+     "88.%",
+     "1,059[5.3𝜇s]",
+     "72[1.05%]",
+     "48[4.1%]",
+     "15[0.63%]",
+     "32.5[1.5%]",
+     "1,029"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "93.9%",
+     "1,050[5.3𝜇s]",
+     "58[0.85%]",
+     "69[5.8%]",
+     "28[1.2%]",
+     "32.0[1.5%]",
+     "1,029"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "93.1%",
+     "1,061[5.3𝜇s]",
+     "30[0.44%]",
+     "47[4.0%]",
+     "21[0.89%]",
+     "28.0[1.3%]",
+     "1,029"
+    ],
+    [
+     "HGQ",
+     "Latency",
+     "91.9%",
+     "1,058[5.3𝜇s]",
+     "15[0.22%]",
+     "40[3.4%]",
+     "18[0.76%]",
+     "23.5[1.1%]",
+     "1,029"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "93.9%",
+     "1,045[5.2𝜇s]",
+     "0",
+     "53[4.5%]",
+     "20[0.85%]",
+     "32.0[1.5%]",
+     "1,029"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "93.1%",
+     "1,045[5.2𝜇s]",
+     "0",
+     "37[3.1%]",
+     "15[0.63%]",
+     "28.0[1.3%]",
+     "1,029"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "91.9%",
+     "1,045[5.2𝜇s]",
+     "0",
+     "31[2.6%]",
+     "14[0.59%]",
+     "23.5[1.1%]",
+     "1,029"
+    ]
+   ]
+  },
+  {
+   "page": 21,
+   "bbox": [
+    151.6,
+    489.5,
+    423.6,
+    536.1
+   ],
+   "caption": "Table 8. Accuracy, resource usage, and latency of the particle-based classifier models in HGQ. Reported resource usage after out of context place-and-route with an AMD XCVU13P FPGA. The clock period used is 5 ns. All HGQ trained models are using the MLP-Mixer architecture from [112]. Models without DA failed to meet timing and II constraints. All designs use no DSPs or BRAM and have an II of one cycle.",
+   "rows": [
+    [
+     "Trainer",
+     "Strategy",
+     "Accuracy",
+     "Latency(cc)",
+     "LUT(k)",
+     "FF (k)"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "81.4%",
+     "13[65ns]",
+     "126[7.3%]",
+     "26[0.76%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "81.0%",
+     "13[65ns]",
+     "68[3.9%]",
+     "13[0.38%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "80.3%",
+     "12[60ns]",
+     "51[3.0%]",
+     "11[0.33%]"
+    ]
+   ]
+  },
+  {
+   "page": 22,
+   "bbox": [
+    179.2,
+    135.6,
+    469.5,
+    182.1
+   ],
+   "caption": "Table 9. Accuracy, resource usage, latency, and initiation intervals of the MNIST classifier models in HGQ [20]. Reported resource usage after out of context place-and-route with an AMD XCVU13P FPGA. The clock period used is 5 ns. All HGQ trained models are using a single layer MLP. Models without DA failed to synthesize. All designs use no DSPs or BRAM and have an II of one cycle.",
+   "rows": [
+    [
+     "Trainer",
+     "Strategy",
+     "Accuracy",
+     "Latency(cc)",
+     "LUT",
+     "FF"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "97.7%",
+     "2[10ns]",
+     "9671[0.56%]",
+     "2,039[0.06%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "97.3%",
+     "2[10ns]",
+     "6890[0.40%]",
+     "1,672[0.05%]"
+    ],
+    [
+     "HGQ",
+     "DA",
+     "97.0%",
+     "2[10ns]",
+     "5040[0.29%]",
+     "1,349[0.04%]"
+    ]
+   ]
+  },
+  {
+   "page": 25,
+   "bbox": [
+    74.3,
+    117.0,
+    500.7,
+    286.5
+   ],
+   "caption": "Table 10. Comparison of different tools for the translation of ML models to FPGA designs.",
+   "rows": [
+    [
+     "Framework",
+     "Multiple ML frameworks",
+     "Multiple hardware vendors",
+     "Arbitrary Quantization",
+     "CNN",
+     "RNN",
+     "Transformers",
+     "Open-source",
+     "Maintained"
+    ],
+    [
+     "Vitis AI [9]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "Intel FPGA AI Suite [67]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "EdgeCortex MERA [43]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "FP-DNN [54]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "N/A"
+    ],
+    [
+     "DeepBurning [132]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "DeepHLS [99]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "PipeCNN [130]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "DnnWeaver [103]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "NNGen [114]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "fpgaConvNet [125]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "+□o"
+    ],
+    [
+     "HPIPE/H2PIPE [56, 110]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "N/A"
+    ],
+    [
+     "MASE [23, 136]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "cgra4ml [4]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "chisel4ml [128]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "tinyHLS [62]",
+     "✓",
+     "✓",
+     "+□o",
+     "+□o",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "FINN [15, 122]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "hls4ml [41]",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "+□o",
+     "✓",
+     "✓"
+    ]
+   ]
+  }
+ ]
+}

@@ -86,6 +86,7 @@
     "ok": true,
     "warnings": [
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE I, TABLE IV",
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE IV",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
     ]
   },

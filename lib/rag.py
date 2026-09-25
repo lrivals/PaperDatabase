@@ -30,9 +30,8 @@ RRF_K = 60
 BM25_K1, BM25_B = 1.5, 0.75
 SNIPPET = 160
 VERIFY_MIN = 0.85
-# Sous ce cosinus (bge-small), le meilleur passage est probablement hors sujet. Calibré à la
-# main sur quelques requêtes (hors sujet 0,45-0,55, pertinentes 0,73-0,90) : indicatif.
-LOW_COS = 0.60
+# Pas de seuil de « pertinence faible » : ni le cosinus ni le cross-encoder ne séparent les
+# questions hors corpus des questions du corpus (docs/EVAL.md §5, 26/09/2026).
 MODES = ("hybrid", "dense", "lexical")
 RERANK_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 RERANK_TOP = 30
@@ -288,6 +287,15 @@ class Index:
                 if self.chunks[j]["paper_id"] == pid]
 
 
+def relevance_score(index, q, hits=None, top=3):
+    """Meilleur score du cross-encoder entre la question et les `top` premiers passages
+    (recherche hybride si hits n'est pas fourni) : signal de pertinence, docs/EVAL.md §5."""
+    hits = hits if hits is not None else index.search(q, k=top)
+    if not hits:
+        return float("-inf")
+    return max(_cross_scores(q, [encoded_text(h) for h in hits[:top]]))
+
+
 # ------------------------------------------------------------------ extraits
 
 def snippet(text, q, idf=None, width=SNIPPET):
@@ -342,22 +350,84 @@ def match_ratio(text, quote):
     return best
 
 
+_NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
+_THOUSANDS = re.compile(r"(?<![\d.,])(\d{1,3})((?:[    ]\d{3})+)(?![\d.,])")
+_ELISION = re.compile(r"…|\.\.\.|\[\.\.\.\]")
+
+
+def number_tokens(text):
+    """Nombres d'un texte, dans l'ordre : « 143,927 » et « 143 927 » → « 143927 »."""
+    for a, b in _LIGATURES.items():
+        text = text.replace(a, b)
+    text = unicodedata.normalize("NFKC", text)
+    text = re.sub(r"(\d)-\s+(\d)", r"\1\2", text)  # césure au milieu d'un nombre
+    text = _THOUSANDS.sub(lambda m: m.group(1) + re.sub(r"\D", "", m.group(2)), text)
+    out = []
+    for tok in _NUMBER.findall(text):
+        if re.fullmatch(r"\d{1,3}(,\d{3})+(\.\d+)?", tok):
+            tok = tok.replace(",", "")
+        out.append(tok)
+    return out
+
+
+def numbers_match(text, quote):
+    """Les nombres de la citation sont-ils ceux du passage, dans le même ordre ?
+
+    La citation est découpée sur les ellipses (« … ») ; les nombres de chaque morceau doivent
+    former une suite contiguë des nombres du passage. Un morceau peut commencer ou finir au
+    milieu d'un nombre (« 5 W » tiré de « 3.5 W ») : suffixe et préfixe tolérés aux bords."""
+    ref = number_tokens(text)
+    for part in _ELISION.split(quote):
+        toks = number_tokens(part)
+        if not toks:
+            continue
+        n = len(toks)
+        # un nombre n'est peut-être coupé que s'il touche le bord du morceau
+        cut_start = part.strip()[:1].isdigit()
+        cut_end = part.strip().rstrip(".,;:)»\"'")[-1:].isdigit()
+
+        def same(tok, full, first, last):
+            return (tok == full or (first and cut_start and full.endswith(tok))
+                    or (last and cut_end and full.startswith(tok)))
+
+        def fits(i):
+            window = ref[i:i + n]
+            return len(window) == n and all(same(t, w, j == 0, j == n - 1)
+                                            for j, (t, w) in enumerate(zip(toks, window)))
+
+        if not any(fits(i) for i in range(len(ref))):
+            return False
+        # chaque nombre avec ses mots voisins : « Section 2 reviews » ne vaut pas « Section 3
+        # reviews », même si le passage contient un 3 ailleurs
+        words = part.split()
+        norm = normalize(text)
+        for i, w in enumerate(words):
+            if any(ch.isdigit() for ch in w) and normalize(" ".join(words[max(0, i - 1):i + 2])) not in norm:
+                return False
+    return True
+
+
 def verify(index, chunk_id, quote, expect_sha=None):
-    """Statut d'une citation : OK, APPROX, ABSENT ; MODIFIÉ si le sha1 attendu ne correspond pas.
+    """Statut d'une citation : OK, APPROX, ABSENT ; NOMBRES si le texte ressemble mais que ses
+    nombres diffèrent de ceux du passage ; MODIFIÉ si le sha1 attendu ne correspond pas.
 
     Renvoie (statut, ratio, chunk_id où la citation est trouvée). Une citation absente du
-    passage indiqué est cherchée dans le reste du papier : le chunk_id renvoyé le dit.
+    passage indiqué (ou dont les nombres n'y correspondent pas) est cherchée dans le reste du
+    papier : le chunk_id renvoyé le dit.
     """
     c = index.chunks[index.by_id[chunk_id]]
     if expect_sha and not c["sha1"].startswith(expect_sha):
         return "MODIFIÉ", 0.0, chunk_id
     r = match_ratio(c["text"], quote)
-    if r < VERIFY_MIN:
+    same_numbers = numbers_match(c["text"], quote)
+    if r < VERIFY_MIN or not same_numbers:
         for other in index.chunks:
             if other["paper_id"] == c["paper_id"] and other["chunk_id"] != chunk_id:
                 r2 = match_ratio(other["text"], quote)
-                if r2 >= VERIFY_MIN and r2 > r:
+                if r2 >= VERIFY_MIN and (r2 > r or not same_numbers) and numbers_match(other["text"], quote):
                     return ("OK" if r2 == 1.0 else "APPROX"), r2, other["chunk_id"]
+    if r >= VERIFY_MIN and not same_numbers:
+        return "NOMBRES", r, chunk_id
     status = "OK" if r == 1.0 else "APPROX" if r >= VERIFY_MIN else "ABSENT"
     return status, r, chunk_id
 

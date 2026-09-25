@@ -1,0 +1,3 @@
+# Optionnel : second repli pour les tableaux sans corps (lib/docling_tables.py),
+# bin/pdb ingest --reparse --tables docling [--ocr]. Lourd (torch, modèles ~500 Mo).
+docling>=2.130

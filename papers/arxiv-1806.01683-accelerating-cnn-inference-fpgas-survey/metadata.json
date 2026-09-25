@@ -45,7 +45,7 @@
     "ok": true,
     "warnings": [
       "ligatures perdues à l'extraction : 162 mot(s) réparé(s) (lib/ligatures.py)",
-      "tableaux sans corps extrait (légende seule) : Table 4",
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 4",
       "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
     ]
   },

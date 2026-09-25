@@ -11,7 +11,7 @@ construire, comment s'en servir. Suivi des tâches : [SETUP.md §9](../SETUP.md#
 | `pdb paper` : fiche d'identité, candidats si ambigu, `--bench`, plusieurs ids (une ligne chacun) | idem | idem | oui : `finn` (ambigu), `1612.07119 --bench`, `2022-feng --fields`, `1612.07119 2022-feng 2502.15737 finn` |
 | Identifiants courts (arXiv, sinon année-auteur, noms composés compris) | `lib/query.short_ids` | idem | oui : 28 papiers, aucune collision ; `2025-el-zeinaty` corrigé après l'essai (§12) |
 | Passages, BM25, embeddings bge-small, fusion RRF, filtres | [lib/rag.py](../lib/rag.py) | [tests/test_rag.py](../tests/test_rag.py) (10, encodeur factice) | oui : 2 405 passages ; évaluation §10 |
-| `pdb search` : colonne `cos`, `# pertinence faible` | `lib/rag.py`, `bin/pdb.py` | idem | oui : requêtes hors sujet (cos 0,45-0,55) et pertinentes (0,73-0,90) |
+| `pdb search` : colonne `cos` (alerte `# pertinence faible` retirée le 26/09/2026) | `lib/rag.py`, `bin/pdb.py` | idem | oui : aucun seuil fiable, ni cosinus ni cross-encoder (EVAL.md §5) |
 | `pdb show` : texte exact, sha1, `--context` | idem | idem | oui |
 | `pdb verify` : OK / APPROX / ABSENT / MODIFIÉ, « trouvée dans » | idem | idem | oui : 5 cas manuels (§5.6), 7 citations de l'essai de `/paper-ask` (§12) |
 | Index incrémental, branché dans `reindex` | `lib/rag.build_index`, [bin/reindex.py](../bin/reindex.py) | idem (réencodage d'un seul passage modifié) | oui : 0,2 s sans changement, ~3 min pour une construction complète |
@@ -116,10 +116,13 @@ classements. Cette méthode ne dépend pas de l'échelle des scores, ne demande 
 et elle est déterministe. En cas d'égalité, le `chunk_id` le plus petit passe en premier.
 
 Le score RRF ne dit rien de la pertinence absolue : `search` renvoie toujours k passages.
-La sortie affiche donc aussi le **cosinus** entre la requête et chaque passage. Si le
-meilleur cosinus est sous `rag.LOW_COS` (0,60), un avertissement `# pertinence faible` est
-affiché. Ce seuil a été calibré à la main sur quelques requêtes : hors sujet 0,45 à 0,55,
-pertinentes 0,73 à 0,90. Il est indicatif.
+La sortie affiche aussi le **cosinus** entre la requête et chaque passage, mais il ne dit
+pas si la base traite le sujet. L'avertissement `# pertinence faible` (cosinus < 0,60), qui
+avait été calibré à la main sur quelques requêtes, a été retiré le 26/09/2026. Sur 10
+questions hors corpus, il ne s'était jamais déclenché : leurs cosinus vont de 0,66 à 0,83.
+Le score du cross-encoder ne fait pas mieux : au seuil qui sépare la calibration, il
+signale 90 % des questions hors corpus, mais aussi 40 % des questions du corpus
+(EVAL.md §5). C'est donc à la lecture des extraits de juger si la base répond.
 
 Choix du modèle et du mode par défaut : voir l'évaluation (§10). `all-MiniLM-L6-v2`, que
 la vue 3D utilise, s'y montre nettement plus faible.
@@ -311,8 +314,23 @@ bin/pdb verify <chunk_id> "<citation textuelle>" [--sha1 X]
 - Sortie sur une ligne `statut<TAB>ratio<TAB>chunk_id` :
   - `OK` : présente telle quelle (après normalisation) ;
   - `APPROX` : ressemblance ≥ 0,85 (`rag.VERIFY_MIN`) ;
+  - `NOMBRES` : ressemblance ≥ 0,85, mais les nombres de la citation ne sont pas ceux du
+    passage (depuis le 26/09/2026, voir ci-dessous) ;
   - `ABSENT` : ressemblance < 0,85 ;
   - `MODIFIÉ` : le passage a changé depuis que `--sha1` a été relevé avec `pdb show`.
+- Code de sortie 0 pour `OK` et `APPROX` seulement.
+- **Contrôle des nombres** (`rag.numbers_match`). Un chiffre changé dans une phrase longue
+  laisse la ressemblance au-dessus de 0,85 : avant ce contrôle, `verify` répondait `APPROX`
+  à 38 citations sur 38 dont un chiffre avait été modifié (EVAL.md §5). Désormais :
+  - les nombres de la citation (« 143,927 » = « 143 927 ») doivent former une suite contiguë
+    des nombres du passage, morceau par morceau si la citation est élidée par « … » ;
+  - chaque nombre doit y figurer avec ses mots voisins : « Section 3 reviews » est refusé
+    même si le passage contient un 3 ailleurs ;
+  - un nombre n'est tronqué (« 5 W » tiré de « 3.5 W ») qu'au bord de la citation.
+
+  Si un autre passage du papier a les bons nombres, il est proposé (« trouvée dans »). La
+  normalisation retirant la ponctuation, c'est aussi ce contrôle qui distingue « 94.9 % » de
+  « 949 % ». Un mot remplacé juste à côté d'un nombre donne aussi `NOMBRES`.
 - Une citation absente du passage indiqué, mais présente ailleurs dans le papier, est
   signalée avec `trouvée dans <chunk_id>`, et le code de sortie vaut 1 : la source citée
   était fausse.
@@ -376,7 +394,7 @@ Fichier [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md). Outil
 
 1. Question chiffrée : `pdb bench` d'abord (N0).
 2. Sinon, ou en complément : `pdb search --rerank` avec une ou deux formulations **en anglais**, `-k 8` ;
-   `# pertinence faible` → le dire, ne pas combler.
+   si aucun extrait ne répond → le dire, ne pas combler.
 3. `pdb show` sur les 2 ou 3 passages les plus prometteurs seulement ; jamais `fulltext.md`.
 4. Réponse avec citations `[chunk_id]` ; `pdb verify` sur chaque citation textuelle ; toute
    citation `ABSENT` est retirée, et un `chunk_id` faux est corrigé.
@@ -466,6 +484,13 @@ Lecture :
 
 Seuil d'acceptation proposé : recall@5 ≥ 0,8 en anglais. À relancer (`bin/pdb test --rag`)
 après tout changement de modèle, de découpage ou de fusion, et quand le corpus grossit.
+
+**Mise à jour du 26/09/2026** : ce jeu fait désormais partie du banc `bin/pdb eval`
+([EVAL.md](EVAL.md)), qui ajoute un jeu holdout de 25 questions jamais utilisé pour régler.
+Sur ce holdout, le rappel est plus bas (hybride 0,84 ; rerank 0,80, mais MRR 0,65 → 0,78) :
+le gain de rappel du rerank observé ici ne se généralise pas, son gain de classement si. Le
+banc montre aussi que l'alerte « pertinence faible » ne se déclenche jamais et que `verify`
+accepte (APPROX) une citation dont un chiffre a été modifié (EVAL.md §5).
 
 ---
 

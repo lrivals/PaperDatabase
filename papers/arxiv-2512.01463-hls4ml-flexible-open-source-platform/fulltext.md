@@ -287,12 +287,29 @@ A variation of the transformer architecture optimized for computational efficien
 
 1 Read 1 Fig. 4. Fig.4. Schematics of the computation of an MLP model implemented using parallel data transfer (left) and a CNN model implemented using streaming data transfer (right). In the Resource strategy, the number of parallel MAC operations executed in each cycle is determined by the RF and PF. In the case of the MLP, 𝑀 •𝑁 RF multiplications are executed in parallel each clock cycle.
 
-**Table 1.** Support for different NN layers or types in the hls4ml front ends. Support is indicated by ✓, while not supported layers are marked ✓. Layers not supported in the respective NN frameworks are marked -.
+**Table 1.** Support for different NN layers or types in the hls4ml front ends. Support is indicated by ✓, while not supported layers are marked ✓. Layers not supported in the respective NN frameworks are marked -. [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 2.** Support for different layers in the hls4ml back ends. Support is indicated by ✓, while not supported layers are marked ✓.
+    Layer | Front end.Keras2 | Front end.QKeras | Front end.HGQ | Front end.Keras3 | Front end.HGQ2 | Front end.PyTorch | Front end.ONNX | Front end.QONNX
+    Linear/Dense | ✓ |  |  | ✓✓✓ | ✓ | ✓ | ✓ | ✓
+    1D/2DConvolution | ✓ |  | ✓✓✓ |  | ✓ | ✓ | ✓ | ✓
+    LSTM/GRU | ✓ | ✓ | - | ✓ | - | ✓ | ✓ | ✓
+    Einsum | ✓ | - | - |  | ✓✓ | ✓ | ✓ | -
+    MultiheadAttention | ✓ | - | - | ✓ | ✓ | ✓ | ✓ | -
+    BatchNormalization | ✓ |  | ✓✓✓ |  | ✓ | ✓ | ✓ | ✓
+    LayerNormalization | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓
+    GNN | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓
 
-    Layer | Back end Vitis/Vivado Quartus/oneAPI Catapult
-    Linear/Dense | ✓
+**Table 2.** Support for different layers in the hls4ml back ends. Support is indicated by ✓, while not supported layers are marked ✓. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Layer | Back end.Vitis/Vivado | Back end.Quartus/oneAPI | Back end.Catapult
+    Linear/Dense | ✓ | ✓ | ✓
+    1D/2D Convolution | ✓ | ✓ | ✓
+    LSTM/GRU | ✓ | ✓ | ✓
+    Einsum | ✓ | ✓ | ✓
+    MultiheadAttention | ✓ | ✓ | ✓
+    BatchNormalization | ✓ | ✓ | ✓
+    LayerNormalization | ✓ | ✓ | ✓
+    GNN | ✓ | ✓ | ✓
 
 [figure sans légende identifiée] 6.2 IP Core back endsCurrently, hls4ml provides five back ends supporting HLS compilers from AMD/Xilinx, Intel/Altera, and Siemens EDA. There are two back ends for AMD/Xilinx FPGAs: the Vivado back end, targeting the discontinued Vivado HLS, and the Vitis back end, targeting Vitis HLS 2022.2 or newer. These two back ends are best supported with the most complete feature set. They support the most layer types, including fully connected (dense), convolutional, recurrent, many activations, and Einstein summation layers. Both io_parallel and io_stream are supported. All strategies for the CMVM operation are supported, including Latency, Resource, and Distributed Arithmetic. Due to their popularity, many optimized layers exist for special configurations, such as pointwise, depthwise, and separable convolutions.Similarly, there are two related back ends for Intel/Altera FPGAs: the Quartus back end, targeting the discontinued Intel HLS, and the oneAPI back end, targeting oneAPI 2025.05 . Both io_parallel and io_stream are supported in these back ends. In the streaming implementations, the oneAPI back end follows the data flow architecture more closely than the Quartus back end, where individual layers run independently as separate tasks, with handshaking and data transfers between tasks done through the streams implemented as pipes. Unlike Vivado/Vitis back ends, the Quartus and oneAPI back ends do not provide distinct strategy implementations for the CMVM operations and generally use a resource-optimized approach.hls4ml also provides a back end for Catapult HLS, developed in collaboration with Siemens EDA and guided by evolving industry requirements for edge ML applications. Catapult HLS is widely used for the development of ASICs,
 

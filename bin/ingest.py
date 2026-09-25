@@ -2,11 +2,12 @@
 """Ingestion des PDF de inbox/ : extraction, nettoyage, écriture de papers/<paper_id>/.
 
 usage : ingest.py [--force] [chemin.pdf ...]
-        ingest.py --reparse [paper_id ...]
+        ingest.py --reparse [--tables docling [--ocr]] [paper_id ...]
 Sans chemin, traite tous les PDF de inbox/. --reparse ré-extrait les papiers déjà ingérés
 (tous, ou ceux dont le paper_id contient un des motifs) depuis leur grobid.tei.xml, sans
 GROBID (repli PyMuPDF sur paper.pdf pour ceux qui n'en ont pas) ; fiche.md n'est jamais
-écrasée. Voir SETUP.md §5.
+écrasée. --tables docling relance Docling sur les tableaux restés sans corps (25-100 s par
+papier ; résultat gardé dans papers/<id>/docling_tables.json, relu ensuite). Voir SETUP.md §5.
 """
 import argparse
 import difflib
@@ -23,7 +24,7 @@ sys.path.insert(0, str(ROOT))
 
 import requests  # noqa: E402
 
-from lib import citation, doc, ids, ligatures, pdftext, schema, tables, tei  # noqa: E402
+from lib import citation, doc, docling_tables, ids, ligatures, pdftext, schema, tables, tei  # noqa: E402
 
 INBOX = ROOT / "inbox"
 PAPERS = ROOT / "papers"
@@ -216,7 +217,7 @@ def resolved_by_citation(warnings, cit):
 # appartiennent à l'utilisateur une fois le papier ingéré : une ré-extraction les conserve.
 EXTRACTION_WARNINGS = ("GROBID a échoué", "ligatures perdues", "aucune section détectée",
                        "sections numérotées non détectées", "corps très court",
-                       schema.WARN_TABLES_RECOVERED, schema.WARN_TABLES_LOST)
+                       schema.WARN_TABLES_RECOVERED, schema.WARN_TABLES_DOCLING, schema.WARN_TABLES_LOST)
 AXES_WARNINGS = (schema.WARN_AXES_GUESSED, "aucun axe détecté")
 
 
@@ -269,11 +270,13 @@ def check_missing(meta, warnings):
 
 # --- traitement d'un PDF --------------------------------------------------------------
 
-def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None):
+def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None, docling=False, ocr=False):
     """Retourne ('ingéré' | 'ignoré', message).
 
     tei_bytes : TEI déjà obtenu (--reparse), GROBID n'est alors pas appelé.
     vocab : vocabulaire de lib/ligatures (calculé sur le corpus si absent).
+    docling : lance Docling sur les tableaux restés sans corps (lib/docling_tables.py) ; sans
+    cette option, un docling_tables.json déjà présent est relu. ocr : Docling avec OCR.
     """
     pdf = Path(pdf).resolve()
     meta_json = pdf.with_suffix(".meta.json")
@@ -335,10 +338,20 @@ def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None):
     if left:
         warnings.append(f"ligatures perdues : {left} fragment(s) non réparé(s) (« classi cation »…)")
 
+    docling_found = None  # tableaux Docling à mettre en cache dans papers/<id>/
     if backend == "grobid":
         recovered, lost = tables.recover(pdf, blocks)
         if recovered:
             warnings.append(f"{schema.WARN_TABLES_RECOVERED} : {', '.join(recovered)}")
+        if lost:
+            cache = docling_tables.load(existing) if existing else None
+            if docling and (cache is None or (ocr and not cache.get("ocr"))):
+                cache = {"ocr": ocr, "tables": docling_tables.extract(pdf, ocr=ocr)}
+                docling_found = cache
+            if cache:
+                by_docling, lost = docling_tables.recover(blocks, cache["tables"])
+                if by_docling:
+                    warnings.append(f"{schema.WARN_TABLES_DOCLING} : {', '.join(by_docling)}")
         if lost:
             warnings.append(f"{schema.WARN_TABLES_LOST} : {', '.join(lost)}")
 
@@ -390,6 +403,8 @@ def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None):
         meta_json.unlink()
     if cit:
         store_citation(cit[0], out)
+    if docling_found:
+        docling_tables.save(out, docling_found["tables"], docling_found["ocr"])
     note = f" [{backend}]" + (f" — {len(warnings)} avertissement(s)" if warnings else "")
     return "ingéré", f"papers/{paper_id}{note}"
 
@@ -423,9 +438,10 @@ def run(pdfs=None, force=False):
     return counts["erreur"]
 
 
-def reparse(patterns=()):
+def reparse(patterns=(), docling=False, ocr=False):
     """Ré-extrait les papiers déjà ingérés depuis papers/<id>/grobid.tei.xml (sans GROBID),
-    ou depuis paper.pdf par PyMuPDF s'ils n'ont pas de TEI. Retourne le nombre d'erreurs."""
+    ou depuis paper.pdf par PyMuPDF s'ils n'ont pas de TEI. Retourne le nombre d'erreurs.
+    docling, ocr : voir process."""
     folders = sorted(p for p in PAPERS.iterdir() if (p / "metadata.json").exists())
     if patterns:
         folders = [f for f in folders if any(q in f.name for q in patterns)]
@@ -440,7 +456,8 @@ def reparse(patterns=()):
             if not pdf.exists():
                 raise FileNotFoundError("paper.pdf absent (gitignoré : le redéposer)")
             tei_bytes = tei_path.read_bytes() if tei_path.exists() else None
-            status, msg = process(pdf, force=True, use_grobid=False, tei_bytes=tei_bytes, vocab=vocab)
+            status, msg = process(pdf, force=True, use_grobid=False, tei_bytes=tei_bytes, vocab=vocab,
+                                  docling=docling, ocr=ocr)
         except Exception as e:
             status, msg = "erreur", f"{type(e).__name__}: {e}"
             errors += 1
@@ -454,10 +471,13 @@ def main():
                     help="ré-extrait un article déjà ingéré (fiche.md n'est jamais écrasée)")
     ap.add_argument("--reparse", action="store_true",
                     help="ré-extrait les papiers déjà ingérés depuis leur TEI, sans GROBID")
+    ap.add_argument("--tables", choices=("docling",),
+                    help="avec --reparse : relance Docling sur les tableaux restés sans corps (lent)")
+    ap.add_argument("--ocr", action="store_true", help="avec --tables docling : OCR des tableaux en image")
     ap.add_argument("pdfs", nargs="*", help="PDF à ingérer (défaut : tout inbox/) ; avec --reparse : motifs de paper_id")
     args = ap.parse_args()
     if args.reparse:
-        sys.exit(1 if reparse(args.pdfs) else 0)
+        sys.exit(1 if reparse(args.pdfs, docling=args.tables == "docling", ocr=args.ocr) else 0)
     sys.exit(1 if run(args.pdfs, force=args.force) else 0)
 
 

@@ -155,6 +155,39 @@ class TestRag(unittest.TestCase):
         self.assertEqual(rag.verify(ix, cid, "wall power", expect_sha=sha[:8])[0], "OK")
         self.assertEqual(rag.verify(ix, cid, "wall power", expect_sha="00000000")[0], "MODIFIÉ")
 
+    def test_numbers_match(self):
+        text = "On a ZC706 drawing 25 W, we reach 12.3 million images/s, 143,927 LUTs and 0.31 µs."
+        ok = rag.numbers_match
+        self.assertTrue(ok(text, "we reach 12.3 million images/s"))
+        self.assertFalse(ok(text, "we reach 12.4 million images/s"))
+        # 25 existe, mais pas à cette place : repéré par l'ordre des nombres…
+        self.assertFalse(ok(text, "we reach 25 million images/s, 143,927 LUTs"))
+        # … et, pour un nombre seul, par ses mots voisins
+        self.assertFalse(ok(text, "we reach 25 million images/s"))
+        self.assertFalse(ok("Section 2 reviews the background, Section 3 the method.",
+                            "Section 3 reviews the background"))
+        self.assertFalse(ok(text, "0.4 µs"))  # « 4 » ne vaut pas « 6.4 » : pas de sous-chaîne
+        self.assertTrue(ok(text, "143 927 LUTs and 0.31 µs"))  # séparateur de milliers
+        self.assertTrue(ok(text, "ZC706 drawing 25 W … 143,927 LUTs"))  # citation élidée
+        self.assertFalse(ok(text, "ZC706 drawing 25 W … 143,928 LUTs"))
+        self.assertTrue(ok(text, "3 million images/s"))  # coupée au milieu de « 12.3 »
+        self.assertTrue(ok(text, "images per second"))  # sans nombre
+
+    def test_verify_rejects_changed_number(self):
+        chunks = [{"chunk_id": f"p#00{i}.0", "section_id": f"p#00{i}", "paper_id": "p", "kind": "section",
+                   "section": "S", "subsection": None, "page": 1, "text": t, "sha1": str(i)}
+                  for i, t in enumerate(("The prototype reaches 21906 images per second at 283 us latency on CIFAR-10.",
+                                         "SVHN runs at 21906 images per second with 94.9% accuracy."))]
+        ix = rag.Index(self.root, chunks=chunks)
+        self.assertEqual(rag.verify(ix, "p#000.0", "reaches 21906 images per second at 283 us")[0], "OK")
+        status, ratio, where = rag.verify(ix, "p#000.0", "reaches 21906 images per second at 288 us")
+        self.assertEqual((status, where), ("NOMBRES", "p#000.0"))
+        self.assertGreaterEqual(ratio, rag.VERIFY_MIN)
+        # « 3.5 » et « 35 » ont la même forme normalisée : le contrôle des nombres les distingue
+        self.assertEqual(rag.verify(ix, "p#001.0", "with 949% accuracy")[0], "NOMBRES")
+        # bons nombres dans un autre passage du papier
+        self.assertEqual(rag.verify(ix, "p#000.0", "runs at 21906 images per second with 94.9%")[2], "p#001.0")
+
     def test_snippet_marks_terms(self):
         text = "x " * 200 + "the wall power meter reads the board"
         snip = rag.snippet(text, "wall power", {"wall": 3.0, "power": 2.0})

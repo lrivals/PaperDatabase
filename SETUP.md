@@ -252,7 +252,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `status` | `lib/status.py` | état de l'environnement (venv, Docker, GROBID, dépendances optionnelles) et du corpus (papiers par axe, fiches à faire, extractions `ok: false`, benchmarks, gaps, `inbox/`, git), puis au plus 3 actions suggérées par ordre de priorité |
 | `add …` | `add.run` | propose de démarrer GROBID s'il est arrêté (`--start-grobid` : sans question), puis `reindex.run` |
 | `ingest [--force] [pdf…]` | `ingest.run` | idem |
-| `ingest --reparse [id…]` | `ingest.reparse` | ré-extraction depuis `grobid.tei.xml`, sans GROBID, puis `reindex.run` |
+| `ingest --reparse [--tables docling [--ocr]] [id…]` | `ingest.reparse` | ré-extraction depuis `grobid.tei.xml`, sans GROBID (Docling pour les tableaux sans corps si demandé), puis `reindex.run` |
 | `reindex` | `reindex.run` | |
 | `discover …` | `discover.run` | |
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
@@ -354,6 +354,15 @@ un des motifs donnés) depuis leur `grobid.tei.xml`, sans appeler GROBID ; un pa
 est relu depuis `paper.pdf` par PyMuPDF. À lancer après une amélioration du parsing :
 `bin/pdb ingest --reparse` réindexe ensuite. Les `chunk_id` des papiers modifiés peuvent
 changer.
+
+`--tables docling [--ocr]` (avec `--reparse`, dépendance optionnelle
+`requirements-docling.txt`) : après le repli PyMuPDF, les tableaux restés sans corps sont
+cherchés dans la sortie de Docling (`lib/docling_tables.py`). Le rapprochement se fait par
+numéro de légende (Table 3 = TABLE III, à une page près), sinon par tableau sans légende
+unique sur la page. La légende est marquée « reconstruit par Docling : à vérifier ». Docling
+prend 25 à 100 s par papier sur CPU ; sa sortie est gardée dans
+`papers/<id>/docling_tables.json`, et tout `--reparse` ultérieur la relit sans l'option.
+`--ocr` relance Docling avec OCR (tableaux en image).
 
 ### `bin/reindex.py`
 
@@ -726,6 +735,30 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
   - Conclusion : utile en second backend pour les tableaux seulement, jamais sans la
     mention « à vérifier ». À brancher si l'on accepte la dépendance (voir tâches).
 
+**Bilan du 26/09/2026 (banc d'évaluation).** `bin/pdb eval` ([docs/EVAL.md](docs/EVAL.md),
+`lib/evaluation.py`, `tests/test_evaluation.py`) : extraction (couverture du texte 0,91,
+tableaux avec corps 0,66, en-tête GROBID, valeurs de `benchmarks.csv` retrouvées dans le
+tableau cité 0,74 contre 0,86 dans le texte), recherche (nouveau jeu holdout de 25 questions :
+recall@5 hybride 0,84, contre 0,90 sur le jeu dev), questions hors corpus, `verify`, temps.
+Rapport de référence dans `eval/results/`, seuils dans `eval/thresholds.json`. 153 tests.
+Défauts mis au jour, à corriger (tâche 12) :
+- l'alerte « pertinence faible » ne se déclenche sur aucune des 10 questions hors corpus ;
+- `verify` accepte (APPROX) une citation avec un chiffre ou un mot modifié ;
+- `tei.clean_doi` laisse passer le DOI gabarit MDPI `10.3390/electronics1010000`.
+
+**Bilan du 26/09/2026 (corrections mesurées par le banc).** Détail : [docs/EVAL.md](docs/EVAL.md) §6.
+- `verify` refuse (`NOMBRES`, code 1) une citation dont les nombres diffèrent du passage :
+  0/38 chiffres modifiés acceptés, contre 38/38 avant ; 40/40 citations exactes restent
+  `OK`. `/paper-ask` mis à jour.
+- Pertinence faible : ni le cosinus ni le cross-encoder ne remplissent la règle fixée
+  d'avance (validation : cross-encoder 90 % hors corpus signalés, mais 40 % du corpus à
+  tort). L'alerte `# pertinence faible` est retirée de `pdb search`.
+- Docling branché (`ingest --reparse --tables docling [--ocr]`, `lib/docling_tables.py`,
+  cache `docling_tables.json`) : tableaux avec corps 0,66 → 0,90 (41 reconstruits, OCR sur
+  shuvo, cui, hozhabr), à vérifier. Sans effet sur les valeurs de `benchmarks.csv` ni sur la
+  recherche.
+- 162 tests.
+
 ### Prochaines étapes prioritaires
 
 1. [ ] **Liste courte autoencodeurs** : 2108.03986 ajouté (fiche à faire :
@@ -776,11 +809,13 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
      DOI 10.3390/electronics14152977) ;
    - Anupreetham et al. [67] (NMS pipeliné sur FPGA) et D. Zhang et al. [86] (détecteur
      entièrement sur FPGA), cités par 2025-hozhabr : références dans son `refs.jsonl`.
-8. [ ] **Tableaux encore vides** (49, liste à jour dans `bin/pdb status`, « tableaux à
-   vérifier ») : brancher Docling (tâche outillage) puis vérifier à la main ce qu'il ne lit
-   pas. Déjà repérés : hozhabr Tables 9-10 (paysage pivoté, illisibles même par OCR),
-   FINN Table 3 (colonnes décalées, BRAM SFC-max), 2512.01463 Table 3 (DSP/LUT inversés
-   par Docling sur 2 lignes ?).
+8. [ ] **Tableaux** (liste dans `bin/pdb status`, « tableaux à vérifier ») : Docling branché le
+   26/09/2026. 12 tableaux restent sans corps, dont au moins 7 blocs qui ne sont pas des
+   tableaux (prose, algorithme ou note classés en tableau par GROBID) ; restent notamment
+   2409.07114 Tables II et IV, et 2211.11647. Les 44 tableaux reconstruits (41 Docling, 3
+   PyMuPDF) sont à relire avant tout usage chiffré. Défauts déjà repérés : cui Table 9
+   (colonnes perdues), hozhabr Table 5 (fragments OCR), Tables 9-10 (paysage pivoté), FINN
+   Table 3 (colonnes décalées, BRAM SFC-max), 2512.01463 Table 3 (DSP/LUT inversés ?).
 9. [ ] **Vérifications contre le PDF** des chiffres lus en figures seulement : 2211.11647
    (Fig. 6, 7 et 12) ; tableaux perdus à l'extraction dans 2025-hozhabr (Tables 9-10) et
    2023-shuvo (Tables 6-10).
@@ -805,6 +840,14 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
     - [ ] relever les puissances de 2211.11647 dans ses figures (portée `board`), et
       vérifier la portée de tegrastats pour les 14 lignes `chip` de 2502.15737 (constats
       de l'essai de `/paper-ask`).
+12. [ ] **Défauts révélés par `bin/pdb eval`** ([docs/EVAL.md](docs/EVAL.md) §5-6) :
+    - [x] `verify` refuse une citation aux nombres différents (26/09/2026, 0/38 acceptées) ;
+    - [x] « pertinence faible » : aucun signal fiable (cosinus, cross-encoder), alerte retirée
+      (26/09/2026) ; piste restante : combiner les deux signaux, à valider sur un nouveau
+      jeu hors corpus ;
+    - [ ] `tei.clean_doi` : rejeter les DOI gabarits MDPI (`…1010000`) ;
+    - [ ] recherche sur tableaux : 2 questions holdout sur 2 manquées, même après Docling ;
+    - [ ] `verify` : un mot remplacé loin d'un nombre donne toujours `APPROX` (38/40).
 
 ### En place
 
@@ -828,6 +871,7 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
 | `gaps.md` | 16 gaps, dont 12 étayés (5e passage, le 24/09/2026, 24 fiches `done`) |
 | Visualisation (`viz.py`, `lib/graph.py`, `lib/lineage.py`, `lib/vizfig.py`, `lib/embed.py`) | terminée le 24/09/2026 : graphe 3D (recherche, filtres, surlignage des liens, détail avec fiche et benchmarks, export HTML) et onglet Généalogie (papier ou sujet, suite probable déduite) ; embeddings optionnels ; testée (`test_graph.py`, `test_lineage.py`, `test_viz.py`, `test_embed.py` ; 77 tests au total avec ceux du 24/09/2026) ; 10 citations internes, 89 références externes co-citées |
 | Requêtes et recherche de passages (`lib/query.py`, `lib/rag.py`, `pdb bench`/`paper`/`search`/`show`/`verify`) | depuis le 25/09/2026 : BM25 + embeddings bge-small, fusion RRF, reranking optionnel, index incrémental ; testé (`test_query.py`, `test_rag.py`) et évalué (RAG.md §10) ; skill `/paper-ask` essayée en réel (RAG.md §12) |
+| Banc d'évaluation (`bin/pdb eval`, `lib/evaluation.py`) | depuis le 26/09/2026 : extraction, recherche (dev, holdout, FR, hors corpus), `verify`, temps ; `--save` / `--compare` et seuils ; testé (`test_evaluation.py`) ; rapport de référence dans [docs/EVAL.md](docs/EVAL.md) §5 |
 | Versionnage | dépôt git + remote GitHub ; travaux du 24/09/2026 commités et poussés |
 
 ### Tâches — corpus
@@ -964,8 +1008,8 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
      `bin/ingest.py` et `lib/schema.py`, et `pdb init --profile` ;
   5. références consolidées via `referenced_works` d'OpenAlex (10 citations internes
      seulement) ; jeu d'évaluation RAG généré par corpus.
-- [ ] **Docling en second backend pour les tableaux** (essai du 26/09/2026, bilan
-  ci-dessus) : `bin/pdb ingest --tables docling [id…]` pour les tableaux « sans corps »,
+- [x] **Docling en second backend pour les tableaux** (branché le 26/09/2026, EVAL.md §6 ;
+  prévu ainsi) : `bin/pdb ingest --tables docling [id…]` pour les tableaux « sans corps »,
   OCR réservé aux pages sans texte, rapprochement par page et libellé de légende, mention
   « reconstruit par Docling : à vérifier » ; `requirements-docling.txt` optionnel.
 - [x] **Recherche sémantique** (25/09/2026) : `lib/rag.py`, index local **par-dessus**

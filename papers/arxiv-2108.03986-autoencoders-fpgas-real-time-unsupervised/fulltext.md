@@ -179,7 +179,7 @@ FIG.V. TPR ratios versus model bit width for the VAE CNN (left) and DNN (right) 
     DNN VAE PTQ 8 bits | 1 | 3 | 0.5 | 0.3 | 80 | 5
     CNN VAE PTQ 8 bits | 10 | 12 | 4 | 2 | 365 | 115
 
-**TABLE IV.** Resource utilization and latency for the quantized and pruned DNN AE model. Resources are based on the Vivado estimates from Vivado HLS 2020.1 for a clock period of 5 ns on Xilinx V7-690. [corps du tableau reconstruit par PyMuPDF : à vérifier]
+**TABLE IV.** Resource utilization and latency for the quantized and pruned DNN AE model. Resources are based on the Vivado estimates from Vivado HLS 2020.1 for a clock period of 5 ns on Xilinx V7-690. [corps du tableau reconstruit par PyMuPDF : à vérifier] [corps du tableau reconstruit par Docling : à vérifier]
 
     Model | DSP [%] | LUT [%] | FF [%] | BRAM [%] | Latency [ns] | II [ns]
     DNN VAE PTQ 8 bits | 3 | 9 | 3 | 0.4 | 205 | 5

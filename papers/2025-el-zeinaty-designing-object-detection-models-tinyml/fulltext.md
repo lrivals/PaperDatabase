@@ -455,7 +455,14 @@ Foundations, 31 Fig. 7. Fig. 7. Comparison of computational resource constraints
     OpenImage [75] | 2020 | 600 | 1,743,042 14,610,229 41,620 204,621 125,436
     where 𝑆 (𝑥) is the Smooth L1 function, defined as |  |  |  | 
 
-**Table 3.** Comparison of TinyML Datasets
+**Table 3.** Comparison of TinyML Datasets [corps du tableau reconstruit par Docling : à vérifier]
+
+    Dataset Name | Year | Use Case | NumberofSamples | EvaluationMetric
+    Speech Commands [157] | 2018 | KeywordSpotting | 105,829 | Accuracy
+    ToyAdmos Dataset [70] | 2019 | SoundAnomalyDetection | 5,939 | AUC-ROC, Precision-Recall
+    VWWDataset [26] | 2019 | Person Detection | 115,000 | Accuracy
+    WakeVisionDataset (Quality) [5] | 2024 | Person Detection | 1,322,574 | Accuracy
+    WakeVisionDataset(Large)[5] | 2024 | Person Detection | 5,760,428 | Accuracy
 
 **Table 4.** Comparison of TinyML Hardware Platforms
 
@@ -512,11 +519,14 @@ Foundations, 31 Fig. 7. Fig. 7. Comparison of computational resource constraints
     EAutoDet-m [155] | Gradient Backbone, Neck | 45.2 | 2.2
     EAutoDet-L [155] |  |  |  | 
 
-**Table 7.** Categorized Summary of Optimization Techniques Used in MCU-Optimized Object Detection Models
+**Table 7.** Categorized Summary of Optimization Techniques Used in MCU-Optimized Object Detection Models [corps du tableau reconstruit par Docling : à vérifier]
 
-    Optimization Strategy Model | Key Features
-    Neural Architecture | 
-    Search (NAS) | 
+    OptimizationStrategy | Model | Key Features
+    Neural Architecture Search (NAS) | MCUNetV1-YOLOV2 [88] | NAS with memory scheduling for MCUs; optimized memory layout reduces peak SRAM usage by 3.4×. Use patch-based execution to reduce memory
+    Neural Architecture Search (NAS) | MCUNetV2-YOLOV3 [87] | bottlenecks; in-place convolutions overwrite input activations, saving 1.6× memory.
+    Quantization-Based Optimization | TinyissimoYOLO[110] | Usefullyquantized(8-bitinteger)modelsto reduce size by 4× while maintaining accuracy.
+    Quantization-Based Optimization | EtinyNet-SSD [162] | Adaptive per-layer quantization and depthwise convolutions to reduce computation.
+    Hardware-Aware Scaling (HAS) | XiNet-YOLOV7 [4] | Scale models based on RAM, flash, and compute resources; adapt to MCU memory and energy constraints.
 
 **Table 8.** Comparative Analysis of MCU-optimized OD Models Using 8-bit Precision for Weights and Activations on the VOC Benchmark Peak SRAM indicates the maximum on-chip SRAM usage during inference, expressed in kilobytes.
 

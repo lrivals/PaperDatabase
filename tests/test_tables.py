@@ -96,3 +96,68 @@ class PlausibleTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DoclingRecoverTest(unittest.TestCase):
+    """lib/docling_tables.recover sur des tableaux Docling déjà extraits (sans docling)."""
+    GRID = [["Model", "FPS", "Power (W)"], ["YOLOv3-tiny", "55", "2.13"], ["YOLOv5n", "31", "4.8"]]
+
+    def block(self, caption, page=3):
+        return Block("table", "Figures et tableaux", None, 1, [(caption, page)], page=page,
+                     bbox=(page, 50, 100, 300, 108))
+
+    def found(self, caption, page=3, rows=None):
+        return {"page": page, "bbox": [50, 110, 300, 200], "caption": caption, "rows": rows or self.GRID}
+
+    def test_matched_by_roman_or_arabic_number(self):
+        from lib import docling_tables
+        b = self.block("TABLE III. Results on the board.")
+        rec, lost = docling_tables.recover([b], [self.found("Table 2: other", 3), self.found("Table 3: results", 4)])
+        self.assertEqual((rec, lost), (["TABLE III"], []))
+        self.assertIn(docling_tables.MARK, b.paras[0][0])
+        self.assertEqual([t for t, _ in b.paras[1:]][1], "YOLOv3-tiny | 55 | 2.13")
+
+    def test_same_page_without_caption(self):
+        from lib import docling_tables
+        b = self.block("Table 5. Latency.")
+        rec, _ = docling_tables.recover([b], [self.found("", 3)])
+        self.assertEqual(rec, ["Table 5"])
+        # deux candidats sans légende sur la page : ambigu, rien n'est choisi
+        b = self.block("Table 5. Latency.")
+        self.assertEqual(docling_tables.recover([b], [self.found("", 3), self.found("", 3)])[1], ["Table 5"])
+
+    def test_empty_grid_or_far_is_lost(self):
+        from lib import docling_tables
+        for rows in ([[""]], [["a", "", ""], ["", "b", ""], ["", "", "c"]]):  # image lue sans OCR ; grille creuse
+            b = self.block("Table 1. Setup.")
+            self.assertEqual(docling_tables.recover([b], [self.found("Table 1", 3, rows)]), ([], ["Table 1"]))
+        # un tableau de synthèse textuel passe (Docling a reconnu la structure)
+        text = [["Work", "Method"], ["Smith [3]", "Pruning of filters"], ["Lee [7]", "Knowledge distillation"]]
+        b = self.block("Table 1. Setup.")
+        self.assertEqual(docling_tables.recover([b], [self.found("Table 1", 3, text)])[0], ["Table 1"])
+        b = self.block("Table 1. Setup.")
+        self.assertEqual(docling_tables.recover([b], [self.found("Table 1", 9)]), ([], ["Table 1"]))
+
+    def test_uncaptioned_tables_paired_by_vertical_rank(self):
+        from lib import docling_tables
+        low = Block("table", "F", None, 1, [("TABLE IV Results on MNIST", 6)], page=6, bbox=(6, 50, 500, 300, 508))
+        high = Block("table", "F", None, 1, [("TABLE II Results on CORe", 6)], page=6, bbox=(6, 50, 100, 300, 108))
+        a = {"page": 6, "bbox": [50, 520, 300, 700], "caption": "", "rows": [["A", "1"], ["B", "2"]]}
+        h = {"page": 6, "bbox": [50, 120, 300, 300], "caption": "", "rows": [["H", "1"], ["I", "2"]]}
+        rec, lost = docling_tables.recover([low, high], [a, h])
+        self.assertEqual((sorted(rec), lost), (["TABLE II", "TABLE IV"], []))
+        self.assertEqual(high.paras[1][0], "H | 1")
+        self.assertEqual(low.paras[1][0], "A | 1")
+
+    def test_generated_header_dropped_and_full_tables_untouched(self):
+        from lib import docling_tables
+        full = table_block(rows=["x" * 200])
+        b = self.block("Table 4. Numbers.")
+        rows = [["0", "1", "2"]] + self.GRID
+        docling_tables.recover([full, b], [self.found("Table 4", 3, rows)])
+        self.assertEqual(b.paras[1][0], "Model | FPS | Power (W)")
+        self.assertNotIn(docling_tables.MARK, full.paras[0][0])
+
+    def test_number(self):
+        self.assertEqual([tables.number(x) for x in ("3", "IV", "xii", "A2", "B")], [3, 4, 12, 2, None])
+        self.assertEqual(tables.label_number("TABLE IX: Comparison"), 9)

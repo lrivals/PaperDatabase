@@ -1,0 +1,924 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 4,
+   "bbox": [
+    48.2,
+    90.2,
+    441.6,
+    194.5
+   ],
+   "caption": "Table 1. Recent Surveys on Model Compression Techniques and their Applications in Embedded Systems",
+   "rows": [
+    [
+     "Authors",
+     "Year",
+     "FocusonOD",
+     "Optim. parts",
+     "Optim. insights",
+     "HardwareDiscussion",
+     "EdgeAI",
+     "TinyML"
+    ],
+    [
+     "Zaidi et al. [163]",
+     "2021",
+     "✓",
+     "Backbone",
+     "✗",
+     "✗",
+     "✓",
+     "✗"
+    ],
+    [
+     "Kang et al. [66]",
+     "2022",
+     "✓",
+     "Backbone",
+     "✗",
+     "✓",
+     "✓",
+     "✗"
+    ],
+    [
+     "Zou et al. [177]",
+     "2023",
+     "✓",
+     "Backbone",
+     "✗",
+     "✗",
+     "✓",
+     "✗"
+    ],
+    [
+     "Setyanto et al. [131]",
+     "2024",
+     "✓",
+     "Backbone,head,andneck",
+     "✗",
+     "✓",
+     "✓",
+     "✗"
+    ],
+    [
+     "Mittal [107]",
+     "2024",
+     "✓",
+     "Backbone,head,andneck",
+     "✗",
+     "✓",
+     "✓",
+     "✗"
+    ],
+    [
+     "Huangetal.[151]",
+     "2024",
+     "✗",
+     "Backbone",
+     "✓",
+     "✓",
+     "✓",
+     "✗"
+    ],
+    [
+     "Liu et al. [94]",
+     "2024",
+     "✗",
+     "Backbone",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "Lin et al. [89]",
+     "2024",
+     "✗",
+     "Backbone",
+     "✗",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "Ours",
+     "2025",
+     "✓",
+     "Backbone,head,andneck",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    52.5,
+    90.3,
+    436.0,
+    169.3
+   ],
+   "caption": "Table2. ComparisonofObjectDetectionDatasets",
+   "rows": [
+    [
+     "Dataset.",
+     "Year.",
+     "Classes.",
+     "Train.Images",
+     "Train.Objects",
+     "Validation.Images",
+     "Validation.Objects",
+     "Test."
+    ],
+    [
+     "PASCALVOC[38]",
+     "2012",
+     "20",
+     "5,717",
+     "13,609",
+     "5,823",
+     "13,841",
+     "10,991"
+    ],
+    [
+     "ILSVRC [128]",
+     "2015",
+     "200",
+     "456,567",
+     "478,807",
+     "20,121",
+     "55,501",
+     "40,152"
+    ],
+    [
+     "MS-COCO [92]",
+     "2017",
+     "80",
+     "118,287",
+     "860,001",
+     "5,000",
+     "36,781",
+     "40,670"
+    ],
+    [
+     "OpenImage [75]",
+     "2020",
+     "600",
+     "1,743,042",
+     "14,610,229",
+     "41,620",
+     "204,621",
+     "125,436"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    48.8,
+    90.3,
+    441.5,
+    157.3
+   ],
+   "caption": "Table 3. Comparison of TinyML Datasets",
+   "rows": [
+    [
+     "Dataset Name",
+     "Year",
+     "Use Case",
+     "NumberofSamples",
+     "EvaluationMetric"
+    ],
+    [
+     "Speech Commands [157]",
+     "2018",
+     "KeywordSpotting",
+     "105,829",
+     "Accuracy"
+    ],
+    [
+     "ToyAdmos Dataset [70]",
+     "2019",
+     "SoundAnomalyDetection",
+     "5,939",
+     "AUC-ROC, Precision-Recall"
+    ],
+    [
+     "VWWDataset [26]",
+     "2019",
+     "Person Detection",
+     "115,000",
+     "Accuracy"
+    ],
+    [
+     "WakeVisionDataset (Quality) [5]",
+     "2024",
+     "Person Detection",
+     "1,322,574",
+     "Accuracy"
+    ],
+    [
+     "WakeVisionDataset(Large)[5]",
+     "2024",
+     "Person Detection",
+     "5,760,428",
+     "Accuracy"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    50.4,
+    90.3,
+    439.8,
+    187.2
+   ],
+   "caption": "Table 4. Comparison of TinyML Hardware Platforms",
+   "rows": [
+    [
+     "Platform",
+     "Core",
+     "FrequencySRAM",
+     "",
+     "Flash",
+     "AIAcceleratorApprox.Cost",
+     ""
+    ],
+    [
+     "STM32H743",
+     "Cortex-M7",
+     "480MHz",
+     "1MB",
+     "2 MB",
+     "✗",
+     "$5-$10"
+    ],
+    [
+     "STM32F746",
+     "Cortex-M7",
+     "216MHz",
+     "320KB",
+     "1 MB",
+     "✗",
+     "$4-$8"
+    ],
+    [
+     "STM32N6",
+     "Cortex-M55 + NPU",
+     "800MHz",
+     "",
+     "4.2MB8MB(external)",
+     "✓",
+     "$20-$25"
+    ],
+    [
+     "GAP9",
+     "8-core RISC-V cluster",
+     "175MHz",
+     "1.6MB",
+     "2 MB",
+     "✓",
+     "$10-$15"
+    ],
+    [
+     "KendryteK210",
+     "Dual-coreRISC-V(RV64GC)",
+     "400MHz",
+     "",
+     "512KB8MB(external)",
+     "✓",
+     "$5-$10"
+    ],
+    [
+     "MAX78000",
+     "Cortex-M4F",
+     "100MHz",
+     "128KB",
+     "512KB",
+     "✓",
+     "$10-$15"
+    ],
+    [
+     "ESP32",
+     "Dual-core Tensilica LX6",
+     "240MHz",
+     "",
+     "520KB4MB(external)",
+     "✗",
+     "$2-$4"
+    ],
+    [
+     "Himax WE-I Plus",
+     "ARC EM9D DSP",
+     "400MHz",
+     "2MB",
+     "2 MB",
+     "✗",
+     "$10-$20"
+    ]
+   ]
+  },
+  {
+   "page": 16,
+   "bbox": [
+    50.4,
+    101.2,
+    440.0,
+    435.9
+   ],
+   "caption": "Table5. SummaryofRecentLightweightODModelsandtheirPerformanceonCOCOandPASCALVOC Datasets",
+   "rows": [
+    [
+     "Optim.",
+     "Model",
+     "Year",
+     "Optim. parts",
+     "Params (M)↓",
+     "AP50:95 (COCO)↑",
+     "mAP (Pascal VOC)↑"
+    ],
+    [
+     "",
+     "MobileNetV1 + SSDLite [129]",
+     "2018",
+     "backbone",
+     "5.1",
+     "22.2",
+     "68.0"
+    ],
+    [
+     "",
+     "MobileNetV2 + SSDLite [129]",
+     "2018",
+     "backbone",
+     "4.3",
+     "22.1",
+     "70.9"
+    ],
+    [
+     "",
+     "Tiny-DSOD [82]",
+     "2018",
+     "backbone,neck",
+     "1.15",
+     "23.2",
+     "72.1"
+    ],
+    [
+     "Model Design",
+     "LightDet [142]",
+     "2020",
+     "backbone,neck,head",
+     "-",
+     "24.0",
+     "75.5"
+    ],
+    [
+     "",
+     "GnetDet [135]",
+     "2021",
+     "backbone,head",
+     "-",
+     "-",
+     "66.0"
+    ],
+    [
+     "",
+     "YOLOv5-N [63]",
+     "2022",
+     "backbone,neck,head",
+     "1.9",
+     "28.0",
+     "-"
+    ],
+    [
+     "",
+     "YOLOv5-S [63]",
+     "2022",
+     "backbone,neck,head",
+     "7.2",
+     "37.4",
+     "-"
+    ],
+    [
+     "",
+     "MobileDenseNet [51]",
+     "2023",
+     "backbone",
+     "5.8",
+     "24.8",
+     "76.8"
+    ],
+    [
+     "",
+     "YOLOv11-N [64]",
+     "2024",
+     "backbone,neck,head",
+     "2.6",
+     "39.5",
+     "-"
+    ],
+    [
+     "",
+     "YOLOv12-N [145]",
+     "2025",
+     "backbone,neck,head",
+     "2.6",
+     "40.6",
+     "-"
+    ],
+    [
+     "Pruning",
+     "Lite-YOLOv3 [174]",
+     "2023",
+     "backbone,neck,head",
+     "15.3",
+     "52.4",
+     "74.1"
+    ],
+    [
+     "",
+     "Faster-RCNN-Bi-Real Net [103]",
+     "2018",
+     "backbone",
+     "20.1",
+     "-",
+     "58.2"
+    ],
+    [
+     "",
+     "Unified network [136]",
+     "2018",
+     "backbone",
+     "-",
+     "-",
+     "44.3"
+    ],
+    [
+     "",
+     "ResNet-50 GroupNet-c [176]",
+     "2019",
+     "backbone",
+     "-",
+     "33.9",
+     "74.4"
+    ],
+    [
+     "",
+     "ResNet-34 GroupNet-c [176]",
+     "2019",
+     "backbone",
+     "-",
+     "32.8",
+     "69.3"
+    ],
+    [
+     "",
+     "ResNet-18 GroupNet-c [176]",
+     "2019",
+     "backbone",
+     "-",
+     "30.1",
+     "63.6"
+    ],
+    [
+     "BNNs",
+     "FasterR-CNN-BiDet-Resnet18[156]",
+     "2020",
+     "backbone,head",
+     "20",
+     "15.7",
+     "59.5"
+    ],
+    [
+     "",
+     "Faster R-CNN-DA-BNN [170]",
+     "2020",
+     "backbone,head",
+     "-",
+     "-",
+     "64.0"
+    ],
+    [
+     "",
+     "Faster-RCNN-XNOR-Net [170]",
+     "2022",
+     "backbone,head",
+     "22.2",
+     "-",
+     "48.9"
+    ],
+    [
+     "",
+     "DetNASNet (FPN) [23]",
+     "2019",
+     "backbone",
+     "-",
+     "36.6",
+     "81.5"
+    ],
+    [
+     "",
+     "DetNASNet (RetinaNet) [23]",
+     "2019",
+     "backbone",
+     "-",
+     "33.3",
+     "80.1"
+    ],
+    [
+     "",
+     "NATS-C [117]",
+     "2019",
+     "backbone",
+     "-",
+     "38.4",
+     "-"
+    ],
+    [
+     "",
+     "NAS-FCOS [153]",
+     "2019",
+     "neck,head",
+     "-",
+     "46.1",
+     "-"
+    ],
+    [
+     "NAS",
+     "NAS-FPNLite+MobileNetV2[45]",
+     "2019neck",
+     "",
+     "2.16",
+     "24.2",
+     "-"
+    ],
+    [
+     "",
+     "MobileNetV2 + MnasFPN [17]",
+     "2019",
+     "head",
+     "1.29",
+     "23.8",
+     "-"
+    ],
+    [
+     "",
+     "Hit-Detector [49]",
+     "2020",
+     "backbone,neck,head",
+     "27",
+     "41.4",
+     "-"
+    ],
+    [
+     "",
+     "YOLO-NAS-Small [2]",
+     "2021",
+     "backbone,neck,head",
+     "19",
+     "47.5",
+     "-"
+    ],
+    [
+     "",
+     "MCUNetV2 [87]",
+     "2021",
+     "backbone",
+     "0.67",
+     "-",
+     "68.3"
+    ],
+    [
+     "",
+     "DarkNet-YOLO-BWN-KT [161]",
+     "2018",
+     "backbone",
+     "-",
+     "-",
+     "65.0"
+    ],
+    [
+     "",
+     "MOBILENET-Yolo-BWN-KT[161]",
+     "2018",
+     "backbone",
+     "-",
+     "-",
+     "63.0"
+    ],
+    [
+     "KD",
+     "Centernet-34 [72]",
+     "2021",
+     "backbone,head",
+     "-",
+     "-",
+     "75.8"
+    ],
+    [
+     "",
+     "Centernet-50 [72]",
+     "2021",
+     "backbone,head",
+     "-",
+     "-",
+     "77.1"
+    ],
+    [
+     "",
+     "EtinyNet [162]",
+     "2022",
+     "backbone",
+     "0.59",
+     "-",
+     "56.4"
+    ],
+    [
+     "Quantization",
+     "TinyissimoYOLO [110]",
+     "2023",
+     "backbone,neck,head",
+     "0.703",
+     "-",
+     "56.4"
+    ]
+   ]
+  },
+  {
+   "page": 25,
+   "bbox": [
+    51.5,
+    90.4,
+    436.9,
+    272.8
+   ],
+   "caption": "Table 6. Comparison of NAS-based OD Models Evaluated on the COCO Dataset",
+   "rows": [
+    [
+     "Method",
+     "Search",
+     "Optim.Parts",
+     "AP50:95↑",
+     "SearchCost↓"
+    ],
+    [
+     "NAS-FCOS [153]",
+     "RL",
+     "Neck, Head",
+     "43.0",
+     "28"
+    ],
+    [
+     "MobileDets [160]",
+     "RL",
+     "Backbone",
+     "28.5",
+     "-"
+    ],
+    [
+     "NAS-FPN [45]",
+     "RL",
+     "Neck",
+     "44.2",
+     "333*"
+    ],
+    [
+     "DetNAS [23]",
+     "EA",
+     "Backbone",
+     "42.0",
+     "44"
+    ],
+    [
+     "EAutoDet-s [155]",
+     "Gradient",
+     "Backbone,Neck",
+     "40.1",
+     "1.4"
+    ],
+    [
+     "EAutoDet-m [155]",
+     "Gradient",
+     "Backbone,Neck",
+     "45.2",
+     "2.2"
+    ],
+    [
+     "EAutoDet-L [155]",
+     "Gradient",
+     "Backbone,Neck",
+     "47.9",
+     "4.5"
+    ],
+    [
+     "EAutoDet-X [155]",
+     "Gradient",
+     "Backbone,Neck",
+     "49.2",
+     "22.0"
+    ],
+    [
+     "ResNet-101(NATS)[117]",
+     "Gradient",
+     "Backbone",
+     "40.4",
+     "20.0"
+    ],
+    [
+     "ResNeXt-101(NATS)[117]",
+     "Gradient",
+     "Backbone",
+     "41.6",
+     "20.0"
+    ],
+    [
+     "FNA++(RetinaNet)[40]",
+     "Gradient",
+     "Backbone",
+     "34.7",
+     "8.5"
+    ],
+    [
+     "FNA++ (SSDLite) [40]",
+     "Gradient",
+     "Backbone",
+     "23.9",
+     "21.0"
+    ],
+    [
+     "Hit-Detector [49]",
+     "Gradient",
+     "Backbone,Neck,Head",
+     "41.4",
+     "-"
+    ],
+    [
+     "IC-ResNet50 [95]",
+     "Gradient",
+     "Backbone,Neck,Head",
+     "39.2",
+     "-"
+    ]
+   ]
+  },
+  {
+   "page": 32,
+   "bbox": [
+    49.4,
+    101.2,
+    440.9,
+    261.7
+   ],
+   "caption": "Table 7. Categorized Summary of Optimization Techniques Used in MCU-Optimized Object Detection Models",
+   "rows": [
+    [
+     "OptimizationStrategy",
+     "Model",
+     "Key Features"
+    ],
+    [
+     "Neural Architecture Search (NAS)",
+     "MCUNetV1-YOLOV2 [88]",
+     "NAS with memory scheduling for MCUs; optimized memory layout reduces peak SRAM usage by 3.4×. Use patch-based execution to reduce memory"
+    ],
+    [
+     "Neural Architecture Search (NAS)",
+     "MCUNetV2-YOLOV3 [87]",
+     "bottlenecks; in-place convolutions overwrite input activations, saving 1.6× memory."
+    ],
+    [
+     "Quantization-Based Optimization",
+     "TinyissimoYOLO[110]",
+     "Usefullyquantized(8-bitinteger)modelsto reduce size by 4× while maintaining accuracy."
+    ],
+    [
+     "Quantization-Based Optimization",
+     "EtinyNet-SSD [162]",
+     "Adaptive per-layer quantization and depthwise convolutions to reduce computation."
+    ],
+    [
+     "Hardware-Aware Scaling (HAS)",
+     "XiNet-YOLOV7 [4]",
+     "Scale models based on RAM, flash, and compute resources; adapt to MCU memory and energy constraints."
+    ]
+   ]
+  },
+  {
+   "page": 33,
+   "bbox": [
+    49.5,
+    101.4,
+    440.3,
+    185.6
+   ],
+   "caption": "Table 8. Comparative Analysis of MCU-optimized OD Models Using 8-bit Precision for Weights and Activations on the VOC Benchmark",
+   "rows": [
+    [
+     "Model",
+     "Venue(Year)",
+     "Optimization",
+     "",
+     "InputSizeParameters↓",
+     "MCU",
+     "",
+     "MMACs↓PeakSRAM↓mAP↑",
+     ""
+    ],
+    [
+     "MCUNetV1-YOLOV2 [88]",
+     "NeurIPS (2020)",
+     "NAS",
+     "224×224",
+     "1.20M",
+     "STM32H743",
+     "168",
+     "466kB",
+     "51.4%"
+    ],
+    [
+     "MCUNetV2-YOLOV3-M4[87]",
+     "NeurIPS(2021)",
+     "NAS",
+     "224×224",
+     "0.47M",
+     "STM32F412",
+     "172",
+     "247kB",
+     "64.6%"
+    ],
+    [
+     "MCUNetV2-YOLOV3-H7[87]",
+     "NeurIPS(2021)",
+     "NAS",
+     "224×224",
+     "0.67M",
+     "STM32H743",
+     "343",
+     "438kB",
+     "68.3%"
+    ],
+    [
+     "EtinyNet-SSD [162]",
+     "AAAI(2022)",
+     "Quantization(ASQ)",
+     "256×256",
+     "0.59M",
+     "STM32H743",
+     "164",
+     "395kB",
+     "56.4%"
+    ],
+    [
+     "XiNet-YOLOV7-S [4]",
+     "ICCV(2023)",
+     "ModelDesign(HAS)",
+     "256×256",
+     "-",
+     "STM32H743",
+     "80",
+     "53kB",
+     "54.0%"
+    ],
+    [
+     "XiNet-YOLOV7-M [4]",
+     "ICCV(2023)",
+     "ModelDesign(HAS)",
+     "384×384",
+     "-",
+     "STM32H743",
+     "220",
+     "138kB",
+     "67.0%"
+    ],
+    [
+     "XiNet-YOLOV7-L [4]",
+     "ICCV(2023)",
+     "ModelDesign(HAS)",
+     "416×416",
+     "-",
+     "STM32H743",
+     "789",
+     "511kB",
+     "74.9%"
+    ],
+    [
+     "TinyissimoYOLO [110]",
+     "",
+     "IEEEAccess(2024)Quantization(QAT)",
+     "112×112",
+     "0.70M",
+     "GAP9",
+     "55",
+     "-",
+     "56.4%"
+    ]
+   ]
+  }
+ ]
+}

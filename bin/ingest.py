@@ -2,7 +2,11 @@
 """Ingestion des PDF de inbox/ : extraction, nettoyage, écriture de papers/<paper_id>/.
 
 usage : ingest.py [--force] [chemin.pdf ...]
-Sans chemin, traite tous les PDF de inbox/. Voir SETUP.md §5.
+        ingest.py --reparse [paper_id ...]
+Sans chemin, traite tous les PDF de inbox/. --reparse ré-extrait les papiers déjà ingérés
+(tous, ou ceux dont le paper_id contient un des motifs) depuis leur grobid.tei.xml, sans
+GROBID (repli PyMuPDF sur paper.pdf pour ceux qui n'en ont pas) ; fiche.md n'est jamais
+écrasée. Voir SETUP.md §5.
 """
 import argparse
 import difflib
@@ -19,7 +23,7 @@ sys.path.insert(0, str(ROOT))
 
 import requests  # noqa: E402
 
-from lib import citation, doc, ids, pdftext, schema, tei  # noqa: E402
+from lib import citation, doc, ids, ligatures, pdftext, schema, tei  # noqa: E402
 
 INBOX = ROOT / "inbox"
 PAPERS = ROOT / "papers"
@@ -34,12 +38,17 @@ AXIS_RULES = (
     ("toolflows", r"hls4ml|\bFINN\b|vitis ai|fpga ai suite|\bSATAY\b|tool ?flow|codesign workflow"),
     ("platforms", r"zynq|kria|kv260|zcu ?10[24]|pynq|versal|ultrascale|jetson"),
 )
-# Découverte (bin/discover.py) : un candidat est « dans le sujet » s'il correspond à
-# TOPIC_RE (contexte matériel) ou relève d'un des HARDWARE_AXES ; un axe thématique seul
-# (autoencodeur, YOLO sans matériel) ne suffit pas. AXIS_QUERIES sert de requête par défaut
-# pour `discover --axis`. À redéfinir avec les axes pour un autre sujet de recherche.
+# Découverte (bin/discover.py) : un candidat est « dans le sujet » s'il relève d'un des
+# HARDWARE_AXES, si son titre correspond à TITLE_TOPIC_RE, ou si titre + résumé mentionnent
+# au moins TOPIC_MIN_HITS fois TOPIC_RE (contexte matériel). Une mention isolée dans le
+# résumé ne suffit pas (SqueezeNet, DoReFa-Net : « feasible FPGA deployment » en passant),
+# ni un axe thématique seul (autoencodeur, YOLO sans matériel). AXIS_QUERIES sert de requête
+# par défaut pour `discover --axis`. À redéfinir avec les axes pour un autre sujet.
 HARDWARE_AXES = ("toolflows", "platforms")
 TOPIC_RE = r"\bFPGAs?\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\bHLS\b|high-level synthesis|\bSoC\b|edge (?:ai|devices?|inference)|embedded"
+TITLE_TOPIC_RE = TOPIC_RE + (r"|accelerators?\b|\bhardware\b|tinyml|micro-?controllers?|\bMCUs?\b|on-device"
+                             r"|(?:extreme|the|at) edge\b|edge (?:computing|intelligence|artificial)")
+TOPIC_MIN_HITS = 2
 AXIS_QUERIES = {
     "surveys": "survey FPGA deep learning accelerator",
     "yolo-fpga": "YOLO object detection FPGA accelerator",
@@ -193,9 +202,35 @@ def apply_citation(meta, cit, warnings):
             meta[k] = cit[k]
     if cit.get("doi") and not meta.get("arxiv_id"):
         meta["url"] = f"https://doi.org/{cit['doi']}"
-    resolved = ("type de publication", "publié ailleurs") if cit.get("type") else ()
-    warnings[:] = [w for w in warnings if not w.startswith(resolved) and w != schema.WARN_MANUAL_METADATA]
+    warnings[:] = resolved_by_citation(warnings, cit)
     return meta
+
+
+def resolved_by_citation(warnings, cit):
+    """Avertissements restants une fois un fichier de citation appliqué."""
+    resolved = ("type de publication", "publié ailleurs") if cit.get("type") else ()
+    return [w for w in warnings if not w.startswith(resolved) and w != schema.WARN_MANUAL_METADATA]
+
+
+# Avertissements recalculés à chaque extraction ; les autres (métadonnées, notes manuelles)
+# appartiennent à l'utilisateur une fois le papier ingéré : une ré-extraction les conserve.
+EXTRACTION_WARNINGS = ("GROBID a échoué", "ligatures perdues", "aucune section détectée",
+                       "sections numérotées non détectées", "corps très court")
+AXES_WARNINGS = (schema.WARN_AXES_GUESSED, "aucun axe détecté")
+
+
+def reextraction_warnings(old, new, cit=None):
+    """Avertissements d'une ré-extraction : ceux de l'ancien metadata.json, hors extraction
+    (moins ceux qu'un fichier de citation résout), puis les avertissements d'extraction
+    recalculés. Fiche done : plus aucun avertissement sur les axes (confirmés)."""
+    kept = [w for w in (old.get("extraction") or {}).get("warnings") or []
+            if not w.startswith(EXTRACTION_WARNINGS)]
+    if cit:
+        kept = resolved_by_citation(kept, cit)
+    out = kept + [w for w in new if w.startswith(EXTRACTION_WARNINGS) and w not in kept]
+    if (old.get("status") or {}).get("fiche") == "done":
+        out = [w for w in out if not w.startswith(AXES_WARNINGS)]
+    return out
 
 
 def find_citation(pdf, doi, title):
@@ -233,8 +268,12 @@ def check_missing(meta, warnings):
 
 # --- traitement d'un PDF --------------------------------------------------------------
 
-def process(pdf, force=False, use_grobid=True):
-    """Retourne ('ingéré' | 'ignoré', message)."""
+def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None):
+    """Retourne ('ingéré' | 'ignoré', message).
+
+    tei_bytes : TEI déjà obtenu (--reparse), GROBID n'est alors pas appelé.
+    vocab : vocabulaire de lib/ligatures (calculé sur le corpus si absent).
+    """
     pdf = Path(pdf).resolve()
     meta_json = pdf.with_suffix(".meta.json")
     arx = json.loads(meta_json.read_text()) if meta_json.exists() else None
@@ -244,8 +283,11 @@ def process(pdf, force=False, use_grobid=True):
     if existing and not force:
         return "ignoré", f"déjà ingéré dans papers/{existing.name} (--force pour ré-extraire ; sinon supprimer le PDF de inbox/)"
 
-    warnings, tei_bytes = [], None
-    if use_grobid:
+    warnings = []
+    if tei_bytes is not None:
+        header, blocks, refs = tei.parse(tei_bytes)
+        backend = "grobid"
+    elif use_grobid:
         try:
             tei_bytes = grobid_extract(pdf)
             header, blocks, refs = tei.parse(tei_bytes)
@@ -285,6 +327,13 @@ def process(pdf, force=False, use_grobid=True):
             return "ignoré", f"papers/{paper_id} existe déjà pour un autre PDF : conflit à résoudre à la main"
     meta["id"] = paper_id
 
+    fixed, left = ligatures.repair_blocks(blocks, vocab if vocab is not None
+                                          else ligatures.corpus_vocabulary(ROOT))
+    if fixed:
+        warnings.append(f"ligatures perdues à l'extraction : {fixed} mot(s) réparé(s) (lib/ligatures.py)")
+    if left:
+        warnings.append(f"ligatures perdues : {left} fragment(s) non réparé(s) (« classi cation »…)")
+
     body_chars = sum(len(t) for b in blocks if b.kind == "section" for t, _ in b.paras)
     if not any(b.kind == "section" and b.heading for b in blocks):
         warnings.append("aucune section détectée")
@@ -294,6 +343,8 @@ def process(pdf, force=False, use_grobid=True):
                         "leur texte est rattaché à la section précédente")
     if body_chars < 2000:
         warnings.append(f"corps très court ({body_chars} caractères) : extraction douteuse")
+    if old:
+        warnings = reextraction_warnings(old, warnings, cit[1] if cit else None)
     meta["extraction"] = {
         "backend": backend,
         "ok": backend == "grobid" and body_chars >= 2000,
@@ -302,8 +353,6 @@ def process(pdf, force=False, use_grobid=True):
     meta["status"]["extracted"] = True
 
     out = PAPERS / paper_id
-    if old and meta["status"]["fiche"] == "done":  # axes et tags confirmés lors de la fiche
-        meta["extraction"]["warnings"] = [w for w in warnings if w != schema.WARN_AXES_GUESSED]
 
     errs = schema.validate_metadata(meta)
     if errs:
@@ -352,9 +401,10 @@ def run(pdfs=None, force=False):
         print("GROBID ne répond pas (bash bin/grobid.sh start) : repli PyMuPDF, métadonnées à vérifier.")
 
     counts = {"ingéré": 0, "ignoré": 0, "erreur": 0}
+    vocab = ligatures.corpus_vocabulary(ROOT)
     for pdf in pdfs:
         try:
-            status, msg = process(pdf, force=force, use_grobid=use_grobid)
+            status, msg = process(pdf, force=force, use_grobid=use_grobid, vocab=vocab)
         except Exception as e:
             status, msg = "erreur", f"{type(e).__name__}: {e}"
         counts[status] += 1
@@ -365,12 +415,41 @@ def run(pdfs=None, force=False):
     return counts["erreur"]
 
 
+def reparse(patterns=()):
+    """Ré-extrait les papiers déjà ingérés depuis papers/<id>/grobid.tei.xml (sans GROBID),
+    ou depuis paper.pdf par PyMuPDF s'ils n'ont pas de TEI. Retourne le nombre d'erreurs."""
+    folders = sorted(p for p in PAPERS.iterdir() if (p / "metadata.json").exists())
+    if patterns:
+        folders = [f for f in folders if any(q in f.name for q in patterns)]
+    if not folders:
+        print("aucun papier ne correspond.")
+        return 1
+    vocab = ligatures.corpus_vocabulary(ROOT)
+    errors = 0
+    for folder in folders:
+        pdf, tei_path = folder / "paper.pdf", folder / "grobid.tei.xml"
+        try:
+            if not pdf.exists():
+                raise FileNotFoundError("paper.pdf absent (gitignoré : le redéposer)")
+            tei_bytes = tei_path.read_bytes() if tei_path.exists() else None
+            status, msg = process(pdf, force=True, use_grobid=False, tei_bytes=tei_bytes, vocab=vocab)
+        except Exception as e:
+            status, msg = "erreur", f"{type(e).__name__}: {e}"
+            errors += 1
+        print(f"{status:7} {folder.name} → {msg}")
+    return errors
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--force", action="store_true",
                     help="ré-extrait un article déjà ingéré (fiche.md n'est jamais écrasée)")
-    ap.add_argument("pdfs", nargs="*", help="PDF à ingérer (défaut : tout inbox/)")
+    ap.add_argument("--reparse", action="store_true",
+                    help="ré-extrait les papiers déjà ingérés depuis leur TEI, sans GROBID")
+    ap.add_argument("pdfs", nargs="*", help="PDF à ingérer (défaut : tout inbox/) ; avec --reparse : motifs de paper_id")
     args = ap.parse_args()
+    if args.reparse:
+        sys.exit(1 if reparse(args.pdfs) else 0)
     sys.exit(1 if run(args.pdfs, force=args.force) else 0)
 
 

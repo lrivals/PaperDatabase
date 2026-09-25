@@ -68,8 +68,12 @@ PaperDatabase/
 │   ├── tei.py
 │   ├── doc.py              # représentation commune GROBID / PyMuPDF
 │   ├── pdftext.py          # extraction de repli PyMuPDF
+│   ├── ligatures.py        # réparation des ligatures perdues (« classi cation »)
+│   ├── citation.py         # exports .bib / .ris éditeur
 │   ├── schema.py
-│   ├── refs.py             # rapprochement des références, classement des externes
+│   ├── refs.py             # rapprochement des références, classement des externes, citations
+│   ├── query.py            # requêtes N0 sans LLM (pdb bench, paper, cites)
+│   ├── rag.py              # recherche de passages (pdb search, show, verify)
 │   ├── openalex.py         # client OpenAlex (DOI → arXiv, citations, recherche), cache
 │   ├── status.py           # état de la base et prochaines actions (pdb status)
 │   ├── graph.py            # nœuds, liens et positions du graphe 3D
@@ -81,7 +85,11 @@ PaperDatabase/
 │   ├── test_tei.py
 │   ├── test_schema.py
 │   ├── test_ingest.py
+│   ├── test_ligatures.py
 │   ├── test_refs.py
+│   ├── test_reindex.py     # notes benchmarks, mesures propres own-…
+│   ├── test_query.py
+│   ├── test_rag.py         # encodeur factice
 │   ├── test_graph.py
 │   ├── test_lineage.py
 │   ├── test_viz.py
@@ -89,7 +97,7 @@ PaperDatabase/
 │   ├── test_openalex.py    # OpenAlex simulé : découverte, ajout par DOI / liste
 │   ├── test_citation.py    # exports .bib / .ris éditeur : lecture, appariement, priorité
 │   └── test_status.py
-├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover
+├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask
 ├── inbox/                  # dépôt des PDF à ingérer
 └── papers/
     └── <paper_id>/
@@ -242,11 +250,13 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `status` | `lib/status.py` | état de l'environnement (venv, Docker, GROBID, dépendances optionnelles) et du corpus (papiers par axe, fiches à faire, extractions `ok: false`, benchmarks, gaps, `inbox/`, git), puis au plus 3 actions suggérées par ordre de priorité |
 | `add …` | `add.run` | propose de démarrer GROBID s'il est arrêté (`--start-grobid` : sans question), puis `reindex.run` |
 | `ingest [--force] [pdf…]` | `ingest.run` | idem |
+| `ingest --reparse [id…]` | `ingest.reparse` | ré-extraction depuis `grobid.tei.xml`, sans GROBID, puis `reindex.run` |
 | `reindex` | `reindex.run` | |
 | `discover …` | `discover.run` | |
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
 | `search`, `show`, `verify`, `test --rag` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), texte exact, contrôle de citation, évaluation sur `tests/fixtures/rag_eval*.jsonl` ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5 et §10 |
-| `bench [filtres]`, `paper <requête>` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
+| `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
+| `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
 
 ### `bin/setup.sh`
 
@@ -277,7 +287,7 @@ de `candidates_arxiv.txt`. Enchaîne ensuite sur `ingest.py` pour les fichiers a
 Cas d'erreur à traiter explicitement : id arXiv inexistant, réseau indisponible, PDF déjà
 présent dans `inbox/` ou déjà ingéré.
 
-### `bin/ingest.py [--force] [chemin.pdf]`
+### `bin/ingest.py [--force] [chemin.pdf]` / `bin/ingest.py --reparse [paper_id…]`
 
 Le cœur du pipeline. Sans argument, traite tous les PDF de `inbox/` non encore ingérés.
 
@@ -306,7 +316,16 @@ Pour chaque PDF :
    - les légendes de figures et de tableaux sont **conservées** (elles portent souvent les
      chiffres de performance), taguées `figure` / `table` dans `sections.jsonl` ;
    - les équations mal extraites sont conservées telles quelles, sans tentative de
-     reconstruction.
+     reconstruction ;
+   - les ligatures perdues (« classi cation », « e cient », « the rst ») sont réparées
+     par `lib/ligatures.py` : un mot n'est recollé que si le résultat est connu (présent
+     dans ≥ 2 papiers du corpus ou dans une liste intégrée) et que le fragment ne l'est
+     pas ; le nombre de réparations et les fragments restants vont dans
+     `extraction.warnings` ;
+   - un paragraphe que GROBID a classé en figure sans légende est rendu au corps quand il
+     ressemble à de la prose (`tei.looks_like_prose`) : il est réinséré après le paragraphe
+     coupé en pleine phrase de la même page (ou du bas de la précédente), sinon après le
+     dernier paragraphe de sa page.
 5. **Écriture** de `fulltext.md`, `sections.jsonl`, `refs.jsonl`, `metadata.json`, et
    création de `fiche.md` depuis le template de [DATA_MODEL.md](DATA_MODEL.md) avec
    `status.fiche = "todo"`.
@@ -318,7 +337,15 @@ tout sauf `fiche.md` (le travail de lecture ne doit jamais être écrasé par un
 ré-extraction). Les métadonnées déjà présentes priment ; les axes et tags d'une fiche `done`
 sont conservés tels quels, ceux d'une fiche `todo` sont l'union des anciens et des nouveaux
 (`keep_classification`, testé par `test_ingest.py`) : une correction manuelle survit à la
-ré-extraction.
+ré-extraction. De même pour `extraction.warnings` : seuls les avertissements d'extraction
+(sections, ligatures, corps court, repli) sont recalculés ; ceux sur les métadonnées,
+ajoutés ou retirés à la main, sont conservés (`reextraction_warnings`).
+
+`--reparse` ré-extrait les papiers déjà ingérés (tous, ou ceux dont le `paper_id` contient
+un des motifs donnés) depuis leur `grobid.tei.xml`, sans appeler GROBID ; un papier sans TEI
+est relu depuis `paper.pdf` par PyMuPDF. À lancer après une amélioration du parsing :
+`bin/pdb ingest --reparse` réindexe ensuite. Les `chunk_id` des papiers modifiés peuvent
+changer.
 
 ### `bin/reindex.py`
 
@@ -327,8 +354,10 @@ veille, trié par année décroissante, colonnes `id | titre | auteurs | année 
 fiche`. Ajoute en tête un compteur (`N papiers, M fiches à faire`).
 
 Vérifie aussi la cohérence : tout `paper_id` apparaissant dans `benchmarks.csv` doit exister
-dans `papers/`, et signale les fiches `done` qui n'ont aucune ligne de benchmark (souvent le
-signe d'un oubli, sauf pour les surveys).
+dans `papers/` (sauf une mesure propre `own-…`, qui doit avoir son protocole dans
+`docs/experiences/`, DATA_MODEL §1), et signale les fiches `done` qui n'ont aucune ligne de
+benchmark (souvent le signe d'un oubli, sauf pour les surveys et les fiches marquées
+`benchmarks: none`, DATA_MODEL §8).
 
 Régénère aussi `external_refs.csv` ([DATA_MODEL.md](DATA_MODEL.md) §9) : les travaux absents
 de la base cités par au moins deux papiers, du plus cité au moins cité. Les variantes d'une
@@ -352,7 +381,8 @@ versions y sont souvent deux travaux distincts. Puis, selon les modes (défaut :
 
 Les papiers déjà en base sont exclus (clés de `lib/refs.py`), les versions d'un même travail
 fusionnées par titre normalisé. Chaque candidat reçoit ses axes probables
-(`ingest.classify`), un drapeau `in_topic` (`TOPIC_RE` ou axe de `HARDWARE_AXES`) et un score
+(`ingest.classify`), un drapeau `in_topic` (axe de `HARDWARE_AXES`, titre selon
+`TITLE_TOPIC_RE`, ou au moins deux mentions de `TOPIC_RE`) et un score
 (3 × liens de citation avec le corpus + liens « related » + 2 si trouvé par requête
 + 2 × axes + log10 des citations). Sorties : `candidates.csv` (DATA_MODEL §10) et
 `candidates_arxiv.txt` (les `--top` premiers candidats dans le sujet disponibles sur arXiv,
@@ -465,16 +495,25 @@ sémantiques (PCA) et force-directed (`networkx.spring_layout`). Garde toutes le
 (Sugiyama simplifié, déterministe), sans Dash ; testé par `tests/test_lineage.py`.
 `vizfig.py` : figures Plotly (3D, frise) et panneau de détail, appelables sans serveur ;
 testé par `tests/test_viz.py`. `embed.py` : embeddings sentence-transformers avec cache,
-optionnel ; testé par `tests/test_embed.py` (encodeur simulé, sans la dépendance). Réutilisable
-pour la future recherche sémantique.
+optionnel ; testé par `tests/test_embed.py` (encodeur simulé, sans la dépendance). La
+recherche de passages (`lib/rag.py`) a son propre index : [docs/RAG.md](docs/RAG.md).
 
 ### `lib/refs.py`
 
 Rapprochement des références, sans dépendance de visualisation : clés exactes
 (`ref_keys` : arXiv → DOI → titre normalisé), puis fusion des titres quasi identiques à un an
 près (`same_title`), choix du titre d'affichage le moins abîmé (`best_title`) et classement
-des travaux hors base (`external_ranking`). Utilisé par `lib/graph.py` et `reindex.py`.
+des travaux hors base (`external_ranking`), qui cite qui (`citations`, pour `pdb cites` /
+`cited-by`). Utilisé par `lib/graph.py`, `reindex.py` et `bin/pdb.py`.
 Testé par `tests/test_refs.py`.
+
+### `lib/ligatures.py`
+
+Réparation des ligatures fi/ff/fl/ffi/ffl perdues à l'extraction, appelée par `ingest.py`
+sur les blocs des deux backends. Jonction « e cient » → « efficient », début de mot
+« the rst » → « the first » ; un mot n'est réparé que si le résultat est connu (mot présent
+dans ≥ 2 papiers du corpus, ou liste intégrée `KNOWN`) et le fragment inconnu. Les URL ne
+sont pas touchées. Testé par `tests/test_ligatures.py`.
 
 ### `lib/ids.py`
 
@@ -584,7 +623,7 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 24/09/2026 (fin de journée). À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 25/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
 
 **Bilan du 24/09/2026.** Outillage : conservation des axes/tags à la ré-extraction,
@@ -632,6 +671,29 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
   vérifier) et le protocole [docs/experiences/kv260-map-sur-cible.md](docs/experiences/kv260-map-sur-cible.md).
 - Clé `OPENALEX_API_KEY` configurée dans `~/.bashrc`.
 - 89 tests.
+
+**Bilan du 25/09/2026 (requêtes et recherche de passages).** Spécification et détail :
+[docs/RAG.md](docs/RAG.md).
+- Requêtes N0 sans LLM : `pdb bench` (filtres, tri, `--count`, colonnes de source toujours
+  affichées) et `pdb paper` (fiche d'identité, id court), `lib/query.py`.
+- Recherche de passages `lib/rag.py` : découpage de `sections.jsonl`, BM25 + embeddings
+  bge-small, fusion RRF, index incrémental dans `.cache/rag/` reconstruit par `reindex`.
+  Commandes `pdb search` (option `--rerank`, cross-encoder), `pdb show`, `pdb verify`,
+  `pdb test --rag`.
+- Skill `/paper-ask`, essayée en réel sur la mesure de puissance (RAG.md §12) : ~2 500 tokens
+  lus, 7 citations vérifiées `OK`.
+- Évaluation : recall@5 0,90 en anglais (1,00 avec `--rerank`), 0,50 en français.
+- 113 tests.
+
+**Bilan du 25/09/2026 (outillage restant).**
+- `pdb cites` / `cited-by` (`--external`), `pdb paper` sur plusieurs ids.
+- Réparation des ligatures perdues (`lib/ligatures.py`) et des paragraphes que GROBID
+  classait en figure (`tei.looks_like_prose`). Corpus ré-extrait par le nouveau
+  `ingest --reparse`, sans GROBID ; les avertissements manuels sont désormais conservés.
+- `benchmarks: none` pour une fiche sans ligne justifiée ; mesures propres `own-…`
+  (DATA_MODEL §1, `bench --own`).
+- `discover` : `in_topic` plus strict (titre, axe matériel, ou deux mentions).
+- 133 tests.
 
 ### Prochaines étapes prioritaires
 
@@ -697,7 +759,8 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
       branchement dans `reindex.py` ; skill `/paper-ask` ; jeux d'évaluation
       `tests/fixtures/rag_eval.jsonl` (20 q.) et `rag_eval_fr.jsonl` (8 q.) (25/09/2026,
       110 tests). Évaluation : recall@5 0,90 en anglais, 0,50 en français (RAG.md §10) ;
-    - [ ] `pdb cites` / `cited-by` (RAG.md §5.5) ;
+    - [x] `pdb cites` / `cited-by`, `--external` (RAG.md §5.5), et `pdb paper` sur
+      plusieurs ids (25/09/2026) ;
     - [x] essai réel de `/paper-ask` sur la mesure de puissance (RAG.md §12) ; corrigés
       ensuite : id court des noms composés, `bench --count` (112 tests) ;
     - [x] reranking par cross-encoder, option `search --rerank` : recall@5 0,90 → 1,00 en
@@ -727,6 +790,7 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
 | `benchmarks.csv` | 109 lignes (le 24/09/2026) : 16 `board`, 14 `chip` (Rey et al., Jetson et RPi), 24 `unspecified`, 3 `estimated`, 52 sans puissance ; 71 lignes de détection, dont 15 avec mAP COCO (Alqahtani et al., Jetson et Hailo), aucune ligne FPGA avec mAP COCO ; aucune ligne pour les surveys, hls4ml 2021 ni fpgaConvNet (justifié dans les fiches) |
 | `gaps.md` | 16 gaps, dont 12 étayés (5e passage, le 24/09/2026, 24 fiches `done`) |
 | Visualisation (`viz.py`, `lib/graph.py`, `lib/lineage.py`, `lib/vizfig.py`, `lib/embed.py`) | terminée le 24/09/2026 : graphe 3D (recherche, filtres, surlignage des liens, détail avec fiche et benchmarks, export HTML) et onglet Généalogie (papier ou sujet, suite probable déduite) ; embeddings optionnels ; testée (`test_graph.py`, `test_lineage.py`, `test_viz.py`, `test_embed.py` ; 77 tests au total avec ceux du 24/09/2026) ; 10 citations internes, 89 références externes co-citées |
+| Requêtes et recherche de passages (`lib/query.py`, `lib/rag.py`, `pdb bench`/`paper`/`search`/`show`/`verify`) | depuis le 25/09/2026 : BM25 + embeddings bge-small, fusion RRF, reranking optionnel, index incrémental ; testé (`test_query.py`, `test_rag.py`) et évalué (RAG.md §10) ; skill `/paper-ask` essayée en réel (RAG.md §12) |
 | Versionnage | dépôt git + remote GitHub ; travaux du 24/09/2026 commités et poussés |
 
 ### Tâches — corpus
@@ -792,8 +856,8 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
 
 - [ ] Expérience de référence YOLOv5 INT8 sur KV260 avec protocole de mesure complet :
   voir « Prochaines étapes prioritaires » (3). Consigner les résultats dans
-  `benchmarks.csv` sous un `paper_id` dédié aux mesures propres (convention à définir
-  dans DATA_MODEL.md).
+  `benchmarks.csv` sous le `paper_id` `own-2026-kv260-map-sur-cible` (convention des mesures
+  propres définie le 25/09/2026, DATA_MODEL §1 ; `bin/pdb bench --own`).
 
 - [ ] Généalogies à relever dès maintenant (onglet Généalogie) : `hls4ml`, `finn|binar`,
   `yolo|you only look once` — lignées de toolflows et points où le corpus ne couvre pas un
@@ -812,9 +876,13 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
   arXiv (OpenAlex) et lit `--from liste.txt`.
 - [x] **Découverte de candidats** (24/09/2026) : `bin/discover.py`, `lib/openalex.py`,
   `/paper-discover`, `candidates.csv` ; guide `docs/GUIDE.md`.
-- [ ] **Roder `/paper-discover`** sur un axe et un gap, et ajuster `TOPIC_RE` / le score si
-  le tri laisse passer trop de hors-sujet (ex. SqueezeNet est classé « dans le sujet » car
-  son résumé mentionne l'embarqué).
+- [ ] **Roder `/paper-discover`** sur un axe et un gap. Fait le 25/09/2026 : `in_topic` exige
+  un titre explicite (`TITLE_TOPIC_RE` : FPGA, accélérateur, TinyML, MCU, edge computing…),
+  un axe matériel, ou au moins deux mentions de `TOPIC_RE`. Évalué sur les 857 travaux du
+  cache OpenAlex : 34 hors-sujet sortent (SqueezeNet, DoReFa-Net, chants d'oiseaux…), 46
+  papiers TinyML / accélérateurs / apprentissage on-device entrent (472 → 484 « oui »).
+  Reste : relancer `bin/pdb discover` en réel (écrase `candidates.csv`), puis juger le tri
+  et le score sur un axe et un gap.
 
 - [x] **Axes et tags stables à la ré-extraction** (24/09/2026) : `keep_classification`
   dans `ingest.py`, testé par `test_ingest.py`.
@@ -823,20 +891,26 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
 - [x] **Fusion des variantes d'une même référence** (24/09/2026) : `lib/refs.py` fusionne
   les titres quasi identiques (ratio ≥ 0,92, ou préfixe ≥ 6 mots, années à ±1 an) ; les
   publications distinctes (fpgaConvNet FCCM 2016 / TNNLS 2019) restent séparées.
-- [ ] **Ligatures perdues à l'extraction.** Dans 1806.01683, « fi », « ff », « fl »
-  disparaissent (« classi cation », « e cient ») : un `grep` sur ces mots rate le papier.
-  Détecter le cas (warning dans `extraction.warnings`) et, si possible, restaurer depuis
-  PyMuPDF ou un dictionnaire.
-- [ ] **Texte classé en figure par GROBID.** Un paragraphe coupé par une figure peut
-  finir en « [figure sans légende identifiée] » (2507.18174, 2403.07851) : le recoller à la
-  section de la page correspondante quand il ne ressemble pas à une légende.
-- [ ] **Note `reindex.py` pour une fiche `done` sans benchmark** : permettre de marquer
-  l'absence de ligne comme justifiée (ex. hls4ml 2021) pour éviter une note permanente.
+- [x] **Ligatures perdues à l'extraction** (25/09/2026) : `lib/ligatures.py` recolle les
+  mots (« classi cation », « e cient », « the rst ») d'après le vocabulaire du corpus (mots
+  présents dans ≥ 2 papiers) et une liste intégrée ; warning dans `extraction.warnings`.
+  1806.01683 : 162 mots réparés, aucun fragment restant, aucune modification ailleurs.
+- [x] **Texte classé en figure par GROBID** (25/09/2026) : `tei.looks_like_prose`, puis
+  réinsertion après le paragraphe coupé (même page ou bas de la précédente). 40 → 21
+  « [figure sans légende identifiée] » dans le corpus ; les restantes sont de vraies
+  légendes, des tableaux, ou des cas ambigus (« The anticipated output… », 2024-mittal).
+- [x] **Note `reindex.py` pour une fiche `done` sans benchmark** (25/09/2026) :
+  `benchmarks: none` dans le front-matter de la fiche (DATA_MODEL §8) ; posé sur hls4ml 2021
+  (2103.05579) et fpgaConvNet (1711.08740).
+- [x] **Ré-extraction sans GROBID** (25/09/2026) : `bin/pdb ingest --reparse [id…]` relit
+  `grobid.tei.xml` ; les avertissements manuels survivent à la ré-extraction. Corpus
+  ré-extrait le 25/09/2026 ; `pdb test --rag` : rappel inchangé (RAG.md §10).
 - [x] **Embeddings dans la vue 3D** (24/09/2026) : `lib/embed.py` (sentence-transformers,
   cache `.cache/embeddings/`), bouton TF-IDF / embeddings dans `viz.py`. Pas encore testé
   avec le vrai modèle (dépendance non installée) : à faire après
   `pip install -r requirements-embed.txt`. Réutilisable pour la recherche sémantique
   ci-dessous.
-- [ ] **Recherche sémantique.** Au-delà de ~200 papiers, si `grep` ne suffit plus, ajouter
-  un index local (sentence-transformers + ChromaDB) **par-dessus** `sections.jsonl`, sans
-  rien changer à l'arborescence. C'est un ajout, jamais un remplacement.
+- [x] **Recherche sémantique** (25/09/2026) : `lib/rag.py`, index local **par-dessus**
+  `sections.jsonl` (BM25 + sentence-transformers bge-small, fusion RRF), sans rien changer
+  à l'arborescence. Pas de ChromaDB : une recherche exhaustive en numpy suffit jusqu'à
+  ~10⁵ passages ([docs/RAG.md](docs/RAG.md) §11).

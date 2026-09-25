@@ -142,6 +142,30 @@ class TestPaperCard(unittest.TestCase):
         with self.assertRaises(ValueError):
             query.paper_card(PAPERS[0], 0, "x", ["nope"])
 
+    def test_paper_table(self):
+        cards = [query.card_values(m, 0, s, ["short", "type"])
+                 for m, s in ((PAPERS[0], "1612.07119"), (PAPERS[1], "2022-feng"))]
+        self.assertEqual(query.paper_table(cards),
+                         "short\ttype\n1612.07119\tconference\n"
+                         "2022-feng\tpreprint (non relu par les pairs)")
+        self.assertEqual(query.paper_table([]), "")
+
+
+class TestCitationLines(unittest.TestCase):
+    def test_internal_then_external(self):
+        by_id = {m["id"]: m for m in PAPERS}
+        short = query.short_ids(PAPERS)
+        groups = {"ext:a": {"title": "Rare", "year": 2015, "arxiv_id": None, "doi": "10.1/r"},
+                  "ext:b": {"title": "Popular", "year": 2016, "arxiv_id": "1510.00149", "doi": None}}
+        citers = {"ext:a": {"p1"}, "ext:b": {"p1", "p2"}}
+        targets = {"2022-feng-yolo-edge", "arxiv-1612.07119-finn", "ext:a", "ext:b"}
+        self.assertEqual(query.citation_lines(targets, by_id, short), [
+            "1612.07119\t2016\tFINN: binarized",
+            "2022-feng-yolo-edge\t2022\tYOLO on edge"])
+        lines = query.citation_lines(targets, by_id, short, groups, citers)
+        self.assertEqual(lines[2:], ["ext\t2\t2016\tPopular\tarXiv:1510.00149",
+                                     "ext\t1\t2015\tRare\tdoi:10.1/r"])
+
 
 class TestLoad(unittest.TestCase):
     def test_load_from_disk(self):

@@ -43,5 +43,23 @@ class TestKeepClassification(unittest.TestCase):
         self.assertEqual(tags[:3], ["yolov5-tiny", "hls4ml", "kv260"])
 
 
+class TestReextractionWarnings(unittest.TestCase):
+    def test_manual_kept_extraction_recomputed(self):
+        old = {"status": {"fiche": "done"}, "extraction": {"warnings": [
+            "note ajoutée à la main", "sections numérotées non détectées : 2 — …",
+            "ligatures perdues à l'extraction : 3 mot(s) réparé(s)"]}}
+        new = ["type de publication à préciser",            # retiré à la main : pas remis
+               "aucun axe détecté : à classer dans /paper-fiche",
+               "ligatures perdues à l'extraction : 5 mot(s) réparé(s)"]
+        self.assertEqual(ingest.reextraction_warnings(old, new),
+                         ["note ajoutée à la main", "ligatures perdues à l'extraction : 5 mot(s) réparé(s)"])
+
+    def test_citation_resolves_old_warnings(self):
+        old = {"status": {"fiche": "todo"}, "extraction": {"warnings": [
+            "type de publication à préciser", "axes déduits automatiquement, à confirmer dans /paper-fiche"]}}
+        self.assertEqual(ingest.reextraction_warnings(old, [], {"type": "journal"}),
+                         ["axes déduits automatiquement, à confirmer dans /paper-fiche"])
+
+
 if __name__ == "__main__":
     unittest.main()

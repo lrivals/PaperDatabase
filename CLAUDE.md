@@ -54,7 +54,8 @@ brute d'extraction.
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ([docs/RAG.md](docs/RAG.md) §5.1) |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM, texte exact, contrôle d'une citation ([docs/RAG.md](docs/RAG.md) §5) |
 | `/paper-ask <question>` | réponse sourcée et vérifiée : `bench`, puis `search`, `show`, `verify` |
-| `bin/pdb paper <id \| mot>` | fiche d'identité d'un papier : métadonnées, preprint, statut de la fiche, nombre de benchmarks (`--bench` pour les lignes) |
+| `bin/pdb paper <id \| mot>…` | fiche d'identité d'un papier : métadonnées, preprint, statut de la fiche, nombre de benchmarks (`--bench` pour les lignes) ; plusieurs ids → une ligne par papier (`--fields short,type`) |
+| `bin/pdb cites <id>` / `bin/pdb cited-by <id>` | graphe de citations internes (`--external` : références hors base, avec leur nombre de citants) |
 | `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition + ingestion + réindexation (un DOI est résolu vers sa version arXiv via OpenAlex) |
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches `done` et `benchmarks.csv` |

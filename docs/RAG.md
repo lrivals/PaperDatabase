@@ -8,7 +8,7 @@ construire, comment s'en servir. Suivi des tâches : [SETUP.md §9](../SETUP.md#
 | Élément | Code | Tests unitaires | Vérifié sur la base réelle |
 |---|---|---|---|
 | `pdb bench` : filtres, tri, colonnes de source forcées, `!` low, lignes identiques signalées, `--max-chars`, `--count` | [lib/query.py](../lib/query.py), [bin/pdb.py](../bin/pdb.py) | [tests/test_query.py](../tests/test_query.py) (14) | oui : KV260, `--sort fps --desc`, `--min`/`--max`, colonne inconnue → code 2, `--count paper_id,power_scope` |
-| `pdb paper` : fiche d'identité, candidats si ambigu, `--bench` | idem | idem | oui : `finn` (ambigu), `1612.07119 --bench`, `2022-feng --fields` |
+| `pdb paper` : fiche d'identité, candidats si ambigu, `--bench`, plusieurs ids (une ligne chacun) | idem | idem | oui : `finn` (ambigu), `1612.07119 --bench`, `2022-feng --fields`, `1612.07119 2022-feng 2502.15737 finn` |
 | Identifiants courts (arXiv, sinon année-auteur, noms composés compris) | `lib/query.short_ids` | idem | oui : 28 papiers, aucune collision ; `2025-el-zeinaty` corrigé après l'essai (§12) |
 | Passages, BM25, embeddings bge-small, fusion RRF, filtres | [lib/rag.py](../lib/rag.py) | [tests/test_rag.py](../tests/test_rag.py) (10, encodeur factice) | oui : 2 405 passages ; évaluation §10 |
 | `pdb search` : colonne `cos`, `# pertinence faible` | `lib/rag.py`, `bin/pdb.py` | idem | oui : requêtes hors sujet (cos 0,45-0,55) et pertinentes (0,73-0,90) |
@@ -17,10 +17,11 @@ construire, comment s'en servir. Suivi des tâches : [SETUP.md §9](../SETUP.md#
 | Index incrémental, branché dans `reindex` | `lib/rag.build_index`, [bin/reindex.py](../bin/reindex.py) | idem (réencodage d'un seul passage modifié) | oui : 0,2 s sans changement, ~3 min pour une construction complète |
 | Évaluation `bin/pdb test --rag` | `lib/rag.evaluate`, `bin/pdb.py` | idem | oui : 20 questions EN et 8 FR (§10) |
 | Skill `/paper-ask` | [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md) | — | oui : un essai réel (§12) |
-| `pdb cites` / `cited-by` | — | — | **non implémenté** (§5.5) |
+| `pdb cites` / `cited-by`, `--external` | `lib/refs.citations`, `lib/query.citation_lines`, `bin/pdb.py` | `test_refs.py`, `test_query.py` | oui : `cited-by 1612.07119` (4 papiers), `cites 2025-hozhabr --external` (2 dans la base, 286 hors base) |
 | Reranking par cross-encoder (`search --rerank`) | `lib/rag.py` (`_cross_scores`, `Index.search(rerank=True)`) | idem (cross-encoder factice) | oui : évaluation §10, +1,2 s par recherche ; activé dans `/paper-ask` |
 
-Au total, `bin/pdb test` passe 113 tests, dont 24 pour cette couche (14 + 10).
+Au total, `bin/pdb test` passe 133 tests (le 25/09/2026, après `cites`, `paper` multiple,
+ligatures, figures rendues au corps et mesures propres).
 
 Objectifs, par ordre de priorité :
 
@@ -264,7 +265,7 @@ suivi du texte exact. `--context 1` ajoute les passages voisins du même papier,
 ### 5.4 `pdb paper` — fiche d'identité d'un papier
 
 ```
-bin/pdb paper <id|court|sous-chaîne> [--fields a,b,…] [--bench] [--format tsv|md|json]
+bin/pdb paper <id|court|sous-chaîne>… [--fields a,b,…] [--bench] [--format tsv|md|json]
 ```
 
 - Sortie : une ligne `clé<TAB>valeur` par champ. Champs : `id`, `short`, `title`,
@@ -276,16 +277,26 @@ bin/pdb paper <id|court|sous-chaîne> [--fields a,b,…] [--bench] [--format tsv
   autres données, avec le code 1. Par exemple, `pdb paper finn` renvoie FINN et FINN-R.
 - Id court : l'`arxiv_id` s'il existe, sinon `année-auteur` (`2022-feng`) ; l'id complet en
   cas de collision.
+- Plusieurs arguments : en-tête des champs, puis une ligne TSV par papier (champs par
+  défaut `short,year,type,title`). Un argument ambigu ou inconnu est signalé sur stderr
+  (`# finn : ambigu : 1612.07119, 1809.04570`) sans bloquer les autres, avec le code 1 ;
+  `--bench` est refusé.
 
-### 5.5 `pdb cites` / `pdb cited-by` — graphe de citations (à faire)
+### 5.5 `pdb cites` / `pdb cited-by` — graphe de citations
 
 ```
-bin/pdb cites <id>        # références du papier présentes dans la base
-bin/pdb cited-by <id>     # papiers de la base qui le citent
+bin/pdb cites <id> [--external]   # références du papier présentes dans la base
+bin/pdb cited-by <id>             # papiers de la base qui le citent
 ```
 
-Réutilisera `lib/refs.ref_keys` et le rapprochement de DATA_MODEL §6. L'option `--external`
-inclura les références hors base (titre, année, nombre de citants, comme `external_refs.csv`).
+Même rapprochement que la vue 3D et `external_refs.csv` (`lib/refs.group_refs`,
+DATA_MODEL §6 : arXiv, DOI, titre normalisé, titres quasi identiques).
+
+- Première ligne : `# <id> cite N papier(s) de la base et M travaux hors base`.
+- Puis une ligne `id_court<TAB>année<TAB>titre` par papier de la base, par année.
+- `--external` ajoute les travaux hors base, du plus cité au moins cité dans le corpus :
+  `ext<TAB>n_citants<TAB>année<TAB>titre<TAB>arXiv:…|doi:…|n/r`.
+- Pied `# ids:` pour les ids courts, comme `search`.
 
 ### 5.6 `pdb verify` — contrôle d'une citation
 
@@ -425,6 +436,11 @@ cible dans les 5 premiers).
 | bge-small-en-v1.5 | hybride (défaut) | 0,90 | 0,79 | 0,50 | 0,33 |
 | bge-small-en-v1.5 | hybride + rerank (`--rerank`) | **1,00** | **0,87** | 0,50 | 0,26 |
 
+Après la ré-extraction du 25/09/2026 (ligatures réparées, 19 paragraphes rendus au corps,
+2 396 passages), le rappel est inchangé partout ; les MRR bougent un peu (bge-small
+hybride : 0,79 → 0,75 en anglais ; rerank : 0,87 → 0,85 ; BM25 : 0,82 → 0,75) et le rappel
+BM25 en français monte (0,25 → 0,38).
+
 La colonne FR porte sur 8 des questions, traduites à la main en français
 ([tests/fixtures/rag_eval_fr.jsonl](../tests/fixtures/rag_eval_fr.jsonl), mêmes `expect`,
 question anglaise d'origine dans `en`). `bin/pdb test --rag` évalue les deux jeux.
@@ -519,4 +535,5 @@ comparaison, un seul `fulltext.md` en fait ~18 000 en moyenne.
   surveys, capteurs en introduction de hls4ml). Filtrer avec `--section` aurait réduit le
   bruit ;
 - les 8 appels `paper` pour connaître le type de publication pourraient se réduire à un
-  seul avec une option `--fields type` sur plusieurs ids ; non implémenté.
+  seul avec une option `--fields type` sur plusieurs ids. Fait depuis :
+  `pdb paper id1 id2 … --fields short,type`, utilisé par `/paper-ask`.

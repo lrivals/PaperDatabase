@@ -145,9 +145,10 @@ bin/pdb add --from candidates_arxiv.txt
 
 Comment lire `candidates.csv` :
 
-- `in_topic` : « oui » si le titre ou le résumé mentionne un contexte matériel (FPGA,
-  accélérateur, embarqué…) ou un toolflow / une plateforme ; un autoencodeur purement
-  logiciel reste « non » ;
+- `in_topic` : « oui » si le titre évoque le matériel (FPGA, accélérateur, TinyML, MCU,
+  edge computing…), si le résumé le fait au moins deux fois, ou si le papier relève d'un
+  toolflow / d'une plateforme ; un autoencodeur purement logiciel, ou un réseau qui cite le
+  FPGA une fois en passant (SqueezeNet), reste « non » ;
 - `reasons` : le lien avec le corpus (« cite 4 papiers du corpus », « cité par 3 papiers du
   corpus ») ;
 - `axes_guess` : l'axe probable ;
@@ -242,6 +243,10 @@ bin/pdb bench --has power_w --sort fps --desc -n 5 --format md
 bin/pdb bench --task detection --min fps=30 --max power_w=10
 bin/pdb paper finn                  # ambigu : liste FINN et FINN-R
 bin/pdb paper 1612.07119 --bench    # métadonnées + lignes de benchmark
+bin/pdb paper 1612.07119 2022-feng --fields short,type   # plusieurs papiers, une ligne chacun
+bin/pdb cites 2025-hozhabr --external   # ses références : dans la base, puis hors base
+bin/pdb cited-by 1612.07119         # papiers de la base qui citent FINN
+bin/pdb bench --own                 # vos propres mesures (paper_id own-…, DATA_MODEL §1)
 ```
 
 Dans la sortie, `!` marque une ligne de confiance `low`, et les ids courts sont expliqués en
@@ -318,7 +323,9 @@ Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
 | `bin/pdb discover [--forward] [--backward] [--related] [--axis A] [--query "…"] [--since AAAA]` | candidats → `candidates.csv`, `candidates_arxiv.txt` |
 | `bin/pdb reindex` | régénère `INDEX.md`, `external_refs.csv`, vérifie |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (`-h` pour les filtres) |
-| `bin/pdb paper <id \| mot>` | identité d'un papier (`--bench` : ses lignes) |
+| `bin/pdb paper <id \| mot>…` | identité d'un ou plusieurs papiers (`--bench` : ses lignes) |
+| `bin/pdb cites <id>` / `cited-by <id>` | références dans la base (`--external` : hors base aussi) / papiers qui le citent |
+| `bin/pdb ingest --reparse [id…]` | ré-extrait les papiers déjà ingérés depuis leur TEI, sans GROBID |
 | `bin/pdb search "<q>"`, `show <id>`, `verify <id> "<cit.>"` | passages, texte exact, contrôle d'une citation |
 | `bin/pdb test --rag` | évaluation de la recherche |
 | `bin/pdb grobid start\|stop\|status` | GROBID |

@@ -21,12 +21,19 @@ Identifiant stable, lisible et triable, utilisé comme nom de dossier et comme c
 |---|---|---|
 | Article arXiv | `arxiv-<id>-<slug-titre-court>` | `arxiv-2507.18174-yolo-edge-fpga` |
 | Autre | `<annee>-<premier-auteur>-<slug-titre-court>` | `2025-kim-yolov2-zynq7000` |
+| Mesure propre | `own-<annee>-<slug-du-protocole>` | `own-2026-kv260-map-sur-cible` |
 
 Le slug fait 3 à 5 mots, en minuscules, sans accents, mots vides retirés. Il est là pour la
 lisibilité humaine : c'est l'`id` arXiv ou le couple auteur-année qui porte l'unicité.
 
 Un `paper_id` ne change jamais une fois créé — il est référencé depuis `benchmarks.csv`,
 `INDEX.md` et les fiches.
+
+**Mesures propres.** Un id `own-…` n'existe que dans `benchmarks.csv` : il n'a jamais de
+dossier `papers/`. Sa source est le protocole `docs/experiences/<slug-du-protocole>.md`,
+complété des résultats, et `reindex.py` refuse une ligne dont le protocole manque.
+`source_section` désigne la section de ce protocole. `INDEX.md` les liste sous « Mesures
+propres » ; `bin/pdb bench --own` (ou `--no-own`) les isole de la littérature.
 
 ---
 
@@ -213,7 +220,7 @@ Colonnes, dans cet ordre :
 
 | Colonne | Exemple | Notes |
 |---|---|---|
-| `paper_id` | `2025-kim-yolov2-zynq7000` | |
+| `paper_id` | `2025-kim-yolov2-zynq7000` | ou `own-<annee>-<slug>` pour une mesure propre (§1) |
 | `model` | `YOLOv2` | tel que nommé par les auteurs |
 | `task` | `object detection` | `detection` \| `classification` \| `anomaly detection` \| ... |
 | `platform` | `Zynq-7000 XC7Z020` | référence exacte de la puce, pas seulement la famille |
@@ -301,6 +308,12 @@ La section **Statut de lecture** est obligatoire : elle matérialise la distinct
 qui a été lu et ce qui a été déduit, et empêche une fiche partielle de passer pour une
 lecture complète.
 
+Clé de front-matter facultative `benchmarks: none` : la fiche est `done` et le papier n'a
+volontairement aucune ligne dans `benchmarks.csv` (ratios seulement, chiffres absents du
+texte extrait…) ; la justification reste dans la section « Résultats ». `reindex.py` ne
+signale alors plus « fiche done sans ligne », mais signale une fiche marquée `none` qui a
+des lignes. Les surveys (axe `surveys`) n'en ont pas besoin.
+
 ---
 
 ## 9. `external_refs.csv`
@@ -333,7 +346,7 @@ versionnés.** Candidats à l'ajout trouvés via OpenAlex, papiers déjà en bas
 |---|---|
 | `rank` | rang |
 | `score` | 3 × liens de citation avec le corpus + liens « related » + 2 si trouvé par requête + 2 × axes probables + log10(citations + 1) |
-| `in_topic` | `oui` si le titre ou le résumé correspond à `ingest.TOPIC_RE` (contexte matériel) ou relève d'un axe de `ingest.HARDWARE_AXES` ; un axe thématique seul (autoencodeur, YOLO logiciel) ne suffit pas |
+| `in_topic` | `oui` si le candidat relève d'un axe de `ingest.HARDWARE_AXES`, si son titre correspond à `ingest.TITLE_TOPIC_RE` (FPGA, accélérateur, TinyML, MCU, edge computing…), ou si titre + résumé mentionnent au moins deux fois `ingest.TOPIC_RE` ; une mention isolée dans le résumé (SqueezeNet) ou un axe thématique seul (autoencodeur, YOLO logiciel) ne suffit pas |
 | `reasons` | lien avec le corpus : `cite N papier(s) du corpus`, `cité par N papiers du corpus`, `lié à N papier(s) du corpus (OpenAlex)`, requête ou axe, séparés par ` ; ` |
 | `title`, `year`, `venue` | d'après OpenAlex (versions arXiv et éditeur fusionnées ; la venue éditeur prime) |
 | `doi` | DOI éditeur (jamais le DOI arXiv 10.48550), sinon `n/r` |

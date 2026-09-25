@@ -44,6 +44,7 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
+      "ligatures perdues à l'extraction : 162 mot(s) réparé(s) (lib/ligatures.py)",
       "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
     ]
   },

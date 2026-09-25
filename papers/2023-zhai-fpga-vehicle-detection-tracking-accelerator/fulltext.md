@@ -43,6 +43,8 @@ The rest of this paper is organized as follows: Section 1 reviews the background
 
 Deepsort [18] is an online multitarget tracking algorithm. It considers both the detection frame parameters of the detection result and the appearance information of the tracked object, combining the relevant information of the previous frame and the current frame for prediction without considering the whole video at the time of detection. In the first frame of the video to be detected, a unique track ID is assigned to the detection frame of each target. Then, the detection object in the new frame is associated with the previously tracked object using the Hungarian algorithm [19] to obtain a global minimum of the assignment cost function. The cost function contains the spatial Mahalanobis distance [20] d (1), which measures the difference between the detected frame and the position predicted based on the previously known position of the object, and a visual distance d(2), which measures the difference between the appearance of the currently detected object and the previous appearance of the object. The cost function for assigning the detected object j to track i is shown in (1), the spatial martingale distance is shown in (2), and the visual distance is shown in (3). The meanings of the parameters in the formula are shown in Table 1.
 
+2.1. YOLO YOLO was proposed by Joseph Redmon et al. in 2016. Compared with other networks in the YOLO series, YOLOv3 and YOLOv3-tiny achieves a good balance in accuracy and detection speed, and is easy to transplant to hardware.
+
 C i,j = λd (1) (i, j) + (1λ)d (2) (i, j).
 
 (1)
@@ -394,8 +396,6 @@ We implemented a scalable vehicle detector based on the FPGA and the YOLO object
 Compression acceleration of neural networks still has many worthy research directions. In the future, the search for network structures suitable for solving specific problems using the optimization scheme of neural architecture searches (NASs) can be used as a research direction for network compression. In terms of hardware acceleration, the current neural network accelerators usually only support a few network frames, and the generalization of acceleration frames is also worthy of further research.
 
 ## Figures et tableaux
-
-[figure sans légende identifiée] 2.1. YOLO YOLO was proposed by Joseph Redmon et al. in 2016. Compared with other networks in the YOLO series, YOLOv3 and YOLOv3-tiny achieves a good balance in accuracy and detection speed, and is easy to transplant to hardware.
 
 **Figure 1.** Network structure of YOLOv3-tiny.
 

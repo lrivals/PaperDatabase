@@ -45,6 +45,8 @@ The proposed system utilizes two widely recognized datasets to support general-p
 
 This study selects YOLOv5 for the proposed object detection and classification system due to its favorable tradeoff between detection accuracy and computational efficiency, making it suitable for deployment on resource-constrained edge devices. The model training has been conducted using the PyTorch framework, with YOLOv5 initialized using pretrained weights to accelerate convergence and enhance performance. The training process involved fine-tuning the model on two benchmark datasets: COCO for general object detection and GTSRB for traffic sign classification. Appropriate data augmentation techniques were applied during training to improve the model's ability to generalize to diverse environments. The training configuration included a learning rate of 0.01, batch size of 32, and 100 training epochs, using the stochastic gradient descent (SGD) optimizer with a momentum of 0.937 and weight decay of 0.0005. These hyperparameters were empirically selected to balance training
 
+stability, convergence speed, and final model accuracy. Early stopping and model checkpointing strategies were also employed to prevent overfitting and ensure the retention of the best-performing model weights. This training process effectively prepared YOLOv5 for integration into the proposed FPGA-based real-time object detection and classification system.
+
 ### C. Model Quantization and Compilation
 
 A post-training quantization and compilation workflow was applied using the Vitis AI development environment to enable efficient deployment of the trained YOLOv5 model on the Xilinx Kria KV260 FPGA. The quantization process involved converting the model's 32-bit floating-point weights and activations into 8-bit integer (INT8) representations using the Vitis AI toolchain. This step significantly reduced the model's memory footprint and improved data transfer efficiency. It lowered computational complexity, all of which are essential for meeting the strict resource and power constraints of edge FPGAs. Quantization-aware techniques ensured that the reduction in numerical precision introduced minimal impact on the model's detection accuracy. The YOLO model has been compiled following quantization into a hardware-friendly format specifically optimized for execution on the Deep Processing Unit (DPU) of the KV260 FPGA. This compilation step involved graph-level optimizations, operator mapping, and memory allocation tailored to the architecture of the target platform. The combined quantization and compilation process allowed the YOLOv5 model to achieve real-time inference performance with low latency and power consumption, demonstrating its suitability for object detection and classification tasks in edge computing applications.
@@ -66,8 +68,6 @@ Table 1 presents a comparative analysis of various FPGAbased object detection sy
 ## Figures et tableaux
 
 **Fig. 1.** Overall architecture of the proposed object detection and classification system.
-
-[figure sans légende identifiée] stability, convergence speed, and final model accuracy. Early stopping and model checkpointing strategies were also employed to prevent overfitting and ensure the retention of the best-performing model weights. This training process effectively prepared YOLOv5 for integration into the proposed FPGA-based real-time object detection and classification system.
 
 **Fig. 2.** Object detection and classification result using COCO dataset.
 

@@ -5,13 +5,17 @@
   add <id|doi|pdf>… [--from liste.txt] [--start-grobid]
                             ajoute des articles (arXiv, DOI, PDF local), ingère, réindexe
   ingest [--force] [pdf…]   ingère inbox/ (ou les PDF donnés), réindexe
+  ingest --reparse [id…]    ré-extrait les papiers déjà ingérés depuis leur TEI (sans GROBID)
   reindex                   régénère INDEX.md et external_refs.csv, vérifie la cohérence
   discover [options]        cherche des papiers candidats (OpenAlex) → candidates.csv
   grobid start|stop|status  pilote le conteneur GROBID
   bench [filtres] [--cols a,b] [--sort col [--desc]] [-n N] [--format tsv|md|json]
                             filtre benchmarks.csv (sans LLM) ; bench -h pour les filtres
-  paper <id|court|mot> [--fields a,b] [--bench]
-                            fiche d'identité d'un papier (métadonnées, statut, benchmarks)
+  paper <id|court|mot>… [--fields a,b] [--bench]
+                            fiche d'identité d'un papier (métadonnées, statut, benchmarks) ;
+                            plusieurs ids → une ligne par papier
+  cites <id> [--external]   références du papier présentes dans la base (et hors base)
+  cited-by <id>             papiers de la base qui le citent
   search "<question>" [-k 8] [--paper ID] [--section S] [--mode M] [--rerank]
                             passages pertinents, avec chunk_id, section, page (sans LLM)
   show <chunk_id>… [--context N]
@@ -75,6 +79,10 @@ def cmd_ingest(args):
     if args and args[0] in ("-h", "--help"):
         print(ingest.__doc__)
         return 0
+    if "--reparse" in args:
+        failed = ingest.reparse([a for a in args if a != "--reparse"])
+        print()
+        return 1 if (reindex.run() or failed) else 0
     ensure_grobid("--start-grobid" in args)
     force = "--force" in args
     pdfs = [a for a in args if a not in ("--force", "--start-grobid")]
@@ -117,7 +125,7 @@ BENCH_SHORTCUTS = ("platform", "model", "task", "toolflow", "dataset")
 
 def cmd_bench(args):
     import argparse
-    from lib import query
+    from lib import query, schema
     p = argparse.ArgumentParser(prog="pdb bench", description=(
         "Filtre benchmarks.csv. Filtres texte : sous-chaîne insensible à la casse. "
         "paper_id, source_section et confidence sont toujours affichés ; "
@@ -130,6 +138,9 @@ def cmd_bench(args):
     p.add_argument("--min", action="append", metavar="COL=X", help="COL ≥ X (n/r exclu), répétable")
     p.add_argument("--max", action="append", metavar="COL=X", help="COL ≤ X (n/r exclu), répétable")
     p.add_argument("--has", action="append", default=[], metavar="COL", help="COL renseignée")
+    own = p.add_mutually_exclusive_group()
+    own.add_argument("--own", action="store_true", help="mesures propres seulement (paper_id own-…)")
+    own.add_argument("--no-own", action="store_true", help="littérature seulement")
     p.add_argument("--cols", help="colonnes à afficher, séparées par des virgules")
     p.add_argument("--count", metavar="COL,COL", help="synthèse : nombre de lignes par combinaison de ces colonnes")
     p.add_argument("--sort", metavar="COL", help="tri croissant (n/r en dernier)")
@@ -164,6 +175,8 @@ def cmd_bench(args):
         ids = {m["id"] for m in found}
         rows = [r for r in rows if r["paper_id"] in ids]
 
+    if a.own or a.no_own:
+        rows = [r for r in rows if schema.is_own_id(r["paper_id"]) == a.own]
     rows = query.filter_rows(rows, contains, minimum, maximum, a.has)
     if a.sort:
         rows = query.sort_rows(rows, a.sort, desc=a.desc)
@@ -179,13 +192,106 @@ def cmd_bench(args):
     return 0
 
 
+MULTI_FIELDS = ("short", "year", "type", "title")
+
+
+def _one_paper(prog, q, found, short):
+    """Le papier unique désigné par q ; sinon message (candidats si ambigu) et None."""
+    if not found:
+        print(f"{prog} : aucun papier ne correspond à {q!r}", file=sys.stderr)
+        return None
+    if len(found) > 1:
+        print(f"# {len(found)} papiers correspondent ; préciser avec l'id court :")
+        for m in found:
+            print(f"{short[m['id']]}\t{m.get('year') or 'n/r'}\t{m.get('title') or 'n/r'}")
+        return None
+    return found[0]
+
+
+def _paper_many(a, metas, short, fields):
+    """pdb paper id1 id2 … : une ligne par papier ; un argument ambigu ou inconnu est
+    signalé sur stderr sans empêcher les autres (code 1 à la fin)."""
+    from lib import query
+    if a.bench:
+        print("pdb paper : --bench ne s'utilise qu'avec un seul papier", file=sys.stderr)
+        return 2
+    _, rows = query.load_benchmarks(ROOT)
+    n_bench = {}
+    for r in rows:
+        n_bench[r["paper_id"]] = n_bench.get(r["paper_id"], 0) + 1
+    cards, rc = [], 0
+    for q in a.query:
+        found = query.resolve(q, metas)
+        if len(found) != 1:
+            what = "aucun papier" if not found else "ambigu : " + ", ".join(short[m["id"]] for m in found)
+            print(f"# {q} : {what}", file=sys.stderr)
+            rc = 1
+            continue
+        m = found[0]
+        try:
+            cards.append(query.card_values(m, n_bench.get(m["id"], 0), short[m["id"]], fields))
+        except ValueError as e:
+            print(f"pdb paper : {e}", file=sys.stderr)
+            return 2
+    if cards:
+        print(query.paper_table(cards))
+    return rc
+
+
+def cmd_cites(args, reverse=False):
+    import argparse
+    from lib import query, refs
+    prog = "pdb cited-by" if reverse else "pdb cites"
+    p = argparse.ArgumentParser(prog=prog, description=(
+        "Papiers de la base qui citent ce papier (rapprochement de refs.jsonl, lib/refs.py)."
+        if reverse else
+        "Références de ce papier présentes dans la base (rapprochement de refs.jsonl, "
+        "lib/refs.py). --external : aussi les travaux hors base, avec leur nombre de "
+        "citants dans le corpus."))
+    p.add_argument("query", help="id complet, court, ou mot du titre")
+    if not reverse:
+        p.add_argument("--external", action="store_true",
+                       help="ajoute les références hors base (ext, n_citants, année, titre, id)")
+    a = p.parse_args(args)
+
+    papers = refs.load_papers(ROOT)
+    short = query.short_ids(papers)
+    meta = _one_paper(prog, a.query, query.resolve(a.query, papers), short)
+    if meta is None:
+        return 1
+    cites, citers, groups = refs.citations(papers)
+    by_id = {m["id"]: m for m in papers}
+    targets = citers.get(meta["id"], set()) if reverse else cites.get(meta["id"], set())
+    external = not reverse and a.external
+    lines = query.citation_lines(targets, by_id, short, groups if external else None, citers)
+    n_int = sum(1 for t in targets if t in by_id)
+    if reverse:
+        print(f"# {n_int} papier(s) de la base citent {short[meta['id']]}")
+    else:
+        n_ext = sum(1 for t in targets if t not in by_id)
+        print(f"# {short[meta['id']]} cite {n_int} papier(s) de la base et {n_ext} travaux hors base"
+              + ("" if external else " (--external pour les lister)"))
+    if lines:
+        print("\n".join(lines))
+    used = sorted(t for t in targets if t in by_id and short[t] != t)
+    if used:
+        print("# ids: " + " ".join(f"{short[t]}={t}" for t in used))
+    return 0
+
+
+def cmd_cited_by(args):
+    return cmd_cites(args, reverse=True)
+
+
 def cmd_paper(args):
     import argparse
     from lib import query
     p = argparse.ArgumentParser(prog="pdb paper", description=(
         "Fiche d'identité d'un papier : id complet, id court (arXiv ou année-auteur) "
-        "ou mot du titre. Plusieurs correspondances → liste des candidats."))
-    p.add_argument("query")
+        "ou mot du titre. Plusieurs correspondances → liste des candidats. Plusieurs "
+        "arguments → une ligne TSV par papier (champs par défaut : "
+        f"{','.join(MULTI_FIELDS)})."))
+    p.add_argument("query", nargs="+")
     p.add_argument("--fields", help=f"champs parmi : {','.join(query.CARD_FIELDS)}")
     p.add_argument("--bench", action="store_true", help="ajoute les lignes de benchmarks.csv")
     p.add_argument("--format", choices=("tsv", "md", "json"), default="tsv",
@@ -194,19 +300,15 @@ def cmd_paper(args):
 
     metas = query.load_papers(ROOT)
     short = query.short_ids(metas)
-    found = query.resolve(a.query, metas)
-    if not found:
-        print(f"pdb paper : aucun papier ne correspond à {a.query!r}", file=sys.stderr)
+    fields = [f.strip() for f in a.fields.split(",")] if a.fields else None
+    if len(a.query) > 1:
+        return _paper_many(a, metas, short, fields or list(MULTI_FIELDS))
+    found = query.resolve(a.query[0], metas)
+    meta = _one_paper("pdb paper", a.query[0], found, short)
+    if meta is None:
         return 1
-    if len(found) > 1:
-        print(f"# {len(found)} papiers correspondent ; préciser avec l'id court :")
-        for m in found:
-            print(f"{short[m['id']]}\t{m.get('year') or 'n/r'}\t{m.get('title') or 'n/r'}")
-        return 1
-    meta = found[0]
     header, rows = query.load_benchmarks(ROOT)
     rows = [r for r in rows if r["paper_id"] == meta["id"]]
-    fields = [f.strip() for f in a.fields.split(",")] if a.fields else None
     try:
         print(query.paper_card(meta, len(rows), short[meta["id"]], fields))
     except ValueError as e:
@@ -357,7 +459,7 @@ COMMANDS = {
     "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
     "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
-    "verify": cmd_verify,
+    "verify": cmd_verify, "cites": cmd_cites, "cited-by": cmd_cited_by,
 }
 
 

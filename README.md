@@ -180,9 +180,9 @@ PaperDatabase/
 ├── docs/GUIDE.md           # guide d'utilisation
 ├── bin/                    # pdb (point d'entrée), setup.sh, grobid.sh, add.py, ingest.py,
 │                           # reindex.py, discover.py, viz.py
-├── lib/                    # ids, tei, doc, pdftext, schema, refs, openalex, status, graph…
+├── lib/                    # ids, tei, doc, pdftext, ligatures, schema, refs, query, rag, openalex…
 ├── tests/
-├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover
+├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask
 ├── inbox/                  # PDF en attente d'ingestion
 └── papers/<paper_id>/      # un dossier par article
 ```

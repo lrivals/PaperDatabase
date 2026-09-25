@@ -54,7 +54,9 @@ NUMERIC_COLUMNS = (
     "accuracy_value", "fps", "gops", "latency_ms", "power_w", "luts", "dsps", "bram",
 )
 
-WARN_MANUAL_METADATA = "métadonnées à vérifier à la main"
+NO_BENCHMARKS = "none"  # front-matter de fiche.md : `benchmarks: none`, absence de ligne justifiée
+
+WARN_MANUAL_METADATA ="métadonnées à vérifier à la main"
 WARN_AXES_GUESSED = "axes déduits automatiquement, à confirmer dans /paper-fiche"
 
 METADATA_KEYS = (
@@ -164,6 +166,22 @@ PAPER_ID_RE = re.compile(
     rf"^(?:arxiv-(?:\d{{4}}\.\d{{4,5}}|[a-z\-]+(?:\.[A-Za-z]{{2}})?_\d{{7}})-{_SLUG}"
     rf"|(?:\d{{4}}|unknown)-{_SLUG})$"
 )
+
+# Mesures propres (DATA_MODEL §1) : lignes de benchmarks.csv sans dossier papers/, dont la
+# source est le protocole docs/experiences/<slug>.md.
+OWN_ID_RE = re.compile(rf"^own-\d{{4}}-({_SLUG})$")
+EXPERIENCES_DIR = "docs/experiences"
+
+
+def is_own_id(pid):
+    return bool(OWN_ID_RE.match(pid or ""))
+
+
+def own_source(pid):
+    """Chemin (relatif à la racine) du protocole d'une mesure propre ; None si pid n'en est pas une."""
+    m = OWN_ID_RE.match(pid or "")
+    return f"{EXPERIENCES_DIR}/{m.group(1)}.md" if m else None
+
 
 SECTION_KEYS = ("id", "paper_id", "kind", "section", "subsection", "order", "page", "text")
 REF_KEYS = ("paper_id", "raw", "title", "authors", "year", "doi", "arxiv_id")

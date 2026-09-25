@@ -207,6 +207,8 @@ To maximize energy efficiency with a fixed target FPS, is it better to use a hig
 
 We consider two aspects of resource efficiency for Finn: how efficiently the compute units are used during runtime (runtime efficiency), and how efficiently FPGA resources are turned into compute units (mapping efficiency).
 
+presents a roofline model (Section 3.1) for the ZC706, assuming 90% LUT uti-
+
 To assess runtime efficiency, we divide the FPS-based (actual) operations per cycle ( FPS•Ops F clk ) by the (peak) number of synaptic operations per cycle from the design ( 2 • P • S). The prototypes exhibit good runtime efficiency, with ∼70% for CNV, ∼80% for SFC and ∼90% for LFC. The efficiency can be increased further by fine-tuning the folding factors between different layers.
 
 Evaluating the mapping efficiency directly on the prototypes loses some insight, since CNV uses LUTs on SWU and PU, while fully-connected topologies do not. Instead, for a single 256 × 256 fully-connected layer, we fix S = 64 and vary P , and plot the LUTs per synaptic operation in Figure 11, which should be minimized to maximize efficiency. The LUTs per operation decreases with higher P since the fixed-size control logic is amortized between more PEs and reaches a minimum of 1.83 for P = 64, but increases again for P > 64. To understand why, we also plot the number of BRAMs used in the same figure. Although all designs have the same number of BNN parameters, the number of BRAMs increases with P since each PE needs its own weight and threshold memories. This also means a significant part of the BRAM storage capacity is unused for 1 < P ≤ 64, since the same amount of network parameters is divided between a greater number of memories. This is also visible for SFC-fix and SFC-max, which use the same network parameters, but have almost 10× difference in the number of BRAMs used (15.5 vs 130.5) since SFC-max has more compute elements working in parallel. Here, with P > 64, so little of each BRAM is used that Vivado HLS implements the weight and threshold memories using LUTs, which causes the LUTs per operation to increase. Thus, the depth and number of BRAMs, and the LUT-to-BRAM ratio of the FPGA plays a key role in determining how well the resources will be utilized by a BNN. For instance, on another FPGA with the same amount of LUTs but twice the number of half-depth BRAMs, LFC-max could achieve 2× throughput.
@@ -234,8 +236,6 @@ BNN for image classification have recently been proposed and this work demonstra
 **Figure 7:** Convolution using interleaved channels.
 
 **Figure 8:** Neuron and synapse folding for MVTU.
-
-[figure sans légende identifiée] presents a roofline model (Section 3.1) for the ZC706, assuming 90% LUT uti-
 
 **Figure 9:** ZC706 roofline with topologies and max-datapoints.
 

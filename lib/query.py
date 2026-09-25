@@ -201,8 +201,8 @@ def render(rows, cols, short, fmt="tsv", max_chars=None):
     return "\n".join(lines + footer(kept, 0))
 
 
-def paper_card(meta, n_bench, short_id, fields=None):
-    """Fiche d'identité d'un papier, une ligne `clé<TAB>valeur` par champ."""
+def card_values(meta, n_bench, short_id, fields=None):
+    """Valeurs des champs demandés (CARD_FIELDS par défaut) ; ValueError si champ inconnu."""
     typ = meta.get("type")
     values = {
         "id": meta["id"],
@@ -225,4 +225,39 @@ def paper_card(meta, n_bench, short_id, fields=None):
     if unknown:
         raise ValueError(f"champ(s) inconnu(s) : {', '.join(unknown)}. "
                          f"Valides : {', '.join(CARD_FIELDS)}")
-    return "\n".join(f"{f}\t{values[f]}" for f in fields)
+    return [(f, values[f]) for f in fields]
+
+
+def paper_card(meta, n_bench, short_id, fields=None):
+    """Fiche d'identité d'un papier, une ligne `clé<TAB>valeur` par champ."""
+    return "\n".join(f"{f}\t{v}" for f, v in card_values(meta, n_bench, short_id, fields))
+
+
+def paper_table(cards):
+    """Plusieurs papiers : en-tête des champs puis une ligne TSV par papier.
+    cards : listes de (champ, valeur) de card_values, mêmes champs pour toutes."""
+    if not cards:
+        return ""
+    lines = ["\t".join(f for f, _ in cards[0])]
+    lines += ["\t".join(str(v).replace("\t", " ") for _, v in c) for c in cards]
+    return "\n".join(lines)
+
+
+def citation_lines(targets, metas_by_id, short, groups=None, citers=None):
+    """Lignes `id_court<TAB>année<TAB>titre` des papiers du corpus parmi `targets`, triées
+    par année ; avec groups (et citers), lignes `ext<TAB>n_citants<TAB>année<TAB>titre<TAB>id`
+    pour les travaux hors base, du plus cité au moins cité."""
+    internal = sorted((metas_by_id[t] for t in targets if t in metas_by_id),
+                      key=lambda m: (m.get("year") or 0, m["id"]))
+    lines = [f"{short[m['id']]}\t{m.get('year') or NR}\t{m.get('title') or NR}" for m in internal]
+    if groups is not None:
+        ext = [t for t in targets if t in groups]
+        ext.sort(key=lambda t: (-len((citers or {}).get(t, ())), -(groups[t]["year"] or 0),
+                                (groups[t]["title"] or "").lower()))
+        for t in ext:
+            g = groups[t]
+            ident = (f"arXiv:{g['arxiv_id']}" if g.get("arxiv_id")
+                     else f"doi:{g['doi']}" if g.get("doi") else NR)
+            title = (g["title"] or g.get("raw") or NR).replace("\t", " ")
+            lines.append(f"ext\t{len((citers or {}).get(t, ()))}\t{g['year'] or NR}\t{title}\t{ident}")
+    return lines

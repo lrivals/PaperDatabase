@@ -164,6 +164,13 @@ def citers_of(cites):
     return citers
 
 
+def citations(papers):
+    """(cites, citers, groups) : qui cite quoi, qui est cité par qui (cibles internes et
+    groupes « ext: »), et les groupes externes. Utilisé par bin/pdb cites / cited-by."""
+    cites, groups = group_refs(papers)
+    return cites, citers_of(cites), groups
+
+
 def external_ranking(papers, min_citers=2):
     """Travaux absents de la base cités par au moins min_citers papiers, du plus cité au
     moins cité (puis du plus récent au plus ancien)."""

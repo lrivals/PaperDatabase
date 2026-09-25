@@ -81,6 +81,8 @@ Experiments that deploy the model in isolation on each of the previous hardware 
 
 •
 
+1.1, model selection and training in 3.1.2, and model optimization in 3.1.3. From the model, two types of experiments are developed:
+
 Experiments that integrate the object detection model into a typical drone image processing pipeline. As described in Section 5, these experiments seek to compare the capabilities of edge devices against a cloud deployment under a representative scenario.
 
 In these experiments, a set of metrics are used to evaluate the performance of the models. These metrics are described in Section 3.2.
@@ -226,8 +228,6 @@ Moreover, studies should explore hybrid architectures that combine the complemen
 Further integration of edge architectures with 5G and tactical cloud technologies could expand the potential of drone applications. This integration would enable the design and control of complex swarm missions, as discussed in Section 2, The State of the Art. Through network slicing, the processing tasks could be decentralized, increasing the autonomy of individual drones within the swarm and reducing reliance on a central server. Moreover, testing 5G communications in these configurations could provide insights into intelligent drone architectures, particularly regarding real-time decision-making and minimizing the latency in data transmission. These advancements would also necessitate the deployment of larger drones capable of supporting the additional weight and power requirements associated with outdoor operations in complex environments.
 
 ## Figures et tableaux
-
-[figure sans légende identifiée] 1.1, model selection and training in 3.1.2, and model optimization in 3.1.3. From the model, two types of experiments are developed:
 
 **Figure 1.** Diagram of the indoor controlled flight environment equipped with OptiTrack sensors, drones with access points, and a TurtleBot target on the ground.
 

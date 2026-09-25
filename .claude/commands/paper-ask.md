@@ -1,6 +1,6 @@
 ---
 description: Répond à une question sur le corpus à partir de passages sourcés et vérifiés, sans lire fulltext.md
-allowed-tools: Read, Bash(bin/pdb bench:*), Bash(bin/pdb search:*), Bash(bin/pdb show:*), Bash(bin/pdb paper:*), Bash(bin/pdb verify:*)
+allowed-tools: Read, Bash(bin/pdb bench:*), Bash(bin/pdb search:*), Bash(bin/pdb show:*), Bash(bin/pdb paper:*), Bash(bin/pdb verify:*), Bash(bin/pdb cites:*), Bash(bin/pdb cited-by:*)
 ---
 
 Question : $ARGUMENTS
@@ -33,8 +33,10 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
    - **Déduit** : tes rapprochements et inférences, sans citation.
    - **Non trouvé dans la base** : ce qui manque. Relie-le à `gaps.md` si c'est pertinent.
 
-   Signale : `confidence: low` (lignes marquées `!`), les preprints (`bin/pdb paper <id>`
-   si tu as un doute), et les `power_scope` qui diffèrent entre les lignes que tu compares.
+   Signale : `confidence: low` (lignes marquées `!`), les preprints (un seul appel pour
+   tous les papiers cités : `bin/pdb paper id1 id2 … --fields short,type`), et les
+   `power_scope` qui diffèrent entre les lignes que tu compares. Pour situer un papier dans
+   sa lignée : `bin/pdb cites <id>` / `bin/pdb cited-by <id>`.
 7. Termine par 2 ou 3 pistes : papier à lire, expérience, gap.
 
 Réponds en français et garde les termes techniques en anglais. Ajoute en fin de réponse la

@@ -2,6 +2,7 @@
 id: arxiv-1711.08740-fpgaconvnet-toolflow-mapping-diverse-convolutional
 fiche: done
 date: 2026-09-24
+benchmarks: none
 ---
 
 # fpgaConvNet: A Toolflow for Mapping Diverse Convolutional Neural Networks on Embedded FPGAs

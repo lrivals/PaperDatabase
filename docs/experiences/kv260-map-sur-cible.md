@@ -122,5 +122,6 @@ Lecture :
   même protocole de puissance) : c'est le gap « baseline Jetson ».
 - Refaire la chaîne avec FINN ou hls4ml sur un modèle plus petit (TinyissimoYOLO) : c'est
   le gap « passerelle MCU ↔ FPGA ».
-- Après exécution : ajouter les lignes dans `benchmarks.csv` (avec un `paper_id` interne à
-  définir, par exemple `exp-2026-kv260-map-cible`) et mettre à jour `gaps.md`.
+- Après exécution : ajouter les lignes dans `benchmarks.csv` sous le `paper_id`
+  `own-2026-kv260-map-sur-cible` (mesure propre, DATA_MODEL §1 ; `source_section` renvoie
+  à une section de ce fichier), puis mettre à jour `gaps.md`.

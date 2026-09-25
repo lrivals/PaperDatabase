@@ -96,6 +96,25 @@ class TestGroupRefs(unittest.TestCase):
         self.assertEqual(rows[0]["rank"], 1)
 
 
+class TestCitations(unittest.TestCase):
+    def test_cites_and_cited_by(self):
+        b = _paper("b", "Binarized networks on reconfigurable hardware made fast", 2016,
+                   arxiv_id="1612.07119")
+        a = _paper("a", "Paper A about things", refs_=[
+            _ref("whatever", arxiv_id="1612.07119v2"),
+            _ref("An external work cited by two papers")])
+        c = _paper("c", "Paper C about other things", refs_=[
+            _ref("Binarized networks on reconfigurable hardware made"),   # titre tronqué, 6 mots
+            _ref("An external work cited by two papers")])
+        cites, citers, groups = refs.citations([a, b, c])
+        self.assertIn("b", cites["a"])
+        self.assertIn("b", cites["c"])
+        self.assertEqual(citers["b"], {"a", "c"})
+        (ext,) = groups
+        self.assertEqual(citers[ext], {"a", "c"})
+        self.assertNotIn("b", cites)
+
+
 class TestExternalCsv(unittest.TestCase):
     def test_write_external(self):
         spec = importlib.util.spec_from_file_location("reindex", ROOT / "bin" / "reindex.py")

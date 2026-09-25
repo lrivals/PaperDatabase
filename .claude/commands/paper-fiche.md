@@ -50,6 +50,8 @@ dire dans la fiche). Colonnes et vocabulaires : `DATA_MODEL.md` §7.
   deviner la portée : une puissance sans méthode décrite est `unspecified`.
 - Échappe par des guillemets toute cellule contenant une virgule.
 - Reporte dans la section « Résultats » de la fiche la liste des lignes ajoutées.
+- Aucune ligne justifiable (hors survey) : dis pourquoi dans « Résultats » et ajoute
+  `benchmarks: none` au front-matter de la fiche (DATA_MODEL §8).
 
 ## `metadata.json`
 

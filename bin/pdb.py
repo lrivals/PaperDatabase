@@ -12,7 +12,7 @@
                             filtre benchmarks.csv (sans LLM) ; bench -h pour les filtres
   paper <id|court|mot> [--fields a,b] [--bench]
                             fiche d'identité d'un papier (métadonnées, statut, benchmarks)
-  search "<question>" [-k 8] [--paper ID] [--section S] [--mode M]
+  search "<question>" [-k 8] [--paper ID] [--section S] [--mode M] [--rerank]
                             passages pertinents, avec chunk_id, section, page (sans LLM)
   show <chunk_id>… [--context N]
                             texte exact d'un passage (id court accepté : 1612.07119#019.0)
@@ -131,6 +131,7 @@ def cmd_bench(args):
     p.add_argument("--max", action="append", metavar="COL=X", help="COL ≤ X (n/r exclu), répétable")
     p.add_argument("--has", action="append", default=[], metavar="COL", help="COL renseignée")
     p.add_argument("--cols", help="colonnes à afficher, séparées par des virgules")
+    p.add_argument("--count", metavar="COL,COL", help="synthèse : nombre de lignes par combinaison de ces colonnes")
     p.add_argument("--sort", metavar="COL", help="tri croissant (n/r en dernier)")
     p.add_argument("--desc", action="store_true", help="tri décroissant")
     p.add_argument("-n", type=int, help="nombre maximal de lignes")
@@ -148,7 +149,8 @@ def cmd_bench(args):
             contains["quantization"] = a.quant
         minimum, maximum = _pairs(a.min, number=True), _pairs(a.max, number=True)
         cols = query.select_columns([c.strip() for c in a.cols.split(",")] if a.cols else [], header)
-        for c in [*contains, *minimum, *maximum, *a.has, *([a.sort] if a.sort else [])]:
+        count_cols = [c.strip() for c in a.count.split(",")] if a.count else []
+        for c in [*contains, *minimum, *maximum, *a.has, *([a.sort] if a.sort else []), *count_cols]:
             if c not in header:
                 raise ValueError(f"colonne inconnue : {c}. Valides : {', '.join(header)}")
     except ValueError as e:
@@ -170,6 +172,9 @@ def cmd_bench(args):
     if not rows:
         print("# aucune ligne", file=sys.stderr)
         return 1
+    if count_cols:
+        print(query.count_rows(rows, count_cols, short))
+        return 0
     print(query.render(rows, cols, short, a.format, a.max_chars))
     return 0
 
@@ -213,9 +218,9 @@ def cmd_paper(args):
     return 0
 
 
-def _rag_index():
+def _rag_index(rerank=False):
     from lib import rag
-    return rag, rag.Index(ROOT)
+    return rag, rag.Index(ROOT, rerank=rerank)
 
 
 def cmd_search(args):
@@ -232,11 +237,14 @@ def cmd_search(args):
     p.add_argument("--section", help="sous-chaîne du titre de section")
     p.add_argument("--kind", choices=("abstract", "section", "figure", "table"))
     p.add_argument("--mode", choices=("hybrid", "dense", "lexical"), default="hybrid")
+    p.add_argument("--rerank", action="store_true", help=(
+        "reclasse les 30 premiers par un cross-encoder (anglais) : meilleur en anglais, "
+        "un peu moins bon en français (docs/RAG.md §10)"))
     p.add_argument("--ids-only", action="store_true")
     p.add_argument("--format", choices=("tsv", "json"), default="tsv")
     a = p.parse_args(args)
 
-    rag, ix = _rag_index()
+    rag, ix = _rag_index(rerank=a.rerank)
     ids = None
     if a.paper:
         found = query.resolve(a.paper, ix.metas)
@@ -245,7 +253,7 @@ def cmd_search(args):
             return 1
         ids = {m["id"] for m in found}
     hits = ix.search(a.query, k=a.k, mode=a.mode, paper_ids=ids, axis=a.axis,
-                     kind=a.kind, section=a.section)
+                     kind=a.kind, section=a.section, rerank=a.rerank)
     if not hits:
         print("# aucun passage", file=sys.stderr)
         return 1
@@ -331,14 +339,14 @@ def cmd_test(args):
 
 def rag_eval():
     """Évaluation de la recherche sur tests/fixtures/rag_eval.jsonl (demande le vrai modèle)."""
-    rag, ix = _rag_index()
+    rag, ix = _rag_index(rerank=True)
     print(f"{len(ix.chunks)} passages, modèle {ix.model}"
           + ("" if ix.dense else " (index dense absent : lexical seul)"))
     print("jeu\tmode\trecall@5\tMRR\tpaper@5")
     for name in ("rag_eval", "rag_eval_fr"):
         path = ROOT / "tests" / "fixtures" / f"{name}.jsonl"
         questions = [json.loads(l) for l in path.read_text().splitlines() if l.strip()]
-        for mode, r in rag.evaluate(ix, questions).items():
+        for mode, r in rag.evaluate(ix, questions, modes=rag.MODES + ("hybrid+rerank",)).items():
             print(f"{name} ({len(questions)} q.)\t{mode}\t{r['recall']:.2f}\t{r['mrr']:.2f}\t{r['paper']:.2f}")
             for q in r["misses"]:
                 print(f"#   manqué ({name}, {mode}) : {q}")

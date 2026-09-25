@@ -34,6 +34,18 @@ VERIFY_MIN = 0.85
 # main sur quelques requêtes (hors sujet 0,45-0,55, pertinentes 0,73-0,90) : indicatif.
 LOW_COS = 0.60
 MODES = ("hybrid", "dense", "lexical")
+RERANK_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+RERANK_TOP = 30
+
+_rerankers = {}
+
+
+def _cross_scores(q, texts, model=RERANK_MODEL):
+    """Scores du cross-encoder ; séparé pour être remplacé dans les tests."""
+    if model not in _rerankers:
+        from sentence_transformers import CrossEncoder
+        _rerankers[model] = CrossEncoder(model)
+    return [float(x) for x in _rerankers[model].predict([(q, t) for t in texts])]
 
 _TOKEN = re.compile(r"[a-z0-9]+")
 
@@ -46,16 +58,19 @@ def tokenize(text):
     return _TOKEN.findall(text.lower())
 
 
-def quiet_model_loading(model):
-    """Hors ligne si le modèle est déjà en cache (pas de requête au Hub à chaque recherche),
-    et sans barre de progression : la sortie des commandes reste propre."""
+def quiet_model_loading(*models):
+    """Hors ligne si tous les modèles sont déjà en cache (pas de requête au Hub à chaque
+    recherche), et sans barre de progression : la sortie des commandes reste propre.
+
+    Le mode hors ligne vaut pour tout le processus : déclarer d'avance tous les modèles
+    qu'il chargera, sinon un modèle absent du cache ne pourra plus être téléchargé."""
     import os
     os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
     os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
     os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
     hub = Path(os.environ.get("HF_HOME", Path.home() / ".cache" / "huggingface")) / "hub"
-    name = model if "/" in model else f"sentence-transformers/{model}"
-    if (hub / f"models--{name.replace('/', '--')}").exists():
+    names = [m if "/" in m else f"sentence-transformers/{m}" for m in models]
+    if names and all((hub / f"models--{n.replace('/', '--')}").exists() for n in names):
         os.environ.setdefault("HF_HUB_OFFLINE", "1")
 
 
@@ -178,7 +193,7 @@ def _load_vectors(root, chunks, model):
 class Index:
     """Passages + BM25 + vecteurs (si disponibles). Chargé une fois par commande."""
 
-    def __init__(self, root, model=DEFAULT_MODEL, chunks=None):
+    def __init__(self, root, model=DEFAULT_MODEL, chunks=None, rerank=False):
         self.root = Path(root)
         self.model = model
         self.chunks = chunks if chunks is not None else load_chunks(root)
@@ -186,7 +201,7 @@ class Index:
         self.bm25 = BM25([encoded_text(c) for c in self.chunks])
         self.vecs = _load_vectors(root, self.chunks, model) if embed.available() else None
         if self.vecs is not None:
-            quiet_model_loading(model)
+            quiet_model_loading(model, *([RERANK_MODEL] if rerank else []))
         self.metas = query.load_papers(root)
         self.short = query.short_ids(self.metas)
         self._axes = {m["id"]: set(m.get("axes") or []) for m in self.metas}
@@ -210,8 +225,18 @@ class Index:
             out.append(i)
         return out
 
-    def search(self, q, k=8, mode="hybrid", paper_ids=None, axis=None, kind=None, section=None):
-        """Liste de hits (dicts du passage + score + rangs), du meilleur au moins bon."""
+    def search(self, q, k=8, mode="hybrid", paper_ids=None, axis=None, kind=None, section=None,
+               rerank=False):
+        """Liste de hits (dicts du passage + score + rangs), du meilleur au moins bon.
+
+        rerank : les RERANK_TOP premiers de la fusion sont reclassés par un cross-encoder
+        (expérimental, docs/RAG.md §11)."""
+        if rerank:
+            pool = self.search(q, k=RERANK_TOP, mode=mode, paper_ids=paper_ids, axis=axis,
+                               kind=kind, section=section)
+            ce = _cross_scores(q, [encoded_text(h) for h in pool])
+            order = sorted(range(len(pool)), key=lambda i: (-ce[i], pool[i]["chunk_id"]))
+            return [{**pool[i], "rerank": round(ce[i], 3)} for i in order[:k]]
         if mode not in MODES:
             raise ValueError(f"mode {mode!r} : {' | '.join(MODES)}")
         if mode != "lexical" and not self.dense:
@@ -343,13 +368,14 @@ def evaluate(index, questions, k=5, modes=MODES):
     """recall@k (au moins une section attendue dans les k premiers), MRR, paper@k."""
     out = {}
     for mode in modes:
-        if mode != "lexical" and not index.dense:
+        base, _, rr_flag = mode.partition("+")
+        if base != "lexical" and not index.dense:
             continue
         hits = rr = paper_hits = 0
         misses = []
         for q in questions:
             exp = set(q["expect"])
-            res = index.search(q["q"], k=max(k, 10), mode=mode)
+            res = index.search(q["q"], k=max(k, 10), mode=base, rerank=bool(rr_flag))
             ranks = [r for r, h in enumerate(res, 1) if h["section_id"] in exp]
             first = ranks[0] if ranks else None
             if first and first <= k:

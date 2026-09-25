@@ -1,10 +1,26 @@
 # Recherche de passages (RAG) et requêtes sans génération
 
 Spécification de la couche de recherche de PaperDatabase : ce qu'elle doit faire, comment la
-construire, comment s'en servir. **Statut : en place depuis le 25/09/2026**, sauf
-`pdb cites` / `cited-by` (§5.5, à faire). Code : [lib/query.py](../lib/query.py) (N0),
-[lib/rag.py](../lib/rag.py) (N1), [bin/pdb.py](../bin/pdb.py) (commandes), skill
-[/paper-ask](../.claude/commands/paper-ask.md). Suivi : [SETUP.md §9](../SETUP.md#9-état-actuel-et-tâches-à-faire).
+construire, comment s'en servir. Suivi des tâches : [SETUP.md §9](../SETUP.md#9-état-actuel-et-tâches-à-faire).
+
+## État au 25/09/2026 : implémenté et testé
+
+| Élément | Code | Tests unitaires | Vérifié sur la base réelle |
+|---|---|---|---|
+| `pdb bench` : filtres, tri, colonnes de source forcées, `!` low, lignes identiques signalées, `--max-chars`, `--count` | [lib/query.py](../lib/query.py), [bin/pdb.py](../bin/pdb.py) | [tests/test_query.py](../tests/test_query.py) (14) | oui : KV260, `--sort fps --desc`, `--min`/`--max`, colonne inconnue → code 2, `--count paper_id,power_scope` |
+| `pdb paper` : fiche d'identité, candidats si ambigu, `--bench` | idem | idem | oui : `finn` (ambigu), `1612.07119 --bench`, `2022-feng --fields` |
+| Identifiants courts (arXiv, sinon année-auteur, noms composés compris) | `lib/query.short_ids` | idem | oui : 28 papiers, aucune collision ; `2025-el-zeinaty` corrigé après l'essai (§12) |
+| Passages, BM25, embeddings bge-small, fusion RRF, filtres | [lib/rag.py](../lib/rag.py) | [tests/test_rag.py](../tests/test_rag.py) (10, encodeur factice) | oui : 2 405 passages ; évaluation §10 |
+| `pdb search` : colonne `cos`, `# pertinence faible` | `lib/rag.py`, `bin/pdb.py` | idem | oui : requêtes hors sujet (cos 0,45-0,55) et pertinentes (0,73-0,90) |
+| `pdb show` : texte exact, sha1, `--context` | idem | idem | oui |
+| `pdb verify` : OK / APPROX / ABSENT / MODIFIÉ, « trouvée dans » | idem | idem | oui : 5 cas manuels (§5.6), 7 citations de l'essai de `/paper-ask` (§12) |
+| Index incrémental, branché dans `reindex` | `lib/rag.build_index`, [bin/reindex.py](../bin/reindex.py) | idem (réencodage d'un seul passage modifié) | oui : 0,2 s sans changement, ~3 min pour une construction complète |
+| Évaluation `bin/pdb test --rag` | `lib/rag.evaluate`, `bin/pdb.py` | idem | oui : 20 questions EN et 8 FR (§10) |
+| Skill `/paper-ask` | [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md) | — | oui : un essai réel (§12) |
+| `pdb cites` / `cited-by` | — | — | **non implémenté** (§5.5) |
+| Reranking par cross-encoder (`search --rerank`) | `lib/rag.py` (`_cross_scores`, `Index.search(rerank=True)`) | idem (cross-encoder factice) | oui : évaluation §10, +1,2 s par recherche ; activé dans `/paper-ask` |
+
+Au total, `bin/pdb test` passe 113 tests, dont 24 pour cette couche (14 + 10).
 
 Objectifs, par ordre de priorité :
 
@@ -125,8 +141,11 @@ la casse).
   aussi. Un échec de l'index devient une note, sans bloquer la réindexation. Sans
   sentence-transformers, ou si l'index est périmé, `search` passe en lexical seul et le
   signale en tête de sortie (`# mode: lexical seul`).
-- Le modèle est chargé hors ligne s'il est déjà en cache (`rag.quiet_model_loading`) : aucune
-  requête au Hub à chaque recherche.
+- Les modèles sont chargés hors ligne s'ils sont tous déjà en cache
+  (`rag.quiet_model_loading`) : aucune requête au Hub à chaque recherche. Le mode hors
+  ligne vaut pour tout le processus. Un index qui fera du reranking doit donc le déclarer
+  (`Index(..., rerank=True)`), faute de quoi le cross-encoder ne pourrait pas être
+  téléchargé au premier appel (bug rencontré et corrigé le 25/09/2026).
 - Temps d'une commande `search` / `show` / `verify` : environ 7 s, dont l'essentiel est
   l'import de torch.
 
@@ -136,7 +155,9 @@ la casse).
 load_chunks(root) -> list[dict]                   # passages (§4.1)
 build_index(root, chunks=None, model=DEFAULT_MODEL, force=False) -> dict   # manifeste
 Index(root, model=DEFAULT_MODEL)                  # passages + BM25 + vecteurs
-Index.search(q, k=8, mode="hybrid", paper_ids=None, axis=None, kind=None, section=None)
+Index(root, model=DEFAULT_MODEL, rerank=False)    # rerank : déclare le cross-encoder (§4.3)
+Index.search(q, k=8, mode="hybrid", paper_ids=None, axis=None, kind=None, section=None,
+             rerank=False)
 Index.get(chunk_id, context=0)                    # passage exact ± voisins du même papier
 Index.resolve_chunk(cid) / Index.short_chunk_id(chunk_id)
 verify(index, chunk_id, quote, expect_sha=None) -> (statut, ratio, chunk_id où trouvée)
@@ -165,7 +186,8 @@ options. Conventions communes :
 ```
 bin/pdb bench [--platform S] [--model S] [--task S] [--quant S] [--toolflow S] [--dataset S]
               [--paper ID] [--where COL=S]… [--min COL=X]… [--max COL=X]… [--has COL]…
-              [--cols a,b,c] [--sort COL [--desc]] [-n N] [--format tsv|md|json] [--max-chars N]
+              [--cols a,b,c | --count a,b] [--sort COL [--desc]] [-n N]
+              [--format tsv|md|json] [--max-chars N]
 ```
 
 - Les filtres texte portent sur une sous-chaîne, insensible à la casse. Les raccourcis
@@ -187,6 +209,9 @@ bin/pdb bench [--platform S] [--model S] [--task S] [--quant S] [--toolflow S] [
   entières, et la légende des ids ne porte que sur les lignes gardées.
 - Codes de sortie : 0 s'il y a des lignes, 1 s'il n'y en a aucune, 2 pour une erreur
   d'argument.
+- `--count col,col` remplace les lignes par une synthèse : nombre de lignes par combinaison
+  de valeurs, triée par effectif. Exemple : `--has power_w --count paper_id,power_scope`
+  dit en 9 lignes qui mesure la puissance, et avec quelle portée.
 
 ```
 $ bin/pdb bench --platform kv260 --cols model,quantization,fps,power_w
@@ -202,8 +227,13 @@ Coût : ~40 tokens par ligne, contre ~10 000 pour lire `benchmarks.csv` en entie
 
 ```
 bin/pdb search "<question>" [-k 8] [--paper ID] [--axis A] [--section S] [--kind K]
-               [--mode hybrid|dense|lexical] [--ids-only] [--format tsv|json]
+               [--mode hybrid|dense|lexical] [--rerank] [--ids-only] [--format tsv|json]
 ```
+
+`--rerank` reclasse les 30 premiers résultats de la fusion avec le cross-encoder
+`cross-encoder/ms-marco-MiniLM-L-6-v2` (~90 Mo, téléchargé au premier appel). Il améliore
+les requêtes en anglais et dégrade un peu le classement en français (§10). Coût : +1,2 s.
+Il n'est pas activé par défaut, mais `/paper-ask`, qui formule en anglais, l'utilise.
 
 Une ligne par passage : `chunk`, `section`, `page`, `cos` (cosinus avec la requête, `n/r` en
 lexical), `snippet`. L'extrait fait ~160 caractères ; il est centré sur le terme de la
@@ -334,7 +364,7 @@ Fichier [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md). Outil
 `Read`, `bin/pdb bench|search|show|paper|verify`. Déroulé demandé à Claude :
 
 1. Question chiffrée : `pdb bench` d'abord (N0).
-2. Sinon, ou en complément : `pdb search` avec une ou deux formulations **en anglais**, `-k 8` ;
+2. Sinon, ou en complément : `pdb search --rerank` avec une ou deux formulations **en anglais**, `-k 8` ;
    `# pertinence faible` → le dire, ne pas combler.
 3. `pdb show` sur les 2 ou 3 passages les plus prometteurs seulement ; jamais `fulltext.md`.
 4. Réponse avec citations `[chunk_id]` ; `pdb verify` sur chaque citation textuelle ; toute
@@ -393,6 +423,7 @@ cible dans les 5 premiers).
 | all-MiniLM-L6-v2 | hybride | 0,95 | 0,74 | 0,50 | 0,25 |
 | bge-small-en-v1.5 | dense | 0,90 | 0,79 | **0,62** | **0,46** |
 | bge-small-en-v1.5 | hybride (défaut) | 0,90 | 0,79 | 0,50 | 0,33 |
+| bge-small-en-v1.5 | hybride + rerank (`--rerank`) | **1,00** | **0,87** | 0,50 | 0,26 |
 
 La colonne FR porte sur 8 des questions, traduites à la main en français
 ([tests/fixtures/rag_eval_fr.jsonl](../tests/fixtures/rag_eval_fr.jsonl), mêmes `expect`,
@@ -406,10 +437,16 @@ Lecture :
   accident de bge-small tient mieux.
 - **Choix retenu : hybride avec bge-small**, le mode le plus robuste quand on ne sait pas
   comment la question sera formulée. La skill `/paper-ask` fait reformuler en anglais.
-- **Échec persistant** : « Is the post-processing step that removes duplicate bounding boxes
-  run on the CPU or in programmable logic? ». Les passages attendus disent « NMS » ou
-  « non-maximum suppression », jamais « duplicate bounding boxes ». Aucun mode ne relie les
-  deux.
+- **Reranking** : le cross-encoder récupère les 2 questions manquées en anglais. La première
+  est la question NMS : « removes duplicate bounding boxes » ne contient ni « NMS » ni
+  « non-maximum suppression », et aucun mode sans reranking ne la trouvait. En français, le
+  rappel est inchangé et le MRR baisse (0,33 → 0,26), car le modèle est entraîné en
+  anglais (MS MARCO).
+- **Décision** : `--rerank` reste une option (règle fixée avant la mesure : activation par
+  défaut seulement sans dégradation en français). `/paper-ask` l'active, parce qu'il
+  formule toujours en anglais.
+- **Réserve** : ces 20 questions ont servi à décider ; aucun réglage n'a été fait dessus,
+  mais un jeu plus grand et écrit par quelqu'un d'autre confirmerait le gain.
 
 Seuil d'acceptation proposé : recall@5 ≥ 0,8 en anglais. À relancer (`bin/pdb test --rag`)
 après tout changement de modèle, de découpage ou de fusion, et quand le corpus grossit.
@@ -429,8 +466,9 @@ après tout changement de modèle, de découpage ou de fusion, et quand le corpu
   skill `/paper-ask`. Autre voie : un modèle multilingue
   (`paraphrase-multilingual-MiniLM-L12-v2`, `bge-m3`), puis `bin/pdb reindex` et
   `bin/pdb test --rag` pour comparer.
-- **Reclassement** (*reranking*) par un cross-encoder (`cross-encoder/ms-marco-MiniLM-L-6-v2`)
-  sur les 30 premiers résultats : à envisager seulement si l'évaluation (§10) le justifie.
+- **Reclassement** (*reranking*) : en place en option (§5.2, §10). Évolution possible : un
+  cross-encoder multilingue (`BAAI/bge-reranker-base`, plus lourd) pour ne plus dégrader
+  le français. À évaluer avec `bin/pdb test --rag`.
 - **Serveur MCP** : exposer `search`, `show`, `bench` et `verify` comme outils MCP, pour les
   utiliser hors de ce dossier ou depuis une autre application. Même `lib/rag.py`, autre interface.
 - **Généricité** : rien ici ne dépend du domaine FPGA. `bench` lit ses colonnes dans
@@ -439,3 +477,46 @@ après tout changement de modèle, de découpage ou de fusion, et quand le corpu
 - **Coût de démarrage** : ~7 s par commande `search`/`show`/`verify`, dû à l'import de torch.
   Si cela gêne, un processus résident (serveur MCP ci-dessus) le paierait une seule fois.
   `show` et `verify` pourraient aussi se passer du modèle.
+
+---
+
+## 12. Essai réel de `/paper-ask` (25/09/2026)
+
+Question : « comment les papiers mesurent-ils la puissance, et est-ce comparable ? ».
+
+**Déroulé suivi :**
+
+| Étape | Commandes | Lu |
+|---|---|---|
+| N0 | `bench --has power_w`, agrégé à la main par papier et portée | 57 lignes, 8 papiers |
+| N1 | 1 `search -k 10` (requête en anglais) | 3,2 Ko |
+| Lecture | 1 `show` sur 3 passages | 3,8 Ko |
+| Vérification | 7 `verify`, 8 `paper` (type de publication) | < 1 Ko |
+
+Total : ~9 Ko lus, environ 2 500 tokens, sans ouvrir de `fulltext.md`. À titre de
+comparaison, un seul `fulltext.md` en fait ~18 000 en moyenne.
+
+**Ce qui a fonctionné :**
+- les 7 citations textuelles sont revenues `OK` au premier essai ;
+- la recherche a trouvé en une requête les quatre protocoles de mesure du corpus : FINN
+  (PMBus et prise murale), 2211.11647 (multimètre à l'entrée de la carte), 2502.15737
+  (tegrastats) et 2022-feng (puissance au repos mesurée avant les tests) ;
+- la structure Lu / Déduit / Non trouvé a fait ressortir des points utiles :
+  - la classe `chip` de 2502.15737 (tegrastats) est à vérifier ;
+  - 2211.11647 décrit une mesure soignée mais n'a aucune ligne de puissance dans
+    `benchmarks.csv`.
+
+**Défauts relevés et corrigés :**
+- l'id court de El Zeinaty était tronqué en `2025-el` : il est désormais pris dans le préfixe
+  `année-auteur` du `paper_id` (test ajouté) ;
+- l'agrégation par papier et portée demandait un `awk` : `bench --count` fait maintenant
+  cette synthèse (test ajouté).
+
+**Limites constatées :**
+- 1 seul essai, jugé par la même instance qui l'a exécuté : ce n'est pas une évaluation
+  indépendante ;
+- `search` a renvoyé aussi des passages génériques (définition de la puissance dans les
+  surveys, capteurs en introduction de hls4ml). Filtrer avec `--section` aurait réduit le
+  bruit ;
+- les 8 appels `paper` pour connaître le type de publication pourraient se réduire à un
+  seul avec une option `--fields type` sur plusieurs ids ; non implémenté.

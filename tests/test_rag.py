@@ -112,6 +112,16 @@ class TestRag(unittest.TestCase):
         self.assertEqual({h["paper_id"] for h in ix.search("memory", axis="platforms")},
                          {"2021-lin-mcunet"})
 
+    def test_rerank_reorders_pool(self):
+        ix = self.index()
+        # cross-encoder factice : préfère les passages qui parlent de mémoire
+        fake = lambda q, texts, model=None: [1.0 if "memory" in t.lower() else 0.0 for t in texts]  # noqa: E731
+        with mock.patch.object(rag, "_cross_scores", side_effect=fake):
+            top = ix.search("wall power measurement", k=2, rerank=True)
+        self.assertEqual(top[0]["chunk_id"], "2021-lin-mcunet#000.0")
+        self.assertEqual(top[0]["rerank"], 1.0)
+        self.assertEqual(len(top), 2)
+
     def test_lexical_fallback_without_vectors(self):
         with mock.patch.object(embed, "available", return_value=False):
             ix = rag.Index(self.root)

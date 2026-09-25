@@ -10,8 +10,10 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
 
 1. **Chiffres d'abord (N0).** Si la question porte sur des performances (FPS, W, latence,
    ressources, précision), commence par `bin/pdb bench` avec des filtres et `--cols` ciblés.
-   Une sortie de `bench` qui répond déjà se transmet telle quelle, en tableau.
-2. **Passages (N1).** Sinon, ou en complément, lance `bin/pdb search "<question>" -k 8`.
+   Une sortie de `bench` qui répond déjà se transmet telle quelle, en tableau. Pour une vue
+   d'ensemble (qui mesure quoi, avec quelle portée), `--count paper_id,power_scope` résume
+   sans lister les lignes.
+2. **Passages (N1).** Sinon, ou en complément, lance `bin/pdb search "<question>" -k 8 --rerank`.
    - Le corpus est en anglais : formule la requête en anglais, et essaie une deuxième
      formulation si la première ne donne rien d'utile.
    - Restreins la recherche avec `--paper`, `--section` ou `--kind` quand la question le permet.

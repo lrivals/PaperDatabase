@@ -245,7 +245,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `reindex` | `reindex.run` | |
 | `discover …` | `discover.run` | |
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
-| `search`, `show`, `verify`, `test --rag` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF), texte exact, contrôle de citation, évaluation sur `tests/fixtures/rag_eval*.jsonl` ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5 et §10 |
+| `search`, `show`, `verify`, `test --rag` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), texte exact, contrôle de citation, évaluation sur `tests/fixtures/rag_eval*.jsonl` ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5 et §10 |
 | `bench [filtres]`, `paper <requête>` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 
 ### `bin/setup.sh`
@@ -698,7 +698,14 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
       `tests/fixtures/rag_eval.jsonl` (20 q.) et `rag_eval_fr.jsonl` (8 q.) (25/09/2026,
       110 tests). Évaluation : recall@5 0,90 en anglais, 0,50 en français (RAG.md §10) ;
     - [ ] `pdb cites` / `cited-by` (RAG.md §5.5) ;
-    - [ ] requête NMS paraphrasée toujours manquée (RAG.md §10) : piste reranking.
+    - [x] essai réel de `/paper-ask` sur la mesure de puissance (RAG.md §12) ; corrigés
+      ensuite : id court des noms composés, `bench --count` (112 tests) ;
+    - [x] reranking par cross-encoder, option `search --rerank` : recall@5 0,90 → 1,00 en
+      anglais (question NMS récupérée), MRR 0,33 → 0,26 en français. Option non activée par
+      défaut, utilisée par `/paper-ask` (RAG.md §10, 113 tests) ;
+    - [ ] relever les puissances de 2211.11647 dans ses figures (portée `board`), et
+      vérifier la portée de tegrastats pour les 14 lignes `chip` de 2502.15737 (constats
+      de l'essai de `/paper-ask`).
 
 ### En place
 

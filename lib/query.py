@@ -8,6 +8,8 @@ import csv
 import json
 from pathlib import Path
 
+from slugify import slugify
+
 from lib import schema
 
 NR = schema.NR
@@ -36,8 +38,16 @@ def load_papers(root):
 # ------------------------------------------------------------ identifiants courts
 
 def _short_candidate(meta):
+    """arxiv_id, sinon le préfixe « année-auteur » du paper_id (lib/ids.make_paper_id), qui
+    garde les noms composés entiers (2025-el-zeinaty) ; à défaut, deux premiers segments."""
     if meta.get("arxiv_id"):
         return meta["arxiv_id"]
+    authors = meta.get("authors") or []
+    family = authors[0].get("family") if authors else None
+    if family and meta.get("year"):
+        prefix = f"{meta['year']}-{slugify(family)}"
+        if meta["id"].startswith(prefix + "-") or meta["id"] == prefix:
+            return prefix
     return "-".join(meta["id"].split("-")[:2])
 
 
@@ -112,6 +122,17 @@ def select_columns(cols, header):
     if "power_w" in wanted and "power_scope" in header:
         wanted.add("power_scope")
     return [c for c in header if c in wanted]
+
+
+def count_rows(rows, cols, short):
+    """Nombre de lignes par combinaison de valeurs de `cols` (paper_id en id court)."""
+    counts = {}
+    for r in rows:
+        key = tuple(short.get(r[c], r[c]) if c == "paper_id" else (r.get(c) or "") for c in cols)
+        counts[key] = counts.get(key, 0) + 1
+    lines = ["n\t" + "\t".join("paper" if c == "paper_id" else c for c in cols)]
+    lines += [f"{n}\t" + "\t".join(k) for k, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))]
+    return "\n".join(lines)
 
 
 # -------------------------------------------------------------------- rendu

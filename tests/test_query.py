@@ -49,6 +49,11 @@ class TestShortIds(unittest.TestCase):
         self.assertEqual(short["2022-feng-yolo-edge"], "2022-feng-yolo-edge")
         self.assertEqual(query.short_ids(PAPERS[:2])["2022-feng-yolo-edge"], "2022-feng")
 
+    def test_compound_family_name(self):
+        meta = {"id": "2025-el-zeinaty-designing-models", "year": 2025,
+                "authors": [{"given": "C", "family": "El Zeinaty"}]}
+        self.assertEqual(query.short_ids([meta])[meta["id"]], "2025-el-zeinaty")
+
     def test_resolve(self):
         self.assertEqual([m["id"] for m in query.resolve("1612.07119", PAPERS)],
                          ["arxiv-1612.07119-finn"])
@@ -117,6 +122,12 @@ class TestRender(unittest.TestCase):
                                        fmt="json"))
         self.assertEqual((data[0]["paper_id"], data[0]["short"]),
                          ("arxiv-1612.07119-finn", "1612.07119"))
+
+
+class TestCount(unittest.TestCase):
+    def test_count_rows(self):
+        out = query.count_rows(ROWS, ["paper_id", "power_scope"], {"arxiv-1612.07119-finn": "finn"})
+        self.assertEqual(out.splitlines()[:2], ["n\tpaper\tpower_scope", "2\tfinn\tboard"])
 
 
 class TestPaperCard(unittest.TestCase):

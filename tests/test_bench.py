@@ -36,6 +36,16 @@ class BenchTest(unittest.TestCase):
         self.assertFalse(bench_cli.retrieved_match({**hit, "locator": "p1#002"}, evidence))
         self.assertFalse(bench_cli.retrieved_match({**hit, "kind": "fiche"}, evidence))
 
+    def test_cpu_search_hits_match_through_their_parent_section(self):
+        class Index:
+            def search(self, q, k, mode, rerank):
+                return [{"paper_id": "p1", "kind": "section", "section_id": "p1#001",
+                         "chunk_id": "p1#001.1", "text": "second window only"}]
+        evidence = {"paper_id": "p1", "id": "p1#001", "quote": "first window quote"}
+        hits = bench_cli.cpu_search(Index(), "q", False,
+                                    {"p1#001": "first window quote. second window only"})
+        self.assertTrue(bench_cli.retrieved_match(hits[0], evidence))
+
     def test_local_generator_rejects_a_different_loaded_model(self):
         response = BytesIO(json.dumps({"model": "other.gguf", "choices": [
             {"message": {"content": '{"cases": []}'}}]}).encode())

@@ -170,7 +170,8 @@ def _source_match(stage, query):
 
 
 def _acquire_unlocked(root, query, run_id, limit=3):
-    """Import relevant, validated full texts; return explicit acquisition outcomes."""
+    """Stage relevant, validated full texts for review; papers/ is not modified.
+    The user picks which staged papers enter the library with approve()."""
     if not query.strip():
         raise ValueError("empty discovery question")
     root = Path(root).resolve()
@@ -180,8 +181,9 @@ def _acquire_unlocked(root, query, run_id, limit=3):
     state = json.loads(manifest_path.read_text()) if manifest_path.exists() else {
         "started": time.time(), "searches": 0, "attempts": 0,
         "downloads": 0, "bytes": 0,
-        "queries": [], "imported": [], "errors": []}
+        "queries": [], "staged": [], "imported": [], "errors": []}
     state.setdefault("attempts", state["downloads"])
+    state.setdefault("staged", [])
     if state["searches"] >= MAX_SEARCHES or time.time() - state["started"] > MAX_SECONDS:
         raise RuntimeError("external search budget exhausted")
     state["searches"] += 1
@@ -201,11 +203,10 @@ def _acquire_unlocked(root, query, run_id, limit=3):
     known = [json.loads(p.read_text()) for p in (root / "papers").glob("*/metadata.json")]
     known_hashes = {hashlib.sha256(p.read_bytes()).hexdigest()
                     for p in (root / "papers").glob("*/paper.pdf")}
-    imported = []
-    selected = []
+    staged_now = []
     seen = set()
     for c in candidates:
-        if (len(imported) >= limit or state["attempts"] >= MAX_PAPERS or
+        if (len(staged_now) >= limit or state["attempts"] >= MAX_PAPERS or
                 state["bytes"] >= MAX_BYTES or time.time() - state["started"] > MAX_SECONDS):
             break
         if _score(query, c) == 0:
@@ -273,43 +274,74 @@ def _acquire_unlocked(root, query, run_id, limit=3):
                           "extraction_warnings": meta["extraction"]["warnings"]}
             (staged / "acquisition.json").write_text(
                 json.dumps(provenance, ensure_ascii=False, indent=2) + "\n")
-            os.replace(staged, root / "papers" / staged.name)
             known.append(meta)
             known_hashes.add(pdf_hash)
-            imported.append(staged.name)
-            selected.append((staged.name, passage["locator"], passage["start"], passage["end"]))
-            state["imported"].append(staged.name)
+            entry = {"paper_id": staged.name, "title": meta["title"], "year": meta["year"],
+                     "path": str(staged.relative_to(root)), "relevance": relevance,
+                     "locator": passage["locator"], "excerpt": passage["text"][:400]}
+            staged_now.append(entry)
+            state["staged"].append(entry)
             _save(manifest_path, state)
         except Exception as e:
             state["errors"].append(f"{identity}: parse/import: {e}")
             _save(manifest_path, state)
-    if imported:
-        if reindex.run(root):
-            raise RuntimeError("imported papers need index validation; check bin/pdb reindex")
-        rag.build(root, mode="hybrid", download=False)
-    evidence = []
-    if selected:
-        db, _ = rag.open_index(root)
-        try:
-            for paper_id, locator, start, end in selected:
-                row = db.execute("SELECT id, text FROM evidence WHERE paper_id=? AND locator=? "
-                                 "AND start=? AND end=?", (paper_id, locator, start, end)).fetchone()
-                if row:
-                    evidence.append({"paper_id": paper_id, "evidence_id": row["id"],
-                                     "excerpt": row["text"][:400]})
-        finally:
-            db.close()
-    return {"run": run_id, "query": query, "imported": imported,
-            "selected_evidence": evidence,
+    return {"run": run_id, "query": query, "staged": staged_now,
             "errors": state["errors"], "searches": state["searches"],
             "attempts": state["attempts"], "downloads": state["downloads"],
             "bytes": state["bytes"]}
 
 
-def acquire(root, query, run_id, limit=3):
+def _approve_unlocked(root, run_id, paper_ids):
+    """Move user-approved staged papers into papers/, reindex, and return their evidence."""
+    from bin import reindex
+    root = Path(root).resolve()
+    run = _run_dir(root, run_id)
+    manifest_path = run / "manifest.json"
+    state = json.loads(manifest_path.read_text())
+    staged = {e["paper_id"]: e for e in state.get("staged", [])}
+    unknown = [p for p in paper_ids if p not in staged]
+    if unknown:
+        raise ValueError(f"not staged in run {run_id}: {', '.join(unknown)}")
+    imported = []
+    for paper_id in paper_ids:
+        target = root / "papers" / paper_id
+        if target.exists():
+            raise ValueError(f"papers/{paper_id} already exists")
+        os.replace(root / staged[paper_id]["path"], target)
+        imported.append(paper_id)
+        state["imported"].append(paper_id)
+        _save(manifest_path, state)
+    if reindex.run(root):
+        raise RuntimeError("imported papers need index validation; check bin/pdb reindex")
+    rag.build(root, mode="hybrid", download=False)
+    evidence = []
+    db, _ = rag.open_index(root)
+    try:
+        for paper_id in imported:
+            p = json.loads((root / "papers" / paper_id / "acquisition.json").read_text())
+            row = db.execute("SELECT id, text FROM evidence WHERE paper_id=? AND locator=? "
+                             "AND start=? AND end=?", (paper_id, p["selected_locator"],
+                                                       p["selected_start"], p["selected_end"])).fetchone()
+            if row:
+                evidence.append({"paper_id": paper_id, "evidence_id": row["id"],
+                                 "excerpt": row["text"][:400]})
+    finally:
+        db.close()
+    return {"run": run_id, "imported": imported, "selected_evidence": evidence}
+
+
+def _locked(root, fn, *args):
     """Serialize corpus mutations and the following index rebuild."""
     lock = Path(root) / ".cache" / "rag" / "import.lock"
     lock.parent.mkdir(parents=True, exist_ok=True)
     with lock.open("w") as file:
         fcntl.flock(file, fcntl.LOCK_EX)
-        return _acquire_unlocked(root, query, run_id, limit)
+        return fn(root, *args)
+
+
+def acquire(root, query, run_id, limit=3):
+    return _locked(root, _acquire_unlocked, query, run_id, limit)
+
+
+def approve(root, run_id, paper_ids):
+    return _locked(root, _approve_unlocked, run_id, paper_ids)

@@ -79,6 +79,8 @@ bin/pdb synth retrieval --mode lexical
 bin/pdb synth retrieval --mode dense
 bin/pdb synth retrieval --mode hybrid
 bin/pdb synth retrieval --mode reranked
+bin/pdb synth retrieval --mode cpu-hybrid     # pdb search (bge-small), same questions
+bin/pdb synth retrieval --mode cpu-reranked
 bin/pdb synth agent --variant native --split development --limit 20
 bin/pdb synth agent --variant hybrid --split development --limit 20
 bin/pdb synth judge --limit 200

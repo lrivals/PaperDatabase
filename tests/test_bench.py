@@ -46,6 +46,25 @@ class BenchTest(unittest.TestCase):
                                     {"p1#001": "first window quote. second window only"})
         self.assertTrue(bench_cli.retrieved_match(hits[0], evidence))
 
+    def test_claude_wrapper_reads_structured_output_and_errors(self):
+        stream = "\n".join(json.dumps(e) for e in (
+            {"type": "assistant", "message": {"content": [
+                {"type": "tool_use", "name": "Bash", "input": {"command": "ls"}}]}},
+            {"type": "result", "is_error": False, "structured_output": {"valid": True},
+             "usage": {"input_tokens": 3}}))
+        data, usage, events = bench_cli.claude_result(stream)
+        self.assertEqual((data, usage["input_tokens"], len(events)), ({"valid": True}, 3, 2))
+        text = json.dumps({"type": "result", "is_error": False, "result": '{"valid": false}'})
+        self.assertEqual(bench_cli.claude_result(text)[0], {"valid": False})
+        with self.assertRaisesRegex(RuntimeError, "Not logged in"):
+            bench_cli.claude_result(json.dumps({"type": "result", "is_error": True,
+                                                "result": "Not logged in"}))
+        done = type("Done", (), {"stdout": text, "stderr": ""})
+        with patch.object(bench_cli.subprocess, "run", return_value=done):
+            self.assertEqual(bench_cli.claude("q", {"valid": "boolean"}), {"valid": False})
+            with self.assertRaisesRegex(ValueError, "schema mismatch"):
+                bench_cli.claude("q", {"other": "string"})
+
     def test_local_generator_rejects_a_different_loaded_model(self):
         response = BytesIO(json.dumps({"model": "other.gguf", "choices": [
             {"message": {"content": '{"cases": []}'}}]}).encode())

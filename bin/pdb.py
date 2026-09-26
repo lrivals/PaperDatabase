@@ -25,6 +25,8 @@
   verify <chunk_id> "<citation>" [--sha1 X]
                             la citation figure-t-elle dans le passage ? OK | APPROX | NOMBRES | ABSENT
   viz [--port N]            visualisation du corpus (http://127.0.0.1:8050)
+  plot [bench|eval|corpus|all] [--only a,b] [--out DIR] [--format png|pdf|svg] [--list]
+                            figures statiques : benchmarks, évaluation, statistiques du corpus
   eval [--extract|--rag|--speed] [--save] [--compare [JSON]]
                             banc d'évaluation du logiciel (docs/EVAL.md)
   rag <command>             recherche GPU (Qwen3), preuves, acquisition open access
@@ -115,6 +117,72 @@ def cmd_grobid(args):
 
 def cmd_viz(args):
     return subprocess.run([sys.executable, str(ROOT / "bin" / "viz.py"), *args]).returncode
+
+
+def cmd_plot(args):
+    import argparse
+    from datetime import datetime
+    p = argparse.ArgumentParser(prog="pdb plot", description=(
+        "Figures statiques (matplotlib) : benchmarks.csv, eval/results, statistiques du "
+        "corpus. Écrit aussi manifest.json (sources et effectifs de chaque figure)."))
+    p.add_argument("group", nargs="?", default="all", choices=("bench", "eval", "corpus", "all"))
+    p.add_argument("--only", help="noms de figures séparés par des virgules (voir --list)")
+    p.add_argument("--out", default=str(ROOT / "figures"), help="dossier de sortie (figures/)")
+    p.add_argument("--format", default="png", choices=("png", "pdf", "svg"))
+    p.add_argument("--list", action="store_true", help="liste les figures sans rien générer")
+    a = p.parse_args(args)
+    try:
+        from lib import plotfig
+    except ImportError as e:
+        print(f"pdb plot : {e}. Installer : .venv/bin/pip install -r requirements-plot.txt",
+              file=sys.stderr)
+        return 1
+    import matplotlib.pyplot as plt
+
+    names = [n for n, (g, _, _) in plotfig.FIGURES.items() if a.group in ("all", g)]
+    if a.only:
+        wanted = [n.strip() for n in a.only.split(",") if n.strip()]
+        unknown = [n for n in wanted if n not in plotfig.FIGURES]
+        if unknown:
+            print(f"pdb plot : figure(s) inconnue(s) : {', '.join(unknown)} (voir --list)",
+                  file=sys.stderr)
+            return 2
+        names = wanted
+    if a.list:
+        for n in names:
+            g, _, desc = plotfig.FIGURES[n]
+            print(f"{g}\t{n}\t{desc}")
+        return 0
+
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    manifest_path = out / "manifest.json"
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+    ctx = plotfig.Context(ROOT)
+    failed = 0
+    for n in names:
+        g, fn, desc = plotfig.FIGURES[n]
+        try:
+            fig, info = fn(ctx)
+        except LookupError as e:
+            print(f"-  {n} : ignorée ({e})")
+            continue
+        except Exception as e:  # une figure cassée n'empêche pas les autres
+            print(f"!  {n} : échec ({type(e).__name__}: {e})", file=sys.stderr)
+            failed += 1
+            continue
+        path = out / f"{n}.{a.format}"
+        fig.savefig(path, dpi=200 if a.format == "png" else None, bbox_inches="tight")
+        plt.close(fig)
+        manifest[n] = {"file": path.name, "group": g, "description": desc,
+                       "generated": datetime.now().isoformat(timespec="seconds"), **info}
+        try:
+            shown = path.relative_to(ROOT)
+        except ValueError:
+            shown = path
+        print(f"ok {shown}")
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=1) + "\n")
+    return 1 if failed else 0
 
 
 def _pairs(items, number):
@@ -591,7 +659,7 @@ COMMANDS = {
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
     "eval": cmd_eval, "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
     "verify": cmd_verify, "cites": cmd_cites, "cited-by": cmd_cited_by,
-    "rag": cmd_rag, "synth": cmd_synth,
+    "rag": cmd_rag, "synth": cmd_synth, "plot": cmd_plot,
 }
 
 

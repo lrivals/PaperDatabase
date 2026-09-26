@@ -52,6 +52,8 @@ PaperDatabase/
 ├── requirements-viz.txt    # optionnel : dépendances de la visualisation
 ├── requirements-embed.txt  # optionnel : embeddings (sentence-transformers) pour la visualisation
 ├── requirements-docling.txt # optionnel : Docling pour les tableaux sans corps
+├── requirements-plot.txt   # optionnel : matplotlib pour bin/pdb plot
+├── figures/                # sortie de bin/pdb plot (PNG par défaut) et manifest.json
 ├── eval/                   # banc d'évaluation : thresholds.json, results/<date>-<commit>.json
 ├── .venv/                  # non versionné
 ├── .cache/                 # non versionné : embeddings, réponses OpenAlex
@@ -86,6 +88,8 @@ PaperDatabase/
 │   ├── graph.py            # nœuds, liens et positions du graphe 3D
 │   ├── lineage.py          # généalogie : sous-graphe de citations sur une frise
 │   ├── vizfig.py           # figures Plotly et panneau de détail de viz.py
+│   ├── plotdata.py         # données des figures statiques (pdb plot), stdlib seulement
+│   ├── plotfig.py          # figures matplotlib de pdb plot : benchmarks, éval, corpus
 │   └── embed.py            # optionnel : embeddings avec cache (.cache/)
 ├── tests/
 │   ├── fixtures/sample.tei.xml
@@ -103,6 +107,7 @@ PaperDatabase/
 │   ├── test_graph.py
 │   ├── test_lineage.py
 │   ├── test_viz.py
+│   ├── test_plot.py        # familles, quantification, n/r, runs d'éval ; rendu des figures
 │   ├── test_embed.py
 │   ├── test_openalex.py    # OpenAlex simulé : découverte, ajout par DOI / liste
 │   ├── test_citation.py    # exports .bib / .ris éditeur : lecture, appariement, priorité
@@ -185,6 +190,12 @@ pipeline d'ingestion léger :
 ```bash
 .venv/bin/pip install -r requirements-viz.txt   # dash, plotly, numpy, scikit-learn, networkx
 .venv/bin/pip install -r requirements-embed.txt # encore plus optionnel : sentence-transformers (torch)
+```
+
+Optionnel, pour les figures statiques (`bin/pdb plot`) :
+
+```bash
+.venv/bin/pip install -r requirements-plot.txt  # matplotlib
 ```
 
 ### Étape 2 — GROBID
@@ -272,6 +283,27 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `eval [--extract\|--rag\|--speed] [--save] [--compare [JSON]]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; runs dans `eval/results/`, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
+| `plot [bench\|eval\|corpus\|all] [--only a,b] [--out DIR] [--format png\|pdf\|svg] [--list]` | `lib/plotdata.py`, `lib/plotfig.py` | figures statiques, voir ci-dessous |
+
+### `bin/pdb plot`
+
+Figures matplotlib, écrites dans `figures/` (PNG à 200 dpi par défaut ; `--format pdf` pour
+une version vectorielle, pour LaTeX). Lecture seule sur la base. Trois groupes, `--list` pour les noms :
+
+| Groupe | Source | Figures |
+|---|---|---|
+| `bench` | `benchmarks.csv` | débit vs puissance (détection / autres tâches, iso-FPS/W), GOPS/W par précision, LUT vs DSP par toolflow, précision vs débit (un panneau par métrique), précision de calcul par famille |
+| `eval` | `eval/results/*.json` (dernier run qui contient chaque volet) | recall@5/@10 et MRR par mode et jeu, verdicts de `verify`, couverture d'extraction et tableaux par papier, temps d'exécution, évolution entre runs |
+| `corpus` | `metadata.json`, `benchmarks.csv`, `refs.jsonl`, `external_refs.csv` | papiers par année et type, par axe (fiches done/todo), part de n/r par colonne, papiers les plus cités (dans et hors base), carte famille × axe / tâche (cases à 0 = gaps candidats) |
+
+Règles : une valeur `n/r` n'est jamais tracée ; chaque figure porte en pied sa source et le
+nombre de lignes tracées sur le total ; les métriques de précision différentes ne partagent
+jamais un axe ; puissance mesurée (puce, carte) en marqueur plein, estimée ou de portée non
+dite en marqueur creux. `figures/manifest.json` garde, par figure, les sources, les
+effectifs et le run d'évaluation utilisé. Les plateformes (texte libre) sont regroupées en
+familles et les quantifications en classes de précision par des heuristiques
+(`lib/plotdata.platform_family`, `quant_bucket`) ; `tests/test_plot.py` vérifie que chaque
+plateforme de `benchmarks.csv` a une famille. Palette : celle de `viz.py`.
 
 ### `bin/setup.sh`
 
@@ -596,6 +628,7 @@ bin/pdb add 2509.04153                  # arXiv ; aussi un DOI, un PDF local, --
 cp ~/Téléchargements/article.pdf inbox/ && bin/pdb ingest   # article sous paywall
 bin/pdb discover --forward --backward   # candidats → candidates.csv, candidates_arxiv.txt
 bin/pdb viz                             # visualisation, http://127.0.0.1:8050
+bin/pdb plot                            # figures statiques → figures/ (benchmarks, éval, corpus)
 ```
 
 `add` et `ingest` réindexent d'eux-mêmes ; après une fiche remplie ou une ligne de benchmark
@@ -673,6 +706,11 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 Point au 26/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 26/09/2026 (figures).** `bin/pdb plot` (`lib/plotdata.py`, `lib/plotfig.py`,
+`requirements-plot.txt`) : 15 figures statiques en trois groupes (benchmarks, évaluation du
+logiciel, statistiques du corpus), sources et effectifs dans `figures/manifest.json` ;
+`tests/test_plot.py` (10 tests).
 
 **Bilan du 24/09/2026.** Outillage : conservation des axes/tags à la ré-extraction,
 `lib/refs.py` (rapprochement et fusion des variantes de références), `external_refs.csv`,

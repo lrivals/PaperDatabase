@@ -1,14 +1,16 @@
-# Compile l'article : make ; nettoyage : make clean
-DOC = paperdatabase
+# Compile l'article (français et anglais) : make ; nettoyage : make clean
+DOCS = paperdatabase paperdatabase-en
 
-$(DOC).pdf: $(DOC).tex refs.bib
-	pdflatex -interaction=nonstopmode -halt-on-error $(DOC).tex >/dev/null
-	bibtex $(DOC) >/dev/null
-	pdflatex -interaction=nonstopmode -halt-on-error $(DOC).tex >/dev/null
-	pdflatex -interaction=nonstopmode -halt-on-error $(DOC).tex >/dev/null
-	@grep -E "undefined|Warning: Citation" $(DOC).log || echo "OK : $(DOC).pdf"
+all: $(addsuffix .pdf,$(DOCS))
+
+%.pdf: %.tex refs.bib
+	pdflatex -interaction=nonstopmode -halt-on-error $*.tex >/dev/null
+	bibtex $* >/dev/null
+	pdflatex -interaction=nonstopmode -halt-on-error $*.tex >/dev/null
+	pdflatex -interaction=nonstopmode -halt-on-error $*.tex >/dev/null
+	@grep -E "undefined|Warning: Citation" $*.log || echo "OK : $*.pdf"
 
 clean:
-	rm -f $(DOC).aux $(DOC).bbl $(DOC).blg $(DOC).log $(DOC).out $(DOC).toc
+	rm -f $(foreach d,$(DOCS),$(d).aux $(d).bbl $(d).blg $(d).log $(d).out $(d).toc)
 
-.PHONY: clean
+.PHONY: all clean

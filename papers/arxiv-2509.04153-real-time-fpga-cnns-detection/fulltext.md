@@ -373,7 +373,14 @@ This paper has surveyed the evolving landscape of FPGA-based acceleration for CN
      | MACs (up to | cores) |  |  | and DSPCPLX |  | 
      | 400 AIE tiles) |  |  |  | Modes |  | 
 
-**TABLE V** COMMONLY USED FPGAS FOR REAL-TIME VISION TASKS
+**TABLE V** COMMONLY USED FPGAS FOR REAL-TIME VISION TASKS [corps du tableau reconstruit par Docling : à vérifier]
+
+    FPGA Board | LUTs / ALMs, FFS | DSP /AI engine | Block RAM (size) | Cost
+    AMD Xilinx Zynq UltraScale+ ZCU104 [62] | 230,400 LUTs, 461,000 FFs | 1,728 | 146 (38Mb) | $1,678
+    AMD Versal AI Core VC1902 [63] | 899,840 LUTs, 1,799,680 FFs | 1,968 DSPs 400 AI | 34Mb | $13,195
+    AMD Xilinx Kria KV260 [64] | 70,560 LUTs, 141,120 FFs | 1.2K | 144 | $249
+    Intel Agilex 7 AGM 032 [65] | 1,100,000 ALMs, 440,0000 FFs | 9,375 | 15,932 (311Mb) | $9,495
+    Intel Arria 10 GX 1150 [66] | 427,200 ALMs, 1708800 FFs | 1518 | 2,713 (52.96Mb) | $10,019
 
 FPGA Board LUTs / ALMs, FFS DSP /AI engine Block RAM (size) Cost
 

@@ -27,6 +27,26 @@ def label(block):
     return m.group(1) if m else (caption[:30].strip() or f"tableau p. {block.page}")
 
 
+_ROMAN = {"I": 1, "V": 5, "X": 10, "L": 50}
+
+
+def number(s):
+    """Numéro d'un tableau : « 3 » → 3, « IV » → 4, « A2 » → 2 ; None sinon."""
+    m = re.fullmatch(r"[A-Z]?(\d+)|([IVXL]+)", (s or "").strip().upper())
+    if not m:
+        return None
+    if m.group(1):
+        return int(m.group(1))
+    vals = [_ROMAN[c] for c in m.group(2)]
+    return sum(-v if i + 1 < len(vals) and v < vals[i + 1] else v for i, v in enumerate(vals))
+
+
+def label_number(text):
+    """Numéro du tableau d'après le début d'une légende (« TABLE III. … » → 3)."""
+    m = _LABEL.match(text or "")
+    return number(m.group(1).split()[-1]) if m else None
+
+
 def body_chars(block):
     return sum(len(t) for t, _ in block.paras[1:])
 

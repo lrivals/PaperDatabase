@@ -1,0 +1,691 @@
+{
+ "date": "2026-09-26T0051",
+ "commit": "80aa05e",
+ "dirty": true,
+ "volets": [
+  "extraction",
+  "rag",
+  "speed"
+ ],
+ "results": {
+  "extraction": {
+   "quality": {
+    "papers": 28,
+    "grobid": 28,
+    "coverage_mean": 0.9131458836185015,
+    "coverage_min": 0.8045927674643202,
+    "coverage_worst": [
+     "arxiv-2512.01463-hls4ml-flexible-open-source-platform 0.805",
+     "2024-mittal-comprehensive-survey-deep-learning-lightweight 0.824",
+     "arxiv-2103.05579-hls4ml-open-source-codesign-workflow 0.838"
+    ],
+    "words": 305490,
+    "tables": 148,
+    "tables_with_body_rate": 0.6621621621621622,
+    "tables_recovered": 3,
+    "ligature_leftover_per_10k": 0.0,
+    "papers_missed_sections": 7,
+    "papers_spaced_headings": 1,
+    "warnings_per_paper": 1.0357142857142858,
+    "per_paper": {
+     "2022-feng-benchmark-analysis-yolo-performance-edge": {
+      "backend": "grobid",
+      "coverage": 0.8853038153556289,
+      "words": 6473,
+      "sections": 17,
+      "tables": 6,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2023-cui-survey-unsupervised-anomaly-detection-algorithms": {
+      "backend": "grobid",
+      "coverage": 0.9322463768115942,
+      "words": 7910,
+      "sections": 24,
+      "tables": 10,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2023-shuvo-efficient-acceleration-deep-learning-inference": {
+      "backend": "grobid",
+      "coverage": 0.908794434177628,
+      "words": 27379,
+      "sections": 86,
+      "tables": 10,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": true,
+      "warnings": 1
+     },
+     "2023-zhai-fpga-vehicle-detection-tracking-accelerator": {
+      "backend": "grobid",
+      "coverage": 0.9220919747520289,
+      "words": 9453,
+      "sections": 49,
+      "tables": 7,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2024-mittal-comprehensive-survey-deep-learning-lightweight": {
+      "backend": "grobid",
+      "coverage": 0.824274303526203,
+      "words": 13440,
+      "sections": 47,
+      "tables": 5,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "2025-el-zeinaty-designing-object-detection-models-tinyml": {
+      "backend": "grobid",
+      "coverage": 0.9442807017543859,
+      "words": 20514,
+      "sections": 44,
+      "tables": 9,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2025-hozhabr-survey-real-time-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.9532662676684069,
+      "words": 22169,
+      "sections": 59,
+      "tables": 7,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1612.07119-finn-framework-fast-scalable-binarized": {
+      "backend": "grobid",
+      "coverage": 0.934935147778014,
+      "words": 8437,
+      "sections": 25,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1711.08740-fpgaconvnet-toolflow-mapping-diverse-convolutional": {
+      "backend": "grobid",
+      "coverage": 0.9390934844192634,
+      "words": 2181,
+      "sections": 8,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1806.01683-accelerating-cnn-inference-fpgas-survey": {
+      "backend": "grobid",
+      "coverage": 0.9377641183250096,
+      "words": 10598,
+      "sections": 37,
+      "tables": 7,
+      "tables_with_body": 6,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 3
+     },
+     "arxiv-1809.04570-finn-r-end-end-deep": {
+      "backend": "grobid",
+      "coverage": 0.852110537503796,
+      "words": 10279,
+      "sections": 22,
+      "tables": 6,
+      "tables_with_body": 6,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2010.15277-class-incremental-learning-survey-performance": {
+      "backend": "grobid",
+      "coverage": 0.9663376623376624,
+      "words": 20032,
+      "sections": 60,
+      "tables": 12,
+      "tables_with_body": 9,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2103.05579-hls4ml-open-source-codesign-workflow": {
+      "backend": "grobid",
+      "coverage": 0.8377678361196138,
+      "words": 5962,
+      "sections": 13,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised": {
+      "backend": "grobid",
+      "coverage": 0.9033482913358647,
+      "words": 5494,
+      "sections": 12,
+      "tables": 5,
+      "tables_with_body": 3,
+      "tables_recovered": 2,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference": {
+      "backend": "grobid",
+      "coverage": 0.9596092925026399,
+      "words": 6631,
+      "sections": 17,
+      "tables": 7,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2206.15472-device-training-256kb-memory": {
+      "backend": "grobid",
+      "coverage": 0.945284002084419,
+      "words": 7667,
+      "sections": 19,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2211.11647-benchmarking-edge-computing-devices-grape": {
+      "backend": "grobid",
+      "coverage": 0.8796412181894034,
+      "words": 7719,
+      "sections": 17,
+      "tables": 1,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint": {
+      "backend": "grobid",
+      "coverage": 0.9434554973821989,
+      "words": 3206,
+      "sections": 7,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2403.07851-12-mj-per-class-device": {
+      "backend": "grobid",
+      "coverage": 0.919984076433121,
+      "words": 4471,
+      "sections": 14,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2409.07114-continual-incremental-learning-tinyml-device": {
+      "backend": "grobid",
+      "coverage": 0.9224088013896931,
+      "words": 5334,
+      "sections": 19,
+      "tables": 2,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2409.16808-comprehensive-evaluation-deep-learning-object": {
+      "backend": "grobid",
+      "coverage": 0.8653743553263382,
+      "words": 8659,
+      "sections": 26,
+      "tables": 4,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded": {
+      "backend": "grobid",
+      "coverage": 0.9570866434033707,
+      "words": 38209,
+      "sections": 81,
+      "tables": 4,
+      "tables_with_body": 4,
+      "tables_recovered": 1,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2502.15737-performance-analysis-you-only-look": {
+      "backend": "grobid",
+      "coverage": 0.9473684210526315,
+      "words": 10015,
+      "sections": 25,
+      "tables": 8,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2507.18174-real-time-object-detection-classification": {
+      "backend": "grobid",
+      "coverage": 0.9466393022062596,
+      "words": 2582,
+      "sections": 9,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2509.04153-real-time-fpga-cnns-detection": {
+      "backend": "grobid",
+      "coverage": 0.9566585110101363,
+      "words": 13329,
+      "sections": 30,
+      "tables": 7,
+      "tables_with_body": 6,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2512.01463-hls4ml-flexible-open-source-platform": {
+      "backend": "grobid",
+      "coverage": 0.8045927674643202,
+      "words": 12845,
+      "sections": 32,
+      "tables": 8,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2602.15751-enabling-low-latency-machine-learning": {
+      "backend": "grobid",
+      "coverage": 0.895984518626028,
+      "words": 8450,
+      "sections": 29,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2604.21280-imagehd-energy-efficient-device-continual": {
+      "backend": "grobid",
+      "coverage": 0.8823823823823824,
+      "words": 6052,
+      "sections": 24,
+      "tables": 6,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     }
+    }
+   },
+   "header": {
+    "title": 0.9285714285714286,
+    "year": 0.5,
+    "doi": 0.42105263157894735,
+    "arxiv_id": 0.6666666666666666,
+    "authors_f1": 0.8596453582006001,
+    "n": {
+     "title": 28,
+     "year": 28,
+     "doi": 19,
+     "arxiv_id": 21,
+     "authors_f1": 28
+    },
+    "title_errors": [
+     "arxiv-2403.07851-12-mj-per-class-device titre : '2 mJ per Class On-Device Online Few-Shot Class-Incremental Learning'",
+     "arxiv-2409.16808-comprehensive-evaluation-deep-learning-object titre : None"
+    ]
+   },
+   "tables": {
+    "values": 339,
+    "in_cited_table": 0.7404129793510325,
+    "in_text": 0.855457227138643,
+    "rows_cited_table_absent": 3,
+    "found_outside_table": {
+     "2502.15737": 10,
+     "1612.07119": 9,
+     "2512.01463": 6,
+     "1809.04570": 6,
+     "2306.00001": 6,
+     "2023-zhai": 2
+    }
+   }
+  },
+  "rag": {
+   "passages": 2398,
+   "model": "BAAI/bge-small-en-v1.5",
+   "dense": true,
+   "sets": {
+    "rag_eval": {
+     "n": 20,
+     "hybrid": {
+      "recall@5": 0.9,
+      "recall@10": 0.95,
+      "mrr": 0.75,
+      "ndcg@10": 0.40381145982355104,
+      "paper@5": 0.95,
+      "misses": [
+       "Is the post-processing step that removes duplicate bounding boxes run on the CPU or in programmable logic?",
+       "How are layers mapped onto processing elements and SIMD lanes to balance throughput?"
+      ]
+     },
+     "dense": {
+      "recall@5": 0.9,
+      "recall@10": 0.9,
+      "mrr": 0.7625,
+      "ndcg@10": 0.4012616132898687,
+      "paper@5": 0.95,
+      "misses": [
+       "Is the post-processing step that removes duplicate bounding boxes run on the CPU or in programmable logic?",
+       "How are layers mapped onto processing elements and SIMD lanes to balance throughput?"
+      ]
+     },
+     "lexical": {
+      "recall@5": 0.95,
+      "recall@10": 0.95,
+      "mrr": 0.7516666666666667,
+      "ndcg@10": 0.3839208873428236,
+      "paper@5": 1.0,
+      "misses": [
+       "Is the post-processing step that removes duplicate bounding boxes run on the CPU or in programmable logic?"
+      ]
+     },
+     "hybrid+rerank": {
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.8541666666666666,
+      "ndcg@10": 0.4590582926988861,
+      "paper@5": 1.0,
+      "misses": []
+     }
+    },
+    "rag_eval_holdout": {
+     "n": 25,
+     "hybrid": {
+      "recall@5": 0.84,
+      "recall@10": 0.84,
+      "mrr": 0.652,
+      "ndcg@10": 0.34873955305959065,
+      "paper@5": 0.92,
+      "misses": [
+       "Protecting neural network inference from particle-induced bit flips in space",
+       "Condensing a training set into a few synthetic samples for continual learning on microcontrollers",
+       "FPGA resource usage of the anomaly-detection autoencoder models",
+       "Resource utilization and throughput of each binarized prototype"
+      ]
+     },
+     "dense": {
+      "recall@5": 0.76,
+      "recall@10": 0.8,
+      "mrr": 0.637047619047619,
+      "ndcg@10": 0.3700414019221116,
+      "paper@5": 0.88,
+      "misses": [
+       "Protecting neural network inference from particle-induced bit flips in space",
+       "Majority voting over replicated logic to tolerate soft errors",
+       "Fast convolution algorithms that reduce the number of multiplications",
+       "Condensing a training set into a few synthetic samples for continual learning on microcontrollers",
+       "FPGA resource usage of the anomaly-detection autoencoder models",
+       "Resource utilization and throughput of each binarized prototype"
+      ]
+     },
+     "lexical": {
+      "recall@5": 0.68,
+      "recall@10": 0.8,
+      "mrr": 0.5937142857142857,
+      "ndcg@10": 0.2933780027260317,
+      "paper@5": 0.8,
+      "misses": [
+       "Protecting neural network inference from particle-induced bit flips in space",
+       "Majority voting over replicated logic to tolerate soft errors",
+       "Detecting fruit clusters and vine stems in vineyards with edge devices",
+       "Training with low-precision weights before porting the anomaly detector to hardware",
+       "Condensing a training set into a few synthetic samples for continual learning on microcontrollers",
+       "Physics use case used to demonstrate the codesign workflow",
+       "FPGA resource usage of the anomaly-detection autoencoder models",
+       "Resource utilization and throughput of each binarized prototype"
+      ]
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.8,
+      "recall@10": 0.8,
+      "mrr": 0.78,
+      "ndcg@10": 0.4127136526156771,
+      "paper@5": 0.88,
+      "misses": [
+       "Protecting neural network inference from particle-induced bit flips in space",
+       "Training with low-precision weights before porting the anomaly detector to hardware",
+       "Condensing a training set into a few synthetic samples for continual learning on microcontrollers",
+       "FPGA resource usage of the anomaly-detection autoencoder models",
+       "Resource utilization and throughput of each binarized prototype"
+      ]
+     }
+    },
+    "rag_eval_fr": {
+     "n": 8,
+     "hybrid": {
+      "recall@5": 0.5,
+      "recall@10": 0.625,
+      "mrr": 0.36160714285714285,
+      "ndcg@10": 0.14259488529928557,
+      "paper@5": 0.625,
+      "misses": [
+       "Comment la consommation a-t-elle été mesurée, à la prise murale ou sur les rails d'alimentation du FPGA ?",
+       "Réduire le pic de mémoire SRAM des premières couches d'un CNN sur microcontrôleur",
+       "Entraîner un réseau de neurones avec 256 Ko de mémoire sur un microcontrôleur",
+       "Suivi multi-objets de véhicules pour des statistiques de trafic routier"
+      ]
+     },
+     "dense": {
+      "recall@5": 0.625,
+      "recall@10": 0.75,
+      "mrr": 0.4583333333333333,
+      "ndcg@10": 0.19535347977435513,
+      "paper@5": 0.75,
+      "misses": [
+       "Comment la consommation a-t-elle été mesurée, à la prise murale ou sur les rails d'alimentation du FPGA ?",
+       "Apprentissage continu non supervisé embarqué avec des vecteurs binaires de grande dimension",
+       "Stratégies de déroulage et de tuilage de boucles pour les accélérateurs de convolution sur FPGA"
+      ]
+     },
+     "lexical": {
+      "recall@5": 0.375,
+      "recall@10": 0.375,
+      "mrr": 0.11875,
+      "ndcg@10": 0.0496490243579252,
+      "paper@5": 0.375,
+      "misses": [
+       "Comment la consommation a-t-elle été mesurée, à la prise murale ou sur les rails d'alimentation du FPGA ?",
+       "Apprentissage continu non supervisé embarqué avec des vecteurs binaires de grande dimension",
+       "Réduire le pic de mémoire SRAM des premières couches d'un CNN sur microcontrôleur",
+       "Entraîner un réseau de neurones avec 256 Ko de mémoire sur un microcontrôleur",
+       "Suivi multi-objets de véhicules pour des statistiques de trafic routier"
+      ]
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.5,
+      "recall@10": 0.5,
+      "mrr": 0.3229166666666667,
+      "ndcg@10": 0.12401918807754023,
+      "paper@5": 0.625,
+      "misses": [
+       "Comment la consommation a-t-elle été mesurée, à la prise murale ou sur les rails d'alimentation du FPGA ?",
+       "Apprentissage continu non supervisé embarqué avec des vecteurs binaires de grande dimension",
+       "Suivi multi-objets de véhicules pour des statistiques de trafic routier",
+       "Stratégies de déroulage et de tuilage de boucles pour les accélérateurs de convolution sur FPGA"
+      ]
+     }
+    }
+   },
+   "low_relevance": {
+    "threshold": 0.6,
+    "flagged_negatives": 0.0,
+    "flagged_positives": 0.0,
+    "cos_neg_max": 0.83,
+    "cos_pos_min": 0.692,
+    "cos_pos_median": 0.827,
+    "separating_threshold": 0.79,
+    "negatives_not_flagged": [
+     "Protein structure prediction with deep learning",
+     "Training large transformer language models on TPU pods",
+     "Reinforcement learning for robotic grasping",
+     "Quantum error correction with surface codes",
+     "Proof-of-stake consensus in blockchain networks",
+     "Differential privacy guarantees in federated learning",
+     "Numerical weather prediction and climate simulation",
+     "Collaborative filtering recommender systems for e-commerce",
+     "Graph neural networks for molecular property prediction",
+     "Legal document summarization with large language models"
+    ]
+   },
+   "verify": {
+    "exact": {
+     "n": 40,
+     "accepted_rate": 1.0,
+     "status": {
+      "OK": 40
+     }
+    },
+    "mot remplacé": {
+     "n": 40,
+     "accepted_rate": 0.975,
+     "status": {
+      "APPROX": 39,
+      "ABSENT": 1
+     }
+    },
+    "chiffre modifié": {
+     "n": 38,
+     "accepted_rate": 1.0,
+     "status": {
+      "APPROX": 38
+     }
+    },
+    "autre papier": {
+     "n": 40,
+     "accepted_rate": 0.0,
+     "status": {
+      "ABSENT": 40
+     }
+    }
+   }
+  },
+  "speed": {
+   "extract_s": {
+    "2306.00001": 0.007268770000337099,
+    "2025-el-zeinaty": 0.20815159999983734,
+    "2211.11647": 0.1357130970000071
+   },
+   "pymupdf_fallback_s": {
+    "2306.00001": 0.022026734000064607,
+    "2025-el-zeinaty": 0.1379967390003003,
+    "2211.11647": 0.06905425199965975
+   },
+   "index_load_s": 0.1489207009999518,
+   "passages": 2398,
+   "cache_mb": 4.777318,
+   "encode_passages_per_s": 17.880608595166215,
+   "full_encode_estimate_s": 134.11176623195405,
+   "search_hybrid_ms": {
+    "p50": 113.91379899941967,
+    "p95": 178.84529100047075
+   },
+   "search_dense_ms": {
+    "p50": 111.5635359992666,
+    "p95": 125.35730400031753
+   },
+   "search_lexical_ms": {
+    "p50": 7.0025479999458184,
+    "p95": 14.221837999684794
+   },
+   "search_hybrid+rerank_ms": {
+    "p50": 1405.3644679997888,
+    "p95": 1688.6354869993738
+   },
+   "verify_ms": 0.6599119997190428,
+   "cli_s": {
+    "status": 0.1336002499992901,
+    "bench": 0.053543828000329086,
+    "paper": 0.05171529700055544,
+    "search": 5.794386507999661,
+    "show": 0.31232328999976744
+   }
+  }
+ }
+}

@@ -5,7 +5,9 @@
   add <id|doi|pdf>… [--from liste.txt] [--start-grobid]
                             ajoute des articles (arXiv, DOI, PDF local), ingère, réindexe
   ingest [--force] [pdf…]   ingère inbox/ (ou les PDF donnés), réindexe
-  ingest --reparse [id…]    ré-extrait les papiers déjà ingérés depuis leur TEI (sans GROBID)
+  ingest --reparse [--tables docling [--ocr]] [id…]
+                            ré-extrait les papiers déjà ingérés depuis leur TEI (sans GROBID) ;
+                            --tables docling : Docling sur les tableaux restés sans corps
   reindex                   régénère INDEX.md et external_refs.csv, vérifie la cohérence
   discover [options]        cherche des papiers candidats (OpenAlex) → candidates.csv
   grobid start|stop|status  pilote le conteneur GROBID
@@ -21,9 +23,11 @@
   show <chunk_id>… [--context N]
                             texte exact d'un passage (id court accepté : 1612.07119#019.0)
   verify <chunk_id> "<citation>" [--sha1 X]
-                            la citation figure-t-elle dans le passage ? OK | APPROX | ABSENT
+                            la citation figure-t-elle dans le passage ? OK | APPROX | NOMBRES | ABSENT
   viz [--port N]            visualisation du corpus (http://127.0.0.1:8050)
-  test                      lance les tests
+  eval [--extract|--rag|--speed] [--save] [--compare [JSON]]
+                            banc d'évaluation du logiciel (docs/EVAL.md)
+  test [--rag]              lance les tests (--rag : pdb eval --rag)
 
 Guide : docs/GUIDE.md. Détail des scripts : SETUP.md §5. Requêtes : docs/RAG.md.
 """
@@ -80,7 +84,9 @@ def cmd_ingest(args):
         print(ingest.__doc__)
         return 0
     if "--reparse" in args:
-        failed = ingest.reparse([a for a in args if a != "--reparse"])
+        docling = "--tables" in args and args[args.index("--tables") + 1:][:1] == ["docling"]
+        ids = [a for a in args if a not in ("--reparse", "--tables", "docling", "--ocr")]
+        failed = ingest.reparse(ids, docling=docling, ocr="--ocr" in args)
         print()
         return 1 if (reindex.run() or failed) else 0
     ensure_grobid("--start-grobid" in args)
@@ -366,10 +372,6 @@ def cmd_search(args):
         return 0
     if hits[0]["mode"] != a.mode:
         print(f"# mode: {hits[0]['mode']} seul (embeddings indisponibles ou index à reconstruire : bin/pdb reindex)")
-    best = max((h["cos"] for h in hits if h["cos"] is not None), default=None)
-    if best is not None and best < rag.LOW_COS:
-        print(f"# pertinence faible : meilleur cos {best:.2f} < {rag.LOW_COS} ; "
-              "la base ne traite sans doute pas ce sujet")
     if a.ids_only:
         print("\n".join(ix.short_chunk_id(h["chunk_id"]) for h in hits))
     else:
@@ -416,7 +418,8 @@ def cmd_verify(args):
     p = argparse.ArgumentParser(prog="pdb verify", description=(
         "Vérifie qu'une citation figure dans un passage (casse, espaces, ponctuation, "
         "ligatures et césures ignorées). OK = exacte, APPROX = ressemblance ≥ 0,85, "
-        "ABSENT sinon. Une citation trouvée ailleurs dans le papier est signalée."))
+        "NOMBRES = ressemblance ≥ 0,85 mais nombres différents du passage, ABSENT sinon. "
+        "Une citation trouvée ailleurs dans le papier est signalée. Code 0 : OK ou APPROX."))
     p.add_argument("chunk_id")
     p.add_argument("quote")
     p.add_argument("--sha1", help="préfixe du sha1 relevé par pdb show : MODIFIÉ s'il a changé")
@@ -434,31 +437,147 @@ def cmd_verify(args):
 
 def cmd_test(args):
     if "--rag" in args:
-        return rag_eval()
+        return cmd_eval(["--rag"])
     return subprocess.run([sys.executable, "-m", "unittest", "discover", "tests", *args],
                           cwd=ROOT).returncode
 
 
-def rag_eval():
-    """Évaluation de la recherche sur tests/fixtures/rag_eval.jsonl (demande le vrai modèle)."""
-    rag, ix = _rag_index(rerank=True)
-    print(f"{len(ix.chunks)} passages, modèle {ix.model}"
-          + ("" if ix.dense else " (index dense absent : lexical seul)"))
-    print("jeu\tmode\trecall@5\tMRR\tpaper@5")
-    for name in ("rag_eval", "rag_eval_fr"):
-        path = ROOT / "tests" / "fixtures" / f"{name}.jsonl"
-        questions = [json.loads(l) for l in path.read_text().splitlines() if l.strip()]
-        for mode, r in rag.evaluate(ix, questions, modes=rag.MODES + ("hybrid+rerank",)).items():
-            print(f"{name} ({len(questions)} q.)\t{mode}\t{r['recall']:.2f}\t{r['mrr']:.2f}\t{r['paper']:.2f}")
-            for q in r["misses"]:
-                print(f"#   manqué ({name}, {mode}) : {q}")
-    return 0
+def _fmt(v):
+    return "n/r" if v is None else f"{v:.2f}" if isinstance(v, float) else str(v)
+
+
+def _print_eval(res):
+    """Résumé lisible d'un run de pdb eval (le détail complet est dans le JSON)."""
+    ex = res.get("extraction")
+    if ex:
+        q, h, t = ex["quality"], ex["header"], ex["tables"]
+        print(f"## Extraction ({q['papers']} papiers, {q['grobid']} par GROBID, {q['words']} mots)")
+        print(f"couverture du texte PDF\tmoy. {_fmt(q['coverage_mean'])}\tmin. {_fmt(q['coverage_min'])}"
+              f"\t({', '.join(q['coverage_worst'])})")
+        print(f"tableaux avec corps\t{_fmt(q['tables_with_body_rate'])}\t({q['tables']} tableaux, "
+              f"reconstruits : {q['tables_recovered']} PyMuPDF, {q.get('tables_docling', 0)} Docling)")
+        print(f"ligatures restantes / 10k mots\t{_fmt(q['ligature_leftover_per_10k'])}")
+        print(f"papiers : sections non détectées\t{q['papers_missed_sections']}\t"
+              f"titres espacés\t{q['papers_spaced_headings']}")
+        print(f"avertissements / papier\t{_fmt(q['warnings_per_paper'])}")
+        print(f"en-tête GROBID\ttitre {_fmt(h['title'])}\tannée {_fmt(h['year'])}\tDOI {_fmt(h['doi'])}"
+              f"\tarXiv {_fmt(h['arxiv_id'])}\tauteurs F1 {_fmt(h['authors_f1'])}")
+        print(f"valeurs de benchmarks.csv\tdans le tableau cité {_fmt(t['in_cited_table'])}\t"
+              f"dans le texte {_fmt(t['in_text'])}\t({t['values']} valeurs)\t"
+              f"lignes « tableaux seuls » : {_fmt(t.get('table_only_in_cited_table'))} ({t.get('table_only_values')} valeurs)")
+        print()
+    rg = res.get("rag")
+    if rg:
+        print(f"## Recherche de passages ({rg['passages']} passages, {rg['model']})")
+        print("jeu\tmode\trecall@5\trecall@10\tMRR\tnDCG@10\tpaper@5")
+        for name, st in rg["sets"].items():
+            for mode, m in st.items():
+                if mode == "n":
+                    continue
+                print(f"{name} ({st['n']} q.)\t{mode}\t{m['recall@5']:.2f}\t{m['recall@10']:.2f}\t"
+                      f"{m['mrr']:.2f}\t{m['ndcg@10']:.2f}\t{m['paper@5']:.2f}")
+                for q in m["misses"]:
+                    print(f"#   manqué : {q}")
+        lr = rg.get("low_relevance", {})
+        if lr.get("n"):
+            n = lr["n"]
+            print(f"pertinence faible\tseuil (calibration : {n['cal_pos']} + {n['cal_neg']} q.)\t"
+                  f"validation ({n['val_pos']} + {n['val_neg']} q.) : hors corpus signalés\tdu corpus signalés"
+                  "\tadopté")
+            for sig in ("cos", "rerank"):
+                d = lr[sig]
+                v = d["validation"]
+                print(f"\t{sig}\t{d['threshold']:.2f}\t{v['flagged_negatives']:.2f}\t{v['flagged_positives']:.2f}"
+                      f"\t{'oui' if d['adopted'] else 'non'}")
+                if "current" in d:
+                    c = d["current"]
+                    print(f"\t{sig} (seuil en place {c['threshold']})\t\t{c['flagged_negatives']:.2f}"
+                          f"\t{c['flagged_positives']:.2f}")
+        print("verify\tcas\tacceptés\tstatuts")
+        for case, v in rg["verify"].items():
+            print(f"\t{case} ({v['n']})\t{v['accepted_rate']:.2f}\t{v['status']}")
+        print()
+    sp = res.get("speed")
+    if sp:
+        print("## Temps (médianes)")
+        print("extraction hors GROBID (s)\t" + "\t".join(f"{k} {v:.2f}" for k, v in sp["extract_s"].items()))
+        print("repli PyMuPDF (s)\t" + "\t".join(f"{k} {v:.2f}" for k, v in sp["pymupdf_fallback_s"].items()))
+        print(f"chargement de l'index (s)\t{sp['index_load_s']:.2f}\t({sp['passages']} passages, cache {_fmt(sp['cache_mb'])} Mo)")
+        if "encode_passages_per_s" in sp:
+            print(f"encodage\t{sp['encode_passages_per_s']:.0f} passages/s\tindex complet ≈ {sp['full_encode_estimate_s']:.0f} s")
+        for k, v in sp.items():
+            if k.startswith("search_"):
+                print(f"{k[7:-3]} (ms)\tp50 {v['p50']:.0f}\tp95 {v['p95']:.0f}")
+        print(f"verify (ms)\t{sp['verify_ms']:.0f}")
+        if "cli_s" in sp:
+            print("commandes à froid (s)\t" + "\t".join(f"{k} {v:.2f}" for k, v in sp["cli_s"].items()))
+
+
+def cmd_eval(args):
+    import argparse
+    import datetime
+    from lib import evaluation as ev
+    p = argparse.ArgumentParser(prog="pdb eval", description=(
+        "Banc d'évaluation (docs/EVAL.md) : qualité d'extraction, recherche de passages, "
+        "vérification de citations, temps. Sans option : tous les volets."))
+    p.add_argument("--extract", action="store_true", help="qualité de l'extraction")
+    p.add_argument("--rag", action="store_true", help="recherche de passages, pertinence faible, verify")
+    p.add_argument("--speed", action="store_true", help="temps d'exécution")
+    p.add_argument("--no-cli", action="store_true", help="--speed sans chronométrer les commandes à froid")
+    p.add_argument("--save", action="store_true", help="enregistre eval/results/<date>-<commit>.json")
+    p.add_argument("--compare", nargs="?", const="last", metavar="JSON",
+                   help="écarts avec un run enregistré (défaut : le dernier) ; code 1 si un seuil n'est pas atteint")
+    a = p.parse_args(args)
+    if not (a.extract or a.rag or a.speed):
+        a.extract = a.rag = a.speed = True
+    fixtures = ROOT / "tests" / "fixtures"
+    res = {}
+    if a.extract:
+        res["extraction"] = {"quality": ev.extraction_quality(ROOT), "header": ev.header_accuracy(ROOT),
+                             "tables": ev.table_values(ROOT)}
+    if a.rag:
+        res["rag"] = ev.rag_quality(ROOT, fixtures)
+    if a.speed:
+        res["speed"] = ev.speed(ROOT, fixtures, cli=not a.no_cli)
+    _print_eval(res)
+
+    flat = ev.flatten(res)
+    results = ROOT / "eval" / "results"
+    thresholds = json.loads((ROOT / "eval" / "thresholds.json").read_text())
+    fails = [f for f in ev.check_thresholds(flat, thresholds) if f[0].split(".")[0] in res]
+    if a.compare:
+        runs = sorted(results.glob("*.json"))
+        ref = Path(a.compare) if a.compare != "last" else (runs[-1] if runs else None)
+        if ref is None:
+            print("\n# aucun run enregistré à comparer (pdb eval --save)")
+        else:
+            old = ev.flatten({k: v for k, v in json.loads(ref.read_text())["results"].items() if k in res})
+            diffs = ev.compare(old, flat)
+            print(f"\n## Écarts avec {ref.name} ({len(diffs)})")
+            for key, x, y in diffs:
+                arrow = "" if x is None or y is None else "▲" if y > x else "▼"
+                print(f"{key}\t{_fmt(x)} → {_fmt(y)}\t{arrow}")
+    for key, v, bound in fails:
+        print(f"# seuil non atteint : {key} = {_fmt(v)} ({bound})")
+    if a.save:
+        sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT,
+                             capture_output=True, text=True).stdout.strip() or "nogit"
+        dirty = subprocess.run(["git", "status", "--porcelain", "--", "lib", "bin"], cwd=ROOT,
+                               capture_output=True, text=True).stdout.strip()
+        stamp = datetime.datetime.now().strftime("%Y-%m-%dT%H%M")
+        results.mkdir(parents=True, exist_ok=True)
+        out = results / f"{stamp}-{sha}{'-dirty' if dirty else ''}.json"
+        out.write_text(json.dumps({"date": stamp, "commit": sha, "dirty": bool(dirty),
+                                   "volets": sorted(res), "results": res},
+                                  ensure_ascii=False, indent=1, default=str) + "\n")
+        print(f"\nenregistré : {out.relative_to(ROOT)}")
+    return 1 if (a.compare and fails) else 0
 
 
 COMMANDS = {
     "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
-    "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
+    "eval": cmd_eval, "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
     "verify": cmd_verify, "cites": cmd_cites, "cited-by": cmd_cited_by,
 }
 

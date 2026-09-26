@@ -599,10 +599,20 @@ TABLE S4: CIFAR-100(11/50-5) with different sampling strategies and growing memo
      | inv-entropy | 28.7 | 22.2 | 21.8 | 30.1 32.8
      | inv-distance | 29.2 | 23.3 | 20.6 | 27.1 35.4
 
-TABLE S5: CIFAR-100 (10/10) with different sampling strategies and fixed memory of 2,000 exemplars on ResNet-32 trained from scratch. ˘4.0 61.5 ˘3.2 59.4 ˘3.9 64.6 ˘3.7 65.3 ˘4.0 task herd 64.0 ˘4.8 61.5 ˘3.1 58.9 ˘4.5 65.1 ˘4.2 65.0 ˘4.2 2 entr 61.1 ˘5.4 60.6 ˘4.1 57.7 ˘3.9 62.7 ˘5.1 62.9 ˘3.1 dist 60.7 ˘5.7 59.7 ˘4.0 56.8 ˘4.2 63.8 ˘5.9 62.9 ˘3.6 rand 49.4 ˘2.9 45.2 ˘3.2 39.7 ˘3.2 54.5 ˘3.3 54.2 ˘3.4 task herd 51.4 ˘3.1 45.9 ˘2.8 40.8 ˘3.2 55.7 ˘3.5 54.6 ˘3.3 5 entr 39.7 ˘4.0 38.2 ˘3.9 32.6 ˘3.7 48.4 ˘4.4 49.6 ˘3.6 dist 39.8 ˘4.0 37.9 ˘3.0 30.5 ˘3.0 47.0 ˘5.0 47.9 ˘4.4 rand 36.7 ˘1.8 29.0 ˘1.9 25.1 ˘3.0 39.7 ˘4.0 41.3 ˘3.3 task herd 37.8 ˘1.9 31.0 ˘2.1 26.6 ˘2.8 41.8 ˘3.7 42.0 ˘3.5 10 entr 23.6 ˘1.7 19.3 ˘2.5 15.1 ˘2.1 30.4 ˘3.1 33.5 ˘3.3 dist 22.1 ˘2.1 19.2 ˘1.9 12.6 ˘2.2 28.7 ˘3.5 31.1 ˘4.3
+TABLE S5: CIFAR-100 (10/10) with different sampling strategies and fixed memory of 2,000 exemplars on ResNet-32 trained from scratch. ˘4.0 61.5 ˘3.2 59.4 ˘3.9 64.6 ˘3.7 65.3 ˘4.0 task herd 64.0 ˘4.8 61.5 ˘3.1 58.9 ˘4.5 65.1 ˘4.2 65.0 ˘4.2 2 entr 61.1 ˘5.4 60.6 ˘4.1 57.7 ˘3.9 62.7 ˘5.1 62.9 ˘3.1 dist 60.7 ˘5.7 59.7 ˘4.0 56.8 ˘4.2 63.8 ˘5.9 62.9 ˘3.6 rand 49.4 ˘2.9 45.2 ˘3.2 39.7 ˘3.2 54.5 ˘3.3 54.2 ˘3.4 task herd 51.4 ˘3.1 45.9 ˘2.8 40.8 ˘3.2 55.7 ˘3.5 54.6 ˘3.3 5 entr 39.7 ˘4.0 38.2 ˘3.9 32.6 ˘3.7 48.4 ˘4.4 49.6 ˘3.6 dist 39.8 ˘4.0 37.9 ˘3.0 30.5 ˘3.0 47.0 ˘5.0 47.9 ˘4.4 rand 36.7 ˘1.8 29.0 ˘1.9 25.1 ˘3.0 39.7 ˘4.0 41.3 ˘3.3 task herd 37.8 ˘1.9 31.0 ˘2.1 26.6 ˘2.8 41.8 ˘3.7 42.0 ˘3.5 10 entr 23.6 ˘1.7 19.3 ˘2.5 15.1 ˘2.1 30.4 ˘3.1 33.5 ˘3.3 dist 22.1 ˘2.1 19.2 ˘1.9 12.6 ˘2.2 28.7 ˘3.5 31.1 ˘4.3 [corps du tableau reconstruit par Docling : à vérifier]
 
-    acc. samp after strat | FT-E | LwF-E | EWC-E | EEIL | BiC
-    rand 65.2 |  |  |  | 
+    acc. after | samp strat | FT-E | LwF-E | EWC-E | EEIL | BiC
+    task 2 | rand herd entr | 65.2�4.0 64.0�4.8 61.1�5.4 | 61.5�3.2 61.5�3.1 60.6�4.1 59.7�4.0 | 59.4�3.9 57.7�3.9 56.8�4.2 39.7�3.2 | 64.6�3.7 65.1�4.2 62.7�5.1 63.8�5.9 54.5�3.3 | 65.3�4.0 65.0�4.2 62.9�3.1
+    task 2 |  |  |  | 58.9�4.5 |  | 
+    task 2 | dist | 60.7�5.7 |  |  |  | 62.9�3.6
+    task 5 | rand | 49.4�2.9 | 45.2�3.2 |  |  | 54.2�3.4
+    task 5 | herd | 51.4�3.1 | 45.9�2.8 | 40.8�3.2 | 55.7�3.5 | 54.6�3.3
+    task 5 | entr | 39.7�4.0 | 38.2�3.9 | 32.6�3.7 | 48.4�4.4 | 49.6�3.6
+    task 5 | dist | 39.8�4.0 | 37.9�3.0 | 30.5�3.0 | 47.0�5.0 | 47.9�4.4
+    task 10 | rand | 36.7�1.8 | 29.0�1.9 | 25.1�3.0 | 39.7�4.0 | 41.3�3.3
+    task 10 | herd | 37.8�1.9 | 31.0�2.1 | 26.6�2.8 | 41.8�3.7 | 42.0�3.5
+    task 10 | entr | 23.6�1.7 | 19.3�2.5 | 15.1�2.1 | 30.4�3.1 | 33.5�3.3
+    task 10 | dist | 22.1�2.1 | 19.2�1.9 | 12.6�2.2 | 28.7�3.5 | 31.1�4.3
 
 TABLE S6: Mann-Whitney U-test between random and herding sampling strategies from TableS5.
 
@@ -613,7 +623,7 @@ TABLE S6: Mann-Whitney U-test between random and herding sampling strategies fro
     EEIL | 40.0 | 0.236 | 37.0 | 0.172 | 23.5 | 0.024
     BiC | 52.0 | 0.575 | 46.5 | 0.410 | 40.0 | 0.236
 
-TABLE S7: Additional results for Fig.9. Small domain shifts on VGGFace2 (40/25) on ResNet-18 trained from scratch amd 5,000 exemplar fixed memory.
+TABLE S7: Additional results for Fig.9. Small domain shifts on VGGFace2 (40/25) on ResNet-18 trained from scratch amd 5,000 exemplar fixed memory. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Approach | FZ-E LwF-E LwM-E iCaRL
-    Accuracy at task 40 | 34.3 | 43.5 | 55.0 | 55.4
+    Approach | FZ-E | LwF-E | LwM-E | iCaRL
+    Accuracyattask40 | 34.3 | 43.5 | 55.0 | 55.4

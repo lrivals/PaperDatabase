@@ -60,6 +60,7 @@ WARN_MANUAL_METADATA ="métadonnées à vérifier à la main"
 WARN_AXES_GUESSED = "axes déduits automatiquement, à confirmer dans /paper-fiche"
 # Tableaux dont GROBID n'a gardé que la légende (lib/tables.py), recalculés à chaque extraction
 WARN_TABLES_RECOVERED = "tableaux reconstruits par PyMuPDF, chiffres à vérifier"
+WARN_TABLES_DOCLING = "tableaux reconstruits par Docling, chiffres à vérifier"
 WARN_TABLES_LOST = "tableaux sans corps extrait (légende seule)"
 
 METADATA_KEYS = (

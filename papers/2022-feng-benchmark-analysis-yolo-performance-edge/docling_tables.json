@@ -1,0 +1,563 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 5,
+   "bbox": [
+    165.5,
+    679.2,
+    559.9,
+    745.6
+   ],
+   "caption": "Table 1. Comparison of the scale of the backbone between different YOLO models.",
+   "rows": [
+    [
+     "YOLO",
+     "Total Layers of Backbone"
+    ],
+    [
+     "YOLOv3",
+     "106"
+    ],
+    [
+     "YOLOv3-tiny",
+     "24"
+    ],
+    [
+     "YOLOv4",
+     "161"
+    ],
+    [
+     "YOLOv4-tiny",
+     "38"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    34.8,
+    193.6,
+    559.9,
+    455.8
+   ],
+   "caption": "Table 2. Hardware specifications used in the benchmarks.",
+   "rows": [
+    [
+     "",
+     "NVIDIA Jetson Nano",
+     "NVIDIA Jetson Xavier NX",
+     "Raspberry 4B + Intel NCS2"
+    ],
+    [
+     "Edge Accelerator",
+     "128-core NVIDIA Maxwell GPU",
+     "384-core NVIDIA Volta GPU with 48 Tensor Cores",
+     "Intel Movidius Myriad X VPU"
+    ],
+    [
+     "AI Performance",
+     "0.5 TFLOPs",
+     "1.3 TFLOPs",
+     "1 TFLOPs"
+    ],
+    [
+     "CPU",
+     "Quad-core ARM Cortex-A57 MPCore processor",
+     "6-core NVIDIA Carmel ARM v8.2 64-bit CPU 6 MB L2 + 4 MB L3",
+     "Quad-core ARM Cortex-A72"
+    ],
+    [
+     "Memory",
+     "4 GB 64-bit LPDDR4 25.6 GB/s",
+     "8 GB 128-bit LPDDR4x 51.2 GB/s",
+     "4 GB LPDDR4"
+    ],
+    [
+     "Edge Accelerator Interface",
+     "PCIe",
+     "PCIe",
+     "USB 3.0"
+    ],
+    [
+     "Dimensions",
+     "69.6 mm × 45 mm",
+     "69.6 mm × 45 mm",
+     "85 mm × 56 mm +72.5 mm × 27 mm"
+    ],
+    [
+     "Nominal Power Envelope",
+     "5 W-10 W",
+     "10 W-15 W",
+     "3 W-6.25 W +1 W"
+    ],
+    [
+     "Price",
+     "USD 89",
+     "USD 399",
+     "USD 55 + USD 69"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    35.1,
+    207.0,
+    561.3,
+    451.0
+   ],
+   "caption": "Table 3. Benchmarking Jetson Nano, Jetson Xavier NX and RPi with NCS2. (Note: Video1 has 1596 frames with a frame size of 768 × 436, Video2 has 960 frames with a frame size of 1920 × 1080).",
+   "rows": [
+    [
+     "",
+     "Models",
+     "Accelerator -Based SBCs",
+     "Mean Confidence (%)",
+     "FPS",
+     "CPU Usage (%)",
+     "Memory Usage (GB)",
+     "Power (W)",
+     "Time (s)"
+    ],
+    [
+     "Video1",
+     "YOLOv3",
+     "RPi + NCS2",
+     "99.3",
+     "2.5",
+     "4.3",
+     "0.33",
+     "6.0",
+     "690"
+    ],
+    [
+     "Video1",
+     "",
+     "Nano",
+     "99.7",
+     "1.7",
+     "26.5",
+     "1.21",
+     "7.9",
+     "967"
+    ],
+    [
+     "Video1",
+     "",
+     "NX",
+     "99.7",
+     "6.1",
+     "22.5",
+     "1.51",
+     "15.2",
+     "256"
+    ],
+    [
+     "Video1",
+     "YOLOv3-tiny",
+     "RPi + NCS2",
+     "0",
+     "18.8",
+     "15.5",
+     "0.11",
+     "6.5",
+     "121"
+    ],
+    [
+     "Video1",
+     "",
+     "Nano",
+     "59.7",
+     "6.8",
+     "28.8",
+     "1.00",
+     "7.2",
+     "236"
+    ],
+    [
+     "Video1",
+     "",
+     "NX",
+     "59.7",
+     "41.1",
+     "30.5",
+     "1.33",
+     "13.5",
+     "46"
+    ],
+    [
+     "",
+     "YOLOv3",
+     "RPi + NCS2",
+     "85.8",
+     "2.5",
+     "9.8",
+     "0.41",
+     "6.2",
+     "496"
+    ],
+    [
+     "",
+     "",
+     "Nano",
+     "71.5",
+     "1.6",
+     "28.8",
+     "1.36",
+     "8.0",
+     "587"
+    ],
+    [
+     "",
+     "Video2",
+     "NX",
+     "71.5",
+     "5.9",
+     "26.8",
+     "1.69",
+     "15.2",
+     "162"
+    ],
+    [
+     "",
+     "",
+     "RPi + NCS2",
+     "61.5",
+     "19.0",
+     "24.8",
+     "0.18",
+     "6.8",
+     "162"
+    ],
+    [
+     "",
+     "YOLOv3-tiny",
+     "Nano",
+     "54.1",
+     "6.6",
+     "37.3",
+     "1.16",
+     "7.4",
+     "152"
+    ],
+    [
+     "",
+     "",
+     "NX",
+     "54.1",
+     "35.6",
+     "55.5",
+     "1.47",
+     "13.2",
+     "31"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    165.4,
+    352.6,
+    560.1,
+    407.4
+   ],
+   "caption": "Table 4. Idle power of accelerator-based SBCs (W).",
+   "rows": [
+    [
+     "Accelerator-Based SBC",
+     "Idle Total",
+     "Idle CPU",
+     "Idle GPU/NCS2"
+    ],
+    [
+     "RPi + NCS2",
+     "3.16",
+     "-",
+     "0.64"
+    ],
+    [
+     "Jetson Nano",
+     "2.60",
+     "0.4",
+     "0.04"
+    ],
+    [
+     "Jetson Xavier",
+     "3.15",
+     "0.7",
+     "0.08"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    34.8,
+    243.7,
+    560.5,
+    408.6
+   ],
+   "caption": "Table5. InferenceperformanceofYOLOv3andYOLOv3-tinyonJetsonNanowhentheS value changes.",
+   "rows": [
+    [
+     "",
+     "Models",
+     "SValue",
+     "FPS",
+     "CPU Usage (%)",
+     "Memory Usage (GB)",
+     "GPU Power (W)",
+     "Energy Consumption (kJ)"
+    ],
+    [
+     "Video1",
+     "YOLOv3",
+     "320",
+     "2.4",
+     "26.8",
+     "0.86",
+     "3.7",
+     "5.43"
+    ],
+    [
+     "Video1",
+     "",
+     "608",
+     "0.9",
+     "25.5",
+     "1.19",
+     "3.9",
+     "16.01"
+    ],
+    [
+     "Video1",
+     "YOLOv3-tiny",
+     "320",
+     "10.3",
+     "30.5",
+     "1.00",
+     "3.7",
+     "1.18"
+    ],
+    [
+     "Video1",
+     "",
+     "608",
+     "3.3",
+     "27.0",
+     "1.01",
+     "3.9",
+     "3.00"
+    ],
+    [
+     "",
+     "YOLOv3",
+     "320",
+     "2.5",
+     "30.8",
+     "1.31",
+     "3.3",
+     "3.26"
+    ],
+    [
+     "",
+     "YOLOv3",
+     "608",
+     "0.8",
+     "26.8",
+     "1.31",
+     "3.4",
+     "9.72"
+    ],
+    [
+     "",
+     "YOLOv3-tiny",
+     "320",
+     "9.9",
+     "41.3",
+     "1.13",
+     "3.3",
+     "0.77"
+    ],
+    [
+     "",
+     "YOLOv3-tiny",
+     "608",
+     "3.3",
+     "31.8",
+     "1.13",
+     "3.4",
+     "2.18"
+    ]
+   ]
+  },
+  {
+   "page": 13,
+   "bbox": [
+    35.0,
+    415.3,
+    560.5,
+    513.0
+   ],
+   "caption": "Table 6. Inference performance of YOLOv4 and YOLOv4-tiny with S = 416 runs on Jetson Nano.",
+   "rows": [
+    [
+     "",
+     "Models",
+     "Mean Confidence(%)",
+     "FPS",
+     "CPU Usage (%)",
+     "Memory Usage (GB)",
+     "GPU Power (W)",
+     "Energy Consumption (kJ)"
+    ],
+    [
+     "Video1",
+     "YOLOv4",
+     "94.2",
+     "1.6",
+     "26.8",
+     "1.22",
+     "4.0",
+     "7.92"
+    ],
+    [
+     "Video1",
+     "YOLOv4-tiny",
+     "67.1",
+     "15.0",
+     "34.3",
+     "0.98",
+     "3.9",
+     "0.86"
+    ],
+    [
+     "",
+     "YOLOv4",
+     "75.6",
+     "1.6",
+     "29.5",
+     "1.36",
+     "3.5",
+     "3.78"
+    ],
+    [
+     "",
+     "Video2 YOLOv4-tiny",
+     "61.9",
+     "14.2",
+     "54.5",
+     "1.10",
+     "3.4",
+     "0.57"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    165.3,
+    432.9,
+    376.0,
+    689.0
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "SBCs",
+     "Single-board computers"
+    ],
+    [
+     "AI",
+     "artificial intelligence"
+    ],
+    [
+     "IoT",
+     "Internet of things"
+    ],
+    [
+     "5G",
+     "5th Generation mobile networks"
+    ],
+    [
+     "eMBB",
+     "enhancedmobilebroadband"
+    ],
+    [
+     "uRLLC",
+     "ultrareliablelowlatencycommunications"
+    ],
+    [
+     "mMTC",
+     "MassiveMachineTypeCommunication"
+    ],
+    [
+     "EI",
+     "Edge Intelligence"
+    ],
+    [
+     "ASIC",
+     "ApplicationSpecificIntegratedCircuit"
+    ],
+    [
+     "FPGA",
+     "FieldProgrammableGateArray"
+    ],
+    [
+     "NCS2",
+     "NeuralComputeStick2"
+    ],
+    [
+     "UAV",
+     "UnmannedAerialVehicle"
+    ],
+    [
+     "RPi",
+     "Raspberry Pi"
+    ],
+    [
+     "YOLO",
+     "YouOnlyLookOnce"
+    ],
+    [
+     "SoC",
+     "SystemonChip"
+    ],
+    [
+     "IR",
+     "Intermediate Representation"
+    ],
+    [
+     "FP16",
+     "Half-Precision"
+    ],
+    [
+     "FP32",
+     "Sigle-Precision"
+    ],
+    [
+     "PB",
+     "Protocol Buffer"
+    ],
+    [
+     "MO",
+     "ModelOptimizer"
+    ],
+    [
+     "API",
+     "ApplicationProgrammingInterface"
+    ],
+    [
+     "FPS",
+     "Frames-Per-Second"
+    ]
+   ]
+  }
+ ]
+}

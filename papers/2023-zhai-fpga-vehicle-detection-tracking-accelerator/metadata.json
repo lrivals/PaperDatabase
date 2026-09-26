@@ -45,7 +45,7 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : Table 2, Table 4, Table 5"
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 2, Table 4, Table 5"
     ]
   },
   "status": {

@@ -11,11 +11,11 @@ construire, comment s'en servir. Suivi des tâches : [SETUP.md §9](../SETUP.md#
 | `pdb paper` : fiche d'identité, candidats si ambigu, `--bench`, plusieurs ids (une ligne chacun) | idem | idem | oui : `finn` (ambigu), `1612.07119 --bench`, `2022-feng --fields`, `1612.07119 2022-feng 2502.15737 finn` |
 | Identifiants courts (arXiv, sinon année-auteur, noms composés compris) | `lib/query.short_ids` | idem | oui : 28 papiers, aucune collision ; `2025-el-zeinaty` corrigé après l'essai (§12) |
 | Passages, BM25, embeddings bge-small, fusion RRF, filtres | [lib/rag.py](../lib/rag.py) | [tests/test_rag.py](../tests/test_rag.py) (10, encodeur factice) | oui : 2 405 passages ; évaluation §10 |
-| `pdb search` : colonne `cos`, `# pertinence faible` | `lib/rag.py`, `bin/pdb.py` | idem | oui : requêtes hors sujet (cos 0,45-0,55) et pertinentes (0,73-0,90) |
+| `pdb search` : colonne `cos` (alerte `# pertinence faible` retirée le 26/09/2026) | `lib/rag.py`, `bin/pdb.py` | idem | oui : aucun seuil fiable, ni cosinus ni cross-encoder (EVAL.md §5) |
 | `pdb show` : texte exact, sha1, `--context` | idem | idem | oui |
-| `pdb verify` : OK / APPROX / ABSENT / MODIFIÉ, « trouvée dans » | idem | idem | oui : 5 cas manuels (§5.6), 7 citations de l'essai de `/paper-ask` (§12) |
+| `pdb verify` : OK / APPROX / NOMBRES / ABSENT / MODIFIÉ, « trouvée dans » | idem | idem | oui : 5 cas manuels (§5.6), 7 citations de l'essai de `/paper-ask` (§12), 158 citations générées par `pdb eval` (EVAL.md §6) |
 | Index incrémental, branché dans `reindex` | `lib/rag.build_index`, [bin/reindex.py](../bin/reindex.py) | idem (réencodage d'un seul passage modifié) | oui : 0,2 s sans changement, ~3 min pour une construction complète |
-| Évaluation `bin/pdb test --rag` | `lib/rag.evaluate`, `bin/pdb.py` | idem | oui : 20 questions EN et 8 FR (§10) |
+| Évaluation `bin/pdb eval --rag` (alias `test --rag`) | `lib/evaluation.py`, `bin/pdb.py` | `test_evaluation.py` | oui : 20 questions dev, 25 holdout, 8 FR, 20 hors corpus (§10, [EVAL.md](EVAL.md)) |
 | Skill `/paper-ask` | [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md) | — | oui : un essai réel (§12) |
 | `pdb cites` / `cited-by`, `--external` | `lib/refs.citations`, `lib/query.citation_lines`, `bin/pdb.py` | `test_refs.py`, `test_query.py` | oui : `cited-by 1612.07119` (4 papiers), `cites 2025-hozhabr --external` (2 dans la base, 286 hors base) |
 | Reranking par cross-encoder (`search --rerank`) | `lib/rag.py` (`_cross_scores`, `Index.search(rerank=True)`) | idem (cross-encoder factice) | oui : évaluation §10, +1,2 s par recherche ; activé dans `/paper-ask` |
@@ -116,10 +116,13 @@ classements. Cette méthode ne dépend pas de l'échelle des scores, ne demande 
 et elle est déterministe. En cas d'égalité, le `chunk_id` le plus petit passe en premier.
 
 Le score RRF ne dit rien de la pertinence absolue : `search` renvoie toujours k passages.
-La sortie affiche donc aussi le **cosinus** entre la requête et chaque passage. Si le
-meilleur cosinus est sous `rag.LOW_COS` (0,60), un avertissement `# pertinence faible` est
-affiché. Ce seuil a été calibré à la main sur quelques requêtes : hors sujet 0,45 à 0,55,
-pertinentes 0,73 à 0,90. Il est indicatif.
+La sortie affiche aussi le **cosinus** entre la requête et chaque passage, mais il ne dit
+pas si la base traite le sujet. L'avertissement `# pertinence faible` (cosinus < 0,60), qui
+avait été calibré à la main sur quelques requêtes, a été retiré le 26/09/2026. Sur 10
+questions hors corpus, il ne s'était jamais déclenché : leurs cosinus vont de 0,66 à 0,83.
+Le score du cross-encoder ne fait pas mieux : au seuil qui sépare la calibration, il
+signale 90 % des questions hors corpus, mais aussi 40 % des questions du corpus
+(EVAL.md §5). C'est donc à la lecture des extraits de juger si la base répond.
 
 Choix du modèle et du mode par défaut : voir l'évaluation (§10). `all-MiniLM-L6-v2`, que
 la vue 3D utilise, s'y montre nettement plus faible.
@@ -147,8 +150,9 @@ la casse).
   ligne vaut pour tout le processus. Un index qui fera du reranking doit donc le déclarer
   (`Index(..., rerank=True)`), faute de quoi le cross-encoder ne pourrait pas être
   téléchargé au premier appel (bug rencontré et corrigé le 25/09/2026).
-- Temps d'une commande `search` / `show` / `verify` : environ 7 s, dont l'essentiel est
-  l'import de torch.
+- Temps d'une commande à froid (mesuré par `pdb eval --speed`, EVAL.md §5) : `search` 5,8 s,
+  dont l'essentiel est l'import de torch et le chargement du modèle ; `show` et `verify`
+  environ 0,3 s, sans modèle.
 
 ### 4.4 Module `lib/rag.py`
 
@@ -162,7 +166,10 @@ Index.search(q, k=8, mode="hybrid", paper_ids=None, axis=None, kind=None, sectio
 Index.get(chunk_id, context=0)                    # passage exact ± voisins du même papier
 Index.resolve_chunk(cid) / Index.short_chunk_id(chunk_id)
 verify(index, chunk_id, quote, expect_sha=None) -> (statut, ratio, chunk_id où trouvée)
+numbers_match(text, quote) -> bool               # contrôle des nombres de verify (§5.6)
+relevance_score(index, q) -> float               # meilleur score du cross-encoder (EVAL.md §6)
 evaluate(index, questions, k=5) -> {mode: {recall, mrr, paper, misses}}
+                                                 # remplacé par lib/evaluation.evaluate_set
 ```
 
 ---
@@ -311,8 +318,23 @@ bin/pdb verify <chunk_id> "<citation textuelle>" [--sha1 X]
 - Sortie sur une ligne `statut<TAB>ratio<TAB>chunk_id` :
   - `OK` : présente telle quelle (après normalisation) ;
   - `APPROX` : ressemblance ≥ 0,85 (`rag.VERIFY_MIN`) ;
+  - `NOMBRES` : ressemblance ≥ 0,85, mais les nombres de la citation ne sont pas ceux du
+    passage (depuis le 26/09/2026, voir ci-dessous) ;
   - `ABSENT` : ressemblance < 0,85 ;
   - `MODIFIÉ` : le passage a changé depuis que `--sha1` a été relevé avec `pdb show`.
+- Code de sortie 0 pour `OK` et `APPROX` seulement.
+- **Contrôle des nombres** (`rag.numbers_match`). Un chiffre changé dans une phrase longue
+  laisse la ressemblance au-dessus de 0,85 : avant ce contrôle, `verify` répondait `APPROX`
+  à 38 citations sur 38 dont un chiffre avait été modifié (EVAL.md §5). Désormais :
+  - les nombres de la citation (« 143,927 » = « 143 927 ») doivent former une suite contiguë
+    des nombres du passage, morceau par morceau si la citation est élidée par « … » ;
+  - chaque nombre doit y figurer avec ses mots voisins : « Section 3 reviews » est refusé
+    même si le passage contient un 3 ailleurs ;
+  - un nombre n'est tronqué (« 5 W » tiré de « 3.5 W ») qu'au bord de la citation.
+
+  Si un autre passage du papier a les bons nombres, il est proposé (« trouvée dans »). La
+  normalisation retirant la ponctuation, c'est aussi ce contrôle qui distingue « 94.9 % » de
+  « 949 % ». Un mot remplacé juste à côté d'un nombre donne aussi `NOMBRES`.
 - Une citation absente du passage indiqué, mais présente ailleurs dans le papier, est
   signalée avec `trouvée dans <chunk_id>`, et le code de sortie vaut 1 : la source citée
   était fausse.
@@ -346,7 +368,7 @@ Règles d'usage, reprises dans la skill `/paper-ask` (§8) :
    transmise telle quelle, avec les sources.
 4. **Budget explicite** : `bench --max-chars`, `search -k`.
 5. Pas de cache de réponses : les commandes sont locales. `bench` et `paper` répondent
-   instantanément, `search`, `show` et `verify` en ~7 s (import de torch).
+   instantanément, `show` et `verify` en ~0,3 s, `search` en ~6 s (import de torch).
 
 ---
 
@@ -376,7 +398,7 @@ Fichier [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md). Outil
 
 1. Question chiffrée : `pdb bench` d'abord (N0).
 2. Sinon, ou en complément : `pdb search --rerank` avec une ou deux formulations **en anglais**, `-k 8` ;
-   `# pertinence faible` → le dire, ne pas combler.
+   si aucun extrait ne répond → le dire, ne pas combler.
 3. `pdb show` sur les 2 ou 3 passages les plus prometteurs seulement ; jamais `fulltext.md`.
 4. Réponse avec citations `[chunk_id]` ; `pdb verify` sur chaque citation textuelle ; toute
    citation `ABSENT` est retirée, et un `chunk_id` faux est corrigé.
@@ -398,10 +420,10 @@ Fichier [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md). Outil
    bin/pdb show <chunk_id renvoyé>
    bin/pdb verify <chunk_id> "<phrase copiée>"      # → OK
    bin/pdb test          # tests unitaires (encodeur factice)
-   bin/pdb test --rag    # évaluation sur le vrai modèle (§10)
+   bin/pdb eval --rag    # évaluation sur le vrai modèle (§10)
    ```
 4. **Changer de modèle** : `rag.DEFAULT_MODEL` (et `QUERY_PREFIX` si le modèle en demande
-   un), puis `bin/pdb reindex` et `bin/pdb test --rag` pour comparer. L'ancien cache reste
+   un), puis `bin/pdb reindex` et `bin/pdb eval --rag` pour comparer. L'ancien cache reste
    dans `.cache/rag/` ; il peut être supprimé.
 
 ---
@@ -443,7 +465,7 @@ BM25 en français monte (0,25 → 0,38).
 
 La colonne FR porte sur 8 des questions, traduites à la main en français
 ([tests/fixtures/rag_eval_fr.jsonl](../tests/fixtures/rag_eval_fr.jsonl), mêmes `expect`,
-question anglaise d'origine dans `en`). `bin/pdb test --rag` évalue les deux jeux.
+question anglaise d'origine dans `en`). `bin/pdb eval --rag` évalue les deux jeux.
 
 Lecture :
 - **En anglais, les modes se valent** : sur 20 questions, un écart de 0,05 est une seule
@@ -464,8 +486,15 @@ Lecture :
 - **Réserve** : ces 20 questions ont servi à décider ; aucun réglage n'a été fait dessus,
   mais un jeu plus grand et écrit par quelqu'un d'autre confirmerait le gain.
 
-Seuil d'acceptation proposé : recall@5 ≥ 0,8 en anglais. À relancer (`bin/pdb test --rag`)
+Seuil d'acceptation proposé : recall@5 ≥ 0,8 en anglais. À relancer (`bin/pdb eval --rag`)
 après tout changement de modèle, de découpage ou de fusion, et quand le corpus grossit.
+
+**Mise à jour du 26/09/2026** : ce jeu fait désormais partie du banc `bin/pdb eval`
+([EVAL.md](EVAL.md)), qui ajoute un jeu holdout de 25 questions jamais utilisé pour régler.
+Sur ce holdout, le rappel est plus bas (hybride 0,84 ; rerank 0,80, mais MRR 0,65 → 0,78) :
+le gain de rappel du rerank observé ici ne se généralise pas, son gain de classement si. Le
+banc montre aussi que l'alerte « pertinence faible » ne se déclenche jamais et que `verify`
+accepte (APPROX) une citation dont un chiffre a été modifié (EVAL.md §5).
 
 ---
 
@@ -481,18 +510,19 @@ après tout changement de modèle, de découpage ou de fusion, et quand le corpu
   une question en français doit être reformulée en anglais avant `search`, ce que fait la
   skill `/paper-ask`. Autre voie : un modèle multilingue
   (`paraphrase-multilingual-MiniLM-L12-v2`, `bge-m3`), puis `bin/pdb reindex` et
-  `bin/pdb test --rag` pour comparer.
+  `bin/pdb eval --rag` pour comparer.
 - **Reclassement** (*reranking*) : en place en option (§5.2, §10). Évolution possible : un
   cross-encoder multilingue (`BAAI/bge-reranker-base`, plus lourd) pour ne plus dégrader
-  le français. À évaluer avec `bin/pdb test --rag`.
+  le français. À évaluer avec `bin/pdb eval --rag`.
 - **Serveur MCP** : exposer `search`, `show`, `bench` et `verify` comme outils MCP, pour les
   utiliser hors de ce dossier ou depuis une autre application. Même `lib/rag.py`, autre interface.
 - **Généricité** : rien ici ne dépend du domaine FPGA. `bench` lit ses colonnes dans
   l'en-tête du CSV. Seuls ses raccourcis de filtre (`--platform`, `--quant`…) et le jeu
   d'évaluation sont propres au corpus.
-- **Coût de démarrage** : ~7 s par commande `search`/`show`/`verify`, dû à l'import de torch.
-  Si cela gêne, un processus résident (serveur MCP ci-dessus) le paierait une seule fois.
-  `show` et `verify` pourraient aussi se passer du modèle.
+- **Coût de démarrage** : ~6 s par commande `search` (0,1 s à chaud), dû à l'import de torch
+  et au chargement du modèle ; `show` et `verify` s'en passent déjà (~0,3 s). Si cela gêne,
+  un processus résident (serveur MCP ci-dessus) le paierait une seule fois. Le rerank
+  ajoute ~1,4 s à chaud (EVAL.md §5).
 
 ---
 

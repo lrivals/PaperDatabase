@@ -360,9 +360,11 @@ MIS = 1 Mean Inference Time (s) Inferences Per Minute or IPM Calculates the tota
      | YOLOv8s | FP32 | 48.97 |  | 8.83 | 26.50 | 20.42 | 20.42
      | YOLOv8s | INT8 | 33.60 |  | 3.31 | 15.96 | 29.76 | 29.76
 
-**Table 6.** Latency results in the two different deployment scenarios, edge and cloud.
+**Table 6.** Latency results in the two different deployment scenarios, edge and cloud. [corps du tableau reconstruit par Docling : à vérifier]
 
     Processing Environment | RTT Latency (ms) | Model Processing Latency (ms) | Communication Latency (ms)
+    Edge | Mean: 35.09 Std: 4.25 | Mean: 32.59 Std: 4.27 | Mean: 2.50 Std: 0.34
+    Cloud | Mean: 348.21 Std: 69.88 | Mean: 6.82 Std: 0.05 | Mean: 341.41 Std: 69.89
 
 **Table 7.** Recommended configurations based on operational needs.
 

@@ -51,7 +51,8 @@ PDF local (+ .bib/.ris) ──────────► inbox/        ├─ G
     des figures ;
   - il garde les légendes et le contenu des tableaux, qui portent souvent les chiffres ;
     quand GROBID n'a gardé que la légende, il tente de reconstruire le tableau depuis le
-    PDF (marqué « à vérifier »), sinon il le signale ;
+    PDF (PyMuPDF, puis Docling avec `--reparse --tables docling [--ocr]`), marqué « à
+    vérifier », sinon il le signale ;
   - il écrit les fichiers ci-dessous.
 
   Il est idempotent, et `--force` réextrait sans jamais écraser une fiche déjà rédigée.
@@ -70,6 +71,7 @@ Chaque article devient un dossier `papers/<paper_id>/` :
 | `refs.jsonl` | références citées : titre, auteurs, année, DOI, arXiv id |
 | `fiche.md` | fiche de lecture : problème, méthode, résultats, limites, pertinence, lu vs déduit |
 | `paper.pdf`, `grobid.tei.xml` | preuve et trace d'extraction, non versionnés |
+| `docling_tables.json` | tableaux lus par Docling, s'il a été lancé (trace, relue par `--reparse`) |
 
 ---
 
@@ -95,12 +97,21 @@ colonnes de source toujours affichées) :
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (plateforme, colonne renseignée, tri, `--count`) |
 | `bin/pdb paper <id \| mot>` | fiche d'identité d'un papier : métadonnées, preprint, statut de fiche, benchmarks |
 | `bin/pdb search "<question>"` | passages classés (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), avec `chunk_id`, section et page |
-| `bin/pdb show <chunk_id>` / `verify <chunk_id> "<citation>"` | texte exact d'un passage / contrôle qu'une citation y figure |
+| `bin/pdb show <chunk_id>` / `verify <chunk_id> "<citation>"` | texte exact d'un passage / contrôle qu'une citation y figure, nombres compris (`NOMBRES` si un chiffre diffère) |
 | `bin/pdb cites <id>` / `cited-by <id>` | graphe de citations internes, références hors base (`--external`) |
 
 Sur un essai réel (répondre à une question sur la mesure de puissance), cette chaîne a lu
-~2 500 tokens au lieu des textes intégraux. Évaluation de la recherche : recall@5 de 0,90 en
-anglais (1,00 avec `--rerank`), 0,50 en français ([docs/RAG.md](docs/RAG.md) §10).
+~2 500 tokens au lieu des textes intégraux.
+
+**Performances mesurées** par le banc `bin/pdb eval` ([docs/EVAL.md](docs/EVAL.md)) :
+- recherche : recall@5 de 0,90 en anglais sur le jeu qui a servi aux réglages, 0,84 sur un
+  jeu de questions jamais utilisé pour régler, et 0,50 en français ;
+- `verify` rejette les 38 citations dont un chiffre a été modifié et accepte les 40
+  citations exactes ;
+- extraction : 91 % du texte du PDF retrouvé et 90 % des tableaux avec leur corps.
+
+Limite connue : `search` renvoie toujours des passages, et aucun score ne dit de façon fiable
+que la base ne traite pas une question.
 
 **Liens entre articles :**
 
@@ -137,6 +148,8 @@ distinguer le lu du déduit, relever les comparaisons biaisées. Cinq commandes 
 ## Démarrage rapide
 
 Prérequis : Python 3.12, Docker. **Guide d'utilisation pas à pas : [docs/GUIDE.md](docs/GUIDE.md).**
+Présentation sous forme d'article (principes, RAG, tests, évaluation) :
+[docs/article/](docs/article/), à compiler avec `make -C docs/article`.
 
 ```bash
 bash bin/setup.sh              # crée .venv, installe requirements.txt
@@ -204,11 +217,12 @@ PaperDatabase/
 ├── README.md  CLAUDE.md  SETUP.md  DATA_MODEL.md
 ├── INDEX.md  external_refs.csv   # générés
 ├── benchmarks.csv  gaps.md  basicStart.txt
-├── docs/                   # GUIDE.md (utilisation), RAG.md (recherche), experiences/
+├── docs/                   # GUIDE.md (utilisation), RAG.md (recherche), EVAL.md (banc), experiences/
+├── eval/                   # seuils et résultats du banc (pdb eval)
 ├── bin/                    # pdb (point d'entrée), setup.sh, grobid.sh, add.py, ingest.py,
 │                           # reindex.py, discover.py, viz.py
 ├── lib/                    # ids, tei, doc, pdftext, ligatures, tables, schema, refs, query, rag,
-│                           # openalex, citation, status…
+│                           # openalex, citation, status, evaluation, docling_tables…
 ├── tests/
 ├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask
 ├── inbox/                  # PDF en attente d'ingestion
@@ -227,7 +241,7 @@ et MCU :
 - 109 lignes dans `benchmarks.csv` ;
 - 16 gaps dans `gaps.md`, dont 12 étayés.
 
-### Ce qui marche (testé : 143 tests unitaires, et essais sur le vrai corpus)
+### Ce qui marche (testé : 162 tests unitaires, banc `pdb eval`, essais sur le vrai corpus)
 
 - acquisition arXiv, DOI (via OpenAlex), PDF local, par lot ; exports `.bib` / `.ris`
   éditeur prioritaires sur l'en-tête GROBID (vérifié sur 6 exports IEEE, ACM, MDPI,
@@ -238,14 +252,19 @@ et MCU :
   `/paper-ask`, essayée en réel ;
 - découverte de candidats OpenAlex, `external_refs.csv`, `pdb status` avec prochaines
   actions ;
-- tableaux réduits à leur légende : reconstruction PyMuPDF des tableaux à filets (3 sur 52),
-  signalement des autres dans `pdb status`.
+- tableaux réduits à leur légende : reconstruction PyMuPDF des tableaux à filets, puis
+  Docling en option, avec OCR pour les tableaux en image (44 reconstruits sur 56, marqués
+  « à vérifier ») ;
+- banc d'évaluation `bin/pdb eval` : qualité d'extraction, recherche, `verify`, temps ;
+  comparaison entre deux runs et seuils ([docs/EVAL.md](docs/EVAL.md)).
 
 ### Ce qui manque encore
 
-- **Tableaux** : 49 restent sans corps (tableaux sans filets, en image ou pivotés). Docling,
-  essayé le 26/09/2026, en lit une bonne partie (avec OCR pour les images), mais n'est pas
-  encore branché ; certains tableaux devront être vérifiés à la main.
+- **Tableaux** : les 44 tableaux reconstruits sont à relire contre le PDF (colonnes décalées
+  ou perdues, fragments d'OCR), et 12 restent sans corps. Les valeurs de `benchmarks.csv`
+  ne sont retrouvées telles quelles dans leur tableau que dans 80 % des cas.
+- **Recherche** : les questions sur tableaux échouent encore, et l'absence de sujet n'est
+  pas détectée ([docs/EVAL.md](docs/EVAL.md) §6).
 - **Généricité** : axes, regex de classification et colonnes de benchmark sont encore codés
   en dur (voir ci-dessus) ; un profil de corpus (`corpus.toml`) est prévu.
 - **Économie de tokens** : `/paper-fiche` lit encore `fulltext.md` en entier ; un digest
@@ -266,6 +285,7 @@ S'y ajoutent une liste de labos ([labs.md](labs.md)) et un protocole d'expérien
 | [docs/GUIDE.md](docs/GUIDE.md) | guide d'utilisation : prise en main, routine, extension du corpus, dépannage |
 | [SETUP.md](SETUP.md) | installation, rôle de chaque script, flux de travail, vérification, tâches |
 | [docs/RAG.md](docs/RAG.md) | requêtes sans LLM et recherche de passages : spécification, évaluation, essai réel |
+| [docs/EVAL.md](docs/EVAL.md) | banc d'évaluation du logiciel (`pdb eval`) : protocole, résultats de référence, corrections mesurées |
 | [DATA_MODEL.md](DATA_MODEL.md) | schémas : `paper_id`, `metadata.json`, `sections.jsonl`, `refs.jsonl`, `benchmarks.csv`, fiche |
 | [CLAUDE.md](CLAUDE.md) | mode d'emploi et règles de travail de l'agent |
 | [INDEX.md](INDEX.md) | index des articles |

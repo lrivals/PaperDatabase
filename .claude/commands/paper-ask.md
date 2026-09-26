@@ -17,8 +17,10 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
    - Le corpus est en anglais : formule la requête en anglais, et essaie une deuxième
      formulation si la première ne donne rien d'utile.
    - Restreins la recherche avec `--paper`, `--section` ou `--kind` quand la question le permet.
-   - Si la sortie affiche `# pertinence faible`, dis que la base ne traite probablement pas
-     le sujet. Ne comble pas le vide par tes connaissances générales.
+   - `search` renvoie toujours des passages, même quand la base ne traite pas le sujet :
+     aucun score ne le détecte de façon fiable (docs/EVAL.md §5). Si aucun extrait ne répond
+     à la question, dis que la base ne la traite probablement pas. Ne comble pas le vide par
+     tes connaissances générales.
 3. **Lecture.** `bin/pdb show` sur 2 ou 3 passages au plus, ceux dont l'extrait répond.
    N'ouvre jamais `fulltext.md` ni `paper.pdf`.
 4. **Réponse.** Cite chaque affirmation sous la forme `[chunk_id]` (id court, par exemple
@@ -26,6 +28,8 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
 5. **Vérification.** Lance `bin/pdb verify <chunk_id> "<citation>"` sur chaque citation
    textuelle entre guillemets.
    - Retire toute citation `ABSENT`.
+   - `NOMBRES` : un chiffre de la citation n'est pas celui du passage. Reprends le chiffre
+     exact avec `bin/pdb show`, ou retire la citation. Ne la garde jamais en l'état.
    - Corrige le `chunk_id` si la sortie dit « trouvée dans … ».
    - Une citation `APPROX` peut rester si elle est présentée comme une paraphrase.
 6. **Structure.**

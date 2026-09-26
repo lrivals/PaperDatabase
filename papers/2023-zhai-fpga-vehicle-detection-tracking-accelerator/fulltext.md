@@ -437,11 +437,42 @@ Compression acceleration of neural networks still has many worthy research direc
 
 **Figure 19.** Comparison of traffic flow statistics.
 
-**Table 2.** Parameter conventions for convolution operations.
+**Table 2.** Parameter conventions for convolution operations. [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 4.** Meanings of the variables.
+    Symbol | Meaning
+    I | The input feature map.
+    W | Theweightsoftheconvolutionlayer.
+    B | The bias of the convolution layer.
+    O | Theoutputfeaturemap.
+    IH | Theheightoftheinputfeaturemap.
+    IW | Thewidthoftheinputfeaturemap.
+    IC | The number of input channels.
+    K | The kernel size.
+    OH | Theheightoftheoutputfeaturemap.
+    OW | Thewidthoftheoutputfeaturemap.
+    OC | Thenumberofoutputchannels.
+    pad | The padding.
+    S | The stride.
+    Tx | Parallelism of multiply-add operations on input feature maps.
+    Ty | Parallelism of multiply-add operations on output feature maps.
 
-**Table 5.** Comparison of the numbers of detected vehicles.
+**Table 4.** Meanings of the variables. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Model | PruningRate | AP@0.5 | ModelSize(MB) | Parameters (×10 3 ) | BFLOPs
+    YOLOv3 | 0 | 0.671 | 235.06 | 61523 | 65.864
+    YOLOv3 | 85% | 0.711 | 33.55 | 8719 | 19.494
+    YOLOv3-tiny | 0 | 0.625 | 33.10 | 8670 | 5.444
+    YOLOv3-tiny | 85% | 0.625 | 1.02 | 267 | 1.402
+    YOLOv3-tiny | 85%+30% | 0.599 | 0.59 | 69 | 0.735
+
+**Table 5.** Comparison of the numbers of detected vehicles. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Model | Number of Vehicles Detected
+    YOLOv3 | 27
+    YOLOv3-prune85% | 27
+    YOLOv3-tiny | 24
+    YOLOv3-tiny-prune85% | 24
+    YOLOv3-tiny-prune85%+30% | 26
 
 **Table 6.** Ablation experiment of re-id training.
 

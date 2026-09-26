@@ -27,7 +27,8 @@ Lis du résumé vers le détail, et arrête-toi dès que tu as la réponse.
 4. **Passages** — `bin/pdb search "<question en anglais>"`, qui renvoie des passages avec
    `chunk_id`, section, page et extrait, puis `bin/pdb show <chunk_id>` sur 2 ou 3 d'entre
    eux. Vérifie chaque citation textuelle avec `bin/pdb verify <chunk_id> "<citation>"`.
-   `# pertinence faible` en tête de sortie = la base ne traite probablement pas le sujet.
+   `search` renvoie toujours des passages, même hors sujet : si aucun extrait ne répond,
+   dis que la base ne traite probablement pas le sujet (aucun seuil fiable, docs/EVAL.md §5).
    La skill `/paper-ask` enchaîne tout cela ; détails dans [docs/RAG.md](docs/RAG.md).
    `grep` sur `papers/*/sections.jsonl` reste utile pour une chaîne exacte.
    `papers/<id>/fulltext.md`, le texte intégral, en dernier recours seulement.
@@ -40,9 +41,11 @@ des bibliographies : à vérifier avant de les citer. Au-delà des références,
 (ou `bin/pdb discover`) produit `candidates.csv` depuis OpenAlex : citations entrantes,
 recherche par axe ou par gap (DATA_MODEL §10). Métadonnées OpenAlex, non vérifiées.
 
-`refs.jsonl` et `grobid.tei.xml` ne servent pas à répondre aux questions : le premier
-alimente la visualisation 3D (`bin/viz.py`) et `external_refs.csv`, le second est la trace
-brute d'extraction.
+`refs.jsonl`, `grobid.tei.xml` et `docling_tables.json` ne servent pas à répondre aux
+questions : le premier alimente la visualisation 3D (`bin/viz.py`) et `external_refs.csv`,
+les deux autres sont des traces brutes d'extraction. Un tableau dont la légende porte
+« reconstruit par PyMuPDF » ou « reconstruit par Docling : à vérifier » n'est pas fiable
+chiffre à chiffre ([docs/EVAL.md](docs/EVAL.md) §6).
 
 ---
 
@@ -51,6 +54,7 @@ brute d'extraction.
 | Commande | Effet |
 |---|---|
 | `bin/pdb status` | état de la base et prochaines actions suggérées |
+| `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation du logiciel : qualité d'extraction, recherche de passages, `verify`, temps ; à lancer avant/après tout changement du pipeline ([docs/EVAL.md](docs/EVAL.md)) |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ([docs/RAG.md](docs/RAG.md) §5.1) |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM, texte exact, contrôle d'une citation ([docs/RAG.md](docs/RAG.md) §5) |
 | `/paper-ask <question>` | réponse sourcée et vérifiée : `bench`, puis `search`, `show`, `verify` |

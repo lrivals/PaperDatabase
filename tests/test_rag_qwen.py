@@ -95,16 +95,20 @@ class RagTest(unittest.TestCase):
              mock.patch("bin.ingest.grobid_alive", return_value=False), \
              mock.patch("bin.reindex.run", return_value=0), \
              mock.patch.object(rag, "build", side_effect=lambda root, **kw: build_index(root, mode="lexical")):
+            before = sorted((self.root / "papers").iterdir())
             result = rag_external.acquire(self.root, "FPGA accelerators", "trial")
+            self.assertEqual(len(result["staged"]), 1, result["errors"])
+            self.assertEqual(sorted((self.root / "papers").iterdir()), before)  # staged only
+            approved = rag_external.approve(self.root, "trial", [result["staged"][0]["paper_id"]])
             candidate["arxiv_id"] = "2609.99998"
             duplicate = rag_external.acquire(self.root, "FPGA accelerators", "second")
-        self.assertEqual(len(result["imported"]), 1, result["errors"])
+        result = approved
         created = self.root / "papers" / result["imported"][0]
         self.assertEqual(json.loads((created / "metadata.json").read_text())["status"]["fiche"], "todo")
         self.assertTrue((created / "paper.pdf").read_bytes().startswith(b"%PDF"))
         self.assertTrue((created / "acquisition.json").exists())
         self.assertEqual(result["selected_evidence"][0]["paper_id"], result["imported"][0])
-        self.assertFalse(duplicate["imported"])
+        self.assertFalse(duplicate["staged"])
         self.assertTrue(any("PDF already exists" in error for error in duplicate["errors"]))
 
     def test_external_rejects_html_payload(self):

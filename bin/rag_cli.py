@@ -35,6 +35,9 @@ def run(argv):
     acquire.add_argument("query")
     acquire.add_argument("--run", required=True)
     acquire.add_argument("--limit", type=int, default=3)
+    approve = sub.add_parser("approve", help="import staged papers the user accepted")
+    approve.add_argument("run")
+    approve.add_argument("paper_ids", nargs="+")
     check = sub.add_parser("check-answer")
     check.add_argument("path", type=Path)
     evaluate = sub.add_parser("evaluate")
@@ -60,6 +63,10 @@ def run(argv):
             from lib import rag_external
             with contextlib.redirect_stdout(sys.stderr):
                 result = rag_external.acquire(ROOT, args.query, args.run, args.limit)
+        elif args.command == "approve":
+            from lib import rag_external
+            with contextlib.redirect_stdout(sys.stderr):
+                result = rag_external.approve(ROOT, args.run, args.paper_ids)
         elif args.command == "check-answer":
             result = rag.check_answer(ROOT, json.loads(args.path.read_text()))
         else:

@@ -1082,7 +1082,9 @@ Dans Claude Code, `/paper-research <question>` effectue une rédaction suivie d'
 trois lacunes au maximum, de recherches complémentaires, puis d'un contrôle des sources.
 Quand le corpus ne suffit pas, `bin/pdb rag acquire "requête" --run identifiant` interroge
 OpenAlex et arXiv, met les PDF en staging, vérifie qu'un passage extrait répond à la requête,
-importe les nouveaux articles et reconstruit les index. Chaque ajout conserve
+et laisse les articles retenus en staging. Seuls ceux que l'utilisateur accepte entrent dans
+`papers/`, via `bin/pdb rag approve identifiant PAPER_ID…`, qui reconstruit ensuite les
+index. Chaque ajout conserve
 `acquisition.json` ; la fiche reste `todo`. Le budget partagé d'un run est huit recherches,
 huit PDF, 50 Mo par PDF, 200 Mo au total et quinze minutes. Les échecs de téléchargement ou
 d'extraction sont rapportés, jamais interprétés comme absence de travaux.

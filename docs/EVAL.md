@@ -331,3 +331,47 @@ Lecture :
   demande un jugement humain et consomme des tokens.
 - Pas de comparaison GROBID / Docling : le banc est prêt à la chiffrer une fois Docling
   branché (couverture, tableaux avec corps, valeurs dans le tableau cité).
+
+## 8. Recherche GPU (Qwen3, `pdb rag`) sur les mêmes jeux (26/09/2026)
+
+Les jeux du §3 (mêmes fichiers, mêmes attentes, `evaluation.ranking_metrics`, même protocole
+de pertinence faible) appliqués au second moteur, `lib/rag_qwen.py` : SQLite FTS5,
+Qwen3-Embedding-4B, fusion RRF, Qwen3-Reranker-4B, RTX 5090. Corpus identique pour les deux
+moteurs : 28 papiers après fusion de `main` et `dev` ; `pdb eval --rag` y retrouve exactement
+les chiffres du §5. Script : [eval/qwen_on_eval.py](../eval/qwen_on_eval.py).
+
+| Jeu | Moteur | recall@5 | recall@10 | MRR | nDCG@10 | s / question |
+|---|---|---|---|---|---|---|
+| dev (20) | bge-small hybride + rerank | **1,00** | **1,00** | **0,85** | **0,46** | ~1,4 |
+| dev (20) | Qwen hybride (sans rerank) | 0,90 | 0,90 | 0,78 | 0,37 | 0,7 |
+| dev (20) | Qwen hybride + rerank | 0,80 | 0,80 | 0,76 | 0,35 | 3,7 |
+| holdout (25) | bge-small hybride | 0,80 | 0,84 | 0,67 | 0,36 | 0,1 |
+| holdout (25) | bge-small hybride + rerank | 0,80 | 0,80 | **0,78** | **0,41** | ~1,4 |
+| holdout (25) | Qwen hybride + rerank | **0,88** | **0,92** | 0,75 | 0,35 | 3,3 |
+| FR (8) | bge-small dense (meilleur mode) | 0,62 | 0,75 | 0,46 | 0,19 | 0,1 |
+| FR (8) | Qwen dense | **1,00** | **1,00** | 0,63 | 0,22 | 0,7 |
+| FR (8) | Qwen hybride + rerank | **1,00** | **1,00** | **0,88** | **0,31** | 3,8 |
+
+| Pertinence faible (score du reranker, top 3 hybride) | Seuil | Hors corpus signalés (validation) | Corpus signalés à tort (validation) | Adopté |
+|---|---|---|---|---|
+| cross-encoder MiniLM (bge-small) | 2,37 | 0,90 | 0,40 | non |
+| Qwen3-Reranker-4B (probabilité « yes ») | 0,96 | **1,00** | **0,16** | non |
+
+Lecture :
+- **Français** : c'est le seul écart net. Qwen retrouve les 8 questions (0,62 au mieux avec
+  bge-small), sans reformulation en anglais.
+- **Holdout** : +0,08 de rappel@5 (2 questions sur 25), MRR comparable. **Dev** : Qwen est
+  en dessous (0,80 contre 1,00) ; le jeu dev a servi à régler bge-small (§3), l'écart y est
+  donc attendu, mais il n'est pas nul.
+- **Lexical** : FTS5 de `rag_qwen` fait moins bien que le BM25 de `rag.py` (dev 0,80 contre
+  0,95 ; FR 0,00). En hybride français, il noie le canal dense (0,12) : le reranker rattrape.
+- **Pertinence faible** : le reranker Qwen sépare la calibration parfaitement et signale les
+  10 questions hors corpus de validation, mais aussi 4 des 25 questions du holdout
+  (vote majoritaire / soft errors, famille FPGA spatiale, « systolic » paraphrasé, cas
+  d'usage physique). La règle (≤ 5 %) n'est pas remplie ; c'est toutefois le premier signal
+  proche. À revalider sur un nouveau jeu avant tout usage.
+- **Coût** : GPU de 32 Go, modèles rechargés à chaque requête (3 à 4 s avec rerank, contre
+  ~1,4 s pour bge-small + MiniLM sur CPU). Les deux jeux restent petits : 0,04 = 1 question.
+- Différences de protocole : Qwen plafonne à 3 passages par papier et indexe aussi fiches et
+  lignes de benchmark ; les limiter au texte original ne change pas le rappel (ligne
+  « original text only » du JSON).

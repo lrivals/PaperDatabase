@@ -817,9 +817,20 @@ def retrieved_match(result, evidence):
                  evidence["quote"] in result.get("parent_text", "")))
 
 
+# "cpu-*": main's bge-small search (lib/rag.py, pdb search) on the same questions.
+RETRIEVAL_MODES = ("lexical", "dense", "hybrid", "reranked", "cpu-hybrid", "cpu-reranked")
+
+
+def cpu_search(index, query, reranking, parents):
+    """pdb search hits, shaped like rag_qwen results for retrieved_match."""
+    return [{"paper_id": h["paper_id"], "kind": h["kind"], "locator": h["section_id"],
+             "text": h["text"], "parent_text": parents[h["section_id"]]}
+            for h in index.search(query, k=20, mode="hybrid", rerank=reranking)]
+
+
 def retrieval(mode):
     frozen(SOURCE)
-    if mode not in ("lexical", "dense", "hybrid", "reranked"):
+    if mode not in RETRIEVAL_MODES:
         raise ValueError("invalid retrieval mode")
     cases = lines(HOME / "questions.jsonl")
     if not cases:
@@ -835,14 +846,22 @@ def retrieval(mode):
         if not root.exists():
             continue
         frozen(root)
-        rag.build(root, mode="lexical" if mode == "lexical" else "hybrid")
+        if mode.startswith("cpu-"):
+            from lib import rag as rag_cpu
+            rag_cpu.build_index(root)
+            index = rag_cpu.Index(root, rerank=mode == "cpu-reranked")
+            parents = {r["id"]: r["text"] for m in sources(root) for r in sections(m.parent)}
+        else:
+            rag.build(root, mode="lexical" if mode == "lexical" else "hybrid")
         for case, variant, query in query_cases:
             started = time.monotonic()
-            route = "hybrid" if mode == "reranked" else mode
-            found = rag.search(root, query, mode=route, limit=20,
-                               reranking=mode == "reranked")
+            if mode.startswith("cpu-"):
+                hits = cpu_search(index, query, mode == "cpu-reranked", parents)
+            else:
+                route = "hybrid" if mode == "reranked" else mode
+                hits = rag.search(root, query, mode=route, limit=20,
+                                  reranking=mode == "reranked")["results"]
             elapsed = time.monotonic() - started
-            hits = found["results"]
             needed = case["evidence"]
             matched = []
             for item in needed:
@@ -1088,7 +1107,7 @@ def report():
 
 
 def run(argv):
-    parser = argparse.ArgumentParser(prog="bin/pdb bench", description=__doc__,
+    parser = argparse.ArgumentParser(prog="bin/pdb synth", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="command", required=True)
     for name in ("corpus", "enrich", "generate", "validate", "variants", "retrieval",
@@ -1099,7 +1118,7 @@ def run(argv):
         sub.choices[name].add_argument("--limit", type=int, default=200)
     sub.choices["variants"].add_argument("--limit", type=int, default=40)
     sub.choices["retrieval"].add_argument("--mode", required=True,
-                                           choices=("lexical", "dense", "hybrid", "reranked"))
+                                           choices=RETRIEVAL_MODES)
     sub.choices["agent"].add_argument("--variant", required=True,
                                       choices=("native", "lexical", "dense", "hybrid",
                                                "reranked", "structured", "feedback", "oracle"))

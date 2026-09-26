@@ -59,6 +59,8 @@ class BenchTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "Not logged in"):
             bench_cli.claude_result(json.dumps({"type": "result", "is_error": True,
                                                 "result": "Not logged in"}))
+        with patch.dict(bench_cli.os.environ, {"PDB_BENCH_CLAUDE": "/opt/claude"}):
+            self.assertEqual(bench_cli.claude_binary(), "/opt/claude")
         done = type("Done", (), {"stdout": text, "stderr": ""})
         with patch.object(bench_cli.subprocess, "run", return_value=done):
             self.assertEqual(bench_cli.claude("q", {"valid": "boolean"}), {"valid": False})

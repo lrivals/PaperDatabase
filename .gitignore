@@ -15,3 +15,4 @@ docs/article/*.blg
 docs/article/*.log
 docs/article/*.out
 docs/article/*.toc
+.claude/settings.local.json

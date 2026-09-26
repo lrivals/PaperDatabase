@@ -32,7 +32,8 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE 1, TABLE 2, TABLE 3, TABLE 5, TABLE 6, TABLE 7, TABLE 8, TABLE 9, TABLE 10, TABLE 12"
     ]
   },
   "status": {

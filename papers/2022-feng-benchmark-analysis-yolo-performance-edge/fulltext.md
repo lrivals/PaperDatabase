@@ -127,7 +127,7 @@ In this study, we benchmark and analyze the performance of three accelerator-bas
 
 **Figure 7.** FPS and energy consumption of different S value. (a) FPS Performance; (b) energy consumption.
 
-**Table 1.** Comparison of the scale of the backbone between different YOLO models.
+**Table 1.** Comparison of the scale of the backbone between different YOLO models. [corps du tableau reconstruit par Docling : à vérifier]
 
     YOLO | Total Layers of Backbone
     YOLOv3 | 106

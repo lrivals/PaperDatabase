@@ -71,6 +71,10 @@ Modern SoC FPGAs from Xilinx and Intel integrate hard ARM cores with the program
 
 Intel's Agilex 3 FPGA architecture [50], fabricated on Intel 7 with second-generation HyperFlex, exemplifies advanced SoC FPGAs, as illustrated in Fig. Compared with Xilinx devices, Agilex 3 offers superior timing closure and pipelining flexibility, with its dual-core Cortex-A55 MPCores and FP32/FP64 support enabling hybrid AI workloads.
 
+. The PS supports LPDDR3/4 and DDR4/5 with up to 230.4 Gbps bandwidth (72-bit DDR4-3200 in Agilex F-Series) and often integrates HDMI and H.264 decoders, enabling edge-AI video applications. Within the PL, Xilinx DSP48E1/E2 slices (25×18 multiplier, pre-adder, 48-bit accumulator, SIMD dual-24/quad-12) deliver INT8/INT16 MACs with optional FP16/BF16, while Intel Agilex DSPs (up to 54×54 multipliers with ALMs and M20K RAMs) support INT4-INT16, FP16, and FP32 [52]. Although FPGA DSP blocks are optimized for standard widths (mainly INT8 for ML inference), designers can implement custom or mixed-precision arithmetic (e.g., INT5, INT7) in LUTs, at the cost of higher CNN latency due to less-optimized routing. Toolchains are critical: Xilinx's FINN [53] compiles quantization-aware networks to PL with arbitrary precisions down to 1 bit, while Xilinx's Vitis AI [54] supports only INT8 models, deploying them on the soft DPU (DPUCZDX8G) [54], a LUT-DSP-based systolic array, as shown in Fig. 4. The DPU communicates with the APU via AXI interconnects; its Instruction Fetch Unit sends commands to a High-Performance Scheduler, which performs static compile-time scheduling of CNN layers onto a Hybrid Computing Array. Hybrid Computing Array is a grid of PEs optimized for parallel MAC operations. Data is streamed from external DDR through a High-Speed Data Pipe into the Global Memory Pool, a shared on-chip buffer that stores feature maps, weights, and intermediate results to feed the computing array. This layer-fusion execution (e.g., Conv + ReLU) minimizes intermediate memory accesses and supports continuous PE operation. The DPUCZDX8G is offered in multiple configurations, with the B4096 variant achieving 4,096 INT8 MACs per cycle for convolution and fully connected layers.
+
+5. It adopts a registers-everywhere architecture that includes Hyper-Registers (bypassable flip-flops along routing paths for fine-grained timing), Hyper-Retiming (relocation of these registers to equalize logic delays), and Hyper-Pipelining (insertion of additional pipeline stages without RTL changes). Together, these features enable >1 GHz clocking and support deep pipelining. The PL integrates 34k ALMs, 262 M20K RAMs, and 276 variable-precision DSPs in a columnar grid, while AI Tensor Blocks support INT8, INT16, and mixed-precision (e.g., INT4 early, INT8 later) to balance accuracy and efficiency.
+
 ### C. SoC FPGA with hardcore AI engines
 
 Versal devices extend the PS-PL continuum with a third heterogeneous tier: a two-dimensional mesh of hard AI Engine tiles (AIE and AIE-ML), each incorporating a SIMD very-long instruction word (VLIW) core and 128-bit AXI-Stream NoC routers [58], [59]. These VLIW-based cores can execute multiple operations per cycle across scalar, vector, and address-generation units. The vector registers natively support a wide range of data types including int8/uint8, int16/uint16, cint16, int32/uint32, cint32, BF16, FP16, and int64/uint64, with grouping sizes of 128, 256, 512, or 1024 bits for AI kernels implemented via the AI Engine API (eg., Versal AI Core series, Versal AI Edge). The total data width of the vector units can thus scale up to 1024 bits per cycle, offering high parallelism for both integer and floating-point workloads.
@@ -116,6 +120,8 @@ Fig. 9 shows H2PIPE, a high-throughput spatial pipeline [73]. where convolution,
 #### 2. Precision Scaling & Quantization
 
 Precision scaling is critical for real-time FPGA inference, reducing weights, activations, and intermediate signals from Despite these gains, quantization presents notable challenges. Aggressive precision reduction can significantly degrade accuracy, particularly in early layers and residual paths. While QAT can mitigate this, it introduces additional training complexity and tuning overhead. Ultra-low precisions (binary/INT2) often fall back to bit-serial or LUT arithmetic, reducing DSP utilization and increasing latency. Mixed-precision designs improve flexibility but may fragment resources due to DSP/BRAM granularity. Future progress relies on quantization-friendly networks, bit-accurate simulation, and compiler automation to enable workload-aware precision mapping and efficient FPGA utilization.
+
+FP32 to low-precision fixed-point formats (INT8, INT4, binary) to cut memory bandwidth and resource usage. Lower precision enables more parallel PEs on the FPGA fabric, improving throughput and energy efficiency for latency-sensitive tasks such as object tracking and detection. Unlike GPUs, FPGAs offer flexible logic that efficiently supports low-bit operations, improving throughput per watt. For example, on Xilinx UltraScale+, DSP48E2 slices can pack up to four INT4 MACs per DSP, greatly boosting compute density and energy efficiency versus INT16 execution. These capabilities drive precision-scaled accelerators that pair Quantization-Aware Training (QAT) with optimized computation to achieve high-speed inference without accuracy loss. Post-Training Quantization (PTQ) and QAT are two examples of contemporary quantization techniques. PTQ statistically calibrates fixed-point scales (e.g., percentile clipping) but may lose accuracy below 8-bit, while QAT simulates quantization noise during training using fake nodes, enabling adaptation to low-bit formats (INT4, INT2) and preserving accuracy. Uniform quantization with fixed step sizes is best suited to FPGA hardware, whereas non-uniform or block-floating formats expand dynamic range but require extra LUTs and control logic. In practice, Peccia et al. [74] demonstrated PTQ on YOLOv7-tiny, converting it to INT8 for a Gemmini-based FPGA accelerator, preserving detection accuracy by skipping Non-Maximum Suppression (NMS) quantization and using per-tensor scaling for a balance of simplicity and precision.
 
 #### 3. DSP Packing and Low-Bitwidth Arithmetic Optimization
 
@@ -179,6 +185,8 @@ Further improvements in performance and memory efficiency can be achieved by mod
 
 CNN models are deployed on DPUs for acceleration. For instance, to accelerate LCAM-YOLOX, which is a YOLOX model Fig. 14: Implementation of YOLOV11n and YOLOV11s models on PYNQ Z1 FPGA trained for images of size 640×640 [95].
 
+. Standard convolutions follow the 𝐾 2 • 𝐶 𝑖𝑛 • 𝐶 𝑜𝑢𝑡 • 𝐻 𝑜𝑢𝑡 • 𝑊 𝑜𝑢𝑡 compute model, while depthwise-separable convolutions apply 3×3 depthwise + 1×1 pointwise kernels in in two stages to minimize MAC operations. The architecture incorporates C3k2 block (Cross Stage Partial with kernel size 2) for fast processing, and SPPF (Spatial Pyramid Pooling -Fast) and C2PSA (Cross Stage Partial with Spatial Attention) modules to enhance small-object and occlusion detection, as shown in Fig. 14. Cross Stage Partial (CSP) modules improve gradient flow and reduce redundancy without hardware-intensive attention mechanisms
+
 with layerwise channel attention module, Elhence et al. [98] utilized DPUCZDX8G and Vitis AI software. LCAM-YOLOX model trained with images of size 640×640 on the SoC-based ZCU102 FPGA achieved real-time performance at 195 FPS, while utilizing only 19.03% of LUTs and 28.17% of DSPs. For detection of airplanes, Brown et.al [99] utilized DPUCVDX8G for YOLOV5 deployment on Versal VCK190 board with a replacement of SiLU layers with LeakyReLU as the DPU does not support SiLU layers. On Rareplane dataset with image size 640×640, this model achieved 244.49FPS and with 0.852 F1 score.
 
 El-Ghany et al. [100] proposed a masked face detection system using Tiny DarkNet, a lightweight CNN optimized for FPGA deployment, using LUT-DSP based Virtex UltraScale+ XCVU19P FPGA. The 21-layer network includes 3×3 and 1×1 convolutions with ReLU activations and is quantized to 16-bit fixed-point for reduced memory and power usage. The Verilog-based accelerator exploits spatial parallelism with 128 convolution and pooling windows. The system achieves real-time inference with 8.3 ms latency, 120.48 FPS throughput, and consumes 4.756 W, utilizing 1153 DSPs and 12% of the available LUTs.
@@ -213,6 +221,8 @@ four attention blocks that use expanded receptive fields to recalibrate spatial 
 
 Table VIII compares
 
+few recent CNN based classification models on FPGA. While models like U-Net and LightLiteNet emphasize accuracy, others like RBPnet4 are optimized for speed and efficiency on low-power FPGAs. RESNET-14 reveal the challenge of scaling throughput without incurring significant latency on LUT-DSP based FPGA architectures. RBPnet4, targeting Zynq 7020, delivers the best latency (0.7 ms) and a competitive 60 FPS frame rate while consuming 2.3 W, making it highly efficient for real-time embedded scenarios. Therefore, SoC based FPGAs are used for CNN based classification tasks.
+
 ### C. Real-time Object Tracking on FPGA
 
 Real-time object tracking focuses on detecting and following objects in video streams with minimal latency, which is essential for autonomous vehicles, robotics, surveillance, and AR applications [115], [116]. Tracking in crowded or dynamic scenes enables early anomaly detection in surveillance and predictive navigation for vehicles [116]. In addition, tracking is required for vehicle navigation as it predicts the future position of eventual objects in the scene.
@@ -239,6 +249,8 @@ Experimental results across CPU, CPU/GPU, CPU/FPGA, CPU/NPU, and CPU/FPGA/NPU va
 
 The ability of CPU-FPGA and GPU-FPGA platforms to balance throughput, latency, and power efficiency has led to their increasing popularity in edge vision and language processing. By speeding up memory-bound operations and facilitating dataflow optimizations, FPGAs enhance GPUs, which provide high FLOP rates appropriate. for dense tensor operations. For these systems to fully utilize resource synergy, intelligent runtime schedulers and tightly coupled interconnects (such as PCIe, AXI, and CCIX) are necessary. These works illustrate how important it is to divide tasks according to precision, parallelism, and access patterns to maximize the benefits of heterogeneity in vision inference
 
+without silicon changes, highlighting the flexibility and scalability of FPGA-based NPU implementations in real-time object detection and classification systems.
+
 ## VII. DESIGN TRADE-OFFS AND CHALLENGES IN FPGA-BASED VISION INFERENCE
 
 Deploying deep learning models on FPGAs for real-time detection, classification, and tracking requires managing interdependent trade-offs in model architecture, memory hierarchy, compute efficiency, and resource utilization. These challenges are amplified when complex CNNs-with residual connections, multi-scale fusion, and attention modules-demand trillions of operations per second. FPGAs, constrained by limited on-chip memory and fixed interconnects, rely on careful tiling and pipelined dataflows, where activations and weights are partitioned into BRAM-fit tiles. Yet, tile dimensions vary by layer, and over-tailored tiling can introduce control overhead or leave compute units underutilized when layer dimensions are irregular.
@@ -263,10 +275,6 @@ This paper has surveyed the evolving landscape of FPGA-based acceleration for CN
 
 **Fig. 3:** Fig.3: FPGA with Columnar Resources from[44]
 
-[figure sans légende identifiée] . The PS supports LPDDR3/4 and DDR4/5 with up to 230.4 Gbps bandwidth (72-bit DDR4-3200 in Agilex F-Series) and often integrates HDMI and H.264 decoders, enabling edge-AI video applications. Within the PL, Xilinx DSP48E1/E2 slices (25×18 multiplier, pre-adder, 48-bit accumulator, SIMD dual-24/quad-12) deliver INT8/INT16 MACs with optional FP16/BF16, while Intel Agilex DSPs (up to 54×54 multipliers with ALMs and M20K RAMs) support INT4-INT16, FP16, and FP32 [52]. Although FPGA DSP blocks are optimized for standard widths (mainly INT8 for ML inference), designers can implement custom or mixed-precision arithmetic (e.g., INT5, INT7) in LUTs, at the cost of higher CNN latency due to less-optimized routing. Toolchains are critical: Xilinx's FINN [53] compiles quantization-aware networks to PL with arbitrary precisions down to 1 bit, while Xilinx's Vitis AI [54] supports only INT8 models, deploying them on the soft DPU (DPUCZDX8G) [54], a LUT-DSP-based systolic array, as shown in Fig. 4. The DPU communicates with the APU via AXI interconnects; its Instruction Fetch Unit sends commands to a High-Performance Scheduler, which performs static compile-time scheduling of CNN layers onto a Hybrid Computing Array. Hybrid Computing Array is a grid of PEs optimized for parallel MAC operations. Data is streamed from external DDR through a High-Speed Data Pipe into the Global Memory Pool, a shared on-chip buffer that stores feature maps, weights, and intermediate results to feed the computing array. This layer-fusion execution (e.g., Conv + ReLU) minimizes intermediate memory accesses and supports continuous PE operation. The DPUCZDX8G is offered in multiple configurations, with the B4096 variant achieving 4,096 INT8 MACs per cycle for convolution and fully connected layers.
-
-[figure sans légende identifiée] 5. It adopts a registers-everywhere architecture that includes Hyper-Registers (bypassable flip-flops along routing paths for fine-grained timing), Hyper-Retiming (relocation of these registers to equalize logic delays), and Hyper-Pipelining (insertion of additional pipeline stages without RTL changes). Together, these features enable >1 GHz clocking and support deep pipelining. The PL integrates 34k ALMs, 262 M20K RAMs, and 276 variable-precision DSPs in a columnar grid, while AI Tensor Blocks support INT8, INT16, and mixed-precision (e.g., INT4 early, INT8 later) to balance accuracy and efficiency.
-
 **Fig. 4:** Top level architecture of DPUCZDX8G [56] .
 
 **Fig. 5:** Hyperflex's "Registers Everywhere" architecture. The orange boxes correspond to the Hyper-Registers in the core fabric [57].
@@ -276,8 +284,6 @@ This paper has surveyed the evolving landscape of FPGA-based acceleration for CN
 **Fig. 8.** An overview of the sparse -periodic systolic CNN accelerator from [71].
 
 **Fig. 9.** Overview of CNN dataflow architecture showing layer-level pipelining. Each PE has its own weight memory. Activation FIFOs between PEs enable continuous streaming of data every clock [73].
-
-[figure sans légende identifiée] FP32 to low-precision fixed-point formats (INT8, INT4, binary) to cut memory bandwidth and resource usage. Lower precision enables more parallel PEs on the FPGA fabric, improving throughput and energy efficiency for latency-sensitive tasks such as object tracking and detection. Unlike GPUs, FPGAs offer flexible logic that efficiently supports low-bit operations, improving throughput per watt. For example, on Xilinx UltraScale+, DSP48E2 slices can pack up to four INT4 MACs per DSP, greatly boosting compute density and energy efficiency versus INT16 execution. These capabilities drive precision-scaled accelerators that pair Quantization-Aware Training (QAT) with optimized computation to achieve high-speed inference without accuracy loss. Post-Training Quantization (PTQ) and QAT are two examples of contemporary quantization techniques. PTQ statistically calibrates fixed-point scales (e.g., percentile clipping) but may lose accuracy below 8-bit, while QAT simulates quantization noise during training using fake nodes, enabling adaptation to low-bit formats (INT4, INT2) and preserving accuracy. Uniform quantization with fixed step sizes is best suited to FPGA hardware, whereas non-uniform or block-floating formats expand dynamic range but require extra LUTs and control logic. In practice, Peccia et al. [74] demonstrated PTQ on YOLOv7-tiny, converting it to INT8 for a Gemmini-based FPGA accelerator, preserving detection accuracy by skipping Non-Maximum Suppression (NMS) quantization and using per-tensor scaling for a balance of simplicity and precision.
 
 **Fig. 10.** FPGA-based CNN accelerator from [76], integrating a Zynq SoC, DDR3 with CDMA, and a modular pipeline of controller, adder, pooling, and systolic-array matrix blocks coordinated by a Layer Translator for structured data reuse and DSB.
 
@@ -289,19 +295,13 @@ This paper has surveyed the evolving landscape of FPGA-based acceleration for CN
 
 **Fig. 13.** FPGA AI Inference Development Flow [84].
 
-[figure sans légende identifiée] . Standard convolutions follow the 𝐾 2 • 𝐶 𝑖𝑛 • 𝐶 𝑜𝑢𝑡 • 𝐻 𝑜𝑢𝑡 • 𝑊 𝑜𝑢𝑡 compute model, while depthwise-separable convolutions apply 3×3 depthwise + 1×1 pointwise kernels in in two stages to minimize MAC operations. The architecture incorporates C3k2 block (Cross Stage Partial with kernel size 2) for fast processing, and SPPF (Spatial Pyramid Pooling -Fast) and C2PSA (Cross Stage Partial with Spatial Attention) modules to enhance small-object and occlusion detection, as shown in Fig. 14. Cross Stage Partial (CSP) modules improve gradient flow and reduce redundancy without hardware-intensive attention mechanisms
-
 **Fig. 15:** Graphical comparison of YOLO and SSD models based on their resource utilization and throughput.
-
-[figure sans légende identifiée] few recent CNN based classification models on FPGA. While models like U-Net and LightLiteNet emphasize accuracy, others like RBPnet4 are optimized for speed and efficiency on low-power FPGAs. RESNET-14 reveal the challenge of scaling throughput without incurring significant latency on LUT-DSP based FPGA architectures. RBPnet4, targeting Zynq 7020, delivers the best latency (0.7 ms) and a competitive 60 FPS frame rate while consuming 2.3 W, making it highly efficient for real-time embedded scenarios. Therefore, SoC based FPGAs are used for CNN based classification tasks.
 
 **Fig. 18:** (a) Comparison of performance matrices across different platforms (b) Resource utilization for ZCU104 and PYNQ-Z2 [114].
 
 **Fig. 19:** Fig.19: Fully Convolutional Siamese Architecture obtained from[118]. Similarity scores for the sub-windows are shown in red and blue pixels of score map.
 
 **Fig. 20:** Task partitioning in Zynq UltraScale+ MPSoC MOT: PL runs 4-bit pipelined YOLOv8n inference; PS handles NMS and SORT tracking via DMA/FIFOs [125].
-
-[figure sans légende identifiée] without silicon changes, highlighting the flexibility and scalability of FPGA-based NPU implementations in real-time object detection and classification systems.
 
 **Fig. 21:** Fig.21: Overview of the NPU overlay architecture[127].
 
@@ -373,7 +373,14 @@ This paper has surveyed the evolving landscape of FPGA-based acceleration for CN
      | MACs (up to | cores) |  |  | and DSPCPLX |  | 
      | 400 AIE tiles) |  |  |  | Modes |  | 
 
-**TABLE V** COMMONLY USED FPGAS FOR REAL-TIME VISION TASKS
+**TABLE V** COMMONLY USED FPGAS FOR REAL-TIME VISION TASKS [corps du tableau reconstruit par Docling : à vérifier]
+
+    FPGA Board | LUTs / ALMs, FFS | DSP /AI engine | Block RAM (size) | Cost
+    AMD Xilinx Zynq UltraScale+ ZCU104 [62] | 230,400 LUTs, 461,000 FFs | 1,728 | 146 (38Mb) | $1,678
+    AMD Versal AI Core VC1902 [63] | 899,840 LUTs, 1,799,680 FFs | 1,968 DSPs 400 AI | 34Mb | $13,195
+    AMD Xilinx Kria KV260 [64] | 70,560 LUTs, 141,120 FFs | 1.2K | 144 | $249
+    Intel Agilex 7 AGM 032 [65] | 1,100,000 ALMs, 440,0000 FFs | 9,375 | 15,932 (311Mb) | $9,495
+    Intel Arria 10 GX 1150 [66] | 427,200 ALMs, 1708800 FFs | 1518 | 2,713 (52.96Mb) | $10,019
 
 FPGA Board LUTs / ALMs, FFS DSP /AI engine Block RAM (size) Cost
 

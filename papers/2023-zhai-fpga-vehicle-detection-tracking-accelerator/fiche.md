@@ -84,7 +84,11 @@ Compression (§4.2) :
 - YOLOv3 : taille −85 %, AP@0.5 +0,04, calcul de convolution −70,4 % ;
 - YOLOv3-tiny : taille −98,2 %, AP −0,026, calcul −86,5 % (0,735 GOP, contre environ 5,44 GOP
   pour un YOLOv3-tiny standard, déduit du facteur 7,4 cité au §4.4) ;
-- le Tableau 4 (tailles, paramètres) est perdu à l'extraction.
+- le Tableau 4 (tailles, paramètres) était perdu à l'extraction. *Mise à jour du 26/09/2026* :
+  corps reconstruit par Docling (à vérifier). Ses valeurs recoupent celles ci-dessus :
+  AP@0.5 0,671 → 0,711 (YOLOv3) et 0,625 → 0,599 (tiny), 0,735 BFLOPs. La légende que
+  GROBID lui associe (« Meanings of the variables ») semble être celle d'un autre tableau :
+  à contrôler sur le PDF.
 
 Comparaison entre plateformes (Table 7, YOLOv3-tiny élagué) :
 
@@ -154,7 +158,8 @@ Suivi (Table 6) : RE-ID Deepsort améliore la MOTA sur les trois séquences, de 
 ## Statut de lecture
 
 Papier complet (`fulltext.md` lu en entier, extraction GROBID `ok`). Le Tableau 4
-(résultats de compression) est perdu à l'extraction. Les Tableaux 8 et 9 ont été relus
+(résultats de compression), perdu à l'extraction, a été reconstruit par Docling le
+26/09/2026 (voir Résultats, à vérifier). Les Tableaux 8 et 9 ont été relus
 colonne par colonne : l'ordre FP32 v3 / FP32 tiny / INT16 v3 / INT16 tiny est confirmé par
 la Table 7 (91,65 FPS à 12,51 W).
 

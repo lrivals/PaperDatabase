@@ -256,7 +256,10 @@ ProxylessFigure 14.ProxylessFigure 15. Figure 14. Contribution analysis of updat
     128 (GPU simulate) | 0.9 0 | 2× 1× | 55.2 47.8 | 57.8 57.2 | 89.1 87.3 | 80.9 80.8 | 89.3 88.8 | 74.4 72.4
     1 (tinyML) | 0.9 0 | 2× 1× | 47.8 51.1 | 54.8 56.2 | 88.5 88.7 | 80.5 79.3 | 86.2 86.0 | 71.5 72.3
 
-**Table 5.** Gradient accumulation helps the optimization on datasets with a small category number. Numbers obtained by training with batch size 1, the same setting as on microcontrollers.
+**Table 5.** Gradient accumulation helps the optimization on datasets with a small category number. Numbers obtained by training with batch size 1, the same setting as on microcontrollers. [corps du tableau reconstruit par Docling : à vérifier]
 
-    model | accumulate grad SRAM VWW accuracy
-    MCUNet-5FPS | ✗ ✓ | 160KB 188KB | 86.6% 89.1%
+    ch. selection | avg acc.
+    86.6% larger mag. | 69.6%
+    89.1% smaller mag. | 69.4%
+    random 1 | 69.4%
+    random 2 | 69.4%

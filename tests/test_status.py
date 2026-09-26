@@ -58,6 +58,19 @@ class TestCollect(unittest.TestCase):
         self.assertEqual(s["extraction_issues"], [("p2", 1)])
         self.assertIn("À faire ensuite", status.render(s))
 
+    def test_tables_to_check(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "papers" / "p1").mkdir(parents=True)
+            (root / "papers" / "p1" / "metadata.json").write_text(json.dumps(
+                {"id": "p1", "axes": [], "status": {"fiche": "todo"}, "extraction": {"ok": True, "warnings": [
+                    f"{schema.WARN_TABLES_LOST} : Table 3, Table 4",
+                    f"{schema.WARN_TABLES_RECOVERED} : TABLE I"]}}))
+            (root / "inbox").mkdir()
+            s = status.collect(root, check_services=False)
+        self.assertEqual(s["tables"], [("p1", 2, 1)])
+        self.assertIn("p1 (2 sans corps, 1 reconstruit(s))", status.render(s))
+
 
 if __name__ == "__main__":
     unittest.main()

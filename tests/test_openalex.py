@@ -112,6 +112,25 @@ class FakeClient:
         return [self.works_[i] for i in sorted(ids_) if i in self.works_]
 
 
+class TestInTopic(unittest.TestCase):
+    def check(self, title, abstract, axes=()):
+        return discover.in_topic_of(title, f"{title} {abstract}", list(axes))
+
+    def test_single_passing_mention_not_enough(self):
+        # SqueezeNet : une seule mention de FPGA dans le résumé, rien dans le titre
+        self.assertFalse(self.check(
+            "SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and <0.5MB model size",
+            "Smaller CNNs are more feasible to deploy on FPGAs and other hardware with limited memory."))
+        self.assertFalse(self.check("An Efficient Edge Detection Approach for Image Analysis", "Canny."))
+
+    def test_title_repeated_mentions_or_hardware_axis(self):
+        self.assertTrue(self.check("A TinyML Platform for On-Device Continual Learning", "latent replays"))
+        self.assertTrue(self.check("UNPU: An Energy-Efficient Deep Neural Network Accelerator", "bit precision"))
+        self.assertTrue(self.check("Object detection at 40 MHz",
+                                   "We implement it on an FPGA; the FPGA design uses HLS."))
+        self.assertTrue(self.check("A detector", "one mention of Kria", axes=["platforms"]))
+
+
 class TestDiscover(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

@@ -11,8 +11,9 @@ Modes (combinables ; sans mode : --forward --backward) :
   --query     recherche par mots-clés ;
   --axis      recherche avec la requête par défaut d'un axe (ingest.AXIS_QUERIES).
 
-Les papiers déjà en base sont exclus. Un candidat est « dans le sujet » s'il correspond à
-ingest.TOPIC_RE ou relève d'un axe de ingest.HARDWARE_AXES. Rien n'est ajouté à la base : relire
+Les papiers déjà en base sont exclus. Un candidat est « dans le sujet » s'il relève d'un axe
+de ingest.HARDWARE_AXES, si son titre évoque le matériel (ingest.TITLE_TOPIC_RE) ou si son
+résumé le fait au moins deux fois (ingest.TOPIC_RE). Rien n'est ajouté à la base : relire
 candidates_arxiv.txt, puis `bin/pdb add --from candidates_arxiv.txt`. Voir docs/GUIDE.md.
 """
 import argparse
@@ -79,14 +80,19 @@ def reasons(e):
     return " ; ".join(out)
 
 
+def in_topic_of(title, text, axes):
+    """Contexte matériel : axe matériel, titre explicite, ou mentions répétées (ingest.py).
+    Un axe thématique seul (« autoencoder », « yolo ») ne suffit pas."""
+    return (bool(set(axes) & set(ingest.HARDWARE_AXES))
+            or bool(re.search(ingest.TITLE_TOPIC_RE, title or "", re.IGNORECASE))
+            or len(re.findall(ingest.TOPIC_RE, text, re.IGNORECASE)) >= ingest.TOPIC_MIN_HITS)
+
+
 def assess(e):
     """Axes devinés, pertinence et score d'un candidat."""
     text = " ".join(filter(None, (e["title"], e["abstract"])))
     axes, _ = ingest.classify(text, e["title"])
-    # un axe thématique seul (« autoencoder », « yolo ») ne suffit pas : il faut aussi un
-    # contexte matériel (TOPIC_RE) ou un axe qui en est un (HARDWARE_AXES)
-    in_topic = (bool(set(axes) & set(ingest.HARDWARE_AXES))
-                or bool(re.search(ingest.TOPIC_RE, text, re.IGNORECASE)))
+    in_topic = in_topic_of(e["title"], text, axes)
     score = (3 * max(e["cites"], e["cited_by"]) + e["related"] + 2 * bool(e["queries"])
              + 2 * len([a for a in axes if a != "surveys"])
              + math.log10(e["cited_by_count"] + 1))

@@ -14,7 +14,7 @@ from urllib.parse import urljoin, urlparse
 import requests
 from lxml import etree
 
-from lib import ids, openalex, rag, rag_models
+from lib import ids, openalex, rag_models, rag_qwen as rag
 
 MAX_SEARCHES = 8
 MAX_PAPERS = 8

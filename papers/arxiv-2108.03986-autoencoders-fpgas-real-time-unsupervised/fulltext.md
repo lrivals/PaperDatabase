@@ -151,7 +151,18 @@ FIG.V. TPR ratios versus model bit width for the VAE CNN (left) and DNN (right) 
 
 [figure sans légende identifiée] activation function. The first layer has 16 3 × 3 kernels, without padding to ensure that p T , η and φ inputs do not share weights. The second layer has 32 3 × 1 kernels. Both layers have no bias parameters and a stride set to one. The output of the second CNN block is flattened and passed to a DNN layer, with 8 neurons and no activation, which represents the latent space. The decoder takes this as input to a dense layer with 64 nodes and ReLU activation, and reshapes it into a 2 × 1 × 32 table. The following architecture mirrors the encoder architecture with 2 CNN blocks with the same number of filters as in the encoder and with ReLU activation. Both are followed by an upsampling layer, in order to mimic the result of a transposed convolutional layer.
 
-**TABLE I.** Performance assessment of the CNN and DNN models, for different AD scores and different new physics benchmark scenarios.
+**TABLE I.** Performance assessment of the CNN and DNN models, for different AD scores and different new physics benchmark scenarios. [corps du tableau reconstruit par PyMuPDF : à vérifier]
+
+    Model | AD score | TPR @ FPR 10−5[%] |  |  |  | AUC[%] |  |  | 
+     |  | LQ → bτ A | →4ℓ h | ± →τν | h0 →ττ | LQ → bτ | A →4ℓ | h± →τν | h0 →ττ
+    CNN VAE | IO | 0.06 | 3.28 | 0.10 | 0.09 | 92 | 94 | 95 | 85
+     | D KL | 0.05 | 2.85 | 0.07 | 0.14 | 84 | 85 | 86 | 71
+     | R z | 0.05 | 2.53 | 0.06 | 0.12 | 84 | 85 | 86 | 71
+    CNN AE | IO | 0.09 | 6.29 | 0.10 | 0.13 | 95 | 94 | 96 | 85
+    DNN VAE | IO | 0.07 | 5.23 | 0.08 | 0.11 | 93 | 95 | 95 | 85
+     | D KL | 0.07 | 5.27 | 0.08 | 0.11 | 92 | 94 | 94 | 81
+     | R z | 0.06 | 4.05 | 0.07 | 0.10 | 86 | 93 | 88 | 76
+    DNN AE | IO | 0.05 | 3.56 | 0.06 | 0.09 | 95 | 96 | 96 | 87
 
 **TABLE II.** Performance assessment of the quantized and pruned CNN and DNN models, for different AD scores and different new physics benchmark scenarios. LQ → bτ A → 4 h ± → τ ν h 0 → τ τ LQ → bτ A → 4 h ± → τ ν h 0 → τ τ
 
@@ -168,8 +179,7 @@ FIG.V. TPR ratios versus model bit width for the VAE CNN (left) and DNN (right) 
     DNN VAE PTQ 8 bits | 1 | 3 | 0.5 | 0.3 | 80 | 5
     CNN VAE PTQ 8 bits | 10 | 12 | 4 | 2 | 365 | 115
 
-**TABLE IV.** Resource utilization and latency for the quantized and pruned DNN AE model. Resources are based on the Vivado estimates from Vivado HLS 2020.1 for a clock period of 5 ns on Xilinx V7-690.
+**TABLE IV.** Resource utilization and latency for the quantized and pruned DNN AE model. Resources are based on the Vivado estimates from Vivado HLS 2020.1 for a clock period of 5 ns on Xilinx V7-690. [corps du tableau reconstruit par PyMuPDF : à vérifier] [corps du tableau reconstruit par Docling : à vérifier]
 
-    Model | DSP [%] LUT [%] FF [%] BRAM [%] Latency [ns] II [ns]
+    Model | DSP [%] | LUT [%] | FF [%] | BRAM [%] | Latency [ns] | II [ns]
     DNN VAE PTQ 8 bits | 3 | 9 | 3 | 0.4 | 205 | 5
-    XI. AUTHOR INFORMATION |  |  |  |  |

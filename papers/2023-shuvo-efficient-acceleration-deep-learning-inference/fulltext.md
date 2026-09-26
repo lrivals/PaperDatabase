@@ -317,6 +317,8 @@ Open-source frameworks are highly successful for DL model building, training, va
 
 The compression-compiler codesign has recently gained attention demonstrating improvement in EI performance in mainstream general-purpose edge devices. The DL model compression and compilation of executable codes are performed in synergy to ensure optimum model size and inference speed. The compilation is the mapping of high-level DL operations into hardware-level instructions. This codesign approach remained unexplored for a long and has recently shown promise in improving energy efficiency and latency. A few prominent examples include PCONV [261], PatDNN [262], and CoCoPIE [263], which considers simultaneous design exploration compression and compiler. In model compression, structured pruning obtains compiler-compatible patterns. In the compiler design phase, parallelism at both the instruction and thread levels generates efficient compiler code. MCUNet [264] is a framework incorporating compact model design and compiler optimization to eliminate instruction and memory redundancy. Compression-Compilation codesign for Performance, Intelligence, and Efficiency (CoCoPIE) [263] is a software framework that effectively uses the pruning and quantization techniques compatible with compiler instructions. The two-part optimization in CoCoPIE includes CoCo-Gen and CoCo-Tune. The CoCo-Gen is the pattern-based structured weight pruning and pattern-aware executable code generation. A simplified overview of the CoCo-Gen framework is illustrated in Fig. 14. The synergy in fine-grained pruning for high accuracy and hardware-compatible compiler code generation resulted in the efficient execution of DL inference. However, the process is slow due to the time-consuming pruning process. The CoCo-Tune fastens the pruning by effectively identifying the parameters to discard through a composability-based compiler framework. In CoCo-Tune, the pruning is speeded by considering the CNN model as a composition of pretrained blocks and reusing them to identify the components to be discarded. In addition, computation reuse is exploited by utilizing hierarchical compression techniques. An experimental demonstration of CoCoPIE resulted in improved energy efficiency and inference latency for ResNet50 and VGG-16 models in general-purpose smartphones compared to neural accelerator ASICs and FPGAs [274]. This technique has also been experimented with for object detection using YOLO-v4 and 3-D activity detection using C3D, R(2 + 1)D, and S3D networks achieving 19 frames/s and 6.8 ms per frame performance without accuracy degradation, respectively, in smartphones [275]. Therefore, the compression-compiler codesign has emerged as a promising technology to ensure energy efficiency and faster DL inference in general-purpose edge devices.
 
+is another extension of TensorFlow, developed to ensure proper utilization of the heterogeneous computing resources to run inference on android devices. It has demonstrated improved matrix multiplication and speedup of different DL models on Android devices with GPU support. Caffe and PyTorch are two other frameworks maintained by Facebook. Caffe focuses on DL model building and experimentation for edge devices, such as smartphones and Raspberry Pi. PyTorch is a very convenient platform to deploy DNN research prototypes into production. Open NN Exchange (ONNX) [260] enables interoperability, hardware optimization, and portability within different frameworks. A model trained in one of the frameworks can be deployed to make inferences using another framework taking advantage of the ONNX standard format.
+
 ### B. Algorithm-Hardware Codesign
 
 The processing of DNN algorithms in hardware for efficient inference is attracting continuous research attention. The reason for the current surge of customized hardware design is twofold: 1) conventional hardware performance is reaching the upper limit and 2) adopting the compression techniques in hardware is a potential choice to meet the increasing computation demand. The paradigm in customized DNN accelerator design is the algorithm-hardware codesign. A general framework of the algorithm-hardware codesign is illustrated in Fig. 15. The algorithmic design can be performed in any of the ML frameworks. The best-learned models are then used by an edge-specific intermediate software package for optimization. The optimized models are used for inference acceleration on the target hardware platform. The algorithmic optimization provides effective hardware design instructions. On the other hand, the hardware realization of DNN algorithms provides feedback for more efficient algorithm design. Therefore, the algorithm-hardware codesign is the new research direction in obtaining customized application-specific DNN accelerators.
@@ -571,6 +573,8 @@ The FPGA and CGRA can overcome some limitations of ASICs with the ability to rec
 
 The ML frameworks help researchers quickly prototype the models for different applications. More functions and libraries should be added to these frameworks to quickly implement the compression techniques. For example, NVIDIA's SparseBLAS/cuSPARSE and Intel's MKL libraries can handle sparse matrix computations. Ten-sorFlow provides library support for quantization during training or posttraining. Xilinx provides quantization support through the FINN-R framework for inference realization on FPGA [413]. Therefore, developing more advanced
 
+and frameworks to support training and posttraining compression of DL models is imperative.
+
 ### C. Developing Benchmarks
 
 Proper benchmark standards to assess the performance of EI are significantly important. EI requires a universal and comprehensive set of quality metrics to execute meaningful comparisons of DL models, optimization algorithms, and hardware platforms.
@@ -663,8 +667,6 @@ In summary, this article presents a comprehensive review and systematic classifi
 
 **Fig. 13.** Example of skipping net [217]. The network can skip some layers depending on the input type to save computations with negligible effect on accuracy.
 
-[figure sans légende identifiée] is another extension of TensorFlow, developed to ensure proper utilization of the heterogeneous computing resources to run inference on android devices. It has demonstrated improved matrix multiplication and speedup of different DL models on Android devices with GPU support. Caffe and PyTorch are two other frameworks maintained by Facebook. Caffe focuses on DL model building and experimentation for edge devices, such as smartphones and Raspberry Pi. PyTorch is a very convenient platform to deploy DNN research prototypes into production. Open NN Exchange (ONNX) [260] enables interoperability, hardware optimization, and portability within different frameworks. A model trained in one of the frameworks can be deployed to make inferences using another framework taking advantage of the ONNX standard format.
-
 **Fig. 14.** Overview of compression-compiler codesign used inCoCo-Gen of the CoCoPIE software framework[274].
 
 **Fig. 15.** Block diagram of the generic training to inference pipeline. The algorithmic design can be performed in any of the ML frameworks. The learned model is then used by an edge-specific intermediate software package for optimization. The optimized models are used for inference acceleration on the target edge hardware platform.
@@ -685,8 +687,6 @@ In summary, this article presents a comprehensive review and systematic classifi
 
 **Fig. 24.** Overview of the distributed inference system inEdgeFlow[380].
 
-[figure sans légende identifiée] and frameworks to support training and posttraining compression of DL models is imperative.
-
 **Table 1** Computational Characteristics of Popular DL Models
 
     software optimization for fast and reliable simulation,
@@ -694,20 +694,159 @@ In summary, this article presents a comprehensive review and systematic classifi
     DL model architectures. However, the computational and
     memory needs for DL models are evident from Table
 
-**Table 2** Summary of Noteworthy Works on the Quantization of DL Models simplified using XNOR operations, resulting in 58× speedup.
+**Table 2** Summary of Noteworthy Works on the Quantization of DL Models simplified using XNOR operations, resulting in 58× speedup. [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 3** Summary of Model Compression Techniques and Results of Compression
+    Quantization Technique. | Model/Method. | Bit-Width (no. of bit).Weights | Bit-Width (no. of bit).Activations
+    Fixed-point precision | Weight fine tuning [114] | 8 | 8
+    Reduced precision for weights | BinaryConnect (BC) [132] | 1 | 32-bit floating point
+    Reduced precision for weights | Ternary Weight Network (TWN) [145] | 2 | 32-bit floating point
+    Reduced precision for weights | Trained Ternary Quantization (TTQ) [146] | (32-bit float for first and last layer) | 32-bit floating point
+    Reduced precision for weight and activation | XNOR-Net [140] | (32-bit float for first and last layer) | (32-bit float for first and last layer)
+    Reduced precision for weight and activation | Binarynet [137] |  | 
+    Reduced precision for weight and activation | DoReFa-Net [143] | (32-bit float for first and last layer) | 2 (32-bit float for first and last layer)
+    Reduced precision for weight and activation | Quantized Neural Network (QNN) [142] |  | 2 (32-bit float for first and last layer)
+    Reduced precision for weight and activation | HWGQ-Net [144] | (32-bit float for first and last layer) | 2 (32-bit float for first and last layer)
+    Nonlinear quantization | Incremental Network Quantization (INQ) [152] | 5 | 32-bit floating point
+    Nonlinear quantization | DeepCompression [157] | 8 (conv), 4(dense) | 16
+    Nonlinear quantization | DeepCompression [157] | 4(conv), 2(dense) | 16
+    Variable precision neural accelerators | Stripes [123] | 16 | 1-16
+    Variable precision neural accelerators | UNPU [124] | 1-16 | 16
+    Variable precision neural accelerators | Loom [125] | 1-1-6 | 1-16
+    Variable precision neural accelerators | BitFusion [126] | 1,2,4,8,16 | 1,2,4,8,16
+    Variable precision neural accelerators | BitBlade [127] | 1,2,4,8,16 | 1,2,4,8,16
 
-**Table 4** Lightweight DL Models for Edge
+**Table 3** Summary of Model Compression Techniques and Results of Compression [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 5** Software Packages and Supported Edge Devices for Algorithm-Hardware Codesign
+    Ref. | Goal | Base Model | Compression Technique | Performance Type | Results
+    [121] | Reduce model size | Faster R-CNN | Quantization | improved | 4.16x smaller
+    [140] | Reduce model size, speedup | AlexNet | Binarization | lossy | 32x reduced size, 58x faster
+    [157] | Reduce model size | VGG-16 | Pruning, Quantization, Huffman coding | lossless | 49x size reduction
+    [195] | Reduce computation | VGG | Pruning | lossless | 5x reduced computation
+    [108] | Improve energy efficiency | AlexNet | Pruning | lossy | 3.7x energy reduction
+    [105] | Faster inference | VGG-16 | Pruning | lossy | 10x faster
+    [196] | Speedup | ResNet | Pruning | improved | 20x faster
+    [47] | Reduce storage | AlexNet | Pruning | lossless | 13x reduction
+    [197] | Speed up, reduce model size | NIN | Pruning | lossy | 1.24x faster
+    [198] | Resource utilization, computation optimization | SqueezeNet | Compact network design | improved | 5.17x smaller
+    [73] | Reduce model size | AlexNet | Compact network design | lossless | 50x reduction
+    [66] | Reduce model size, speedup | YOLOv2 | Compact network design | improved | 15.1x smaller, 34% faster
+    [000] | Reduce storage, speedup | AlexNet, VGG | Kernel separation, low-rank approximation | lossless | 11.3x less memory, 13.3x faster
+    [175] | Improve energy efficiency | VGG-S | Low-rank approximation | lossy | 4.26x reduced energy cost
+    [201] | Reduce computation | VGG 16 | Low-rank approximation | lossless | 9x faster
+    [202] | Reduce Computation | CNN | Low-rank approximation | lossy | 2x faster
+    [203] | Speedup | CNN | Low-rank approximation | lossy | 4.5x faster
+    [186] | Reduce storage, faster | GooLeNet | Knowledge distillation | lossy | 2.5x reduced memory, 3x faster
+    [204] | Reduce storage | WideResNet | Knowledge distillation | lossless | 40% reduction
+    [185] | Generate lite network | FitNet | Knowledge distillation | improved | Increased accuracy, reduced model size
+    [205] | Generate lite network, improve performance | ResNet | Knowledge Distillation | improved | 1.1% increased accuracy
+    [206] | Minimize storage | NIN | Knowledge distillation, regularization | improved | 33.28x smaller memory
+    [207] | Speed up, energy saving | DNN | Dataflow optimization | improved | 58x faster, 104x energy saving
+    [208] | Power, performance tradeoff | VGG | Memory access optimization | lossy | 83% accuracy
+    [65] | Speed up | MobileNet | Adaptive optimization | lossless | 1.7x speedup
 
-**Table 6** Edge Hardware Comparison in Terms of Quality Metric
+**Table 4** Lightweight DL Models for Edge [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 7** Summary of ASICs and SoCs for Edge Inference Targeting Various Use Cases
+    Lightweight Model | Number of weights (M) | Number of operations (G)
+    SqueezeNet [73] | 1.25 | 1.72
+    SqueezeNext [74] | 3.2 | 1.42
+    MobileNet-v1 [70] | 4.2 | 1.15
+    MobileNet-v2 [72] | 3.4 | 0.60
+    MobileNet-v3-Small [64] | 2.9 | 0.11
+    CondenseNet [76] | 2.9 | 0.55
+    NASNet-B [59] | 5.3 | 0.98
+    PNASNet [66] | 5.1 | 1.18
+    MNASNet-small [67] | 2.0 | 0.14
+    ANTNets [77] | 3.7 | 0.64
 
-**Table 8** State-of-the-Art DL Inference on FPGA
+**Table 5** Software Packages and Supported Edge Devices for Algorithm-Hardware Codesign [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 9** Summary of Reconfigurable Architectures for DL Inference
+    Software for DL inference on edge | Supported frameworks | Supported edge devices
+    Intel OpenVINO Toolkit [258] | Caffe, TensorFlow, ONNX | Intel® CPU, Integrated Graphics, Neural Compute Stick 2, Movidius™M VPUs, and FPGAs
+    Matlab Deep Learning HDL Toolbox [265] | Keras, TensorFlow | Xilinx Zynq®-7000 ZC706, UltraScale+™ MPSoC ZCU102, Intel Arria® 10 SoC
+    XCUBE-AI [266] | Keras, TensorFlow Lite, ONNX standard format | STM32 Arm® Cortex®-M-based MCU
+    XILINX DNNDK [267] | Caffe and TensorFlow | Xilinx® Zynq®-7000 and Zynq UltraŚcale+™ MPSoC
+    NVIDIA TensorRT [268] | TensorFlow, MATLAB, ONNX | Tesla P4, Tesla V100, Drive PX2, Jetson TX2, NVIDIA DLA
+    CEVA Deep Neural Network (CDNN) [269] | Caffe, TensorFlow, ONNX | CEVA-XM Vision Processor, NeuPro, and SensPro
+    Qualcomm® Neural Processing SDK [270] | Caffe/Caffe2, TensorFlow ONNX | Qualcomm® Snapdragon mobile chips (Hexagon™ DSPs, Adreno™ GPUs, Kryo™ CPUs)
+    Cadence Stratus HLS [271] | TensorFlow, Caffe | RTL/FPGA
+    TensorFlow Lite [272] | TensorFlow | Android and iOS mobile phones, MCU (ARM Cortex-M, ESP32)
+    Embedded Learning Library (ELL) [273] | Microsoft CNTK, Darknet, ONNX | Raspberry Pi, Arduino, micro: bit
 
-**Table 10** Summary of Representative Research on DL Inference on Edge
+**Table 6** Edge Hardware Comparison in Terms of Quality Metric [corps du tableau reconstruit par Docling : à vérifier]
+
+    Quality Metric | Lowest Highest | Lowest Highest | Lowest Highest | Lowest Highest
+    Reconfigurability | ASIC | FPGA | GPU | CPU
+    Speed | FPGA | ASIC | CPU | GPU
+    Cost | CPU | GPU | FPGA | ASIC
+    Performance | CPU | FPGA | GPU | ASIC
+    Time to Market | CPU | GPU | FPGA | ASIC
+    Power | ASIC | FPGA | CPU | GPU
+    Area | ASIC | FPGA | CPU | GPU
+
+**Table 7** Summary of ASICs and SoCs for Edge Inference Targeting Various Use Cases [corps du tableau reconstruit par Docling : à vérifier]
+
+    ASIC | Energy efficiency (TOPS/W) | Area (mm²) | Process (nm) | Power Consumption (mW) | Supported DL Models | Target Applications
+    DNA 100 [305] | 3.4 TMACs/W |  | 16 | 850 | All neural network layers | IoT, AR/VR, autonomous driving, surveillance, mobile devices
+    Stripes [123] |  | 122.1 | 65 |  | CNN (LeNet, AlexNet, GoogleNet, VGG, etc.) | Image classification
+    Eyeriss [250] | 0.1265 | 12.25 | 65 | 235-332 | CNN, AlexNet | Image analysis, computer vision
+    Bit Fusion [126] |  | 5.93 | 16 | 895 | CNN, RNN | Image classification, object detection, language modeling, optical character recognition
+    DesignWare [306] | 2,000 GMACs/W |  | 16 |  | CNN, R-CNN, AlexNet, VGG16, GoogLeNet, ResNet, SqueezeNet, and YOLO | Object detection, classification, segmentation
+    UNPU [124] | 3.08 | 16 | 65 | 3.2-297 | FNN, VGG 16 CNN, RNN, | Image classification
+    Envision [218] | 0.26-10 | 1.87 | 28 | 7.5-300 | CNN, VGG 16, AlexNet | Always-on-vision, face recognition
+    Lightspeeur 2803 [307] | 24 | 81 |  | 700 (for 16.8 TOPS) | VGG, ResNet, MobileNet | Image classification, Object Detection and Tracking NLP, Visual Analysis
+    Lightspeeur 5801 [307] | 12.6 | 36 |  | 224 (for 2.8 TOPS) | VGG, ResNet, MobileNet-v1, custom networks | Image classification, Object detection and tracking, NLP, Visual Analysis
+    PDFA [308] | 0.7708-1.321 | 5.76 | 65 | 168 | CNN, FCN | Object tracking
+    SNAP [309] | 21.55 | 2.4 | 16 | 16.3-364 | CNN, FCN, ResNet-50, AlexNet, VGG-16 | Image classification
+    Cambricon-X [233] |  | 6.38 | 65 | 954 | LeNet-5, AlexNet, VGG, etc. | Classification
+    Scalable processor [119] | 0.3-2.6 | 2.4 | 40 | 25-288 | CNN, AlexNet, LeNet-5 | Image classification
+    Sticker [310] | 0.411-62.1 | 7.8 | 65 | 20.5-248.4 | CNN, FCN, AlexNet | Object detection
+    EIE [243] | 138,927 Frames/J | 40.8 | 45 | 600 | CNN (AlexNet, VGG-16), RNN, LSTM | Image classification, object detection, automatic image captioning
+    FlexFlow [311] | 0.38-0.5 | 3.89 | 65 | 1000 | CNN | Image analysis
+    SqueezeFlow [249] |  | 4.80 | 65 | 536.09 | Sparse CNN (VGĠ 16, AlexNet, GoogleNet) | Image analysis
+
+**Table 8** State-of-the-Art DL Inference on FPGA [corps du tableau reconstruit par Docling : à vérifier]
+
+    FPGA Platform | DL Model | Peak Performance (GOPS) | Energy Efficiency (GOPS/W)
+    Xilinx ZC702 | XNOR-Net [140] | 207.8 | 44.2
+    Xilinx ZC702 | DoReFa-Net [143] | 410.2 | 181.5
+    Zynq ZU3EG | Synetgy [164] | 47.09 | 8.56
+    Arria 10 GX1150 | BBS-LSTM [96] | 304.1 | 15.9
+    Xilinx XC7Z100 | DeltaRNN [313] | 192.0 | 26.3
+    Xilinx Virtex-7 | C-LSTM [314] | 131.1 | 6.0
+
+**Table 9** Summary of Reconfigurable Architectures for DL Inference [corps du tableau reconstruit par Docling : à vérifier]
+
+    Reconfigurable Architecture | Peak performance (GOPS) | Energy Efficiency (GOPS/W) | Supported DL Models
+    Eyeriss [250] | 46.2 | 166 | CNN
+    Eyeriss v2 [237] | 153.6 | 962.9 | CNN
+    Thinker chip [320] | 409.6 | 1060 | CNN, RNN
+    DRP [327] | 960 |  | CNN, DNN
+    Lite-CNN [317] | 363 | 33 | CNN
+    DNPU [322] | 1214 | 8100 | CNN, RNN
+    NullHop [248] | 450 | 3000 | CNN
+    SDT-CGRA [323] | 92.3 | 50.78 | CNN, k-means, PCA, SVM, etc.
+
+**Table 10** Summary of Representative Research on DL Inference on Edge [corps du tableau reconstruit par Docling : à vérifier]
+
+    Reference | Deep Learning Model | Optimization Technique | Application | Edge Device | Quality Metric
+    [401] | MobileNet | Model selection | Image classification | NVIDIA Jetson TX2 | Latency, accuracy
+    [314] | LSTM | Structured compression, quantization | Speech recognition | Xilinx KU060 and Virtex-7 FPGA | Energy efficiency, speed
+    [158] | LeNet5, VGGNet BiLSTM | Pruning | Speech, image, text recognition | Intel Edison | Memory, energy, latency
+    [313] | Single-layer RNN with 256 GRU | delta network update, zero-skipping | Spoken digit recognition | Xilinx Zynq-7100 FPGA | Throughput, speed, energy efficiency
+    [402] | 7-Layer CNN | Quantization | Image classification | ARM Cortex-M | Number of operations, memory
+    [96] | LSTM | Pruning, structured sparsity | NLP, speech recognition | Arria-10 FPGA | Latency, energy efficiency, number of operations
+    [160] | LSTM | Pruning, quantization | Speech recognition | XCKU060 FPGA | Number of operations, memory
+    [164] | CNN | Quantization, optimized convolution | Image classification | Ultra96 SoC | Accuracy, inference speed
+    [200] | AlexNet VGGNet | Sparsification | Speech, image recognition | Qualcomm Snapdragon, 400Nvidia Tegra K1, ARM Cortex M0 and M3 | Memory
+    [140] | Binary CNN | Binarization, optimized convolution | Image classification | CPU | Accuracy, inference speed
+    [161] | LeNet, AlexNet, VGGNet | Model selection | activity classification Audio, image, | Wearables, smartphones, development boards, smart home devices | energy, latency Memory,
+    [403] | LSTM | Model selection, software optimization | Blood glucose prediction | ARM Cortex-M4 | Inference time, power consumption
+    [162] | YOLO, MatConvNet | GPU | Object detection | Samsung Galaxy S7 | Latency, caching hit rate
+    [166] | FCN, CNN | Pruning, MAC optimization, approximate memory | Digit and object recognition | RTL | Accuracy, energy efficiency
+    [375] | CNN | Parallel computing | Object detection | Raspberry Pi model 3 (AŘM v8) | Memory saving, inference speed, throughput
+    [259] | 24-layer CNN, LSTM | Heterogenous processor | Image and hand gesture classification | Nexus 6, Nexus 5x | Latency
+    [404] | CNN, AlexNet, VGG 16 | Zero-skipping, weight pruning | Image classification | ZYNQ XC7020 and ZYNQ XC7Z7045 | Inference time
+    [405] | CNN, VGG 16, ResNet-50 | Filter pruning | Image classification, object detection, segmentation | GPU, CPU, mobile phone | Speed up, memory saving, generalization
+    [406] | CNN, AlexNet, MLP | Binarization | Classification, digit recognition, | Stratix-V FPGA | Speed, inference time, energy efficiency
+    [407] | AlexNet, ResNet-18, ResNet-50 | Optimized multiplication, quantization | Image classification | Xilinx Virtex 5/6 FPGAs, UltraScale/UltraScale+ FPGAs | Speedups and power savings
+    [284] | AlexNet | Heterogenous processor | Speech, image recognition | Qualcomm Snapdragon, 800 Nvidia Tegra K1 | Memory, energy

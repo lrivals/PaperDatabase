@@ -43,6 +43,8 @@ The rest of this paper is organized as follows: Section 1 reviews the background
 
 Deepsort [18] is an online multitarget tracking algorithm. It considers both the detection frame parameters of the detection result and the appearance information of the tracked object, combining the relevant information of the previous frame and the current frame for prediction without considering the whole video at the time of detection. In the first frame of the video to be detected, a unique track ID is assigned to the detection frame of each target. Then, the detection object in the new frame is associated with the previously tracked object using the Hungarian algorithm [19] to obtain a global minimum of the assignment cost function. The cost function contains the spatial Mahalanobis distance [20] d (1), which measures the difference between the detected frame and the position predicted based on the previously known position of the object, and a visual distance d(2), which measures the difference between the appearance of the currently detected object and the previous appearance of the object. The cost function for assigning the detected object j to track i is shown in (1), the spatial martingale distance is shown in (2), and the visual distance is shown in (3). The meanings of the parameters in the formula are shown in Table 1.
 
+2.1. YOLO YOLO was proposed by Joseph Redmon et al. in 2016. Compared with other networks in the YOLO series, YOLOv3 and YOLOv3-tiny achieves a good balance in accuracy and detection speed, and is easy to transplant to hardware.
+
 C i,j = λd (1) (i, j) + (1λ)d (2) (i, j).
 
 (1)
@@ -395,8 +397,6 @@ Compression acceleration of neural networks still has many worthy research direc
 
 ## Figures et tableaux
 
-[figure sans légende identifiée] 2.1. YOLO YOLO was proposed by Joseph Redmon et al. in 2016. Compared with other networks in the YOLO series, YOLOv3 and YOLOv3-tiny achieves a good balance in accuracy and detection speed, and is easy to transplant to hardware.
-
 **Figure 1.** Network structure of YOLOv3-tiny.
 
 **Figure 2.** Strategy of dynamic threshold pruning. Sparse regularization training first introduces a scaling factor for each channel, which is used to multiply with the output of that channel. The scaling factors are trained jointly with the network weights and are sparsely regularized during the training to identify insignificant channels. The objective function of the sparse regularization training is shown in (4), where (x, y) represents the input and target of training and W represents the trainable weight. The first term represents CNN training losses, g(•) is the sparse penalty function for the scaling factor, and g(s) = |s|. λ is used to balance the effect of two terms as the result. We use the subgradient descent algorithm to optimize the nonsmooth L1 penalty term.
@@ -437,11 +437,42 @@ Compression acceleration of neural networks still has many worthy research direc
 
 **Figure 19.** Comparison of traffic flow statistics.
 
-**Table 2.** Parameter conventions for convolution operations.
+**Table 2.** Parameter conventions for convolution operations. [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 4.** Meanings of the variables.
+    Symbol | Meaning
+    I | The input feature map.
+    W | Theweightsoftheconvolutionlayer.
+    B | The bias of the convolution layer.
+    O | Theoutputfeaturemap.
+    IH | Theheightoftheinputfeaturemap.
+    IW | Thewidthoftheinputfeaturemap.
+    IC | The number of input channels.
+    K | The kernel size.
+    OH | Theheightoftheoutputfeaturemap.
+    OW | Thewidthoftheoutputfeaturemap.
+    OC | Thenumberofoutputchannels.
+    pad | The padding.
+    S | The stride.
+    Tx | Parallelism of multiply-add operations on input feature maps.
+    Ty | Parallelism of multiply-add operations on output feature maps.
 
-**Table 5.** Comparison of the numbers of detected vehicles.
+**Table 4.** Meanings of the variables. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Model | PruningRate | AP@0.5 | ModelSize(MB) | Parameters (×10 3 ) | BFLOPs
+    YOLOv3 | 0 | 0.671 | 235.06 | 61523 | 65.864
+    YOLOv3 | 85% | 0.711 | 33.55 | 8719 | 19.494
+    YOLOv3-tiny | 0 | 0.625 | 33.10 | 8670 | 5.444
+    YOLOv3-tiny | 85% | 0.625 | 1.02 | 267 | 1.402
+    YOLOv3-tiny | 85%+30% | 0.599 | 0.59 | 69 | 0.735
+
+**Table 5.** Comparison of the numbers of detected vehicles. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Model | Number of Vehicles Detected
+    YOLOv3 | 27
+    YOLOv3-prune85% | 27
+    YOLOv3-tiny | 24
+    YOLOv3-tiny-prune85% | 24
+    YOLOv3-tiny-prune85%+30% | 26
 
 **Table 6.** Ablation experiment of re-id training.
 

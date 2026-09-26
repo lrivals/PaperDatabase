@@ -1,0 +1,1448 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    35.4,
+    85.3,
+    538.3,
+    467.5
+   ],
+   "caption": "TABLE 1. Comparison of recent related review studies with the present work, focusing on the main topics discussed.",
+   "rows": [
+    [
+     "Year.Year",
+     "",
+     "Ref. Main Surveyed Topics (Corresponding to ours).Object Detection (OD) Methods",
+     "Ref. Main Surveyed Topics (Corresponding to ours).Real-time Performance",
+     "Ref. Main Surveyed Topics (Corresponding to ours).FPGA Im- plementation",
+     "Ref. Main Surveyed Topics (Corresponding to ours).HW Acceleration/ Optimization Techniques",
+     "Highlights.Highlights"
+    ],
+    [
+     "2024",
+     "Ours",
+     "YES",
+     "YES",
+     "YES",
+     "YES",
+     "Focuses mainly on suitable OD models, HW acceleration methods, and optimization strategies to achieve real-time performance on FPGAs"
+    ],
+    [
+     "2024",
+     "Mittal [25]",
+     "YES",
+     "YES",
+     "NO",
+     "NO",
+     "Focuses on the design and evaluation of lightweight object detection models based on deep learning, specifically tailored for edge devices"
+    ],
+    [
+     "2023",
+     "Amjoud et al. [26]",
+     "YES",
+     "NO",
+     "NO",
+     "NO",
+     "Provides an overview of the current state of deep learning-based OD models"
+    ],
+    [
+     "2023",
+     "Kamath et al. [27]",
+     "YES",
+     "NO",
+     "NO",
+     "NO",
+     "Provides a systematic review on deep learning-based OD on resource-constrained devices, emphasizing lightweight models"
+    ],
+    [
+     "2023",
+     "R. Kaur et al. [28]",
+     "YES",
+     "NO",
+     "NO",
+     "NO",
+     "Reviews the evolution of OD, emphasizing DNN-based models while discussing key frameworks, architectures, datasets, and evaluation metrics"
+    ],
+    [
+     "2023",
+     "Setyanto et ai. [29]",
+     "YES",
+     "YES",
+     "NO",
+     "NO",
+     "Reviews OD methods and simplification strategies suitable for edge computing, focusing on compression techniques"
+    ],
+    [
+     "2023",
+     "Zou et al. [30]",
+     "YES",
+     "YES",
+     "NO",
+     "NO",
+     "Reviews the development of OD with a discussion on detection speedup helpful for real-time performance"
+    ],
+    [
+     "2022",
+     "Huang et al. [31]",
+     "YES",
+     "YES",
+     "NO",
+     "NO",
+     "Discusses CNN-based OD models suitable for implementation on Raspberry Pi while achieving real-time performance"
+    ],
+    [
+     "2022",
+     "J. Kaur et al. [32]",
+     "YES",
+     "YES",
+     "NO",
+     "NO",
+     "Discusses various OD techniques, applications, and related tools and datasets, with a focus on existing challenges"
+    ],
+    [
+     "2022",
+     "Zaidi et al. [33]",
+     "YES",
+     "YES",
+     "NO",
+     "NO",
+     "Reviews OD methods, focusing on lightweight models suitable for real-time performance on edge devices"
+    ],
+    [
+     "2022",
+     "Zeng et al. [14]",
+     "YES",
+     "NO",
+     "YES",
+     "YES",
+     "Reviews some software and hardware optimization methods for the implementation of OD models on FPGAs"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    35.5,
+    93.3,
+    538.7,
+    714.0
+   ],
+   "caption": "TABLE 2. A summary of the discussed models from all categories, including Non-DNN-based Detectors (NDD), DNN-based Two-stage Detectors (DTD), DNN-based One-stage Detectors (DOD), and Transformer-based Detectors (TBD).",
+   "rows": [
+    [
+     "Detection Model.Detection Model",
+     "Year.Year",
+     "Category Detector.Category Detector",
+     "Backbone Network.Backbone Network",
+     "#Param (M).#Param (M)",
+     "GFLOPs Required.GFLOPs Required",
+     "Accuracy",
+     "Best Reported Performance.Latency (ms)",
+     "Best Reported Performance.FPS",
+     "Best Reported Performance.Size",
+     "Dataset.Dataset",
+     "Hardware (software im- Platform plementation).Hardware (software im- Platform plementation)",
+     "FPGA (hardware im- Platform plementation).FPGA (hardware im- Platform plementation)",
+     "Highlights.Highlights"
+    ],
+    [
+     "VJ [59]",
+     "2001",
+     "NDD",
+     "N/A",
+     "N/A",
+     "N/A",
+     "(detection 90% rate)",
+     "N/A",
+     "15",
+     "384*288",
+     "MIT",
+     "CPU (Intel Pentium III)",
+     "Yes [60], [61]",
+     "Fast, simple, good for face detection"
+    ],
+    [
+     "DPM [62]",
+     "2008",
+     "NDD",
+     "N/A",
+     "N/A",
+     "N/A",
+     "34% AP",
+     "N/A",
+     "N/A",
+     "N/A",
+     "VOC",
+     "CPU",
+     "Yes [63]",
+     "Objects are represented as a collection of parts, Effective for Complex Objects Uses CNN to extract features from"
+    ],
+    [
+     "R-CNN [64]",
+     "2014",
+     "DTD",
+     "AlexNet",
+     "N/A",
+     "N/A",
+     "58.5% mAP",
+     "47000",
+     "N/A",
+     "227*227",
+     "VOC",
+     "GPU (NVIDIA Titan Black)",
+     "N/A",
+     "proposal part, improved accuracy regions proposed by region compared to traditional methods, multi-stage pipeline, slow"
+    ],
+    [
+     "Fast R-CNN [21]",
+     "2015",
+     "DTD",
+     "AlexNet",
+     "N/A",
+     "N/A",
+     "66.9% mAP",
+     "2000",
+     "N/A",
+     "1000*600",
+     "VOC",
+     "GPU (NVIDIA K40)",
+     "N/A",
+     "Faster than R-CNN by using a shared convolutional layer to process the entire image., multi-stage pipeline"
+    ],
+    [
+     "Faster R-CNN [22]",
+     "2015",
+     "DTD",
+     "VGG-16",
+     "N/A",
+     "N/A",
+     "69.9% mAP",
+     "200",
+     "5",
+     "1000*600",
+     "VOC",
+     "GPU (NVIDIA K40)",
+     "Yes [65]",
+     "Faster than Fast R-CNN by using a better selective search algorithm, end-to-end network"
+    ],
+    [
+     "YOLO [18]",
+     "2016",
+     "DOD",
+     "Modified GoogleNet",
+     "N/A",
+     "40.19",
+     "63.4% mAP",
+     "25",
+     "45",
+     "448*448",
+     "VOC",
+     "GTX Titan X) GPU (Geforce",
+     "Yes [66]",
+     "Introduced the concept of dividing predicting bounding boxes, the image into a grid and real-time performance with moderate accuracy"
+    ],
+    [
+     "SSD [19]",
+     "2016",
+     "DOD",
+     "ResNet- 101",
+     "N/A",
+     "N/A",
+     "74.3% mAP",
+     "N/A",
+     "46",
+     "300*300",
+     "VOC",
+     "NVIDIA Titan GPU( X)",
+     "Yes [46], [47], [69]-[∠9]",
+     "Real-time object detector, Utilized a set of default bounding boxes at different aspect ratios and scales"
+    ],
+    [
+     "DSSD [70]",
+     "2017",
+     "DOD",
+     "ResNet- 101",
+     "N/A",
+     "N/A",
+     "81.5% mAP",
+     "N/A",
+     "6.4",
+     "513*513",
+     "VOC",
+     "NVIDIA Titan GPU( X)",
+     "N/A",
+     "An extension of SSD, Improved deconvolution layer to extract accuracy by adopting a more semantic information, Slower than SSD"
+    ],
+    [
+     "YOLOv2 [71]",
+     "2017",
+     "DOD",
+     "DarkNet- 19",
+     "193",
+     "34.90",
+     "76.8% mAP",
+     "N/A",
+     "67",
+     "416*416",
+     "VOC",
+     "GTX Titan X) GPU (Geforce",
+     "Yes [72]–[74]",
+     "Detection of a large number of object categories, Addressed some limitations of YOLO, such as localization accuracy and small object detection"
+    ],
+    [
+     "YOLOv2-tiny [71]",
+     "2017",
+     "DOD",
+     "DarkNet- 19",
+     "60.5",
+     "6.97",
+     "57.1% mAP",
+     "N/A",
+     "207",
+     "416*416",
+     "VOC",
+     "GTX Titan X) GPU (Geforce",
+     "Yes [15], [48], [75]-[77]",
+     "Lightweight and faster alternative to YOLOv2, optimized for real-time performance on resource-constrained devices"
+    ],
+    [
+     "SqueezeDet [2]",
+     "2017",
+     "DOD",
+     "SqueezeNet",
+     "26.8",
+     "77.2",
+     "80.4% mAP",
+     "N/A",
+     "32.1",
+     "1242*375",
+     "KITTI",
+     "GTX Titan X) GPU (Geforce",
+     "N/A",
+     "Designed for efficient object detection on embedded systems by reducing model size and"
+    ],
+    [
+     "RetinaNet [78]",
+     "2017",
+     "DOD",
+     "ResNet- 101- FPN",
+     "N/A",
+     "N/A",
+     "39.1% mAP",
+     "90",
+     "5",
+     "600*600",
+     "COCO",
+     "GPU(NVIDIA M40)",
+     "N/A",
+     "complexity Addressed the imbalance between foreground and background classes with a focal loss function"
+    ],
+    [
+     "CornerNet [79]",
+     "2018",
+     "DOD",
+     "Hourglass",
+     "N/A",
+     "N/A",
+     "42.2% mAP",
+     "224",
+     "N/A",
+     "511*511",
+     "COCO",
+     "GPU (Titan X)",
+     "N/A",
+     "keypoint locations (top-left and Detected objects as paired the bottom-right corners)"
+    ],
+    [
+     "YOLOv3 [80]",
+     "2018",
+     "DOD",
+     "Darknet- 53",
+     "237",
+     "65.86",
+     "55.3% mAP",
+     "29",
+     "35",
+     "416*416",
+     "COCO",
+     "GTX Titan X) GPU (Geforce",
+     "Yes [81], [82]",
+     "Introduced multi-scale detection and feature pyramid network to improve accuracy"
+    ],
+    [
+     "YOLOv3-tiny [80]",
+     "2018",
+     "DOD",
+     "Darknet- 53",
+     "33.8",
+     "5.56",
+     "33.1% mAP",
+     "4.5",
+     "220",
+     "416*416",
+     "COCO",
+     "GTX Titan X) GPU (Geforce",
+     "Yes [83]–[86]",
+     "Efficient and faster variant of YOLOv3, offering a good balance between speed and accuracy on embedded devices"
+    ],
+    [
+     "CenterNet [87]",
+     "2019",
+     "DOD",
+     "Hourglass",
+     "N/A",
+     "N/A",
+     "47% mAP",
+     "340",
+     "N/A",
+     "511*511",
+     "COCO",
+     "GPU (NVIDIA Tesla P100)",
+     "Yes [88]",
+     "Predicting the center point and regressing to the object size and orientation"
+    ],
+    [
+     "EfficientDet [89]",
+     "2020",
+     "DOD",
+     "EfficientNet",
+     "6.6",
+     "6.1",
+     "39.6% AP",
+     "20",
+     "50",
+     "640*640",
+     "COCO",
+     "GPU (Titan V)",
+     "N/A",
+     "Utilized a compound scaling method to efficiently scale the network, balanced model efficiency and accuracy."
+    ],
+    [
+     "YOLOv4 [23]",
+     "2020",
+     "DOD",
+     "CSPDarknet- 53",
+     "64.4",
+     "43.5",
+     "41.2 % mAP",
+     "N/A",
+     "96",
+     "416*416",
+     "COCO",
+     "GPU(Tesla V100)",
+     "Yes [90]",
+     "architectural improvements over Introduced significant YOLOv3"
+    ],
+    [
+     "YOLOv4-tiny [91]",
+     "2020",
+     "DOD",
+     "CSPDarknet- 53",
+     "6.1",
+     "6.9",
+     "21.7 % mAP",
+     "N/A",
+     "371",
+     "416*416",
+     "COCO",
+     "GPU(Tesla V100)",
+     "Yes [85]",
+     "Optimized for real-time detection improved accuracy over previous with high speed, providing tiny models"
+    ],
+    [
+     "DETR [11]",
+     "2020",
+     "TBD",
+     "ResNet- 50",
+     "41",
+     "86",
+     "42% mAP",
+     "N/A",
+     "28",
+     "800*1200",
+     "COCO",
+     "GPU (V100)",
+     "N/A",
+     "Transformer encoder-decoder, pipeline, issues with processing streamlining the detection small objects, too large"
+    ],
+    [
+     "YOLOv7 [24]",
+     "2022",
+     "DOD",
+     "E-ELAN",
+     "36.9",
+     "51.2",
+     "51.2% mAP",
+     "N/A",
+     "161",
+     "640*640",
+     "COCO",
+     "GPU(Tesla V100)",
+     "N/A",
+     "Outperforms all YOLO versions in speed and detection accuracy"
+    ],
+    [
+     "YOLOv7-tiny [24]",
+     "2022",
+     "DOD",
+     "E-ELAN",
+     "6.2",
+     "13.8",
+     "35.2% mAP",
+     "N/A",
+     "161",
+     "416*416",
+     "COCO",
+     "GPU(Tesla V100)",
+     "Yes [92]",
+     "Enhanced speed and accuracy for optimized architecture for edge real-time detection, featuring devices"
+    ],
+    [
+     "RT-DETR [13]",
+     "2023",
+     "TBD",
+     "ResNet- 50",
+     "42",
+     "136",
+     "53.1% mAP",
+     "8.8",
+     "108",
+     "1024*1024 COCO",
+     "",
+     "GPU (T4)",
+     "N/A",
+     "Good speed-accuracy trade-off, eliminates NMS, Supports flexible speed tuning without retraining, still too large"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    47.4,
+    78.5,
+    526.3,
+    217.0
+   ],
+   "caption": "TABLE 3. A summary of the commonly-used datasets in the context of object detection.",
+   "rows": [
+    [
+     "Dataset",
+     "# of classes",
+     "# of images",
+     "# of annotated objects",
+     "Examples of object types",
+     "Tasks"
+    ],
+    [
+     "ImageNet [102]",
+     "20K",
+     "14M",
+     "1M (with Bbox)",
+     "animals, everyday objects, natural scenes, plants, people, food, abstract concepts",
+     "image classification, object detection"
+    ],
+    [
+     "MS COCO [41]",
+     "91",
+     "328K",
+     "2.5M",
+     "animals, person, everyday objects, vehicles, food, sport equipment",
+     "object detection, image segmentation"
+    ],
+    [
+     "Pascal VOC 07 [40]",
+     "20",
+     "9963",
+     "26640",
+     "person, animals, vehicles, and indoor objects",
+     "object detection, semantic segmentation, image classification"
+    ],
+    [
+     "Pascal VOC 12 [45]",
+     "20",
+     "11K",
+     "27450",
+     "person, animals, vehicles, and indoor objects",
+     "object detection, semantic segmentation, image classification"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    37.2,
+    256.4,
+    275.9,
+    442.1
+   ],
+   "caption": "TABLE 4. A summary of commonly used metrics for evaluating object detection models.",
+   "rows": [
+    [
+     "Metric",
+     "Measure of"
+    ],
+    [
+     "Intersection over Union (IoU)",
+     "Localization accuracy"
+    ],
+    [
+     "mean Average Precision (mAP)",
+     "Detection (localization and classification) accuracy"
+    ],
+    [
+     "Frames Per Second (FPS)",
+     "Processing throughput"
+    ],
+    [
+     "Number of required FLoating- point OPerations (FLOPs)",
+     "Computational complexity"
+    ],
+    [
+     "Number of trainable parame- ters",
+     "Computationalcomplexity and memory footprint"
+    ],
+    [
+     "Latency",
+     "Inference time"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    123.4,
+    63.1,
+    476.1,
+    727.1
+   ],
+   "caption": "TABLE 5. Comparing FPGAs with some possible alternatives in different criteria.",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7"
+    ],
+    [
+     "CPUs",
+     "Good for sequential tasks, fixed architecture",
+     "general-purpose computing tasks Typically cost-effective for",
+     "Not reconfigurable at the hardware level, offer software-level flexibility",
+     "Varied power efficiency depending on workload and design",
+     "Typically versatile in terms of input and output sources",
+     "Extensive and mature development Typically can offer lower latency than Gpus se  ue  senm ecosystem",
+     "Used for both training and inference phases, Generally slower compared to GPUs"
+    ],
+    [
+     "GPUs",
+     "Good for parallel processing, high power consumption, fixed architecture",
+     "Wide-spectrum of costs",
+     "Not reconfigurable at the hardware level, offer software-level flexibility, less adaptable compared to FPGAs",
+     "Typically communicates with the host through PCIe interface, Less versatile in Less power efficient",
+     "input sources compared to FPGAs User-friendly environments with extensive libraries, Faster and more straightforward code development compared to FPGAs and ASICs",
+     "communication with the host through Exhibits longer latency due to PCIe interface",
+     "Primarily leveraged for the training phase"
+    ],
+    [
+     "ASICs",
+     "Superior performance in memory usage, power efficiency, latency, and throughput, Highly optimized pipelines for efficient data processing, fixed architecture",
+     "Cost-effective only in mass production, high initial development cost",
+     "Not reconfigurable after manufactured, suitable only for specific tasks",
+     "Superior power efficiency",
+     "Requires more complex development workflows, Extended development time Fixed I/O types after production",
+     "Can offer the lowest latency than other platforms",
+     "Deployed for both training and inference phases"
+    ],
+    [
+     "FPGAs",
+     "Good for parallel processing (more powerful than GPUs in some cases, like multiple-stream management), Limited oamosoesl eoe n aoees totally customizable architecture irregular data accesses and",
+     "Higher initial cost but Longer life cycle co eo ss vs s  to additional capabilities integration",
+     "Reprogrammable for different functionalities, Adaptable to different tasks, More flexible compared to ASICs",
+     "Can achieve reasonable power efficiency Can receive input data from multiple and diverse sources",
+     "Ler r r er daent compared to ASICs, Lacks strong tools for development of AI-based systems, Developing high-performance arcths ns e wvard",
+     "Can deliver deterministic and low latency, Can directly connect with peripheral hardware components, which improve latency",
+     "Primarily for the inference phase due to their limited computational and memory resources"
+    ],
+    [
+     "Criteria",
+     "Performance General",
+     "Cost of the hardware",
+     "Programmability Flexibility/",
+     "I/O Interface Power",
+     "Development Tools",
+     "Latency",
+     "developing phases of CNN-based object Suitability for detection"
+    ]
+   ]
+  },
+  {
+   "page": 16,
+   "bbox": [
+    40.5,
+    79.1,
+    533.3,
+    272.3
+   ],
+   "caption": "TABLE 6. A list of some FPGA boards used in recent works for implementing Real-time object detection models, sorted by number of LUTs/ALMs.",
+   "rows": [
+    [
+     "Board.",
+     "FPGA Part.",
+     "Number of Available Resources.LUTs/ALMsª",
+     "Number of Available Resources.FFs",
+     "Number of Available Resources.DSPs",
+     "Number of Available Resources.Memory Blocks (Size)",
+     "Reference."
+    ],
+    [
+     "ZC702",
+     "ZYNQ XC7Z020-1CLG484",
+     "53,200",
+     "106,400",
+     "220",
+     "140 (36Kb)",
+     "[90], [182]"
+    ],
+    [
+     "Pynq-Z1",
+     "ZYNQ XC7Z020-1CLG400C",
+     "53,200",
+     "106,400",
+     "220",
+     "140 (36Kb)",
+     "[183]"
+    ],
+    [
+     "Ultra96",
+     "Zynq UltraScale+ MPSoC ZU3EG A484",
+     "70,560",
+     "141,120",
+     "360",
+     "216 (36Kb)",
+     "[69], [184]"
+    ],
+    [
+     "ZC706",
+     "ZYNQ XC7Z045 FFG900 - 2 SoC",
+     "218,600",
+     "437,200",
+     "006",
+     "545 (36Kb)",
+     "[47], [48], [68]"
+    ],
+    [
+     "ZCU104",
+     "Zynq UltraScale+ MPSoC ZU7EV",
+     "230,400",
+     "460,800",
+     "1,728",
+     "312 (36Kb)",
+     "[185]"
+    ],
+    [
+     "KU040",
+     "XCKU040-1FBVA676",
+     "242,400",
+     "484,800",
+     "1,920",
+     "600 (36Kb)",
+     "[s8]"
+    ],
+    [
+     "ZCU102",
+     "Zynq UltraScale+ XCZU9EG-2FFVB1156",
+     "274,080",
+     "548,160",
+     "2,520",
+     "912 (36Kb)",
+     "[82]"
+    ],
+    [
+     "VC707",
+     "Virtex 7 XC7VX485T-2FFG1761C",
+     "303,600",
+     "607,200",
+     "2,800",
+     "2,060 (36Kb)",
+     "[15]"
+    ],
+    [
+     "Arria-10",
+     "Arria 10 GX1150",
+     "427,200",
+     "1,708,800",
+     "1,518",
+     "2,713 (20Kb)",
+     "[46], [73], [74], [76]"
+    ],
+    [
+     "DE10-PRO",
+     "Stratix 10 GX2800",
+     "933,120",
+     "3,732,480",
+     "5,760",
+     "11,721 (20Kb)",
+     "[67]"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    62.2,
+    85.9,
+    511.7,
+    211.7
+   ],
+   "caption": "TABLE 7. A summary of two FPGA architecture design approaches for implementing object detection models.",
+   "rows": [
+    [
+     "Architecture Type",
+     "Highlights",
+     "Related Works"
+    ],
+    [
+     "Single computation engine",
+     "Uses one single computation block to perform all parts of the model, proii -ts ion oi  s eion resources, adaptable to various object detection models, less efficient, bottleneck in memory bandwidth (Figure 6)",
+     "[47], [68], [73], [190]- [192]"
+    ],
+    [
+     "Streaming",
+     "s a    dod   os l ds seskl advantage of pipeline design, less adaptable to different models, faster, more resource consumer (Figure 7)",
+     "[15], [48], [90], [193]"
+    ]
+   ]
+  },
+  {
+   "page": 19,
+   "bbox": [
+    36.7,
+    78.1,
+    281.2,
+    193.5
+   ],
+   "caption": "TABLE 8. Commonly used hardware acceleration techniques for FPGA-based object detection.",
+   "rows": [
+    [
+     "1. Model-related Techniques for Hardware Acceleration",
+     "FPGA-related references"
+    ],
+    [
+     "a. Pruning",
+     "[47], [73], [203]–[206]"
+    ],
+    [
+     "b. Quantization",
+     "[15], [47], [48], [69], [73], [77], [82], [184]"
+    ],
+    [
+     "c. Knowledge Distillation",
+     "[213]-[216]"
+    ],
+    [
+     "d. Hardware-awareNeural Architecture Search",
+     "[77], [183], [219]- [221]"
+    ]
+   ]
+  },
+  {
+   "page": 19,
+   "bbox": [
+    293.0,
+    79.1,
+    537.3,
+    240.7
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "2. Implementation-related Techniques for Hardware Acceleration",
+     "FPGA-related references"
+    ],
+    [
+     "a. Data Reuse",
+     "[68], [69], [82], [184], [207], [208]"
+    ],
+    [
+     "b. Mathematical-based Optimization",
+     "[68], [209]–[211]"
+    ],
+    [
+     "c. Systolic Arrays",
+     "[82], [217], [218]"
+    ],
+    [
+     "d. Code Modification",
+     "[15], [47], [69], [73], [90], [92]"
+    ],
+    [
+     "e. Roofline-based Optimization",
+     "[47], [73], [203], [211], [222], [223]"
+    ],
+    [
+     "f. Pipelining",
+     "[15], [47], [48], [74], [82], [83], [224]"
+    ]
+   ]
+  },
+  {
+   "page": 29,
+   "bbox": [
+    143.4,
+    62.0,
+    432.2,
+    731.6
+   ],
+   "caption": "TABLE9. TherecentadvancedworksofFPGA-basedreal-timeobjectdetectionimplementations(part1/2).",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10",
+     "11",
+     "12",
+     "13",
+     "14",
+     "15",
+     "16",
+     "17",
+     "18"
+    ],
+    [
+     "Power eff.* (GOPS/W)",
+     "N/A",
+     "N/A",
+     "57.5",
+     "N/A",
+     "N/A",
+     "V/N",
+     "N/A",
+     "27.2",
+     "43.16",
+     "18.26",
+     "52.87",
+     "51.4",
+     "53.29",
+     "N/A",
+     "N/A",
+     "81.92",
+     "46.51",
+     "45.3 N/A"
+    ],
+    [
+     "Power ()",
+     "56",
+     "9.34",
+     "242",
+     "99",
+     "N/A",
+     "2.11",
+     "",
+     "27.2",
+     "22",
+     "10.36",
+     "15.3",
+     "78",
+     "81",
+     "10.79",
+     "N/A",
+     "3.87",
+     "10.25",
+     "18"
+    ],
+    [
+     "Throughput (GOPS)",
+     "128",
+     "N/A",
+     "138",
+     "N/A",
+     "161.4",
+     "N/A",
+     "N/A",
+     "740",
+     "95.08",
+     "189.14",
+     "608",
+     "401",
+     "464.7",
+     "N/A",
+     "500 2,130",
+     "180",
+     "464.5",
+     "N/A"
+    ],
+    [
+     "Latency (m)",
+     "40",
+     "V/NA",
+     "29.25",
+     "15.43",
+     "43.33",
+     "22.75",
+     "11.79",
+     "N/A",
+     "13.03",
+     "11.83",
+     "N/A",
+     "N15.2",
+     "V/NA",
+     "15 N/A",
+     "N/A",
+     "30.9",
+     "27.78",
+     "2.13"
+    ],
+    [
+     "Pixel Throughput (MPPS)*",
+     "1.76",
+     "2.98",
+     "3.07",
+     "3.25",
+     "3.98",
+     "4.14",
+     "4.23",
+     "4.32",
+     "45",
+     "5.19",
+     "6.75",
+     "11.36",
+     "11.51",
+     "12.28 12.28",
+     "12.54",
+     "14.33",
+     "21.47",
+     "12"
+    ],
+    [
+     "Frame Rate (FPS)",
+     "26.9",
+     "33.14",
+     "34.18",
+     "64.8",
+     "23",
+     "43.95",
+     "84.4",
+     "25",
+     "76.75",
+     "30",
+     "22",
+     "65.7",
+     "66.56",
+     "30",
+     "71 72.5",
+     "32.4",
+     "43.7",
+     "469"
+    ],
+    [
+     "Image Resolution (Pixes)",
+     "256×256",
+     "300×300",
+     "300×300",
+     "224×224",
+     "416×416",
+     "192×256",
+     "224×224*",
+     "416×416",
+     "320×320",
+     "416×416*",
+     "640×480",
+     "416×416",
+     "416×416",
+     "640×640* 416×416",
+     "416×416",
+     "768×576",
+     "1280×384",
+     "640×640*"
+    ],
+    [
+     "Accuracy (mAP)(%)",
+     "55.1",
+     "56.8",
+     "76.2",
+     "20.5",
+     "57.1",
+     "82.6",
+     "78.6",
+     "73.6",
+     "81.19",
+     "N/A",
+     "49.7",
+     "58.1",
+     "51.38",
+     "34.1",
+     "56 74.45",
+     "31",
+     "77.04",
+     "22.8"
+    ],
+    [
+     "Freq. (zHM)",
+     "250",
+     "150",
+     "00",
+     "10",
+     "200",
+     "10",
+     "200",
+     "00",
+     "10",
+     "10",
+     "200",
+     "200",
+     "200",
+     "10",
+     "10",
+     "13",
+     "200",
+     "40"
+    ],
+    [
+     "Precision ()",
+     "(4,8)",
+     "(16,N/A)",
+     "(8'8)",
+     "(88)",
+     "(8,16)",
+     "(8,8)",
+     "(16,16)",
+     "(8,N/A)",
+     "(8,8)",
+     "N/A",
+     "(2-8,2-8)",
+     "(8,8)",
+     "(1,6)",
+     "(13,13) (8,8)",
+     "N/A",
+     "(16,16)",
+     "(8,8)",
+     "N/A"
+    ],
+    [
+     "Detection Model",
+     "ShuffleNetV2 based",
+     "SSDLite-Mobile-NetV3",
+     "SSD-VGG16",
+     "SSDLite-Mobile-NetV2",
+     "Tiny YOLOv2",
+     "SqueezeNet based",
+     "SSDLite",
+     "YOLOv2",
+     "Tiny YOLOv3",
+     "YOLOv4",
+     "YOLOv3",
+     "Tiny YOLOv3",
+     "Tiny YOLOv2",
+     "Tiny YOLOv7",
+     "Tiny YOLOv2 YOLOv2",
+     "Tiny YOLOv3",
+     "Tiny YOLOv2",
+     "SSDLite-Mobile-NetV1"
+    ],
+    [
+     "Year",
+     "2021",
+     "2021",
+     "2023",
+     "2018",
+     "2022",
+     "2023",
+     "2021",
+     "2020",
+     "2023",
+     "2022",
+     "2021",
+     "2024",
+     "2019",
+     "2023 2021",
+     "2020",
+     "2021",
+     "2021",
+     "2024"
+    ],
+    [
+     "Reference",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "Hosseiny et al. [92]",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "",
+     "Huang et al. [184]",
+     "Cai et al. [68]",
+     "Suh et al. [69]",
+     "Fan et al. [47]",
+     "Jain et al. [77]",
+     "K. Kim et al. [182]",
+     "S. Kim et al. [46]",
+     "Li et al. [74]",
+     "M. Kim et al. [84]",
+     "Babu et al. [90]",
+     "Chang et al. [82]",
+     "D. Zhang et al. [86]",
+     "Nguyen et al. [15]",
+     "Xu et al. [76]",
+     "Wang et al. [73]",
+     "Pestana et al. [85]",
+     "J. Zhang et al. [48]",
+     "Anupreetham et al. [67]"
+    ]
+   ]
+  },
+  {
+   "page": 30,
+   "bbox": [
+    128.8,
+    61.9,
+    462.6,
+    730.7
+   ],
+   "caption": "TABLE10. TherecentadvancedworksofFPGA-basedreal-timeobjectdetectionimplementations(part2/2).",
+   "rows": [
+    [
+     "Key Employed Techniques",
+     "Data reusing, algorithm-hardware co-design",
+     "Wwinnzo (oao -d sn) aa ao a pa-aron",
+     "Low-precision quantization, loop tiling, model pruning",
+     "Partial quantization, resource sharing, channel pruning",
+     "Deans S DS ee ozaen Doxe eas segy",
+     "Model simplification and compression, parallel processing",
+     "Arithmetic-based and memory access optimization, data reusing",
+     "Mixed-precision data, parallel design, pipelining",
+     "Dynamic data reuse scheme, hardware-friendly quantization",
+     "Code modification, memory access optimization",
+     "Mixed-precision quantization",
+     "Ping-pong buffer-based data reusing, memory access optimization",
+     "Binary weights, HW-aware quantization, data reusing",
+     "Code modification, pipelining, data reusing",
+     "Scalable pipeline design, layer fusion, SW-HW co-design",
+     "Fine-grained pruning, Hardware/Software co-Design",
+     "Post-training dynamic quantization",
+     "Resource sharing, pipelining, arithmetic-based optimization",
+     "Pipelining and parallel processing, code modification"
+    ],
+    [
+     "FFs X",
+     "42",
+     "159",
+     "75",
+     "11",
+     "62",
+     "21",
+     "N/A",
+     "N/A",
+     "58",
+     "46",
+     "308",
+     "N/A",
+     "60",
+     "9",
+     "N/A",
+     "N/A",
+     "N/A",
+     "65",
+     "N/A"
+    ],
+    [
+     "DSP",
+     "360",
+     "801",
+     "263",
+     "728",
+     "44",
+     "7",
+     "086",
+     "410",
+     "240",
+     "174",
+     "2280",
+     "687",
+     "168",
+     "16",
+     "1092",
+     "",
+     "839",
+     "610",
+     "5,009"
+    ],
+    [
+     "Resource Utilization LUTs/ALMs (K)",
+     "34",
+     "166",
+     "78",
+     "148",
+     "8",
+     "18",
+     "N/A",
+     "N/A",
+     "50",
+     "23",
+     "185",
+     "136.5",
+     "98",
+     "59",
+     "145",
+     "188",
+     "19",
+     "18",
+     "N/A"
+    ],
+    [
+     "BRAMs #(size)",
+     "216 (18k)",
+     "446 (18k)",
+     "102 (18K)",
+     "311 (18K)",
+     "462 (18K)",
+     "V/A",
+     "N/A",
+     "N/A",
+     "185 (18K)",
+     "115 (18k)",
+     "(80 (18)",
+     "553 (18K)",
+     "1,026 (18K)",
+     "1,092 (18k)",
+     "1849 (20K)",
+     "2,576 (20K)",
+     "384 (18K)",
+     "256 (18k)",
+     "7,883 (20k)"
+    ],
+    [
+     "Design Environment",
+     "Vivado HLSa",
+     "Vivado",
+     "Vivado",
+     "Vivado",
+     "N/A",
+     "Vivado",
+     "Quartus Prime",
+     "OpenCL + RTL",
+     "Vivado",
+     "Vivado HLS",
+     "Vivado",
+     "Vivado HLS",
+     "Vivado HLS",
+     "Vivado HLS",
+     "OpenCL SDK",
+     "OpenCL",
+     "N/A",
+     "N/A",
+     "Quartus Prime Pro"
+    ],
+    [
+     "FPGA/Board Model",
+     "Xilinx Ultra96",
+     "Xilinx XC7Z045",
+     "Xilinx ZU3EG",
+     "Xilinx ZC706",
+     "Xilinx XC7Z035",
+     "Xilinx ZC702",
+     "Intel Arria 10",
+     "Intel Arria 10",
+     "Xilinx Artix-7",
+     "Xilinx XC7Z020",
+     "Xilinx ZCU102",
+     "Xilinx XC7K325T",
+     "Xilinx VC707",
+     "Xilinx XC7Z100",
+     "Intel Arria-10 GX1150",
+     "Intel Arria-10 GX1150",
+     "Xilinx XCKU040",
+     "Xilinx ZC706",
+     ""
+    ],
+    [
+     "Reference",
+     "Huang et al. [184]",
+     "Cai et al. [68]",
+     "Suh et al. [69]",
+     "Fan et al. [47]",
+     "Jain et al. [77]",
+     "K. Kim et al. [182]",
+     "S. Kim et al. [46]",
+     "Li et al. [74]",
+     "M. Kim et al. [84]",
+     "Babu et al. [90]",
+     "Chang et al. [82]",
+     "D. Zhang et al. [86]",
+     "Nguyen et al. [15]",
+     "Hosseiny et al. [92]",
+     "Xu et al. [76]",
+     "Wang et al. [73]",
+     "Pestana et al. [85]",
+     "J. Zhang et al. [48]",
+     "Anupreetham et al. [67] Intel Stratix 10 GX2800"
+    ]
+   ]
+  },
+  {
+   "page": 35,
+   "bbox": [
+    327.9,
+    94.0,
+    507.1,
+    167.0
+   ],
+   "caption": "TABLE 11. Prediction result category in object detection models based on the label provided by the dataset (real label).",
+   "rows": [
+    [
+     "",
+     "",
+     "Real Label Predicted Label Prediction Category"
+    ],
+    [
+     "Positive",
+     "Positive",
+     "True Positive (TP)"
+    ],
+    [
+     "Positive",
+     "Negative",
+     "False Negative (FN)"
+    ],
+    [
+     "Negative",
+     "Positive",
+     "False Positive (FP)"
+    ],
+    [
+     "Negative",
+     "Negative",
+     "True Negative (TN)"
+    ]
+   ]
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 # Synthetic benchmark
 
 The benchmark lives in `.cache/bench/`, separate from the working paper library.
-`bin/pdb bench` acquires and freezes 200 papers, generates source-grounded questions,
+`bin/pdb synth` acquires and freezes 200 papers, generates source-grounded questions,
 validates them without human labels, and runs retrieval and Codex workflow ablations.
 The expanded collection includes neighboring topics as distractors. Question anchors
 are conservatively screened for FPGA, embedded/edge AI, and hardware acceleration;
@@ -45,8 +45,8 @@ Start the downloaded `llama-server` with its CUDA libraries on `LD_LIBRARY_PATH`
 llama-server -m /path/to/Qwen3.8-27B-UD-Q6_K_XL.gguf \
   -c 16384 -ngl 99 -fa on --reasoning off \
   --host 127.0.0.1 --port 8787 --no-ui
-bin/pdb bench generate --limit 200
-bin/pdb bench validate --limit 200
+bin/pdb synth generate --limit 200
+bin/pdb synth validate --limit 200
 ```
 
 Generation uses schema-constrained JSON, temperature 0.7, top-p 0.8, top-k 20,
@@ -72,17 +72,17 @@ Automatically generated fiches and numerical transcriptions form a separate
 `enriched/` corpus; they are never used to generate reference answers.
 
 ```bash
-bin/pdb bench corpus --target 200
-bin/pdb bench enrich --limit 200
-bin/pdb bench variants --limit 40
-bin/pdb bench retrieval --mode lexical
-bin/pdb bench retrieval --mode dense
-bin/pdb bench retrieval --mode hybrid
-bin/pdb bench retrieval --mode reranked
-bin/pdb bench agent --variant native --split development --limit 20
-bin/pdb bench agent --variant hybrid --split development --limit 20
-bin/pdb bench judge --limit 200
-bin/pdb bench report
+bin/pdb synth corpus --target 200
+bin/pdb synth enrich --limit 200
+bin/pdb synth variants --limit 40
+bin/pdb synth retrieval --mode lexical
+bin/pdb synth retrieval --mode dense
+bin/pdb synth retrieval --mode hybrid
+bin/pdb synth retrieval --mode reranked
+bin/pdb synth agent --variant native --split development --limit 20
+bin/pdb synth agent --variant hybrid --split development --limit 20
+bin/pdb synth judge --limit 200
+bin/pdb synth report
 ```
 
 Screen agent variants on development questions before selecting three finalists

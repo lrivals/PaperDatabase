@@ -38,8 +38,11 @@ Revue, sans expérience propre. Elle couvre :
 Pas d'implémentation propre. Côté FPGA (§XI-C1), une seule sous-section, qui cite :
 - VGG-16 8 bits sur Zynq-7020 à 84 GOPS [315] ;
 - Lite-CNN INT8 sur XC7Z020 à 408 GOPS crête et 33 GOPS/W.
-Le tableau des FPGA (Table 8) et les tableaux comparatifs (Tables 6 à 10) sont perdus à
-l'extraction.
+Le tableau des FPGA (Table 8) et les tableaux comparatifs (Tables 6 à 10) étaient perdus à
+l'extraction (tableaux en image). *Mise à jour du 26/09/2026* : leurs corps ont été
+reconstruits par Docling avec OCR (Tables 2 à 10). Ils sont marqués « à vérifier », et
+aucune de leurs valeurs n'a été relue contre le PDF. Table 8 paraît propre (6 lignes, GOPS
+et GOPS/W).
 
 ## Résultats
 
@@ -56,7 +59,8 @@ Chiffres repris des travaux cités, sans vérification :
 - **Jetson TX2 :** environ 15 W en inférence (§XI-A).
 
 → reportés dans `benchmarks.csv` : aucune ligne. C'est une revue, et ses tableaux
-comparatifs sont perdus à l'extraction.
+comparatifs n'étaient pas extraits. Depuis le 26/09/2026, ils sont reconstruits par OCR,
+mais non relus ; les travaux cités restent à ficher à la source.
 
 ## Limites et critique
 

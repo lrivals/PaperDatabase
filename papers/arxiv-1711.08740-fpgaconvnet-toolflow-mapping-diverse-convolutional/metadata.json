@@ -24,7 +24,6 @@
   "tags": [
     "fpgaconvnet",
     "zynq",
-    
     "sdf",
     "dataflow",
     "reconfiguration",
@@ -36,8 +35,8 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente",
-      "article de workshop (commentaire arXiv) : version toolflow de fpgaConvNet, distincte de l'article FCCM 2016 (DOI 10.1109/FCCM.2016.22) cité par le corpus"
+      "article de workshop (commentaire arXiv) : version toolflow de fpgaConvNet, distincte de l'article FCCM 2016 (DOI 10.1109/FCCM.2016.22) cité par le corpus",
+      "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {

@@ -21,6 +21,7 @@ class Block:
     paras: list = field(default_factory=list)   # [(texte, page)]
     heading: str | None = None                  # titre introduit par ce bloc, s'il y en a un
     page: int | None = None
+    bbox: tuple | None = None                   # tableau : (page, x0, y0, x1, y1) de la zone TEI
 
 
 _ROMAN_HEADING = re.compile(r"^([IVX]+)\.\s")

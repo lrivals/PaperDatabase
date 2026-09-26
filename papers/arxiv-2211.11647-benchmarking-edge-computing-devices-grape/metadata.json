@@ -45,7 +45,9 @@
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": []
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : 1 See TensorFlow, 2022, Tensor"
+    ]
   },
   "status": {
     "extracted": true,

@@ -1,0 +1,759 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 4,
+   "bbox": [
+    166.3,
+    229.1,
+    558.6,
+    348.7
+   ],
+   "caption": "Table 1. Meanings of the variables.",
+   "rows": [
+    [
+     "Variables",
+     "Meaning"
+    ],
+    [
+     "l",
+     "The parameter for regulating the effect of the spatial Mahalanobis distance and visual distance on the cost function."
+    ],
+    [
+     "yi",
+     "The state vector of the i-th prediction frame."
+    ],
+    [
+     "Si",
+     "The covariance matrix of the average tracking results between the detection frame and track i."
+    ],
+    [
+     "dj",
+     "Detectionboxj."
+    ],
+    [
+     "ri",
+     "The appearance descriptor extracted from detection box j."
+    ],
+    [
+     "Ri",
+     "The last 100 appearance descriptor sets associated with track i."
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    166.2,
+    262.1,
+    558.7,
+    464.8
+   ],
+   "caption": "Table 2. Parameter conventions for convolution operations.",
+   "rows": [
+    [
+     "Symbol",
+     "Meaning"
+    ],
+    [
+     "I",
+     "The input feature map."
+    ],
+    [
+     "W",
+     "Theweightsoftheconvolutionlayer."
+    ],
+    [
+     "B",
+     "The bias of the convolution layer."
+    ],
+    [
+     "O",
+     "Theoutputfeaturemap."
+    ],
+    [
+     "IH",
+     "Theheightoftheinputfeaturemap."
+    ],
+    [
+     "IW",
+     "Thewidthoftheinputfeaturemap."
+    ],
+    [
+     "IC",
+     "The number of input channels."
+    ],
+    [
+     "K",
+     "The kernel size."
+    ],
+    [
+     "OH",
+     "Theheightoftheoutputfeaturemap."
+    ],
+    [
+     "OW",
+     "Thewidthoftheoutputfeaturemap."
+    ],
+    [
+     "OC",
+     "Thenumberofoutputchannels."
+    ],
+    [
+     "pad",
+     "The padding."
+    ],
+    [
+     "S",
+     "The stride."
+    ],
+    [
+     "Tx",
+     "Parallelism of multiply-add operations on input feature maps."
+    ],
+    [
+     "Ty",
+     "Parallelism of multiply-add operations on output feature maps."
+    ]
+   ]
+  },
+  {
+   "page": 16,
+   "bbox": [
+    166.4,
+    579.5,
+    558.5,
+    687.4
+   ],
+   "caption": "Table 3. Parameter conventions.",
+   "rows": [
+    [
+     "Symbol",
+     "Meaning"
+    ],
+    [
+     "Onorm",
+     "The output of the feature map after batch normalization."
+    ],
+    [
+     "g",
+     "The parameter that controls the variance of Onorm."
+    ],
+    [
+     "s2",
+     "The variance of O ."
+    ],
+    [
+     "e",
+     "A small constant used to prevent numerical error."
+    ],
+    [
+     "O",
+     "The output of the feature map."
+    ],
+    [
+     "m",
+     "The estimate of the mean of O."
+    ],
+    [
+     "b",
+     "The parameters that control the mean of Onorm."
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    34.8,
+    437.2,
+    557.9,
+    520.7
+   ],
+   "caption": "Table 4. Meanings of the variables.",
+   "rows": [
+    [
+     "Model",
+     "PruningRate",
+     "AP@0.5",
+     "ModelSize(MB)",
+     "Parameters (×10 3 )",
+     "BFLOPs"
+    ],
+    [
+     "YOLOv3",
+     "0",
+     "0.671",
+     "235.06",
+     "61523",
+     "65.864"
+    ],
+    [
+     "YOLOv3",
+     "85%",
+     "0.711",
+     "33.55",
+     "8719",
+     "19.494"
+    ],
+    [
+     "YOLOv3-tiny",
+     "0",
+     "0.625",
+     "33.10",
+     "8670",
+     "5.444"
+    ],
+    [
+     "YOLOv3-tiny",
+     "85%",
+     "0.625",
+     "1.02",
+     "267",
+     "1.402"
+    ],
+    [
+     "YOLOv3-tiny",
+     "85%+30%",
+     "0.599",
+     "0.59",
+     "69",
+     "0.735"
+    ]
+   ]
+  },
+  {
+   "page": 18,
+   "bbox": [
+    166.4,
+    471.5,
+    558.6,
+    554.3
+   ],
+   "caption": "Table 5. Comparison of the numbers of detected vehicles.",
+   "rows": [
+    [
+     "Model",
+     "Number of Vehicles Detected"
+    ],
+    [
+     "YOLOv3",
+     "27"
+    ],
+    [
+     "YOLOv3-prune85%",
+     "27"
+    ],
+    [
+     "YOLOv3-tiny",
+     "24"
+    ],
+    [
+     "YOLOv3-tiny-prune85%",
+     "24"
+    ],
+    [
+     "YOLOv3-tiny-prune85%+30%",
+     "26"
+    ]
+   ]
+  },
+  {
+   "page": 19,
+   "bbox": [
+    34.7,
+    463.3,
+    558.7,
+    558.6
+   ],
+   "caption": "Table 6. Ablation experiment of re-id training.",
+   "rows": [
+    [
+     "Model",
+     "VideoStream",
+     "IDF1↑",
+     "IDP↑",
+     "IDR↑",
+     "FP↓",
+     "FN↓",
+     "",
+     "IDs↓MOTA↑MOTP↓",
+     ""
+    ],
+    [
+     "Deepsort",
+     "MVI_40701",
+     "76.4%",
+     "82.5%",
+     "71.1%",
+     "1515",
+     "3706",
+     "53",
+     "66.8%",
+     "0.118"
+    ],
+    [
+     "RE-ID Deepsort",
+     "MVI_40701",
+     "79.6%",
+     "86.4%",
+     "76.2%",
+     "1452",
+     "3686",
+     "27",
+     "67.5%",
+     "0.117"
+    ],
+    [
+     "Deepsort",
+     "MVI_40771",
+     "69.3%",
+     "74.5%",
+     "66.2%",
+     "2409",
+     "2409",
+     "49",
+     "65.2%",
+     "0.153"
+    ],
+    [
+     "RE-ID Deepsort",
+     "MVI_40771",
+     "80.6%",
+     "87.2%",
+     "75.0%",
+     "1015",
+     "2348",
+     "13",
+     "69.6%",
+     "0.155"
+    ],
+    [
+     "Deepsort",
+     "MVI_40863",
+     "55.2%",
+     "80.6%",
+     "42.0%",
+     "2076",
+     "17746",
+     "51",
+     "39.2%",
+     "0.138"
+    ],
+    [
+     "RE-ID Deepsort",
+     "MVI_40863",
+     "56.1%",
+     "82.0%",
+     "42.6%",
+     "2037",
+     "17382",
+     "35",
+     "40.5%",
+     "0.138"
+    ]
+   ]
+  },
+  {
+   "page": 21,
+   "bbox": [
+    34.7,
+    228.9,
+    560.1,
+    415.3
+   ],
+   "caption": "Table 7. Cross-platform comparison.",
+   "rows": [
+    [
+     "Item",
+     "Platform",
+     "CNNModel",
+     "Operation (GOP)",
+     "Throughput (fps)",
+     "Full Power (W)",
+     "Efficiency (GOPS/W)",
+     "Cost Efficiency (GOPS/$×10 2 )"
+    ],
+    [
+     "Baseline1",
+     "CPUAMD R75800H",
+     "YOLOv3- tiny",
+     "0.735",
+     "10.01",
+     "45",
+     "0.16",
+     "1.96"
+    ],
+    [
+     "Baseline2",
+     "GeForceRTX 2060",
+     "YOLOv3- tiny",
+     "0.735",
+     "112.87",
+     "160",
+     "0.52",
+     "16.58"
+    ],
+    [
+     "Baseline3",
+     "XCZU9EG- FFVB1156",
+     "yolov3-adas- pruned-0.9",
+     "5.5",
+     "84.1",
+     "-",
+     "3.71",
+     "4.16"
+    ],
+    [
+     "Ref [45]",
+     "Nvidia Jetson Nano",
+     "YOLOv3- tiny",
+     "1.81",
+     "17",
+     "10",
+     "3.08",
+     "24.62"
+    ],
+    [
+     "Thiswork",
+     "Zynq-7000",
+     "YOLOv3- tiny",
+     "0.735",
+     "91.65",
+     "12.51",
+     "5.43",
+     "46.51"
+    ]
+   ]
+  },
+  {
+   "page": 22,
+   "bbox": [
+    35.3,
+    104.9,
+    806.7,
+    524.4
+   ],
+   "caption": "Table 8. Comparison with previous fpga-based work.",
+   "rows": [
+    [
+     "Item.Basic information introduction",
+     "Ref [14].Basic information introduction",
+     "Ref [37].Basic information introduction",
+     "Ref [37].Basic information introduction",
+     "Ref [33].Basic information introduction",
+     "Ref [46].Basic information introduction",
+     "This Work.Basic information introduction",
+     "This Work.Basic information introduction",
+     "This Work.Basic information introduction",
+     "This Work.Basic information introduction"
+    ],
+    [
+     "Platform Precision CNN Model Dataset",
+     "ZYNQXC7Z020 Fixed-16 YOLOv2 COCO",
+     "Zedboard Fixed-16 YOLOv2",
+     "Zedboard Fixed-16 YOLOv2",
+     "Arria-10GX1150 Int8 YOLOv2 VOC",
+     "Virtex-7: XC7VX690T-2 Float-32 YOLOv2-tiny VOC",
+     "YOLOv3",
+     "Float-32 YOLOv3-tiny",
+     "Zynq-7000",
+     ""
+    ],
+    [
+     "",
+     "",
+     "YOLOv2-tiny COCO",
+     "YOLOv2-tiny COCO",
+     "",
+     "consumption 1320 3456 637 560",
+     "",
+     "",
+     "Fixed-16 YOLOv3 YOLOv3-tiny UA-DETRAC",
+     "Fixed-16 YOLOv3 YOLOv3-tiny UA-DETRAC"
+    ],
+    [
+     "Hardware resource",
+     "Hardware resource",
+     "Hardware resource",
+     "Hardware resource",
+     "Hardware resource",
+     "Hardware resource",
+     "Hardware resource",
+     "Hardware resource",
+     "Hardware resource",
+     "Hardware resource"
+    ],
+    [
+     "BRAM DSPs LUTs FFs",
+     "87.5 150 36 576 43 940",
+     "88 153 37 342 35 785",
+     "88 153 37 342 35 785",
+     "96% 6% 45%",
+     "717 660",
+     "98.5 (19.7%) 301 (33.8%) 38 336 (22.3%) 62 988 (18.3%)",
+     "98.5 (19.7%) 301 (33.8%) 38 336 (22.3%) 62 988 (18.3%)",
+     "132.5 (26.5%) 144 (16.2%) 38 228 (22.2%) 42 853 (12.5%)",
+     "132.5 (26.5%) 144 (16.2%) 38 228 (22.2%) 42 853 (12.5%)"
+    ],
+    [
+     "Performance comparison",
+     "Performance comparison",
+     "Performance comparison",
+     "Performance comparison",
+     "Performance comparison",
+     "Performance comparison",
+     "Performance comparison",
+     "Performance comparison",
+     "Performance comparison",
+     "Performance comparison"
+    ],
+    [
+     "mAP",
+     "0.481",
+     "0.481",
+     "-",
+     "0.744",
+     "0.548",
+     "0.711",
+     "0.599",
+     "0.711",
+     "0.599"
+    ],
+    [
+     "Operations (GOP)",
+     "29.47",
+     "29.47",
+     "5.14",
+     "4.2",
+     "1.24",
+     "19.494",
+     "0.735",
+     "19.494",
+     "0.735"
+    ],
+    [
+     "Freq (MHz)",
+     "150",
+     "150",
+     "150",
+     "204",
+     "200",
+     "210",
+     "210",
+     "230",
+     "230"
+    ],
+    [
+     "Performance (GOP/s)",
+     "64.91",
+     "30.15",
+     "21.97",
+     "182.36",
+     "389.90",
+     "41.39",
+     "43.47",
+     "63.51",
+     "67.91"
+    ],
+    [
+     "Throughput(fps)",
+     "2.20",
+     "1.02",
+     "4.27",
+     "61.90",
+     "314.2",
+     "2.12",
+     "59.14",
+     "3.23",
+     "91.65"
+    ],
+    [
+     "Efficiency comparison",
+     "Efficiency comparison",
+     "Efficiency comparison",
+     "Efficiency comparison",
+     "Efficiency comparison",
+     "Efficiency comparison",
+     "Efficiency comparison",
+     "Efficiency comparison",
+     "Efficiency comparison",
+     "Efficiency comparison"
+    ],
+    [
+     "Cost Efficiency (GOPS/$×10 2 )",
+     "44.45",
+     "20.65",
+     "15.05",
+     "17.49",
+     "46.75",
+     "28.35",
+     "29.77",
+     "43.50",
+     "46.51"
+    ],
+    [
+     "DSP Efficiency (GOPS/DSPs)",
+     "0.433",
+     "0.197",
+     "0.144",
+     "2.004",
+     "0.113",
+     "0.138",
+     "0.144",
+     "0.441",
+     "0.472"
+    ],
+    [
+     "Dynamic Power (W)",
+     "1.4",
+     "1.2",
+     "0.83",
+     "-",
+     "-",
+     "1.80",
+     "1.48",
+     "1.52",
+     "1.31"
+    ],
+    [
+     "Full Power (W)",
+     "-",
+     "-",
+     "-",
+     "26",
+     "21",
+     "13.29",
+     "12.92",
+     "12.73",
+     "12.51"
+    ],
+    [
+     "Dynamic Energy Efficiency",
+     "46.36",
+     "25.13",
+     "26.47",
+     "-",
+     "-",
+     "22.99",
+     "29.37",
+     "41.78",
+     "51.84"
+    ],
+    [
+     "(GOPS/W) Full Energy Efficiency",
+     "-",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "(GOPS/W)",
+     "",
+     "-",
+     "-",
+     "7.01",
+     "18.57",
+     "3.11",
+     "3.36",
+     "4.99",
+     "5.43"
+    ]
+   ]
+  },
+  {
+   "page": 23,
+   "bbox": [
+    166.0,
+    209.6,
+    558.4,
+    352.4
+   ],
+   "caption": "Table 9. Performance and power consumption of the dual.",
+   "rows": [
+    [
+     "Precision",
+     "Float-32",
+     "Float-32",
+     "Fixed-16",
+     "Fixed-16"
+    ],
+    [
+     "Platform",
+     "Zynq-7000",
+     "Zynq-7000",
+     "Zynq-7000",
+     "Zynq-7000"
+    ],
+    [
+     "Freq (MHz)",
+     "200",
+     "",
+     "",
+     "209"
+    ],
+    [
+     "BRAM",
+     "230.5",
+     "",
+     "",
+     "263"
+    ],
+    [
+     "DSPs",
+     "",
+     "602",
+     "",
+     "294"
+    ],
+    [
+     "LUTs",
+     "89,014",
+     "",
+     "",
+     "91,108"
+    ],
+    [
+     "FFs",
+     "149,259",
+     "149,259",
+     "",
+     "89,148"
+    ],
+    [
+     "CNN Model",
+     "YOLOv3",
+     "YOLOv3-tiny",
+     "YOLOv3",
+     "YOLOv3-tiny"
+    ],
+    [
+     "Performance (GOP/S)",
+     "78.84",
+     "82.80",
+     "115.96",
+     "124.01"
+    ],
+    [
+     "Throughput (fps)",
+     "4.04",
+     "112.66",
+     "5.95",
+     "168.72"
+    ],
+    [
+     "Full Power (W)",
+     "16.72",
+     "16.06",
+     "15.64",
+     "15.18"
+    ]
+   ]
+  }
+ ]
+}

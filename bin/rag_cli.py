@@ -8,7 +8,7 @@ import sys
 import time
 from pathlib import Path
 
-from lib import rag
+from lib import rag_qwen as rag
 
 ROOT = Path(os.environ.get("PDB_RAG_ROOT", Path(__file__).resolve().parent.parent)).resolve()
 

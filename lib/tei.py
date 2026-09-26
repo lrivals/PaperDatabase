@@ -36,6 +36,17 @@ def _text(node):
     return t or None
 
 
+def _bbox(node):
+    """(page, x0, y0, x1, y1) de la première zone de coords, en points PDF, origine en haut
+    à gauche (comme PyMuPDF) ; None sans coords exploitables."""
+    c = node.get("coords")
+    try:
+        p, x, y, w, h = (float(v) for v in c.split(";", 1)[0].split(","))
+    except (AttributeError, ValueError):
+        return None
+    return int(p), x, y, x + w, y + h
+
+
 def _page(node):
     """Page du PDF d'après l'attribut coords (« page,x,y,w,h;… »)."""
     c = node.get("coords")
@@ -167,6 +178,51 @@ def _table_text(fig):
     return rows
 
 
+_HEADING_START = re.compile(r"^(\d+(\.\d+)*\.?|[A-Z]\.)\s+[A-Z]")
+
+
+def looks_like_prose(text):
+    """Texte d'une « figure » sans légende qui est en fait un morceau du corps : GROBID coupe
+    parfois un paragraphe autour d'une figure. Seuils posés sur les 40 cas du corpus du
+    25/09/2026 ; les légendes courtes (« (a) … (b) … », « Evaluation on … ») et les tableaux
+    restent des figures."""
+    text = text.strip()
+    if not text or text.count(" | ") >= 2 or text.startswith("("):
+        return False
+    n_words = len(text.split())
+    if text[0].islower() or _HEADING_START.match(text):
+        return True
+    if not text[0].isupper():  # « . CIFAR-100 … », « 8(c)-(e), … », symbole mathématique
+        return n_words >= 15
+    return n_words >= 80
+
+
+def _attach_to_section(blocks, text, page):
+    """Réinsère un paragraphe dans le corps : juste après un paragraphe coupé en pleine
+    phrase sur la même page, ou en bas de la précédente (le cas typique) ; sinon après le
+    dernier paragraphe de la page ; sinon à la fin de la dernière section commencée avant."""
+    def paras_on(pg):
+        return [(b, i) for b in blocks if b.kind == "section"
+                for i, (_, p) in enumerate(b.paras) if p == pg]
+
+    def cut(found):
+        return [(b, i) for b, i in found
+                if not b.paras[i][0].rstrip().endswith((".", "!", "?", ":"))]
+
+    same, prev = paras_on(page), paras_on(page - 1)
+    for found in (cut(same), cut(prev[-1:]), same):
+        if found:
+            b, i = found[-1]
+            b.paras.insert(i + 1, (text, page))
+            return True
+    sections = [b for b in blocks if b.kind == "section"]
+    if not sections:
+        return False
+    target = next((b for b in reversed(sections) if (b.page or 0) <= page), sections[0])
+    target.paras.append((text, page))
+    return True
+
+
 def parse_body(root):
     """Blocs ordonnés : abstract, sections (avec hiérarchie), puis figures et tableaux."""
     blocks = []
@@ -237,9 +293,13 @@ def parse_body(root):
             continue
         page = _page(fig) or last_page
         if not label and not (desc and re.match(r"(?i)(fig|table)", desc)):
+            if kind == "figure" and not lines and looks_like_prose(caption) \
+                    and _attach_to_section(blocks, caption, page):
+                continue
             caption = f"[figure sans légende identifiée] {caption}"
         paras = [(caption, page)] + [(line, page) for line in lines]
-        blocks.append(Block(kind, FIGURES_SECTION, None, 1, paras, page=page))
+        blocks.append(Block(kind, FIGURES_SECTION, None, 1, paras, page=page,
+                            bbox=_bbox(fig) if kind == "table" else None))
     return blocks
 
 

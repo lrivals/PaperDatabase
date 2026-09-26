@@ -38,7 +38,9 @@
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": []
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Algorithm 1: End-to-End Contin"
+    ]
   },
   "status": {
     "extracted": true,

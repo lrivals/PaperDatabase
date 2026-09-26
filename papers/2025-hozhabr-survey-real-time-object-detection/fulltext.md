@@ -753,16 +753,71 @@ FIGURE 21. An overview of basic FPGA architecture, including programmable logic 
 
 FIGURE 22. The Roofline model.
 
-**TABLE 1.** Comparison of recent related review studies with the present work, focusing on the main topics discussed.
+**TABLE 1.** Comparison of recent related review studies with the present work, focusing on the main topics discussed. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 3.** A summary of the commonly-used datasets in the context of object detection.
+    Year.Year |  | Ref. Main Surveyed Topics (Corresponding to ours).Object Detection (OD) Methods | Ref. Main Surveyed Topics (Corresponding to ours).Real-time Performance | Ref. Main Surveyed Topics (Corresponding to ours).FPGA Im- plementation | Ref. Main Surveyed Topics (Corresponding to ours).HW Acceleration/ Optimization Techniques | Highlights.Highlights
+    2024 | Ours | YES | YES | YES | YES | Focuses mainly on suitable OD models, HW acceleration methods, and optimization strategies to achieve real-time performance on FPGAs
+    2024 | Mittal [25] | YES | YES | NO | NO | Focuses on the design and evaluation of lightweight object detection models based on deep learning, specifically tailored for edge devices
+    2023 | Amjoud et al. [26] | YES | NO | NO | NO | Provides an overview of the current state of deep learning-based OD models
+    2023 | Kamath et al. [27] | YES | NO | NO | NO | Provides a systematic review on deep learning-based OD on resource-constrained devices, emphasizing lightweight models
+    2023 | R. Kaur et al. [28] | YES | NO | NO | NO | Reviews the evolution of OD, emphasizing DNN-based models while discussing key frameworks, architectures, datasets, and evaluation metrics
+    2023 | Setyanto et ai. [29] | YES | YES | NO | NO | Reviews OD methods and simplification strategies suitable for edge computing, focusing on compression techniques
+    2023 | Zou et al. [30] | YES | YES | NO | NO | Reviews the development of OD with a discussion on detection speedup helpful for real-time performance
+    2022 | Huang et al. [31] | YES | YES | NO | NO | Discusses CNN-based OD models suitable for implementation on Raspberry Pi while achieving real-time performance
+    2022 | J. Kaur et al. [32] | YES | YES | NO | NO | Discusses various OD techniques, applications, and related tools and datasets, with a focus on existing challenges
+    2022 | Zaidi et al. [33] | YES | YES | NO | NO | Reviews OD methods, focusing on lightweight models suitable for real-time performance on edge devices
+    2022 | Zeng et al. [14] | YES | NO | YES | YES | Reviews some software and hardware optimization methods for the implementation of OD models on FPGAs
 
-**TABLE 4.** A summary of commonly used metrics for evaluating object detection models.
+**TABLE 3.** A summary of the commonly-used datasets in the context of object detection. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 5.** Comparing FPGAs with some possible alternatives in different criteria.
+    Dataset | # of classes | # of images | # of annotated objects | Examples of object types | Tasks
+    ImageNet [102] | 20K | 14M | 1M (with Bbox) | animals, everyday objects, natural scenes, plants, people, food, abstract concepts | image classification, object detection
+    MS COCO [41] | 91 | 328K | 2.5M | animals, person, everyday objects, vehicles, food, sport equipment | object detection, image segmentation
+    Pascal VOC 07 [40] | 20 | 9963 | 26640 | person, animals, vehicles, and indoor objects | object detection, semantic segmentation, image classification
+    Pascal VOC 12 [45] | 20 | 11K | 27450 | person, animals, vehicles, and indoor objects | object detection, semantic segmentation, image classification
 
-**TABLE 6.** A list of some FPGA boards used in recent works for implementing Real-time object detection models, sorted by number of LUTs/ALMs.
+**TABLE 4.** A summary of commonly used metrics for evaluating object detection models. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 7.** A summary of two FPGA architecture design approaches for implementing object detection models.
+    Metric | Measure of
+    Intersection over Union (IoU) | Localization accuracy
+    mean Average Precision (mAP) | Detection (localization and classification) accuracy
+    Frames Per Second (FPS) | Processing throughput
+    Number of required FLoating- point OPerations (FLOPs) | Computational complexity
+    Number of trainable parame- ters | Computationalcomplexity and memory footprint
+    Latency | Inference time
 
-**TABLE 8.** Commonly used hardware acceleration techniques for FPGA-based object detection.
+**TABLE 5.** Comparing FPGAs with some possible alternatives in different criteria. [corps du tableau reconstruit par Docling : à vérifier]
+
+    CPUs | Good for sequential tasks, fixed architecture | general-purpose computing tasks Typically cost-effective for | Not reconfigurable at the hardware level, offer software-level flexibility | Varied power efficiency depending on workload and design | Typically versatile in terms of input and output sources | Extensive and mature development Typically can offer lower latency than Gpus se ue senm ecosystem | Used for both training and inference phases, Generally slower compared to GPUs
+    GPUs | Good for parallel processing, high power consumption, fixed architecture | Wide-spectrum of costs | Not reconfigurable at the hardware level, offer software-level flexibility, less adaptable compared to FPGAs | Typically communicates with the host through PCIe interface, Less versatile in Less power efficient | input sources compared to FPGAs User-friendly environments with extensive libraries, Faster and more straightforward code development compared to FPGAs and ASICs | communication with the host through Exhibits longer latency due to PCIe interface | Primarily leveraged for the training phase
+    ASICs | Superior performance in memory usage, power efficiency, latency, and throughput, Highly optimized pipelines for efficient data processing, fixed architecture | Cost-effective only in mass production, high initial development cost | Not reconfigurable after manufactured, suitable only for specific tasks | Superior power efficiency | Requires more complex development workflows, Extended development time Fixed I/O types after production | Can offer the lowest latency than other platforms | Deployed for both training and inference phases
+    FPGAs | Good for parallel processing (more powerful than GPUs in some cases, like multiple-stream management), Limited oamosoesl eoe n aoees totally customizable architecture irregular data accesses and | Higher initial cost but Longer life cycle co eo ss vs s to additional capabilities integration | Reprogrammable for different functionalities, Adaptable to different tasks, More flexible compared to ASICs | Can achieve reasonable power efficiency Can receive input data from multiple and diverse sources | Ler r r er daent compared to ASICs, Lacks strong tools for development of AI-based systems, Developing high-performance arcths ns e wvard | Can deliver deterministic and low latency, Can directly connect with peripheral hardware components, which improve latency | Primarily for the inference phase due to their limited computational and memory resources
+    Criteria | Performance General | Cost of the hardware | Programmability Flexibility/ | I/O Interface Power | Development Tools | Latency | developing phases of CNN-based object Suitability for detection
+
+**TABLE 6.** A list of some FPGA boards used in recent works for implementing Real-time object detection models, sorted by number of LUTs/ALMs. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Board. | FPGA Part. | Number of Available Resources.LUTs/ALMsª | Number of Available Resources.FFs | Number of Available Resources.DSPs | Number of Available Resources.Memory Blocks (Size) | Reference.
+    ZC702 | ZYNQ XC7Z020-1CLG484 | 53,200 | 106,400 | 220 | 140 (36Kb) | [90], [182]
+    Pynq-Z1 | ZYNQ XC7Z020-1CLG400C | 53,200 | 106,400 | 220 | 140 (36Kb) | [183]
+    Ultra96 | Zynq UltraScale+ MPSoC ZU3EG A484 | 70,560 | 141,120 | 360 | 216 (36Kb) | [69], [184]
+    ZC706 | ZYNQ XC7Z045 FFG900 - 2 SoC | 218,600 | 437,200 | 006 | 545 (36Kb) | [47], [48], [68]
+    ZCU104 | Zynq UltraScale+ MPSoC ZU7EV | 230,400 | 460,800 | 1,728 | 312 (36Kb) | [185]
+    KU040 | XCKU040-1FBVA676 | 242,400 | 484,800 | 1,920 | 600 (36Kb) | [s8]
+    ZCU102 | Zynq UltraScale+ XCZU9EG-2FFVB1156 | 274,080 | 548,160 | 2,520 | 912 (36Kb) | [82]
+    VC707 | Virtex 7 XC7VX485T-2FFG1761C | 303,600 | 607,200 | 2,800 | 2,060 (36Kb) | [15]
+    Arria-10 | Arria 10 GX1150 | 427,200 | 1,708,800 | 1,518 | 2,713 (20Kb) | [46], [73], [74], [76]
+    DE10-PRO | Stratix 10 GX2800 | 933,120 | 3,732,480 | 5,760 | 11,721 (20Kb) | [67]
+
+**TABLE 7.** A summary of two FPGA architecture design approaches for implementing object detection models. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Architecture Type | Highlights | Related Works
+    Single computation engine | Uses one single computation block to perform all parts of the model, proii -ts ion oi s eion resources, adaptable to various object detection models, less efficient, bottleneck in memory bandwidth (Figure 6) | [47], [68], [73], [190]- [192]
+    Streaming | s a dod os l ds seskl advantage of pipeline design, less adaptable to different models, faster, more resource consumer (Figure 7) | [15], [48], [90], [193]
+
+**TABLE 8.** Commonly used hardware acceleration techniques for FPGA-based object detection. [corps du tableau reconstruit par Docling : à vérifier]
+
+    1. Model-related Techniques for Hardware Acceleration | FPGA-related references
+    a. Pruning | [47], [73], [203]–[206]
+    b. Quantization | [15], [47], [48], [69], [73], [77], [82], [184]
+    c. Knowledge Distillation | [213]-[216]
+    d. Hardware-awareNeural Architecture Search | [77], [183], [219]- [221]

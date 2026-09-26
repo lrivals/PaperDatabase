@@ -53,7 +53,9 @@
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": []
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : • For each novel class, our pr"
+    ]
   },
   "status": {
     "extracted": true,

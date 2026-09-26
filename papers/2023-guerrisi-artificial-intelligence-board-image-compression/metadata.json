@@ -1,0 +1,52 @@
+{
+  "id": "2023-guerrisi-artificial-intelligence-board-image-compression",
+  "title": "Artificial Intelligence Based On-Board Image Compression for the Φ-Sat-2 Mission",
+  "authors": [
+    {
+      "given": "Giorgia",
+      "family": "Guerrisi"
+    },
+    {
+      "given": "Fabio Del",
+      "family": "Frate"
+    },
+    {
+      "given": "Giovanni",
+      "family": "Schiavon"
+    }
+  ],
+  "year": 2023,
+  "venue": "IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing 16, 8063-8075",
+  "doi": "10.1109/JSTARS.2023.3296485",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/JSTARS.2023.3296485",
+  "type": "journal",
+  "axes": [
+    "autoencoder-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "cae",
+    "image-compression",
+    "on-board",
+    "space",
+    "myriad2",
+    "vpu",
+    "openvino",
+    "sentinel-2",
+    "non-fpga"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE I, TABLE II, TABLE IV, TABLE V, TABLE VI",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

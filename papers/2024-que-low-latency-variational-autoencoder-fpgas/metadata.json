@@ -1,0 +1,60 @@
+{
+  "id": "2024-que-low-latency-variational-autoencoder-fpgas",
+  "title": "Low Latency Variational Autoencoder on FPGAs",
+  "authors": [
+    {
+      "given": "Zhiqiang",
+      "family": "Que"
+    },
+    {
+      "given": "Minghao",
+      "family": "Zhang"
+    },
+    {
+      "given": "Hongxiang",
+      "family": "Fan"
+    },
+    {
+      "given": "He",
+      "family": "Li"
+    },
+    {
+      "given": "Ce",
+      "family": "Guo"
+    },
+    {
+      "given": "Wayne",
+      "family": "Luk"
+    }
+  ],
+  "year": 2024,
+  "venue": "IEEE Journal on Emerging and Selected Topics in Circuits and Systems 14(2), 323-333",
+  "doi": "10.1109/JETCAS.2024.3389660",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/JETCAS.2024.3389660",
+  "type": "journal",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "vae",
+    "grng",
+    "anomaly-detection",
+    "time-series",
+    "gravitational-waves",
+    "hls"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE I, TABLE II, TABLE III, TABLE IV"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

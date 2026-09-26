@@ -1,0 +1,142 @@
+---
+id: arxiv-2301.07050-energy-efficient-reconfigurable-autoencoder-implementation
+title: "An Energy-Efficient Reconfigurable Autoencoder Implementation on FPGA"
+year: 2023
+backend: grobid
+---
+
+## Abstract
+
+Autoencoders are unsupervised neural networks that are used to process and compress input data and then reconstruct the data back to the original data size. This allows autoencoders to be used for different processing applications such as data compression, image classification, image noise reduction, and image coloring. Hardware-wise, re-configurable architectures like Field Programmable Gate Arrays (FPGAs) have been used for accelerating computations from several domains because of their unique combination of flexibility, performance, and power efficiency. In this paper, we look at the different autoencoders available and use the convolutional autoencoder in both FPGA and GPU-based implementations to process noisy static MNIST images. We compare the different results achieved with the FPGA and GPU-based implementations and then discuss the pros and cons of each implementation. The evaluation of the proposed design achieved 80% accuracy and our experimental results show that the proposed accelerator achieves a throughput of 21.12 Giga-Operations Per Second (GOP/s) with a 5.93 W on-chip power consumption at 100 MHz. The comparison results with off-the-shelf devices and recent state-of-the-art implementations illustrate that the proposed accelerator has obvious advantages in terms of energy efficiency and design flexibility. We also discuss future work that can be done with the use of our proposed accelerator.
+
+## I. INTRODUCTION
+
+Autoencoders are an unsupervised neural network that aims to learn how to compress input data and then reconstruct the data to match the input data with the least amount of loss [1]. This is done using encoder and decoder methods, where the encoder compresses the data and the decoder reconstructs the data [1], [2], [3], [7]. There are many types of autoencoders that can be used in machine learning; some examples are simple, convolutional, removing noise, and sparse autoencoders. These different autoencoders can then be used for different processing needs, like data compression before storage, image classification, and removing noise from images.
+
+This paper shows the use of convolutional autoencoders and how effective they are at removing noise from images. Convolutional autoencoders use convolutional neural networks for the layers of encoding and decoding to help compress and reconstruct the image respectively. Convolution neural networks use different filters to pull out features from the data. These filters are designed to pull out specific features and are dependent on what the feature needed is. The filters are designed to scan through the data and then create a map of how well the data matched the filter by creating scores, where a higher score is a better match [4]. The filter strides across the image based on how the layer is set up by the user. These maps are then used in the next layer, which is either a pooling layer or an up-sample layer. The pooling layer looks at a window of the data and will combines the window into one sample. The pool can use either a max of the data, the sum of the data, or the average of the data to create the new sample [4]. The pooling layer is used in the encoding process to help compress the data and store the important features. While the up-sampling process is used in the decoding process to help with reconstruction. There are many different ways to implement an autoencoder using different hardware. This paper compares two methods, one is an implementation of an FPGA using VHDL and the other is a GPU-based implementation using python.
+
+While developing the rest of the framework, machine vision framework developers and respectability might become engrossed in deciding which of these steps to use. The organize option is commonly chosen when prototyping a system for the first time. A prototype application must be tested to determine how many sections it must prepare every second or how many outlines it must handle per second of the live video. The power consumption of embedded systems is an important consideration for most applications, and researchers strive to develop energy-efficient design methodologies [14][15].
+
+The applications require for handling enormous data sets of high-resolution image preparing applications requests faster, configurable, long throughput frameworks with superior vitality productivity [16][17]. FPGAs (Field-Programmable Gate Arrays) can play an important role since they provide configurability, adaptability, and parallelism to coordinate the necessary throughput rates of the application under consideration [13]. Real-world applications can be implemented on FPGA devices thanks to their execution capabilities. The development of FPGAs has taken hardware flexibility, in general, one step further. In the end, The toolchain for developing applications on these devices has also advanced significantly, allowing these devices to be used by a larger building community [18]. FPGAs are typically used in applications that demand concurrency, high transfer speeds, and re-programmability.
+
+FPGAs have achieved rapid acceptance and growth over the past decade because they can be used in a very wide range of applications. The algorithms that extract features are time-consuming, which is a huge drawback when developing real-time applications. One solution to this problem is the use of dedicated hardware for the algorithms, such as the Example Autoencoder showing input image compression and reconstruction [1] FPGA, which can provide dedicated functional blocks that perform complex image processing operations in parallel. FPGAs have achieved rapid acceptance and growth over the past decade because they can be used in a very wide range of applications [19].
+
+We designed the convolutional autoencoder in both FPGA and GPU-based implementations to process noisy static MNIST images. Results show that the proposed design is both area-and power-efficient.
+
+## II. AUTOENCODER TYPES
+
+Autoencoders are a type of unsupervised neural network and are used for various processing applications. They are trained to encode and compress input data then reconstruct and decode the data back to try to match the input data. There are three main parts to autoencoders [3]:
+
+• Encode and Compress, • Bottleneck,
+
+• Decode and reconstruct. The encode and compress part of the autoencoder is composed of layers of neural networks that work to compress the data down to a set size. This encoded and compressed data is considered the bottleneck part since it is the smallest part of the system before getting reconstructed. The data could then be stored if needed, which allows for less required storage capacity. The compressed data is then used in the next part of the system, the decoding, and reconstruction part. This part works to decode the encoded data and reconstruct the data back to match the input data that was passed in. It does this by using neural networks that are designed the same as in the encode and compress part, however instead of compressing the data it is up-sampled instead. The number of layers used in both the compression and reconstruction parts is set by the user based on the required implementation needed. Figure 1, below, shows an example of an input image being compressed and reconstructed to an output image that matches closely [2].
+
+There are many different types of autoencoders that are used within machine learning. These autoencoders have the same flow and parts between them but the layers used within the encoding and decoding change. The sections below cover some of the different types of autoencoders that can be used.
+
+### A. Simple Autoencoder
+
+Simple autoencoders are the basic implementation of an autoencoder and are a simple feed-forward network that can have multiple layers within the encode and decode parts. One implementation had 3 layers and the layers were fully connected to each other [1]. This implementation also had the input and out of the autoencoder as the same size which forces the autoencoder to learn the compressed data with no information loss [1].
+
+### B. Convolutional Autoencoder
+
+Convolutional autoencoders are similar to simple autoencoders but change the layers to convolution layers using a convolution neural network. The convolution neural network layers are set up with several parts [4]:
+
+• Convolution,
+
+• Rectified Linear Unit,
+
+• Pooling (Encode) or Up-Sample (Decode).
+
+The convolution is performed by forming features out of the data and creating feature maps using convolution window filters. These filters are used to maintain the relationship between the pixels and the input image [4]. The resulting features create high and low scores that are representative of how well the pixels are in relation to the filter; the better the match the higher the score. The convolution has two parameters to it, the padding and the stride length [4]. The padding is so that feature has the same amount to work on no matter the input data size. The stride parameter is set to determine how many pixels the filter shifts over the input data when creating the feature.
+
+The Rectified Linear Unit (ReLU) part is used to make sure that there are no negative numbers going between layers. This is done by replacing any negative number found with zeros to help the math work out. The pooling part is the compression of the image. A window size is selected to combine parts of the filtered features into one pixel of the new image to be passed to the next layer. In the pooling window either the max value, average value, or summed value within the window is passed into the next pixel of the new image. The decoding and reconstruction layers will use an up-sample part instead of the pooling part to increase the size of the image as it gets reconstructed back to match the input size.
+
+### C. Denoising Autoencoder
+
+Denoising autoencoders [2] use Gaussian noise on the input data to disrupt the data then the autoencoder is trained to reconstruct the data with the noise removed. The goal of the denoising autoencoder is to be used for error correction of data that has been corrupted. The effectiveness of the autoencoder is measured by the reconstruction loss between the output data and the input data.
+
+### D. Sparse Autoencoder
+
+Sparse Autoencoders use sparsity in the layers to help with keeping the reconstruction error low and have a meaningful bottleneck image in the middle. In [2], the sparsity was enforced by applying L 1 regularization in the layer. This changes the autoencoder optimization objective to: where a i is the activation at the ith hidden layer and i iterates over all hidden activations [2]. Another method covered in [2], is the KL-divergence method. This method measures the distance between two probabilities by changing the activation a i to a Bernoulli variable with a probability of p [2]. The method tweaks the probability p by taking the measured probability for a batch, finding the difference, and then applying that as the regularization factor.
+
+argmin A,B E[∆(x, B • A(x)] + λ i |a i |,(1)
+
+Layer Type Window Size Stride 1
+
+## III. METHOD
+
+We consider an image has been corrupted by noise and requires the noise to be removed for processing later on. A convolutional autoencoder was designed to perform image noise reduction on the corrupted input images. The convolutional autoencoder is designed using three convolution layers and three pooling layers, interleaved, for encoding and compression. The decoding and reconstruction used four convolution layers and three up-sampling layers that were interleaved. The pooling layers were constructed to use the maximum pooling operation when operating over the windows of the images.
+
+Table I shows the layer construction of the convolutional autoencoder for encoding and decoding.
+
+The convolution layers were designed using convolution neural networks to train the weights and perform feature extraction on the image before the pooling or up-sampling layers. A 2-D convolution was used as the filter to create the features from the pixels. The general 2-D function equation used is given by
+
+f = y a=-y z b=-z x i-a,j-b * k a,b .(2)
+
+After the convolutional filters are run over the pixels a ReLU function is performed to make sure that no negative numbers are passed to the next layer. This allows for the math to always come back correct and not have errors when performing calculations. The ReLU function used is given by y = max(0, x),
+
+where x is the filtered pixel feature. The output of the ReLU function is then passed to the next layer of either pooling or up-sampling. The pooling function was a max function of window size of the filtered pixel features and is given by
+
+y = max(x 1 , 1, ..., x i,j ),(4)
+
+where i and j are the window size chosen for the layer.
+
+IV. RESULTS
+
+### A. Dataset
+
+This dataset is to be a noisy variation of the MNIST digit set, with the noise coming from an internal sense of style.
+
+The training set receives 80% of the whole data, whereas the validation set receives 20% of the total data. The actual training data contains 60,000 photos in all. Since the dataset, we require for the task at hand requires noisy images, we define functions to add random gaussian noise to the dataset elements. The new dataset now consists of noisy images and can be visualized. Gaussian noise is a type of noise that is in the form of Gaussian distribution, such as the white noise commonly encountered. It is random-valued and in impulses.
+
+### B. Training Details
+
+We eventually settled on the 20-epoch training time and the training loss and validation loss are displayed at the end of each epoch. Training time for each model amounted to about 100 seconds each due to the input images being of small size and hence not requiring too much processing power. Although it can occasionally reduce the visibility of already visible numerals, it does a better job of cleaning out the number and making it far more visible in more challenging circumstances like the first image. For a modest number of training parameters, the results are reasonable, with the greatest accuracy of 80.83%. The output of our autoencoding process is shown in Figure 3.
+
+### C. Experimental Setup
+
+We focused on two approaches to physically implementing the convolutional autoencoder; one using a GPU and the other using an FPGA hardware implementation. The GPU implementation was done using Python and Google Colaboratory. Google Colaboratory allowed for running the machine learning python executable on an NVIDIA Tesla K80. We implement the same design on the XCZU7EV FPGA chip having a 504K lookup table (LUT) and used 2021.1 software version of Vivado.
+
+### D. FPGA Implementation
+
+The encoded images are further analyzed with a convolutional autoencoder architecture comprising of matrix operation, channel distributor, encoding module, round-robin arbitration, and output controller blocks.
+
+Matrix operation: The boundary information during the convolution operation (28*28*1).
+
+Channel Distributor: Matrix is sent to the channel distributor module, which contains a channel controller and first-in-first-out memories. The channel controller interleaves channel data points and then sends them to the FIFOs in sequence. The FIFOs buffer the interleaved data and then divide them into eight channels.
+
+Encoding and decoding module: First, the convolutional encoding module does the convolution process, activation, and then max-pooling. Decoding is performed by up-sampling rather than max-pooling.
+
+Round robin arbitration: The output data of the convolutional encoding module are orderly packaged and then sent to the output controller. Round-Robin arbitrator is giving priority to requestors.
+
+Output controller: This module is used to judge whether the data stream is processed completely.
+
+### E. Comparision
+
+The implementation of Neural Networks (NNs) has been done using CPUs, GPUs, and ASICs. CPU/GPU-based NNs consume a lot of power and have a limited throughput due to limited memory bandwidth. Many researchers have developed custom ASICs for accelerating network inference workloads in order to achieve the best performance and energy efficiency. In spite of their attractiveness, ASICs cannot provide sufficient flexibility to accommodate the As shown in Table II, we compare our CNN autoencoder implementation with other CNN autoencoder models presented in the literature. The evaluation of the proposed design achieved 80% accuracy and our experimental results show that the proposed accelerator achieves a throughput of 21.12 Giga-Operations Per Second (GOP/s) with a 5.93 W on-chip power consumption at 100 MHz. The comparison results with off-the-shelf devices and recent state-of-the-art implementations illustrate that the proposed accelerator has obvious advantages in terms of energy efficiency and design flexibility.
+
+## V. CONCLUSION AND FUTURE WORK
+
+In a confusion matrix, the model determined which classes it is accurately forecasting and which classes it is forecasting inaccurately. More training parameters and deeper layers in the autoencoder could improve the model's performance. However, in the context of this study, the model performs admirably in reassembling denoised photos. It is shown that the use of convolutional layers is very important in the case of denoising images using deep learning based on a distinction between encoder and decoder architectures. The model is implemented for hardware acceleration with various heterogeneous devices and resulting in an energyefficient, reconfigurable system on the latter. Therefore, a deeper model and a more suitable latent space dimension can be used for more complex denoising involving RGB images. Future work scenarios could be removing noise from pictures received from cameras attached to autonomous robots before image processing, as the next step of this research. We are seeking to integrate our model into robots so that a response can be made by cleaning images received wirelessly from different robots if the transition is not clear before detecting position.
+
+## Figures et tableaux
+
+**Fig. 1.** 
+
+**Fig. 2.** Project noisy dataset
+
+**Fig. 3.** Denoised Image
+
+**Fig. 4.** RTL Design of the Implementation
+
+**Fig. 5.** Block Diagram of Implementation
+
+**TABLE II** AUTOENCODER ON DIFFERENT HETEROGENEOUS DEVICES [corps du tableau reconstruit par Docling : à vérifier]
+
+    Platform | Technology | OperationFrequencyPower |  | Latency | Throughput | Energy Efficiency
+    NVIDIA K80 | ASIC(28nm) | 1.48GHz | 30W | 1137.62ms | 22000(GOP/s) | 733.33(GOP/s/W)
+    NVIDIAGTX1080TIGPU(16nm) |  | 1.48GHz | 250W | 6.15ms | 235.77(GOP/s) | 0.94(GOP/s/W)
+    Chakradharetal.[12] | FPGA(28nm) | 200MHz | 15W | - | 16(GOP/s) | 1.06(GOP/s/W)
+    Gokhale et al. [11] | FPGA(28nm) | 150MHz | 8W | 4.50ms | 23.18(GOP/s) | 2.90(GOP/s/W)
+    Zhang et al. [5] | FPGA(28nm) | 100MHz |  | 18.61W21.61ms | 61.62(GOP/s) | 3.31(GOP/s/W)
+    Ours | FPGA(16nm) | 100MHz | 5.93W | 2.91ms | 21.12(GOP/s) | 3.56(GOP/s/W)

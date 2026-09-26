@@ -1,0 +1,337 @@
+{
+ "bench_fps_power": {
+  "file": "bench_fps_power.png",
+  "group": "bench",
+  "description": "débit vs puissance, détection / autres tâches",
+  "generated": "2026-09-26T20:44:46",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 52,
+  "total": 172
+ },
+ "bench_gops_per_watt": {
+  "file": "bench_gops_per_watt.png",
+  "group": "bench",
+  "description": "GOPS/W par précision de calcul",
+  "generated": "2026-09-26T20:44:46",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 35,
+  "total": 172
+ },
+ "bench_fpga_resources": {
+  "file": "bench_fpga_resources.png",
+  "group": "bench",
+  "description": "LUT vs DSP des FPGA, par toolflow",
+  "generated": "2026-09-26T20:44:46",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 54,
+  "total": 172
+ },
+ "bench_accuracy_fps": {
+  "file": "bench_accuracy_fps.png",
+  "group": "bench",
+  "description": "précision vs débit, un panneau par métrique",
+  "generated": "2026-09-26T20:44:47",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 33,
+  "total": 172,
+  "metrics": [
+   "mAP50-95 (jeu propre, 1 cible)",
+   "top-1 accuracy",
+   "AP@0.5 (UA-DETRAC, classe unique car)",
+   "PSNR dB à 0.2542 bpp (jeu n/r)"
+  ]
+ },
+ "bench_quantization": {
+  "file": "bench_quantization.png",
+  "group": "bench",
+  "description": "précision de calcul par famille de plateforme",
+  "generated": "2026-09-26T20:44:47",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 172,
+  "total": 172
+ },
+ "eval_retrieval": {
+  "file": "eval_retrieval.png",
+  "group": "eval",
+  "description": "recall@5/@10 et MRR par mode et jeu de questions",
+  "generated": "2026-09-26T20:44:47",
+  "sources": [
+   "eval/results/2026-09-26T2044-65074b7.json"
+  ],
+  "run": "2026-09-26T2044 · 65074b7"
+ },
+ "eval_verify": {
+  "file": "eval_verify.png",
+  "group": "eval",
+  "description": "verdicts de pdb verify par perturbation",
+  "generated": "2026-09-26T20:44:48",
+  "sources": [
+   "eval/results/2026-09-26T2044-65074b7.json"
+  ],
+  "run": "2026-09-26T2044 · 65074b7"
+ },
+ "eval_extraction": {
+  "file": "eval_extraction.png",
+  "group": "eval",
+  "description": "couverture du texte et tableaux, par papier",
+  "generated": "2026-09-26T20:44:48",
+  "sources": [
+   "eval/results/2026-09-26T2044-65074b7.json"
+  ],
+  "run": "2026-09-26T2044 · 65074b7",
+  "n": 45
+ },
+ "eval_latency": {
+  "file": "eval_latency.png",
+  "group": "eval",
+  "description": "temps d'exécution (recherche, verify, CLI)",
+  "generated": "2026-09-26T20:44:48",
+  "sources": [
+   "eval/results/2026-09-26T2044-65074b7.json"
+  ],
+  "run": "2026-09-26T2044 · 65074b7"
+ },
+ "eval_history": {
+  "file": "eval_history.png",
+  "group": "eval",
+  "description": "évolution des métriques au fil des runs",
+  "generated": "2026-09-26T20:44:49",
+  "sources": [
+   "eval/results/2026-09-26T0051-80aa05e-dirty.json",
+   "eval/results/2026-09-26T0100-80aa05e-dirty.json",
+   "eval/results/2026-09-26T0108-80aa05e-dirty.json",
+   "eval/results/2026-09-26T0109-80aa05e-dirty.json",
+   "eval/results/2026-09-26T0122-80aa05e-dirty.json",
+   "eval/results/2026-09-26T0124-80aa05e-dirty.json",
+   "eval/results/2026-09-26T0136-80aa05e-dirty.json",
+   "eval/results/2026-09-26T0140-80aa05e-dirty.json",
+   "eval/results/2026-09-26T2044-65074b7.json"
+  ]
+ },
+ "corpus_years": {
+  "file": "corpus_years.png",
+  "group": "corpus",
+  "description": "papiers par année et type",
+  "generated": "2026-09-26T20:44:49",
+  "sources": [
+   "papers/*/metadata.json"
+  ],
+  "n": 45
+ },
+ "corpus_axes": {
+  "file": "corpus_axes.png",
+  "group": "corpus",
+  "description": "papiers par axe, fiches done / todo",
+  "generated": "2026-09-26T20:44:49",
+  "sources": [
+   "papers/*/metadata.json"
+  ],
+  "n": 45
+ },
+ "corpus_bench_coverage": {
+  "file": "corpus_bench_coverage.png",
+  "group": "corpus",
+  "description": "part de n/r, power_scope, confidence",
+  "generated": "2026-09-26T20:44:49",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 172
+ },
+ "corpus_citations": {
+  "file": "corpus_citations.png",
+  "group": "corpus",
+  "description": "papiers les plus cités, dans et hors base",
+  "generated": "2026-09-26T20:45:04",
+  "sources": [
+   "papers/*/refs.jsonl",
+   "external_refs.csv"
+  ],
+  "n_internal": 15,
+  "n_external": 15
+ },
+ "corpus_gaps": {
+  "file": "corpus_gaps.png",
+  "group": "corpus",
+  "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
+  "generated": "2026-09-26T20:45:05",
+  "sources": [
+   "benchmarks.csv",
+   "papers/*/metadata.json"
+  ],
+  "zeros_axis": [
+   [
+    "GPU embarqué",
+    "yolo-fpga"
+   ],
+   [
+    "GPU embarqué",
+    "autoencoder-fpga"
+   ],
+   [
+    "GPU embarqué",
+    "continual-learning"
+   ],
+   [
+    "GPU embarqué",
+    "toolflows"
+   ],
+   [
+    "NPU / VPU",
+    "yolo-fpga"
+   ],
+   [
+    "NPU / VPU",
+    "continual-learning"
+   ],
+   [
+    "NPU / VPU",
+    "toolflows"
+   ],
+   [
+    "MCU",
+    "yolo-fpga"
+   ],
+   [
+    "MCU",
+    "autoencoder-fpga"
+   ],
+   [
+    "MCU",
+    "toolflows"
+   ],
+   [
+    "CPU",
+    "yolo-fpga"
+   ],
+   [
+    "CPU",
+    "continual-learning"
+   ],
+   [
+    "CPU",
+    "toolflows"
+   ],
+   [
+    "GPU bureau",
+    "yolo-fpga"
+   ],
+   [
+    "GPU bureau",
+    "continual-learning"
+   ],
+   [
+    "GPU bureau",
+    "toolflows"
+   ],
+   [
+    "ASIC",
+    "yolo-fpga"
+   ],
+   [
+    "ASIC",
+    "continual-learning"
+   ],
+   [
+    "ASIC",
+    "toolflows"
+   ],
+   [
+    "ASIC",
+    "platforms"
+   ]
+  ],
+  "zeros_task": [
+   [
+    "GPU embarqué",
+    "classification"
+   ],
+   [
+    "GPU embarqué",
+    "anomalie"
+   ],
+   [
+    "GPU embarqué",
+    "compression / AE"
+   ],
+   [
+    "GPU embarqué",
+    "apprentissage continu"
+   ],
+   [
+    "NPU / VPU",
+    "classification"
+   ],
+   [
+    "NPU / VPU",
+    "anomalie"
+   ],
+   [
+    "NPU / VPU",
+    "apprentissage continu"
+   ],
+   [
+    "MCU",
+    "anomalie"
+   ],
+   [
+    "MCU",
+    "compression / AE"
+   ],
+   [
+    "CPU",
+    "classification"
+   ],
+   [
+    "CPU",
+    "anomalie"
+   ],
+   [
+    "CPU",
+    "apprentissage continu"
+   ],
+   [
+    "GPU bureau",
+    "détection"
+   ],
+   [
+    "GPU bureau",
+    "classification"
+   ],
+   [
+    "GPU bureau",
+    "anomalie"
+   ],
+   [
+    "GPU bureau",
+    "apprentissage continu"
+   ],
+   [
+    "ASIC",
+    "détection"
+   ],
+   [
+    "ASIC",
+    "classification"
+   ],
+   [
+    "ASIC",
+    "anomalie"
+   ],
+   [
+    "ASIC",
+    "apprentissage continu"
+   ]
+  ]
+ }
+}

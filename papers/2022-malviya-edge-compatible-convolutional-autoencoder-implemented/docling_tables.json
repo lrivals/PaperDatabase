@@ -1,0 +1,325 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 2,
+   "bbox": [
+    318.7,
+    265.9,
+    560.2,
+    446.8
+   ],
+   "caption": "TABLE1. SummaryofCAEArchitecture",
+   "rows": [
+    [
+     "Section",
+     "Layer (type)",
+     "# kernels",
+     "Output size",
+     "# parameters"
+    ],
+    [
+     "Encoder",
+     "Input_1 Conv_1 max_pool_1 Conv_2 max_pool_2",
+     "16",
+     "64 × 64 × 1 64 × 64 × 16 32 × 32× 16 32×32× 8 16 × 16 × 8",
+     "0 160 0 1160 0"
+    ],
+    [
+     "Encoder",
+     "",
+     "8",
+     "16×16×4 8×8×4 256 10",
+     "292"
+    ],
+    [
+     "Encoder",
+     "Conv_3 max_pool_3 Flatten",
+     "4",
+     "",
+     "0 0"
+    ],
+    [
+     "Encoder",
+     "Dense_1 Dense_2",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Encoder",
+     "",
+     "",
+     "",
+     "2570 2816 0"
+    ],
+    [
+     "Fully- Connected (FC)",
+     "Conv_4",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Fully- Connected (FC)",
+     "",
+     "",
+     "256",
+     ""
+    ],
+    [
+     "Fully- Connected (FC)",
+     "Reshape",
+     "",
+     "8×8×4",
+     ""
+    ],
+    [
+     "Decoder",
+     "",
+     "4",
+     "8×8×4",
+     "148"
+    ],
+    [
+     "Decoder",
+     "up_sampling_1",
+     "",
+     "16× 16× 8",
+     "0"
+    ],
+    [
+     "Decoder",
+     "Conv_5",
+     "8",
+     "16 × 16× 8",
+     "296"
+    ],
+    [
+     "Decoder",
+     "up_sampling_2",
+     "",
+     "32×32×8",
+     "0"
+    ],
+    [
+     "Decoder",
+     "Conv_6",
+     "16",
+     "32× 32× 16",
+     "1168"
+    ],
+    [
+     "Decoder",
+     "up_sampling_3",
+     "",
+     "64 × 64× 16",
+     "0"
+    ],
+    [
+     "Decoder",
+     "Conv_7",
+     "16",
+     "64 × 64 × 1",
+     "145"
+    ],
+    [
+     "Total number of trainable parameters",
+     "Total number of trainable parameters",
+     "Total number of trainable parameters",
+     "Total number of trainable parameters",
+     "8755"
+    ]
+   ]
+  },
+  {
+   "page": 3,
+   "bbox": [
+    316.9,
+    82.6,
+    558.2,
+    131.1
+   ],
+   "caption": "TABLE2. CAEModelResultsforVariousImageEncodings",
+   "rows": [
+    [
+     "Encoding",
+     "# kernels",
+     "# nodes in FC layer",
+     "Accuracy"
+    ],
+    [
+     "Spectrogram",
+     "32,8,4",
+     "10",
+     "80.4 %"
+    ],
+    [
+     "Scalogram",
+     "16,8,4",
+     "10",
+     "88.8 %"
+    ],
+    [
+     "MTF",
+     "16,8,4",
+     "10",
+     "59 %"
+    ],
+    [
+     "GAF",
+     "32,8,4",
+     "5",
+     "62 %"
+    ]
+   ]
+  },
+  {
+   "page": 3,
+   "bbox": [
+    316.9,
+    170.5,
+    558.3,
+    229.5
+   ],
+   "caption": "TABLE3. ComparisonofThisWorkWithOtherModelsforAnomaly Detection in Airbus SAS Helicopter Accelerometer Dataset",
+   "rows": [
+    [
+     "Reference",
+     "Architecture",
+     "# trainable pa- rameters",
+     "Accuracy"
+    ],
+    [
+     "Garcia et al. [17]",
+     "CAE (2 Conv + 1 FC)",
+     ">10M",
+     "85 %"
+    ],
+    [
+     "Ducoffe et al. [18]",
+     "Generative adversarial network (GAN)",
+     "Not specified",
+     "88.11 %"
+    ],
+    [
+     "This work",
+     "CAE (3 Conv + 1 FC)",
+     "8755",
+     "88.8 %"
+    ]
+   ]
+  },
+  {
+   "page": 3,
+   "bbox": [
+    334.6,
+    259.8,
+    540.1,
+    309.3
+   ],
+   "caption": "TABLE4. ResourceUtilizationonPYNQ-Z2",
+   "rows": [
+    [
+     "Resource",
+     "Available",
+     "Encoder",
+     "Decoder"
+    ],
+    [
+     "LUT",
+     "53 200",
+     "40 403 (75.7 %)",
+     "38 169 (71.75 %)"
+    ],
+    [
+     "FF",
+     "106400",
+     "37094 (34.8 %)",
+     "39 839 (37.44 %)"
+    ],
+    [
+     "BRAM",
+     "140",
+     "6 (4.29 %)",
+     "10 (7.14 %)"
+    ],
+    [
+     "DSP",
+     "220",
+     "82 (37.27 %)",
+     "106 (48.18 %)"
+    ]
+   ]
+  },
+  {
+   "page": 4,
+   "bbox": [
+    66.4,
+    82.1,
+    547.9,
+    203.6
+   ],
+   "caption": "TABLE5. ComparisonofThisWorkWithOtherFPGAImplementationsofCNN/AEModelsReportedinLiterature",
+   "rows": [
+    [
+     "Reference",
+     "Application",
+     "Architecture",
+     "Input size",
+     "FPGA family/board and performance",
+     "Resource utilization"
+    ],
+    [
+     "Zhang et al. [13]",
+     "CNN resource optimization on FPGA",
+     "5-layer CNN, 3 FC layers",
+     "224×224× 3",
+     "Virtex-7 VX485T; inference time: 21.6ms; power consumption: 18.61 W",
+     "BRAM: 1024, LUT: 186 251, FF: 205 704"
+    ],
+    [
+     "Feng et al. [14]",
+     "Remaining useful life estimation (CBM)",
+     "3-layer CNN with 2-layer RNN",
+     "24 × 24× 3",
+     "PYNQ-Z2; inference time: 214 ms; power con- sumption: 1.99 W",
+     "BRAM: 134, LUT: 36 520, FF: 21 193"
+    ],
+    [
+     "Zhao et al. [15]",
+     "Image compression",
+     "CAE with 3-layer CNN",
+     "256× 256× 3",
+     "Kintex Ultrascale KCU105; inference time: 15.73 ms; power consumption: 2.76 W",
+     "BRAM: 55.5, LUT: 22 441, FF: 27100"
+    ],
+    [
+     "Sun et al. [19]",
+     "Object detection using MobileNet",
+     "12-layer CNN (MobileNet)",
+     "3 × 160 × 360",
+     "Ultra96-V2; inference time: 35.7 ms; power consumption: 6.1 W",
+     "BRAM: 210, LUT: 51 508, FF: 57 859"
+    ],
+    [
+     "Maraoui et al. [20]",
+     "LeNet-5 model-based traffic sign recognition",
+     "2-layer CNN and 2 FC layer",
+     "32 × 32",
+     "PYNQ-Z1; inference time: 30 ms",
+     "BRAM: 167, LUT: 33 816, FF: 27 854"
+    ],
+    [
+     "This work",
+     "Anomaly detection in vibration CBM",
+     "CAE with 3-layer CNN, 1 FC layer",
+     "64 × 64",
+     "PYNQ-Z2; inference time: 5.9 ms; power con- sumption: 1.85 W (encoder), 1.79 W (decoder)",
+     "Described in Table 4"
+    ]
+   ]
+  }
+ ]
+}

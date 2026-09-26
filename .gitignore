@@ -16,3 +16,9 @@ docs/article/*.log
 docs/article/*.out
 docs/article/*.toc
 .claude/settings.local.json
+
+# État de l'art (brouillon local, hors git pour l'instant)
+docs/etat-de-l-art/
+
+# Fichiers générés par l'extension TS-TeX de l'éditeur
+tstex_modules/

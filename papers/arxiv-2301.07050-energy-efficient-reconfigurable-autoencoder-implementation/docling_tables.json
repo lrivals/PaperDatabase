@@ -1,0 +1,177 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    91.0,
+    52.8,
+    261.2,
+    193.3
+   ],
+   "caption": "TABLE I LAYER CONSTRUCTION FOR CONVOLUTIONAL AUTOENCODER",
+   "rows": [
+    [
+     "Layer",
+     "Type",
+     "WindowSize",
+     "Stride"
+    ],
+    [
+     "1",
+     "Convolution",
+     "4",
+     "1"
+    ],
+    [
+     "2",
+     "MaxPool",
+     "4",
+     "1"
+    ],
+    [
+     "3",
+     "Convolution",
+     "4",
+     "1"
+    ],
+    [
+     "4",
+     "MaxPool",
+     "4",
+     "1"
+    ],
+    [
+     "5",
+     "Convolution",
+     "4",
+     "1"
+    ],
+    [
+     "6",
+     "MaxPool",
+     "4",
+     "1"
+    ],
+    [
+     "7",
+     "Convolution",
+     "4",
+     "1"
+    ],
+    [
+     "8",
+     "Up-Sample",
+     "4",
+     "1"
+    ],
+    [
+     "9",
+     "Convolution",
+     "4",
+     "1"
+    ],
+    [
+     "10",
+     "Up-Sample",
+     "4",
+     "1"
+    ],
+    [
+     "11",
+     "Convolution",
+     "4",
+     "1"
+    ],
+    [
+     "12",
+     "Up-Sample",
+     "4",
+     "1"
+    ],
+    [
+     "13",
+     "Convolution",
+     "4",
+     "1"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    105.8,
+    257.5,
+    508.2,
+    327.0
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Platform",
+     "Technology",
+     "OperationFrequencyPower",
+     "",
+     "Latency",
+     "Throughput",
+     "Energy Efficiency"
+    ],
+    [
+     "NVIDIA K80",
+     "ASIC(28nm)",
+     "1.48GHz",
+     "30W",
+     "1137.62ms",
+     "22000(GOP/s)",
+     "733.33(GOP/s/W)"
+    ],
+    [
+     "NVIDIAGTX1080TIGPU(16nm)",
+     "",
+     "1.48GHz",
+     "250W",
+     "6.15ms",
+     "235.77(GOP/s)",
+     "0.94(GOP/s/W)"
+    ],
+    [
+     "Chakradharetal.[12]",
+     "FPGA(28nm)",
+     "200MHz",
+     "15W",
+     "-",
+     "16(GOP/s)",
+     "1.06(GOP/s/W)"
+    ],
+    [
+     "Gokhale et al. [11]",
+     "FPGA(28nm)",
+     "150MHz",
+     "8W",
+     "4.50ms",
+     "23.18(GOP/s)",
+     "2.90(GOP/s/W)"
+    ],
+    [
+     "Zhang et al. [5]",
+     "FPGA(28nm)",
+     "100MHz",
+     "",
+     "18.61W21.61ms",
+     "61.62(GOP/s)",
+     "3.31(GOP/s/W)"
+    ],
+    [
+     "Ours",
+     "FPGA(16nm)",
+     "100MHz",
+     "5.93W",
+     "2.91ms",
+     "21.12(GOP/s)",
+     "3.56(GOP/s/W)"
+    ]
+   ]
+  }
+ ]
+}

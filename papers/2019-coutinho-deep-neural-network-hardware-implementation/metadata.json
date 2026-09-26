@@ -1,0 +1,49 @@
+{
+  "id": "2019-coutinho-deep-neural-network-hardware-implementation",
+  "title": "Deep Neural Network Hardware Implementation Based on Stacked Sparse Autoencoder",
+  "authors": [
+    {
+      "given": "Maria G. F.",
+      "family": "Coutinho"
+    },
+    {
+      "given": "Matheus F.",
+      "family": "Torquato"
+    },
+    {
+      "given": "Marcelo A. C.",
+      "family": "Fernandes"
+    }
+  ],
+  "year": 2019,
+  "venue": "IEEE Access 7, 40674-40694",
+  "doi": "10.1109/ACCESS.2019.2907261",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/ACCESS.2019.2907261",
+  "type": "journal",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "stacked-sparse-autoencoder",
+    "systolic-array",
+    "fixed-point",
+    "rtl",
+    "virtex-6",
+    "mnist",
+    "mlp"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE 1, TABLE 2, TABLE 3, TABLE 4, Table 5, TABLE 6, TABLE 12, TABLE 13, TABLE 14, TABLE 15, TABLE 16, TABLE 17"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

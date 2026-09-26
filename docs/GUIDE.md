@@ -58,6 +58,7 @@ ln -s "$PWD/bin/pdb" ~/.local/bin/pdb
 Facultatif :
 
 - `.venv/bin/pip install -r requirements-viz.txt` pour la visualisation ;
+- `.venv/bin/pip install -r requirements-plot.txt` pour les figures statiques (`bin/pdb plot`) ;
 - `requirements-embed.txt` pour la similarité par embeddings ;
 - `.venv/bin/pip install -r requirements-rag.txt` puis `bin/pdb rag index --download` pour
   la recherche de passages avec les modèles Qwen locaux (GPU CUDA) ;
@@ -234,6 +235,9 @@ démarrer, PDF en attente, fiche à rédiger, gaps à mettre à jour, axe à ét
 - `bin/pdb viz`, onglet Généalogie : suivre la lignée d'un sujet (`hls4ml`, `finn|binar`,
   `yolo`) et repérer les maillons manquants à ajouter.
 - Relire une fiche contre le PDF lu vous-même (§6).
+- `bin/pdb plot` : régénérer les figures dans `figures/` (benchmarks, évaluation, statistiques
+  du corpus). La carte `corpus_gaps` montre les cases vides famille de plateforme × axe ou
+  tâche, à confronter à `gaps.md`.
 
 **Interroger la base sans passer par Claude**
 
@@ -351,6 +355,7 @@ Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
 | `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
 | `bin/pdb grobid start\|stop\|status` | GROBID |
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
+| `bin/pdb plot [bench\|eval\|corpus] [--format pdf]` | figures statiques (PNG par défaut) dans `figures/` (`--list` : noms) |
 | `bin/pdb test` | tests |
 
 | Claude Code | Effet |

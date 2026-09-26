@@ -138,6 +138,10 @@ bin/pdb rag search "KV260 power consumption"
 la base ne suffit pas. Les papiers importés gardent un PDF et une trace d'acquisition ;
 leurs fiches restent à faire. Voir [le plan RAG](docs/RAG_IMPLEMENTATION_PLAN.md).
 
+Le [benchmark synthétique](docs/BENCHMARK.md) utilise un corpus isolé de 200 articles,
+des questions générées localement sur GPU et une validation automatique indépendante.
+`bin/pdb bench --help` expose les étapes de construction et d'évaluation.
+
 ---
 
 ## Adapter à un autre sujet de recherche

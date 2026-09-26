@@ -3,13 +3,14 @@
 import argparse
 import contextlib
 import json
+import os
 import sys
 import time
 from pathlib import Path
 
 from lib import rag
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(os.environ.get("PDB_RAG_ROOT", Path(__file__).resolve().parent.parent)).resolve()
 
 
 def run(argv):

@@ -101,10 +101,16 @@ def cmd_rag(args):
     return rag_cli.run(args)
 
 
+def cmd_bench(args):
+    import bench_cli
+    return bench_cli.run(args)
+
+
 COMMANDS = {
     "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
     "rag": cmd_rag,
+    "bench": cmd_bench,
 }
 
 

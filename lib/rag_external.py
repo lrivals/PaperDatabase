@@ -75,9 +75,9 @@ def _download(url, target, budget):
     raise ValueError("too many PDF redirects")
 
 
-def _arxiv_candidates(query):
+def _arxiv_candidates(query, limit=8):
     params = {"search_query": " AND ".join(f"all:{word}" for word in query.split()[:2]),
-              "start": 0, "max_results": 8, "sortBy": "relevance"}
+              "start": 0, "max_results": limit, "sortBy": "relevance"}
     res = requests.get("https://export.arxiv.org/api/query", params=params, timeout=30)
     res.raise_for_status()
     ns = {"a": "http://www.w3.org/2005/Atom"}
@@ -105,10 +105,10 @@ def _arxiv_candidates(query):
     return result
 
 
-def _openalex_candidates(query, cache):
+def _openalex_candidates(query, cache, limit=12):
     client = openalex.Client(cache_dir=cache)
     candidates = []
-    for work in client.works(search=query, limit=12):
+    for work in client.works(search=query, limit=limit):
         arxiv_id = openalex.arxiv_id_of(work)
         urls = ([f"https://arxiv.org/pdf/{arxiv_id}"] if arxiv_id else [])
         urls += [loc["pdf_url"] for loc in
@@ -284,7 +284,7 @@ def _acquire_unlocked(root, query, run_id, limit=3):
             state["errors"].append(f"{identity}: parse/import: {e}")
             _save(manifest_path, state)
     if imported:
-        if reindex.run():
+        if reindex.run(root):
             raise RuntimeError("imported papers need index validation; check bin/pdb reindex")
         rag.build(root, mode="hybrid", download=False)
     evidence = []

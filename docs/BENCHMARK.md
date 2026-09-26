@@ -131,3 +131,28 @@ Reading:
   parent section, Qwen hits only against their own 512-token chunk.
 - These are synthetic questions anchored on single passages; agent and judge stages
   measure answer quality.
+
+## Retrieval with enriched notes and query variants (26/09/2026, 23:53)
+
+Same protocol, both frozen corpus copies, 200 canonical questions plus 80 variants
+(a translation and a terse rewording of 40 questions, written and checked by Claude).
+Cells are recall@20 / MRR over answerable questions.
+
+| Slice | Qwen lexical | Qwen dense | Qwen hybrid | Qwen + reranker | bge-small | bge-small + rerank |
+|---|---|---|---|---|---|---|
+| source, canonical (180) | 0.46 / 0.40 | 0.67 / 0.57 | 0.67 / 0.55 | **0.77 / 0.73** | 0.65 / 0.47 | 0.69 / 0.50 |
+| enriched, canonical (180) | 0.37 / 0.36 | 0.65 / 0.54 | 0.65 / 0.44 | **0.73 / 0.70** | 0.65 / 0.47 | 0.69 / 0.50 |
+| source, 40 questions, original | 0.57 / 0.56 | 0.78 / 0.70 | 0.76 / 0.71 | **0.82 / 0.84** | 0.74 / 0.58 | 0.76 / 0.61 |
+| same, translated | 0.46 / 0.39 | 0.78 / 0.73 | 0.76 / 0.61 | **0.81 / 0.82** | 0.69 / 0.44 | 0.71 / 0.40 |
+| same, terse | 0.65 / 0.54 | 0.76 / 0.68 | 0.78 / 0.73 | **0.82 / 0.82** | 0.75 / 0.51 | 0.74 / 0.58 |
+
+Reading:
+- **Automatic notes hurt Qwen retrieval of original evidence** (reranker 0.77 → 0.73,
+  hybrid MRR 0.55 → 0.44): notes and benchmark-row records compete with the original
+  passages for the top 20 and for the three-results-per-paper cap. bge-small only
+  indexes original sections, so its scores are unchanged. Whether notes help *answers*
+  is for the agent stage.
+- **Translation**: the Qwen reranker loses nothing (0.82 → 0.81); bge-small loses
+  recall and most of its ranking (MRR 0.61 → 0.40 with rerank). Terse rewording costs
+  neither engine much.
+- The ranking of modes on the held-out test split matches the whole set.

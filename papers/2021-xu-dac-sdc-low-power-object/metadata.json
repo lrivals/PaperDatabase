@@ -1,0 +1,65 @@
+{
+  "id": "2021-xu-dac-sdc-low-power-object",
+  "title": "DAC-SDC Low Power Object Detection Challenge for UAV Applications",
+  "authors": [
+    {
+      "given": "Xiaowei",
+      "family": "Xu"
+    },
+    {
+      "given": "Xinyi",
+      "family": "Zhang"
+    },
+    {
+      "given": "Bei",
+      "family": "Yu"
+    },
+    {
+      "given": "Xiaobo Sharon",
+      "family": "Hu"
+    },
+    {
+      "given": "Christopher",
+      "family": "Rowen"
+    },
+    {
+      "given": "Jingtong",
+      "family": "Hu"
+    },
+    {
+      "given": "Yiyu",
+      "family": "Shi"
+    }
+  ],
+  "year": 2021,
+  "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence 43(2), 392-403",
+  "doi": "10.1109/TPAMI.2019.2932429",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TPAMI.2019.2932429",
+  "type": "journal",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "dac-sdc",
+    "uav",
+    "object-detection",
+    "benchmark",
+    "pynq",
+    "zynq-7000",
+    "jetson-tx2",
+    "energy-measurement",
+    "small-objects"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

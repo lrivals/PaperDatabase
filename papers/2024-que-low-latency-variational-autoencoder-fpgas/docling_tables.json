@@ -1,0 +1,259 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 7,
+   "bbox": [
+    49.8,
+    83.7,
+    299.7,
+    223.2
+   ],
+   "caption": "TABLE I RESOURCE UTILIZATION ON A XILINX ZYNQ 7045 AND U250 FPGAS",
+   "rows": [
+    [
+     "Task",
+     "Z7045",
+     "LUT",
+     "FF",
+     "BRAM",
+     "DSP"
+    ],
+    [
+     "Task",
+     "Available",
+     "218600",
+     "437200",
+     "1090",
+     "900"
+    ],
+    [
+     "VAE",
+     "Used [↓]",
+     "12708",
+     "12929",
+     "9",
+     "175"
+    ],
+    [
+     "(Nvae = 2)",
+     "Utili. [%, ↓]",
+     "5.8%",
+     "3.0%",
+     "0.8%",
+     "19.4%"
+    ],
+    [
+     "VAE",
+     "Used [↓]",
+     "62590",
+     "63817",
+     "53",
+     "860"
+    ],
+    [
+     "(Nvae = 10)",
+     "Utili. [%, ↓]",
+     "28.6%",
+     "14.6%",
+     "4.9%",
+     "95.6%"
+    ],
+    [
+     "Task",
+     "U250",
+     "LUT",
+     "FF",
+     "BRAM",
+     "DSP"
+    ],
+    [
+     "Task",
+     "Available",
+     "1728000",
+     "3456000",
+     "5376",
+     "12288"
+    ],
+    [
+     "VAE",
+     "Used [↓]",
+     "188350",
+     "29496",
+     "62",
+     "1032"
+    ],
+    [
+     "(Nvae = 12)",
+     "Utili. [%, ↓]",
+     "10.9%",
+     "0.9%",
+     "1.2%",
+     "8.4%"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    314.4,
+    418.4,
+    560.4,
+    485.8
+   ],
+   "caption": "TABLE II COMPARISON OF TRUE-POSITIVE RATES (TPR) FOR GW DETECTION AT 10% AND 1% FALSE-POSITIVE RATES (FPR) WITH OTHER WORK. THE HIGHER, THE BETTER",
+   "rows": [
+    [
+     "FPR",
+     "",
+     "AE [21] (LSTM)",
+     "This work",
+     "",
+     "AE [21] (GRU)",
+     "This work",
+     "AE [21] (CNN)",
+     "This work"
+    ],
+    [
+     "0.1",
+     "二",
+     "0.461",
+     "0.531",
+     "II",
+     "0.348",
+     "0.531 II",
+     "0.302",
+     "0.531"
+    ],
+    [
+     "0.01",
+     "二",
+     "0.304",
+     "0.381",
+     "II",
+     "0.186",
+     "0.381",
+     "0.120",
+     "0.381"
+    ],
+    [
+     "0.001",
+     "ⅡI",
+     "",
+     "0.261",
+     "ⅡI",
+     "",
+     "0.261",
+     "",
+     "0.261"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    317.0,
+    93.6,
+    557.9,
+    159.5
+   ],
+   "caption": "TABLE III THE LATENCY AND HARDWARE USAGE OF THE VAES WITH DIFFERENT GRNGS ON U250",
+   "rows": [
+    [
+     "Types",
+     "Latency",
+     "Initiation Interval",
+     "LUT",
+     "DSP",
+     "BRAM"
+    ],
+    [
+     "Float32",
+     "24",
+     "1",
+     "16128",
+     "147",
+     "4"
+    ],
+    [
+     "Unified 16-bit",
+     "16",
+     "1",
+     "15045",
+     "109",
+     "5"
+    ],
+    [
+     "Mixed Precision",
+     "17",
+     "1",
+     "15570",
+     "113",
+     "12"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    312.3,
+    83.6,
+    562.1,
+    211.6
+   ],
+   "caption": "TABLE IV COMPARISON OF THE FPGA, CPU AND GPU DESIGNS",
+   "rows": [
+    [
+     "Platform.Application Domain",
+     "CPU E5-2620.Anomaly Detection",
+     "GPU GeForce 2080Ti.Anomaly Detection",
+     "FPGA U250 [13].Anomaly Detection",
+     "FPGA U250 This work.Anomaly Detection"
+    ],
+    [
+     "Model",
+     "VAE",
+     "VAE",
+     "AE",
+     "VAE"
+    ],
+    [
+     "AUC",
+     "0.76",
+     "0.76",
+     "0.76",
+     "0.76"
+    ],
+    [
+     "Precision",
+     "Float32",
+     "Float32",
+     "Fixed 16",
+     "Fixed 16"
+    ],
+    [
+     "DSP",
+     "",
+     "",
+     "2221",
+     "113"
+    ],
+    [
+     "Average Late. (ns)",
+     "461.7",
+     "1162.5",
+     "343",
+     "5.6"
+    ],
+    [
+     "Latency ratio with ours",
+     "82",
+     "208",
+     "61",
+     "1"
+    ]
+   ]
+  }
+ ]
+}

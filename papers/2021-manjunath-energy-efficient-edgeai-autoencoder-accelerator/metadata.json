@@ -1,0 +1,62 @@
+{
+  "id": "2021-manjunath-energy-efficient-edgeai-autoencoder-accelerator",
+  "title": "An Energy Efficient EdgeAI Autoencoder Accelerator for Reinforcement Learning",
+  "authors": [
+    {
+      "given": "Nitheesh Kumar",
+      "family": "Manjunath"
+    },
+    {
+      "given": "Aidin",
+      "family": "Shiri"
+    },
+    {
+      "given": "Morteza",
+      "family": "Hosseini"
+    },
+    {
+      "given": "Bharat",
+      "family": "Prakash"
+    },
+    {
+      "given": "Nicholas R.",
+      "family": "Waytowich"
+    },
+    {
+      "given": "Tinoosh",
+      "family": "Mohsenin"
+    }
+  ],
+  "year": 2021,
+  "venue": "IEEE Open Journal of Circuits and Systems 2, 182-195",
+  "doi": "10.1109/OJCAS.2020.3043737",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/OJCAS.2020.3043737",
+  "type": "journal",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "convolutional-autoencoder",
+    "ternary",
+    "bnn",
+    "tnn",
+    "reinforcement-learning",
+    "artix-7",
+    "asic",
+    "verilog"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE 1, TABLE 2, TABLE 4, TABLE 5, TABLE 7"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

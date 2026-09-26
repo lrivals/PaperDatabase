@@ -1,0 +1,731 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 4,
+   "bbox": [
+    315.8,
+    88.5,
+    515.5,
+    135.8
+   ],
+   "caption": "TABLE 1. Comparison of autoencoder and RL in terms of computation and model size for the baseline network. The autoencoder has a significant portion of model size and is the best choice for compression and complexity reduction.",
+   "rows": [
+    [
+     "Factor",
+     "Autoencoder",
+     "RL",
+     "Ratio"
+    ],
+    [
+     "Parameters",
+     "377K",
+     "4.3K",
+     "44×"
+    ],
+    [
+     "Computation",
+     "20.1M",
+     "4.3K",
+     "2,392×"
+    ],
+    [
+     "Model Size",
+     "1,476 KB",
+     "16.8 KB",
+     "88×"
+    ],
+    [
+     "Feature map Size",
+     "56 KB",
+     "0.24 KB",
+     "234×"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    39.9,
+    79.4,
+    277.4,
+    136.2
+   ],
+   "caption": "TABLE 2. Episode length (reward), PSNR and MSE comparison between different configurations in DonkeyCar environment.",
+   "rows": [
+    [
+     "Config.",
+     "Latent Space",
+     "Operations (Million)",
+     "Model Size (KB)",
+     "MSE",
+     "PSNR",
+     "Episode length"
+    ],
+    [
+     "Full Precision",
+     "64",
+     "19.9",
+     "1,476",
+     "0.0003",
+     "34.1",
+     "560"
+    ],
+    [
+     "1.0 BNN",
+     "1,024",
+     "23.0",
+     "421",
+     "0.0031",
+     "25.4",
+     "194"
+    ],
+    [
+     "1.0 TNN",
+     "256",
+     "20.6",
+     "242",
+     "0.0010",
+     "29.9",
+     "490"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    39.9,
+    332.1,
+    277.6,
+    397.8
+   ],
+   "caption": "TABLE 3. Reward, PSNR and MSE comparison between different configurations in Miniworld sidewalk environment.",
+   "rows": [
+    [
+     "Config.",
+     "Latent Space",
+     "Operations (Million)",
+     "Model Size (KB)",
+     "MSE",
+     "PSNR",
+     "Average Reward"
+    ],
+    [
+     "Full Precision",
+     "64",
+     "19.9",
+     "1,476",
+     "0.0011",
+     "30.9",
+     "94.3"
+    ],
+    [
+     "2.0 BNN",
+     "1,024",
+     "46.9",
+     "884",
+     "0.0038",
+     "25.5",
+     "8.7"
+    ],
+    [
+     "4.0 BNN",
+     "1,024",
+     "92.2",
+     "1,937",
+     "0.0036",
+     "25.6",
+     "69.3"
+    ],
+    [
+     "2.0 TNN",
+     "256",
+     "41.2",
+     "569",
+     "0.0014",
+     "29.4",
+     "94.0"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    39.7,
+    79.1,
+    277.9,
+    183.1
+   ],
+   "caption": "TABLE 4. Reward, PSNR and MSE comparison between different configuration in Miniworld object pickup.",
+   "rows": [
+    [
+     "Config.",
+     "Latent Space",
+     "Operations (Million)",
+     "Model Size (KB)",
+     "MSE",
+     "PSNR",
+     "Average Reward"
+    ],
+    [
+     "Full Precision",
+     "64",
+     "19.9",
+     "1,476",
+     "0.0006",
+     "32.0",
+     "84.8"
+    ],
+    [
+     "1.0 BNN",
+     "1,024",
+     "23.0",
+     "421",
+     "0.0034",
+     "25.5",
+     "72.8"
+    ],
+    [
+     "2.0 BNN",
+     "1,024",
+     "46.9",
+     "484",
+     "0.0091",
+     "21.5",
+     "52.2"
+    ],
+    [
+     "4.0 BNN",
+     "1,024",
+     "92.2",
+     "1,937",
+     "0.0059",
+     "23.4",
+     "54.1"
+    ],
+    [
+     "1.0 TNN",
+     "128",
+     "20.2",
+     "142",
+     "0.0021",
+     "27.6",
+     "82.0"
+    ],
+    [
+     "2.0 TNN",
+     "64",
+     "39.9",
+     "269",
+     "0.0022",
+     "27.8",
+     "75.1"
+    ],
+    [
+     "2.0 TNN",
+     "256",
+     "41.2",
+     "569",
+     "0.0013",
+     "29.9",
+     "82.3"
+    ],
+    [
+     "2.0 TNN",
+     "512",
+     "42.8",
+     "969",
+     "0.0010",
+     "31.2",
+     "82.5"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    62.1,
+    80.1,
+    508.8,
+    288.6
+   ],
+   "caption": "TABLE5. TheimplementationresultsofproposedTNNautoencoderhardwareonXilinxArtix7FPGA.Theresultsareobtained,ataclockfrequencyof100MHz,andthe required latency to reach target 30 FPS is 33.34 ms.",
+   "rows": [
+    [
+     "Memory Width",
+     "# PE",
+     "LUT",
+     "Utilization FF DSP BRAM",
+     "Utilization FF DSP BRAM",
+     "Utilization FF DSP BRAM",
+     "Total Power(mW)",
+     "Latency(ms)",
+     "Perf(GOPS)",
+     "Energy(mJ)",
+     "Energy Eff(GOP/J)"
+    ],
+    [
+     "32",
+     "1",
+     "906",
+     "492",
+     "10",
+     "73",
+     "260",
+     "19.8",
+     "3.2",
+     "5.15",
+     "12"
+    ],
+    [
+     "32",
+     "2",
+     "956",
+     "551",
+     "11",
+     "73",
+     "277",
+     "10",
+     "6.4",
+     "2.77",
+     "23"
+    ],
+    [
+     "32",
+     "4",
+     "1097",
+     "623",
+     "11",
+     "73",
+     "276",
+     "5",
+     "12.8",
+     "1.39",
+     "46"
+    ],
+    [
+     "32",
+     "8",
+     "1371",
+     "787",
+     "11",
+     "73",
+     "280",
+     "2.54",
+     "25.6",
+     "0.71",
+     "91"
+    ],
+    [
+     "32",
+     "16",
+     "1937",
+     "1061",
+     "11",
+     "73",
+     "285",
+     "1.3",
+     "51.2",
+     "0.37",
+     "180"
+    ],
+    [
+     "32",
+     "32",
+     "3428",
+     "1970",
+     "11",
+     "73",
+     "290",
+     "0.9",
+     "102.4",
+     "0.26",
+     "353"
+    ],
+    [
+     "32",
+     "64",
+     "6082",
+     "3466",
+     "11",
+     "73",
+     "318",
+     "0.8",
+     "204.8",
+     "0.25",
+     "644"
+    ],
+    [
+     "64",
+     "1",
+     "1030",
+     "569",
+     "10",
+     "73",
+     "282",
+     "16.5",
+     "6.4",
+     "4.67",
+     "23"
+    ],
+    [
+     "64",
+     "2",
+     "1173",
+     "624",
+     "11",
+     "73",
+     "283",
+     "8.27",
+     "12.8",
+     "2.34",
+     "45"
+    ],
+    [
+     "64",
+     "4",
+     "1580",
+     "802",
+     "11",
+     "73",
+     "292",
+     "4.17",
+     "25.6",
+     "1.22",
+     "88"
+    ],
+    [
+     "64",
+     "8",
+     "2214",
+     "1049",
+     "11",
+     "69",
+     "286",
+     "2.1",
+     "51.2",
+     "0.6",
+     "179"
+    ],
+    [
+     "64",
+     "16",
+     "3792",
+     "1794",
+     "11",
+     "73",
+     "317",
+     "1",
+     "102.4",
+     "0.34",
+     "323"
+    ],
+    [
+     "64",
+     "32",
+     "6645",
+     "2974",
+     "11",
+     "73",
+     "341",
+     "0.8",
+     "204.8",
+     "0.28",
+     "601"
+    ],
+    [
+     "64",
+     "64",
+     "9968",
+     "3466",
+     "11",
+     "73",
+     "370",
+     "0.75",
+     "409.6",
+     "0.28",
+     "1,107"
+    ],
+    [
+     "128",
+     "1",
+     "1217",
+     "703",
+     "10",
+     "73",
+     "268",
+     "15.76",
+     "12.8",
+     "4.22",
+     "48"
+    ],
+    [
+     "128",
+     "2",
+     "1499",
+     "775",
+     "11",
+     "73",
+     "275",
+     "7.87",
+     "25.6",
+     "2.16",
+     "93"
+    ],
+    [
+     "128",
+     "4",
+     "2097",
+     "999",
+     "11",
+     "67",
+     "270",
+     "3.9",
+     "51.2",
+     "1.06",
+     "190"
+    ],
+    [
+     "128",
+     "8",
+     "3468",
+     "1535",
+     "11",
+     "69",
+     "289",
+     "1.98",
+     "102.4",
+     "0.57",
+     "354"
+    ],
+    [
+     "128",
+     "16",
+     "5964",
+     "2483",
+     "11",
+     "73",
+     "322",
+     "1",
+     "204.8",
+     "0.32",
+     "636"
+    ],
+    [
+     "128",
+     "32",
+     "10953",
+     "4313",
+     "7",
+     "73",
+     "499",
+     "0.78",
+     "409.6",
+     "0.39",
+     "821"
+    ],
+    [
+     "128",
+     "64",
+     "23912",
+     "7951",
+     "7",
+     "73",
+     "889",
+     "0.74",
+     "819.2",
+     "0.66",
+     "922"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    64.6,
+    319.1,
+    253.0,
+    488.8
+   ],
+   "caption": "TABLE 6. Post place and route results of the proposed TNN autoencoder hardware accelerator with 32-bit memory width and 64 PEs in ASIC 14nm technology.",
+   "rows": [
+    [
+     "Hardware Metrics",
+     "ASIC results"
+    ],
+    [
+     "Core Area (mm2)",
+     "3.15"
+    ],
+    [
+     "#PEs",
+     "64"
+    ],
+    [
+     "#SRAM Blocks each 512×32-bit",
+     "144"
+    ],
+    [
+     "Clock Frequency (MHz)",
+     "100"
+    ],
+    [
+     "Static Power (mW)",
+     "2.0"
+    ],
+    [
+     "Dynamic Power (mW)",
+     "2.8"
+    ],
+    [
+     "Total power (mW)",
+     "4.8"
+    ],
+    [
+     "Performance (GOPS)",
+     "204.8"
+    ],
+    [
+     "1.0 TNN-128 Deployed",
+     "Implementation results"
+    ],
+    [
+     "# Operations (Million)",
+     "20.2"
+    ],
+    [
+     "Model Size (KB)",
+     "142"
+    ],
+    [
+     "Throughput(FPS)",
+     "1,250"
+    ],
+    [
+     "Latency (ms)",
+     "0.8"
+    ],
+    [
+     "Energy (µJ)",
+     "3.9"
+    ],
+    [
+     "Energy Eff (TOP/J)",
+     "42.3"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    297.6,
+    317.2,
+    533.6,
+    467.6
+   ],
+   "caption": "TABLE 7. Comparison of the proposed autoencoder hardware with state-of-the-art TNN and autoencoder related works.",
+   "rows": [
+    [
+     "Metrics",
+     "CNN-64 [28]",
+     "GTSRB [38]",
+     "[39]",
+     "This work",
+     "SVHN [28]",
+     "This work"
+    ],
+    [
+     "Compression",
+     "TNN",
+     "TNN",
+     "8-bit",
+     "TNN",
+     "TNN",
+     "TNN"
+    ],
+    [
+     "Input size",
+     "32×32",
+     "32×32",
+     "256×256",
+     "120×120",
+     "32×32",
+     "120×120"
+    ],
+    [
+     "Platform",
+     "FPGA VC709",
+     "FPGA VC709",
+     "FPGA KCU105",
+     "FPGA Artix-7",
+     "ASIC 28nm",
+     "ASIC 14nm"
+    ],
+    [
+     "Frequency (MHz)",
+     "200",
+     "250",
+     "150",
+     "100",
+     "500",
+     "100"
+    ],
+    [
+     "Power (W)",
+     "4.8",
+     "6.64",
+     "2.76",
+     "0.37",
+     "0.22",
+     "0.005"
+    ],
+    [
+     "Latency (ms)",
+     "0.29",
+     "0.04",
+     "15.73",
+     "0.75",
+     "0.13",
+     "0.8"
+    ],
+    [
+     "Energy (mJ)",
+     "1.4",
+     "0.27",
+     "43.41",
+     "0.28",
+     "0.03",
+     "0.004"
+    ],
+    [
+     "Performance (TOPS)",
+     "1.05",
+     "1.05",
+     "0.07",
+     "0.41",
+     "2.1",
+     "0.20"
+    ],
+    [
+     "Energy Eff. (TOP/J)",
+     "0.22",
+     "0.16",
+     "0.26",
+     "1.1",
+     "9.5",
+     "42.3"
+    ],
+    [
+     "Area (mm2)",
+     "",
+     "",
+     "",
+     "",
+     "1.79",
+     "3.18"
+    ]
+   ]
+  }
+ ]
+}

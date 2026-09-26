@@ -1,0 +1,52 @@
+{
+  "id": "2019-tsukada-neural-network-device-learning-anomaly",
+  "title": "A Neural Network-Based On-device Learning Anomaly Detector for Edge Devices",
+  "authors": [
+    {
+      "given": "Mineto",
+      "family": "Tsukada"
+    },
+    {
+      "given": "Masaaki",
+      "family": "Kondo"
+    },
+    {
+      "given": "Hiroki",
+      "family": "Matsutani"
+    }
+  ],
+  "year": 2020,
+  "venue": "IEEE Transactions on Computers",
+  "doi": "10.1109/TC.2020.2973631",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TC.2020.2973631",
+  "type": "journal",
+  "axes": [
+    "autoencoder-fpga",
+    "continual-learning"
+  ],
+  "tags": [
+    "anomaly-detection",
+    "on-device-learning",
+    "os-elm",
+    "concept-drift",
+    "autoencoder",
+    "pynq",
+    "zynq-7000",
+    "vivado-hls"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées corrigées à la main (OpenAlex) : le .bib apparié était la version arXiv/CoRR 2019 (arXiv 1907.10147), le PDF est la version IEEE TC",
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE 8, TABLE 10",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "2022-malviya-edge-compatible-convolutional-autoencoder-implemented",
+  "title": "Edge-Compatible Convolutional Autoencoder Implemented on FPGA for Anomaly Detection in Vibration Condition-Based Monitoring",
+  "authors": [
+    {
+      "given": "Vaibhav",
+      "family": "Malviya"
+    },
+    {
+      "given": "Indrani",
+      "family": "Mukherjee"
+    },
+    {
+      "given": "Siddharth",
+      "family": "Tallur"
+    }
+  ],
+  "year": 2022,
+  "venue": "IEEE Sensors Letters 6(4), 1-4",
+  "doi": "10.1109/LSENS.2022.3159972",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/LSENS.2022.3159972",
+  "type": "journal",
+  "axes": [
+    "autoencoder-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "autoencoder",
+    "convolutional-autoencoder",
+    "anomaly-detection",
+    "vibration",
+    "time-series",
+    "scalogram",
+    "pynq",
+    "zynq-7000",
+    "vivado-hls"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE 1, TABLE 2, TABLE 3, TABLE 4, TABLE 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

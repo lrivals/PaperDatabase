@@ -1,0 +1,1132 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 8,
+   "bbox": [
+    41.8,
+    551.7,
+    271.0,
+    679.7
+   ],
+   "caption": "TABLE 1. Hardware occupation (logic cells and multipliers) per PE for proposal 1.",
+   "rows": [
+    [
+     "Layer",
+     "nPE",
+     "nLC",
+     "nMult"
+    ],
+    [
+     "First layer (n1 E)",
+     "1 5 10 25 50",
+     "141 (0.06%) 853 (0.35%) 1664 (0.69%) 4200 (1.74%) 9397 (3.90%) 22162 (9.19%)",
+     "1 (0.13%) 5 (0.65%) 10 (1.30%) 25 (3.26%) 50 (6.51%) 100 (13.02%)"
+    ],
+    [
+     "First layer (n1 E)",
+     "100",
+     "",
+     ""
+    ],
+    [
+     "Other layers (nP2 k≥2",
+     "1",
+     "269 (0.11%)",
+     "2 (0.26%)"
+    ],
+    [
+     "Other layers (nP2 k≥2",
+     "2",
+     "599 (0.25%)",
+     "4 (0.52%)"
+    ],
+    [
+     "Other layers (nP2 k≥2",
+     "5",
+     "1349 (0.56%)",
+     "10 (1.30%)"
+    ],
+    [
+     "Other layers (nP2 k≥2",
+     "10",
+     "2610 (1.08%)",
+     "20 (2.60%)"
+    ],
+    [
+     "Other layers (nP2 k≥2",
+     "25",
+     "6511 (2.70%)",
+     "50 (6.51%)"
+    ],
+    [
+     "Other layers (nP2 k≥2",
+     "50",
+     "14621 (6.06%)",
+     "100 (13.02%)"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    42.1,
+    93.0,
+    270.8,
+    221.7
+   ],
+   "caption": "TABLE 2. Hardware occupation (logic cells and multipliers) per PE for proposal 2.",
+   "rows": [
+    [
+     "Layer",
+     "nPE",
+     "nLC",
+     "nMult"
+    ],
+    [
+     "First layer (n1 E)",
+     "1 5 10 25 50",
+     "141 (0.06%) 746 (0.31%) 1384 (0.57%) 3375 (1.40%) 6682 (2.77%) 13432 (5.57%)",
+     "1 (0.13%) 5 (0.65%) 10 (1.30%) 25 (3.26%) 50 (6.51%)"
+    ],
+    [
+     "First layer (n1 E)",
+     "100",
+     "",
+     "100 (13.02%)"
+    ],
+    [
+     "Other layers (nk2 k≥2",
+     "1",
+     "229 (0.09%)",
+     "2 (0.26%)"
+    ],
+    [
+     "Other layers (nk2 k≥2",
+     "2",
+     "570 (0.24%)",
+     "4 (0.52%)"
+    ],
+    [
+     "Other layers (nk2 k≥2",
+     "5",
+     "1151 (0.48%)",
+     "10 (1.30%)"
+    ],
+    [
+     "Other layers (nk2 k≥2",
+     "10",
+     "2056 (0.85%)",
+     "20 (2.60%)"
+    ],
+    [
+     "Other layers (nk2 k≥2",
+     "25",
+     "4860 (2.02%)",
+     "50 (6.51%)"
+    ],
+    [
+     "Other layers (nk2 k≥2",
+     "50",
+     "9735 (4.04%)",
+     "100 (13.02%)"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    52.9,
+    87.5,
+    521.3,
+    151.7
+   ],
+   "caption": "TABLE 3. The estimate of the maximum number of PEs, n max PE ,forsomecommercialFPGAs.",
+   "rows": [
+    [
+     "Label",
+     "FPGA.Name",
+     "n LC xdu",
+     "n max Mult",
+     "n xdu PE.γ = 20%",
+     "n xdu PE.Proposal 1 γ = 40%",
+     "n xdu PE.γ = 60%",
+     "n xdu PE.γ = 20%",
+     "n xdu PE.Proposal 2 γ  = 40%",
+     "n xdu PE.γ = 60%"
+    ],
+    [
+     "FPGA1",
+     "Virtex 6 XC6VLX240T",
+     "241152",
+     "768",
+     "620",
+     "680",
+     "750",
+     "720",
+     "800",
+     "890"
+    ],
+    [
+     "FPGA2",
+     "Virtex 6 XC6VLX760",
+     "758784",
+     "864",
+     "1470",
+     "1610",
+     "1780",
+     "1720",
+     "1900",
+     "2120"
+    ],
+    [
+     "FPGA3",
+     "Virtex 7 XC7V2000T",
+     "1954560",
+     "2160",
+     "3780",
+     "4140",
+     "4510",
+     "4410",
+     "4880",
+     "5450"
+    ],
+    [
+     "FPGA4",
+     "Virtex UltraScale VU440",
+     "5540850",
+     "2880",
+     "9700",
+     "10000",
+     "10000",
+     "10000",
+     "10000",
+     "10000"
+    ]
+   ]
+  },
+  {
+   "page": 13,
+   "bbox": [
+    57.4,
+    85.0,
+    516.9,
+    158.4
+   ],
+   "caption": "TABLE 4. Values of the throughput, thff , (in KIPS) and performance, pf , (in GOPS) shown in Figures 18, 19 and 20 (� D 40%).",
+   "rows": [
+    [
+     "",
+     "n PE max.η.G",
+     "FPGA1 680.1/8.34",
+     "FPGA1 680.1/4.68",
+     "FPGA1 680.1/2.136",
+     "FPGA2 1610.1/8.81",
+     "FPGA2 1610.1/4.161",
+     "FPGA2 1610.1/2.322",
+     "FPGA3 4140.1/8.207",
+     "FPGA3 4140.1/4.414",
+     "FPGA3 4140.1/2.828",
+     "FPGA4 10000.1/8.500",
+     "FPGA4 10000.1/4.1000",
+     "FPGA4 10000.1/2.2000"
+    ],
+    [
+     "Q = 100",
+     "th f f (KIPS)",
+     "125",
+     "250",
+     "500",
+     "125",
+     "250",
+     "500",
+     "125",
+     "250",
+     "500",
+     "125",
+     "250",
+     "500"
+    ],
+    [
+     "Q = 1000",
+     "thff f (KIPS)",
+     "12.5",
+     "25.0",
+     "50.0",
+     "12.5",
+     "25.0",
+     "50.0",
+     "12.5",
+     "25.0",
+     "50.0",
+     "12.5",
+     "25.0",
+     "50.0"
+    ],
+    [
+     "Q = 10000",
+     "thf f (KIPS)",
+     "1.25",
+     "2.50",
+     "5.00",
+     "1.25",
+     "2.50",
+     "5.00",
+     "1.25",
+     "2.50",
+     "5.00",
+     "1.25",
+     "2.50",
+     "5.00"
+    ],
+    [
+     "",
+     "pf (GOPS)",
+     "27.2",
+     "54.4",
+     "108.8",
+     "64.8",
+     "128.8",
+     "257.6",
+     "165.6",
+     "331.2",
+     "662.4",
+     "400",
+     "800",
+     "1600"
+    ]
+   ]
+  },
+  {
+   "page": 13,
+   "bbox": [
+    299.3,
+    421.0,
+    535.6,
+    482.6
+   ],
+   "caption": "TABLE 5. Values of the throughput, thff , (in MIPS) and performance, pf , (in GOPS) shown in Figures 21 and 22 (� D 40%).",
+   "rows": [
+    [
+     "tc = 10 ns tc = 5 50 ns",
+     "Q th f f (KIPS) thf f (KIPS)",
+     "100 1000 200",
+     "1000 100",
+     "10000 10 2",
+     "100000 1 0.2"
+    ],
+    [
+     "",
+     "",
+     "",
+     "20",
+     "",
+     ""
+    ],
+    [
+     "",
+     "",
+     "FPGA1",
+     "FPGA2",
+     "FPGA3",
+     "FPGA4"
+    ],
+    [
+     "",
+     "n PE max",
+     "680",
+     "1610",
+     "4140",
+     "10000"
+    ],
+    [
+     "tc = 10 ns",
+     "pf (GOPS)",
+     "217",
+     "515",
+     "1324",
+     "3200"
+    ],
+    [
+     "tc = 50 ns",
+     "pf (GOPS)",
+     "43",
+     "103",
+     "264",
+     "640"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    39.3,
+    300.6,
+    273.7,
+    410.0
+   ],
+   "caption": "TABLE 6. Measured dynamic power consumption per number of PEs, n 1 PE , and frequency of PE, fPE , in MHz for the first layer of proposal 1.",
+   "rows": [
+    [
+     "fPE.",
+     "P1 PE.npE = 5",
+     "P1 PE.np E = 10",
+     "P1 PE.np E = 25",
+     "P1 PE.np E = 50"
+    ],
+    [
+     "2MHz",
+     "0.001W",
+     "0.001W",
+     "0.002W",
+     "0.002W"
+    ],
+    [
+     "5MHz",
+     "0.003W",
+     "0.003 W",
+     "0.004W",
+     "0.005 W"
+    ],
+    [
+     "10 MHz",
+     "0.006 W",
+     "0.006 W",
+     "0.008 W",
+     "0.010 W"
+    ],
+    [
+     "15 MHz",
+     "0.008W",
+     "0.009 W",
+     "0.012W",
+     "0.015 W"
+    ],
+    [
+     "20 MHz",
+     "0.011W",
+     "0.012W",
+     "0.016 W",
+     "0.021 W"
+    ],
+    [
+     "40 MHz",
+     "0.022 W",
+     "0.024W",
+     "0.032 W",
+     "0.041 W"
+    ],
+    [
+     "60 MHz",
+     "0.033 W",
+     "0.037W",
+     "0.048W",
+     "0.062 W"
+    ],
+    [
+     "80 MHz",
+     "0.044W",
+     "0.049 W",
+     "0.065 W",
+     "0.082 W"
+    ],
+    [
+     "100 MHz",
+     "0.055 W",
+     "0.061 W",
+     "0.081 W",
+     "0.103 W"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    321.4,
+    103.3,
+    513.2,
+    214.8
+   ],
+   "caption": "TABLE 7. Measured dynamic power consumption per number of PEs, n k�2 PE , and frequency of PE, fPE , inMHz for other layers of proposal 1 (k � 2).",
+   "rows": [
+    [
+     "fPE",
+     "npE k≥2 = 5",
+     "pk≥2 PE nPE k≥2 = 10",
+     "nPE k≥2 = 25"
+    ],
+    [
+     "2MHz",
+     "0.001W",
+     "0.001W",
+     "0.002W"
+    ],
+    [
+     "5MHz",
+     "0.003 W",
+     "0.003 W",
+     "0.004W"
+    ],
+    [
+     "10 MHz",
+     "0.007W",
+     "0.007W",
+     "0.009 W"
+    ],
+    [
+     "15MHz",
+     "0.01W",
+     "0.01W",
+     "0.013W"
+    ],
+    [
+     "20 MHz",
+     "0.013W",
+     "0.013W",
+     "0.018W"
+    ],
+    [
+     "40 MHz",
+     "0.026 W",
+     "0.027W",
+     "0.036 W"
+    ],
+    [
+     "60 MHz",
+     "0.039 W",
+     "0.04W",
+     "0.053 W"
+    ],
+    [
+     "80 MHz",
+     "0.052 W",
+     "0.053W",
+     "0.071 W"
+    ],
+    [
+     "100 MHz",
+     "0.065 W",
+     "0.067 W",
+     "0.089 W"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    322.6,
+    86.4,
+    512.3,
+    377.4
+   ],
+   "caption": "TABLE8. SomecurvesvaluespresentedinFigures25and26.",
+   "rows": [
+    [
+     "",
+     "FPGA1 (n† max = 680) PE",
+     "FPGA1 (n† max = 680) PE",
+     "FPGA1 (n† max = 680) PE",
+     "FPGA1 (n† max = 680) PE"
+    ],
+    [
+     "η G Pd (W) η G Pd (W)",
+     "0 1 0.0086 0.0554 16 0.1369",
+     "0.0037 2 0.0171 1/8 34 0.2931",
+     "0.0111 4 0.0342 1/4 68 0.5864",
+     "0.0258 8 0.0684 1/2 136 1.1737"
+    ],
+    [
+     "",
+     "FPGA2 (n max = 1610) PE",
+     "FPGA2 (n max = 1610) PE",
+     "FPGA2 (n max = 1610) PE",
+     "FPGA2 (n max = 1610) PE"
+    ],
+    [
+     "η G Pd (W) η G Pd (W)",
+     "0 1 0.0080 0.0233 16",
+     "0.0016 2 0.0160 1/8 81",
+     "0.0047 4 0.0319 1/4 161",
+     "0.0109 8 0.0639 1/2"
+    ],
+    [
+     "",
+     "322 0.1278 0.6484 1.2891 2.5790 FPGA3 (n max = 4140) PE",
+     "322 0.1278 0.6484 1.2891 2.5790 FPGA3 (n max = 4140) PE",
+     "322 0.1278 0.6484 1.2891 2.5790 FPGA3 (n max = 4140) PE",
+     "322 0.1278 0.6484 1.2891 2.5790 FPGA3 (n max = 4140) PE"
+    ],
+    [
+     "η G Pd (W) η G PPd (W)",
+     "0 1 0.0077 0.0091 16 0.1237",
+     "0.0006 2 0.0155 1/8 207 1.6015",
+     "0.0018 4 0.0309 1/4 414 3.2031",
+     "0.0042 8 0.0619 1/2 828 6.4071"
+    ],
+    [
+     "η G Pd (W)",
+     "0 1 0.0076 0.0038",
+     "0.0003 2 0.0153",
+     "0.0008 4 0.0305 1/4",
+     "0.0018 8 0.0611"
+    ],
+    [
+     "",
+     "FPGA4 (n max = 10000) PE",
+     "FPGA4 (n max = 10000) PE",
+     "FPGA4 (n max = 10000) PE",
+     "FPGA4 (n max = 10000) PE"
+    ],
+    [
+     "η G PPd (W)",
+     "16 0.1222",
+     "1/8 500 3.8184",
+     "1000 7.6370",
+     "1/2 2000 15.2749"
+    ]
+   ]
+  },
+  {
+   "page": 16,
+   "bbox": [
+    143.7,
+    88.4,
+    429.9,
+    199.0
+   ],
+   "caption": "TABLE 9. Measured dynamic power consumption per number of PEs, n 1 PE , and frequency of PE, fPE , in MHz for the first layer of proposal 2.",
+   "rows": [
+    [
+     "fPE",
+     "npE = 5",
+     "npE = 10",
+     "P1 PE np E = 25",
+     "npE = 50",
+     "nP F = 100"
+    ],
+    [
+     "2MHz",
+     "0.001W",
+     "0.002W",
+     "0.003W",
+     "0.004W",
+     "0.006 W"
+    ],
+    [
+     "5MHz",
+     "0.003 W",
+     "0.004W",
+     "0.007W",
+     "0.010 W",
+     "0.015W"
+    ],
+    [
+     "10 MHz",
+     "0.006 W",
+     "0.008W",
+     "0.014W",
+     "0.021 W",
+     "0.030 W"
+    ],
+    [
+     "15MHz",
+     "0.010 W",
+     "0.012W",
+     "0.021 W",
+     "0.031 W",
+     "0.045 W"
+    ],
+    [
+     "20 MHz",
+     "0.013W",
+     "0.016 W",
+     "0.028 W",
+     "0.042 W",
+     "0.060 W"
+    ],
+    [
+     "40 MHz",
+     "0.026 W",
+     "0.033 W",
+     "0.056 W",
+     "0.083 W",
+     "0.120 W"
+    ],
+    [
+     "60 MHz",
+     "0.039 W",
+     "0.049 W",
+     "0.084W",
+     "0.125 W",
+     "0.180 W"
+    ],
+    [
+     "80 MHz",
+     "0.052 W",
+     "0.065 W",
+     "0.112W",
+     "0.167 W",
+     "0.241 W"
+    ],
+    [
+     "100 MHz",
+     "0.064W",
+     "0.081 W",
+     "0.140 W",
+     "0.207W",
+     "0.298W"
+    ]
+   ]
+  },
+  {
+   "page": 16,
+   "bbox": [
+    37.0,
+    478.9,
+    275.8,
+    588.8
+   ],
+   "caption": "TABLE 10. Measured dynamic power consumption per number of PEs, n k�2 PE , and frequency of PE, fPE , inMHz for other layers of proposal 2 (k � 2).",
+   "rows": [
+    [
+     "fPE.",
+     "pk≥2 PE.n PE k≥2 = 5",
+     "pk≥2 PE.n PE k≥2 = 10",
+     "pk≥2 PE.n k≥2 PE = 25",
+     "pk≥2 PE.n k≥2 PE = 50"
+    ],
+    [
+     "2MHz",
+     "0.001 W",
+     "0.002W",
+     "0.003W",
+     "0.003 W"
+    ],
+    [
+     "5MHz",
+     "0.004W",
+     "0.004W",
+     "0.007W",
+     "0.008W"
+    ],
+    [
+     "10 MHz",
+     "0.007W",
+     "0.009 W",
+     "0.014W",
+     "0.017W"
+    ],
+    [
+     "15MHz",
+     "0.011 W",
+     "0.013W",
+     "0.021 W",
+     "0.025 W"
+    ],
+    [
+     "20 MHz",
+     "0.015 W",
+     "0.017W",
+     "0.029 W",
+     "0.034W"
+    ],
+    [
+     "40 MHz",
+     "0.030 W",
+     "0.034W",
+     "0.057W",
+     "0.067W"
+    ],
+    [
+     "60 MHz",
+     "0.045 W",
+     "0.051 W",
+     "0.086 W",
+     "0.101 W"
+    ],
+    [
+     "80 MHz",
+     "0.060 W",
+     "0.068W",
+     "0.114W",
+     "0.135 W"
+    ],
+    [
+     "100 MHz",
+     "0.074W",
+     "0.085 W",
+     "0.142 W",
+     "0.167W"
+    ]
+   ]
+  },
+  {
+   "page": 16,
+   "bbox": [
+    298.5,
+    444.4,
+    536.3,
+    481.9
+   ],
+   "caption": "TABLE 11. Values of the dynamic power consumption, Pd , (in watts) shown in Figure 29 (� D 40%).",
+   "rows": [
+    [
+     "",
+     "",
+     "FPGA1",
+     "FPGA2",
+     "FPGA3",
+     "FPGA4"
+    ],
+    [
+     "tc = 10 ns",
+     "n PE xpu",
+     "680",
+     "1610",
+     "4140",
+     "10000"
+    ],
+    [
+     "",
+     "PPE (W)",
+     "1.634",
+     "3.704",
+     "9.334",
+     "22.374"
+    ],
+    [
+     "tc = 50 ns",
+     "PPE (W)",
+     "0.327",
+     "0.740",
+     "1.867",
+     "4.475"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    50.2,
+    637.2,
+    263.0,
+    684.4
+   ],
+   "caption": "TABLE 12. Proposal 1 - hardware area occupation.",
+   "rows": [
+    [
+     "",
+     "Multipliers (nMult)",
+     "Logic cells (nCL)"
+    ],
+    [
+     "Synthesis Estimated",
+     "220 (28.65%)",
+     "37796 (15.67%)"
+    ],
+    [
+     "(Equations 10, 11, 13, and 16)",
+     "220 (28.65%)",
+     "38326 (15.89%)"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    297.4,
+    278.5,
+    537.2,
+    333.7
+   ],
+   "caption": "TABLE 13. Proposal 1 - processing times and delays (G D 1 and Q D 800).",
+   "rows": [
+    [
+     "trc",
+     "d",
+     "tff",
+     "thff",
+     "Pd Measurement",
+     "Estimated (Eqs. 41, 42, and 43)"
+    ],
+    [
+     "10 ns",
+     "2.4 ms",
+     "0.8 ms",
+     "1.25 KFPS",
+     "0.003 W",
+     "0.0047W"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    311.3,
+    383.1,
+    523.7,
+    430.3
+   ],
+   "caption": "TABLE 14. Proposal 2 - hardware area occupation.",
+   "rows": [
+    [
+     "",
+     "Multipliers (nMult)",
+     "Logic cells (nCL)"
+    ],
+    [
+     "Synthesis Estimated",
+     "220 (28.65%)",
+     "24399 (10.12%)"
+    ],
+    [
+     "(Equations 13, 16, 17, and 18)",
+     "220 (28.65%)",
+     "25045 (10.39%)"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    302.4,
+    479.2,
+    532.1,
+    515.6
+   ],
+   "caption": "TABLE 15. Proposal 2 - processing times and delays (Q D 800).",
+   "rows": [
+    [
+     "tc",
+     "d",
+     "tff",
+     "thff",
+     "Pd Measurement",
+     "Estimated (Eq. 49)"
+    ],
+    [
+     "45 ns",
+     "0.1 ms",
+     "0.04 ms",
+     "25 KFPS",
+     "0.112W",
+     "0.110W"
+    ]
+   ]
+  },
+  {
+   "page": 18,
+   "bbox": [
+    43.0,
+    84.7,
+    531.4,
+    329.6
+   ],
+   "caption": "TABLE 16. State of the art comparison associated with throughput, thff , and power consumption, Pd , for two different deep neural network size.",
+   "rows": [
+    [
+     "Ref..",
+     "References.Device.",
+     "References.Network architecture.",
+     "Value.thf f (FPS) 45",
+     "G 1 2",
+     "Proposal 1.thf f (FPS) 12.5 25",
+     "Proposal 1.Q = 4000, trc = 10 ns, and tc = 45 ns Speedup",
+     "Proposal 2.thf f (FPS) 5208",
+     "Proposal 2.Speedup ≈116×"
+    ],
+    [
+     "[5]",
+     "Intel (Altera) Stratix V",
+     "3072 - 2000 - 750 - 10",
+     "Pd (W)",
+     "4 8 G",
+     "50 100 Pd (W)",
+     "≈ 1.11× ≈ 2.22× Power saving",
+     "Pd (W)",
+     "Power saving"
+    ],
+    [
+     "",
+     "",
+     "",
+     "16",
+     "1 2",
+     "0.0023 0.0045",
+     "≈ 7081× ≈ 3540×",
+     "",
+     ""
+    ],
+    [
+     "",
+     "",
+     "",
+     "",
+     "4 8",
+     "0.0090 0.0181",
+     "≈1770× ≈ 885×",
+     "1.46",
+     "≈11×"
+    ],
+    [
+     "",
+     "",
+     "",
+     "Q = 1000, trc = 10 ns, and tc = 45 ns",
+     "Q = 1000, trc = 10 ns, and tc = 45 ns",
+     "Q = 1000, trc = 10 ns, and tc = 45 ns",
+     "Q = 1000, trc = 10 ns, and tc = 45 ns",
+     "Q = 1000, trc = 10 ns, and tc = 45 ns",
+     "Q = 1000, trc = 10 ns, and tc = 45 ns"
+    ],
+    [
+     "",
+     "",
+     "",
+     "thf f (FPS)",
+     "G 1",
+     "thf f (FPS) 390.62",
+     "Speedup ≈31×",
+     "thf f (FPS)",
+     "Speedup"
+    ],
+    [
+     "",
+     "",
+     "",
+     "12.45",
+     "2 4 8",
+     "781.25 1562.5 3125",
+     "≈ 62× ≈ 125× ≈251×",
+     "22222",
+     "≈1784×"
+    ],
+    [
+     "[14]",
+     "Xilinx XC7Z020",
+     "784 - 256 - 256 - 10",
+     "Pd (W)",
+     "G 1",
+     "Pd (W) 0.0059",
+     "Power saving ≈309×",
+     "Pd (W)",
+     "Power saving"
+    ],
+    [
+     "",
+     "",
+     "",
+     "1.814",
+     "2 4 8",
+     "0.0117 0.0234 0.0468",
+     "≈ 154× ≈77× ≈38×",
+     "0.29",
+     "≈ 6×"
+    ]
+   ]
+  },
+  {
+   "page": 19,
+   "bbox": [
+    88.5,
+    84.7,
+    486.0,
+    366.5
+   ],
+   "caption": "TABLE 17. State of the art comparison associated with performance, pf , in GOPS.",
+   "rows": [
+    [
+     "Ref.",
+     "References.Device",
+     "Value",
+     "Proposals.Proposal 1",
+     "Proposals.Proposal 1",
+     "Proposals.Proposal 1",
+     "Proposals.Proposal 2",
+     "Proposals.Proposal 2"
+    ],
+    [
+     "[36]",
+     "Xilinx Ultrascale KU060 FPGA",
+     "",
+     "npdx max = 10000, γ = 40%, trc = 10 ns, and tc = 45 ns",
+     "npdx max = 10000, γ = 40%, trc = 10 ns, and tc = 45 ns",
+     "npdx max = 10000, γ = 40%, trc = 10 ns, and tc = 45 ns",
+     "npdx max = 10000, γ = 40%, trc = 10 ns, and tc = 45 ns",
+     "npdx max = 10000, γ = 40%, trc = 10 ns, and tc = 45 ns"
+    ],
+    [
+     "[36]",
+     "Xilinx Ultrascale KU060 FPGA",
+     "pf (GOPS) 173",
+     "η 0.1 0.2 0.3 0.4",
+     "pf (GOPS) 320 640 960 1280",
+     "Speedup ≈1.8× ≈3.7× ≈5.5× ≈7.4×",
+     "pf (GOPS) 711",
+     "Speedup ≈ 4.11×"
+    ],
+    [
+     "[12]",
+     "Xilinx Virtex7 485t FPGA",
+     "",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns"
+    ],
+    [
+     "[12]",
+     "Xilinx Virtex7 485t FPGA",
+     "pf (GOPS) 61.62",
+     "η 0.1 0.2 0.3 0.4",
+     "pf (GOPS) 320 640 960 1280",
+     "Speedup ≈ 5.2× ≈ 10.4× ≈ 15.6× ≈ 20.8×",
+     "pf (GOPS) 711",
+     "Speedup ≈11.5×"
+    ],
+    [
+     "[13]",
+     "Xilinx Kintex K325T FPGA",
+     "",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns PE",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns PE",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns PE",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns PE",
+     "= 10000, γ = 40%, trc = 10 ns, and tc = 45 ns PE"
+    ],
+    [
+     "[13]",
+     "Xilinx Kintex K325T FPGA",
+     "pf (GOPS) 260 pf (GOPS)",
+     "η 0.1 0.2 0.3 0.4 npEx η",
+     "pf (GOPS) 320 640 960 1280 = 10000, γ = 40%, trc = 10 ns, and tc = 45 ns",
+     "Speedup ≈1.2× ≈2.5× ≈3.7× ≈4.9×",
+     "pf (GOPS) 711",
+     "Speedup ≈ 2.7×"
+    ],
+    [
+     "[37]",
+     "ASIC",
+     "pf (GOPS) 260 pf (GOPS)",
+     "0.2 0.3",
+     "pf (GOPS) 640 960 1280",
+     "Speedup ≈ 1.4× ≈ 2.1× ≈ 2.8×",
+     "pf (GOPS)",
+     "Speedup"
+    ],
+    [
+     "[13]",
+     "Xilinx Kintex K325T FPGA",
+     "452",
+     "0.4 0.5",
+     "1600",
+     "≈ 3.5×",
+     "711",
+     "≈1.53×"
+    ]
+   ]
+  }
+ ]
+}

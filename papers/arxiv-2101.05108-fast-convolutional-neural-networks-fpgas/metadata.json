@@ -1,0 +1,120 @@
+{
+  "id": "arxiv-2101.05108-fast-convolutional-neural-networks-fpgas",
+  "title": "Fast convolutional neural networks on FPGAs with hls4ml",
+  "authors": [
+    {
+      "given": "Thea",
+      "family": "Aarrestad"
+    },
+    {
+      "given": "Vladimir",
+      "family": "Loncar"
+    },
+    {
+      "given": "Nicolò",
+      "family": "Ghielmetti"
+    },
+    {
+      "given": "Maurizio",
+      "family": "Pierini"
+    },
+    {
+      "given": "Sioni",
+      "family": "Summers"
+    },
+    {
+      "given": "Jennifer",
+      "family": "Ngadiuba"
+    },
+    {
+      "given": "Christoffer",
+      "family": "Petersson"
+    },
+    {
+      "given": "Hampus",
+      "family": "Linander"
+    },
+    {
+      "given": "Yutaro",
+      "family": "Iiyama"
+    },
+    {
+      "given": "Giuseppe Di",
+      "family": "Guglielmo"
+    },
+    {
+      "given": "Javier",
+      "family": "Duarte"
+    },
+    {
+      "given": "Philip",
+      "family": "Harris"
+    },
+    {
+      "given": "Dylan",
+      "family": "Rankin"
+    },
+    {
+      "given": "Sergo",
+      "family": "Jindariani"
+    },
+    {
+      "given": "Kevin",
+      "family": "Pedro"
+    },
+    {
+      "given": "Nhan",
+      "family": "Tran"
+    },
+    {
+      "given": "Mia",
+      "family": "Liu"
+    },
+    {
+      "given": "Edward",
+      "family": "Kreinar"
+    },
+    {
+      "given": "Zhenbin",
+      "family": "Wu"
+    },
+    {
+      "given": "Duc",
+      "family": "Hoang"
+    }
+  ],
+  "year": 2021,
+  "venue": "Mach. Learn.: Sci. Technol. 2 045015 (2021)",
+  "doi": "10.1088/2632-2153/ac0ea1",
+  "arxiv_id": "2101.05108",
+  "url": "https://arxiv.org/abs/2101.05108",
+  "type": "journal",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "hls4ml",
+    "cnn",
+    "streaming",
+    "qat",
+    "qkeras",
+    "pruning",
+    "svhn",
+    "pynq-z2"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
+      "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

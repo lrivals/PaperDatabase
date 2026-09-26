@@ -1,0 +1,51 @@
+{
+  "id": "2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating",
+  "title": "SATAY: A Streaming Architecture Toolflow for Accelerating YOLO Models on FPGA Devices",
+  "authors": [
+    {
+      "given": "Alexander",
+      "family": "Montgomerie-Corcoran"
+    },
+    {
+      "given": "Petros",
+      "family": "Toupas"
+    },
+    {
+      "given": "Zhewen",
+      "family": "Yu"
+    },
+    {
+      "given": "Christos-Savvas",
+      "family": "Bouganis"
+    }
+  ],
+  "year": 2023,
+  "venue": "2023 International Conference on Field Programmable Technology (ICFPT) 179-187",
+  "doi": "10.1109/ICFPT59805.2023.00025",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/ICFPT59805.2023.00025",
+  "type": "conference",
+  "axes": [
+    "yolo-fpga",
+    "toolflows"
+  ],
+  "tags": [
+    "satay",
+    "streaming",
+    "dataflow",
+    "yolov8",
+    "ptq"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "Table III non détectée par GROBID (absente de fulltext.md) : lue par Docling sur paper.pdf, fiche §Statut de lecture"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

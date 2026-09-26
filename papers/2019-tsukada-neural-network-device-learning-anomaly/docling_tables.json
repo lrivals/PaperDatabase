@@ -1,0 +1,831 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 6,
+   "bbox": [
+    287.9,
+    70.4,
+    541.4,
+    202.1
+   ],
+   "caption": "TABLE 1 Specifications of PYNQ-Z1 Board",
+   "rows": [
+    [
+     "Board Specifications",
+     "Board Specifications"
+    ],
+    [
+     "Linux Image SoCChip",
+     "PYNQ v2.4 (Ubuntu v18.04) Cortext-A9 650MHz FPGA: Artix-7"
+    ],
+    [
+     "",
+     "XilinxZYNQXC7Z020-1CLG400CCPU:ARM"
+    ],
+    [
+     "DRAM",
+     "DDR3 512MB"
+    ],
+    [
+     "",
+     "FPGA Specifications"
+    ],
+    [
+     "BRAM",
+     "280 blocks"
+    ],
+    [
+     "DSP",
+     "220 slices"
+    ],
+    [
+     "FF",
+     "106,400 instances"
+    ],
+    [
+     "LUT",
+     "53,200 instances"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    24.9,
+    70.4,
+    278.2,
+    144.1
+   ],
+   "caption": "TABLE 2 Datasets",
+   "rows": [
+    [
+     "Name",
+     "Samples",
+     "Features",
+     "Classes"
+    ],
+    [
+     "Fashion MNIST [28]",
+     "70,000",
+     "784",
+     "10"
+    ],
+    [
+     "MNIST [29]",
+     "70,000",
+     "784",
+     "10"
+    ],
+    [
+     "Smartphone HAR [30]",
+     "5,744",
+     "561",
+     "6"
+    ],
+    [
+     "Drive Diagnosis [30]",
+     "58,509",
+     "48",
+     "11"
+    ],
+    [
+     "Letter Recognition [30]",
+     "20,000",
+     "16",
+     "26"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    24.9,
+    185.6,
+    278.6,
+    376.6
+   ],
+   "caption": "TABLE 3 Search Ranges of Hyperparameters",
+   "rows": [
+    [
+     "",
+     "ONLAD",
+     "FPELM-AE"
+    ],
+    [
+     "Ghidden pðxÞ L ai ~ N1 \u0015",
+     "{Sigmoid [32], Identity 4 } Uniform [0,1] MSE 5 {0.95, 0.96, ..., 1.00} {8, 16, 32, ..., 256}",
+     "{Sigmoid, Identity} Uniform [0,1] MSE {0.95, 0.96, ..., 1.00} {8, 16, 32, ..., 256} 0.02 6"
+    ],
+    [
+     "",
+     "NN-AE",
+     "DNN-AE"
+    ],
+    [
+     "Ghidden Gout L O B E ~ N1 ~ N2 ~ N3",
+     "{Sigmoid, Relu [33]} Sigmoid MSE Adam [34] {8, 16, 32} {5, 10, 15, 20} {8, 16, 32, ..., 256}",
+     "{Sigmoid, Relu} Sigmoid MSE Adam {8, 16, 32} {5, 10, 15, 20} {8, 16, 32, ..., 256} {8, 16, 32, ..., 256} {8, 16, 32, ..., 256}"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    288.1,
+    70.7,
+    541.0,
+    144.1
+   ],
+   "caption": "TABLE 4 AUC Scores on Offline Testbed",
+   "rows": [
+    [
+     "Dataset",
+     "ONLAD",
+     "FPELM-AE",
+     "NN-AE",
+     "DNN-AE"
+    ],
+    [
+     "Fashion MNIST",
+     "0.905",
+     "0.905",
+     "0.925",
+     "0.913"
+    ],
+    [
+     "MNIST",
+     "0.944",
+     "0.945",
+     "0.958",
+     "0.961"
+    ],
+    [
+     "SmartphoneHAR",
+     "0.929",
+     "0.928",
+     "0.922",
+     "0.910"
+    ],
+    [
+     "Drive Diagnosis",
+     "0.939",
+     "0.943",
+     "0.952",
+     "0.961"
+    ],
+    [
+     "LetterRecognition",
+     "0.952",
+     "0.950",
+     "0.978",
+     "0.985"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    288.4,
+    219.7,
+    541.2,
+    416.6
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Algorithm 2. Offline Testbed",
+     "Algorithm 2. Offline Testbed"
+    ],
+    [
+     "1:",
+     "Xtrain \u0011 ½X ð 0 Þ train ; X ð 1 Þ train ; . . .;X ðc\u0000 1 Þ train "
+    ],
+    [
+     "2:",
+     "Xtest \u0011 ½X ð 0 Þ test ; X ð 1 Þ test ; . . .;X ðc\u0000 1 Þ test "
+    ],
+    [
+     "3:",
+     "averageauc 0"
+    ],
+    [
+     "4:",
+     "fori 0toc\u0000 1 do"
+    ],
+    [
+     "5:",
+     "Xnormal train X ðiÞ train"
+    ],
+    [
+     "6:",
+     "Xnormal test X ðiÞ test"
+    ],
+    [
+     "7:",
+     "Xanomaly X ðj6 ¼iÞ test"
+    ],
+    [
+     "8:",
+     "numanomalies lenðXnormal testÞ\u0002 0:1"
+    ],
+    [
+     "9:",
+     "Xanomaly sampleðXanomaly; num anomaliesÞ"
+    ],
+    [
+     "10:",
+     "model:trainðXnormal trainÞ"
+    ],
+    [
+     "11:",
+     "scores model:predictð concatð½Xnormal test;XanomalyÞÞ"
+    ],
+    [
+     "12:",
+     "averageauc averageaucþ calc aucðscoresÞ"
+    ],
+    [
+     "13:",
+     "model:resetðÞ"
+    ],
+    [
+     "14:",
+     "endfor"
+    ],
+    [
+     "15:",
+     "averageauc average auc c"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    25.0,
+    70.7,
+    278.4,
+    172.0
+   ],
+   "caption": "TABLE 5 AUC Scores on Online Testbed",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    [
+     "Dataset",
+     "ONLAD- NF",
+     "ONLAD",
+     "FPELM- AE",
+     "NN- AE DNN- AE"
+    ],
+    [
+     "FashionMNIST",
+     "0.575",
+     "0.869",
+     "0.866",
+     "0.6850.697"
+    ],
+    [
+     "MNIST",
+     "0.591",
+     "0.899",
+     "0.898",
+     "0.7870.755"
+    ],
+    [
+     "Smartphone",
+     "0.558",
+     "0.781",
+     "0.788",
+     "0.7850.799"
+    ],
+    [
+     "HAR DriveDiagnosis",
+     "0.552",
+     "0.786",
+     "0.849",
+     "0.7440.853"
+    ],
+    [
+     "Letter",
+     "0.548",
+     "0.882",
+     "0.879",
+     "0.7370.788"
+    ],
+    [
+     "Recognition",
+     "",
+     "",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    288.6,
+    76.1,
+    541.2,
+    344.6
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Algorithm 3. Online Testbed",
+     "Algorithm 3. Online Testbed"
+    ],
+    [
+     "1:",
+     "Xinit \u0011 ½X ð 0 Þ init ; X ð 1 Þ init ; . . .;X ðc\u0000 1 Þ init "
+    ],
+    [
+     "2:",
+     "Xtest \u0011 ½X ð 0 Þ test ; X ð 1 Þ test ; . . .;X ðc\u0000 1 Þ test "
+    ],
+    [
+     "",
+     "3:Xnormal;Xanomaly splitðXtest;'9 : 1')"
+    ],
+    [
+     "4:",
+     "indices ½ 0; 1; . . .; c \u0000 1 "
+    ],
+    [
+     "5:",
+     "shuffleðindicesÞ"
+    ],
+    [
+     "",
+     "6:Xconcept ½"
+    ],
+    [
+     "7:",
+     "fori to c \u0000 1 do"
+    ],
+    [
+     "8:",
+     "concept ½X ðindices½iÞ normal "
+    ],
+    [
+     "9:",
+     "numanomalies lenðX ðindices½iÞ normal Þ\u0002 0:1"
+    ],
+    [
+     "10:",
+     "concept:appendð sampleðX ðj6 ¼indices½iÞ anomaly ; num anomaliesÞÞ"
+    ],
+    [
+     "11:",
+     "Xconcept:appendð shuffleð concatðconceptÞÞÞ"
+    ],
+    [
+     "12:",
+     "endfor"
+    ],
+    [
+     "13:",
+     "14: model:trainðX ðindices½ 0 Þ init Þ"
+    ],
+    [
+     "15:",
+     "scores ½"
+    ],
+    [
+     "16:",
+     "fori to c \u0000 1 do"
+    ],
+    [
+     "17:",
+     "forallxinXconcept½ido"
+    ],
+    [
+     "18:",
+     "score model:predictðxÞ"
+    ],
+    [
+     "19:",
+     "scores:appendðscoreÞ"
+    ],
+    [
+     "20:",
+     "model:trainðxÞ"
+    ],
+    [
+     "21:",
+     "endfor"
+    ],
+    [
+     "22:",
+     "endfor"
+    ],
+    [
+     "23:",
+     "auc calcaucðscoresÞ"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    24.4,
+    582.8,
+    540.9,
+    740.8
+   ],
+   "caption": "TABLE 6 Hyperparameter Settings on Offline Testbed",
+   "rows": [
+    [
+     "Dataset",
+     "ONLAD fGhidden;pðxÞ; ~ N1; L; aig",
+     "FPELM-AE fGhidden;pðxÞ; ~ N1; L; ai ; \u0015g"
+    ],
+    [
+     "Fashion MNIST MNIST Smartphone HAR Drive Diagnosis Letter Recognition",
+     "fIdentity, Uniform, 64, MSE, 1.00g fIdentity, Uniform, 64, MSE, 1.00g fIdentity, Uniform, 128, MSE, 1.00g fSigmoid, Uniform, 16, MSE, 1.00g fSigmoid, Uniform, 8, MSE, 1.00g",
+     "fIdentity, Uniform, 64, MSE, 1,00, 0.02g fIdentity, Uniform, 64, MSE, 1.00, 0.02g fIdentity, Uniform, 128, MSE, 1.00, 0.02g fSigmoid, Uniform, 16, MSE, 1.00, 0.02g fSigmoid, Uniform, 8, MSE, 1.00, 0.02g"
+    ],
+    [
+     "Dataset",
+     "NN-AE fGhidden;Gout; ~ N1; L; O; B; Eg",
+     "DNN-AE fGhidden;Gout; ~ N1; ~ N2; ~ N3; L; O; B; Eg"
+    ],
+    [
+     "Fashion MNIST MNIST Smartphone HAR Drive Diagnosis Letter Recognition",
+     "fRelu, Sigmoid, 64, MSE, Adam, 32, 5g fRelu, Sigmoid, 64, MSE, Adam, 32, 5g fRelu, Sigmoid, 256, MSE, Adam, 8, 20g fRelu, Sigmoid, 256, MSE, Adam, 8, 10g fRelu, Sigmoid, 256, MSE, Adam, 8, 20g",
+     "fRelu, Sigmoid, 64, 32, 64, MSE, Adam, 8, 10g fRelu, Sigmoid, 64, 32, 64, MSE, Adam, 8, 10g fRelu, Sigmoid, 128, 256, 128, MSE, Adam, 8, 20g fRelu, Sigmoid, 128, 256, 128, MSE, Adam, 8, 20g fRelu, Sigmoid, 128, 256, 128, MSE, Adam, 8, 20g"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    24.8,
+    70.3,
+    541.3,
+    228.3
+   ],
+   "caption": "TABLE 7 Hyperparameter Settings on Online Testbed",
+   "rows": [
+    [
+     "Dataset",
+     "ONLAD fGhidden;pðxÞ; ~ N1; L; aig",
+     "FPELM-AE fGhidden;pðxÞ; ~ N1; L; ai; \u0015g"
+    ],
+    [
+     "Fashion MNIST MNIST Smartphone HAR Drive Diagnosis Letter Recognition",
+     "fSigmoid, Uniform, 64, MSE, 0.99g fSigmoid, Uniform, 64, MSE, 0.99g fIdentity, Uniform, 16, MSE, 0.97g fSigmoid, Uniform, 16, MSE, 0.99g fIdentity, Uniform, 8, MSE, 0.95g",
+     "fSigmoid, Uniform, 64, MSE, 0.99, 0.02g fSigmoid, Uniform, 64, MSE, 0.99, 0.02g fSigmoid, Uniform, 16, MSE, 0.97, 0.02g fSigmoid, Uniform, 16, MSE, 0.97, 0.02g fIdentity, Uniform, 8, MSE, 0.95, 0.02g"
+    ],
+    [
+     "Dataset",
+     "NN-AE fGhidden;Gout; ~ N1; L; O; B; Eg",
+     "DNN-AE fGhidden;Gout; ~ N1; ~ N2; ~ N3 ; L; O; B; Eg"
+    ],
+    [
+     "Fashion MNIST MNIST Smartphone HAR Drive Diagnosis Letter Recognition",
+     "fRelu, Sigmoid, 64, MSE, Adam, 32, 5g fRelu, Sigmoid, 64, MSE, Adam, 32, 5g fSigmoid, Sigmoid, 32, MSE, Adam, 8, 20g fSigmoid, Sigmoid, 16, MSE, Adam, 8, 10g fRelu, Sigmoid, 16, MSE, Adam, 8, 20g",
+     "fRelu, Sigmoid, 64, 32, 64, MSE, Adam, 8, 10g fRelu, Sigmoid, 64, 32, 64, MSE, Adam, 8, 10g fSigmoid, Sigmoid, 32, 2, 32, MSE, Adam, 8, 20g fSigmoid, Sigmoid, 16, 8, 16, MSE, Adam, 8, 20g fRelu, Sigmoid, 16, 8, 16, MSE, Adam, 8, 20g"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    24.9,
+    701.4,
+    541.2,
+    741.1
+   ],
+   "caption": "TABLE 8 Hyperparameter Settings in Section 6",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3"
+    ],
+    [
+     "ONLAD Core fGhidden; ~ N1 ; Lg",
+     "NN-AE-CPU and NN-AE-GPU fGhidden;Gout; ~ N1 ; L; O; Bg",
+     "DNN-AE-CPU and DNN-AE-GPU fGhidden;Gout; ~ N1; ~ N2; ~ N3; L; O; Bg",
+     "FPELM-AE-CPU and FPELM-AE- GPUfGhidden; ~ N1 ; Lg"
+    ],
+    [
+     "fIdentity, ~ N,MSEg",
+     "fRelu,Sigmoid,~ N, MSE, Adam, 1g",
+     "fRelu, Sigmoid, 2 ~ N, ~ N, 2 ~ N, MSE, Adam, 1g",
+     "fIdentity, ~ N, MSEg"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    25.0,
+    230.1,
+    278.0,
+    444.5
+   ],
+   "caption": "TABLE 9 FPGA Resource Utilization of ONLAD Core (Pre-Synthesis Results)",
+   "rows": [
+    [
+     "Hidden Nodes = 16.InputNodes",
+     "Hidden Nodes = 16.BRAM[%]",
+     "Hidden Nodes = 16.DSP[%]",
+     "Hidden Nodes = 16.FF[%]",
+     "Hidden Nodes = 16.LUT[%]"
+    ],
+    [
+     "128",
+     "10.0",
+     "40.0",
+     "16.0",
+     "29.9"
+    ],
+    [
+     "256",
+     "12.9",
+     "40.0",
+     "16.1",
+     "30.0"
+    ],
+    [
+     "512",
+     "18.6",
+     "40.0",
+     "16.1",
+     "30.0"
+    ],
+    [
+     "1,024",
+     "30.0",
+     "40.0",
+     "16.1",
+     "30.0"
+    ],
+    [
+     "Hidden Nodes = 32",
+     "Hidden Nodes = 32",
+     "Hidden Nodes = 32",
+     "Hidden Nodes = 32",
+     "Hidden Nodes = 32"
+    ],
+    [
+     "InputNodes 128",
+     "BRAM[%]",
+     "DSP[%]",
+     "FF[%] 16.0",
+     "LUT[%] 29.9"
+    ],
+    [
+     "",
+     "13.6",
+     "40.0",
+     "",
+     ""
+    ],
+    [
+     "256",
+     "19.3",
+     "40.0",
+     "16.0",
+     "30.0"
+    ],
+    [
+     "512",
+     "30.7",
+     "40.0",
+     "16.0",
+     "30.0"
+    ],
+    [
+     "1,024",
+     "53.6",
+     "40.0",
+     "16.0",
+     "30.0"
+    ],
+    [
+     "Hidden Nodes = 64",
+     "Hidden Nodes = 64",
+     "Hidden Nodes = 64",
+     "Hidden Nodes = 64",
+     "Hidden Nodes = 64"
+    ],
+    [
+     "InputNodes",
+     "BRAM[%]",
+     "DSP[%]",
+     "FF[%]",
+     "LUT[%]"
+    ],
+    [
+     "128",
+     "24.3",
+     "40.0",
+     "15.9",
+     "30.0"
+    ],
+    [
+     "256",
+     "35.7",
+     "40.0",
+     "15.9",
+     "30.0"
+    ],
+    [
+     "512",
+     "58.6",
+     "40.0",
+     "16.0",
+     "30.0"
+    ],
+    [
+     "1,024",
+     "104.2",
+     "40.0",
+     "16.0",
+     "30.1"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    288.1,
+    231.7,
+    540.9,
+    265.1
+   ],
+   "caption": "TABLE 10 FPGA Resource Utilization of ONLAD Core (Post-Synthesis Result)",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3"
+    ],
+    [
+     "BRAM [%]",
+     "DSP [%]",
+     "FF [%]",
+     "LUT [%]"
+    ],
+    [
+     "55.4",
+     "32.7",
+     "11.6",
+     "25.8"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    24.8,
+    70.6,
+    541.3,
+    273.4
+   ],
+   "caption": "TABLE 11 Comparison of NN-Based Hardware Implementations for Anomaly Detection",
+   "rows": [
+    [
+     "",
+     "Akinetal.[53]",
+     "Wessetal.[54]",
+     "Mossetal.[55]",
+     "Alrawashdeh[56]",
+     "ONLAD Core"
+    ],
+    [
+     "Approach",
+     "supervised (classification)",
+     "supervised (classification)",
+     "semi-supervised (autoencoder)",
+     "supervised (classification)",
+     "semi-supervised (autoencoder)"
+    ],
+    [
+     "NN Model",
+     "BP-NN",
+     "BP-NN",
+     "BP-NN",
+     "DBN",
+     "OS-ELM"
+    ],
+    [
+     "Layers",
+     "3",
+     "3",
+     "5",
+     "4",
+     "3"
+    ],
+    [
+     "Weight",
+     "12",
+     "\u001884",
+     "1,280",
+     "N/A",
+     "\u0018131,072"
+    ],
+    [
+     "Parameters",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Platform",
+     "Altera Cyclone III Devkit",
+     "Avnet Zedboard",
+     "Ettus USRP X310",
+     "XilinxZC706",
+     "DigilentPYNQ-Z1"
+    ],
+    [
+     "Tools",
+     "QuartusII(VHDL)",
+     "Vivado(HLS)",
+     "Vivado (HLS)",
+     "Vivado (Verilog)",
+     "Vivado (HLS)"
+    ],
+    [
+     "Training",
+     "No",
+     "No",
+     "No",
+     "Yes",
+     "Yes"
+    ],
+    [
+     "Supported ? Frequency",
+     "50 MHz",
+     "N/A",
+     "200 MHz",
+     "N/A",
+     "100 MHz"
+    ],
+    [
+     "Prediction",
+     "\u00182 msec",
+     "\u0018100 cycles",
+     "105 nsec",
+     "8msec",
+     "\u00181 msec"
+    ],
+    [
+     "Latency",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Training Latency",
+     "N/A",
+     "N/A",
+     "N/A",
+     "N/A",
+     "\u00181 msec"
+    ],
+    [
+     "Power",
+     "N/A",
+     "N/A",
+     "N/A",
+     "N/A",
+     "3.1 W"
+    ],
+    [
+     "Consumption",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Power Efficiency",
+     "N/A",
+     "N/A",
+     "N/A",
+     "37 Gops/W",
+     "N/A"
+    ]
+   ]
+  }
+ ]
+}

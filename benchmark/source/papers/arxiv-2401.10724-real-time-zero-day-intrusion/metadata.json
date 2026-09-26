@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-2401.10724-real-time-zero-day-intrusion",
+  "title": "Real-Time Zero-Day Intrusion Detection System for Automotive Controller Area Network on FPGAs",
+  "authors": [
+    {
+      "given": "Shashwat",
+      "family": "Khandelwal"
+    },
+    {
+      "given": "Shreejith",
+      "family": "Shanker"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2401.10724",
+  "url": "https://arxiv.org/abs/2401.10724",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "zynq",
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : I, IV — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

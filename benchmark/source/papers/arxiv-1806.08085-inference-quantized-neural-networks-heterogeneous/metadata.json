@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-1806.08085-inference-quantized-neural-networks-heterogeneous",
+  "title": "Inference of Quantized Neural Networks on Heterogeneous All-Programmable Devices",
+  "authors": [
+    {
+      "given": "Thomas B.",
+      "family": "Preußer"
+    },
+    {
+      "given": "Giulio",
+      "family": "Gambardella"
+    },
+    {
+      "given": "Nicholas",
+      "family": "Fraser"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1806.08085",
+  "url": "https://arxiv.org/abs/1806.08085",
+  "type": "preprint",
+  "axes": [
+    "platforms"
+  ],
+  "tags": [
+    "zynq",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

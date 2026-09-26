@@ -1,0 +1,117 @@
+{
+  "papers": 200,
+  "candidates": 329,
+  "validated": 200,
+  "retrieval": {
+    "enriched/cpu-hybrid": {
+      "questions": 280,
+      "complete20": 0.5766129032258065,
+      "recall20": 0.6713709677419355,
+      "mean_latency_s": 0.04441329718934607,
+      "p95_latency_s": 0.06956337299925508
+    },
+    "enriched/cpu-reranked": {
+      "questions": 280,
+      "complete20": 0.6088709677419355,
+      "recall20": 0.6975806451612904,
+      "mean_latency_s": 0.07073615106424508,
+      "p95_latency_s": 0.08469817899822374
+    },
+    "enriched/dense": {
+      "questions": 280,
+      "complete20": 0.5685483870967742,
+      "recall20": 0.6774193548387096,
+      "mean_latency_s": 0.7913331298608812,
+      "p95_latency_s": 0.8495534110006702
+    },
+    "enriched/hybrid": {
+      "questions": 280,
+      "complete20": 0.5604838709677419,
+      "recall20": 0.6754032258064516,
+      "mean_latency_s": 0.8392244302928962,
+      "p95_latency_s": 0.9018142840031942
+    },
+    "enriched/lexical": {
+      "questions": 280,
+      "complete20": 0.3225806451612903,
+      "recall20": 0.39919354838709675,
+      "mean_latency_s": 0.051308473510705103,
+      "p95_latency_s": 0.06164755600184435
+    },
+    "enriched/reranked": {
+      "questions": 280,
+      "complete20": 0.625,
+      "recall20": 0.7439516129032258,
+      "mean_latency_s": 3.463853106721425,
+      "p95_latency_s": 3.870057968000765
+    },
+    "source/cpu-hybrid": {
+      "questions": 280,
+      "complete20": 0.5766129032258065,
+      "recall20": 0.6713709677419355,
+      "mean_latency_s": 0.061678483846377016,
+      "p95_latency_s": 0.058966254000552
+    },
+    "source/cpu-reranked": {
+      "questions": 280,
+      "complete20": 0.6088709677419355,
+      "recall20": 0.6975806451612904,
+      "mean_latency_s": 0.09156958052870842,
+      "p95_latency_s": 0.09358746300131315
+    },
+    "source/dense": {
+      "questions": 280,
+      "complete20": 0.5887096774193549,
+      "recall20": 0.6955645161290323,
+      "mean_latency_s": 0.8028241820678627,
+      "p95_latency_s": 0.8289509810019808
+    },
+    "source/hybrid": {
+      "questions": 280,
+      "complete20": 0.5846774193548387,
+      "recall20": 0.6975806451612904,
+      "mean_latency_s": 0.8365137105929145,
+      "p95_latency_s": 0.9034670850014663
+    },
+    "source/lexical": {
+      "questions": 280,
+      "complete20": 0.3911290322580645,
+      "recall20": 0.48588709677419356,
+      "mean_latency_s": 0.060096920825006755,
+      "p95_latency_s": 0.08718609399875277
+    },
+    "source/reranked": {
+      "questions": 280,
+      "complete20": 0.6693548387096774,
+      "recall20": 0.782258064516129,
+      "mean_latency_s": 3.5238719988608214,
+      "p95_latency_s": 4.080730691999634
+    }
+  },
+  "agents": {
+    "source/hybrid": {
+      "runs": 20,
+      "completed": 1,
+      "agreed_judgments": 0,
+      "correct_rate": null,
+      "supported_rate": null,
+      "mean_elapsed_s": 3.8433572297499268,
+      "p95_elapsed_s": 51.467873659999896,
+      "mean_input_tokens": 6415.3,
+      "mean_tool_calls": 0.45,
+      "protocol_violations": 0
+    },
+    "source/native": {
+      "runs": 1,
+      "completed": 1,
+      "agreed_judgments": 0,
+      "correct_rate": null,
+      "supported_rate": null,
+      "mean_elapsed_s": 31.7191561489999,
+      "p95_elapsed_s": 31.7191561489999,
+      "mean_input_tokens": 0.0,
+      "mean_tool_calls": 0.0,
+      "protocol_violations": 0
+    }
+  }
+}

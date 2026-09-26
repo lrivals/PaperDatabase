@@ -1,0 +1,37 @@
+{
+  "id": "arxiv-2111.07993-collie-continual-learning-language-grounding",
+  "title": "CoLLIE: Continual Learning of Language Grounding from Language-Image Embeddings",
+  "authors": [
+    {
+      "given": "Gabriel",
+      "family": "Skantze"
+    },
+    {
+      "given": "Bram",
+      "family": "Willemsen"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2111.07993",
+  "url": "https://arxiv.org/abs/2111.07993",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

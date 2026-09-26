@@ -1,0 +1,60 @@
+{
+  "id": "arxiv-1701.03400-scaling-binarized-neural-networks-reconfigurable",
+  "title": "Scaling Binarized Neural Networks on Reconfigurable Logic",
+  "authors": [
+    {
+      "given": "Nicholas J.",
+      "family": "Fraser"
+    },
+    {
+      "given": "Yaman",
+      "family": "Umuroglu"
+    },
+    {
+      "given": "Giulio",
+      "family": "Gambardella"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    },
+    {
+      "given": "Philip",
+      "family": "Leong"
+    },
+    {
+      "given": "Magnus",
+      "family": "Jahre"
+    },
+    {
+      "given": "Kees",
+      "family": "Vissers"
+    }
+  ],
+  "year": 2017,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1701.03400",
+  "url": "https://arxiv.org/abs/1701.03400",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

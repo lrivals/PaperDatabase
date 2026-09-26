@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-1901.00121-fpga-accelerators-deep-learning-networks",
+  "title": "FPGA-Based Accelerators of Deep Learning Networks for Learning and Classification: A Review",
+  "authors": [
+    {
+      "given": "Ahmad",
+      "family": "Shawahna"
+    },
+    {
+      "given": "Sadiq M.",
+      "family": "Sait"
+    },
+    {
+      "given": "Aiman H.",
+      "family": "El‐Maleh"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/access.2018.2890150",
+  "arxiv_id": "1901.00121",
+  "url": "https://arxiv.org/abs/1901.00121",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

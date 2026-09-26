@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-2609.05249-proton-irradiation-characterization-open-source",
+  "title": "Proton Irradiation Characterization of an Open-Source ML Accelerator on a Zynq UltraScale+ MPSoC",
+  "authors": [
+    {
+      "given": "Saad",
+      "family": "Memon"
+    },
+    {
+      "given": "Rafal",
+      "family": "Graczyk"
+    },
+    {
+      "given": "Jan",
+      "family": "Swakoń"
+    },
+    {
+      "given": "Leszek",
+      "family": "Grzanka"
+    },
+    {
+      "given": "Sebastian",
+      "family": "Kusyk"
+    },
+    {
+      "given": "Mike",
+      "family": "Papadakis"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2609.05249",
+  "url": "https://arxiv.org/abs/2609.05249",
+  "type": "preprint",
+  "axes": [
+    "platforms"
+  ],
+  "tags": [
+    "zynq",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

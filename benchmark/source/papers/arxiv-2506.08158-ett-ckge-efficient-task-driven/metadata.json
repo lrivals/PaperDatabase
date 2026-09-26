@@ -1,0 +1,77 @@
+{
+  "id": "arxiv-2506.08158-ett-ckge-efficient-task-driven",
+  "title": "ETT-CKGE: Efficient Task-driven Tokens for Continual Knowledge Graph Embedding",
+  "authors": [
+    {
+      "given": "Lijing",
+      "family": "Zhu"
+    },
+    {
+      "given": "Qizhen",
+      "family": "Lan"
+    },
+    {
+      "given": "Qing",
+      "family": "Tian"
+    },
+    {
+      "given": "Wenbo",
+      "family": "Sun"
+    },
+    {
+      "given": "Li",
+      "family": "Yang"
+    },
+    {
+      "given": "Lu",
+      "family": "Xia"
+    },
+    {
+      "given": "Yixin",
+      "family": "Xie"
+    },
+    {
+      "given": "Xi",
+      "family": "Xiao"
+    },
+    {
+      "given": "Tiehang",
+      "family": "Duan"
+    },
+    {
+      "given": "Cui",
+      "family": "Tao"
+    },
+    {
+      "given": "Shuteng",
+      "family": "Niu"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2506.08158",
+  "url": "https://arxiv.org/abs/2506.08158",
+  "type": "preprint",
+  "axes": [
+    "continual-learning",
+    "platforms"
+  ],
+  "tags": [
+    "versal"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 1 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

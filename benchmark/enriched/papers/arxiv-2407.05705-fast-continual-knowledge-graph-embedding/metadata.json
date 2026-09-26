@@ -1,0 +1,70 @@
+{
+  "id": "arxiv-2407.05705-fast-continual-knowledge-graph-embedding",
+  "title": "Fast and Continual Knowledge Graph Embedding via Incremental LoRA",
+  "authors": [
+    {
+      "given": "Jiajun",
+      "family": "Liu"
+    },
+    {
+      "given": "Wenjun",
+      "family": "Ke"
+    },
+    {
+      "given": "Peng",
+      "family": "Wang"
+    },
+    {
+      "given": "Jiahao",
+      "family": "Wang"
+    },
+    {
+      "given": "Jinhua",
+      "family": "Gao"
+    },
+    {
+      "given": "Ziyu",
+      "family": "Shang"
+    },
+    {
+      "given": "Guozheng",
+      "family": "Li"
+    },
+    {
+      "given": "Zijie",
+      "family": "Xu"
+    },
+    {
+      "given": "Ke",
+      "family": "Ji"
+    },
+    {
+      "given": "Yining",
+      "family": "Li"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2407.05705",
+  "url": "https://arxiv.org/abs/2407.05705",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

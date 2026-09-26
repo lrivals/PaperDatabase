@@ -1,0 +1,51 @@
+{
+  "id": "arxiv-2605.25860-sam3-assisted-training-lightweight-yolo",
+  "title": "SAM3-Assisted Training of Lightweight YOLO Models for Precision Pig Farming",
+  "authors": [
+    {
+      "given": "Marcos Vinicius Mendes",
+      "family": "Faria"
+    },
+    {
+      "given": "Thiago Borges",
+      "family": "Pereira"
+    },
+    {
+      "given": "Isabella C. F. S.",
+      "family": "Condotta"
+    },
+    {
+      "given": "Thiago Meireles",
+      "family": "Paixão"
+    },
+    {
+      "given": "Francisco de Assis",
+      "family": "Boldt"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2605.25860",
+  "url": "https://arxiv.org/abs/2605.25860",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov8"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

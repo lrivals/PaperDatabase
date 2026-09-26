@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference",
+  "title": "MCUNetV2: Memory-Efficient Patch-based Inference for Tiny Deep Learning",
+  "authors": [
+    {
+      "given": "Ji",
+      "family": "Lin"
+    },
+    {
+      "given": "Wei-Ming",
+      "family": "Chen"
+    },
+    {
+      "given": "Han",
+      "family": "Cai"
+    },
+    {
+      "given": "Chuang",
+      "family": "Gan"
+    },
+    {
+      "given": "Song",
+      "family": "Han"
+    }
+  ],
+  "year": 2021,
+  "venue": "NeurIPS 2021 (d'après 2025-el-zeinaty-designing-object-detection-models-tinyml, Table 8 ; non imprimé dans la version arXiv)",
+  "doi": null,
+  "arxiv_id": "2110.15352",
+  "url": "https://arxiv.org/abs/2110.15352",
+  "type": "conference",
+  "axes": [
+    "platforms"
+  ],
+  "tags": [
+    "tinyml",
+    "mcu",
+    "stm32",
+    "nas",
+    "int8",
+    "tinyengine",
+    "yolov3",
+    "patch-based-inference"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

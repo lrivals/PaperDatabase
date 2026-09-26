@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2003.03852-low-precision-floating-point-arithmetic",
+  "title": "Low Precision Floating-point Arithmetic for High Performance FPGA-based CNN Acceleration",
+  "authors": [
+    {
+      "given": "Chen",
+      "family": "Wu"
+    },
+    {
+      "given": "Mingyu",
+      "family": "Wang"
+    },
+    {
+      "given": "Xinyuan",
+      "family": "Chu"
+    },
+    {
+      "given": "Kun",
+      "family": "Wang"
+    },
+    {
+      "given": "Lei",
+      "family": "He"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2003.03852",
+  "url": "https://arxiv.org/abs/2003.03852",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

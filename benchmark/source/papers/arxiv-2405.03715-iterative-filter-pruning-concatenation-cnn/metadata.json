@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-2405.03715-iterative-filter-pruning-concatenation-cnn",
+  "title": "Iterative Filter Pruning for Concatenation-based CNN Architectures",
+  "authors": [
+    {
+      "given": "Svetlana",
+      "family": "Pavlitska"
+    },
+    {
+      "given": "Oliver",
+      "family": "Bagge"
+    },
+    {
+      "given": "Federico",
+      "family": "Peccia"
+    },
+    {
+      "given": "Toghrul",
+      "family": "Mammadov"
+    },
+    {
+      "given": "J. Marius",
+      "family": "Zöllner"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2405.03715",
+  "url": "https://arxiv.org/abs/2405.03715",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "yolov7",
+    "pruning"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

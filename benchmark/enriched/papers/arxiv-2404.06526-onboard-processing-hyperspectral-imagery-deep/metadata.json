@@ -1,0 +1,51 @@
+{
+  "id": "arxiv-2404.06526-onboard-processing-hyperspectral-imagery-deep",
+  "title": "Onboard Processing of Hyperspectral Imagery: Deep Learning Advancements, Methodologies, Challenges, and Emerging Trends",
+  "authors": [
+    {
+      "given": "Nafiseh",
+      "family": "Ghasemi"
+    },
+    {
+      "given": "Jon Alvarez",
+      "family": "Justo"
+    },
+    {
+      "given": "Marco",
+      "family": "Celesti"
+    },
+    {
+      "given": "Laurent",
+      "family": "Despoisse"
+    },
+    {
+      "given": "Jens",
+      "family": "Nieke"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2404.06526",
+  "url": "https://arxiv.org/abs/2404.06526",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

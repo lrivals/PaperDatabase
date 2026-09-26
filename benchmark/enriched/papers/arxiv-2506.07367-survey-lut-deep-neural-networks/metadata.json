@@ -1,0 +1,34 @@
+{
+  "id": "arxiv-2506.07367-survey-lut-deep-neural-networks",
+  "title": "A Survey on LUT-based Deep Neural Networks Implemented in FPGAs",
+  "authors": [
+    {
+      "given": "Zeyu",
+      "family": "Guo"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2506.07367",
+  "url": "https://arxiv.org/abs/2506.07367",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

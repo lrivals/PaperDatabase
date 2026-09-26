@@ -1,0 +1,89 @@
+{
+  "id": "arxiv-2206.07527-qonnx-representing-arbitrary-precision-quantized",
+  "title": "QONNX: Representing Arbitrary-Precision Quantized Neural Networks",
+  "authors": [
+    {
+      "given": "Alessandro",
+      "family": "Pappalardo"
+    },
+    {
+      "given": "Yaman",
+      "family": "Umuroglu"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    },
+    {
+      "given": "Jovan",
+      "family": "Mitrevski"
+    },
+    {
+      "given": "Ben",
+      "family": "Hawks"
+    },
+    {
+      "given": "Nhan",
+      "family": "Tran"
+    },
+    {
+      "given": "Vladimir",
+      "family": "Loncar"
+    },
+    {
+      "given": "Sioni",
+      "family": "Summers"
+    },
+    {
+      "given": "Hendrik",
+      "family": "Borras"
+    },
+    {
+      "given": "Jules",
+      "family": "Muhizi"
+    },
+    {
+      "given": "Matthew",
+      "family": "Trahms"
+    },
+    {
+      "given": "Shih-Chieh",
+      "family": "Hsu"
+    },
+    {
+      "given": "Scott",
+      "family": "Hauck"
+    },
+    {
+      "given": "Javier",
+      "family": "Duarte"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2206.07527",
+  "url": "https://arxiv.org/abs/2206.07527",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "hls4ml",
+    "finn",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

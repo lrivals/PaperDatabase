@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2403.01098-low-complexity-deep-learning-augmented",
+  "title": "Low Complexity Deep Learning Augmented Wireless Channel Estimation for Pilot-Based OFDM on Zynq System on Chip",
+  "authors": [
+    {
+      "given": "Animesh",
+      "family": "Sharma"
+    },
+    {
+      "given": "Syed Asrar Ul",
+      "family": "Haq"
+    },
+    {
+      "given": "Sumit J.",
+      "family": "Darak"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2403.01098",
+  "url": "https://arxiv.org/abs/2403.01098",
+  "type": "preprint",
+  "axes": [
+    "platforms"
+  ],
+  "tags": [
+    "zynq"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : II — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

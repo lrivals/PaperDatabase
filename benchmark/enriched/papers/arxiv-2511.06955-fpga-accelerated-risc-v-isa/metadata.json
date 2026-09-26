@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-2511.06955-fpga-accelerated-risc-v-isa",
+  "title": "FPGA-Accelerated RISC-V ISA Extensions for Efficient Neural Network Inference on Edge Devices",
+  "authors": [
+    {
+      "given": "Arya",
+      "family": "Parameshwara"
+    },
+    {
+      "given": "Santosh Hanamappa",
+      "family": "Mokashi"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2511.06955",
+  "url": "https://arxiv.org/abs/2511.06955",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "pynq",
+    "mobilenet"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : III — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2604.24455-compilation-execution-embeddable-yolo-nas",
+  "title": "Compilation and Execution of an Embeddable YOLO-NAS on the VTA",
+  "authors": [
+    {
+      "given": "Anthony",
+      "family": "Faure-Gignoux"
+    },
+    {
+      "given": "Kevin",
+      "family": "Delmas"
+    },
+    {
+      "given": "Adrien",
+      "family": "Gauffriau"
+    },
+    {
+      "given": "Claire",
+      "family": "Pagetti"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2604.24455",
+  "url": "https://arxiv.org/abs/2604.24455",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

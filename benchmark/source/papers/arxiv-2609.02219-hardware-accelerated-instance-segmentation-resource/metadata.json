@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-2609.02219-hardware-accelerated-instance-segmentation-resource",
+  "title": "Hardware-Accelerated Instance Segmentation for Resource-Constrained Space Robotics with Criticality Analysis",
+  "authors": [
+    {
+      "given": "Siddhant",
+      "family": "Shete"
+    },
+    {
+      "given": "Hilmi Dogu",
+      "family": "Kücüker"
+    },
+    {
+      "given": "Udo",
+      "family": "Frese"
+    },
+    {
+      "given": "Frank",
+      "family": "Kirchner"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2609.02219",
+  "url": "https://arxiv.org/abs/2609.02219",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2408.15561-cgra4ml-hardware-software-framework-implement",
+  "title": "cgra4ml : A Hardware/Software Framework to Implement Neural Networks for Scientific Edge Computing",
+  "authors": [
+    {
+      "given": "G",
+      "family": "Abarajithan"
+    },
+    {
+      "given": "Zhenghua",
+      "family": "Ma"
+    },
+    {
+      "given": "Ravidu",
+      "family": "Munasinghe"
+    },
+    {
+      "given": "Francesco",
+      "family": "Restuccia"
+    },
+    {
+      "given": "Ryan",
+      "family": "Kastner"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": "10.1145/3801097",
+  "arxiv_id": "2408.15561",
+  "url": "https://arxiv.org/abs/2408.15561",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -8,7 +8,7 @@
   bin/pdb synth agent [--limit N]
   bin/pdb synth report
 
-All large or generated artifacts live under .cache/bench/.
+All large or generated artifacts live under .cache/bench/; a versioned export is in benchmark/.
 """
 
 import argparse

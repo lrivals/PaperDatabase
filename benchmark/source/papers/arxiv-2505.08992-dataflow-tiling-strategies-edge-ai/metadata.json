@@ -1,0 +1,37 @@
+{
+  "id": "arxiv-2505.08992-dataflow-tiling-strategies-edge-ai",
+  "title": "Dataflow & Tiling Strategies in Edge-AI FPGA Accelerators: A Comprehensive Literature Review",
+  "authors": [
+    {
+      "given": "Richie",
+      "family": "Li"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2505.08992",
+  "url": "https://arxiv.org/abs/2505.08992",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "toolflows"
+  ],
+  "tags": [
+    "finn"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

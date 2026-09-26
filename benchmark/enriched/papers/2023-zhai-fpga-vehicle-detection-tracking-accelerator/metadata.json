@@ -1,0 +1,53 @@
+{
+  "id": "2023-zhai-fpga-vehicle-detection-tracking-accelerator",
+  "title": "FPGA-Based Vehicle Detection and Tracking Accelerator",
+  "authors": [
+    {
+      "given": "Jiaqi",
+      "family": "Zhai"
+    },
+    {
+      "given": "Bin",
+      "family": "Li"
+    },
+    {
+      "given": "Shunsen",
+      "family": "Lv"
+    },
+    {
+      "given": "Qinglei",
+      "family": "Zhou"
+    }
+  ],
+  "year": 2023,
+  "venue": "Sensors 23(4), 2208",
+  "doi": "10.3390/s23042208",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s23042208",
+  "type": "journal",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "yolov3",
+    "yolov3-tiny",
+    "zynq",
+    "hls",
+    "pruning",
+    "quantization",
+    "int16",
+    "winograd",
+    "deepsort"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

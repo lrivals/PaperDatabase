@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-1910.03159-xyolo-model-real-time-object",
+  "title": "xYOLO: A Model For Real-Time Object Detection In Humanoid Soccer On Low-End Hardware",
+  "authors": [
+    {
+      "given": "Daniel",
+      "family": "Barry"
+    },
+    {
+      "given": "Munir",
+      "family": "Shah"
+    },
+    {
+      "given": "Merel",
+      "family": "Keijsers"
+    },
+    {
+      "given": "Humayun",
+      "family": "Khan"
+    },
+    {
+      "given": "Banon",
+      "family": "Hopman"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1910.03159",
+  "url": "https://arxiv.org/abs/1910.03159",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

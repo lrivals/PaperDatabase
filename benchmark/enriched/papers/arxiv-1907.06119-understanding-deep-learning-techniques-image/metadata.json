@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-1907.06119-understanding-deep-learning-techniques-image",
+  "title": "Understanding Deep Learning Techniques for Image Segmentation",
+  "authors": [
+    {
+      "given": "Swarnendu",
+      "family": "Ghosh"
+    },
+    {
+      "given": "Nibaran",
+      "family": "Das"
+    },
+    {
+      "given": "Ishita",
+      "family": "Das"
+    },
+    {
+      "given": "Ujjwal",
+      "family": "Maulik"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": "10.1145/3329784",
+  "arxiv_id": "1907.06119",
+  "url": "https://arxiv.org/abs/1907.06119",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 1, 2, 3, 4, 5 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

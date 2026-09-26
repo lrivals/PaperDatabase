@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2401.12240-quantised-neural-network-accelerators-low",
+  "title": "Quantised Neural Network Accelerators for Low-Power IDS in Automotive Networks",
+  "authors": [
+    {
+      "given": "Shashwat",
+      "family": "Khandelwal"
+    },
+    {
+      "given": "Anneliese",
+      "family": "Walsh"
+    },
+    {
+      "given": "Shanker",
+      "family": "Shreejith"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2401.12240",
+  "url": "https://arxiv.org/abs/2401.12240",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "zcu104"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

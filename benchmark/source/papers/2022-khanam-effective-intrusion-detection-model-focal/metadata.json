@@ -1,0 +1,49 @@
+{
+  "id": "2022-khanam-effective-intrusion-detection-model-focal",
+  "title": "Towards an Effective Intrusion Detection Model Using Focal Loss Variational Autoencoder for Internet of Things (IoT)",
+  "authors": [
+    {
+      "given": "Salma",
+      "family": "Khanam"
+    },
+    {
+      "given": "Ismail",
+      "family": "Ahmedy"
+    },
+    {
+      "given": "Mohd Yamani Idna",
+      "family": "Idris"
+    },
+    {
+      "given": "Mohamed Hisham",
+      "family": "Jaward"
+    }
+  ],
+  "year": 2022,
+  "venue": "Sensors",
+  "doi": "10.3390/s22155822",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s22155822",
+  "type": null,
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "vae"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 7, 8, 12, 13, 14 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

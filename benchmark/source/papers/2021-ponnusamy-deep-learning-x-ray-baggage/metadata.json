@@ -1,0 +1,45 @@
+{
+  "id": "2021-ponnusamy-deep-learning-x-ray-baggage",
+  "title": "Deep Learning-Based X-Ray Baggage Hazardous Object Detection – An FPGA Implementation",
+  "authors": [
+    {
+      "given": "Vijayakumar",
+      "family": "Ponnusamy"
+    },
+    {
+      "given": "Diwakar R.",
+      "family": "Marur"
+    },
+    {
+      "given": "Deepa",
+      "family": "Dhanaskodi"
+    },
+    {
+      "given": "Thangavel",
+      "family": "Palaniappan"
+    }
+  ],
+  "year": 2021,
+  "venue": "Revue d intelligence artificielle",
+  "doi": "10.18280/ria.350510",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.18280/ria.350510",
+  "type": null,
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

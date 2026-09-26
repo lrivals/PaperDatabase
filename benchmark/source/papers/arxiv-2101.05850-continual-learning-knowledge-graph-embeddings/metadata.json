@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2101.05850-continual-learning-knowledge-graph-embeddings",
+  "title": "Continual Learning of Knowledge Graph Embeddings",
+  "authors": [
+    {
+      "given": "Angel",
+      "family": "Daruna"
+    },
+    {
+      "given": "Mehul",
+      "family": "Gupta"
+    },
+    {
+      "given": "Mohan",
+      "family": "Sridharan"
+    },
+    {
+      "given": "Sonia",
+      "family": "Chernova"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2101.05850",
+  "url": "https://arxiv.org/abs/2101.05850",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

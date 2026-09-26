@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2510.09653-ultralytics-yolo-evolution-overview-yolo27",
+  "title": "Ultralytics YOLO Evolution: An Overview of YOLO27, YOLO26, YOLO11, YOLOv8, and YOLOv5 Object Detectors for Computer Vision and Pattern Recognition",
+  "authors": [
+    {
+      "given": "Ranjan",
+      "family": "Sapkota"
+    },
+    {
+      "given": "Manoj",
+      "family": "Karkee"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2510.09653",
+  "url": "https://arxiv.org/abs/2510.09653",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov27",
+    "yolov26",
+    "yolov11",
+    "yolov8",
+    "yolov5",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

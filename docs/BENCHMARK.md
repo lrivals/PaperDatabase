@@ -156,3 +156,6 @@ Reading:
   recall and most of its ranking (MRR 0.61 → 0.40 with rerank). Terse rewording costs
   neither engine much.
 - The ranking of modes on the held-out test split matches the whole set.
+
+The dataset (questions, variants, frozen corpus text, results) is versioned in
+[`benchmark/`](../benchmark/README.md).

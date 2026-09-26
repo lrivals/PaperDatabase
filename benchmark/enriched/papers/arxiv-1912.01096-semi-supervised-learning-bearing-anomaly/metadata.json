@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-1912.01096-semi-supervised-learning-bearing-anomaly",
+  "title": "Semi-Supervised Learning of Bearing Anomaly Detection via Deep Variational Autoencoders",
+  "authors": [
+    {
+      "given": "Shen",
+      "family": "Zhang"
+    },
+    {
+      "given": "Fei",
+      "family": "Ye"
+    },
+    {
+      "given": "Bingnan",
+      "family": "Wang"
+    },
+    {
+      "given": "T.G.",
+      "family": "Habetler"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1912.01096",
+  "url": "https://arxiv.org/abs/1912.01096",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "vae",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

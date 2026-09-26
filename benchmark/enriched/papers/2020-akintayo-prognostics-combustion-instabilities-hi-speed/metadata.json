@@ -1,0 +1,47 @@
+{
+  "id": "2020-akintayo-prognostics-combustion-instabilities-hi-speed",
+  "title": "Prognostics of Combustion Instabilities from Hi-speed Flame Video using A Deep Convolutional Selective Autoencoder",
+  "authors": [
+    {
+      "given": "Adedotun",
+      "family": "Akintayo"
+    },
+    {
+      "given": "Kin Gwn",
+      "family": "Lore"
+    },
+    {
+      "given": "Soumalya",
+      "family": "Sarkar"
+    },
+    {
+      "given": "Soumik",
+      "family": "Sarkar"
+    }
+  ],
+  "year": 2020,
+  "venue": "International Journal of Prognostics and Health Management",
+  "doi": "10.36001/ijphm.2016.v7i4.2461",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.36001/ijphm.2016.v7i4.2461",
+  "type": null,
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

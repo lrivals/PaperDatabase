@@ -1,0 +1,93 @@
+{
+  "id": "arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised",
+  "title": "Autoencoders on FPGAs for real-time, unsupervised new physics detection at 40 MHz at the Large Hadron Collider",
+  "authors": [
+    {
+      "given": "Ekaterina",
+      "family": "Govorkova"
+    },
+    {
+      "given": "Ema",
+      "family": "Puljak"
+    },
+    {
+      "given": "Thea",
+      "family": "Aarrestad"
+    },
+    {
+      "given": "Thomas",
+      "family": "James"
+    },
+    {
+      "given": "Vladimir",
+      "family": "Loncar"
+    },
+    {
+      "given": "Maurizio",
+      "family": "Pierini"
+    },
+    {
+      "given": "Adrian Alan",
+      "family": "Pol"
+    },
+    {
+      "given": "Nicolò",
+      "family": "Ghielmetti"
+    },
+    {
+      "given": "Maksymilian",
+      "family": "Graczyk"
+    },
+    {
+      "given": "Sioni",
+      "family": "Summers"
+    },
+    {
+      "given": "Jennifer",
+      "family": "Ngadiuba"
+    },
+    {
+      "given": "Thong Q",
+      "family": "Nguyen"
+    },
+    {
+      "given": "Javier",
+      "family": "Duarte"
+    },
+    {
+      "given": "Zhenbin",
+      "family": "Wu"
+    }
+  ],
+  "year": 2021,
+  "venue": "Nature Machine Intelligence 4, 154 (2022)",
+  "doi": "10.1038/s42256-022-00441-3",
+  "arxiv_id": "2108.03986",
+  "url": "https://arxiv.org/abs/2108.03986",
+  "type": "journal",
+  "axes": [
+    "autoencoder-fpga",
+    "toolflows"
+  ],
+  "tags": [
+    "anomaly-detection",
+    "autoencoder",
+    "hls4ml",
+    "lhc",
+    "pruning",
+    "qkeras",
+    "quantization",
+    "vae",
+    "vu9p"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "id": "arxiv-2209.02976-yolov6-single-stage-object-detection",
+  "title": "YOLOv6: A Single-Stage Object Detection Framework for Industrial Applications",
+  "authors": [
+    {
+      "given": "Chuyi",
+      "family": "Li"
+    },
+    {
+      "given": "Lulu",
+      "family": "Li"
+    },
+    {
+      "given": "Hongliang",
+      "family": "Jiang"
+    },
+    {
+      "given": "Kaiheng",
+      "family": "Weng"
+    },
+    {
+      "given": "Yifei",
+      "family": "Geng"
+    },
+    {
+      "given": "Liang",
+      "family": "Li"
+    },
+    {
+      "given": "Zaidan",
+      "family": "Ke"
+    },
+    {
+      "given": "Qingyuan",
+      "family": "Li"
+    },
+    {
+      "given": "Meng",
+      "family": "Cheng"
+    },
+    {
+      "given": "Weiqiang",
+      "family": "Nie"
+    },
+    {
+      "given": "Yiduo",
+      "family": "Li"
+    },
+    {
+      "given": "Bo",
+      "family": "Zhang"
+    },
+    {
+      "given": "Yufei",
+      "family": "Liang"
+    },
+    {
+      "given": "Linyuan",
+      "family": "Zhou"
+    },
+    {
+      "given": "Xiaoming",
+      "family": "Xu"
+    },
+    {
+      "given": "Xiangxiang",
+      "family": "Chu"
+    },
+    {
+      "given": "Xiaoming",
+      "family": "Wei"
+    },
+    {
+      "given": "Xiaolin",
+      "family": "Wei"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2209.02976",
+  "url": "https://arxiv.org/abs/2209.02976",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov6",
+    "yolov5",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

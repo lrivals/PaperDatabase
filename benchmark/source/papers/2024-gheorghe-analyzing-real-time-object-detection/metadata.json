@@ -1,0 +1,46 @@
+{
+  "id": "2024-gheorghe-analyzing-real-time-object-detection",
+  "title": "Analyzing Real-Time Object Detection with YOLO Algorithm in Automotive Applications: A Review",
+  "authors": [
+    {
+      "given": "Carmen",
+      "family": "Gheorghe"
+    },
+    {
+      "given": "Mihai",
+      "family": "Duguleană"
+    },
+    {
+      "given": "Răzvan Gabriel",
+      "family": "Boboc"
+    },
+    {
+      "given": "Cristian",
+      "family": "Postelnicu"
+    }
+  ],
+  "year": 2024,
+  "venue": "Computer Modeling in Engineering & Sciences",
+  "doi": "10.32604/cmes.2024.054735",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.32604/cmes.2024.054735",
+  "type": null,
+  "axes": [
+    "surveys",
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

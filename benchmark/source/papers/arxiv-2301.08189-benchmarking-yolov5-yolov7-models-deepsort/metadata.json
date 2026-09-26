@@ -1,0 +1,68 @@
+{
+  "id": "arxiv-2301.08189-benchmarking-yolov5-yolov7-models-deepsort",
+  "title": "Benchmarking YOLOv5 and YOLOv7 models with DeepSORT for droplet tracking applications",
+  "authors": [
+    {
+      "given": "Mihir",
+      "family": "Durve"
+    },
+    {
+      "given": "Sibilla",
+      "family": "Orsini"
+    },
+    {
+      "given": "Adriano",
+      "family": "Tiribocchi"
+    },
+    {
+      "given": "Andrea",
+      "family": "Montessori"
+    },
+    {
+      "given": "Jean-Michel",
+      "family": "Tucny"
+    },
+    {
+      "given": "Marco",
+      "family": "Lauricella"
+    },
+    {
+      "given": "Andrea",
+      "family": "Camposeo"
+    },
+    {
+      "given": "Dario",
+      "family": "Pisignano"
+    },
+    {
+      "given": "Sauro",
+      "family": "Succi"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2301.08189",
+  "url": "https://arxiv.org/abs/2301.08189",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov5",
+    "yolov7"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

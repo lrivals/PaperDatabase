@@ -1,0 +1,47 @@
+{
+  "id": "arxiv-2604.21280-imagehd-energy-efficient-device-continual",
+  "title": "ImageHD: Energy-Efficient On-Device Continual Learning of Visual Representations via Hyperdimensional Computing",
+  "authors": [
+    {
+      "given": "Jebacyril",
+      "family": "Arockiaraj"
+    },
+    {
+      "given": "Dhruv",
+      "family": "Parikh"
+    },
+    {
+      "given": "Viktor",
+      "family": "Prasanna"
+    }
+  ],
+  "year": 2026,
+  "venue": "2026 IEEE 34th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)",
+  "doi": "10.1109/FCCM68464.2026.00041",
+  "arxiv_id": "2604.21280",
+  "url": "https://arxiv.org/abs/2604.21280",
+  "type": "conference",
+  "axes": [
+    "continual-learning",
+    "platforms"
+  ],
+  "tags": [
+    "hdc",
+    "mobilenet",
+    "zcu104",
+    "zynq",
+    "int8",
+    "quantization",
+    "vitis-hls"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-2304.05042-hybrid-combining-ann-conventional-demapping",
+  "title": "A Hybrid Approach combining ANN-based and Conventional Demapping in Communication for Efficient FPGA-Implementation",
+  "authors": [
+    {
+      "given": "Jonas",
+      "family": "Ney"
+    },
+    {
+      "given": "Bilal",
+      "family": "Hammoud"
+    },
+    {
+      "given": "Norbert",
+      "family": "Wehn"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2304.05042",
+  "url": "https://arxiv.org/abs/2304.05042",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

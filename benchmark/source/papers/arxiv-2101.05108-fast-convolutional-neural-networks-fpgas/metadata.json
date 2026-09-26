@@ -1,0 +1,114 @@
+{
+  "id": "arxiv-2101.05108-fast-convolutional-neural-networks-fpgas",
+  "title": "Fast convolutional neural networks on FPGAs with hls4ml",
+  "authors": [
+    {
+      "given": "Thea",
+      "family": "Aarrestad"
+    },
+    {
+      "given": "Vladimir",
+      "family": "Loncar"
+    },
+    {
+      "given": "Nicolò",
+      "family": "Ghielmetti"
+    },
+    {
+      "given": "Maurizio",
+      "family": "Pierini"
+    },
+    {
+      "given": "Sioni",
+      "family": "Summers"
+    },
+    {
+      "given": "Jennifer",
+      "family": "Ngadiuba"
+    },
+    {
+      "given": "Christoffer",
+      "family": "Petersson"
+    },
+    {
+      "given": "Hampus",
+      "family": "Linander"
+    },
+    {
+      "given": "Yutaro",
+      "family": "Iiyama"
+    },
+    {
+      "given": "Giuseppe Di",
+      "family": "Guglielmo"
+    },
+    {
+      "given": "Javier",
+      "family": "Duarte"
+    },
+    {
+      "given": "Philip",
+      "family": "Harris"
+    },
+    {
+      "given": "Dylan",
+      "family": "Rankin"
+    },
+    {
+      "given": "Sergo",
+      "family": "Jindariani"
+    },
+    {
+      "given": "Kevin",
+      "family": "Pedro"
+    },
+    {
+      "given": "Nhan",
+      "family": "Tran"
+    },
+    {
+      "given": "Mia",
+      "family": "Liu"
+    },
+    {
+      "given": "Edward",
+      "family": "Kreinar"
+    },
+    {
+      "given": "Zhenbin",
+      "family": "Wu"
+    },
+    {
+      "given": "Duc",
+      "family": "Hoang"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": "10.1088/2632-2153/ac0ea1",
+  "arxiv_id": "2101.05108",
+  "url": "https://arxiv.org/abs/2101.05108",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "hls4ml",
+    "quantization",
+    "pruning"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

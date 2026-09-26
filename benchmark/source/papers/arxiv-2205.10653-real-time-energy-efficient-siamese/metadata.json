@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-2205.10653-real-time-energy-efficient-siamese",
+  "title": "Towards real-time and energy efficient Siamese tracking -- a hardware-software approach",
+  "authors": [
+    {
+      "given": "Dominika",
+      "family": "Przewlocka-Rus"
+    },
+    {
+      "given": "Tomasz",
+      "family": "Kryjak"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2205.10653",
+  "url": "https://arxiv.org/abs/2205.10653",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "zcu104",
+    "zynq"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

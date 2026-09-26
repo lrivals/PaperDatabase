@@ -1,0 +1,109 @@
+{
+  "id": "arxiv-2206.11791-open-source-fpga-ml-codesign",
+  "title": "Open-source FPGA-ML codesign for the MLPerf Tiny Benchmark",
+  "authors": [
+    {
+      "given": "Hendrik",
+      "family": "Borras"
+    },
+    {
+      "given": "Giuseppe Di",
+      "family": "Guglielmo"
+    },
+    {
+      "given": "Javier",
+      "family": "Duarte"
+    },
+    {
+      "given": "Nicolò",
+      "family": "Ghielmetti"
+    },
+    {
+      "given": "Ben",
+      "family": "Hawks"
+    },
+    {
+      "given": "Scott",
+      "family": "Hauck"
+    },
+    {
+      "given": "Shih-Chieh",
+      "family": "Hsu"
+    },
+    {
+      "given": "Ryan",
+      "family": "Kastner"
+    },
+    {
+      "given": "Jason",
+      "family": "Liang"
+    },
+    {
+      "given": "Andres",
+      "family": "Meza"
+    },
+    {
+      "given": "Jules",
+      "family": "Muhizi"
+    },
+    {
+      "given": "Tai",
+      "family": "Nguyen"
+    },
+    {
+      "given": "Rushil",
+      "family": "Roy"
+    },
+    {
+      "given": "Nhan",
+      "family": "Tran"
+    },
+    {
+      "given": "Yaman",
+      "family": "Umuroglu"
+    },
+    {
+      "given": "Olivia",
+      "family": "Weng"
+    },
+    {
+      "given": "Aidan",
+      "family": "Yokuda"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2206.11791",
+  "url": "https://arxiv.org/abs/2206.11791",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "hls4ml",
+    "finn",
+    "pynq",
+    "quantization",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2307.13901-yolobench-benchmarking-efficient-object-detectors",
+  "title": "YOLOBench: Benchmarking Efficient Object Detectors on Embedded Systems",
+  "authors": [
+    {
+      "given": "Ivan",
+      "family": "Lazarevich"
+    },
+    {
+      "given": "Matteo",
+      "family": "Grimaldi"
+    },
+    {
+      "given": "Ravish",
+      "family": "Kumar"
+    },
+    {
+      "given": "Saptarshi",
+      "family": "Mitra"
+    },
+    {
+      "given": "Shahrukh",
+      "family": "Khan"
+    },
+    {
+      "given": "Sudhakar",
+      "family": "Sah"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2307.13901",
+  "url": "https://arxiv.org/abs/2307.13901",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov3",
+    "yolov4",
+    "yolov8"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

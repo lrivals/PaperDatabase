@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-2310.08401-performance-power-assessment-cnn-packages",
+  "title": "Performance/power assessment of CNN packages on embedded automotive platforms",
+  "authors": [
+    {
+      "given": "Paolo",
+      "family": "Burgio"
+    },
+    {
+      "given": "Gianluca",
+      "family": "Brilli"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2310.08401",
+  "url": "https://arxiv.org/abs/2310.08401",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "zynq"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : I, V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

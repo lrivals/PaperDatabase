@@ -1,0 +1,51 @@
+{
+  "id": "arxiv-2406.07318-embedded-graph-convolutional-networks-real",
+  "title": "Embedded graph convolutional networks for real-time event data processing on SoC FPGAs",
+  "authors": [
+    {
+      "given": "Kamil",
+      "family": "Jeziorek"
+    },
+    {
+      "given": "Piotr",
+      "family": "Wzorek"
+    },
+    {
+      "given": "Krzysztof",
+      "family": "Błachut"
+    },
+    {
+      "given": "Andréa",
+      "family": "Pinna"
+    },
+    {
+      "given": "Tomasz",
+      "family": "Kryjak"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": "10.1016/j.sysarc.2026.103850",
+  "arxiv_id": "2406.07318",
+  "url": "https://arxiv.org/abs/2406.07318",
+  "type": "preprint",
+  "axes": [
+    "platforms"
+  ],
+  "tags": [
+    "zcu104"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

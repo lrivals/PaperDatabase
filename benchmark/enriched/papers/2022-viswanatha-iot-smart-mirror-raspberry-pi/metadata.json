@@ -1,0 +1,41 @@
+{
+  "id": "2022-viswanatha-iot-smart-mirror-raspberry-pi",
+  "title": "IoT Based Smart Mirror Using Raspberry Pi 4 and YOLO Algorithm: A Novel Framework for Interactive Display",
+  "authors": [
+    {
+      "given": "V",
+      "family": "Viswanatha"
+    },
+    {
+      "given": "R K",
+      "family": "Chandana"
+    },
+    {
+      "given": "Ramachandra A",
+      "family": "C"
+    }
+  ],
+  "year": 2022,
+  "venue": "Indian Journal of Science and Technology",
+  "doi": "10.17485/ijst/v15i39.1627",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.17485/ijst/v15i39.1627",
+  "type": null,
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

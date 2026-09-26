@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-2603.11139-h2loop-spark-preview-continual-pretraining",
+  "title": "H2LooP Spark Preview: Continual Pretraining of Large Language Models for Low-Level Embedded Systems Code",
+  "authors": [
+    {
+      "given": "Amit",
+      "family": "Singh"
+    },
+    {
+      "given": "Vedant",
+      "family": "Nipane"
+    },
+    {
+      "given": "Pulkit",
+      "family": "Agrawal"
+    },
+    {
+      "given": "Jatin",
+      "family": "Kishnani"
+    },
+    {
+      "given": "Sairanjan",
+      "family": "Mishra"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2603.11139",
+  "url": "https://arxiv.org/abs/2603.11139",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

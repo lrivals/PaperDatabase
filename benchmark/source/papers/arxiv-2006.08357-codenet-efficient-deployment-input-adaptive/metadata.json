@@ -1,0 +1,68 @@
+{
+  "id": "arxiv-2006.08357-codenet-efficient-deployment-input-adaptive",
+  "title": "CoDeNet: Efficient Deployment of Input-Adaptive Object Detection on Embedded FPGAs",
+  "authors": [
+    {
+      "given": "Zhen",
+      "family": "Dong"
+    },
+    {
+      "given": "Dequan",
+      "family": "Wang"
+    },
+    {
+      "given": "Qijing",
+      "family": "Huang"
+    },
+    {
+      "given": "Yizhao",
+      "family": "Gao"
+    },
+    {
+      "given": "Yaohui",
+      "family": "Cai"
+    },
+    {
+      "given": "Tian",
+      "family": "Li"
+    },
+    {
+      "given": "Bichen",
+      "family": "Wu"
+    },
+    {
+      "given": "Kurt",
+      "family": "Keutzer"
+    },
+    {
+      "given": "John",
+      "family": "Wawrzynek"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2006.08357",
+  "url": "https://arxiv.org/abs/2006.08357",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

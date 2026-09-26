@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2504.06996-neural-signal-compression-raman-tinyml",
+  "title": "Neural Signal Compression using RAMAN tinyML Accelerator for BCI Applications",
+  "authors": [
+    {
+      "given": "Adithya",
+      "family": "Krishna"
+    },
+    {
+      "given": "Sohan",
+      "family": "Debnath"
+    },
+    {
+      "given": "Madhuvanthi",
+      "family": "Srivatsav"
+    },
+    {
+      "given": "André van",
+      "family": "Schaik"
+    },
+    {
+      "given": "Mahesh",
+      "family": "Mehendale"
+    },
+    {
+      "given": "Chetan Singh",
+      "family": "Thakur"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2504.06996",
+  "url": "https://arxiv.org/abs/2504.06996",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "pruning",
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

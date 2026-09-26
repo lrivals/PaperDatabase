@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-2407.08272-poweryolo-mixed-precision-model-hardware",
+  "title": "PowerYOLO: Mixed Precision Model for Hardware Efficient Object Detection with Event Data",
+  "authors": [
+    {
+      "given": "Dominika",
+      "family": "Przewlocka-Rus"
+    },
+    {
+      "given": "Tomasz",
+      "family": "Kryjak"
+    },
+    {
+      "given": "Marek",
+      "family": "Gorgon"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2407.08272",
+  "url": "https://arxiv.org/abs/2407.08272",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

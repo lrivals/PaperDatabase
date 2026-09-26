@@ -1,0 +1,37 @@
+{
+  "id": "2023-baker-artificial-intelligence-things-smarter-healthcare",
+  "title": "Artificial Intelligence of Things for Smarter Healthcare: A Survey of Advancements, Challenges, and Opportunities",
+  "authors": [
+    {
+      "given": "Stephanie",
+      "family": "Baker"
+    },
+    {
+      "given": "Wei",
+      "family": "Xiang"
+    }
+  ],
+  "year": 2023,
+  "venue": "IEEE Communications Surveys & Tutorials",
+  "doi": "10.1109/comst.2023.3256323",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/comst.2023.3256323",
+  "type": null,
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

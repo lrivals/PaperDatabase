@@ -1,0 +1,47 @@
+{
+  "id": "arxiv-2406.14239-leyolo-embedded-architecture-object-detection",
+  "title": "LeYOLO, New Embedded Architecture for Object Detection",
+  "authors": [
+    {
+      "given": "Lilian",
+      "family": "Hollard"
+    },
+    {
+      "given": "Lucas",
+      "family": "Mohimont"
+    },
+    {
+      "given": "Nathalie",
+      "family": "Gaveau"
+    },
+    {
+      "given": "Luiz Angelo",
+      "family": "Steffenel"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2406.14239",
+  "url": "https://arxiv.org/abs/2406.14239",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "mobilenet"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

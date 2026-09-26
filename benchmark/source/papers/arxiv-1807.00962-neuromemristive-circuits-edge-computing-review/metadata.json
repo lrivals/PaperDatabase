@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-1807.00962-neuromemristive-circuits-edge-computing-review",
+  "title": "Neuromemristive Circuits for Edge Computing: A Review",
+  "authors": [
+    {
+      "given": "Olga",
+      "family": "Krestinskaya"
+    },
+    {
+      "given": "Alex Pappachen",
+      "family": "James"
+    },
+    {
+      "given": "Leon Ong",
+      "family": "Chua"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/tnnls.2019.2899262",
+  "arxiv_id": "1807.00962",
+  "url": "https://arxiv.org/abs/1807.00962",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

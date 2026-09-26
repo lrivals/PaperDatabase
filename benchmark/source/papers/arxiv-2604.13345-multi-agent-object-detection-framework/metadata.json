@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-2604.13345-multi-agent-object-detection-framework",
+  "title": "Multi-Agent Object Detection Framework Based on Raspberry Pi YOLO Detector and Slack-Ollama Natural Language Interface",
+  "authors": [
+    {
+      "given": "Vladimir",
+      "family": "Kalušev"
+    },
+    {
+      "given": "Branko",
+      "family": "Brkljač"
+    },
+    {
+      "given": "Milan",
+      "family": "Brkljač"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2604.13345",
+  "url": "https://arxiv.org/abs/2604.13345",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

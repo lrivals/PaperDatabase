@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-1901.04986-systimator-design-space-exploration-methodology",
+  "title": "Systimator: A Design Space Exploration Methodology for Systolic Array based CNNs Acceleration on the FPGA-based Edge Nodes",
+  "authors": [
+    {
+      "given": "Hazoor",
+      "family": "Ahmad"
+    },
+    {
+      "given": "Muhammad",
+      "family": "Tanvir"
+    },
+    {
+      "given": "Muhammad Abdullah",
+      "family": "Hanif"
+    },
+    {
+      "given": "Muhammad Usama",
+      "family": "Javed"
+    },
+    {
+      "given": "Rehan",
+      "family": "Hafiz"
+    },
+    {
+      "given": "Muhammad",
+      "family": "Shafique"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1901.04986",
+  "url": "https://arxiv.org/abs/1901.04986",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

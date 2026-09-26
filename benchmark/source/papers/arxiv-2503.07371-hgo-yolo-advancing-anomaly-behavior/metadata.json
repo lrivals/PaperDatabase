@@ -1,0 +1,61 @@
+{
+  "id": "arxiv-2503.07371-hgo-yolo-advancing-anomaly-behavior",
+  "title": "HGO-YOLO: Advancing Anomaly Behavior Detection with Hierarchical Features and Lightweight Optimized Detection",
+  "authors": [
+    {
+      "given": "Qizhi",
+      "family": "Zheng"
+    },
+    {
+      "given": "Zhongze",
+      "family": "Luo"
+    },
+    {
+      "given": "Meiyan",
+      "family": "Guo"
+    },
+    {
+      "given": "Xinzhu",
+      "family": "Wang"
+    },
+    {
+      "given": "Renqimuge",
+      "family": "Wu"
+    },
+    {
+      "given": "Qiu",
+      "family": "Meng"
+    },
+    {
+      "given": "Guanghui",
+      "family": "Dong"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2503.07371",
+  "url": "https://arxiv.org/abs/2503.07371",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "yolov8",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

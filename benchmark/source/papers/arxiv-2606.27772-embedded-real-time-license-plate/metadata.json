@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2606.27772-embedded-real-time-license-plate",
+  "title": "An Embedded Real-Time License Plate Recognition System for Complex Traffic Scenes",
+  "authors": [
+    {
+      "given": "Anuki",
+      "family": "Pasqual"
+    },
+    {
+      "given": "Dulan",
+      "family": "Lokugeegana"
+    },
+    {
+      "given": "Manimohan",
+      "family": "Thiriloganathan"
+    },
+    {
+      "given": "Nuthya",
+      "family": "Rathnayake"
+    },
+    {
+      "given": "Kithsiri",
+      "family": "Samarasinghe"
+    },
+    {
+      "given": "Udaya S. K. P. Miriya",
+      "family": "Thanthrige"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2606.27772",
+  "url": "https://arxiv.org/abs/2606.27772",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "kv260",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

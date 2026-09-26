@@ -1,0 +1,75 @@
+{
+  "id": "arxiv-2506.19964-higher-order-neuromorphic-ising-machines",
+  "title": "Higher-Order Neuromorphic Ising Machines -- Autoencoders and Fowler-Nordheim Annealers are all you need for Scalability",
+  "authors": [
+    {
+      "given": "Faiek",
+      "family": "Ahsan"
+    },
+    {
+      "given": "Saptarshi",
+      "family": "Maiti"
+    },
+    {
+      "given": "Zihao",
+      "family": "Chen"
+    },
+    {
+      "given": "Jakob",
+      "family": "Kaiser"
+    },
+    {
+      "given": "Ankita",
+      "family": "Nandi"
+    },
+    {
+      "given": "Madhuvanthi",
+      "family": "Srivatsav"
+    },
+    {
+      "given": "Johannes",
+      "family": "Schemmel"
+    },
+    {
+      "given": "Andreas G.",
+      "family": "Andreou"
+    },
+    {
+      "given": "Jason",
+      "family": "Eshraghian"
+    },
+    {
+      "given": "Chetan Singh",
+      "family": "Thakur"
+    },
+    {
+      "given": "Shantanu",
+      "family": "Chakrabartty"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2506.19964",
+  "url": "https://arxiv.org/abs/2506.19964",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

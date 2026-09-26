@@ -1,0 +1,44 @@
+{
+  "id": "2021-soga-energy-efficient-ecg-signals-outlier",
+  "title": "Energy-Efficient ECG Signals Outlier Detection Hardware Using a Sparse Robust Deep Autoencoder",
+  "authors": [
+    {
+      "given": "Naoto",
+      "family": "Soga"
+    },
+    {
+      "given": "Shimpei",
+      "family": "Sato"
+    },
+    {
+      "given": "Hiroki",
+      "family": "Nakahara"
+    }
+  ],
+  "year": 2021,
+  "venue": "IEICE Transactions on Information and Systems",
+  "doi": "10.1587/transinf.2020lop0011",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1587/transinf.2020lop0011",
+  "type": null,
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

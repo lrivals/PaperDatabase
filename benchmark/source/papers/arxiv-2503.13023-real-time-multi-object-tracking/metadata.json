@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2503.13023-real-time-multi-object-tracking",
+  "title": "Real-Time Multi-Object Tracking using YOLOv8 and SORT on a SoC FPGA",
+  "authors": [
+    {
+      "given": "Michal",
+      "family": "Danilowicz"
+    },
+    {
+      "given": "Tomasz",
+      "family": "Kryjak"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2503.13023",
+  "url": "https://arxiv.org/abs/2503.13023",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "yolov8",
+    "finn",
+    "zynq",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

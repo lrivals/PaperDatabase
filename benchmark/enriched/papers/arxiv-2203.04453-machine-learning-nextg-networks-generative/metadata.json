@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2203.04453-machine-learning-nextg-networks-generative",
+  "title": "Machine Learning in NextG Networks via Generative Adversarial Networks",
+  "authors": [
+    {
+      "given": "Ender",
+      "family": "Ayanoğlu"
+    },
+    {
+      "given": "Kemal",
+      "family": "Davaslıoğlu"
+    },
+    {
+      "given": "Yalin E.",
+      "family": "Sagduyu"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/tccn.2022.3153004",
+  "arxiv_id": "2203.04453",
+  "url": "https://arxiv.org/abs/2203.04453",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

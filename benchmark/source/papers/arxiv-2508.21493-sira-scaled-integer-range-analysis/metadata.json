@@ -1,0 +1,77 @@
+{
+  "id": "arxiv-2508.21493-sira-scaled-integer-range-analysis",
+  "title": "SIRA: Scaled-Integer Range Analysis for Optimizing FPGA Dataflow Neural Network Accelerators",
+  "authors": [
+    {
+      "given": "Yaman",
+      "family": "Umuroglu"
+    },
+    {
+      "given": "Christoph",
+      "family": "Berganski"
+    },
+    {
+      "given": "Felix",
+      "family": "Jentzsch"
+    },
+    {
+      "given": "Michal",
+      "family": "Danilowicz"
+    },
+    {
+      "given": "Tomasz",
+      "family": "Kryjak"
+    },
+    {
+      "given": "Charalampos",
+      "family": "Bezaitis"
+    },
+    {
+      "given": "Magnus",
+      "family": "Sjalander"
+    },
+    {
+      "given": "Ian",
+      "family": "Colbert"
+    },
+    {
+      "given": "Thomas",
+      "family": "Preusser"
+    },
+    {
+      "given": "Jakoba",
+      "family": "Petri-Koenig"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2508.21493",
+  "url": "https://arxiv.org/abs/2508.21493",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

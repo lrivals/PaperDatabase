@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2409.07114-continual-incremental-learning-tinyml-device",
+  "title": "A Continual and Incremental Learning Approach for TinyML On-device Training Using Dataset Distillation and Model Size Adaption",
+  "authors": [
+    {
+      "given": "Marcus",
+      "family": "Rüb"
+    },
+    {
+      "given": "Philipp",
+      "family": "Tuchel"
+    },
+    {
+      "given": "Axel",
+      "family": "Sikora"
+    },
+    {
+      "given": "Daniel",
+      "family": "Mueller-Gritschneder"
+    }
+  ],
+  "year": 2024,
+  "venue": "2024 IEEE 7th International Conference on Industrial Cyber-Physical Systems (ICPS)",
+  "doi": "10.1109/ICPS59941.2024.10639989",
+  "arxiv_id": "2409.07114",
+  "url": "https://arxiv.org/abs/2409.07114",
+  "type": null,
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [
+    "anomaly-detection"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

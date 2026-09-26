@@ -1,0 +1,65 @@
+{
+  "id": "arxiv-2412.13843-review-deep-learning-autoencoder-design",
+  "title": "A Review on Deep Learning Autoencoder in the Design of Next-Generation Communication Systems",
+  "authors": [
+    {
+      "given": "Omar",
+      "family": "Alnaseri"
+    },
+    {
+      "given": "Laith H.",
+      "family": "Alzubaidi"
+    },
+    {
+      "given": "Yassine",
+      "family": "Himeur"
+    },
+    {
+      "given": "Mohammed Alaa",
+      "family": "Ala’Anzy"
+    },
+    {
+      "given": "Jens",
+      "family": "Timmermann"
+    },
+    {
+      "given": "Mohammed Salih Mohammed",
+      "family": "Gismalla"
+    },
+    {
+      "given": "Shadi",
+      "family": "Atalla"
+    },
+    {
+      "given": "Wathiq",
+      "family": "Mansoor"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/ojcoms.2026.3683457",
+  "arxiv_id": "2412.13843",
+  "url": "https://arxiv.org/abs/2412.13843",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : VII, VIII — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

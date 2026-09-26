@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-2607.20302-classical-hardware-acceleration-quantum-autoencoders",
+  "title": "Classical Hardware Acceleration of Quantum Autoencoders for Real-Time Anomaly Detection in Collider Experiments",
+  "authors": [
+    {
+      "given": "Ivan",
+      "family": "Ge"
+    },
+    {
+      "given": "Sagar",
+      "family": "Addepalli"
+    },
+    {
+      "given": "Abhilasha",
+      "family": "Dave"
+    },
+    {
+      "given": "Julia",
+      "family": "Gonski"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2607.20302",
+  "url": "https://arxiv.org/abs/2607.20302",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

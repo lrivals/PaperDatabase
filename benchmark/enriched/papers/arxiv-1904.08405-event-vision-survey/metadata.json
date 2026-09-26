@@ -1,0 +1,74 @@
+{
+  "id": "arxiv-1904.08405-event-vision-survey",
+  "title": "Event-Based Vision: A Survey",
+  "authors": [
+    {
+      "given": "Guillermo",
+      "family": "Gallego"
+    },
+    {
+      "given": "Tobi",
+      "family": "Delbruck"
+    },
+    {
+      "given": "Garrick",
+      "family": "Orchard"
+    },
+    {
+      "given": "Chiara",
+      "family": "Bartolozzi"
+    },
+    {
+      "given": "Brian",
+      "family": "Taba"
+    },
+    {
+      "given": "Andrea",
+      "family": "Censi"
+    },
+    {
+      "given": "Stefan",
+      "family": "Leutenegger"
+    },
+    {
+      "given": "Andrew J.",
+      "family": "Davison"
+    },
+    {
+      "given": "Jorg",
+      "family": "Conradt"
+    },
+    {
+      "given": "Kostas",
+      "family": "Daniilidis"
+    },
+    {
+      "given": "Davide",
+      "family": "Scaramuzza"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/tpami.2020.3008413",
+  "arxiv_id": "1904.08405",
+  "url": "https://arxiv.org/abs/1904.08405",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

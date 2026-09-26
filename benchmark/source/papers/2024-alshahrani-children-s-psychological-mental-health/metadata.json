@@ -1,0 +1,53 @@
+{
+  "id": "2024-alshahrani-children-s-psychological-mental-health",
+  "title": "A Children's Psychological and Mental Health Detection Model by Drawing Analysis based on Computer Vision and Deep Learning",
+  "authors": [
+    {
+      "given": "Amal",
+      "family": "Alshahrani"
+    },
+    {
+      "given": "Manar Mohammed",
+      "family": "Almatrafi"
+    },
+    {
+      "given": "Jenan Ibrahim",
+      "family": "Mustafa"
+    },
+    {
+      "given": "Layan Saad",
+      "family": "Albaqami"
+    },
+    {
+      "given": "Raneem Abdulrahman",
+      "family": "Aljabri"
+    }
+  ],
+  "year": 2024,
+  "venue": "Engineering Technology & Applied Science Research",
+  "doi": "10.48084/etasr.7812",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.48084/etasr.7812",
+  "type": null,
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov8",
+    "yolov9"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : I, II, IV — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

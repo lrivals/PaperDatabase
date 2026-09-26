@@ -1,0 +1,62 @@
+{
+  "id": "arxiv-2304.03836-nanosecond-anomaly-detection-decision-trees",
+  "title": "Nanosecond anomaly detection with decision trees and real-time application to exotic Higgs decays",
+  "authors": [
+    {
+      "given": "Stephen",
+      "family": "Roche"
+    },
+    {
+      "given": "Quincy",
+      "family": "Bayer"
+    },
+    {
+      "given": "Benjamin",
+      "family": "Carlson"
+    },
+    {
+      "given": "William",
+      "family": "Ouligian"
+    },
+    {
+      "given": "Pavel",
+      "family": "Serhiayenka"
+    },
+    {
+      "given": "Joerg",
+      "family": "Stelzer"
+    },
+    {
+      "given": "Tae Min",
+      "family": "Hong"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2304.03836",
+  "url": "https://arxiv.org/abs/2304.03836",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "autoencoder",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-2110.06948-challenges-unsupervised-anomaly-detection-particle",
+  "title": "Challenges for unsupervised anomaly detection in particle physics",
+  "authors": [
+    {
+      "given": "Katherine M.",
+      "family": "Fraser"
+    },
+    {
+      "given": "Samuel",
+      "family": "Homiller"
+    },
+    {
+      "given": "Rashmish K.",
+      "family": "Mishra"
+    },
+    {
+      "given": "Bryan",
+      "family": "Ostdiek"
+    },
+    {
+      "given": "Matthew D.",
+      "family": "Schwartz"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": "10.1007/jhep03(2022)066",
+  "arxiv_id": "2110.06948",
+  "url": "https://arxiv.org/abs/2110.06948",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "vae",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

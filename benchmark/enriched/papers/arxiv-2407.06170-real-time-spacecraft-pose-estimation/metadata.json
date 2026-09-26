@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2407.06170-real-time-spacecraft-pose-estimation",
+  "title": "Real-Time Spacecraft Pose Estimation Using Mixed-Precision Quantized Neural Network on COTS Reconfigurable MPSoC",
+  "authors": [
+    {
+      "given": "Julien",
+      "family": "Posso"
+    },
+    {
+      "given": "Guy",
+      "family": "Bois"
+    },
+    {
+      "given": "Yvon",
+      "family": "Savaria"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2407.06170",
+  "url": "https://arxiv.org/abs/2407.06170",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

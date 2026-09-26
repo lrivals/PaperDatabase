@@ -1,0 +1,46 @@
+{
+  "id": "2025-hozhabr-survey-real-time-object-detection",
+  "title": "A Survey on Real-Time Object Detection on FPGAs",
+  "authors": [
+    {
+      "given": "Seyed Hani",
+      "family": "Hozhabr"
+    },
+    {
+      "given": "Roberto",
+      "family": "Giorgi"
+    }
+  ],
+  "year": 2025,
+  "venue": "IEEE Access 13, 38195-38238",
+  "doi": "10.1109/ACCESS.2025.3544515",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/ACCESS.2025.3544515",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "yolo-fpga"
+  ],
+  "tags": [
+    "fpga",
+    "yolo",
+    "ssd",
+    "real-time",
+    "pixel-throughput",
+    "quantization",
+    "pruning",
+    "winograd"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

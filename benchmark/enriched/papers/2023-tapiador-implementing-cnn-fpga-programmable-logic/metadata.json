@@ -1,0 +1,48 @@
+{
+  "id": "2023-tapiador-implementing-cnn-fpga-programmable-logic",
+  "title": "Implementing a CNN in FPGA Programmable Logic for NILM Application",
+  "authors": [
+    {
+      "given": "Miguel",
+      "family": "Tapiador"
+    },
+    {
+      "given": "Laura de",
+      "family": "Diego-Otón"
+    },
+    {
+      "given": "Álvaro",
+      "family": "Hernández"
+    },
+    {
+      "given": "Rubén",
+      "family": "Nieto"
+    }
+  ],
+  "year": 2023,
+  "venue": null,
+  "doi": "10.1109/dcis58620.2023.10335989",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/dcis58620.2023.10335989",
+  "type": null,
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

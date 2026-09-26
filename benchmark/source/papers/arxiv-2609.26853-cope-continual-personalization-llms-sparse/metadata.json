@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-2609.26853-cope-continual-personalization-llms-sparse",
+  "title": "COPE: Continual Personalization of LLMs under Sparse User Feedback via User Embeddings and Self-Evaluation",
+  "authors": [
+    {
+      "given": "Ruike",
+      "family": "Cao"
+    },
+    {
+      "given": "Fugen",
+      "family": "Yao"
+    },
+    {
+      "given": "Liang",
+      "family": "Dong"
+    },
+    {
+      "given": "Jian",
+      "family": "Xu"
+    },
+    {
+      "given": "Guanjun",
+      "family": "Jiang"
+    },
+    {
+      "given": "Li",
+      "family": "Xiao"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2609.26853",
+  "url": "https://arxiv.org/abs/2609.26853",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

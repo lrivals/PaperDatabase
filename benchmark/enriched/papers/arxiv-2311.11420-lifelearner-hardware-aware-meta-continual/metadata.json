@@ -1,0 +1,50 @@
+{
+  "id": "arxiv-2311.11420-lifelearner-hardware-aware-meta-continual",
+  "title": "LifeLearner: Hardware-Aware Meta Continual Learning System for Embedded Computing Platforms",
+  "authors": [
+    {
+      "given": "Young D.",
+      "family": "Kwon"
+    },
+    {
+      "given": "Jagmohan",
+      "family": "Chauhan"
+    },
+    {
+      "given": "Hong",
+      "family": "Jia"
+    },
+    {
+      "given": "Stylianos I.",
+      "family": "Venieris"
+    },
+    {
+      "given": "Cecilia",
+      "family": "Mascolo"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2311.11420",
+  "url": "https://arxiv.org/abs/2311.11420",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

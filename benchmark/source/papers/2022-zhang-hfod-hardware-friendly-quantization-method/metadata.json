@@ -1,0 +1,59 @@
+{
+  "id": "2022-zhang-hfod-hardware-friendly-quantization-method",
+  "title": "HFOD: A hardware-friendly quantization method for object detection on embedded FPGAs",
+  "authors": [
+    {
+      "given": "Fei",
+      "family": "Zhang"
+    },
+    {
+      "given": "Ziyang",
+      "family": "Gao"
+    },
+    {
+      "given": "Jiaming",
+      "family": "Huang"
+    },
+    {
+      "given": "Peining",
+      "family": "Zhen"
+    },
+    {
+      "given": "Hai‐Bao",
+      "family": "Chen"
+    },
+    {
+      "given": "Jie",
+      "family": "Yan"
+    }
+  ],
+  "year": 2022,
+  "venue": "IEICE Electronics Express",
+  "doi": "10.1587/elex.19.20220067",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1587/elex.19.20220067",
+  "type": null,
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "yolov3-tiny",
+    "pynq",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

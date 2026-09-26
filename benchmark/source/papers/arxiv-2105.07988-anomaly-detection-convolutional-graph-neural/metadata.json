@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-2105.07988-anomaly-detection-convolutional-graph-neural",
+  "title": "Anomaly detection with convolutional Graph Neural Networks",
+  "authors": [
+    {
+      "given": "Oliver",
+      "family": "Atkinson"
+    },
+    {
+      "given": "Akanksha",
+      "family": "Bhardwaj"
+    },
+    {
+      "given": "Christoph",
+      "family": "Englert"
+    },
+    {
+      "given": "Vishal S.",
+      "family": "Ngairangbam"
+    },
+    {
+      "given": "Michael",
+      "family": "Spannowsky"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": "10.1007/jhep08(2021)080",
+  "arxiv_id": "2105.07988",
+  "url": "https://arxiv.org/abs/2105.07988",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

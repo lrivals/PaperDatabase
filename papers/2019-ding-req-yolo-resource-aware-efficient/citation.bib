@@ -1,0 +1,17 @@
+@inproceedings{10.1145/3289602.3293904,
+author = {Ding, Caiwen and Wang, Shuo and Liu, Ning and Xu, Kaidi and Wang, Yanzhi and Liang, Yun},
+title = {REQ-YOLO: A Resource-Aware, Efficient Quantization Framework for Object Detection on FPGAs},
+year = {2019},
+isbn = {9781450361378},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3289602.3293904},
+doi = {10.1145/3289602.3293904},
+abstract = {Deep neural networks (DNNs), as the basis of object detection, will play a key role in the development of future autonomous systems with full autonomy. The autonomous systems have special requirements of real-time, energy-e cient implementations of DNNs on a power-budgeted system. Two research thrusts are dedicated to per- formance and energy e ciency enhancement of the inference phase of DNNs. The first one is model compression techniques while the second is e cient hardware implementations. Recent researches on extremely-low-bit CNNs such as binary neural network (BNN) and XNOR-Net replace the traditional oating point operations with bi- nary bit operations, signi cantly reducing memory bandwidth and storage requirement, whereas suffering non-negligible accuracy loss and waste of digital signal processing (DSP) blocks on FPGAs. To overcome these limitations, this paper proposes REQ-YOLO, a resource aware, systematic weight quantization framework for object detection, considering both algorithm and hardware resource aspects in object detection. We adopt the block-circulant matrix method and propose a heterogeneous weight quantization using Alternative Direction Method of Multipliers (ADMM), an e ective optimization technique for general, non-convex optimization problems. To achieve real-time, highly efficient implementations on FPGA, we present the detailed hardware implementation of block circulant matrices on CONV layers and de- velop an e cient processing element (PE) structure supporting the heterogeneous weight quantization, CONV data ow and pipelining techniques, design optimization, and a template-based automatic synthesis framework to optimally exploit hardware resource. Experimental results show that our proposed REQ-YOLO framework can signi cantly compress the YOLO model while introducing very small accuracy degradation. The related codes are here: https://github.com/Anonymous788/heterogeneous_ADMM_YOLO.},
+booktitle = {Proceedings of the 2019 ACM/SIGDA International Symposium on Field-Programmable Gate Arrays},
+pages = {33–42},
+numpages = {10},
+keywords = {admm, compression, fpga, object detection, yolo},
+location = {Seaside, CA, USA},
+series = {FPGA '19}
+}

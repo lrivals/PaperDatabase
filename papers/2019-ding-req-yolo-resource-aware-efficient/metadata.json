@@ -1,0 +1,63 @@
+{
+  "id": "2019-ding-req-yolo-resource-aware-efficient",
+  "title": "REQ-YOLO: A Resource-Aware, Efficient Quantization Framework for Object Detection on FPGAs",
+  "authors": [
+    {
+      "given": "Caiwen",
+      "family": "Ding"
+    },
+    {
+      "given": "Shuo",
+      "family": "Wang"
+    },
+    {
+      "given": "Ning",
+      "family": "Liu"
+    },
+    {
+      "given": "Kaidi",
+      "family": "Xu"
+    },
+    {
+      "given": "Yanzhi",
+      "family": "Wang"
+    },
+    {
+      "given": "Yun",
+      "family": "Liang"
+    }
+  ],
+  "year": 2019,
+  "venue": "Proceedings of the 2019 ACM/SIGDA International Symposium on Field-Programmable Gate Arrays 33–42",
+  "doi": "10.1145/3289602.3293904",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1145/3289602.3293904",
+  "type": "conference",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "tiny-yolo",
+    "yolov2-tiny",
+    "quantization",
+    "admm",
+    "block-circulant",
+    "fft",
+    "virtex-7",
+    "sdx",
+    "jetson-tx2"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
+      "sections numérotées non détectées : 6 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

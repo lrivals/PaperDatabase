@@ -1,0 +1,65 @@
+{
+  "id": "arxiv-2011.07317-memory-efficient-dataflow-inference-deep",
+  "title": "Memory-Efficient Dataflow Inference for Deep CNNs on FPGA",
+  "authors": [
+    {
+      "given": "Lucian",
+      "family": "Petrica"
+    },
+    {
+      "given": "Tobias",
+      "family": "Alonso"
+    },
+    {
+      "given": "Mairin",
+      "family": "Kroes"
+    },
+    {
+      "given": "Nicholas",
+      "family": "Fraser"
+    },
+    {
+      "given": "Sorin",
+      "family": "Cotofana"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2011.07317",
+  "url": "https://arxiv.org/abs/2011.07317",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "dataflow",
+    "bnn",
+    "resnet-50",
+    "memory-packing",
+    "bram",
+    "alveo",
+    "zynq-7000",
+    "quantization"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "tableaux sans corps extrait (légende seule) : Table I",
+      "sections numérotées non détectées : II — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

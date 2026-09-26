@@ -1,0 +1,65 @@
+{
+  "id": "2024-campos-end-end-codesign-hessian-aware",
+  "title": "End-to-end codesign of Hessian-aware quantized neural networks for FPGAs",
+  "authors": [
+    {
+      "given": "Javier",
+      "family": "Campos"
+    },
+    {
+      "given": "Jovan",
+      "family": "Mitrevski"
+    },
+    {
+      "given": "Nhan",
+      "family": "Tran"
+    },
+    {
+      "given": "Zhen",
+      "family": "Dong"
+    },
+    {
+      "given": "Amir",
+      "family": "Gholaminejad"
+    },
+    {
+      "given": "Michael W.",
+      "family": "Mahoney"
+    },
+    {
+      "given": "Javier",
+      "family": "Duarte"
+    }
+  ],
+  "year": 2024,
+  "venue": "ACM Trans. Reconfigurable Technol. Syst. 17(3), 36",
+  "doi": "10.1145/3662000",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1145/3662000",
+  "type": "journal",
+  "axes": [
+    "toolflows",
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "hls4ml",
+    "hawq",
+    "qonnx",
+    "mixed-precision",
+    "quantization",
+    "hessian",
+    "particle-physics",
+    "jet-tagging",
+    "autoencoder"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

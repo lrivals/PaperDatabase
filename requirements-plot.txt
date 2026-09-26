@@ -1,0 +1,2 @@
+# Optionnel : figures statiques de bin/pdb plot (lib/plotfig.py).
+matplotlib>=3.8

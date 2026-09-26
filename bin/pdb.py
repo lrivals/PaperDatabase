@@ -27,6 +27,8 @@
   viz [--port N]            visualisation du corpus (http://127.0.0.1:8050)
   eval [--extract|--rag|--speed] [--save] [--compare [JSON]]
                             banc d'évaluation du logiciel (docs/EVAL.md)
+  rag <command>             recherche GPU (Qwen3), preuves, acquisition open access
+  synth <command>           benchmark synthétique (docs/BENCHMARK.md)
   test [--rag]              lance les tests (--rag : pdb eval --rag)
 
 Guide : docs/GUIDE.md. Détail des scripts : SETUP.md §5. Requêtes : docs/RAG.md.
@@ -442,6 +444,16 @@ def cmd_test(args):
                           cwd=ROOT).returncode
 
 
+def cmd_rag(args):
+    import rag_cli
+    return rag_cli.run(args)
+
+
+def cmd_synth(args):
+    import bench_cli
+    return bench_cli.run(args)
+
+
 def _fmt(v):
     return "n/r" if v is None else f"{v:.2f}" if isinstance(v, float) else str(v)
 
@@ -579,6 +591,7 @@ COMMANDS = {
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
     "eval": cmd_eval, "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
     "verify": cmd_verify, "cites": cmd_cites, "cited-by": cmd_cited_by,
+    "rag": cmd_rag, "synth": cmd_synth,
 }
 
 

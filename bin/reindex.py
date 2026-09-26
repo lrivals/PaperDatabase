@@ -88,12 +88,12 @@ def check_paper_files(folder, meta, problems, notes):
             problems.append(f"{pid} : fiche.md sans section « Statut de lecture » (obligatoire)")
 
 
-def load_papers(problems, notes):
+def load_papers(problems, notes, root=ROOT):
     papers = []
-    for folder in sorted(p for p in PAPERS.iterdir() if p.is_dir()):
+    for folder in sorted(p for p in (root / "papers").iterdir() if p.is_dir()):
         if not (folder / "metadata.json").exists():
             problems.append(f"{folder.name} : metadata.json absent")
-    for path in sorted(PAPERS.glob("*/metadata.json")):
+    for path in sorted((root / "papers").glob("*/metadata.json")):
         try:
             meta = json.loads(path.read_text())
         except json.JSONDecodeError as e:
@@ -108,11 +108,12 @@ def load_papers(problems, notes):
     return papers
 
 
-def load_benchmarks(problems):
-    if not BENCH.exists():
+def load_benchmarks(problems, root=ROOT):
+    bench = root / "benchmarks.csv"
+    if not bench.exists():
         problems.append("benchmarks.csv absent")
         return []
-    with open(BENCH, newline="") as f:
+    with open(bench, newline="") as f:
         reader = csv.DictReader(f)
         if tuple(reader.fieldnames or ()) != schema.BENCHMARK_COLUMNS:
             problems.append("benchmarks.csv : en-tête différent de schema.BENCHMARK_COLUMNS")
@@ -196,11 +197,12 @@ def bench_notes(papers, rows, fronts):
     return notes
 
 
-def run():
+def run(root=ROOT):
     """Régénère INDEX.md et external_refs.csv. Retourne 1 si une incohérence est trouvée."""
+    root = Path(root).resolve()
     problems, notes = [], []
-    papers = load_papers(problems, notes)
-    rows = load_benchmarks(problems)
+    papers = load_papers(problems, notes, root)
+    rows = load_benchmarks(problems, root)
 
     ids_ = {p["id"] for p in papers if "id" in p}
     for pid in sorted({r["paper_id"] for r in rows} - ids_):
@@ -211,26 +213,27 @@ def run():
             problems.append(f"benchmarks.csv : mesure propre {pid} sans protocole {src}")
     fronts = {}
     for p in papers:
-        path = PAPERS / p["id"] / "fiche.md"
+        path = root / "papers" / p["id"] / "fiche.md"
         fronts[p["id"]] = schema.read_front_matter(path.read_text()) if path.exists() else {}
     notes += bench_notes(papers, rows, fronts)
 
-    INDEX.write_text(render(papers, rows) + "\n")
-    ext = refs.external_ranking(refs.load_papers(ROOT))
-    write_external(EXTERNAL, ext)
+    (root / "INDEX.md").write_text(render(papers, rows) + "\n")
+    ext = refs.external_ranking(refs.load_papers(root))
+    write_external(root / "external_refs.csv", ext)
     todo = sum(1 for p in papers if p.get("status", {}).get("fiche") != "done")
     print(f"INDEX.md régénéré : {len(papers)} papiers, {todo} fiches à faire, {len(rows)} lignes de benchmark.")
     print(f"external_refs.csv régénéré : {len(ext)} travaux hors base cités par au moins 2 papiers.")
-    try:
-        from lib import rag
-        m = rag.build_index(ROOT)
-        if m["dense"]:
-            print(f"Index de passages : {m['chunks']} passages, {m['encoded']} (ré)encodés ({m['model']}).")
-        else:
-            print(f"Index de passages : {m['chunks']} passages, lexical seul "
-                  "(requirements-embed.txt absent).")
-    except Exception as e:  # l'index est dérivé : son échec ne bloque pas le reste
-        notes.append(f"index de passages non reconstruit : {e}")
+    if root == ROOT:  # un corpus isolé (pdb synth) n'a pas d'index de passages
+        try:
+            from lib import rag
+            m = rag.build_index(ROOT)
+            if m["dense"]:
+                print(f"Index de passages : {m['chunks']} passages, {m['encoded']} (ré)encodés ({m['model']}).")
+            else:
+                print(f"Index de passages : {m['chunks']} passages, lexical seul "
+                      "(requirements-embed.txt absent).")
+        except Exception as e:  # l'index est dérivé : son échec ne bloque pas le reste
+            notes.append(f"index de passages non reconstruit : {e}")
     for n in notes:
         print(f"note    {n}")
     for pb in problems:

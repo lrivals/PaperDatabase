@@ -1047,3 +1047,48 @@ Défauts mis au jour, à corriger (tâche 12) :
   `sections.jsonl` (BM25 + sentence-transformers bge-small, fusion RRF), sans rien changer
   à l'arborescence. Pas de ChromaDB : une recherche exhaustive en numpy suffit jusqu'à
   ~10⁵ passages ([docs/RAG.md](docs/RAG.md) §11).
+
+## 10. Recherche GPU (Qwen3), acquisition et benchmark synthétique
+
+Second moteur de recherche, indépendant de `pdb search` (bge-small, CPU, §5) : module `lib/rag_qwen.py`, commande `bin/pdb rag`, skill `/paper-research`. Le benchmark synthétique qui l'évalue est `bin/pdb synth` ([docs/BENCHMARK.md](docs/BENCHMARK.md)).
+
+Installer `.venv/bin/pip install -r requirements-rag.txt`, puis lancer
+`bin/pdb rag index --download`. Cette première exécution télécharge les versions épinglées
+de Qwen3-Embedding-4B et Qwen3-Reranker-4B ; les suivantes se font depuis le cache local.
+La commande nécessite un GPU CUDA compatible pour les modes `dense` et `hybrid`. Sur une
+machine sans GPU, `bin/pdb rag index --mode lexical` et
+`bin/pdb rag search "question" --mode lexical` restent disponibles. Les dépendances de
+`requirements-embed.txt` concernent uniquement la visualisation et sont indépendantes.
+
+L'index `.cache/rag/index.sqlite3` est un instantané des fichiers sources. Après une
+modification manuelle de `sections.jsonl`, `fiche.md`, `metadata.json` ou `benchmarks.csv`,
+relancer `bin/pdb rag index`. Une recherche sur un index périmé échoue explicitement.
+`bin/pdb rag search "question"` renvoie des identifiants de passage, leurs pages, sections,
+types, empreintes de source et scores ; `bin/pdb rag evidence ID --parent` affiche aussi la
+section parente. Les faits rapportés doivent venir de `abstract`, `section`, `table` ou
+`figure` ; les fiches guident la navigation et les lignes de benchmark sont des
+transcriptions à vérifier contre l'original.
+
+`bin/pdb rag benchmarks --filter-json '[{"field":"fps","op":"gte","value":25}]'`
+parcourt toutes les configurations sans limite de résultats. Une valeur `n/r` n'entre pas
+dans un filtre numérique. `computed_fps_per_w` apparaît uniquement quand FPS et puissance
+sont tous deux rapportés ; le `power_scope` est conservé. Pour vérifier les identifiants et
+les extraits d'une réponse, enregistrer un JSON contenant `snapshot` et
+`claims: [{"text": "...", "citations": [{"id": "...", "excerpt": "..."}]}]`, puis lancer
+`bin/pdb rag check-answer réponse.json`. Ce contrôle est structurel : l'agent doit encore
+vérifier que le passage soutient réellement la phrase.
+
+Dans Claude Code, `/paper-research <question>` effectue une rédaction suivie d'une liste de
+trois lacunes au maximum, de recherches complémentaires, puis d'un contrôle des sources.
+Quand le corpus ne suffit pas, `bin/pdb rag acquire "requête" --run identifiant` interroge
+OpenAlex et arXiv, met les PDF en staging, vérifie qu'un passage extrait répond à la requête,
+et laisse les articles retenus en staging. Seuls ceux que l'utilisateur accepte entrent dans
+`papers/`, via `bin/pdb rag approve identifiant PAPER_ID…`, qui reconstruit ensuite les
+index. Chaque ajout conserve
+`acquisition.json` ; la fiche reste `todo`. Le budget partagé d'un run est huit recherches,
+huit PDF, 50 Mo par PDF, 200 Mo au total et quinze minutes. Les échecs de téléchargement ou
+d'extraction sont rapportés, jamais interprétés comme absence de travaux.
+
+La base d'évaluation pilote et les commandes d'ablation sont dans
+`docs/RAG_IMPLEMENTATION_PLAN.md`. L'étude bibliographique qui motive ces choix est dans
+`docs/research/rag-improvement-study-2026-09-25.md`.

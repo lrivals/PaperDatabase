@@ -64,11 +64,14 @@ chiffre à chiffre ([docs/EVAL.md](docs/EVAL.md) §6).
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches `done` et `benchmarks.csv` |
 | `/paper-discover [axe \| gap \| mots-clés]` | cherche des candidats (OpenAlex), propose une liste courte, n'ajoute qu'après accord de l'utilisateur |
+| `/paper-ask <question>` | recherche hybride et réponse documentée ; peut ajouter automatiquement les articles open access utilisés comme preuve |
 | `.venv/bin/python bin/viz.py` | visualisation du corpus (app Dash, http://127.0.0.1:8050) : graphe 3D (couleur par thème, liens citations / références partagées / similarité textuelle / thèmes communs, recherche, filtres, détail avec fiche et benchmarks) et onglet Généalogie (frise des citations d'un papier ou d'un sujet). Dépendances : `requirements-viz.txt` (+ `requirements-embed.txt`, optionnel). Détails : [SETUP.md](SETUP.md) §5 |
 
 Après toute modification du corpus (fiche remplie, ligne de benchmark ajoutée) :
 `.venv/bin/python bin/reindex.py` (régénère `INDEX.md` et `external_refs.csv`) ;
 `bin/pdb add` et `bin/pdb ingest` le font d'eux-mêmes.
+Si `/paper-ask` utilise l'index de passages, relancer ensuite `bin/pdb rag index` ;
+une recherche sur un instantané périmé échoue explicitement.
 
 Pour ajouter un article sous paywall, il faut déposer le PDF dans `inbox/` à la main, puis
 `bin/pdb ingest`. Aucun contournement de paywall.

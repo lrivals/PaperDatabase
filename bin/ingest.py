@@ -104,13 +104,14 @@ def grobid_extract(pdf):
     return r.content
 
 
-def find_existing(arxiv_id, digest):
+def find_existing(arxiv_id, digest, papers_dir=None):
     """Dossier papers/ déjà occupé par cet article (même id arXiv ou même PDF)."""
+    papers_dir = Path(papers_dir) if papers_dir is not None else PAPERS
     if arxiv_id:
-        hits = sorted(PAPERS.glob(ids.arxiv_dir_prefix(arxiv_id) + "*"))
+        hits = sorted(papers_dir.glob(ids.arxiv_dir_prefix(arxiv_id) + "*"))
         if hits:
             return hits[0]
-    for p in PAPERS.glob("*/paper.pdf"):
+    for p in papers_dir.glob("*/paper.pdf"):
         if sha256(p) == digest:
             return p.parent
     return None
@@ -169,7 +170,10 @@ def merge_metadata(arx, header, backend, warnings):
         meta["authors"] = [_best_split(a, header["authors"]) for a in meta["authors"]]
 
     if arx:
-        meta["url"] = f"https://arxiv.org/abs/{arx['arxiv_id']}"
+        meta["url"] = (f"https://arxiv.org/abs/{arx['arxiv_id']}" if arx.get("arxiv_id")
+                       else arx.get("url") or (f"https://doi.org/{meta['doi']}" if meta["doi"] else None))
+        if arx.get("type") in schema.TYPES:
+            meta["type"] = arx["type"]
         if arx.get("journal_ref"):
             meta["venue"] = arx["journal_ref"]
             warnings.append(f"publié ailleurs selon arXiv (journal_ref : {arx['journal_ref']}) : "
@@ -178,7 +182,7 @@ def merge_metadata(arx, header, backend, warnings):
             meta["venue"] = arx["venue_openalex"]
             warnings.append(f"publié ailleurs selon OpenAlex ({arx['venue_openalex']}, DOI {meta['doi']}) : "
                             "type journal/conference à préciser")
-        else:
+        elif arx.get("arxiv_id"):
             meta["venue"] = "arXiv preprint"
             meta["type"] = "preprint"
         if header.get("title") and arx.get("title"):
@@ -235,9 +239,9 @@ def reextraction_warnings(old, new, cit=None):
     return out
 
 
-def find_citation(pdf, doi, title):
+def find_citation(pdf, doi, title, dirs=None):
     """Fichier de citation qui correspond au PDF, à côté de lui ou dans inbox/."""
-    for d in dict.fromkeys((pdf.parent, INBOX)):
+    for d in dict.fromkeys(dirs if dirs is not None else (pdf.parent, INBOX)):
         if d.is_dir():
             found = citation.find(d, doi=doi, title=title)
             if found:
@@ -270,7 +274,8 @@ def check_missing(meta, warnings):
 
 # --- traitement d'un PDF --------------------------------------------------------------
 
-def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None, docling=False, ocr=False):
+def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None, docling=False, ocr=False,
+            papers_dir=None, source_meta=None, citation_dirs=None):
     """Retourne ('ingéré' | 'ignoré', message).
 
     tei_bytes : TEI déjà obtenu (--reparse), GROBID n'est alors pas appelé.
@@ -280,10 +285,11 @@ def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None, docli
     """
     pdf = Path(pdf).resolve()
     meta_json = pdf.with_suffix(".meta.json")
-    arx = json.loads(meta_json.read_text()) if meta_json.exists() else None
+    arx = source_meta if source_meta is not None else (json.loads(meta_json.read_text()) if meta_json.exists() else None)
     digest = sha256(pdf)
+    papers_dir = Path(papers_dir) if papers_dir is not None else PAPERS
 
-    existing = find_existing((arx or {}).get("arxiv_id"), digest)
+    existing = find_existing((arx or {}).get("arxiv_id"), digest, papers_dir)
     if existing and not force:
         return "ignoré", f"déjà ingéré dans papers/{existing.name} (--force pour ré-extraire ; sinon supprimer le PDF de inbox/)"
 
@@ -303,6 +309,13 @@ def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None, docli
         header, blocks, refs = pdftext.extract(pdf)
         backend = "pymupdf"
 
+    if source_meta and source_meta.get("title") and header.get("title"):
+        claimed = source_meta["title"].casefold()
+        extracted = header["title"].casefold()
+        if len(extracted) >= 15 and difflib.SequenceMatcher(
+                None, claimed, extracted).ratio() < 0.4:
+            raise ValueError("external PDF title does not match its discovery record")
+
     old = json.loads((existing / "metadata.json").read_text()) if existing else None
     meta = merge_metadata(arx, header, backend, warnings)
     if old:  # ré-extraction : les métadonnées déjà validées (ou corrigées à la main) priment
@@ -312,7 +325,7 @@ def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None, docli
         meta["status"]["fiche"] = old.get("status", {}).get("fiche", "todo")
         warnings[:] = [w for w in warnings if not w.startswith(("type de publication", "publié ailleurs"))]
     cit = find_citation(pdf, (arx or {}).get("doi") or header.get("doi"),
-                        (arx or {}).get("title") or header.get("title"))
+                        (arx or {}).get("title") or header.get("title"), dirs=citation_dirs)
     if cit:  # déposé exprès pour corriger l'en-tête : prime aussi sur l'ancien metadata.json
         apply_citation(meta, cit[1], warnings)
     check_missing(meta, warnings)
@@ -327,7 +340,7 @@ def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None, docli
     else:
         paper_id, w = ids.make_paper_id(meta)
         warnings += w
-        if (PAPERS / paper_id).exists():
+        if (papers_dir / paper_id).exists():
             return "ignoré", f"papers/{paper_id} existe déjà pour un autre PDF : conflit à résoudre à la main"
     meta["id"] = paper_id
 
@@ -373,7 +386,7 @@ def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None, docli
     }
     meta["status"]["extracted"] = True
 
-    out = PAPERS / paper_id
+    out = papers_dir / paper_id
 
     errs = schema.validate_metadata(meta)
     if errs:

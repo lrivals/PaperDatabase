@@ -27,7 +27,7 @@ HEADERS = {"User-Agent": "PaperDatabase/1.0 (usage personnel, recherche bibliogr
 ARXIV_DOI_PREFIX = "10.48550/arxiv."
 FIELDS = ("id", "doi", "title", "publication_year", "cited_by_count", "primary_location",
           "locations", "best_oa_location", "abstract_inverted_index", "referenced_works",
-          "related_works", "type")
+          "related_works", "type", "authorships")
 MAX_OR = 50  # identifiants par filtre « a|b|c » (limite de l'API : 100)
 
 
@@ -87,7 +87,7 @@ class Client:
         """Liste de travaux (pagination par curseur), au plus `limit`."""
         out, cursor = [], "*"
         while cursor and len(out) < limit:
-            params = {"select": ",".join(FIELDS), "per-page": min(200, limit), "cursor": cursor}
+            params = {"select": ",".join(FIELDS), "per-page": min(100, limit), "cursor": cursor}
             if filter:
                 params["filter"] = filter
             if search:

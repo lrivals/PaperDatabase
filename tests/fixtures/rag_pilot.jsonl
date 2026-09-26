@@ -1,0 +1,30 @@
+{"category":"concept","question":"What problem and hardware approach does FINN address for binarized neural network inference?","evidence_ids":["300c2dfe546bbce6628269a6"],"kind":"abstract"}
+{"category":"concept","question":"How does fpgaConvNet map convolutional neural networks onto FPGA hardware?","evidence_ids":["4dc1660931bb01d18f9c5cd1"],"kind":"abstract"}
+{"category":"concept","question":"What is the scope of the survey Accelerating CNN inference on FPGAs?","evidence_ids":["51328654340aed8266717ab0"],"kind":"abstract"}
+{"category":"concept","question":"What does FINN-R add for end-to-end FPGA deep learning design exploration?","evidence_ids":["89c30ea37dc7c1825d2a4895"],"kind":"abstract"}
+{"category":"concept","question":"What low-power scientific machine-learning workflow does hls4ml offer?","evidence_ids":["962de90b6b7c6d0029a95647"],"kind":"abstract"}
+{"category":"concept","question":"How are autoencoders deployed on FPGAs for real-time unsupervised new physics detection?","evidence_ids":["b86056b377002f08e0607731"],"kind":"abstract"}
+{"category":"concept","question":"What memory problem does MCUNetV2 patch-based inference solve on microcontrollers?","evidence_ids":["159d137816f358593bb3709b"],"kind":"abstract"}
+{"category":"concept","question":"What is the main challenge addressed by On-Device Training Under 256KB Memory?","evidence_ids":["5282f4e4efeb00fd876bba81"],"kind":"abstract"}
+{"category":"concept","question":"How does TinyissimoYOLO target low-memory TinyML object detection?","evidence_ids":["edde4421ade5dfb9c56273fe"],"kind":"abstract"}
+{"category":"concept","question":"What problem is studied in 12 mJ per Class On-Device Online Few-Shot Class-Incremental Learning?","evidence_ids":["fbdf90f96851d1958c24ef71"],"kind":"abstract"}
+{"category":"concept","question":"What is ImageHD's approach to energy-efficient on-device continual learning of visual representations?","evidence_ids":["0de12191c95f740634b004aa"],"kind":"abstract"}
+{"category":"concept","question":"What does the industrial-image unsupervised anomaly detection survey cover?","evidence_ids":["339236d544176e518f53de2f"],"kind":"abstract"}
+{"category":"concept","question":"What does the FPGA-based vehicle detection and tracking accelerator propose?","evidence_ids":["20ffdfee45ddfef42c17bf6d"],"kind":"abstract"}
+{"category":"concept","question":"Quelle est la contribution de l'article Real-Time Object Detection and Classification using YOLO for Edge FPGAs ?","evidence_ids":["d7a8d1ce00f8839812de1eb8"],"kind":"abstract"}
+{"category":"concept","question":"What does the survey of real-time object detection on FPGAs analyze?","evidence_ids":["eb92eac2e9c7efd2017e0408"],"kind":"abstract"}
+{"category":"numeric","question":"In Real-Time Object Detection and Classification using YOLO for Edge FPGAs, what FPS and power are reported for YOLOv5 on Kria KV260 DPU?","evidence_ids":["e6793a56e9ad42915a378cc5"],"kind":"benchmark"}
+{"category":"numeric","question":"What FPS and estimated power does ImageHD report for MobileNetV2 INT8 plus HDC kMeans++ on ZCU104 with CIFAR-10?","evidence_ids":["2b1c80ef23eabbd2c716e3d9"],"kind":"benchmark"}
+{"category":"numeric","question":"What power is reported for O-FSCIL MobileNetV2 on GAP9 MCU at 240 MHz and 650 mV?","evidence_ids":["82cf9c73358de6811636874e"],"kind":"benchmark"}
+{"category":"numeric","question":"What throughput is reported for FINN SFC-max binarized MLP on ZC706?","evidence_ids":["a7456415318a4d09e391787d"],"kind":"benchmark"}
+{"category":"numeric","question":"What throughput and power does FINN report for CNV-fix on ZC706?","evidence_ids":["58ebf0de4bab976ad8cdf619"],"kind":"benchmark"}
+{"category":"numeric","question":"What power does FINN-R report for MLP-4 dataflow on Ultra96 XCZU3EG?","evidence_ids":["71c1328b1a67b64cd6a0acfe"],"kind":"benchmark"}
+{"category":"numeric","question":"For the 2022 YOLO edge intelligence benchmark, what are YOLOv3-tiny FPS and power on Jetson Nano at S=416 for Video1 gitee?","evidence_ids":["56b8b512d3580c6106f271d3"],"kind":"benchmark"}
+{"category":"numeric","question":"In the 2023 vehicle tracking accelerator, what FPS and power are reported for FP32 pruned YOLOv3-tiny with two modules on UA-DETRAC in Table 9?","evidence_ids":["de9c8c54a19adc60051e9b21"],"kind":"benchmark"}
+{"category":"numeric","question":"How many FPS does TinyissimoYOLO report on MAX78000 for 88 by 88 input?","evidence_ids":["1cc9adac3926f93d5afd6d0e"],"kind":"benchmark"}
+{"category":"numeric","question":"What FPS and chip power are reported for FP32 YOLOv8s on Jetson Orin Nano 8 GB in Table 4 of A Performance Analysis of YOLO Models?","evidence_ids":["115dd90144f45189364b43d2"],"kind":"benchmark"}
+{"category":"numeric","question":"What FPS and power are reported for YOLOv8n on Raspberry Pi 5 in A Performance Analysis of YOLO Models?","evidence_ids":["1e676e6c80efb49b4c266229"],"kind":"benchmark"}
+{"category":"numeric","question":"In the grape bunch and trunk detection benchmark, what FPS is reported for RetinaNet ResNet-50 on ZCU104?","evidence_ids":["357f1632cf2e8ad3f1013ce2"],"kind":"benchmark"}
+{"category":"numeric","question":"Is power reported for the dense AE encoder 32-2 on PolarFire MPF300TS-FCG1152I using hls4ml SmartHLS?","evidence_ids":["c4a1e13cf1eb20d595f97a5a"],"kind":"benchmark"}
+{"category":"numeric","question":"Does the MCUNetV2-H7 plus YOLOv3 STM32H743 benchmark report FPS and power, or are they unknown?","evidence_ids":["f923f0bdd20fe3adf3c468f4"],"kind":"benchmark"}
+{"category":"numeric","question":"What FPS and power are given for FP16 YOLOv3 on Raspberry Pi 4B plus Intel NCS2 with Video1 gitee in Table 3 of the 2022 edge devices benchmark?","evidence_ids":["f76b6eb614c8e3747097ced5"],"kind":"benchmark"}

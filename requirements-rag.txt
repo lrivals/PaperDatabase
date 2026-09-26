@@ -1,0 +1,4 @@
+# Optional local RAG retrieval on Python 3.14 / NVIDIA GPU.
+numpy==2.5.3
+torch==2.14.0
+transformers==5.17.0

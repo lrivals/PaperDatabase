@@ -103,3 +103,31 @@ across comparisons. Report evidence completeness/recall, supported answer accura
 citation validity, missing-evidence behavior, latency, context usage, and tool calls.
 Synthetic question and LLM-judge biases remain limitations; the results measure this
 frozen corpus and task distribution, not all research work.
+
+## Retrieval results (26/09/2026, source corpus, 180 answerable questions)
+
+`bin/pdb synth retrieval --mode …` then `bin/pdb synth report`. Recall@20 is the share of
+gold evidence passages found in the top 20 (a hit must be original text from the right
+section and contain the evidence quote); MRR uses the first gold hit. Missing-evidence
+questions are excluded. Both engines ran on the RTX 5090 (bge-small also uses CUDA when
+available, hence its low latency here).
+
+| Mode | Recall@20 | MRR | EN recall | FR recall | Cross-paper recall | Mean latency |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen lexical (FTS5) | 0.48 | 0.40 | 0.68 | 0.28 | 0.21 | 0.05 s |
+| Qwen dense | 0.67 | 0.57 | 0.70 | 0.63 | 0.42 | 0.82 s |
+| Qwen hybrid | 0.67 | 0.55 | 0.71 | 0.63 | 0.39 | 0.85 s |
+| **Qwen hybrid + reranker** | **0.77** | **0.73** | **0.80** | **0.74** | **0.49** | 3.39 s |
+| bge-small hybrid (`pdb search`) | 0.65 | 0.47 | 0.77 | 0.54 | 0.35 | 0.04 s |
+| bge-small + MiniLM rerank | 0.69 | 0.50 | 0.80 | 0.58 | 0.38 | 0.09 s |
+
+Reading:
+- The Qwen reranker is the best route on every slice (development and test alike);
+  its gain over bge-small is mostly ranking (MRR 0.73 vs 0.50) and French queries
+  (0.74 vs 0.58). In English, recall is tied (0.80).
+- Cross-paper questions are the weak spot for every engine (≤ 0.49): top-20 search
+  rarely returns both papers' passages. Table and numeric questions are near solved.
+- The match rule slightly favours bge-small: its hits are checked against the whole
+  parent section, Qwen hits only against their own 512-token chunk.
+- These are synthetic questions anchored on single passages; agent and judge stages
+  measure answer quality.

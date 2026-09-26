@@ -341,7 +341,9 @@ def output_schema(expected):
         elif key == "rows":
             props[key] = {"type": "array", "items": {
                 "type": "object", "additionalProperties": False,
-                "properties": {name: {"type": "string"} for name in schema.BENCHMARK_COLUMNS},
+                "properties": {name: {"type": "string"} for name in schema.BENCHMARK_COLUMNS} | {
+                    "power_scope": {"enum": [*schema.POWER_SCOPES, schema.NR]},
+                    "confidence": {"enum": list(schema.CONFIDENCE)}},
                 "required": list(schema.BENCHMARK_COLUMNS)}}
         else:
             props[key] = {"type": "array", "items": {"type": "string"}}

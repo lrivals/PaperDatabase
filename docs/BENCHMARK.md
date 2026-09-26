@@ -2,7 +2,7 @@
 
 The benchmark lives in `.cache/bench/`, separate from the working paper library.
 `bin/pdb synth` acquires and freezes 200 papers, generates source-grounded questions,
-validates them without human labels, and runs retrieval and Codex workflow ablations.
+validates them without human labels, and runs retrieval and Claude Code workflow ablations.
 The expanded collection includes neighboring topics as distractors. Question anchors
 are conservatively screened for FPGA, embedded/edge AI, and hardware acceleration;
 generic introductions and background passages are excluded.
@@ -52,8 +52,18 @@ bin/pdb synth validate --limit 200
 Generation uses schema-constrained JSON, temperature 0.7, top-p 0.8, top-k 20,
 and seeded sampling. Each batch uses one language. The server model identity and
 every quotation are checked; malformed or unsupported candidates are discarded.
-`PDB_BENCH_LOCAL_URL` can change the localhost endpoint. Two independent Codex
-sessions validate each answerable candidate. Run generation and validation again
+`PDB_BENCH_LOCAL_URL` can change the localhost endpoint. Two independent validator
+sessions check each answerable candidate. The 200 canonical questions were validated
+with Codex (`gpt-6-sol`); from 26/09/2026 every model call (validation, enrichment,
+variants, agents, judge) uses headless Claude Code (`claude -p`, default model
+`claude-opus-5-5`, override with `PDB_BENCH_CLAUDE_MODEL`; binary with `PDB_BENCH_CLAUDE`).
+The CLI must be logged in once (`claude`, then `/login`); its credentials file is copied
+into each sandboxed agent run. Validation, enrichment, variants and judging run without
+tools and return schema-checked JSON. Agents run in bubblewrap with `Bash`, `Read`,
+`Grep` and `Glob` only, a read-only corpus and no project files.
+Enrichment keeps a benchmark row only if each number occurs in its cited section,
+compared as numbers (`41200` matches "41,200"). Only frozen corpus copies are evaluated:
+the enriched copy joins retrieval and agent runs once `enrich` has frozen it. Run generation and validation again
 to replace rejected candidates until `questions.jsonl` contains 200 accepted cases.
 Missing-paper cases use deterministic templates and frozen-corpus membership checks.
 

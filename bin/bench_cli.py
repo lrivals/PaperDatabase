@@ -27,7 +27,7 @@ import urllib.request
 from collections import Counter
 from pathlib import Path
 
-from lib import rag_qwen as rag, rag_external, schema
+from lib import evaluation, rag_qwen as rag, rag_external, schema
 from bin import ingest, reindex
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -40,6 +40,9 @@ LOCAL_MODEL_REVISION = "4ca720788d1e01f1bff70c033e0d0028fd02e502"
 LOCAL_MODEL_SHA256 = "701d8fa9ed214ab21bfc130cd2a7df19ca89bbef7713e2dfb19f3c63696aa917"
 LOCAL_URL = os.environ.get("PDB_BENCH_LOCAL_URL", "http://127.0.0.1:8787/v1/chat/completions")
 GENERATION_MAX_TOKENS = 6000
+# Validator, enricher, judge and agent under test: headless Claude Code (`claude -p`).
+CLAUDE = os.environ.get("PDB_BENCH_CLAUDE") or shutil.which("claude") or "claude"
+CLAUDE_MODEL = os.environ.get("PDB_BENCH_CLAUDE_MODEL", "claude-opus-5-5")
 QUOTAS = {
     "single": 40, "numeric": 40, "cross": 50,
     "within": 30, "table": 20, "missing": 20,
@@ -136,6 +139,12 @@ def frozen(root):
     return record
 
 
+def corpora():
+    """Frozen corpus copies to evaluate; the enriched copy is frozen once complete."""
+    return [(label, root) for label, root in (("source", SOURCE), ("enriched", ENRICHED))
+            if (HOME / f"{root.name}-freeze.json").exists() and frozen(root)]
+
+
 def freeze(root):
     documents = {}
     for path in sources(root):
@@ -150,7 +159,7 @@ def freeze(root):
                   "bin/ingest.py", "bin/reindex.py"))).hexdigest()
     record = {"fingerprint": rag.fingerprint(root),
               "papers": len(sources(root)), "created": time.time(),
-              "model": "gpt-6-sol",
+              "model": CLAUDE_MODEL,
               "code_hash": code_hash, "documents": documents,
               "git_revision": subprocess.check_output(
                   ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()}
@@ -339,25 +348,31 @@ def output_schema(expected):
             "properties": props, "required": list(expected)}
 
 
-def codex(prompt, expected, workdir=SOURCE, timeout=480):
+def claude_result(stdout):
+    """Structured answer and usage from `claude -p --output-format json|stream-json`."""
+    events = [json.loads(line) for line in stdout.splitlines() if line.startswith("{")]
+    final = next((e for e in reversed(events) if e.get("type") == "result"), None)
+    if final is None or final.get("is_error"):
+        raise RuntimeError((final or {}).get("result") or stdout[-1200:])
+    data = final.get("structured_output")
+    if data is None:
+        data = json.loads(final["result"])
+    return data, final.get("usage", {}), events
+
+
+def claude(prompt, expected, timeout=480):
+    """One tool-less Claude session answering with JSON that matches `expected`."""
+    command = [CLAUDE, "-p", "--output-format", "json", "--model", CLAUDE_MODEL,
+               "--json-schema", json.dumps(output_schema(expected)),
+               "--tools", "", "--no-session-persistence", "--setting-sources", "",
+               "--strict-mcp-config"]
     with tempfile.TemporaryDirectory(prefix="pdb-bench-") as d:
-        schema_path = Path(d) / "schema.json"
-        save(schema_path, output_schema(expected))
-        output = Path(d) / "answer.json"
-        command = ["codex", "exec", "--ignore-user-config", "--disable", "apps",
-                   "--disable", "browser_use", "--disable", "computer_use",
-                   "--disable", "multi_agent", "-m", "gpt-6-sol",
-                   "--ephemeral", "-s", "read-only",
-                   "-C", str(workdir), "--output-schema", str(schema_path),
-                   "-o", str(output), "-"]
         result = subprocess.run(command, input=prompt, text=True, capture_output=True,
-                                timeout=timeout, cwd=workdir)
-        if result.returncode or not output.exists():
-            raise RuntimeError((result.stderr or result.stdout)[-1200:])
-        data = json.loads(output.read_text())
-        if set(data) != set(expected):
-            raise ValueError("Codex output schema mismatch")
-        return data
+                                timeout=timeout, cwd=d)
+    data, _, _ = claude_result(result.stdout or result.stderr)
+    if set(data) != set(expected):
+        raise ValueError("Claude output schema mismatch")
+    return data
 
 
 def local_generate(prompt, seed, count):
@@ -669,7 +684,7 @@ def validate(limit=200):
                   "Return one judgment per id with valid, answer, "
                   "and reason. Packets:\n" + json.dumps(packets, ensure_ascii=False))
         try:
-            votes = [codex(prompt, {"judgments": "array"})["judgments"] for _ in range(2)]
+            votes = [claude(prompt, {"judgments": "array"})["judgments"] for _ in range(2)]
             maps = [{r["id"]: r for r in vote} for vote in votes]
             for case in batch:
                 if case["id"] not in {r["id"] for r in packets}:
@@ -707,8 +722,8 @@ def variants(limit=40):
                   json.dumps({"question": case["question"], "language": case["language"],
                               "answer": case["answer"]}, ensure_ascii=False))
         try:
-            pair = codex(prompt, {"translated": "string", "short": "string"})
-            check = codex("Do both paraphrases ask the same answerable question, with no "
+            pair = claude(prompt, {"translated": "string", "short": "string"})
+            check = claude("Do both paraphrases ask the same answerable question, with no "
                           "new conditions? Return JSON valid (boolean), reason (string).\n" +
                           json.dumps({"original": case["question"], **pair},
                                      ensure_ascii=False),
@@ -759,7 +774,7 @@ def enrich(limit=200):
                   ", ".join(schema.BENCHMARK_COLUMNS) + ". Paper: " +
                   json.dumps({"metadata": meta, "passages": pack}, ensure_ascii=False))
         try:
-            got = codex(prompt, {"note": "string", "rows": "array"})
+            got = claude(prompt, {"note": "string", "rows": "array"})
             valid = []
             rejected_rows = []
             section_names = {r["section"] for r in available}
@@ -771,7 +786,8 @@ def enrich(limit=200):
                                       row[key], flags=re.I)
                 source_text = " ".join(r["text"] for r in available
                                        if r["section"] == row["source_section"])
-                numbers_present = all(row[k] == schema.NR or row[k] in source_text
+                found = evaluation.numbers(source_text)
+                numbers_present = all(row[k] == schema.NR or evaluation.value_in(row[k], found)
                                       for k in schema.NUMERIC_COLUMNS)
                 problems = schema.validate_benchmark_row(row)
                 if row["source_section"] not in section_names:
@@ -842,10 +858,7 @@ def retrieval(mode):
         if row["id"] in by_id:
             query_cases += [(by_id[row["id"]], label, row[label])
                             for label in ("translated", "short")]
-    for label, root in (("source", SOURCE), ("enriched", ENRICHED)):
-        if not root.exists():
-            continue
-        frozen(root)
+    for label, root in corpora():
         if mode.startswith("cpu-"):
             from lib import rag as rag_cpu
             rag_cpu.build_index(root)
@@ -918,13 +931,13 @@ def agent_variant(case, corpus_name, variant):
     if (output / "result.json").exists():
         return read(output / "result.json", {})
     output.mkdir(parents=True, exist_ok=True)
-    save(output / "schema.json", answer_schema())
-    auth = Path.home() / ".codex" / "auth.json"
-    codex_home = output / "codex_home"
-    codex_home.mkdir(exist_ok=True)
+    # Claude Code sees a private config dir holding only a copy of the CLI login.
+    auth = Path(os.environ.get("CLAUDE_CONFIG_DIR", Path.home() / ".claude")) / ".credentials.json"
+    claude_home = output / "claude_home"
+    claude_home.mkdir(exist_ok=True)
     if auth.exists():
-        shutil.copy2(auth, codex_home / "auth.json")
-        (codex_home / "auth.json").chmod(0o600)
+        shutil.copy2(auth, claude_home / ".credentials.json")
+        (claude_home / ".credentials.json").chmod(0o600)
     protocol = {
         "native": "Use rg and read original files under /tmp/bench/papers. Do not call RAG commands.",
         "lexical": "Search with /tmp/project/bin/pdb rag search QUERY --mode lexical. Read selected original passages with rag evidence ID --parent.",
@@ -959,37 +972,37 @@ def agent_variant(case, corpus_name, variant):
            "--ro-bind", str(project / ".venv"), "/tmp/project/.venv",
            "--bind", str(output), "/tmp/output",
            "--chdir", "/tmp/bench", "--setenv", "PDB_RAG_ROOT", "/tmp/bench",
-           "--setenv", "CODEX_HOME", "/tmp/output/codex_home",
-           "--", "codex", "exec", "--ignore-user-config", "--disable", "apps",
-           "--disable", "browser_use", "--disable", "computer_use",
-           "--disable", "multi_agent", "-m", "gpt-6-sol",
-           "--ephemeral", "--dangerously-bypass-approvals-and-sandbox",
-           "-C", "/tmp/bench",
-           "--skip-git-repo-check", "--json",
-           "--output-schema", "/tmp/output/schema.json",
-           "-o", "/tmp/output/answer.json", "-"]
+           "--setenv", "CLAUDE_CONFIG_DIR", "/tmp/output/claude_home",
+           "--setenv", "HOME", "/tmp/output/claude_home",
+           "--", CLAUDE, "-p", "--model", CLAUDE_MODEL,
+           "--output-format", "stream-json", "--verbose",
+           "--json-schema", json.dumps(answer_schema()),
+           "--tools", "Bash,Read,Grep,Glob", "--permission-mode", "bypassPermissions",
+           "--no-session-persistence", "--setting-sources", "", "--strict-mcp-config"]
     started = time.monotonic()
     try:
         result = subprocess.run(cmd, input=prompt, text=True, capture_output=True,
                                 timeout=480)
         (output / "events.jsonl").write_text(result.stdout)
         (output / "stderr.txt").write_text(result.stderr[-5000:])
-        answer = read(output / "answer.json", None)
-        events = [json.loads(line) for line in result.stdout.splitlines()
-                  if line.startswith("{")]
-        usage = next((e.get("usage", {}) for e in reversed(events)
-                      if e.get("type") == "turn.completed"), {})
-        commands = [e.get("item", {}).get("command", "") for e in events
-                    if e.get("type") == "item.completed"
-                    and e.get("item", {}).get("type") == "command_execution"]
+        try:
+            answer, usage, events = claude_result(result.stdout)
+            save(output / "answer.json", answer)
+        except (RuntimeError, ValueError, KeyError) as e:
+            answer, usage, events = None, {}, []
+            result.stderr += f"\n{e}"
+        calls = [block for e in events if e.get("type") == "assistant"
+                 for block in e.get("message", {}).get("content", [])
+                 if block.get("type") == "tool_use"]
+        commands = [c["input"].get("command", "") for c in calls if c["name"] == "Bash"]
         violations = [c for c in commands if re.search(
             r"\b(?:curl|wget|rag acquire|requests\.get|urllib\.request)\b", c)]
         if variant == "native":
             violations += [c for c in commands if re.search(r"\brag\s+(?:search|benchmarks)\b", c)]
         state = {"id": case["id"], "corpus": corpus_name, "variant": variant,
                  "elapsed_s": time.monotonic() - started, "returncode": result.returncode,
-                 "answer": answer, "error": None if result.returncode == 0 else
-                 result.stderr[-1000:], "usage": usage, "tool_calls": len(commands),
+                 "answer": answer, "error": None if answer is not None else
+                 result.stderr[-1000:], "usage": usage, "tool_calls": len(calls),
                  "protocol_violations": violations}
     except subprocess.TimeoutExpired:
         state = {"id": case["id"], "corpus": corpus_name, "variant": variant,
@@ -1005,7 +1018,7 @@ def agent(variant, split="test", limit=60):
         raise RuntimeError("no validated questions for selected split")
     completed = []
     for case in cases:
-        for corpus_name in ("source", "enriched"):
+        for corpus_name, _ in corpora():
             completed.append(agent_variant(case, corpus_name, variant))
     return {"runs": len(completed), "success": sum(r["returncode"] == 0 for r in completed),
             "variant": variant, "split": split}
@@ -1044,7 +1057,7 @@ def judge(limit=60):
                               "answer": trial["answer"], "evidence": evidence,
                               "citation_ids_valid": verified}, ensure_ascii=False))
         try:
-            votes = [codex(prompt, {"correct": "boolean", "supported": "boolean",
+            votes = [claude(prompt, {"correct": "boolean", "supported": "boolean",
                                     "reason": "string"}) for _ in range(2)]
             save(path.parent / "judgment.json",
                  {"votes": votes, "citation_ids_valid": verified,
@@ -1097,8 +1110,9 @@ def report():
             "mean_elapsed_s": sum(r["elapsed_s"] for r in group) / len(group),
             "p95_elapsed_s": sorted(r["elapsed_s"] for r in group)[
                 min(len(group) - 1, int(.95 * len(group)))],
-            "mean_input_tokens": sum(r.get("usage", {}).get("input_tokens", 0)
-                                     for r in group) / len(group),
+            "mean_input_tokens": sum(sum(r.get("usage", {}).get(k, 0) for k in (
+                "input_tokens", "cache_read_input_tokens", "cache_creation_input_tokens"))
+                for r in group) / len(group),
             "mean_tool_calls": sum(r.get("tool_calls", 0) for r in group) / len(group),
             "protocol_violations": sum(bool(r.get("protocol_violations")) for r in group)}
     result["agents"] = agent_summary

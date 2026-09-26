@@ -168,7 +168,7 @@ chaque script est dans [SETUP.md](SETUP.md).
 
 ## Recherche GPU et benchmark synthétique
 
-En complément de `pdb search`, `bin/pdb rag` indexe le corpus avec Qwen3-Embedding-4B et Qwen3-Reranker-4B (GPU CUDA, `requirements-rag.txt`) et peut acquérir des PDF en libre accès ; `/paper-research` s'en sert. `bin/pdb synth` construit un benchmark synthétique sur un corpus isolé de 200 articles (questions générées localement, validées par deux sessions Codex) : [docs/BENCHMARK.md](docs/BENCHMARK.md), [SETUP.md §10](SETUP.md).
+En complément de `pdb search`, `bin/pdb rag` indexe le corpus avec Qwen3-Embedding-4B et Qwen3-Reranker-4B (GPU CUDA, `requirements-rag.txt`) et peut acquérir des PDF en libre accès ; `/paper-research` s'en sert. `bin/pdb synth` construit un benchmark synthétique sur un corpus isolé de 200 articles (questions générées localement, validées par deux sessions indépendantes ; validation, agents et juge passent par Claude Code en mode non interactif) : [docs/BENCHMARK.md](docs/BENCHMARK.md), [SETUP.md §10](SETUP.md).
 
 ---
 

@@ -41,7 +41,8 @@ LOCAL_MODEL_SHA256 = "701d8fa9ed214ab21bfc130cd2a7df19ca89bbef7713e2dfb19f3c6369
 LOCAL_URL = os.environ.get("PDB_BENCH_LOCAL_URL", "http://127.0.0.1:8787/v1/chat/completions")
 GENERATION_MAX_TOKENS = 6000
 # Validator, enricher, judge and agent under test: headless Claude Code (`claude -p`).
-CLAUDE = os.environ.get("PDB_BENCH_CLAUDE") or shutil.which("claude") or "claude"
+CLAUDE = (os.environ.get("PDB_BENCH_CLAUDE") or shutil.which("claude")
+          or os.environ.get("CLAUDE_CODE_EXECPATH") or "claude")  # desktop app binary
 CLAUDE_MODEL = os.environ.get("PDB_BENCH_CLAUDE_MODEL", "claude-opus-5-5")
 QUOTAS = {
     "single": 40, "numeric": 40, "cross": 50,

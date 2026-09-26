@@ -4,7 +4,7 @@
   bin/pdb synth enrich [--limit N]
   bin/pdb synth generate [--limit N]
   bin/pdb synth validate [--limit N]
-  bin/pdb synth retrieval [--mode lexical|dense|hybrid|reranked]
+  bin/pdb synth retrieval [--mode lexical|dense|hybrid|reranked|cpu-hybrid|cpu-reranked]
   bin/pdb synth agent [--limit N]
   bin/pdb synth report
 
@@ -1057,7 +1057,7 @@ def judge(limit=60):
 
 
 def report():
-    rows = [r for mode in ("lexical", "dense", "hybrid", "reranked")
+    rows = [r for mode in RETRIEVAL_MODES
             for r in lines(HOME / f"retrieval-{mode}.jsonl")]
     summary = {}
     for key in sorted({(r["corpus"], r["mode"]) for r in rows}):

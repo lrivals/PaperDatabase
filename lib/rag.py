@@ -1,388 +1,460 @@
-"""Rebuildable evidence index over PaperDatabase's authoritative files."""
+"""Recherche de passages (niveau N1 de docs/RAG.md) : découpage, BM25, embeddings, fusion RRF.
 
-import csv
+Aucun LLM : la recherche est déterministe (même index, même requête, même classement) et
+chaque passage renvoyé porte son chunk_id, sa section, sa page et le sha1 de son texte.
+
+- Passages : une entrée de sections.jsonl ; au-delà de SPLIT_OVER mots, fenêtres de
+  WINDOW mots avec OVERLAP mots de recouvrement. chunk_id = <id de section>.<k>.
+- Lexical : BM25 recalculé à chaque chargement (moins d'une seconde pour le corpus).
+- Dense : lib/embed._encode (sentence-transformers, optionnel). Vecteurs en cache dans
+  .cache/rag/<modèle>.npz, indexés par chunk_id:sha1 : seuls les passages nouveaux ou
+  modifiés sont réencodés. Sans sentence-transformers, recherche lexicale seule.
+- Fusion : Reciprocal Rank Fusion, score = Σ 1 / (RRF_K + rang).
+"""
+import difflib
 import hashlib
 import json
 import math
-import os
 import re
-import sqlite3
+import unicodedata
+from collections import Counter
 from pathlib import Path
 
-import numpy as np
+from lib import embed, query
 
-from lib import schema
-from lib import rag_models
+DEFAULT_MODEL = "BAAI/bge-small-en-v1.5"
+# Préfixe recommandé par le modèle pour encoder une requête (pas les passages).
+QUERY_PREFIX = {"BAAI/bge-small-en-v1.5": "Represent this sentence for searching relevant passages: "}
+SPLIT_OVER, WINDOW, OVERLAP = 250, 200, 40
+RRF_K = 60
+BM25_K1, BM25_B = 1.5, 0.75
+SNIPPET = 160
+VERIFY_MIN = 0.85
+# Pas de seuil de « pertinence faible » : ni le cosinus ni le cross-encoder ne séparent les
+# questions hors corpus des questions du corpus (docs/EVAL.md §5, 26/09/2026).
+MODES = ("hybrid", "dense", "lexical")
+RERANK_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+RERANK_TOP = 30
 
-FILES = ("metadata.json", "sections.jsonl", "fiche.md")
-INDEX_VERSION = "2"
-
-
-def digest(data):
-    return hashlib.sha256(data).hexdigest()
-
-
-def file_hash(path):
-    return digest(path.read_bytes())
-
-
-def paths(root):
-    root = Path(root)
-    out = [root / "benchmarks.csv"]
-    for d in sorted((root / "papers").iterdir()):
-        if d.is_dir():
-            out += [d / name for name in FILES]
-    return out
+_rerankers = {}
 
 
-def fingerprint(root):
-    h = hashlib.sha256()
-    for p in paths(root):
-        h.update(str(p.relative_to(root)).encode())
-        h.update(p.read_bytes())
-    return h.hexdigest()
+def _cross_scores(q, texts, model=RERANK_MODEL):
+    """Scores du cross-encoder ; séparé pour être remplacé dans les tests."""
+    if model not in _rerankers:
+        from sentence_transformers import CrossEncoder
+        _rerankers[model] = CrossEncoder(model)
+    return [float(x) for x in _rerankers[model].predict([(q, t) for t in texts])]
+
+_TOKEN = re.compile(r"[a-z0-9]+")
 
 
-def index_path(root):
-    return Path(root) / ".cache" / "rag" / "index.sqlite3"
+def sha1(text):
+    return hashlib.sha1(text.encode()).hexdigest()
 
 
-def _chunks(text, token, kind):
-    if token:
-        offsets = token(text, add_special_tokens=False, return_offsets_mapping=True)["offset_mapping"]
-    else:
-        offsets = [m.span() for m in re.finditer(r"\S+", text)]
-    if not offsets:
-        return
-    limit = 4096 if kind in ("table", "figure") else 512
-    overlap = 0 if kind in ("table", "figure") else 64
-    start = 0
-    while start < len(offsets):
-        end = min(start + limit, len(offsets))
-        if end < len(offsets) and kind not in ("table", "figure"):
-            cut = text.rfind("\n\n", offsets[start][0], offsets[end - 1][1])
-            if cut > offsets[min(start + 383, end - 1)][0]:
-                end = next((j for j in range(start + 1, end) if offsets[j][0] >= cut + 2), end)
-        a, b = offsets[start][0], offsets[end - 1][1]
-        yield a, b, text[a:b]
-        if end == len(offsets):
+def tokenize(text):
+    return _TOKEN.findall(text.lower())
+
+
+def quiet_model_loading(*models):
+    """Hors ligne si tous les modèles sont déjà en cache (pas de requête au Hub à chaque
+    recherche), et sans barre de progression : la sortie des commandes reste propre.
+
+    Le mode hors ligne vaut pour tout le processus : déclarer d'avance tous les modèles
+    qu'il chargera, sinon un modèle absent du cache ne pourra plus être téléchargé."""
+    import os
+    os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
+    os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+    os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+    hub = Path(os.environ.get("HF_HOME", Path.home() / ".cache" / "huggingface")) / "hub"
+    names = [m if "/" in m else f"sentence-transformers/{m}" for m in models]
+    if names and all((hub / f"models--{n.replace('/', '--')}").exists() for n in names):
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+
+
+# ------------------------------------------------------------------- passages
+
+def split_text(text, window=WINDOW, overlap=OVERLAP, split_over=SPLIT_OVER):
+    words = text.split()
+    if len(words) <= split_over:
+        return [text]
+    step = window - overlap
+    out = []
+    for start in range(0, len(words), step):
+        out.append(" ".join(words[start:start + window]))
+        if start + window >= len(words):
             break
-        start = max(start + 1, end - overlap)
-
-
-def _database(path):
-    db = sqlite3.connect(path)
-    db.row_factory = sqlite3.Row
-    return db
-
-
-def build(root, mode="hybrid", download=False):
-    root = Path(root).resolve()
-    if download and mode != "lexical":
-        rag_models.download_models()
-    fp = fingerprint(root)
-    final = index_path(root)
-    final.parent.mkdir(parents=True, exist_ok=True)
-    old_vectors = {}
-    if final.exists():
-        with _database(final) as old:
-            old_version = old.execute("SELECT value FROM info WHERE key='version'").fetchone()
-            if old_version and old_version[0] == INDEX_VERSION and old.execute(
-                    "SELECT value FROM info WHERE key='fingerprint'").fetchone()[0] == fp:
-                if mode == "lexical" or old.execute("SELECT count(*) FROM evidence WHERE vector IS NULL").fetchone()[0] == 0:
-                    return {"snapshot": fp, "unchanged": True}
-            try:
-                old_vectors = {r["retrieval"]: r["vector"] for r in old.execute(
-                    "SELECT retrieval, vector FROM evidence WHERE vector IS NOT NULL")}
-            except sqlite3.OperationalError:
-                pass
-    token = rag_models.tokenizer(download=download) if mode != "lexical" else None
-    temp = final.with_name(f".{final.name}.{os.getpid()}.tmp")
-    if temp.exists():
-        temp.unlink()
-    db = _database(temp)
-    try:
-        db.executescript("""
-            CREATE TABLE info(key TEXT PRIMARY KEY, value TEXT NOT NULL);
-            CREATE TABLE evidence(
-                id TEXT PRIMARY KEY, paper_id TEXT, kind TEXT, source_path TEXT,
-                source_hash TEXT, locator TEXT, start INTEGER, end INTEGER,
-                page INTEGER, title TEXT, year INTEGER, section TEXT,
-                text TEXT, retrieval TEXT, metadata TEXT, vector BLOB
-            );
-            CREATE VIRTUAL TABLE evidence_fts USING fts5(
-                id UNINDEXED, body, tokenize='unicode61 remove_diacritics 2');
-            CREATE TABLE benchmarks(row_number INTEGER PRIMARY KEY, evidence_id TEXT, data TEXT);
-        """)
-        db.execute("INSERT INTO info VALUES ('fingerprint', ?)", (fp,))
-        db.execute("INSERT INTO info VALUES ('version', ?)", (INDEX_VERSION,))
-        db.execute("INSERT INTO info VALUES ('model', ?)",
-                   ("lexical" if mode == "lexical" else rag_models.EMBED_REV,))
-        pending = []
-
-        def add(paper, kind, path, source_hash, locator, text, section="", page=None):
-            rel = str(path.relative_to(root))
-            title = paper.get("title") or paper["id"]
-            for start, end, chunk in _chunks(text, token, kind):
-                evidence_id = digest(f"{paper['id']}|{source_hash}|{locator}|{start}|{end}".encode())[:24]
-                retrieval = f"{title} ({paper.get('year') or 'n/r'}). {section}\n{chunk}"
-                vector = old_vectors.get(retrieval) if mode != "lexical" else None
-                metadata = {k: paper.get(k) for k in
-                            ("authors", "doi", "arxiv_id", "venue", "url", "type", "extraction")}
-                db.execute("INSERT INTO evidence VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                           (evidence_id, paper["id"], kind, rel, source_hash, locator,
-                            start, end, page, title, paper.get("year"), section,
-                            chunk, retrieval, json.dumps(metadata, ensure_ascii=False), vector))
-                db.execute("INSERT INTO evidence_fts(id,body) VALUES (?,?)",
-                           (evidence_id, retrieval))
-                if mode != "lexical" and vector is None:
-                    pending.append((evidence_id, retrieval))
-                yield evidence_id
-
-        papers = {}
-        for p in sorted((root / "papers").glob("*/metadata.json")):
-            meta = json.loads(p.read_text())
-            if schema.validate_metadata(meta):
-                raise ValueError(f"invalid metadata: {p}")
-            papers[meta["id"]] = meta
-            sections = p.parent / "sections.jsonl"
-            section_hash = file_hash(sections)
-            for n, line in enumerate(sections.read_text().splitlines()):
-                row = json.loads(line)
-                errs = schema.validate_section_row(row, meta["id"], n)
-                if errs:
-                    raise ValueError(f"{sections}:{n+1}: {'; '.join(errs)}")
-                list(add(meta, row["kind"], sections, section_hash, row["id"], row["text"],
-                         row["subsection"] or row["section"], row["page"]))
-            if meta["status"]["fiche"] == "done":
-                note = p.parent / "fiche.md"
-                list(add(meta, "fiche", note, file_hash(note), "fiche", note.read_text(),
-                         "curated reading note"))
-        bench_path = root / "benchmarks.csv"
-        bench_hash = file_hash(bench_path)
-        with bench_path.open(newline="") as f:
-            reader = csv.DictReader(f)
-            if tuple(reader.fieldnames or ()) != schema.BENCHMARK_COLUMNS:
-                raise ValueError("benchmark columns differ from the corpus schema")
-            for line_no, row in enumerate(reader, start=2):
-                errs = schema.validate_benchmark_row(row)
-                for key in schema.NUMERIC_COLUMNS:
-                    val = row[key]
-                    if val != schema.NR:
-                        try:
-                            if not math.isfinite(float(val)):
-                                errs.append(f"nonfinite {key}")
-                        except (TypeError, ValueError):
-                            errs.append(f"invalid {key}")
-                if errs:
-                    raise ValueError(f"{bench_path}:{line_no}: {'; '.join(errs)}")
-                if row["paper_id"] not in papers:
-                    raise ValueError(f"unknown benchmark paper: {row['paper_id']}")
-                text = "; ".join(f"{k}: {v}" for k, v in row.items())
-                ids = list(add(papers[row["paper_id"]], "benchmark", bench_path, bench_hash,
-                               f"row-{line_no}", text, row["source_section"]))
-                db.execute("INSERT INTO benchmarks VALUES (?,?,?)",
-                           (line_no, ids[0], json.dumps(row, ensure_ascii=False)))
-        if pending:
-            vectors = rag_models.embed_texts([t for _, t in pending], download=download)
-            db.executemany("UPDATE evidence SET vector=? WHERE id=?",
-                           [(v.tobytes(), evidence_id) for (evidence_id, _), v in zip(pending, vectors)])
-        count = db.execute("SELECT count(*) FROM evidence").fetchone()[0]
-        db.commit()
-        db.close()
-        os.replace(temp, final)
-    except Exception:
-        db.close()
-        temp.unlink(missing_ok=True)
-        raise
-    return {"snapshot": fp, "unchanged": False, "records": count}
-
-
-def open_index(root, stale=False):
-    if not index_path(root).exists():
-        raise RuntimeError("RAG index missing; run bin/pdb rag index")
-    db = _database(index_path(root))
-    try:
-        version = db.execute("SELECT value FROM info WHERE key='version'").fetchone()
-        if not version or version[0] != INDEX_VERSION:
-            raise RuntimeError("RAG index format changed; run bin/pdb rag index")
-        fp = db.execute("SELECT value FROM info WHERE key='fingerprint'").fetchone()[0]
-        if not stale and fp != fingerprint(root):
-            raise RuntimeError("RAG index is stale; run bin/pdb rag index")
-        return db, fp
-    except Exception:
-        db.close()
-        raise
-
-
-def _result(row):
-    out = {k: row[k] for k in row.keys() if k not in ("vector", "retrieval")}
-    out["metadata"] = json.loads(out["metadata"])
     return out
 
 
-def search(root, query, mode="hybrid", limit=12, paper=None, kind=None, reranking=None):
-    if not query.strip():
-        raise ValueError("empty query")
-    if mode not in ("lexical", "dense", "hybrid"):
-        raise ValueError("mode must be lexical, dense, or hybrid")
-    db, fp = open_index(root)
-    try:
-        where, args = [], []
-        if paper:
-            where.append("paper_id=?")
-            args.append(paper)
-        if kind:
-            where.append("kind=?")
-            args.append(kind)
-        condition = (" AND " + " AND ".join(where)) if where else ""
-        channels = []
-        if mode in ("lexical", "hybrid"):
-            terms = re.findall(r"\w+", query, re.UNICODE)[:20]
-            if terms:
-                expression = " OR ".join('"' + t.replace('"', '""') + '"' for t in terms)
-                sql = ("SELECT evidence.id AS id FROM evidence_fts JOIN evidence "
-                       "ON evidence.id=evidence_fts.id WHERE evidence_fts MATCH ?" + condition +
-                       " ORDER BY bm25(evidence_fts) LIMIT 40")
-                channels.append([r["id"] for r in db.execute(sql, [expression, *args])])
-        if mode in ("dense", "hybrid"):
-            rows = list(db.execute("SELECT id,vector FROM evidence WHERE vector IS NOT NULL" +
-                                   (" AND " + " AND ".join(where) if where else ""), args))
-            if not rows:
-                raise RuntimeError("dense index unavailable; run bin/pdb rag index")
-            q = rag_models.embed_texts([query], query=True)[0]
-            mat = np.stack([np.frombuffer(r["vector"], dtype=np.float32) for r in rows])
-            sims = mat @ q
-            channels.append([rows[int(i)]["id"] for i in np.argsort(-sims)[:40]])
-        scores = {}
-        for ids in channels:
-            for rank, evidence_id in enumerate(ids, start=1):
-                scores[evidence_id] = scores.get(evidence_id, 0.0) + 1 / (60 + rank)
-        ranked = sorted(scores, key=scores.get, reverse=True)[:80]
-        results = [_result(db.execute("SELECT * FROM evidence WHERE id=?", (x,)).fetchone())
-                   for x in ranked]
-        if reranking is None:
-            reranking = mode == "hybrid"
-        if reranking and results:
-            relevance = rag_models.rerank(query, [r["text"] for r in results])
-            for result, score in zip(results, relevance):
-                result["rerank_score"] = score
-            results.sort(key=lambda r: r["rerank_score"], reverse=True)
-        else:
-            for result in results:
-                result["fusion_score"] = scores[result["id"]]
-        selected, counts = [], {}
-        for result in results:
-            pid = result["paper_id"]
-            if not paper and counts.get(pid, 0) >= 3:
+def load_chunks(root):
+    """Passages du corpus, dans l'ordre des papiers puis des sections."""
+    chunks = []
+    for path in sorted((Path(root) / "papers").glob("*/sections.jsonl")):
+        for line in path.read_text().splitlines():
+            if not line.strip():
                 continue
-            selected.append(result)
-            counts[pid] = counts.get(pid, 0) + 1
-            if len(selected) >= limit:
-                break
-        return {"query": query, "mode": mode, "snapshot": fp,
-                "total_candidates": len(scores), "truncated": len(scores) > len(selected),
-                "results": selected}
-    finally:
-        db.close()
+            s = json.loads(line)
+            for k, text in enumerate(split_text(s["text"])):
+                chunks.append({
+                    "chunk_id": f"{s['id']}.{k}", "section_id": s["id"],
+                    "paper_id": s["paper_id"], "kind": s["kind"], "section": s["section"],
+                    "subsection": s.get("subsection"), "page": s.get("page"),
+                    "text": text, "sha1": sha1(text),
+                })
+    return chunks
 
 
-def evidence(root, evidence_id, parent=False):
-    db, fp = open_index(root)
-    try:
-        row = db.execute("SELECT * FROM evidence WHERE id=?", (evidence_id,)).fetchone()
-        if row is None:
-            raise KeyError(evidence_id)
-        result = _result(row)
-        result["snapshot"] = fp
-        if parent:
-            siblings = db.execute("SELECT text FROM evidence WHERE paper_id=? AND source_hash=? "
-                                  "AND locator=? ORDER BY start", (row["paper_id"],
-                                  row["source_hash"], row["locator"])).fetchall()
-            result["parent_text"] = "\n".join(r["text"] for r in siblings)[:12000]
-        return result
-    finally:
-        db.close()
+def encoded_text(c):
+    """Texte encodé : titre de section en préfixe, pour donner du contexte au vecteur."""
+    head = " — ".join(x for x in (c["section"], c.get("subsection")) if x)
+    return f"{head} — {c['text']}"
 
 
-def benchmarks(root, filters=None):
-    filters = filters or []
-    if not isinstance(filters, list) or any(not isinstance(f, dict) for f in filters):
-        raise ValueError("benchmark filters must be a JSON list of objects")
-    for f in filters:
-        if f.get("field") not in schema.BENCHMARK_COLUMNS or f.get("op") not in ("eq", "gte", "lte"):
-            raise ValueError("unsupported benchmark filter")
-        if f["op"] != "eq":
-            if f["field"] not in schema.NUMERIC_COLUMNS:
-                raise ValueError("range filter requires a numeric field")
-            try:
-                if not math.isfinite(float(f.get("value"))):
-                    raise ValueError("nonfinite filter")
-            except (TypeError, ValueError) as e:
-                raise ValueError("numeric benchmark filter requires a finite value") from e
-    db, fp = open_index(root)
-    try:
+# ----------------------------------------------------------------------- BM25
+
+class BM25:
+    def __init__(self, docs):
+        self.tf = [Counter(tokenize(d)) for d in docs]
+        self.len = [sum(tf.values()) for tf in self.tf]
+        self.avg = (sum(self.len) / len(self.len)) if self.len else 0
+        df = Counter(t for tf in self.tf for t in tf)
+        n = len(docs)
+        self.idf = {t: math.log(1 + (n - f + 0.5) / (f + 0.5)) for t, f in df.items()}
+
+    def scores(self, q):
+        terms = [t for t in set(tokenize(q)) if t in self.idf]
         out = []
-        for r in db.execute("SELECT * FROM benchmarks ORDER BY row_number"):
-            row = json.loads(r["data"])
-            def match(f):
-                value = row[f["field"]]
-                target = f.get("value")
-                if f["op"] == "eq":
-                    return str(value).casefold() == str(target).casefold()
-                if f["field"] not in schema.NUMERIC_COLUMNS or value == schema.NR:
-                    return False
-                number = float(value)
-                threshold = float(target)
-                if not math.isfinite(threshold):
-                    raise ValueError("nonfinite filter")
-                return number >= threshold if f["op"] == "gte" else number <= threshold
-            if all(match(f) for f in filters):
-                item = {**row, "evidence_id": r["evidence_id"], "row_number": r["row_number"]}
-                if row["fps"] != schema.NR and row["power_w"] != schema.NR and float(row["power_w"]) > 0:
-                    item["computed_fps_per_w"] = float(row["fps"]) / float(row["power_w"])
-                    item["computed_power_scope"] = row["power_scope"]
-                out.append(item)
-        return {"snapshot": fp, "total_matches": len(out), "results": out}
-    finally:
-        db.close()
+        for tf, dl in zip(self.tf, self.len):
+            s = 0.0
+            for t in terms:
+                f = tf.get(t)
+                if f:
+                    s += self.idf[t] * f * (BM25_K1 + 1) / (
+                        f + BM25_K1 * (1 - BM25_B + BM25_B * dl / (self.avg or 1)))
+            out.append(s)
+        return out
 
 
-def check_answer(root, data):
-    errors = []
-    if not isinstance(data, dict) or not isinstance(data.get("claims"), list) or not data["claims"]:
-        raise ValueError("answer record requires a nonempty claims list")
-    db, fp = open_index(root)
-    try:
-        if data.get("snapshot") != fp:
-            errors.append("answer snapshot differs from current index")
-        for i, claim in enumerate(data["claims"]):
-            if not isinstance(claim, dict) or not isinstance(claim.get("text"), str) or not claim["text"].strip():
-                errors.append(f"claim {i}: missing claim text")
+# ------------------------------------------------------------------ vecteurs
+
+def _cache_path(root, model):
+    return Path(root) / ".cache" / "rag" / f"{model.replace('/', '_')}.npz"
+
+
+def build_index(root, chunks=None, model=DEFAULT_MODEL, force=False):
+    """Encode les passages absents du cache ; renvoie un manifeste (dict).
+
+    Sans sentence-transformers : aucun vecteur, mode lexical seul (manifest["dense"] = False).
+    """
+    chunks = chunks if chunks is not None else load_chunks(root)
+    manifest = {"chunks": len(chunks), "papers": len({c["paper_id"] for c in chunks}),
+                "model": model, "dense": embed.available(), "encoded": 0}
+    if not manifest["dense"]:
+        return manifest
+    quiet_model_loading(model)
+    import numpy as np
+    path = _cache_path(root, model)
+    cache = {}
+    if path.exists() and not force:
+        with np.load(path) as f:
+            cache = dict(zip(f["keys"].tolist(), f["vecs"]))
+    keys = [f"{c['chunk_id']}:{c['sha1']}" for c in chunks]
+    missing = [i for i, k in enumerate(keys) if k not in cache]
+    if missing:
+        vecs = np.asarray(embed._encode([encoded_text(chunks[i]) for i in missing], model),
+                          dtype=np.float32)
+        for i, v in zip(missing, vecs):
+            cache[keys[i]] = v
+    if missing or set(cache) != set(keys):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        np.savez(path, keys=np.array(keys), vecs=np.vstack([cache[k] for k in keys]))
+    manifest["encoded"] = len(missing)
+    return manifest
+
+
+def _load_vectors(root, chunks, model):
+    import numpy as np
+    path = _cache_path(root, model)
+    if not path.exists():
+        return None
+    with np.load(path) as f:
+        cache = dict(zip(f["keys"].tolist(), f["vecs"]))
+    keys = [f"{c['chunk_id']}:{c['sha1']}" for c in chunks]
+    if any(k not in cache for k in keys):
+        return None  # index périmé : reconstruire (bin/pdb reindex)
+    return np.vstack([cache[k] for k in keys])
+
+
+# ------------------------------------------------------------------ recherche
+
+class Index:
+    """Passages + BM25 + vecteurs (si disponibles). Chargé une fois par commande."""
+
+    def __init__(self, root, model=DEFAULT_MODEL, chunks=None, rerank=False):
+        self.root = Path(root)
+        self.model = model
+        self.chunks = chunks if chunks is not None else load_chunks(root)
+        self.by_id = {c["chunk_id"]: i for i, c in enumerate(self.chunks)}
+        self.bm25 = BM25([encoded_text(c) for c in self.chunks])
+        self.vecs = _load_vectors(root, self.chunks, model) if embed.available() else None
+        if self.vecs is not None:
+            quiet_model_loading(model, *([RERANK_MODEL] if rerank else []))
+        self.metas = query.load_papers(root)
+        self.short = query.short_ids(self.metas)
+        self._axes = {m["id"]: set(m.get("axes") or []) for m in self.metas}
+
+    @property
+    def dense(self):
+        return self.vecs is not None
+
+    def _candidates(self, paper_ids=None, axis=None, kind=None, section=None):
+        out = []
+        for i, c in enumerate(self.chunks):
+            if paper_ids is not None and c["paper_id"] not in paper_ids:
                 continue
-            citations = claim.get("citations")
-            if citations is None:
-                evidence_ids = claim.get("evidence_ids")
-                citations = [{"id": eid, "excerpt": claim.get("excerpt")}
-                             for eid in evidence_ids] if isinstance(evidence_ids, list) else []
-            if not isinstance(citations, list) or not citations:
-                errors.append(f"claim {i}: no evidence")
+            if axis and axis not in self._axes.get(c["paper_id"], ()):
                 continue
-            for citation in citations:
-                if not isinstance(citation, dict) or not isinstance(citation.get("id"), str):
-                    errors.append(f"claim {i}: malformed citation")
-                    continue
-                evidence_id = citation["id"]
-                excerpt = citation.get("excerpt")
-                if not isinstance(excerpt, str) or not excerpt.strip():
-                    errors.append(f"claim {i}: missing excerpt for {evidence_id}")
-                    continue
-                row = db.execute("SELECT text FROM evidence WHERE id=?", (evidence_id,)).fetchone()
-                if row is None:
-                    errors.append(f"claim {i}: unknown evidence {evidence_id}")
-                elif excerpt not in row["text"]:
-                    errors.append(f"claim {i}: excerpt absent from {evidence_id}")
-        return {"valid": not errors, "errors": errors, "snapshot": fp,
-                "semantic_support_checked": False}
-    finally:
-        db.close()
+            if kind and c["kind"] != kind:
+                continue
+            if section and section.lower() not in (c["section"] or "").lower() + " " + \
+                    (c.get("subsection") or "").lower():
+                continue
+            out.append(i)
+        return out
+
+    def search(self, q, k=8, mode="hybrid", paper_ids=None, axis=None, kind=None, section=None,
+               rerank=False):
+        """Liste de hits (dicts du passage + score + rangs), du meilleur au moins bon.
+
+        rerank : les RERANK_TOP premiers de la fusion sont reclassés par un cross-encoder
+        (expérimental, docs/RAG.md §11)."""
+        if rerank:
+            pool = self.search(q, k=RERANK_TOP, mode=mode, paper_ids=paper_ids, axis=axis,
+                               kind=kind, section=section)
+            ce = _cross_scores(q, [encoded_text(h) for h in pool])
+            order = sorted(range(len(pool)), key=lambda i: (-ce[i], pool[i]["chunk_id"]))
+            return [{**pool[i], "rerank": round(ce[i], 3)} for i in order[:k]]
+        if mode not in MODES:
+            raise ValueError(f"mode {mode!r} : {' | '.join(MODES)}")
+        if mode != "lexical" and not self.dense:
+            mode = "lexical"
+        cand = self._candidates(paper_ids, axis, kind, section)
+        ranks, sim = [], None
+        if mode in ("hybrid", "lexical"):
+            s = self.bm25.scores(q)
+            lex = sorted((i for i in cand if s[i] > 0), key=lambda i: (-s[i], self.chunks[i]["chunk_id"]))
+            ranks.append({i: r for r, i in enumerate(lex, 1)})
+        if mode in ("hybrid", "dense"):
+            qv = embed._encode([QUERY_PREFIX.get(self.model, "") + q], self.model)[0]
+            sim = self.vecs @ qv
+            den = sorted(cand, key=lambda i: (-float(sim[i]), self.chunks[i]["chunk_id"]))
+            ranks.append({i: r for r, i in enumerate(den, 1)})
+        score = Counter()
+        for rk in ranks:
+            for i, r in rk.items():
+                score[i] += 1.0 / (RRF_K + r)
+        best = sorted(score, key=lambda i: (-score[i], self.chunks[i]["chunk_id"]))[:k]
+        return [{**self.chunks[i], "score": round(score[i], 5), "mode": mode,
+                 "cos": None if sim is None else round(float(sim[i]), 3)} for i in best]
+
+    # ------------------------------------------------------- identifiants
+    def short_chunk_id(self, chunk_id):
+        pid, _, rest = chunk_id.partition("#")
+        return f"{self.short.get(pid, pid)}#{rest}"
+
+    def resolve_chunk(self, cid):
+        """chunk_id complet ou court (1612.07119#019.0) → chunk_id complet, ou None.
+        Un id de section sans .k (…#019) désigne son premier passage."""
+        pid, sep, rest = cid.partition("#")
+        if not sep:
+            return None
+        if "." not in rest:
+            rest += ".0"
+        if f"{pid}#{rest}" in self.by_id:
+            return f"{pid}#{rest}"
+        full = [p for p, s in self.short.items() if s == pid]
+        if full and f"{full[0]}#{rest}" in self.by_id:
+            return f"{full[0]}#{rest}"
+        return None
+
+    def get(self, chunk_id, context=0):
+        """Le passage et ses voisins du même papier (± context)."""
+        i = self.by_id[chunk_id]
+        pid = self.chunks[i]["paper_id"]
+        return [self.chunks[j] for j in range(max(0, i - context), min(len(self.chunks), i + context + 1))
+                if self.chunks[j]["paper_id"] == pid]
+
+
+def relevance_score(index, q, hits=None, top=3):
+    """Meilleur score du cross-encoder entre la question et les `top` premiers passages
+    (recherche hybride si hits n'est pas fourni) : signal de pertinence, docs/EVAL.md §5."""
+    hits = hits if hits is not None else index.search(q, k=top)
+    if not hits:
+        return float("-inf")
+    return max(_cross_scores(q, [encoded_text(h) for h in hits[:top]]))
+
+
+# ------------------------------------------------------------------ extraits
+
+def snippet(text, q, idf=None, width=SNIPPET):
+    """Extrait de ~width caractères centré sur le terme de la requête le plus rare présent."""
+    terms = sorted(set(tokenize(q)), key=lambda t: -(idf or {}).get(t, len(t)))
+    low = text.lower()
+    pos = -1
+    for t in terms:
+        m = re.search(rf"\b{re.escape(t)}", low)
+        if m:
+            pos = m.start()
+            break
+    start = max(0, pos - width // 3) if pos >= 0 else 0
+    cut = text[start:start + width].replace("\n", " ").replace("\t", " ")
+    marked = {t for t in terms if len(t) > 2 and (idf or {}).get(t, 1) > 1}
+    if marked:
+        cut = re.sub(r"\b(" + "|".join(re.escape(t) for t in sorted(marked, key=len, reverse=True)) + r")\w*",
+                     lambda m: f"«{m.group(0)}»", cut, flags=re.I)
+    return ("…" if start > 0 else "") + cut.strip() + ("…" if start + width < len(text) else "")
+
+
+# --------------------------------------------------------------- vérification
+
+_LIGATURES = {"ﬁ": "fi", "ﬂ": "fl", "ﬀ": "ff", "ﬃ": "ffi", "ﬄ": "ffl"}
+
+
+def normalize(text):
+    """Pour comparer une citation au texte : ligatures, casse, ponctuation et espaces ignorés."""
+    for a, b in _LIGATURES.items():
+        text = text.replace(a, b)
+    text = unicodedata.normalize("NFKC", text).lower()
+    text = re.sub(r"(\w)-\s+(\w)", r"\1\2", text)  # césure
+    return re.sub(r"[^\w]+", "", text)
+
+
+def match_ratio(text, quote):
+    """(ratio, extrait) de la meilleure fenêtre de `text` pour `quote`, après normalisation."""
+    t, q = normalize(text), normalize(quote)
+    if not q:
+        return 0.0
+    if q in t:
+        return 1.0
+    sm = difflib.SequenceMatcher(None, t, q, autojunk=False)
+    best = 0.0
+    for a, b, size in sm.get_matching_blocks():
+        if size < 3:
+            continue
+        start = max(0, a - b)
+        for s in (start, max(0, start - 3), start + 3):
+            r = difflib.SequenceMatcher(None, t[s:s + len(q)], q, autojunk=False).ratio()
+            best = max(best, r)
+    return best
+
+
+_NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
+_THOUSANDS = re.compile(r"(?<![\d.,])(\d{1,3})((?:[    ]\d{3})+)(?![\d.,])")
+_ELISION = re.compile(r"…|\.\.\.|\[\.\.\.\]")
+
+
+def number_tokens(text):
+    """Nombres d'un texte, dans l'ordre : « 143,927 » et « 143 927 » → « 143927 »."""
+    for a, b in _LIGATURES.items():
+        text = text.replace(a, b)
+    text = unicodedata.normalize("NFKC", text)
+    text = re.sub(r"(\d)-\s+(\d)", r"\1\2", text)  # césure au milieu d'un nombre
+    text = _THOUSANDS.sub(lambda m: m.group(1) + re.sub(r"\D", "", m.group(2)), text)
+    out = []
+    for tok in _NUMBER.findall(text):
+        if re.fullmatch(r"\d{1,3}(,\d{3})+(\.\d+)?", tok):
+            tok = tok.replace(",", "")
+        out.append(tok)
+    return out
+
+
+def numbers_match(text, quote):
+    """Les nombres de la citation sont-ils ceux du passage, dans le même ordre ?
+
+    La citation est découpée sur les ellipses (« … ») ; les nombres de chaque morceau doivent
+    former une suite contiguë des nombres du passage. Un morceau peut commencer ou finir au
+    milieu d'un nombre (« 5 W » tiré de « 3.5 W ») : suffixe et préfixe tolérés aux bords."""
+    ref = number_tokens(text)
+    for part in _ELISION.split(quote):
+        toks = number_tokens(part)
+        if not toks:
+            continue
+        n = len(toks)
+        # un nombre n'est peut-être coupé que s'il touche le bord du morceau
+        cut_start = part.strip()[:1].isdigit()
+        cut_end = part.strip().rstrip(".,;:)»\"'")[-1:].isdigit()
+
+        def same(tok, full, first, last):
+            return (tok == full or (first and cut_start and full.endswith(tok))
+                    or (last and cut_end and full.startswith(tok)))
+
+        def fits(i):
+            window = ref[i:i + n]
+            return len(window) == n and all(same(t, w, j == 0, j == n - 1)
+                                            for j, (t, w) in enumerate(zip(toks, window)))
+
+        if not any(fits(i) for i in range(len(ref))):
+            return False
+        # chaque nombre avec ses mots voisins : « Section 2 reviews » ne vaut pas « Section 3
+        # reviews », même si le passage contient un 3 ailleurs
+        words = part.split()
+        norm = normalize(text)
+        for i, w in enumerate(words):
+            if any(ch.isdigit() for ch in w) and normalize(" ".join(words[max(0, i - 1):i + 2])) not in norm:
+                return False
+    return True
+
+
+def verify(index, chunk_id, quote, expect_sha=None):
+    """Statut d'une citation : OK, APPROX, ABSENT ; NOMBRES si le texte ressemble mais que ses
+    nombres diffèrent de ceux du passage ; MODIFIÉ si le sha1 attendu ne correspond pas.
+
+    Renvoie (statut, ratio, chunk_id où la citation est trouvée). Une citation absente du
+    passage indiqué (ou dont les nombres n'y correspondent pas) est cherchée dans le reste du
+    papier : le chunk_id renvoyé le dit.
+    """
+    c = index.chunks[index.by_id[chunk_id]]
+    if expect_sha and not c["sha1"].startswith(expect_sha):
+        return "MODIFIÉ", 0.0, chunk_id
+    r = match_ratio(c["text"], quote)
+    same_numbers = numbers_match(c["text"], quote)
+    if r < VERIFY_MIN or not same_numbers:
+        for other in index.chunks:
+            if other["paper_id"] == c["paper_id"] and other["chunk_id"] != chunk_id:
+                r2 = match_ratio(other["text"], quote)
+                if r2 >= VERIFY_MIN and (r2 > r or not same_numbers) and numbers_match(other["text"], quote):
+                    return ("OK" if r2 == 1.0 else "APPROX"), r2, other["chunk_id"]
+    if r >= VERIFY_MIN and not same_numbers:
+        return "NOMBRES", r, chunk_id
+    status = "OK" if r == 1.0 else "APPROX" if r >= VERIFY_MIN else "ABSENT"
+    return status, r, chunk_id
+
+
+# ----------------------------------------------------------------- évaluation
+
+def evaluate(index, questions, k=5, modes=MODES):
+    """recall@k (au moins une section attendue dans les k premiers), MRR, paper@k."""
+    out = {}
+    for mode in modes:
+        base, _, rr_flag = mode.partition("+")
+        if base != "lexical" and not index.dense:
+            continue
+        hits = rr = paper_hits = 0
+        misses = []
+        for q in questions:
+            exp = set(q["expect"])
+            res = index.search(q["q"], k=max(k, 10), mode=base, rerank=bool(rr_flag))
+            ranks = [r for r, h in enumerate(res, 1) if h["section_id"] in exp]
+            first = ranks[0] if ranks else None
+            if first and first <= k:
+                hits += 1
+            else:
+                misses.append(q["q"])
+            rr += 1 / first if first else 0
+            exp_papers = {e.split("#")[0] for e in exp}
+            paper_hits += any(h["paper_id"] in exp_papers for h in res[:k])
+        n = len(questions) or 1
+        out[mode] = {"recall": hits / n, "mrr": rr / n, "paper": paper_hits / n, "misses": misses}
+    return out

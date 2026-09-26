@@ -2,6 +2,7 @@
 id: arxiv-2103.05579-hls4ml-open-source-codesign-workflow
 fiche: done
 date: 2026-09-24
+benchmarks: none
 ---
 
 # hls4ml: An Open-Source Codesign Workflow to Empower Scientific Low-Power Machine Learning Devices

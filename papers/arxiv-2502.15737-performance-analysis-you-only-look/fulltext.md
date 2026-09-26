@@ -81,6 +81,8 @@ Experiments that deploy the model in isolation on each of the previous hardware 
 
 •
 
+1.1, model selection and training in 3.1.2, and model optimization in 3.1.3. From the model, two types of experiments are developed:
+
 Experiments that integrate the object detection model into a typical drone image processing pipeline. As described in Section 5, these experiments seek to compare the capabilities of edge devices against a cloud deployment under a representative scenario.
 
 In these experiments, a set of metrics are used to evaluate the performance of the models. These metrics are described in Section 3.2.
@@ -227,8 +229,6 @@ Further integration of edge architectures with 5G and tactical cloud technologie
 
 ## Figures et tableaux
 
-[figure sans légende identifiée] 1.1, model selection and training in 3.1.2, and model optimization in 3.1.3. From the model, two types of experiments are developed:
-
 **Figure 1.** Diagram of the indoor controlled flight environment equipped with OptiTrack sensors, drones with access points, and a TurtleBot target on the ground.
 
 **Figure 2.** Examples of different dataset images where the object to be detected has been manually annotated. Images are captured from different angles and heights and with different background environments.
@@ -360,9 +360,11 @@ MIS = 1 Mean Inference Time (s) Inferences Per Minute or IPM Calculates the tota
      | YOLOv8s | FP32 | 48.97 |  | 8.83 | 26.50 | 20.42 | 20.42
      | YOLOv8s | INT8 | 33.60 |  | 3.31 | 15.96 | 29.76 | 29.76
 
-**Table 6.** Latency results in the two different deployment scenarios, edge and cloud.
+**Table 6.** Latency results in the two different deployment scenarios, edge and cloud. [corps du tableau reconstruit par Docling : à vérifier]
 
     Processing Environment | RTT Latency (ms) | Model Processing Latency (ms) | Communication Latency (ms)
+    Edge | Mean: 35.09 Std: 4.25 | Mean: 32.59 Std: 4.27 | Mean: 2.50 Std: 0.34
+    Cloud | Mean: 348.21 Std: 69.88 | Mean: 6.82 Std: 0.05 | Mean: 341.41 Std: 69.89
 
 **Table 7.** Recommended configurations based on operational needs.
 

@@ -1,12 +1,12 @@
 """Reproducible synthetic benchmark over an isolated PaperDatabase corpus.
 
-  bin/pdb bench corpus [--target 200]
-  bin/pdb bench enrich [--limit N]
-  bin/pdb bench generate [--limit N]
-  bin/pdb bench validate [--limit N]
-  bin/pdb bench retrieval [--mode lexical|dense|hybrid|reranked]
-  bin/pdb bench agent [--limit N]
-  bin/pdb bench report
+  bin/pdb synth corpus [--target 200]
+  bin/pdb synth enrich [--limit N]
+  bin/pdb synth generate [--limit N]
+  bin/pdb synth validate [--limit N]
+  bin/pdb synth retrieval [--mode lexical|dense|hybrid|reranked]
+  bin/pdb synth agent [--limit N]
+  bin/pdb synth report
 
 All large or generated artifacts live under .cache/bench/.
 """
@@ -27,7 +27,7 @@ import urllib.request
 from collections import Counter
 from pathlib import Path
 
-from lib import rag, rag_external, schema
+from lib import rag_qwen as rag, rag_external, schema
 from bin import ingest, reindex
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -146,7 +146,7 @@ def freeze(root):
             for name in ("metadata.json", "sections.jsonl", "paper.pdf")}
     code_hash = hashlib.sha256(
         b"".join((ROOT / p).read_bytes() for p in
-                 ("bin/bench_cli.py", "lib/rag.py", "lib/rag_external.py",
+                 ("bin/bench_cli.py", "lib/rag_qwen.py", "lib/rag_external.py",
                   "bin/ingest.py", "bin/reindex.py"))).hexdigest()
     record = {"fingerprint": rag.fingerprint(root),
               "papers": len(sources(root)), "created": time.time(),

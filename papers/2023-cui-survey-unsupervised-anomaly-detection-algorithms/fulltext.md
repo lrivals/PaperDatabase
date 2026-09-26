@@ -39,6 +39,8 @@ In the field of image processing, filter-dependent methods are also used for ano
 
 With the development of neural networks and machine learning, a large number of supervised algorithms have appeared. Supervised Neural Networks [51], [52], [53], [54], [55], [56], [57], [58], [59], [60], [61], [62], Support Vector Machines (SVM) [63], [64], [65] and k-Nearest Neighbors [66], [67], [68], [69], [70], [71], [72]
 
+are the most common supervised algorithms. Recently, deep learning-based algorithms are becoming popular. The majority of deep learning-based visual anomaly detection is data-driven. To build the visual anomaly detection model, supervised methods take two means. The first one trains an image-level classification model, which requires a labeled training set including both normal and abnormal samples. The second conducts refined object localization. Containing more information, supervised methods should theoretically yield higher detection rates than semi-supervised and unsupervised methods. However, because of lacking training dataset that covers all defect locations and erroneous labeling, there still exists certain technical difficulties.
+
 ### B. PREVIOUS SURVEYS
 
 As an important research area, there have been already many reviews researching it. Table . 1 enlists some existing surveys in the industrial anomaly detection field, which have different focus from our research. Specifically, the review [73] starts with formulations of the most classical algorithms of different schools. The paper [74] surveys traditional methods, and also introduces deep learning-based methods. For each type of method, the characteristics of each method are listed in a general way. The article [75] represents an introduction to traditional methods, deep learning-based methods, and an introduction to hardware and software devices is involved in the meantime. For the introduction to deep learning-based methods, it mainly focuses on the supervised domain and introduces milestone algorithms by timeline. The survey [76] groups the relevant approaches given their underlying principles and discusses their assumptions, advantages, and disadvantages. The study [77] focuses on specific solutions for visual processing methods and, in particular, visual inspection approaches for metallic, ceramic, and textile surfaces in industrial applications. The methods in literature [78] are divided into categories based on the types of detection materials used. Some studies focus only on anomaly detection on a particular material. A thorough survey [1] is provided of both two-dimensional and three-dimensional surface defect detection systems for various common metal planar material products such as steel, aluminum, copper plates, and strips. The review [79] presents a detailed overview of histogram-based approaches, color-based approaches, image segmentationbased approaches, frequency domain operations, texturebased defect detection, sparse feature-based operations, and image morphology operations for fabric defect detection. The article [80] investigates supervised and semi-supervised deep learning algorithms. As for the unsupervised aspect, more attention is paid to the different network architectures used by different types of algorithms. The article [81] focuses on the intersection of different research fields, providing extended cross-cutting ideas, exhaustively introducing the algorithms and frameworks of some typical methods, deemphasizing methodological schools and blurring domain boundaries. It intends to bring these fields closer together. The article [82] focuses only on GAN-based algorithms.
@@ -181,6 +183,8 @@ MVTec AD dataset 6 [157] has a total of 15 categories, with 5 of them being dist
 
 There are many challenges in visual industrial anomaly detection scenarios. Take the datasets we listed for example, as shown in Table 11, there are problems such as small amount of anomalous data, small size of defects, object appearance variability, texture differences, etc. datasets is high, it is not sufficiently instructive. In industrial quality inspection scenarios, defects are complex and diverse, and the current study is only the tip of the iceberg. In the actual industrial scenario, there are also cases such as edible oil impurities, wine impurities, bearing defects, engine lining defects (3D internal), etc., as shown in Fig. 12. There are still some problems that are not well solved by current methods. Taking abnormal detection of edible oil in the actual industrial scene as an example, we verify the anomaly detection of image level with existing SOTA algorithm Patchcore and AST as shown in Table . 12, but the experimental results are not ideal and far from the results reported on MVTec benchmark. It further explains that the data in the actual industrial scenario is more complex, and the benchmark data is too simple and not rich enough. On the other hand, the lack of types and quantities of testing samples can not fully verify the proposed model is reliable, which hinders the generalization ability of the model. Therefore, it is necessary to launch richer datasets with diverse scenarios and testing samples.
 
+A. LACK OF COMPREHENSIVE OPEN DATASETS Currently, the existing open datasets merely cover a limited number of scenarios, which is not comprehensive enough. The actual industrial scenarios are rich and diverse, resulting in a domain gap with the scenarios presented by the open datasets. Although the AUROC of existing methods on open
+
 ## VI. CHALLENGES AND DISCUSSION
 
 ### B. CONFLICT BETWEEN FAR AND MAR
@@ -204,8 +208,6 @@ Multimodal learning can facilitate deeper understanding by providing multiple pe
 Deep learning has inspired a surge of interest in the visual industrial anomaly detection problem in recent years, resulting in a wide range of creative solutions. We present a complete review of newly proposed methodologies for visual industrial anomaly detection in the literature in this study. We categorize the relevant approaches based on their fundamental principles and describe their assumptions, benefits, and drawbacks, which may be of interest to practitioners as well as academic researchers. We hope to assist academics in better understanding the common principles of visual industrial anomaly detection systems and identifying interesting research directions in this area. The unsupervised anomaly detection algorithm is still under continuous research and development, and we will continue to track the progress in the follow-up work.
 
 ## Figures et tableaux
-
-[figure sans légende identifiée] are the most common supervised algorithms. Recently, deep learning-based algorithms are becoming popular. The majority of deep learning-based visual anomaly detection is data-driven. To build the visual anomaly detection model, supervised methods take two means. The first one trains an image-level classification model, which requires a labeled training set including both normal and abnormal samples. The second conducts refined object localization. Containing more information, supervised methods should theoretically yield higher detection rates than semi-supervised and unsupervised methods. However, because of lacking training dataset that covers all defect locations and erroneous labeling, there still exists certain technical difficulties.
 
 FIGURE 1. Examples of defects of various materials in datasets.
 
@@ -231,28 +233,127 @@ FIGURE 10. Overview of CutPaste [113]. (a) The CutPaste method creates an abnorm
 
 FIGURE 11.Example images of the MVTec AD dataset. For each category, the top row shows an anomaly-free image. The middle row shows an anomalous example. In the bottom row, a close-up view that highlights the anomalous region is provided.
 
-[figure sans légende identifiée] A. LACK OF COMPREHENSIVE OPEN DATASETS Currently, the existing open datasets merely cover a limited number of scenarios, which is not comprehensive enough. The actual industrial scenarios are rich and diverse, resulting in a domain gap with the scenarios presented by the open datasets. Although the AUROC of existing methods on open
-
 FIGURE 12. Examples of defects of different industrial materials.
 
 FIGURE 13. Future model pipeline. Input image and text prompt, and the model can output classification or defect segmentation.
 
-**TABLE 1.** Summary of previous reviews.
+**TABLE 1.** Summary of previous reviews. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 2.** An overview and summary of different categories of anomaly detection algorithms.
+    Tile | Year | Venue | Description
+    Deep learning for anomaly detection [79] | 2020 | KDD | This review combs formulations of the most classical algorithms of different schools.
+    A review on recent advances in vision-based defect recognition towards industrial intelligence [80] | 2021 | Journal of Manufacturing Systems | 
+    Recent advances in surface defect inspection of industrial products using deep learning techniques [81] | 2021 | Advanced Manufacturing Technology Procedia | The reviews present a concise overview of traditional and deep learning-based visual anomaly detection techniques.
+    Visual Anomaly Detection for Images: A Systematic Survey [82] | 2022 | Computer Science | 
+    Visual-based defect detection and classification approaches for industrial applications—a survey [83] | 2020 | Sensors | 
+    A review on industrial surface defect detection based on deep learning technology [84] | 2020 | MLMI | 
+    Fabric defect detection using computer vision techniques: A comprehensive review [85] | 2020 | Mathematical Problems in Engineering | These studies focus only on anomaly detection on particular materials.
+    Research progress of automated visual surface defect detection for industrial metal planar materials [1] | 2020 | Sensors | 
+    Image-based surface defect detection using deep learning: A review [86] | 2021 | Computing and Information Science in Engineering | For the unsupervised aspect, more attention is paid to the different network architectures used by different types of algorithms.
+    A unified survey on anomaly, novelty, open-set, and out-of-distribution detection: Solutions and future challenges [87] | 2021 | arXiv | The article focuses on the intersection of different research fields, de-emphasizing methodological schools and blurring domain boundaries.
+    GAN-based Anomaly Detection: A Review [88] | 2022 | Neurocomputing | This paper focus on GAN-based anomaly detection and discusses its theoretical basis and applications.
 
-**TABLE 3.** Comparison between supervised and unsupervised algorithms.
+**TABLE 2.** An overview and summary of different categories of anomaly detection algorithms. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 5.** Anomaly localization results measured by pixel-wise AUROC on BTAD dataset.
+    Category | Description | Paper |  | Advantages | Disadvantages
+    Reconstruction- based Methods | The core idea is to conduct en- coding and decoding on the input normal images and train the neu- ral network with the aim of recon- struction. Based on the assumption that by training only on normal im- ages, the model will not be able to reconstruct abnormal images cor- rectly, and the anomaly scores will be higher. | Ven.,CAVGA Liu,UTAD Yang,DFR Mo.,STPM Yamada,RSTPM Deng,RDOE Rudolph,AST Massoli,MOCCA Liang,OCR-GAN Mishra,VT-ADL Li,SOMAD [102] | [92]; [93]; [94]; [95]; [96]; [97]; [98]; [99]; [100]; [101]; | The algorithm principle is straightforward and com- prehensible, while the net- work architecture is un- complicated. | Reconstructors like auto- encoders and GANs are highly generalizable and robust, and the anomalous part of the image can be well reconstructed, lead- ing to hypothesis failure.
+    Normalizing Flow (NF)-based Methods | NF is able to learn transforma- tions between data distributions and well-defined probability den- sity functions, which can serve as a suitable estimator of probability densities for the purpose of detect- ing anomalies. | Rudolph,Differnet Gudovskiy,CFlow Rudolph,FCCSF Yu,FastFlow [106] | [103]; [104]; [105]; | NF mapping is bijective and can be evaluated in both directions and infer- ence efficiency is high. | NF-based methods require expensive training compu- tational resources.
+    Representation- based Methods | Deep neural networks are used to extract meaningful vectors describ- ing the image, and the anomaly score is usually represented by dis- tance calculation. | Cohen,SPADE Defard,PaDIM Kars.,PatchCore Wang,GP Zheng,FYD Rip.,Gaussian-AD Yi,Patch SVDD DisAug CLR Ki.,Semi-orth Lee,CFA [116] | [107]; [108]; [109]; [110]; [111]; [112]; [113]; [114]; [115]; | Representation-based methods do not call for a dedicated training stage, whichintroduces no parameters other than the backbone. | Because the backbone is usually biased towards Im- ageNet, it does not have good generalizability for different domains.
+    Data augmentation- based Methods | Augmentation algorithms are de- signed to resemble anomalies. | Zav.,DRAEM Schluter,NSA Li,CutPaste Nicolae,SSPCAB Song,AnoSeg [121] | [1[17]: [118]; [119]; [120]; | The approach is uncompli- cated and facile to compre- hend and execute. | The data augmentation method is unable to fully replicate actual anomalies, resulting in certain generalization issues.
 
-**TABLE 6.** Image-level anomaly detection AUROC results on the AITEX and ELPV datasets.
+**TABLE 3.** Comparison between supervised and unsupervised algorithms. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 7.** Experiment results of AUROC on MTD dataset.
+     | Need label | Support for undefined defects | Accuracy | Generalizability
+    Supervised |  | X | higher | 
+    III-A Reconstruction-based |  |  | high | 
+    III-B NF-based |  |  | high | 
+    III-C Representation-based |  |  | high | 
+    III-D Augmentation-based | >×××× |  | low | 
 
-**TABLE 8.** AUROC performance on KolektorSDD dataset.
+**TABLE 5.** Anomaly localization results measured by pixel-wise AUROC on BTAD dataset. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 9.** AUROC performance on DAGM dataset.
+    Methods | Product0 | Product1 | Product2 | Average
+    VT-ADL [101] | 0.990 | 0.940 | 0.770 | 0.900
+    AE MSE [136] | 0.490 | 0.920 | 0.950 | 0.787
+    AE MSE+SSIM [137] | 0.530 | 0.960 | 0.890 | 0.793
+    FastFlow [106] | 0.950 | 0.960 | 0.990 | 0.967
+    BGAD [138] | 0.972 | 0.967 | 0.996 | 0.978
+    BGAD-FAS [138] | 0.980 | 0.977 | 0.998 | 0.985
+    FYD [111] | 0.961 | 0.953 | 0.997 | 0.970
 
-**TABLE 10.** Anomaly detection and localization performance on MVTec AD dataset with the format (image-level AUROC, pixel-level AUROC).
+**TABLE 6.** Image-level anomaly detection AUROC results on the AITEX and ELPV datasets. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 12.** Experimental results of existing SOTA methods on edible oil data.
+    Methods | AITEX | ELPV
+    KDAD [139] | 0.576 | 0.744
+    DevNet [140] | 0.598 | 0.514
+    FLOS [141] | 0.538 | 0.457
+    SAOE [142] | 0.675 | 0.635
+    MLEP [143] | 0.564 | 0.578
+    DRA [144] | 0.692 | 0.675
+    BGAD-FAS [138] | 0.826 | 0.903
+
+**TABLE 7.** Experiment results of AUROC on MTD dataset. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Methods | AUROC
+    Geom [145] | 0.755
+    GANomaly [146] | 0.766
+    DSEBM [147] | 0.572
+    Mahalanobis [112] | 0.980
+    1-NN [148] | 0.800
+    DifferNet [103] | 0.977
+    PaDiM [108] | 0.987
+    CS-Flow [105] | 0.993
+    PatchCore [109] | 0.979
+    ADGAN [149] | 0.464
+    OCSVM [150] | 0.587
+
+**TABLE 8.** AUROC performance on KolektorSDD dataset. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Methods | AUROC
+    skipGAN [152] | 0.551
+    Puzzle AE [153] | 0.554
+    DifferNet [103] | 0.849
+    InTra [134] | 0.701
+    CutPaste [119] | 0.602
+    Draem [117] | 0.859
+    OCR-GAN [100] | 0.914
+    Uninformed student [154] | 0.896
+    PaDiM [108] | 0.945
+    Semi-orthogonal [115] | 0.960
+
+**TABLE 9.** AUROC performance on DAGM dataset. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Methods | Average
+    skipGAN [152] | 0.558
+    Puzzle AE [153] | 0.593
+    CutPaste [119] | 0.665
+    DifferNet [103] | 0.746
+    Draem [117] | 0.980
+    OCR-GAN [100] | 0.993
+    f-AnoGAN [155] | 0.575
+    Uninformed student [154] | 0.864
+    Staar [156] | 0.830
+
+**TABLE 10.** Anomaly detection and localization performance on MVTec AD dataset with the format (image-level AUROC, pixel-level AUROC). [corps du tableau reconstruit par Docling : à vérifier]
+
+     | PatchSVDD [113] | SPADE [107] | CutPaste [119] | PatchCore [109] | AST [98] | CFA [116] | CFlow [104] | FastFlow [106]
+    carpet | (92.9,92.6) | (98.6,97.5) | (100.0,98.3) | (98.7,98.9) | (97.5,-) | (97.3,-) | (100.0,99.3) | (100.0,99.4)
+    grid | (94.6,96.2) | (99.0,93.7) | (96.2,97.5) | (98.2,98.7) | (99.1,-) | (99.2,-) | (97.6,99.0) | (99.7,98.3)
+    leather | (90.9,97.4) | (99.5,97.6) | (95.4,99.5) | (100.0,99.3) | (100.0,-) | (100.0,-) | (97.7,99.7) | (100.0,99.5)
+    tile | (97.8,91.4) | (89.8,87.4) | (100.0,90.5) | (98.7,95.6) | (100.0,-) | (99.4,-) | (98.7,98.0) | (100.0,96.3)
+    wood | (96.5,90.8) | (95.8,88.5) | (99.1,95.5) | (99.2,95.0) | (100.0,-) | (99.7,-) | (99.6,96.7) | (100.0,97.0)
+    bottle | (98.6,98.1) | (98.1,98.4) | (99.9,97.6) | (100.0,98.6) | (100.0,-) | (100.0,-) | (100.0,99.0) | (100.0,97.7)
+    cable | (90.3,96.8) | (93.2,97.2) | (100.0,90.0) | (99.5,98.4) | (98.5,-) | (99.8,-) | (100.0,97.6) | (100.0,98.4)
+    capsule | (76.7,95.8) | (98.6,99.0) | (98.6,97.4) | (98.1,98.8) | (99.7,-) | (97.3,-) | (99.3,99.0) | (100.0,99.1)
+    hazelnut | (92.0,97.5) | (98.9,99.1) | (93.3 ,97.3) | (100.0.98.7) | (100.0,-) | (100.0,-) | (96.8,98.9) | (100.0,99.1)
+    meta nut | (94.0,98.0) | (96.9,98.1) | (86.6,93.1) | (100.0,98.4) | (98.5,-) | (100.0,-) | (91.9,98.6) | (100.0,98.5)
+    pill | (86.1,95.1) | (96.5,96.5) | (99.8,95.7) | (96.6,97.1) | (99.1,-) | (97.9,-) | (99.9,99.0) | (99.4,99.2)
+    screw | (81.3,95.7) | (99.5,98.9) | (90.7,96.7) | (98.1,99.4) | (99.7,-) | (97.3,-) | (99.7,98.9) | (97.8,99.4)
+    toothbrush | (100.0,98.1) | (98.9,97.9) | (97.5 ,98.1) | (100.0,98.7) | (96.6,-) | (100.0,-) | (95.2,99.0) | (94.4,98.9)
+    transistor | (91.5,97.0) | (81.0,94.1) | (99.8,93.0) | (100.0,96.3) | (99.3,-) | (100.0,-) | (99.1,98.0) | (99.8,97.3)
+    zipper | (97.9,95.1) | (98.8,96.5) | (99.9,99.3) | (98.8,98.8) | (99.1,-) | (99.6,-) | (98.5,99.1) | (99.5,98.7)
+    Average | (92.1,95.7) | (96.2,96.5) | (97.1,96.0) | (99.1,98.1) | (99.2,95.0) | (99.2,98.2) | (98.3,98.6) | (99.4,98.5)
+
+**TABLE 12.** Experimental results of existing SOTA methods on edible oil data. [corps du tableau reconstruit par Docling : à vérifier]
+
+     | Patchcore-single | Patchcore-3model | AST
+    detection AUROC | 92.2 | 94.4 | 91.8

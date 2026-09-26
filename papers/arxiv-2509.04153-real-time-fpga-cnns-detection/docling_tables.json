@@ -1,0 +1,748 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 2,
+   "bbox": [
+    19.5,
+    494.8,
+    580.8,
+    718.8
+   ],
+   "caption": "TABLE I COMPARISON BETWEEN EXISTING LITERATURES",
+   "rows": [
+    [
+     "Year",
+     "References",
+     "Vision Tasks",
+     "Model Types",
+     "FPGA Targets",
+     "Optimization Techniques",
+     "Sparsity",
+     "Highlights"
+    ],
+    [
+     "2025",
+     "Ours",
+     "Detection, Classification, Tracking",
+     "CNN",
+     "Xilinx Zynq, Intel, Versal, Kria",
+     "Quantization, Pruning, Pipelining.",
+     "Yes",
+     "Focuses on object detection, classification, and tracking implementation on FPGAs. Highlights sparsity and optimization. Covers hardware acceleration methods. Explores GPU-FPGA hybrid architectures for enhanced acceleration."
+    ],
+    [
+     "2025",
+     "Hozhabr etal. [21]",
+     "Detection",
+     "CNN, Transformer",
+     "Xilinx, Intel",
+     "Pruning, Knowledge Distillation (KD), Quantization",
+     "No",
+     "Focuses mainly on object detection models like CNN and transformers, HW acceleration methods, and optimization strategies to achieve real-time performance."
+    ],
+    [
+     "2025",
+     "Jiang etal. [22]",
+     "Detection",
+     "CNN",
+     "General",
+     "Pruning, KD, Quantization",
+     "No",
+     "Discussed FPGA-based hardware accelerators, optimization techniques, and compared FPGA architectures based on latency, throughput, and power."
+    ],
+    [
+     "2024",
+     "Méndez López et al. [23]",
+     "Tracking",
+     "CNN",
+     "Xilinx FPGAs, Intel Cyclone IV, V, and Intel Stratix IV GX",
+     "Pipelining, Parallelism",
+     "No",
+     "Discusses design methodologies and algorithms of visual object tracking systems on FPGAs."
+    ],
+    [
+     "2024",
+     "Bian etal. [24]",
+     "Detection",
+     "CNN",
+     "Altera's MAX series, Xilinx Zynq, Ultrascale",
+     "Pruning, KD, Quantization",
+     "No",
+     "Focuses on YOLO implementations, optimizations, and acceleration on FPGAs."
+    ]
+   ]
+  },
+  {
+   "page": 4,
+   "bbox": [
+    18.8,
+    160.6,
+    580.7,
+    736.1
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Layer Types (Functions)",
+     "Layer Name",
+     "Primary Operation",
+     "Computational Complexity",
+     "Remarks"
+    ],
+    [
+     "Convolutional Layers (Feature extraction)",
+     "Convolution",
+     "𝑌𝑗 (ℎ,𝑤)=∑ ∑ ∑ 𝑋𝑖 (ℎ+𝑚,𝑤+𝑛)∙𝐾𝑗,𝑖 (𝑚,𝑛) 𝐾𝑛=1 𝐾𝑚=1 𝐶𝑖𝑛 𝑖=1 , where 𝐾𝑗,𝑖 is the convolution kernel connecting 𝑋𝑖 to 𝑌𝑗",
+     "𝐾2 ∙𝐶𝑖𝑛∙𝐶𝑜𝑢𝑡 ∙𝐻𝑜𝑢𝑡∙𝑊𝑜𝑢𝑡",
+     "Sliding-window MAC over input channels."
+    ],
+    [
+     "Convolutional Layers (Feature extraction)",
+     "Depthwise Convolution",
+     "𝑌𝑖 (ℎ,𝑤)=∑ ∑ 𝑋𝑖 (ℎ+𝑚,𝑤+𝑛)∙𝐾𝑖 (𝑚,𝑛) 𝐾𝑛=1 𝐾𝑚=1 , where 𝐾𝑖 is depthwise kernel for channel i",
+     "𝐾2 ∙𝐶𝑖𝑛∙𝐻𝑜𝑢𝑡 ∙𝑊𝑜𝑢𝑡",
+     "Channel-wise MAC. Used in MobileNet; reduces compute by ~9×"
+    ],
+    [
+     "Convolutional Layers (Feature extraction)",
+     "Pointwise Convolution",
+     "𝑌𝑗 (ℎ,𝑤)=∑ 𝑋𝑖 (ℎ,𝑤) ∙𝐾𝑗,𝑖 𝐶𝑖𝑛 𝑖=1 ,𝐾𝑗,𝑖∈ℝ1×1",
+     "𝐶𝑖𝑛∙𝐶𝑜𝑢𝑡 ∙𝐻𝑜𝑢𝑡 ∙𝑊𝑜𝑢𝑡",
+     "Element-wise linear projection- Multiply (1×1 convolution per channel combination)."
+    ],
+    [
+     "Convolutional Layers (Feature extraction)",
+     "Transposed Convolution",
+     "𝑌𝑗=∑ (𝑋𝑖↑)∗𝐾𝑗,𝑖 𝐶𝑖𝑛 𝑖=1 where ↑ denotes spatial upsampling",
+     "𝐾2 ∙𝐶𝑖𝑛∙𝐶𝑜𝑢𝑡 ∙𝐻𝑜𝑢𝑡∙𝑊𝑜𝑢𝑡",
+     "MAC with zero-insertion (upsampling). Used in decoders; increases spatial dimensions"
+    ],
+    [
+     "Normalization Layers (Training stability and convergence)",
+     "Batch Normalization",
+     "𝑥̂= 𝑥-𝜇 √𝜎2+𝜖 ,𝑦=𝛾𝑥̂+𝛽 , where 𝜇 and 𝜎2 are mean and variance respectively, 𝜖 is small constant for numerical stability, 𝛾,𝛽 learnable affine transform params, and x is input activation values to be normalized",
+     "𝐶∙𝐻∙𝑊",
+     "Channel-wise normalization using mean and variance . Requires division, sqrt."
+    ],
+    [
+     "Normalization Layers (Training stability and convergence)",
+     "Layer Normalization",
+     "𝑥̂= 𝑥-𝜇 √𝜎2 +𝜖 ,𝑦=𝛾𝑥̂+𝛽",
+     "𝐶∙𝐻∙𝑊",
+     "Normalize across features of a layer. Subtraction, division, square root, element-wise affine ops ."
+    ],
+    [
+     "Activation Layers (Non-linearity)",
+     "ReLU",
+     "𝑦=𝑚𝑎𝑥(0,𝑥), where x is a scalar activation input from previous layer",
+     "𝐶∙𝐻∙𝑊",
+     "Simple non-linearity; no multipliers needed"
+    ],
+    [
+     "Activation Layers (Non-linearity)",
+     "SiLU (Swish)",
+     "𝑦=𝑥∙𝜎(𝑥), where 𝜎(𝑥)= 1 1+𝑒 -𝑥",
+     "𝐶∙𝐻∙𝑊",
+     "Expensive; requires sigmoid (i.e., exp/div)"
+    ],
+    [
+     "Activation Layers (Non-linearity)",
+     "Leaky ReLU",
+     "𝑦={ 𝑥, 𝑥≥0 𝑎𝑥 , 𝑥<0 , where a is activation value",
+     "𝐶∙𝐻∙𝑊",
+     "Allows small negative gradients to flow; helps avoid dead neurons in sparse activations."
+    ],
+    [
+     "Pooling Layers (Dimensionality reduction)",
+     "Max Pooling",
+     "𝑦𝑖,𝑗=𝑚𝑎𝑥(𝑚,𝑛)∈ℛ𝑖,𝑗 𝑥𝑚,𝑛, where ℛ𝑖,𝑗 is the pooling region",
+     "𝐶∙𝐻𝑜𝑢𝑡∙𝑊𝑜𝑢𝑡",
+     "Maximum over local regions. Involves comparisons. Picks the most salient feature in local regions; preserves strong activations"
+    ],
+    [
+     "Pooling Layers (Dimensionality reduction)",
+     "Average Pooling",
+     "𝑦𝑖,𝑗= 1 |ℛ𝑖,𝑗| ∑ 𝑥𝑚,𝑛 (𝑚,𝑛)∈ℛ𝑖,𝑗 , where ℛ𝑖,𝑗 is the pooling region, and |ℛ𝑖,𝑗| number of elements in the region",
+     "𝐶∙𝐻𝑜𝑢𝑡∙𝑊𝑜𝑢𝑡",
+     "Involves add and divide. Computes mean of local features"
+    ],
+    [
+     "Fully Connected Layers (Spatial features into class scores)",
+     "Dense Layer",
+     "𝑦𝑗=∑ 𝑥𝑖 ∙𝐾𝑗,𝑖 𝑁𝑖𝑛 𝑖=1 ,𝑊𝑗,𝑖+𝑏𝑗, where 𝑥𝑖 is the input neuron 𝑖, 𝑦𝑗 is the output neuron j, 𝑊𝑗,𝑖 weight from input i to output j, 𝑏𝑗 is bias term for output neuron j",
+     "𝑁𝑖𝑛∙𝑁𝑜𝑢𝑡",
+     "Matrix-vector multiplication"
+    ],
+    [
+     "Output/Utility Layers (Prediction interpretation)",
+     "Softmax",
+     "𝑦𝑖= 𝑒 𝑥𝑖 ∑ 𝑒 𝑥𝑗 𝑗",
+     "𝑁",
+     "Normalize logits into probability distribution. Uses exponential and division. Also used as intermediate operations."
+    ],
+    [
+     "Skip/Utility Ops",
+     "Residual Add",
+     "𝑦=𝑥+𝐹(𝑥), where x is the input tensor to the residual block and 𝐹(𝑥) denotes the transformation applied through a series of layers.",
+     "𝐶∙𝐻∙𝑊",
+     "no computation but adds bandwidth. Element-wise addition of feature maps"
+    ],
+    [
+     "Skip/Utility Ops",
+     "Concatenation",
+     "𝑦=𝑐𝑜𝑛𝑐𝑎𝑡(𝑥1,𝑥2,…,𝑥𝑛 ) , where 𝑥𝑛 is the n th input tensor.",
+     "Sum of inputs",
+     "No computation; increases memory and layout complexity. Combine feature maps along a dimension"
+    ],
+    [
+     "Skip/Utility Ops",
+     "Upsampling",
+     "𝑦(ℎ′ , 𝑤′) = 𝑥 (⌊ℎ′ 𝑠 ⌋ , ⌊𝑤′ 𝑠 ⌋), for nearest neighbor 𝑦(ℎ′ ,𝑤′)=∑ ∑ 𝑥(𝑚,𝑛) ∙ (1-|ℎ′ 𝑠 -𝑚|) ∙ (1- |𝑤′ 𝑠 -𝑛|) 𝑛 𝑚 , for bilinear interpolation where s is upsampling scale factor, ℎ′ and 𝑤′ are the coordinates in the upsampled output space",
+     "𝐶∙𝐻𝑜𝑢𝑡∙𝑊𝑜𝑢𝑡",
+     "Expand spatial size via interpolation or nearest-neighbor. Increases compute and memory; often used in decoders or PAN necks"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    19.5,
+    77.9,
+    289.9,
+    306.9
+   ],
+   "caption": "TABLE III COMPUTATIONAL MODELS OF ADVANCED CNN LAYERS",
+   "rows": [
+    [
+     "Layer Type",
+     "Primary Operation (Equation)",
+     "Computational Complexity"
+    ],
+    [
+     "Self- Attention",
+     "𝑌 = 𝑠𝑜𝑓𝑡𝑚𝑎𝑥(𝑄𝐾ᵀ / √𝑑) 𝑉, where 𝑄 = 𝑋𝑊𝑄,𝐾 = 𝑋𝑊𝐾,𝑉 = 𝑋𝑊𝑉",
+     "𝑂(𝑀²·𝑑)"
+    ],
+    [
+     "Mutual (Cross) Attention",
+     "𝑌 = 𝑠𝑜𝑓𝑡𝑚𝑎𝑥(𝑄𝐾ᵀ / √𝑑) 𝑉, where 𝑄 = 𝑋𝑊𝑄,,𝐾 = 𝑍𝑊𝐾,𝑉 = 𝑍𝑊𝑉",
+     "𝑂(𝑀·𝑁·𝑑)"
+    ],
+    [
+     "Squeeze-and- Excitation (SE)",
+     "𝑦𝑐= 𝑥𝑐· 𝜎(𝑊2·𝑅𝑒𝐿𝑈(𝑊1 ·𝑧)), 𝑧𝑐 = (1/𝐻𝑊)∑ 𝑥𝑐,ℎ,𝑤 ℎ,𝑤",
+     "𝑂(𝐶²)"
+    ],
+    [
+     "CBAM (Channel + Spatial)",
+     "Channel, 𝑀𝑐 = 𝜎(𝑀𝐿𝑃(𝐺𝐴𝑃(𝑥))), spatial, 𝑀𝑠=𝜎(𝑓 7ˣ7 ([𝑥𝑎𝑣𝑔; 𝑥𝑚𝑎𝑥])) output, 𝑦 = 𝑥·𝑀𝑐·𝑀𝑠",
+     "𝑂(𝐶² + 𝐶·𝐻·𝑊)"
+    ],
+    [
+     "Transformer Block",
+     "𝑦 = 𝐿𝑎𝑦𝑒𝑟𝑁𝑜𝑟𝑚(𝑥 + 𝑀𝐻𝐴(𝑥)) + 𝐹𝐹𝑁(𝑥)",
+     "𝑂(𝑀²·𝑑 + 𝑀·𝑑²)"
+    ],
+    [
+     "Spatial Pyramid Pooling",
+     "𝑦 = 𝑐𝑜𝑛𝑐𝑎𝑡(𝑝𝑜𝑜𝑙𝑛×𝑛(𝑥)) 𝑓𝑜𝑟 𝑛 ∈ {1,2,4,...}",
+     "𝑂(𝐶·𝐻·𝑊) per bin"
+    ],
+    [
+     "Inverted Residual Block",
+     "𝑦=𝑥+ 𝑃𝑊₂(𝐷𝑊𝐶𝑜𝑛𝑣(𝑅𝑒𝐿𝑈(𝑃𝑊₁(𝑥))))",
+     "𝑂(𝐾²·𝐶 + 2𝐶²) ·𝐻·𝑊"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    71.7,
+    116.9,
+    265.5,
+    246.4
+   ],
+   "caption": "Fig. 3: FPGA with Columnar Resources from [44]",
+   "rows": [
+    []
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    19.2,
+    77.6,
+    581.6,
+    278.7
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "FPGA Classifications",
+     "LUTs, DSP Slices",
+     "Embedded Processors",
+     "On-chip SRAM (BRAM / URAM / NoC SRAM)",
+     "External DRAM & peak bandwidth",
+     "Quantization Support",
+     "Typical max clk (fabric / CPU-class core)",
+     "INT8 TOPS / TOPS per W"
+    ],
+    [
+     "LUT-DSP- Based FPGAs",
+     "~10 k - 3 M, 48-12300 DSP48-class slices",
+     "None",
+     "up to ≈ 455 Mb BRAM + URAM",
+     "Soft-IP support for DDR/DDR2/DDR3/DD R4/QDRII+/RLDRAMII /III typical BW < 8 GB/s per channel",
+     "Any precision (1-16 bits, custom fixed- point)",
+     "50 - 200 MHz",
+     "~1 - 143 TOPS / ~0.2 - 1 TOPS/W"
+    ],
+    [
+     "SoC-Based FPGAs",
+     "50K - 2M+ LUTs, ~2 000 - 5 000 DSPs",
+     "Hard ARM Cortex-A9/ A53 cores (up to quad-core)",
+     "5 - 66 Mb BRAM + ~256 KB OCM",
+     "DDR3/4/5, LPDDR4, up to ~1.1 TB/s",
+     "INT8, INT16, INT18, INT27 in DSPs (Xilinx), INT4-INT27, FP16, FP32 for Intel devices",
+     "200-400 MHz (PL) / 0.5- 1.3 GHz (PS)",
+     "~2 - 8 TOPS / 1 - 4 TOPS/W"
+    ],
+    [
+     "SoC FPGA with hardcore AI engines",
+     "100K - 2M+ LUTs, Up to ~7K (ACAP total) + AI Engine MACs (up to 400 AIE tiles)",
+     "Dual Cortex- A72, dual Cortex-R5, AI Engines (SIMD VLIW cores)",
+     "40 - 245 Mb total on-chip SRAM + AI Engine memory",
+     "LPDDR4 / DDR4 (32- 64 bit) In-package HBM2e: 32 GB, up to 820- 880 GB/s (HBM series)",
+     "INT8/INT16/INT32, BF16, FP16, CINT16, CINT32 with AI Engines and DSP58, DSPFP32 and DSPCPLX Modes",
+     "400-600 MHz (PL) / 1.3 GHz (AI Eng.) / 1.5 GHz (A72)",
+     "INT8: > 100 TOPS; FP16/BF16: ~ 50 TOPS; TOPS/W ≈ 8-12"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    19.3,
+    472.0,
+    296.9,
+    661.3
+   ],
+   "caption": "TABLE V COMMONLY USED FPGAS FOR REAL-TIME VISION TASKS",
+   "rows": [
+    [
+     "FPGA Board",
+     "LUTs / ALMs, FFS",
+     "DSP /AI engine",
+     "Block RAM (size)",
+     "Cost"
+    ],
+    [
+     "AMD Xilinx Zynq UltraScale+ ZCU104 [62]",
+     "230,400 LUTs, 461,000 FFs",
+     "1,728",
+     "146 (38Mb)",
+     "$1,678"
+    ],
+    [
+     "AMD Versal AI Core VC1902 [63]",
+     "899,840 LUTs, 1,799,680 FFs",
+     "1,968 DSPs 400 AI",
+     "34Mb",
+     "$13,195"
+    ],
+    [
+     "AMD Xilinx Kria KV260 [64]",
+     "70,560 LUTs, 141,120 FFs",
+     "1.2K",
+     "144",
+     "$249"
+    ],
+    [
+     "Intel Agilex 7 AGM 032 [65]",
+     "1,100,000 ALMs, 440,0000 FFs",
+     "9,375",
+     "15,932 (311Mb)",
+     "$9,495"
+    ],
+    [
+     "Intel Arria 10 GX 1150 [66]",
+     "427,200 ALMs, 1708800 FFs",
+     "1518",
+     "2,713 (52.96Mb)",
+     "$10,019"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    314.6,
+    78.1,
+    585.0,
+    211.9
+   ],
+   "caption": "TABLE VI TYPES OF PIPELINING",
+   "rows": [
+    [
+     "FPGA Board",
+     "LUTs / ALMs"
+    ],
+    [
+     "Layer-level pipelining",
+     "Overlaps the execution of different layers for the same input by streaming intermediate outputs directly from one hardware stage to the next without writing back to memory."
+    ],
+    [
+     "Intra-layer pipelining/unrolling",
+     "Unrolls and pipelines operations within a single layer (e.g., convolutions across pixels/channels) so that each new computation begins every clock cycle (II = 1)."
+    ],
+    [
+     "Layer fusion",
+     "Combines multiple operations like conv + BN + ReLU into a single hardware block, reducing memory usage and latency between layers."
+    ]
+   ]
+  },
+  {
+   "page": 13,
+   "bbox": [
+    18.9,
+    560.6,
+    580.6,
+    735.3
+   ],
+   "caption": "TABLE VII COMPARISON BETWEEN RECENT REAL-TIME DETECTION METHODS ON FPGA",
+   "rows": [
+    [
+     "Ref.",
+     "Detection Model",
+     "FPGA",
+     "Freq. (MHz)",
+     "Frame Rate (FPS)",
+     "mAP %",
+     "Image Size",
+     "Latency (ms)",
+     "Through -put (GOPS)",
+     "Power (W)",
+     "BRAM",
+     "LUTs/ ALMs",
+     "DSP",
+     "FFs"
+    ],
+    [
+     "[103]",
+     "YOLOv3-tiny",
+     "Xilinx Zynq+ ZCU106",
+     "125",
+     "60",
+     "-",
+     "320×320",
+     "5.13",
+     "292.18",
+     "1.57",
+     "105",
+     "144.3k",
+     "1053",
+     "200.1k"
+    ],
+    [
+     "[98]",
+     "LCAM- YOLOX",
+     "Kria KV260",
+     "300",
+     "195",
+     "84.73",
+     "640×640",
+     "11.28",
+     "-",
+     "9.72",
+     "19",
+     "65139",
+     "546",
+     "108532"
+    ],
+    [
+     "[104]",
+     "SRNET",
+     "XCZU15EG",
+     "200",
+     "40.5",
+     "86.68",
+     "-",
+     "24.7",
+     "150",
+     "7.84",
+     "-",
+     "47012",
+     "1592",
+     "-"
+    ],
+    [
+     "[105]",
+     "YOLOv3-Tiny",
+     "Xilinx XCKU060",
+     "200",
+     "62.8",
+     "-",
+     "416×416",
+     "-",
+     "408",
+     "8.1",
+     "1485",
+     "43.2k",
+     "1364",
+     "94.4k"
+    ],
+    [
+     "[100]",
+     "YOLO-v2 with Tiny Darknet",
+     "UltraScale+ XCVU19P",
+     "80",
+     "120.48",
+     "-",
+     "226×226",
+     "8.3",
+     "-",
+     "6.014",
+     "928.5",
+     "484209",
+     "1153",
+     "156665"
+    ],
+    [
+     "[100]",
+     "YOLO-v2 with Tiny Darknet",
+     "Versal Premium Series XCVP1902",
+     "80",
+     "120.48",
+     "-",
+     "226×226",
+     "8.3",
+     "-",
+     "4.756",
+     "892.5",
+     "359591",
+     "1153",
+     "123848"
+    ],
+    [
+     "[102]",
+     "Custom SSD",
+     "ZCU 102",
+     "350",
+     "1609",
+     "25.1",
+     "300×300",
+     "-",
+     "-",
+     "77",
+     "403",
+     "188588",
+     "44",
+     "-"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    19.4,
+    579.3,
+    580.7,
+    738.7
+   ],
+   "caption": "TABLE VIII COMPARISON BETWEEN RECENT REAL-TIME CLASSIFICATION METHODS ON FPGA",
+   "rows": [
+    [
+     "Ref.",
+     "Model",
+     "FPGA",
+     "Frequency (MHz)",
+     "Frame Rate (FPS)",
+     "Accuracy Top 1",
+     "Image Size",
+     "Latency (ms)",
+     "Through put (GOPS)",
+     "Power (W)",
+     "BRAM",
+     "LUTs/ ALMs",
+     "DSP",
+     "FFs"
+    ],
+    [
+     "[120]",
+     "U-Net",
+     "Zynq UltraScale+ MPSoC.",
+     "-",
+     "37.5",
+     "99",
+     "256×256",
+     "26.7",
+     "-",
+     "2.4",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    [
+     "[121]",
+     "VGG16",
+     "Avnet Ultra96-V2",
+     "325",
+     "-",
+     "89.54",
+     "32×32",
+     "0.652",
+     "-",
+     "-",
+     "126",
+     "38,418",
+     "326",
+     "58,831"
+    ],
+    [
+     "[122]",
+     "RESNET 14",
+     "Xilinx XCVU9P",
+     "100",
+     "34.7",
+     "65.9",
+     "256×192",
+     "75.3",
+     "1083",
+     "25",
+     "2035",
+     "760k",
+     "3982",
+     "-"
+    ],
+    [
+     "[123]",
+     "LightFire Net",
+     "ZYNQ Z7- Lite 7020",
+     "-",
+     "15",
+     "96.70",
+     "48×48",
+     "-",
+     "-",
+     "2.23",
+     "64",
+     "39692",
+     "150",
+     "49561"
+    ],
+    [
+     "[113]",
+     "RBPnet4",
+     "Zynq 7Z020",
+     "100",
+     "60",
+     "0.93 (F1 score)",
+     "32×32",
+     "0.7",
+     "77.52",
+     "2.3",
+     "144",
+     "65492",
+     "160",
+     "-"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    24.5,
+    77.9,
+    585.7,
+    218.5
+   ],
+   "caption": "TABLE IX COMPARISON BETWEEN RECENT REAL-TIME TRACKING METHODS ON FPGA",
+   "rows": [
+    [
+     "Ref.",
+     "Tracking Model",
+     "FPGA",
+     "Freq. (MHz)",
+     "Frame Rate (FPS)",
+     "Accuracy (%)",
+     "Image Size",
+     "Latency (ms)",
+     "Through put (GOPS)",
+     "Power (W)",
+     "BRAM",
+     "LUTs/ ALMs",
+     "DSP",
+     "FFs"
+    ],
+    [
+     "[128]",
+     "SiamRPN++",
+     "Kria KV260",
+     "-",
+     "6.37",
+     "56.3",
+     "-",
+     "157.12",
+     "-",
+     "1.11",
+     "91",
+     "70006",
+     "765",
+     "128663"
+    ],
+    [
+     "[129]",
+     "YOLOv3-tiny + Deepsort",
+     "Zynq-7000",
+     "209",
+     "168.72",
+     "59.9",
+     "416×416",
+     "",
+     "67.91",
+     "15.18",
+     "263",
+     "91108",
+     "294",
+     "89148"
+    ],
+    [
+     "[125]",
+     "YOLOV8n + modified SORT",
+     "Zynq UltraScale+",
+     "300",
+     "24",
+     "38.9 MOTA",
+     "-",
+     "-",
+     "-",
+     "-",
+     "421",
+     "205k",
+     "486",
+     "246k"
+    ],
+    [
+     "[130]",
+     "CNN + BG-Diff Tracker",
+     "Zynq UltraScale XCZU9EG",
+     "220",
+     "54.67",
+     "",
+     "227×227",
+     "-",
+     "-",
+     "5.5",
+     "223",
+     "48.5k",
+     "220",
+     "-"
+    ]
+   ]
+  }
+ ]
+}

@@ -45,11 +45,20 @@ dire dans la fiche). Colonnes et vocabulaires : `DATA_MODEL.md` §7.
 - Toute cellule sans valeur rapportée vaut `n/r`. Colonnes numériques : un nombre sans unité.
 - `source_section` : tableau, figure ou section exacte. `confidence` : `high` (tableau),
   `medium` (texte), `low` (déduit — à éviter, et à signaler).
+- Tableau dont la légende porte « [corps du tableau reconstruit par PyMuPDF : à vérifier] »
+  ou « … par Docling : à vérifier » (Docling décale parfois les colonnes, perd des colonnes,
+  et produit des fragments illisibles en OCR, docs/EVAL.md §6) :
+  ses chiffres peuvent être décalés d'une colonne. `confidence: medium` au plus, et
+  recoupe avec le texte quand il redonne la valeur. Tableau listé « sans corps extrait »
+  dans `extraction.warnings` : ses chiffres manquent, dis-le dans « Statut de lecture » et
+  n'invente rien.
 - `power_scope` : `chip`, `board`, `board-dynamic`, `estimated` ou `unspecified` d'après la
   méthode décrite par les auteurs (DATA_MODEL §7) ; `n/r` si `power_w` vaut `n/r`. Ne jamais
   deviner la portée : une puissance sans méthode décrite est `unspecified`.
 - Échappe par des guillemets toute cellule contenant une virgule.
 - Reporte dans la section « Résultats » de la fiche la liste des lignes ajoutées.
+- Aucune ligne justifiable (hors survey) : dis pourquoi dans « Résultats » et ajoute
+  `benchmarks: none` au front-matter de la fiche (DATA_MODEL §8).
 
 ## `metadata.json`
 

@@ -100,6 +100,36 @@ class TestIds(unittest.TestCase):
         self.assertEqual(w, [])
 
 
+class TestProseFigures(unittest.TestCase):
+    def test_looks_like_prose(self):
+        prose = ("stability, convergence speed, and final model accuracy.",
+                 "2.1. YOLO YOLO was proposed by Joseph Redmon et al. in 2016.",
+                 "A. LACK OF COMPREHENSIVE OPEN DATASETS Currently, the existing open datasets",
+                 ". CIFAR-100 contains 32x32 colour images for 100 classes, with 600 samples "
+                 "for each class divided into 500 for training",
+                 "Therefore " + "word " * 90)
+        caption = ("(a)Memory management for YOLOv3-tiny (b) Memory management for route layer",
+                   "Evaluation on latency-sensitive applications with batch size of 1.",
+                   "01/2012 01/2013 01/2014 01/2015 Top-5 Error [%]",
+                   "model. Precision | Accuracy | Cars | CF10",
+                   "Classifying a query in inference mode by comparing its features.")
+        for t in prose:
+            self.assertTrue(tei.looks_like_prose(t), t)
+        for t in caption:
+            self.assertFalse(tei.looks_like_prose(t), t)
+
+    def test_fragment_back_in_cut_paragraph_section(self):
+        # 2507.18174 : la fin de §III-B, page 3, était classée en figure sans légende
+        _, blocks, _ = tei.parse(FIXTURE)
+        figs = [t for b in blocks if b.kind == "figure" for t, _ in b.paras]
+        self.assertFalse(any("convergence speed" in t for t in figs))
+        (training,) = [b for b in blocks if b.kind == "section" and b.subsection
+                       and b.subsection.startswith("B. Model Training")]
+        texts = [t for t, _ in training.paras]
+        i = next(k for k, t in enumerate(texts) if t.startswith("stability, convergence speed"))
+        self.assertTrue(texts[i - 1].endswith("to balance training"))
+
+
 class TestSchema(unittest.TestCase):
     def test_benchmark_row(self):
         row = {c: "n/r" for c in schema.BENCHMARK_COLUMNS}

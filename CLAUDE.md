@@ -16,12 +16,22 @@ Lis du résumé vers le détail, et arrête-toi dès que tu as la réponse.
 
 1. **[INDEX.md](INDEX.md)** — quels papiers existent, sur quel axe, fichés ou non.
 2. **[benchmarks.csv](benchmarks.csv)** — tous les chiffres (FPS, GOPS, W, LUT/DSP/BRAM,
-   quantification, toolflow). `grep` dessus pour toute question quantitative. Une ligne par
-   configuration rapportée, avec sa section source.
+   quantification, toolflow). Pour toute question quantitative, interroge-le avec
+   `bin/pdb bench` plutôt que de le lire en entier ou de faire un `grep`. Exemple :
+   `bin/pdb bench --platform kv260 --has power_w --cols model,fps,power_w`, et `-h` pour
+   les filtres. La sortie garde `source_section`, `confidence` et `power_scope`. Une ligne
+   par configuration rapportée, avec sa section source.
+   Pour l'identité d'un papier (auteurs, venue, preprint ou non, statut de la fiche) :
+   `bin/pdb paper <id court | mot du titre>`, sans ouvrir `metadata.json`.
 3. **`papers/<id>/fiche.md`** — la lecture critique : problème, méthode, limites, pertinence.
-4. **`papers/<id>/fulltext.md`** — le texte intégral, en dernier recours seulement. Pour une
-   recherche ciblée dans le corpus entier, `grep` sur `papers/*/sections.jsonl` (chaque ligne
-   porte sa section et sa page).
+4. **Passages** — `bin/pdb search "<question en anglais>"`, qui renvoie des passages avec
+   `chunk_id`, section, page et extrait, puis `bin/pdb show <chunk_id>` sur 2 ou 3 d'entre
+   eux. Vérifie chaque citation textuelle avec `bin/pdb verify <chunk_id> "<citation>"`.
+   `search` renvoie toujours des passages, même hors sujet : si aucun extrait ne répond,
+   dis que la base ne traite probablement pas le sujet (aucun seuil fiable, docs/EVAL.md §5).
+   La skill `/paper-ask` enchaîne tout cela ; détails dans [docs/RAG.md](docs/RAG.md).
+   `grep` sur `papers/*/sections.jsonl` reste utile pour une chaîne exacte.
+   `papers/<id>/fulltext.md`, le texte intégral, en dernier recours seulement.
 5. **`papers/<id>/paper.pdf`** — ne l'ouvre pas. Il est conservé comme preuve, pas comme
    source de travail ; tout ce qu'il contient est déjà dans `fulltext.md`.
 
@@ -31,9 +41,11 @@ des bibliographies : à vérifier avant de les citer. Au-delà des références,
 (ou `bin/pdb discover`) produit `candidates.csv` depuis OpenAlex : citations entrantes,
 recherche par axe ou par gap (DATA_MODEL §10). Métadonnées OpenAlex, non vérifiées.
 
-`refs.jsonl` et `grobid.tei.xml` ne servent pas à répondre aux questions : le premier
-alimente la visualisation 3D (`bin/viz.py`) et `external_refs.csv`, le second est la trace
-brute d'extraction.
+`refs.jsonl`, `grobid.tei.xml` et `docling_tables.json` ne servent pas à répondre aux
+questions : le premier alimente la visualisation 3D (`bin/viz.py`) et `external_refs.csv`,
+les deux autres sont des traces brutes d'extraction. Un tableau dont la légende porte
+« reconstruit par PyMuPDF » ou « reconstruit par Docling : à vérifier » n'est pas fiable
+chiffre à chiffre ([docs/EVAL.md](docs/EVAL.md) §6).
 
 ---
 
@@ -42,6 +54,12 @@ brute d'extraction.
 | Commande | Effet |
 |---|---|
 | `bin/pdb status` | état de la base et prochaines actions suggérées |
+| `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation du logiciel : qualité d'extraction, recherche de passages, `verify`, temps ; à lancer avant/après tout changement du pipeline ([docs/EVAL.md](docs/EVAL.md)) |
+| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ([docs/RAG.md](docs/RAG.md) §5.1) |
+| `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM, texte exact, contrôle d'une citation ([docs/RAG.md](docs/RAG.md) §5) |
+| `/paper-ask <question>` | réponse sourcée et vérifiée : `bench`, puis `search`, `show`, `verify` |
+| `bin/pdb paper <id \| mot>…` | fiche d'identité d'un papier : métadonnées, preprint, statut de la fiche, nombre de benchmarks (`--bench` pour les lignes) ; plusieurs ids → une ligne par papier (`--fields short,type`) |
+| `bin/pdb cites <id>` / `bin/pdb cited-by <id>` | graphe de citations internes (`--external` : références hors base, avec leur nombre de citants) |
 | `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition + ingestion + réindexation (un DOI est résolu vers sa version arXiv via OpenAlex) |
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches `done` et `benchmarks.csv` |

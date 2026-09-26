@@ -149,9 +149,10 @@ bin/pdb add --from candidates_arxiv.txt
 
 Comment lire `candidates.csv` :
 
-- `in_topic` : « oui » si le titre ou le résumé mentionne un contexte matériel (FPGA,
-  accélérateur, embarqué…) ou un toolflow / une plateforme ; un autoencodeur purement
-  logiciel reste « non » ;
+- `in_topic` : « oui » si le titre évoque le matériel (FPGA, accélérateur, TinyML, MCU,
+  edge computing…), si le résumé le fait au moins deux fois, ou si le papier relève d'un
+  toolflow / d'une plateforme ; un autoencodeur purement logiciel, ou un réseau qui cite le
+  FPGA une fois en passant (SqueezeNet), reste « non » ;
 - `reasons` : le lien avec le corpus (« cite 4 papiers du corpus », « cité par 3 papiers du
   corpus ») ;
 - `axes_guess` : l'axe probable ;
@@ -234,19 +235,69 @@ démarrer, PDF en attente, fiche à rédiger, gaps à mettre à jour, axe à ét
   `yolo`) et repérer les maillons manquants à ajouter.
 - Relire une fiche contre le PDF lu vous-même (§6).
 
+**Interroger la base sans passer par Claude**
+
+`bin/pdb bench` filtre `benchmarks.csv`, et `bin/pdb paper` affiche l'identité d'un papier.
+Les réponses sont instantanées et ne consomment aucun token. Chaque ligne garde sa section
+source et sa confiance, ce qui permet de vérifier chaque chiffre.
+
+```bash
+bin/pdb bench --platform kv260 --cols model,quantization,fps,power_w
+bin/pdb bench --has power_w --sort fps --desc -n 5 --format md
+bin/pdb bench --task detection --min fps=30 --max power_w=10
+bin/pdb paper finn                  # ambigu : liste FINN et FINN-R
+bin/pdb paper 1612.07119 --bench    # métadonnées + lignes de benchmark
+bin/pdb paper 1612.07119 2022-feng --fields short,type   # plusieurs papiers, une ligne chacun
+bin/pdb cites 2025-hozhabr --external   # ses références : dans la base, puis hors base
+bin/pdb cited-by 1612.07119         # papiers de la base qui citent FINN
+bin/pdb bench --own                 # vos propres mesures (paper_id own-…, DATA_MODEL §1)
+```
+
+Dans la sortie, `!` marque une ligne de confiance `low`, et les ids courts sont expliqués en
+pied de sortie.
+
+Pour le texte, `search` trouve les passages par le sens et par les mots, `show` affiche un
+passage exact, et `verify` contrôle qu'une citation y figure bien :
+
+```bash
+bin/pdb search "power measured at the wall versus the FPGA rails" -k 5
+bin/pdb show 1612.07119#019.3
+bin/pdb verify 1612.07119#019.3 "P wall using a wall power meter"   # OK
+```
+
+`verify` répond `OK` (citation exacte), `APPROX` (ressemblance d'au moins 0,85), `NOMBRES`
+(le texte ressemble, mais un nombre diffère du passage : la citation est fausse) ou
+`ABSENT`. Il renvoie le code 0 seulement pour `OK` et `APPROX`.
+
+`search` renvoie toujours des passages, même quand la base ne traite pas le sujet. Aucun
+score ne permet de le détecter de façon fiable : jugez sur les extraits
+([EVAL.md](EVAL.md) §6). Formulez les requêtes en anglais, la langue du corpus : en
+français, la recherche perd environ la moitié de ses bonnes réponses. Dans Claude Code, `/paper-ask <question>` enchaîne
+ces commandes et rend une réponse sourcée. Détails : [RAG.md](RAG.md) §5.
+
 ---
 
 ## 6. Contrôle qualité
 
-L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Trois réflexes :
+L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Quatre réflexes :
 
 1. **Les avertissements d'ingestion** (`bin/pdb status` liste les extractions à vérifier) :
    une section non détectée ou une table absente de `fulltext.md` signifie que ses chiffres
    manquent aussi dans la fiche. Ouvrez alors le PDF vous-même et complétez la fiche.
+   La ligne « tableaux à vérifier » donne, par papier, les tableaux réduits à leur légende
+   (« sans corps ») et ceux reconstruits automatiquement depuis le PDF (« reconstruits »,
+   marqués « à vérifier » dans `fulltext.md` : colonnes décalées ou perdues, fragments d'OCR
+   possibles). Pour les tableaux encore sans corps, `bin/pdb ingest --reparse --tables
+   docling <id>` essaie Docling, et `--ocr` s'ils sont en image (plusieurs minutes par
+   papier).
 2. **Recouper une fiche sur cinq** avec le PDF : chaque chiffre de `benchmarks.csv` doit
    exister dans le papier, à la section indiquée.
 3. **`bin/pdb reindex`** doit finir sans `erreur`. Une `note` est une remarque, pas un
    blocage.
+4. **Après une modification du logiciel** (extraction, recherche, `verify`), lancez
+   `bin/pdb eval --compare` : il compare la qualité et les temps au dernier run enregistré,
+   et signale les seuils non atteints. `bin/pdb eval --save` enregistre un nouveau run de
+   référence. Protocole et résultats : [EVAL.md](EVAL.md).
 
 Procédure complète : [SETUP.md §8](../SETUP.md#8-vérification).
 
@@ -291,6 +342,13 @@ Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
 | `bin/pdb ingest [--force] [pdf…]` | ingère `inbox/` et réindexe |
 | `bin/pdb discover [--forward] [--backward] [--related] [--axis A] [--query "…"] [--since AAAA]` | candidats → `candidates.csv`, `candidates_arxiv.txt` |
 | `bin/pdb reindex` | régénère `INDEX.md`, `external_refs.csv`, vérifie |
+| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (`-h` pour les filtres) |
+| `bin/pdb paper <id \| mot>…` | identité d'un ou plusieurs papiers (`--bench` : ses lignes) |
+| `bin/pdb cites <id>` / `cited-by <id>` | références dans la base (`--external` : hors base aussi) / papiers qui le citent |
+| `bin/pdb ingest --reparse [id…]` | ré-extrait les papiers déjà ingérés depuis leur TEI, sans GROBID |
+| `bin/pdb ingest --reparse --tables docling [--ocr] [id…]` | idem, et Docling pour les tableaux restés sans corps (lent, optionnel : `requirements-docling.txt`) |
+| `bin/pdb search "<q>"`, `show <id>`, `verify <id> "<cit.>"` | passages, texte exact, contrôle d'une citation |
+| `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
 | `bin/pdb grobid start\|stop\|status` | GROBID |
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
 | `bin/pdb test` | tests |
@@ -301,6 +359,7 @@ Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
 | `/paper-fiche <paper_id>` | fiche de lecture et lignes de benchmark |
 | `/paper-gaps` | met à jour `gaps.md` |
 | `/paper-discover [axe \| gap \| mots-clés]` | propose des papiers à ajouter et attend votre accord |
+| `/paper-ask <question>` | réponse sourcée et vérifiée depuis la base |
 
 | Fichier | Rôle | Qui l'écrit |
 |---|---|---|

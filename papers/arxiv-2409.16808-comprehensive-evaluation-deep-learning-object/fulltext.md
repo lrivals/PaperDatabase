@@ -169,6 +169,8 @@ Pi3 Pi4 Pi5 Pi3_TPU Pi4_TPU Pi5_TPU Pi5_HAT Nano Orin Nano
 
 Det_lite0 Det_lite1 Det_lite2 SSD_lite SSD_v1 Yolo8_m Yolo8_n Yolo8_s
 
+8(c)-(e), Jetson Nano and Orin Nano provide the most favorable overall trade-off, combining low energy consumption and low inference time with only a small decrease in mAP relative to the 0.00 0.05 0.10 0.15 0.20 0.25 0.30 En er gy Co ns . (m W h)
+
 (a) Raspberry Pi all balance among energy consumption, inference time, and accuracy. Raspberry Pi 5 with AI HAT+ also emerges as a strong option, particularly because it preserves competitive YOLOv8 accuracy while substantially improving both energy consumption and inference time relative to CPU-only Raspberry Pi 5. In contrast, TPU-based Raspberry Pi platforms achieve excellent latency and energy efficiency for YOLOv8, but their reduced accuracy makes them less attractive when all three metrics are considered jointly.
 
 Det_lite0 Det_lite1 Det_lite2 SSD_lite SSD_v1 Yolo8_m Yolo8_n Yolo8_s
@@ -220,8 +222,6 @@ D
 **Fig. 6.** Energy consumption per request (excluding base energy) versus accuracy for various object detection models
 
 **Fig. 7.** Inference time versus accuracy for various object detection models
-
-[figure sans légende identifiée] 8(c)-(e), Jetson Nano and Orin Nano provide the most favorable overall trade-off, combining low energy consumption and low inference time with only a small decrease in mAP relative to the 0.00 0.05 0.10 0.15 0.20 0.25 0.30 En er gy Co ns . (m W h)
 
 **Fig. 8.** Energy consumption per request (excluding base energy) versus inference time versus accuracy for various object detection models
 

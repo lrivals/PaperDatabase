@@ -45,7 +45,9 @@
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": []
+    "warnings": [
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 1"
+    ]
   },
   "status": {
     "extracted": true,

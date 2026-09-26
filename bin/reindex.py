@@ -124,7 +124,7 @@ def load_benchmarks(problems, root=ROOT):
     return rows
 
 
-def render(papers):
+def render(papers, rows=()):
     todo = sum(1 for p in papers if p.get("status", {}).get("fiche") != "done")
     out = [
         "# Index des papiers",
@@ -158,6 +158,16 @@ def render(papers):
                 fiche,
             ]) + " |")
         out.append("")
+    own = {}
+    for r in rows:
+        if schema.is_own_id(r["paper_id"]):
+            own[r["paper_id"]] = own.get(r["paper_id"], 0) + 1
+    if own:
+        out += ["## Mesures propres", "", "| id | protocole | lignes de benchmark |", "|---|---|---|"]
+        for pid in sorted(own):
+            src = schema.own_source(pid)
+            out.append(f"| {pid} | [{src}]({src}) | {own[pid]} |")
+        out.append("")
     return "\n".join(out)
 
 
@@ -170,6 +180,23 @@ def write_external(path, rows):
             w.writerow({k: (schema.NR if r[k] in (None, "") else r[k]) for k in refs.EXTERNAL_FIELDS})
 
 
+def bench_notes(papers, rows, fronts):
+    """Notes sur les fiches done sans ligne de benchmark. fronts : paper_id → front-matter de
+    fiche.md. `benchmarks: none` (DATA_MODEL §8) marque une absence justifiée ; un survey
+    n'a jamais de ligne."""
+    notes = []
+    with_bench = {r["paper_id"] for r in rows}
+    for p in papers:
+        none = (fronts.get(p["id"]) or {}).get("benchmarks") == schema.NO_BENCHMARKS
+        if none and p["id"] in with_bench:
+            notes.append(f"{p['id']} : fiche.md dit benchmarks: none, mais benchmarks.csv a des lignes")
+        elif (p.get("status", {}).get("fiche") == "done" and p["id"] not in with_bench
+              and not none and "surveys" not in p.get("axes", [])):
+            notes.append(f"{p['id']} : fiche done sans ligne dans benchmarks.csv (oubli ? "
+                         "sinon benchmarks: none dans le front-matter de fiche.md)")
+    return notes
+
+
 def run(root=ROOT):
     """Régénère INDEX.md et external_refs.csv. Retourne 1 si une incohérence est trouvée."""
     root = Path(root).resolve()
@@ -179,20 +206,34 @@ def run(root=ROOT):
 
     ids_ = {p["id"] for p in papers if "id" in p}
     for pid in sorted({r["paper_id"] for r in rows} - ids_):
-        problems.append(f"benchmarks.csv : paper_id inconnu dans papers/ : {pid}")
-    with_bench = {r["paper_id"] for r in rows}
+        src = schema.own_source(pid)
+        if src is None:
+            problems.append(f"benchmarks.csv : paper_id inconnu dans papers/ : {pid}")
+        elif not (ROOT / src).exists():
+            problems.append(f"benchmarks.csv : mesure propre {pid} sans protocole {src}")
+    fronts = {}
     for p in papers:
-        if p.get("status", {}).get("fiche") == "done" and p["id"] not in with_bench:
-            if "surveys" in p.get("axes", []):
-                continue
-            notes.append(f"{p['id']} : fiche done sans ligne dans benchmarks.csv (oubli ?)")
+        path = root / "papers" / p["id"] / "fiche.md"
+        fronts[p["id"]] = schema.read_front_matter(path.read_text()) if path.exists() else {}
+    notes += bench_notes(papers, rows, fronts)
 
-    (root / "INDEX.md").write_text(render(papers) + "\n")
+    (root / "INDEX.md").write_text(render(papers, rows) + "\n")
     ext = refs.external_ranking(refs.load_papers(root))
     write_external(root / "external_refs.csv", ext)
     todo = sum(1 for p in papers if p.get("status", {}).get("fiche") != "done")
     print(f"INDEX.md régénéré : {len(papers)} papiers, {todo} fiches à faire, {len(rows)} lignes de benchmark.")
     print(f"external_refs.csv régénéré : {len(ext)} travaux hors base cités par au moins 2 papiers.")
+    if root == ROOT:  # un corpus isolé (pdb synth) n'a pas d'index de passages
+        try:
+            from lib import rag
+            m = rag.build_index(ROOT)
+            if m["dense"]:
+                print(f"Index de passages : {m['chunks']} passages, {m['encoded']} (ré)encodés ({m['model']}).")
+            else:
+                print(f"Index de passages : {m['chunks']} passages, lexical seul "
+                      "(requirements-embed.txt absent).")
+        except Exception as e:  # l'index est dérivé : son échec ne bloque pas le reste
+            notes.append(f"index de passages non reconstruit : {e}")
     for n in notes:
         print(f"note    {n}")
     for pb in problems:

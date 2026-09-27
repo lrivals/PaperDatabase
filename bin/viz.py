@@ -14,15 +14,15 @@ import argparse
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import plotly.graph_objects as go  # noqa: E402
 from dash import Dash, Input, Output, State, ctx, dcc, html, no_update  # noqa: E402
 
-from lib import embed, graph, lineage, schema, vizfig  # noqa: E402
+from lib import base, embed, graph, lineage, schema, vizfig  # noqa: E402
 from lib.vizfig import COLOR_BY, LINK_STYLE  # noqa: E402
 
+ROOT = base.ROOT
 G = graph.build(ROOT)
 EMBED_OK = embed.available()
 

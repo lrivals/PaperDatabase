@@ -40,11 +40,14 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "bin"))
+CODE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(CODE))
+sys.path.insert(0, str(CODE / "bin"))
 
-GROBID_SH = ["bash", str(ROOT / "bin" / "grobid.sh")]
+from lib import base  # noqa: E402
+
+ROOT = base.ROOT  # base de données active (lib/base.py) ; CODE = le dépôt du logiciel
+GROBID_SH = ["bash", str(CODE / "bin" / "grobid.sh")]
 
 
 def ensure_grobid(start):
@@ -116,7 +119,7 @@ def cmd_grobid(args):
 
 
 def cmd_viz(args):
-    return subprocess.run([sys.executable, str(ROOT / "bin" / "viz.py"), *args]).returncode
+    return subprocess.run([sys.executable, str(CODE / "bin" / "viz.py"), *args]).returncode
 
 
 def cmd_plot(args):
@@ -509,7 +512,7 @@ def cmd_test(args):
     if "--rag" in args:
         return cmd_eval(["--rag"])
     return subprocess.run([sys.executable, "-m", "unittest", "discover", "tests", *args],
-                          cwd=ROOT).returncode
+                          cwd=CODE).returncode
 
 
 def cmd_rag(args):
@@ -610,20 +613,21 @@ def cmd_eval(args):
     a = p.parse_args(args)
     if not (a.extract or a.rag or a.speed):
         a.extract = a.rag = a.speed = True
-    fixtures = ROOT / "tests" / "fixtures"
+    # le banc porte sur la base de référence livrée avec le code (questions des fixtures)
+    fixtures = CODE / "tests" / "fixtures"
     res = {}
     if a.extract:
-        res["extraction"] = {"quality": ev.extraction_quality(ROOT), "header": ev.header_accuracy(ROOT),
-                             "tables": ev.table_values(ROOT)}
+        res["extraction"] = {"quality": ev.extraction_quality(CODE), "header": ev.header_accuracy(CODE),
+                             "tables": ev.table_values(CODE)}
     if a.rag:
-        res["rag"] = ev.rag_quality(ROOT, fixtures)
+        res["rag"] = ev.rag_quality(CODE, fixtures)
     if a.speed:
-        res["speed"] = ev.speed(ROOT, fixtures, cli=not a.no_cli)
+        res["speed"] = ev.speed(CODE, fixtures, cli=not a.no_cli)
     _print_eval(res)
 
     flat = ev.flatten(res)
-    results = ROOT / "eval" / "results"
-    thresholds = json.loads((ROOT / "eval" / "thresholds.json").read_text())
+    results = CODE / "eval" / "results"
+    thresholds = json.loads((CODE / "eval" / "thresholds.json").read_text())
     fails = [f for f in ev.check_thresholds(flat, thresholds) if f[0].split(".")[0] in res]
     if a.compare:
         runs = sorted(results.glob("*.json"))
@@ -640,9 +644,9 @@ def cmd_eval(args):
     for key, v, bound in fails:
         print(f"# seuil non atteint : {key} = {_fmt(v)} ({bound})")
     if a.save:
-        sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT,
+        sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=CODE,
                              capture_output=True, text=True).stdout.strip() or "nogit"
-        dirty = subprocess.run(["git", "status", "--porcelain", "--", "lib", "bin"], cwd=ROOT,
+        dirty = subprocess.run(["git", "status", "--porcelain", "--", "lib", "bin"], cwd=CODE,
                                capture_output=True, text=True).stdout.strip()
         stamp = datetime.datetime.now().strftime("%Y-%m-%dT%H%M")
         results.mkdir(parents=True, exist_ok=True)
@@ -650,7 +654,7 @@ def cmd_eval(args):
         out.write_text(json.dumps({"date": stamp, "commit": sha, "dirty": bool(dirty),
                                    "volets": sorted(res), "results": res},
                                   ensure_ascii=False, indent=1, default=str) + "\n")
-        print(f"\nenregistré : {out.relative_to(ROOT)}")
+        print(f"\nenregistré : {out.relative_to(CODE)}")
     return 1 if (a.compare and fails) else 0
 
 

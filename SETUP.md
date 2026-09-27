@@ -31,6 +31,10 @@ D'où trois règles de conception :
 Ce que le pipeline produit, pour chaque article : des métadonnées vérifiées, un texte
 nettoyé et découpé en sections, une fiche de lecture et une ou plusieurs lignes de benchmark.
 
+Le code sert plusieurs bases séparées : chaque base est un dossier avec son `base.json` (axes
+du domaine), et la base active est celle du répertoire courant ([DATA_MODEL.md §11](DATA_MODEL.md#11-plusieurs-bases--basejson)).
+Ce dépôt contient la base de référence (vision embarquée sur FPGA).
+
 ---
 
 ## 2. Arborescence

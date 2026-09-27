@@ -24,13 +24,14 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "bin"))
+CODE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(CODE))
+sys.path.insert(0, str(CODE / "bin"))
 
 import ingest  # noqa: E402
-from lib import openalex, refs, schema  # noqa: E402
+from lib import base, openalex, refs, schema  # noqa: E402
 
+ROOT = base.ROOT
 CANDIDATES = ROOT / "candidates.csv"
 ARXIV_LIST = ROOT / "candidates_arxiv.txt"
 FIELDS = ("rank", "score", "in_topic", "reasons", "title", "year", "venue", "doi", "arxiv_id",

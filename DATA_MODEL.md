@@ -101,8 +101,9 @@ fait foi, sauf correction manuelle ultérieure.
 
 ## 3. Axes de veille
 
-Repris de `basicStart.txt`. Valeurs fermées — en ajouter une demande de mettre à jour
-`lib/schema.py` et `reindex.py`.
+Valeurs fermées, propres à chaque base : clé `axes` de `base.json` (§11). La table ci-dessous
+est celle de la base livrée avec le code (vision embarquée sur FPGA, reprise de
+`basicStart.txt`). Ajouter un axe se fait dans `base.json` seulement.
 
 | Axe | Contenu |
 |---|---|
@@ -380,3 +381,41 @@ par ligne (`<arxiv_id>  # titre (année) — raisons`), lisible par `bin/pdb add
 
 Métadonnées OpenAlex : à vérifier au moment de l'ajout, jamais citées telles quelles.
 
+---
+
+## 11. Plusieurs bases : `base.json`
+
+Le code (`bin/`, `lib/`, `.venv`) sert plusieurs bases indépendantes. Une base est un dossier
+qui contient `base.json`, plus `papers/`, `inbox/`, `benchmarks.csv`, `gaps.md`, `labs.md`,
+`CLAUDE.md` et les fichiers générés (`INDEX.md`, `external_refs.csv`, `.cache/`). Le schéma
+(§1–10) est le même pour toutes les bases ; seuls les axes et les règles de classement changent.
+
+Base active (`lib/base.py`), dans l'ordre :
+1. `$PDB_ROOT` ;
+2. le premier dossier contenant `base.json`, en remontant depuis le répertoire courant ;
+3. le dépôt du code.
+
+`base.json` :
+
+| Clé | Contenu |
+|---|---|
+| `name` | intitulé de la base |
+| `axes` | `{id: titre}` : valeurs fermées de `metadata.axes`, titres de section d'`INDEX.md` (un axe `surveys` est reconnu depuis le titre) |
+| `axis_rules` | `{axe: regex}` : axes devinés à l'ingestion (`ingest.classify`) |
+| `axis_queries` | `{axe: requête}` : `discover --axis` |
+| `hardware_axes`, `topic_re`, `title_topic_re`, `topic_min_hits` | critère `in_topic` de `discover` (§10) |
+| `tag_rules` | `[[regex, tag], …]` : étiquettes ; la version de YOLO est détectée pour toutes les bases |
+
+Une nouvelle base, dans un dossier frère du dépôt :
+
+```
+mkdir ../MaBase && cd ../MaBase
+ln -s ../PaperDatabase/bin bin; ln -s ../PaperDatabase/.venv .venv
+mkdir -p .claude papers inbox; ln -s ../../PaperDatabase/.claude/commands .claude/commands
+head -1 ../PaperDatabase/benchmarks.csv > benchmarks.csv
+# écrire base.json et CLAUDE.md, puis : .venv/bin/python bin/reindex.py
+```
+
+Les commandes `bin/pdb …` et les skills lancées depuis ce dossier agissent sur cette base
+seulement. `bin/pdb eval` et `bin/pdb test` portent toujours sur le dépôt du code (fixtures de
+la base de référence). Exemple : `../DroneVisionDB` (vision embarquée sur drone).

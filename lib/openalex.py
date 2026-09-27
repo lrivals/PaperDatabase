@@ -18,11 +18,10 @@ from pathlib import Path
 
 import requests
 
-from lib import ids
+from lib import base, ids
 
 API = "https://api.openalex.org"
-ROOT = Path(__file__).resolve().parent.parent
-CACHE = ROOT / ".cache" / "openalex"
+CACHE = base.ROOT / ".cache" / "openalex"
 HEADERS = {"User-Agent": "PaperDatabase/1.0 (usage personnel, recherche bibliographique)"}
 ARXIV_DOI_PREFIX = "10.48550/arxiv."
 FIELDS = ("id", "doi", "title", "publication_year", "cited_by_count", "primary_location",

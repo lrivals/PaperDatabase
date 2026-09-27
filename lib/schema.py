@@ -5,18 +5,11 @@ Seul endroit où le contrat de DATA_MODEL.md est codé. Toute évolution du sch�
 import datetime as _dt
 import re
 
-from lib import ids
+from lib import base, ids
 
 NR = "n/r"
 
-AXES = (
-    "surveys",
-    "yolo-fpga",
-    "autoencoder-fpga",
-    "continual-learning",
-    "toolflows",
-    "platforms",
-)
+AXES = tuple(base.CONFIG["axes"])  # propres à chaque base : base.json (DATA_MODEL §11)
 TYPES = ("preprint", "journal", "conference", "thesis", "repo")
 BACKENDS = ("grobid", "pymupdf")
 FICHE_STATUS = ("todo", "done")

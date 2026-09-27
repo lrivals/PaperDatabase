@@ -18,16 +18,17 @@ import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "bin"))
+CODE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(CODE))
+sys.path.insert(0, str(CODE / "bin"))
 
 import requests  # noqa: E402
 from lxml import etree  # noqa: E402
 
 import ingest  # noqa: E402
-from lib import ids, openalex  # noqa: E402
+from lib import base, ids, openalex  # noqa: E402
 
+ROOT = base.ROOT
 INBOX = ROOT / "inbox"
 PAPERS = ROOT / "papers"
 API = "http://export.arxiv.org/api/query"

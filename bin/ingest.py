@@ -19,55 +19,38 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
+CODE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(CODE))
 
 import requests  # noqa: E402
 
-from lib import citation, doc, docling_tables, ids, ligatures, pdftext, schema, tables, tei  # noqa: E402
+from lib import base, citation, doc, docling_tables, ids, ligatures, pdftext, schema, tables, tei  # noqa: E402
 
+ROOT = base.ROOT
 INBOX = ROOT / "inbox"
 PAPERS = ROOT / "papers"
 GROBID_URL = "http://localhost:8070/api/processFulltextDocument"
 # Champs qu'un fichier de citation éditeur (.bib / .ris, lib/citation.py) fixe dans metadata.json
 CITATION_KEYS = ("title", "authors", "year", "venue", "doi", "type")
 
-AXIS_RULES = (
-    ("yolo-fpga", r"\byolo"),
-    ("autoencoder-fpga", r"auto-?encoder|\bVAEs?\b|\bCAEs?\b"),
-    ("continual-learning", r"continual|incremental|lifelong|\breplay\b|few-shot"),
-    ("toolflows", r"hls4ml|\bFINN\b|vitis ai|fpga ai suite|\bSATAY\b|tool ?flow|codesign workflow"),
-    ("platforms", r"zynq|kria|kv260|zcu ?10[24]|pynq|versal|ultrascale|jetson"),
-)
+# Règles propres au domaine de la base, lues dans base.json (lib/base.py, DATA_MODEL §11).
 # Découverte (bin/discover.py) : un candidat est « dans le sujet » s'il relève d'un des
 # HARDWARE_AXES, si son titre correspond à TITLE_TOPIC_RE, ou si titre + résumé mentionnent
 # au moins TOPIC_MIN_HITS fois TOPIC_RE (contexte matériel). Une mention isolée dans le
 # résumé ne suffit pas (SqueezeNet, DoReFa-Net : « feasible FPGA deployment » en passant),
 # ni un axe thématique seul (autoencodeur, YOLO sans matériel). AXIS_QUERIES sert de requête
-# par défaut pour `discover --axis`. À redéfinir avec les axes pour un autre sujet.
-HARDWARE_AXES = ("toolflows", "platforms")
-TOPIC_RE = r"\bFPGAs?\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\bHLS\b|high-level synthesis|\bSoC\b|edge (?:ai|devices?|inference)|embedded"
-TITLE_TOPIC_RE = TOPIC_RE + (r"|accelerators?\b|\bhardware\b|tinyml|micro-?controllers?|\bMCUs?\b|on-device"
-                             r"|(?:extreme|the|at) edge\b|edge (?:computing|intelligence|artificial)")
-TOPIC_MIN_HITS = 2
-AXIS_QUERIES = {
-    "surveys": "survey FPGA deep learning accelerator",
-    "yolo-fpga": "YOLO object detection FPGA accelerator",
-    "autoencoder-fpga": "autoencoder FPGA",
-    "continual-learning": "continual learning on-device FPGA",
-    "toolflows": "FPGA neural network toolflow hls4ml FINN",
-    "platforms": "Zynq UltraScale Kria neural network inference",
-}
+# par défaut pour `discover --axis`.
+_CFG = base.CONFIG
+AXIS_RULES = tuple(_CFG["axis_rules"].items())
+HARDWARE_AXES = tuple(_CFG["hardware_axes"])
+TOPIC_RE = _CFG["topic_re"]
+TITLE_TOPIC_RE = _CFG["title_topic_re"]
+TOPIC_MIN_HITS = _CFG.get("topic_min_hits", 2)
+AXIS_QUERIES = dict(_CFG["axis_queries"])
+# La version de YOLO est commune à toutes les bases ; les autres étiquettes viennent de base.json.
 TAG_RULES = (
     (r"\byolo ?v?(\d+)(-?tiny)?", lambda m: f"yolov{m.group(1)}" + ("-tiny" if m.group(2) else "")),
-    (r"hls4ml", "hls4ml"), (r"\bFINN\b", "finn"), (r"vitis ai", "vitis-ai"),
-    (r"\bSATAY\b", "satay"), (r"fpga ai suite", "intel-fpga-ai-suite"),
-    (r"kv ?260", "kv260"), (r"zcu ?102", "zcu102"), (r"zcu ?104", "zcu104"),
-    (r"zc ?706", "zc706"), (r"pynq", "pynq"), (r"versal", "versal"), (r"zynq", "zynq"),
-    (r"quantiz", "quantization"), (r"prun", "pruning"), (r"\bINT8\b", "int8"),
-    (r"hyperdimensional|\bHDC\b", "hdc"), (r"\bSLDA\b|streaming lda", "slda"),
-    (r"auto-?encoder", "autoencoder"), (r"\bVAEs?\b|variational auto", "vae"),
-    (r"anomaly", "anomaly-detection"), (r"mobilenet", "mobilenet"),
+    *(tuple(r) for r in _CFG["tag_rules"]),
 )
 
 
@@ -82,7 +65,7 @@ def sha256(path):
 
 
 def grobid_alive():
-    r = subprocess.run(["bash", str(ROOT / "bin" / "grobid.sh"), "status"], capture_output=True)
+    r = subprocess.run(["bash", str(CODE / "bin" / "grobid.sh"), "status"], capture_output=True)
     return r.returncode == 0
 
 
@@ -122,7 +105,7 @@ SURVEY_RE = r"\bsurvey|\breview\b|\boverview\b|state of the art\b"  # titre et m
 
 def classify(text, title_kw=""):
     axes = [a for a, rx in AXIS_RULES if re.search(rx, text, re.IGNORECASE)]
-    if re.search(SURVEY_RE, title_kw, re.IGNORECASE):
+    if "surveys" in schema.AXES and re.search(SURVEY_RE, title_kw, re.IGNORECASE):
         axes.insert(0, "surveys")
     tags = []
     for rx, name in TAG_RULES:

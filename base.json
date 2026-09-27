@@ -1,0 +1,119 @@
+{
+  "name": "Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu)",
+  "axes": {
+    "surveys": "Surveys et toolflows généraux",
+    "yolo-fpga": "YOLO sur FPGA",
+    "autoencoder-fpga": "Autoencodeurs sur FPGA",
+    "continual-learning": "Apprentissage continu / incrémental embarqué",
+    "toolflows": "Toolflows",
+    "platforms": "Plateformes"
+  },
+  "axis_rules": {
+    "yolo-fpga": "\\byolo",
+    "autoencoder-fpga": "auto-?encoder|\\bVAEs?\\b|\\bCAEs?\\b",
+    "continual-learning": "continual|incremental|lifelong|\\breplay\\b|few-shot",
+    "toolflows": "hls4ml|\\bFINN\\b|vitis ai|fpga ai suite|\\bSATAY\\b|tool ?flow|codesign workflow",
+    "platforms": "zynq|kria|kv260|zcu ?10[24]|pynq|versal|ultrascale|jetson"
+  },
+  "axis_queries": {
+    "surveys": "survey FPGA deep learning accelerator",
+    "yolo-fpga": "YOLO object detection FPGA accelerator",
+    "autoencoder-fpga": "autoencoder FPGA",
+    "continual-learning": "continual learning on-device FPGA",
+    "toolflows": "FPGA neural network toolflow hls4ml FINN",
+    "platforms": "Zynq UltraScale Kria neural network inference"
+  },
+  "hardware_axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "topic_re": "\\bFPGAs?\\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\\bHLS\\b|high-level synthesis|\\bSoC\\b|edge (?:ai|devices?|inference)|embedded",
+  "title_topic_re": "\\bFPGAs?\\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\\bHLS\\b|high-level synthesis|\\bSoC\\b|edge (?:ai|devices?|inference)|embedded|accelerators?\\b|\\bhardware\\b|tinyml|micro-?controllers?|\\bMCUs?\\b|on-device|(?:extreme|the|at) edge\\b|edge (?:computing|intelligence|artificial)",
+  "topic_min_hits": 2,
+  "tag_rules": [
+    [
+      "hls4ml",
+      "hls4ml"
+    ],
+    [
+      "\\bFINN\\b",
+      "finn"
+    ],
+    [
+      "vitis ai",
+      "vitis-ai"
+    ],
+    [
+      "\\bSATAY\\b",
+      "satay"
+    ],
+    [
+      "fpga ai suite",
+      "intel-fpga-ai-suite"
+    ],
+    [
+      "kv ?260",
+      "kv260"
+    ],
+    [
+      "zcu ?102",
+      "zcu102"
+    ],
+    [
+      "zcu ?104",
+      "zcu104"
+    ],
+    [
+      "zc ?706",
+      "zc706"
+    ],
+    [
+      "pynq",
+      "pynq"
+    ],
+    [
+      "versal",
+      "versal"
+    ],
+    [
+      "zynq",
+      "zynq"
+    ],
+    [
+      "quantiz",
+      "quantization"
+    ],
+    [
+      "prun",
+      "pruning"
+    ],
+    [
+      "\\bINT8\\b",
+      "int8"
+    ],
+    [
+      "hyperdimensional|\\bHDC\\b",
+      "hdc"
+    ],
+    [
+      "\\bSLDA\\b|streaming lda",
+      "slda"
+    ],
+    [
+      "auto-?encoder",
+      "autoencoder"
+    ],
+    [
+      "\\bVAEs?\\b|variational auto",
+      "vae"
+    ],
+    [
+      "anomaly",
+      "anomaly-detection"
+    ],
+    [
+      "mobilenet",
+      "mobilenet"
+    ]
+  ]
+}

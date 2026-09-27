@@ -1,0 +1,62 @@
+{
+  "id": "arxiv-2509.20318-comprehensive-evaluation-yolo-deer-detection",
+  "title": "A Comprehensive Evaluation of YOLO-based Deer Detection Performance on Edge Devices",
+  "authors": [
+    {
+      "given": "Bishal",
+      "family": "Adhikari"
+    },
+    {
+      "given": "Jiajia",
+      "family": "Li"
+    },
+    {
+      "given": "Eric S.",
+      "family": "Michel"
+    },
+    {
+      "given": "Jacob",
+      "family": "Dykes"
+    },
+    {
+      "given": "Te-Ming Paul",
+      "family": "Tseng"
+    },
+    {
+      "given": "Mary Love",
+      "family": "Tagert"
+    },
+    {
+      "given": "Dong",
+      "family": "Chen"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2509.20318",
+  "url": "https://arxiv.org/abs/2509.20318",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "yolov11",
+    "yolov8",
+    "yolov9"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

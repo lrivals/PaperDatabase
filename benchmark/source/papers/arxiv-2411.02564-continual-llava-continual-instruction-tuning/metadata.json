@@ -1,0 +1,66 @@
+{
+  "id": "arxiv-2411.02564-continual-llava-continual-instruction-tuning",
+  "title": "Continual LLaVA: Continual Instruction Tuning in Large Vision-Language Models",
+  "authors": [
+    {
+      "given": "Meng",
+      "family": "Cao"
+    },
+    {
+      "given": "Yuyang",
+      "family": "Liu"
+    },
+    {
+      "given": "Yingfei",
+      "family": "Liu"
+    },
+    {
+      "given": "Tiancai",
+      "family": "Wang"
+    },
+    {
+      "given": "Jiahua",
+      "family": "Dong"
+    },
+    {
+      "given": "Henghui",
+      "family": "Ding"
+    },
+    {
+      "given": "Xiangyu",
+      "family": "Zhang"
+    },
+    {
+      "given": "Ian",
+      "family": "Reid"
+    },
+    {
+      "given": "Xiaodan",
+      "family": "Liang"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2411.02564",
+  "url": "https://arxiv.org/abs/2411.02564",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

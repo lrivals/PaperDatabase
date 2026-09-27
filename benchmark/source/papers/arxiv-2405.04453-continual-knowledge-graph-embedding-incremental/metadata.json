@@ -1,0 +1,62 @@
+{
+  "id": "arxiv-2405.04453-continual-knowledge-graph-embedding-incremental",
+  "title": "Towards Continual Knowledge Graph Embedding via Incremental Distillation",
+  "authors": [
+    {
+      "given": "Jiajun",
+      "family": "Liu"
+    },
+    {
+      "given": "Wenjun",
+      "family": "Ke"
+    },
+    {
+      "given": "Peng",
+      "family": "Wang"
+    },
+    {
+      "given": "Ziyu",
+      "family": "Shang"
+    },
+    {
+      "given": "Jinhua",
+      "family": "Gao"
+    },
+    {
+      "given": "Guozheng",
+      "family": "Li"
+    },
+    {
+      "given": "Ke",
+      "family": "Ji"
+    },
+    {
+      "given": "Yanhe",
+      "family": "Liu"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2405.04453",
+  "url": "https://arxiv.org/abs/2405.04453",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

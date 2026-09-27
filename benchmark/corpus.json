@@ -1,0 +1,2096 @@
+{
+  "target": 200,
+  "accepted": [
+    {
+      "identity": "10.5954/icarob.2024.os15-1",
+      "paper_id": "2024-pramanta-yolo-real-time-object-detection",
+      "topic": "yolo-fpga",
+      "url": "https://alife-robotics.co.jp/members2024/icarob/data/html/data/OS/OS15-1.pdf"
+    },
+    {
+      "identity": "2207.10482",
+      "paper_id": "arxiv-2207.10482-lpyolo-low-precision-yolo-face",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2207.10482"
+    },
+    {
+      "identity": "1907.08349",
+      "paper_id": "arxiv-1907.08349-convergence-edge-computing-deep-learning",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/1907.08349"
+    },
+    {
+      "identity": "2309.01587",
+      "paper_id": "arxiv-2309.01587-satay-streaming-architecture-toolflow-accelerating",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2309.01587"
+    },
+    {
+      "identity": "2511.06955",
+      "paper_id": "arxiv-2511.06955-fpga-accelerated-risc-v-isa",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2511.06955"
+    },
+    {
+      "identity": "2006.08357",
+      "paper_id": "arxiv-2006.08357-codenet-efficient-deployment-input-adaptive",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2006.08357"
+    },
+    {
+      "identity": "2607.13106",
+      "paper_id": "arxiv-2607.13106-no-attention-no-problem-dpu",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2607.13106"
+    },
+    {
+      "identity": "1909.13396",
+      "paper_id": "arxiv-1909.13396-req-yolo-resource-aware-efficient",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/1909.13396"
+    },
+    {
+      "identity": "1901.04986",
+      "paper_id": "arxiv-1901.04986-systimator-design-space-exploration-methodology",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/1901.04986"
+    },
+    {
+      "identity": "2003.03852",
+      "paper_id": "arxiv-2003.03852-low-precision-floating-point-arithmetic",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2003.03852"
+    },
+    {
+      "identity": "2112.09775",
+      "paper_id": "arxiv-2112.09775-adaptive-subsampling-roi-visual-tracking",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2112.09775"
+    },
+    {
+      "identity": "2604.24455",
+      "paper_id": "arxiv-2604.24455-compilation-execution-embeddable-yolo-nas",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2604.24455"
+    },
+    {
+      "identity": "2403.18921",
+      "paper_id": "arxiv-2403.18921-smof-streaming-modern-cnns-fpgas",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2403.18921"
+    },
+    {
+      "identity": "2405.03715",
+      "paper_id": "arxiv-2405.03715-iterative-filter-pruning-concatenation-cnn",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2405.03715"
+    },
+    {
+      "identity": "2204.10619",
+      "paper_id": "arxiv-2204.10619-real-time-hog-svm-object",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2204.10619"
+    },
+    {
+      "identity": "2609.24757",
+      "paper_id": "arxiv-2609.24757-npu-accelerator-quantized-real-time",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2609.24757"
+    },
+    {
+      "identity": "10.1587/elex.19.20220067",
+      "paper_id": "2022-zhang-hfod-hardware-friendly-quantization-method",
+      "topic": "yolo-fpga",
+      "url": "https://www.jstage.jst.go.jp/article/elex/19/8/19_19.20220067/_pdf"
+    },
+    {
+      "identity": "2301.07050",
+      "paper_id": "arxiv-2301.07050-energy-efficient-reconfigurable-autoencoder-implementation",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2301.07050"
+    },
+    {
+      "identity": "2603.13982",
+      "paper_id": "arxiv-2603.13982-exploiting-temporal-parallelism-lstm-autoencoder",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2603.13982"
+    },
+    {
+      "identity": "2603.13490",
+      "paper_id": "arxiv-2603.13490-ultra-fast-calorimeter-simulation-generative",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2603.13490"
+    },
+    {
+      "identity": "2304.05042",
+      "paper_id": "arxiv-2304.05042-hybrid-combining-ann-conventional-demapping",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2304.05042"
+    },
+    {
+      "identity": "2607.20302",
+      "paper_id": "arxiv-2607.20302-classical-hardware-acceleration-quantum-autoencoders",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2607.20302"
+    },
+    {
+      "identity": "2506.19964",
+      "paper_id": "arxiv-2506.19964-higher-order-neuromorphic-ising-machines",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2506.19964"
+    },
+    {
+      "identity": "2606.14857",
+      "paper_id": "arxiv-2606.14857-chopping-distilling-variational-autoencoders-real",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2606.14857"
+    },
+    {
+      "identity": "2407.17647",
+      "paper_id": "arxiv-2407.17647-energy-efficient-artefact-detection-accelerator",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2407.17647"
+    },
+    {
+      "identity": "2304.03836",
+      "paper_id": "arxiv-2304.03836-nanosecond-anomaly-detection-decision-trees",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2304.03836"
+    },
+    {
+      "identity": "2510.15672",
+      "paper_id": "arxiv-2510.15672-evaluation-fast-machine-learning-algorithms",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2510.15672"
+    },
+    {
+      "identity": "2108.00874",
+      "paper_id": "arxiv-2108.00874-few-shot-domain-adaptation-end",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2108.00874"
+    },
+    {
+      "identity": "2605.06982",
+      "paper_id": "arxiv-2605.06982-fastomnitmae-parallel-clause-learning-scalable",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2605.06982"
+    },
+    {
+      "identity": "2508.00063",
+      "paper_id": "arxiv-2508.00063-anomaly-detection-spiking-neural-networks",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2508.00063"
+    },
+    {
+      "identity": "2010.15156",
+      "paper_id": "arxiv-2010.15156-diagnostic-data-integration-deep-neural",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2010.15156"
+    },
+    {
+      "identity": "2411.19506",
+      "paper_id": "arxiv-2411.19506-real-time-anomaly-detection-l1",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2411.19506"
+    },
+    {
+      "identity": "1805.03033",
+      "paper_id": "arxiv-1805.03033-efficient-design-hardware-enabled-reservoir",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/1805.03033"
+    },
+    {
+      "identity": "2401.10724",
+      "paper_id": "arxiv-2401.10724-real-time-zero-day-intrusion",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2401.10724"
+    },
+    {
+      "identity": "2504.06996",
+      "paper_id": "arxiv-2504.06996-neural-signal-compression-raman-tinyml",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2504.06996"
+    },
+    {
+      "identity": "2404.06526",
+      "paper_id": "arxiv-2404.06526-onboard-processing-hyperspectral-imagery-deep",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2404.06526"
+    },
+    {
+      "identity": "1905.10384",
+      "paper_id": "arxiv-1905.10384-adversarially-trained-autoencoders-robust-unsupervised",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/1905.10384"
+    },
+    {
+      "identity": "2105.07988",
+      "paper_id": "arxiv-2105.07988-anomaly-detection-convolutional-graph-neural",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2105.07988"
+    },
+    {
+      "identity": "2110.06948",
+      "paper_id": "arxiv-2110.06948-challenges-unsupervised-anomaly-detection-particle",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2110.06948"
+    },
+    {
+      "identity": "2111.06417",
+      "paper_id": "arxiv-2111.06417-online-compatible-unsupervised-nonresonant-anomaly",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2111.06417"
+    },
+    {
+      "identity": "1811.10276",
+      "paper_id": "arxiv-1811.10276-variational-autoencoders-physics-mining-large",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/1811.10276"
+    },
+    {
+      "identity": "10.1016/j.eswa.2022.117634",
+      "paper_id": "2022-velasco-gallego-radis-real-time-anomaly-detection",
+      "topic": "autoencoder-fpga",
+      "url": "https://strathprints.strath.ac.uk/80878/7/Velasco_Gallego_Lazakis_ESA_2022_RADIS_a_real_time_anomaly_detection_intelligent_system.pdf"
+    },
+    {
+      "identity": "1912.01096",
+      "paper_id": "arxiv-1912.01096-semi-supervised-learning-bearing-anomaly",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/1912.01096"
+    },
+    {
+      "identity": "10.3390/s22155822",
+      "paper_id": "2022-khanam-effective-intrusion-detection-model-focal",
+      "topic": "autoencoder-fpga",
+      "url": "https://researchmgt.monash.edu/ws/files/411391862/399355953_oa.pdf"
+    },
+    {
+      "identity": "1907.06119",
+      "paper_id": "arxiv-1907.06119-understanding-deep-learning-techniques-image",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/1907.06119"
+    },
+    {
+      "identity": "2203.01343",
+      "paper_id": "arxiv-2203.01343-creating-simple-interpretable-anomaly-detectors",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2203.01343"
+    },
+    {
+      "identity": "10.36001/ijphm.2016.v7i4.2461",
+      "paper_id": "2020-akintayo-prognostics-combustion-instabilities-hi-speed",
+      "topic": "autoencoder-fpga",
+      "url": "https://papers.phmsociety.org/index.php/ijphm/article/download/2461/1424"
+    },
+    {
+      "identity": "10.1109/dsd64264.2024.00079",
+      "paper_id": "2024-castelino-energy-efficient-artefact-detection-accelerator",
+      "topic": "autoencoder-fpga",
+      "url": "https://pure.ulster.ac.uk/ws/files/217576126/2407.17647v1.pdf"
+    },
+    {
+      "identity": "2303.14535",
+      "paper_id": "arxiv-2303.14535-efficientad-accurate-visual-anomaly-detection",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2303.14535"
+    },
+    {
+      "identity": "2311.17162",
+      "paper_id": "arxiv-2311.17162-fast-particle-anomaly-detection-algorithm",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2311.17162"
+    },
+    {
+      "identity": "10.22323/1.434.0014",
+      "paper_id": "2023-valente-joint-variational-auto-encoder-anomaly",
+      "topic": "autoencoder-fpga",
+      "url": "https://pos.sissa.it/434/014/pdf"
+    },
+    {
+      "identity": "2203.13167",
+      "paper_id": "arxiv-2203.13167-exemplar-free-continual-learning-vision",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2203.13167"
+    },
+    {
+      "identity": "2103.13885",
+      "paper_id": "arxiv-2103.13885-supervised-contrastive-replay-revisiting-nearest",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2103.13885"
+    },
+    {
+      "identity": "2110.13290",
+      "paper_id": "arxiv-2110.13290-exploring-system-performance-continual-learning",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2110.13290"
+    },
+    {
+      "identity": "2101.05850",
+      "paper_id": "arxiv-2101.05850-continual-learning-knowledge-graph-embeddings",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2101.05850"
+    },
+    {
+      "identity": "2603.11139",
+      "paper_id": "arxiv-2603.11139-h2loop-spark-preview-continual-pretraining",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2603.11139"
+    },
+    {
+      "identity": "2606.06032",
+      "paper_id": "arxiv-2606.06032-catastrophic-forgetting-accessibility-collapse-three",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2606.06032"
+    },
+    {
+      "identity": "2604.08336",
+      "paper_id": "arxiv-2604.08336-leveraging-complementary-embeddings-replay-selection",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2604.08336"
+    },
+    {
+      "identity": "2503.17061",
+      "paper_id": "arxiv-2503.17061-replay4ncl-efficient-memory-replay-methodology",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2503.17061"
+    },
+    {
+      "identity": "2511.11118",
+      "paper_id": "arxiv-2511.11118-improving-continual-learning-knowledge-graph",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2511.11118"
+    },
+    {
+      "identity": "2311.11420",
+      "paper_id": "arxiv-2311.11420-lifelearner-hardware-aware-meta-continual",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2311.11420"
+    },
+    {
+      "identity": "2508.21773",
+      "paper_id": "arxiv-2508.21773-unsupervised-video-continual-learning-non",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2508.21773"
+    },
+    {
+      "identity": "2508.02426",
+      "paper_id": "arxiv-2508.02426-learning-evolve-bayesian-guided-continual",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2508.02426"
+    },
+    {
+      "identity": "2205.13384",
+      "paper_id": "arxiv-2205.13384-continual-learning-visual-search-backward",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2205.13384"
+    },
+    {
+      "identity": "2604.19401",
+      "paper_id": "arxiv-2604.19401-revisiting-catastrophic-forgetting-continual-knowledge",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2604.19401"
+    },
+    {
+      "identity": "2604.10947",
+      "paper_id": "arxiv-2604.10947-multi-faceted-continual-knowledge-graph",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2604.10947"
+    },
+    {
+      "identity": "2401.13200",
+      "paper_id": "arxiv-2401.13200-topology-aware-embedding-memory-continual",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2401.13200"
+    },
+    {
+      "identity": "2506.00037",
+      "paper_id": "arxiv-2506.00037-query-drift-compensation-enabling-compatibility",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2506.00037"
+    },
+    {
+      "identity": "1909.03742",
+      "paper_id": "arxiv-1909.03742-efficient-continual-learning-neural-networks",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/1909.03742"
+    },
+    {
+      "identity": "2508.11347",
+      "paper_id": "arxiv-2508.11347-sage-scale-aware-gradual-evolution",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2508.11347"
+    },
+    {
+      "identity": "2203.02135",
+      "paper_id": "arxiv-2203.02135-continual-few-shot-relation-learning",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2203.02135"
+    },
+    {
+      "identity": "2506.08158",
+      "paper_id": "arxiv-2506.08158-ett-ckge-efficient-task-driven",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2506.08158"
+    },
+    {
+      "identity": "2506.23115",
+      "paper_id": "arxiv-2506.23115-moca-modality-aware-continual-pre",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2506.23115"
+    },
+    {
+      "identity": "2501.07875",
+      "paper_id": "arxiv-2501.07875-continual-learning-embedding-layer-surgery",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2501.07875"
+    },
+    {
+      "identity": "2111.07993",
+      "paper_id": "arxiv-2111.07993-collie-continual-learning-language-grounding",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2111.07993"
+    },
+    {
+      "identity": "2502.11609",
+      "paper_id": "arxiv-2502.11609-exploiting-task-relationships-continual-learning",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2502.11609"
+    },
+    {
+      "identity": "2608.24273",
+      "paper_id": "arxiv-2608.24273-matched-excess-outranker-regularization-candidate",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2608.24273"
+    },
+    {
+      "identity": "2609.26853",
+      "paper_id": "arxiv-2609.26853-cope-continual-personalization-llms-sparse",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2609.26853"
+    },
+    {
+      "identity": "2606.00426",
+      "paper_id": "arxiv-2606.00426-canonicalized-stable-list-replay-private",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2606.00426"
+    },
+    {
+      "identity": "2405.04453",
+      "paper_id": "arxiv-2405.04453-continual-knowledge-graph-embedding-incremental",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2405.04453"
+    },
+    {
+      "identity": "2411.02564",
+      "paper_id": "arxiv-2411.02564-continual-llava-continual-instruction-tuning",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2411.02564"
+    },
+    {
+      "identity": "2407.05705",
+      "paper_id": "arxiv-2407.05705-fast-continual-knowledge-graph-embedding",
+      "topic": "continual-learning",
+      "url": "https://arxiv.org/pdf/2407.05705"
+    },
+    {
+      "identity": "2201.11409",
+      "paper_id": "arxiv-2201.11409-rtl-implementation-finn-matrix-vector",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2201.11409"
+    },
+    {
+      "identity": "2504.04661",
+      "paper_id": "arxiv-2504.04661-n-torc-native-tensor-optimizer",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2504.04661"
+    },
+    {
+      "identity": "2206.07527",
+      "paper_id": "arxiv-2206.07527-qonnx-representing-arbitrary-precision-quantized",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2206.07527"
+    },
+    {
+      "identity": "2206.11791",
+      "paper_id": "arxiv-2206.11791-open-source-fpga-ml-codesign",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2206.11791"
+    },
+    {
+      "identity": "2501.01511",
+      "paper_id": "arxiv-2501.01511-treelut-efficient-alternative-deep-neural",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2501.01511"
+    },
+    {
+      "identity": "2608.21657",
+      "paper_id": "arxiv-2608.21657-model-compression-hardware-aware-acceleration",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2608.21657"
+    },
+    {
+      "identity": "2101.05108",
+      "paper_id": "arxiv-2101.05108-fast-convolutional-neural-networks-fpgas",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2101.05108"
+    },
+    {
+      "identity": "2408.15561",
+      "paper_id": "arxiv-2408.15561-cgra4ml-hardware-software-framework-implement",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2408.15561"
+    },
+    {
+      "identity": "10.1109/tcsi.2024.3446582",
+      "paper_id": "2024-alsharari-efficient-integer-only-inference-gradient",
+      "topic": "platforms",
+      "url": "https://pureadmin.qub.ac.uk/ws/files/617144119/Efficient_Integer-Only-Inference_of_Gradient_Boosting_Decision_Trees_on_Low-Power_Devices.pdf"
+    },
+    {
+      "identity": "2406.07318",
+      "paper_id": "arxiv-2406.07318-embedded-graph-convolutional-networks-real",
+      "topic": "platforms",
+      "url": "https://arxiv.org/pdf/2406.07318"
+    },
+    {
+      "identity": "2505.08992",
+      "paper_id": "arxiv-2505.08992-dataflow-tiling-strategies-edge-ai",
+      "topic": "surveys",
+      "url": "https://arxiv.org/pdf/2505.08992"
+    },
+    {
+      "identity": "2011.09073",
+      "paper_id": "arxiv-2011.09073-survey-system-architectures-techniques-fpga",
+      "topic": "surveys",
+      "url": "https://arxiv.org/pdf/2011.09073"
+    },
+    {
+      "identity": "2506.07367",
+      "paper_id": "arxiv-2506.07367-survey-lut-deep-neural-networks",
+      "topic": "surveys",
+      "url": "https://arxiv.org/pdf/2506.07367"
+    },
+    {
+      "identity": "1903.06697",
+      "paper_id": "arxiv-1903.06697-graph-processing-fpgas-taxonomy-survey",
+      "topic": "surveys",
+      "url": "https://arxiv.org/pdf/1903.06697"
+    },
+    {
+      "identity": "1901.00121",
+      "paper_id": "arxiv-1901.00121-fpga-accelerators-deep-learning-networks",
+      "topic": "surveys",
+      "url": "https://arxiv.org/pdf/1901.00121"
+    },
+    {
+      "identity": "1904.08405",
+      "paper_id": "arxiv-1904.08405-event-vision-survey",
+      "topic": "surveys",
+      "url": "https://arxiv.org/pdf/1904.08405"
+    },
+    {
+      "identity": "1912.09789",
+      "paper_id": "arxiv-1912.09789-survey-distributed-machine-learning",
+      "topic": "surveys",
+      "url": "https://arxiv.org/pdf/1912.09789"
+    },
+    {
+      "identity": "10.1145/3626314",
+      "paper_id": "2023-perez-cerrolaza-artificial-intelligence-safety-critical-systems",
+      "topic": "surveys",
+      "url": "https://upcommons.upc.edu/server/api/core/bitstreams/ef6b4318-96c5-48ea-9351-33d2949ba4ed/content"
+    },
+    {
+      "identity": "10.1109/comst.2023.3256323",
+      "paper_id": "2023-baker-artificial-intelligence-things-smarter-healthcare",
+      "topic": "surveys",
+      "url": "https://researchonline.jcu.edu.au/77896/13/77896.pdf"
+    },
+    {
+      "identity": "1807.00962",
+      "paper_id": "arxiv-1807.00962-neuromemristive-circuits-edge-computing-review",
+      "topic": "surveys",
+      "url": "https://arxiv.org/pdf/1807.00962"
+    },
+    {
+      "identity": "1705.06963",
+      "paper_id": "arxiv-1705.06963-survey-neuromorphic-computing-neural-networks",
+      "topic": "surveys",
+      "url": "https://arxiv.org/pdf/1705.06963"
+    },
+    {
+      "identity": "10.2174/1874479610801030219",
+      "paper_id": "2010-bouwmans-background-modeling-mixture-gaussians-foreground",
+      "topic": "surveys",
+      "url": "https://hal.science/hal-00338206/document"
+    },
+    {
+      "identity": "2208.00773",
+      "paper_id": "arxiv-2208.00773-real-time-object-detection-system",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2208.00773"
+    },
+    {
+      "identity": "10.32604/cmes.2024.054735",
+      "paper_id": "2024-gheorghe-analyzing-real-time-object-detection",
+      "topic": "yolo-fpga",
+      "url": "https://cdn.techscience.press/files/CMES/2024/TSP_CMES-141-3/TSP_CMES_54735/TSP_CMES_54735.pdf"
+    },
+    {
+      "identity": "10.18280/ria.350510",
+      "paper_id": "2021-ponnusamy-deep-learning-x-ray-baggage",
+      "topic": "yolo-fpga",
+      "url": "https://www.iieta.org/download/file/fid/62564"
+    },
+    {
+      "identity": "10.32604/cmc.2024.052582",
+      "paper_id": "2024-qureshi-semantic-segmentation-yolo-detector-aerial",
+      "topic": "yolo-fpga",
+      "url": "https://cdn.techscience.press/uploads/attached/file/20240826/20240826173540_52740.pdf"
+    },
+    {
+      "identity": "10.14569/ijacsa.2020.0110912",
+      "paper_id": "2020-said-pynq-yolo-net-embedded-quantized",
+      "topic": "yolo-fpga",
+      "url": "https://thesai.org/Downloads/Volume11No9/Paper_12-Pynq_YOLO_Net_An_Embedded_Quantized.pdf"
+    },
+    {
+      "identity": "2310.08401",
+      "paper_id": "arxiv-2310.08401-performance-power-assessment-cnn-packages",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2310.08401"
+    },
+    {
+      "identity": "10.17485/ijst/v15i39.1627",
+      "paper_id": "2022-viswanatha-iot-smart-mirror-raspberry-pi",
+      "topic": "yolo-fpga",
+      "url": "https://sciresol.s3.us-east-2.amazonaws.com/IJST/Articles/2022/Issue-39/IJST-2022-1627.pdf"
+    },
+    {
+      "identity": "10.48084/etasr.7812",
+      "paper_id": "2024-alshahrani-children-s-psychological-mental-health",
+      "topic": "yolo-fpga",
+      "url": "https://etasr.com/index.php/ETASR/article/download/7812/3859"
+    },
+    {
+      "identity": "10.53759/7669/jmc202303025",
+      "paper_id": "2023-mohandoss-machine-learning-performance-analysis-video",
+      "topic": "yolo-fpga",
+      "url": "https://anapub.co.ke/journals/jmc/jmc_pdf/2023/jmc_volume_3-issue_3/JMC202303025.pdf"
+    },
+    {
+      "identity": "10.48084/etasr.7033",
+      "paper_id": "2024-iren-comparison-yolov5-yolov6-models-plant",
+      "topic": "yolo-fpga",
+      "url": "https://www.etasr.com/index.php/ETASR/article/download/7033/3574"
+    },
+    {
+      "identity": "10.1007/s00521-021-05764-7",
+      "paper_id": "2021-martinez-alpiste-dynamic-discarding-technique-increase-speed",
+      "topic": "yolo-fpga",
+      "url": "https://publications.aston.ac.uk/id/eprint/47538/1/A_dynamic_discarding_technique_to_increase_speed_and_preserve_accuracy_for_YOLOv3.pdf"
+    },
+    {
+      "identity": "2504.09900",
+      "paper_id": "arxiv-2504.09900-small-object-detection-yolo-performance",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2504.09900"
+    },
+    {
+      "identity": "2606.07659",
+      "paper_id": "arxiv-2606.07659-real-time-industrial-defect-detection",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2606.07659"
+    },
+    {
+      "identity": "2509.25659",
+      "paper_id": "arxiv-2509.25659-yolo-defect-detection-metal-sheets",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2509.25659"
+    },
+    {
+      "identity": "2609.02219",
+      "paper_id": "arxiv-2609.02219-hardware-accelerated-instance-segmentation-resource",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2609.02219"
+    },
+    {
+      "identity": "2510.09653",
+      "paper_id": "arxiv-2510.09653-ultralytics-yolo-evolution-overview-yolo27",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2510.09653"
+    },
+    {
+      "identity": "2007.12099",
+      "paper_id": "arxiv-2007.12099-pp-yolo-effective-efficient-implementation",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2007.12099"
+    },
+    {
+      "identity": "2503.07371",
+      "paper_id": "arxiv-2503.07371-hgo-yolo-advancing-anomaly-behavior",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2503.07371"
+    },
+    {
+      "identity": "2605.25860",
+      "paper_id": "arxiv-2605.25860-sam3-assisted-training-lightweight-yolo",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2605.25860"
+    },
+    {
+      "identity": "1910.03159",
+      "paper_id": "arxiv-1910.03159-xyolo-model-real-time-object",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/1910.03159"
+    },
+    {
+      "identity": "2009.13684",
+      "paper_id": "arxiv-2009.13684-detecting-soccer-balls-reduced-neural",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2009.13684"
+    },
+    {
+      "identity": "2604.13345",
+      "paper_id": "arxiv-2604.13345-multi-agent-object-detection-framework",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2604.13345"
+    },
+    {
+      "identity": "2509.20318",
+      "paper_id": "arxiv-2509.20318-comprehensive-evaluation-yolo-deer-detection",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2509.20318"
+    },
+    {
+      "identity": "2511.13453",
+      "paper_id": "arxiv-2511.13453-hardware-optimization-android-inference-ai",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2511.13453"
+    },
+    {
+      "identity": "2601.15914",
+      "paper_id": "arxiv-2601.15914-latency-wall-benchmarking-off-shelf",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2601.15914"
+    },
+    {
+      "identity": "2511.07990",
+      "paper_id": "arxiv-2511.07990-hardware-aware-yolo-compression-low",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2511.07990"
+    },
+    {
+      "identity": "2407.08272",
+      "paper_id": "arxiv-2407.08272-poweryolo-mixed-precision-model-hardware",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2407.08272"
+    },
+    {
+      "identity": "2006.00422",
+      "paper_id": "arxiv-2006.00422-ebbinnot-hardware-efficient-hybrid-event",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2006.00422"
+    },
+    {
+      "identity": "2608.03728",
+      "paper_id": "arxiv-2608.03728-sat-edge-agent-hardware-loop",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2608.03728"
+    },
+    {
+      "identity": "2406.14239",
+      "paper_id": "arxiv-2406.14239-leyolo-embedded-architecture-object-detection",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2406.14239"
+    },
+    {
+      "identity": "2112.09660",
+      "paper_id": "arxiv-2112.09660-ai-assisted-verification-biometric-data",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2112.09660"
+    },
+    {
+      "identity": "2307.13901",
+      "paper_id": "arxiv-2307.13901-yolobench-benchmarking-efficient-object-detectors",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2307.13901"
+    },
+    {
+      "identity": "2307.11904",
+      "paper_id": "arxiv-2307.11904-model-compression-methods-yolov5-review",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2307.11904"
+    },
+    {
+      "identity": "2301.08189",
+      "paper_id": "arxiv-2301.08189-benchmarking-yolov5-yolov7-models-deepsort",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2301.08189"
+    },
+    {
+      "identity": "2606.03748",
+      "paper_id": "arxiv-2606.03748-ultralytics-yolo26-unified-real-time",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2606.03748"
+    },
+    {
+      "identity": "2209.02976",
+      "paper_id": "arxiv-2209.02976-yolov6-single-stage-object-detection",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/2209.02976"
+    },
+    {
+      "identity": "1911.08739",
+      "paper_id": "arxiv-1911.08739-vision-deep-learning-provide-walking",
+      "topic": "yolo-fpga",
+      "url": "https://arxiv.org/pdf/1911.08739"
+    },
+    {
+      "identity": "10.1587/transinf.2020lop0011",
+      "paper_id": "2021-soga-energy-efficient-ecg-signals-outlier",
+      "topic": "autoencoder-fpga",
+      "url": "https://www.jstage.jst.go.jp/article/transinf/E104.D/8/E104.D_2020LOP0011/_pdf"
+    },
+    {
+      "identity": "2412.13843",
+      "paper_id": "arxiv-2412.13843-review-deep-learning-autoencoder-design",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2412.13843"
+    },
+    {
+      "identity": "2203.04453",
+      "paper_id": "arxiv-2203.04453-machine-learning-nextg-networks-generative",
+      "topic": "autoencoder-fpga",
+      "url": "https://arxiv.org/pdf/2203.04453"
+    },
+    {
+      "identity": "2506.20810",
+      "paper_id": "arxiv-2506.20810-finn-gl-generalized-mixed-precision",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2506.20810"
+    },
+    {
+      "identity": "2102.01341",
+      "paper_id": "arxiv-2102.01341-benchmarking-quantized-neural-networks-fpgas",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2102.01341",
+      "sha256": "f7ca18a24ff1db10b08470feb4c4b9be7fc9d6775b4fe2e1f239005385bcc26c"
+    },
+    {
+      "identity": "1807.04093",
+      "paper_id": "arxiv-1807.04093-finn-library-extensions-design-trade",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/1807.04093",
+      "sha256": "10aeeeee854a8430e8e4871160a432f1b966611319eadc6000e9bdc323365d06"
+    },
+    {
+      "identity": "2609.26824",
+      "paper_id": "arxiv-2609.26824-finn-tro-exploiting-verification-gaps",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2609.26824",
+      "sha256": "91856b25eaf911f52f3df2ad5ca98ea1a2f67d13f675e3624cbfcf972c3905ed"
+    },
+    {
+      "identity": "2503.08700",
+      "paper_id": "arxiv-2503.08700-real-time-semantic-segmentation-aerial",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2503.08700",
+      "sha256": "952cd0eb283f6f7d859874f9970c87eed53139ee95fbba5a45fd4daf60cee266"
+    },
+    {
+      "identity": "2507.07903",
+      "paper_id": "arxiv-2507.07903-hardware-aware-feature-extraction-quantisation",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2507.07903",
+      "sha256": "9a5bc9b65e6ea5a4c3b8f7c168e318eaf67074007da07dd44da6881febc6e9f6"
+    },
+    {
+      "identity": "2606.11065",
+      "paper_id": "arxiv-2606.11065-arithmetic-packing-wide-integer-datapaths",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2606.11065",
+      "sha256": "2ab208cd0dfed6242304b0fc20b263dc711309182fa9c8b357ca2a3eda1c5028"
+    },
+    {
+      "identity": "2507.02443",
+      "paper_id": "arxiv-2507.02443-red-grape-detection-accelerated-artificial",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2507.02443",
+      "sha256": "4e16ac7f408d1f63c0bb60b81aaf315a0b827263e2cdcaea9a307c06ca2951ed"
+    },
+    {
+      "identity": "2503.13023",
+      "paper_id": "arxiv-2503.13023-real-time-multi-object-tracking",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2503.13023",
+      "sha256": "b801cf10cb814c9e98db5f93504090da7a97b12973c9c536be3955c781a47474"
+    },
+    {
+      "identity": "2508.21493",
+      "paper_id": "arxiv-2508.21493-sira-scaled-integer-range-analysis",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2508.21493",
+      "sha256": "aca437a9a0cdf60d3ea9bdfeca336b0bcd7cf23083cb16809aeeb33b09740916"
+    },
+    {
+      "identity": "1701.03400",
+      "paper_id": "arxiv-1701.03400-scaling-binarized-neural-networks-reconfigurable",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/1701.03400",
+      "sha256": "2b4f36f08b9ca9189bce4172a661ce33a5358e3d45702110a03d9ac8f4840508"
+    },
+    {
+      "identity": "2407.06170",
+      "paper_id": "arxiv-2407.06170-real-time-spacecraft-pose-estimation",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2407.06170",
+      "sha256": "a60e350989b4e1cba8802efa74b0381cffec5febf0235f7900c9a172aabffcd8"
+    },
+    {
+      "identity": "2602.16024",
+      "paper_id": "arxiv-2602.16024-bit-width-aware-design-environment",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2602.16024",
+      "sha256": "8e1a50ac2a72db55aa975cc8d6b3228384371490f115c20570432d6ec9b3bb7b"
+    },
+    {
+      "identity": "2401.12240",
+      "paper_id": "arxiv-2401.12240-quantised-neural-network-accelerators-low",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2401.12240",
+      "sha256": "1e39e7f6b9e45fdb9d512ded17ba6684f7664dfb86a5578a5600d3d78ae2e889"
+    },
+    {
+      "identity": "2104.02303",
+      "paper_id": "arxiv-2104.02303-exploration-hardware-acceleration-methods-xnor",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2104.02303",
+      "sha256": "841f291e04b1c1cb1655e83e754988b267de420f1b26d1c814b1a658a5cb6c02"
+    },
+    {
+      "identity": "2205.10653",
+      "paper_id": "arxiv-2205.10653-real-time-energy-efficient-siamese",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2205.10653",
+      "sha256": "e0c45ac9fa99dc2e8966595001e694d44becf987a540ad0df91c03a20a00528f"
+    },
+    {
+      "identity": "2506.15432",
+      "paper_id": "arxiv-2506.15432-side-channel-extraction-dataflow-ai",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2506.15432",
+      "sha256": "b1c772b7ac2d72fe36abb0a2c9adbda2770569f8f1d4b76b835322f7b81ebc90"
+    },
+    {
+      "identity": "2508.01800",
+      "paper_id": "arxiv-2508.01800-marvel-end-end-framework-generating",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2508.01800",
+      "sha256": "da1dfc80a4e9cf8ece5888c52b641d5e4b79912a06ac55d4a296c75d57ef1a3b"
+    },
+    {
+      "identity": "2304.10618",
+      "paper_id": "arxiv-2304.10618-uleen-architecture-ultra-low-energy",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2304.10618",
+      "sha256": "d8595f1d0739b0760104e8b083edf9ed42b3a1f7ccfff51b4b5de5b544c9113b"
+    },
+    {
+      "identity": "2606.27772",
+      "paper_id": "arxiv-2606.27772-embedded-real-time-license-plate",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2606.27772",
+      "sha256": "63557e6dc5ff0904786f8dd6ad9a867be0f650f18ce9d1f2add674629465cca5"
+    },
+    {
+      "identity": "2003.06308",
+      "paper_id": "arxiv-2003.06308-compressing-deep-neural-networks-fpgas",
+      "topic": "toolflows",
+      "url": "https://arxiv.org/pdf/2003.06308",
+      "sha256": "74c91a90004c3e8ff1beb5cff83b86e13fe0e3345cc9c99d222abbafc1c92280"
+    },
+    {
+      "identity": "10.1109/dcis58620.2023.10335989",
+      "paper_id": "2023-tapiador-implementing-cnn-fpga-programmable-logic",
+      "topic": "toolflows",
+      "url": "https://ebuah.uah.es/dspace/bitstream/handle/10017/60339/Implementing_Tapiador_DCIS_2023.pdf;jsessionid=B656F16F3DF0C550414395083F9D372A?sequence=3",
+      "sha256": "30ea197b1733f3d8441aa96d035b62fa7421fdec7e3c142005d78ed7ab0bdd2c"
+    },
+    {
+      "identity": "1712.00994",
+      "paper_id": "arxiv-1712.00994-neuraghe-exploiting-cpu-fpga-synergies",
+      "topic": "platforms",
+      "url": "https://arxiv.org/pdf/1712.00994",
+      "sha256": "ec406c270425e8ebd134f20d8564cf18bf0ae6359c94142c6c1b8f7504ff53c7"
+    },
+    {
+      "identity": "2609.05249",
+      "paper_id": "arxiv-2609.05249-proton-irradiation-characterization-open-source",
+      "topic": "platforms",
+      "url": "https://arxiv.org/pdf/2609.05249",
+      "sha256": "921d16223ba2730fc17424986edf71ef58ff7fbb83226ca69f7eba6cc33b4b0e"
+    },
+    {
+      "identity": "2403.01098",
+      "paper_id": "arxiv-2403.01098-low-complexity-deep-learning-augmented",
+      "topic": "platforms",
+      "url": "https://arxiv.org/pdf/2403.01098",
+      "sha256": "976e5ae98de9b5de3f8b51867c5bf120d197039661bb5b66cab783c9c3969b99"
+    },
+    {
+      "identity": "2001.09725",
+      "paper_id": "arxiv-2001.09725-probabilistic-spike-propagation-fpga-implementation",
+      "topic": "platforms",
+      "url": "https://arxiv.org/pdf/2001.09725",
+      "sha256": "ad22065c52f014b8005a99c4e52544a7d6a8097167f97e3b417068abb30f4555"
+    },
+    {
+      "identity": "1806.08085",
+      "paper_id": "arxiv-1806.08085-inference-quantized-neural-networks-heterogeneous",
+      "topic": "platforms",
+      "url": "https://arxiv.org/pdf/1806.08085",
+      "sha256": "4b82a2c2aecfc6dcf713eb1c99fe87b1d6b6b3e7d4c2a717aca9e073dbd41ed8"
+    },
+    {
+      "identity": "2401.15453",
+      "paper_id": "arxiv-2401.15453-bayesian-inference-accelerator-spiking-neural",
+      "topic": "platforms",
+      "url": "https://arxiv.org/pdf/2401.15453",
+      "sha256": "ae3795700253c371465ecd4b69b18299ea09cf7749263617cb1dabef0d98f2f4"
+    }
+  ],
+  "rejected": [
+    {
+      "identity": "10.1109/access.2021.3081818",
+      "title": "A Full Featured Configurable Accelerator for Object Detection With YOLO",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/9312710/09435338.pdf"
+    },
+    {
+      "identity": "10.3390/computers13120336",
+      "title": "The YOLO Framework: A Comprehensive Review of Evolution, Applications, and Benchmarks in Object Detection",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2073-431X/13/12/336/pdf?version=1734336408"
+    },
+    {
+      "identity": "10.1109/access.2020.2995330",
+      "title": "A Power-Efficient Optimizing Framework FPGA Accelerator Based on Winograd for YOLO",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/8948470/09094705.pdf"
+    },
+    {
+      "identity": "10.1007/s11042-021-11480-0",
+      "title": "YOLO with adaptive frame control for real-time object detection applications",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.14569/ijacsa.2018.091062",
+      "title": "Fixed Point Implementation of Tiny-Yolo-v2 using OpenCL on FPGA",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF URL must be public HTTPS"
+    },
+    {
+      "identity": "10.1145/3289602.3293904",
+      "title": "REQ-YOLO",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3289602.3293904"
+    },
+    {
+      "identity": "10.3390/mi15091164",
+      "title": "An FPGA-Based YOLOv5 Accelerator for Real-Time Industrial Vision Applications",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1109/access.2023.3285279",
+      "title": "A Reconfigurable CNN-Based Accelerator Design for Fast and Energy-Efficient Object Detection System on Mobile FPGA",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/10005208/10148988.pdf"
+    },
+    {
+      "identity": "2004.13410",
+      "title": "Real-Time Apple Detection System Using Embedded Systems With Hardware Accelerators: An Edge AI Application",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: parsed paper is outside benchmark topics"
+    },
+    {
+      "identity": "10.3390/e24101346",
+      "title": "An OpenCL-Based FPGA Accelerator for Faster R-CNN",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1099-4300/24/10/1346/pdf?version=1666596376"
+    },
+    {
+      "identity": "10.3390/electronics10080895",
+      "title": "Embedded Intelligence on FPGA: Survey, Applications and Challenges",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/10/8/895/pdf?version=1617982096"
+    },
+    {
+      "identity": "10.1109/access.2020.3021508",
+      "title": "Exploring Deep Learning-Based Architecture, Strategies, Applications and Current Trends in Generic Object Detection: A Comprehensive Review",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/8948470/09186021.pdf"
+    },
+    {
+      "identity": "10.1145/3242897",
+      "title": "FINN- R",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3242897"
+    },
+    {
+      "identity": "10.1016/j.vlsi.2019.07.005",
+      "title": "Computer vision algorithms and hardware implementations: A survey",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.sciencedirect.com/science/article/pii/S0167926019301762/pdf"
+    },
+    {
+      "identity": "10.3390/electronics9111921",
+      "title": "Design Space Exploration for YOLO Neural Network Accelerator",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/9/11/1921/pdf?version=1605509373"
+    },
+    {
+      "identity": "10.3390/s23073510",
+      "title": "Reduced-Parameter YOLO-like Object Detector Oriented to Resource-Constrained Platform",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.11591/ijres.v8.i3.pp206-214",
+      "title": "A scalable FPGA based accelerator for Tiny-YOLO-v2 using OpenCL",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF URL must be public HTTPS"
+    },
+    {
+      "identity": "1907.08985",
+      "title": "Achieving Super-Linear Speedup across Multi-FPGA for Real-Time DNN Inference",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: parsed paper is outside benchmark topics"
+    },
+    {
+      "identity": "10.3390/electronics10091025",
+      "title": "Accelerating Neural Network Inference on FPGA-Based Platforms—A Survey",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/10/9/1025/pdf?version=1619408218"
+    },
+    {
+      "identity": "10.3390/s25010214",
+      "title": "A Comprehensive Survey of Machine Learning Techniques and Models for Object Detection",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1109/ojcas.2020.3007334",
+      "title": "Power Efficient Tiny Yolo CNN Using Reduced Hardware Resources Based on Booth Multiplier and WALLACE Tree Adders",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/8784029/8816702/09134378.pdf"
+    },
+    {
+      "identity": "10.3390/s20236779",
+      "title": "Design of a Scalable and Fast YOLO for Edge-Computing Devices",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1424-8220/20/23/6779/pdf?version=1606471699"
+    },
+    {
+      "identity": "10.3390/fi13110280",
+      "title": "Configurable Hardware Core for IoT Object Detection",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1999-5903/13/11/280/pdf?version=1635930646"
+    },
+    {
+      "identity": "10.3934/mbe.2021223",
+      "title": "Applying deep learning to defect detection in printed circuit boards via a newest model of you-only-look-once",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF URL must be public HTTPS"
+    },
+    {
+      "identity": "10.1007/s11042-023-17192-x",
+      "title": "A survey of model compression strategies for object detection",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1109/access.2020.3023946",
+      "title": "FPGAN: An FPGA Accelerator for Graph Attention Networks With Software and Hardware Co-Optimization",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/8948470/09195849.pdf"
+    },
+    {
+      "identity": "10.59145/jaust.v3i6.73",
+      "title": "Real-Time Object Detection Overview: Advancements, Challenges, and Applications",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 406 Client Error: Not Acceptable for url: https://auy.edu.ye/index.php/jaust/article/download/73/60"
+    },
+    {
+      "identity": "10.32604/cmc.2019.03595",
+      "title": "A Review on Deep Learning Approaches to Image Classification and Object Segmentation",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://napier-repository.worktribe.com/preview/2039827/A%20Review%20on%20Deep%20Learning%20Approaches%20VoR.pdf"
+    },
+    {
+      "identity": "10.1109/tim.2023.3241078",
+      "title": "An Ultralightweight Object Detection Network for Empty-Dish Recycling Robots",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/19/10012124/10032614.pdf"
+    },
+    {
+      "identity": "10.1145/3604802",
+      "title": "A Survey of Design and Optimization for Systolic Array-based DNN Accelerators",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3604802"
+    },
+    {
+      "identity": "10.1007/s13735-022-00227-8",
+      "title": "Anomaly detection using edge computing in video surveillance system: review",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "2109.09854",
+      "title": "Object Detection in Thermal Spectrum for Advanced Driver-Assistance Systems (ADAS)",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: parsed paper is outside benchmark topics"
+    },
+    {
+      "identity": "10.1016/j.engappai.2025.110159",
+      "title": "A hardware accelerator to support deep learning processor units in real-time image processing",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.iris.sssup.it/bitstream/11382/576132/1/1-s2.0-S0952197625001599-main.pdf"
+    },
+    {
+      "identity": "10.1109/jetcas.2021.3129415",
+      "title": "A Survey on the Optimization of Neural Network Accelerators for Micro-AI On-Device Inference",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/5503868/9647029/09627710.pdf"
+    },
+    {
+      "identity": "10.1109/access.2024.3387947",
+      "title": "Rapid Detection of PCB Defects Based on YOLOx-Plus and FPGA",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/6514899/10497598.pdf"
+    },
+    {
+      "identity": "10.1109/access.2020.2988311",
+      "title": "An Efficient Task Assignment Framework to Accelerate DPU-Based Convolutional Neural Network Inference on FPGAs",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/8948470/09069951.pdf"
+    },
+    {
+      "identity": "10.3390/electronics12224713",
+      "title": "FPGA-Based CNN for Eye Detection in an Iris Recognition at a Distance System",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/12/22/4713/pdf?version=1700473829"
+    },
+    {
+      "identity": "10.1109/access.2023.3347548",
+      "title": "Near-Edge Computing Aware Object Detection: A Review",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/6514899/10374363.pdf"
+    },
+    {
+      "identity": "10.3390/aerospace7110159",
+      "title": "Utilization of FPGA for Onboard Inference of Landmark Localization in CNN-Based Spacecraft Pose Estimation",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2226-4310/7/11/159/pdf?version=1604631892"
+    },
+    {
+      "identity": "10.3390/app122010227",
+      "title": "An Intelligent Real-Time Object Detection System on Drones",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2076-3417/12/20/10227/pdf?version=1666598820"
+    },
+    {
+      "identity": "10.1109/jstars.2023.3244616",
+      "title": "A Survey on Deep-Learning-Based Real-Time SAR Ship Detection",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/4609443/4609444/10056955.pdf"
+    },
+    {
+      "identity": "10.3390/app15020688",
+      "title": "FPGA-QNN: Quantized Neural Network Hardware Acceleration on FPGAs",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2076-3417/15/2/688/pdf?version=1736818056"
+    },
+    {
+      "identity": "1705.05922",
+      "title": "LCDet: Low-Complexity Fully-Convolutional Neural Networks for Object Detection in Embedded Systems",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: parsed paper is outside benchmark topics"
+    },
+    {
+      "identity": "10.3390/app152211882",
+      "title": "Advancements in Small-Object Detection (2023–2025): Approaches, Datasets, Benchmarks, Applications, and Practical Guidance",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2076-3417/15/22/11882/pdf?version=1762528479"
+    },
+    {
+      "identity": "10.1007/s00521-022-07351-w",
+      "title": "Resource-constrained FPGA implementation of YOLOv2",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1109/access.2021.3054879",
+      "title": "Zero-Centered Fixed-Point Quantization With Iterative Retraining for Deep Convolutional Neural Network-Based Object Detectors",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/9312710/09336635.pdf"
+    },
+    {
+      "identity": "10.3390/rs15163975",
+      "title": "Edge Real-Time Object Detection and DPU-Based Hardware Implementation for Optical Remote Sensing Images",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2072-4292/15/16/3975/pdf?version=1691742197"
+    },
+    {
+      "identity": "10.1109/icae50557.2020.9350556",
+      "title": "The Face Mask Detection For Preventing the Spread of COVID-19 at Politeknik Negeri Batam",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/9350316/9350372/09350556.pdf"
+    },
+    {
+      "identity": "10.3390/electronics9040589",
+      "title": "Deep Learning Framework for Vehicle and Pedestrian Detection in Rural Roads on an Embedded GPU",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/9/4/589/pdf?version=1585647410"
+    },
+    {
+      "identity": "10.1016/j.heliyon.2024.e26652",
+      "title": "Machine learning algorithms for FPGA Implementation in biomedical engineering applications: A review",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1145/3519598",
+      "title": "An FPGA Overlay for CNN Inference with Fine-grained Flexible Parallelism",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3519598"
+    },
+    {
+      "identity": "10.1109/access.2020.3035839",
+      "title": "Lifting Based Object Detection Networks of Remote Sensing Imagery for FPGA Accelerator",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/8948470/09248006.pdf"
+    },
+    {
+      "identity": "10.1109/access.2022.3200755",
+      "title": "Adaptive Subsampling for ROI-Based Visual Tracking: Algorithms and FPGA Implementation",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/6514899/09864184.pdf"
+    },
+    {
+      "identity": "10.1088/1742-6596/2405/1/012011",
+      "title": "FPGA-based Object Detection Acceleration Architecture Design",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.3390/rs17030494",
+      "title": "An FPGA-Based Hybrid Overlapping Acceleration Architecture for Small-Target Remote Sensing Detection",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2072-4292/17/3/494/pdf?version=1738308967"
+    },
+    {
+      "identity": "10.31489/2025n2/121-132",
+      "title": "THERMAL INFRARED OBJECT DETECTION WITH YOLO MODELS",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF title does not match its discovery record"
+    },
+    {
+      "identity": "10.3390/s25206359",
+      "title": "Design and Implementation of a YOLOv2 Accelerator on a Zynq-7000 FPGA",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1424-8220/25/20/6359/pdf?version=1760515315"
+    },
+    {
+      "identity": "10.3390/app15137533",
+      "title": "Key Considerations for Real-Time Object Recognition on Edge Computing Devices",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2076-3417/15/13/7533/pdf?version=1751631586"
+    },
+    {
+      "identity": "10.1109/access.2020.3001350",
+      "title": "Anomaly-Based Intrusion Detection From Network Flow Features Using Variational Autoencoder",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/8948470/09113298.pdf"
+    },
+    {
+      "identity": "10.1007/jhep05%282019%29036",
+      "title": "Variational autoencoders for new physics mining at the Large Hadron Collider",
+      "topic": "autoencoder-fpga",
+      "reason": "ConnectTimeout: HTTPSConnectionPool(host='www.osti.gov', port=443): Max retries exceeded with url: /servlets/purl/1611701 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.osti.gov', port=443) at 0x726002036990>, 'Connection to www.osti.gov timed out. (connect timeout=15)'))"
+    },
+    {
+      "identity": "10.3390/electronics12030668",
+      "title": "FPGA/AI-Powered Architecture for Anomaly Network Intrusion Detection Systems",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/12/3/668/pdf?version=1674977819"
+    },
+    {
+      "identity": "10.1038/s41467-024-47704-8",
+      "title": "Nanosecond anomaly detection with decision trees and real-time application to exotic Higgs decays",
+      "topic": "autoencoder-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1109/access.2021.3072916",
+      "title": "Deep Learning Anomaly Detection for Cellular IoT With Applications in Smart Logistics",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/9312710/09402912.pdf"
+    },
+    {
+      "identity": "10.1016/j.eswa.2022.117634",
+      "title": "RADIS: A real-time anomaly detection intelligent system for fault diagnosis of marine machinery",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.sciencedirect.com/science/article/pii/S0957417422009423/pdf"
+    },
+    {
+      "identity": "2109.01695",
+      "title": "Deep Set Auto Encoders for Anomaly Detection in Particle Physics",
+      "topic": "autoencoder-fpga",
+      "reason": "ValueError: too little extracted text"
+    },
+    {
+      "identity": "10.3390/s23084094",
+      "title": "Label-Free Anomaly Detection Using Distributed Optical Fiber Acoustic Sensing",
+      "topic": "autoencoder-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1109/access.2019.2907261",
+      "title": "Deep Neural Network Hardware Implementation Based on Stacked Sparse Autoencoder",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/8600701/08678408.pdf"
+    },
+    {
+      "identity": "10.3390/s22155822",
+      "title": "Towards an Effective Intrusion Detection Model Using Focal Loss Variational Autoencoder for Internet of Things (IoT)",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1424-8220/22/15/5822/pdf?version=1659604840"
+    },
+    {
+      "identity": "10.1155/2018/3145947",
+      "title": "A New Generalized Deep Learning Framework Combining Sparse Autoencoder and Taguchi Method for Novel Data Classification and Processing",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://downloads.hindawi.com/journals/mpe/2018/3145947.pdf"
+    },
+    {
+      "identity": "10.1109/tbcas.2021.3134660",
+      "title": "A Multi-Channel Spike Sorting Processor With Accurate Clustering Algorithm Using Convolutional Autoencoder",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/4156126/9715158/09647868.pdf"
+    },
+    {
+      "identity": "10.3390/s25134174",
+      "title": "Adaptive Autoencoder-Based Intrusion Detection System with Single Threshold for CAN Networks",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1424-8220/25/13/4174/pdf?version=1751634784"
+    },
+    {
+      "identity": "10.3390/s23094207",
+      "title": "Decentralized Real-Time Anomaly Detection in Cyber-Physical Production Systems under Industry Constraints",
+      "topic": "autoencoder-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.3390/app12073234",
+      "title": "Detecting Cryptojacking Web Threats: An Approach with Autoencoders and Deep Dense Neural Networks",
+      "topic": "autoencoder-fpga",
+      "reason": "ConnectTimeout: HTTPSConnectionPool(host='eprints.ucm.es', port=443): Max retries exceeded with url: /id/eprint/74847/1/applsci-12-03234-v3.pdf (Caused by ConnectTimeoutError(<HTTPSConnection(host='eprints.ucm.es', port=443) at 0x726001da5590>, 'Connection to eprints.ucm.es timed out. (connect timeout=15)'))"
+    },
+    {
+      "identity": "10.1109/gcwkshps56602.2022.10008647",
+      "title": "Machine Learning 5G Attack Detection in Programmable Logic",
+      "topic": "autoencoder-fpga",
+      "reason": "ConnectTimeout: HTTPSConnectionPool(host='www.osti.gov', port=443): Max retries exceeded with url: /servlets/purl/1975113 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.osti.gov', port=443) at 0x726001da60d0>, 'Connection to www.osti.gov timed out. (connect timeout=15)'))"
+    },
+    {
+      "identity": "10.1016/j.dcan.2022.09.008",
+      "title": "An ensemble deep learning model for cyber threat hunting in industrial internet of things",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.sciencedirect.com/science/article/pii/S2352864822001833/pdf"
+    },
+    {
+      "identity": "10.3390/jimaging10100254",
+      "title": "Current Status and Challenges and Future Trends of Deep Learning-Based Intrusion Detection Models",
+      "topic": "autoencoder-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.3390/diagnostics12112569",
+      "title": "EVAE-Net: An Ensemble Variational Autoencoder Deep Learning Network for COVID-19 Classification Based on Chest X-ray Images",
+      "topic": "autoencoder-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2075-4418/12/11/2569/pdf?version=1666951879"
+    },
+    {
+      "identity": "10.1088/1748-0221/19/03/c03029",
+      "title": "Testing a Neural Network for Anomaly Detection in the CMS Global Trigger Test Crate during Run 3",
+      "topic": "autoencoder-fpga",
+      "reason": "ValueError: external PDF URL must be public HTTPS"
+    },
+    {
+      "identity": "10.1038/s41598-022-19437-5",
+      "title": "RaVÆn: unsupervised change detection of extreme events using ML on-board satellites",
+      "topic": "autoencoder-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "2203.10681",
+      "title": "Online Continual Learning for Embedded Devices",
+      "topic": "continual-learning",
+      "reason": "ValueError: external PDF title does not match its discovery record"
+    },
+    {
+      "identity": "10.1145/3555810",
+      "title": "FPGA-based Acceleration of Time Series Similarity Prediction: From Cloud to Edge",
+      "topic": "toolflows",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3555810"
+    },
+    {
+      "identity": "10.3390/electronics15020414",
+      "title": "A Unified FPGA/CGRA Acceleration Pipeline for Time-Critical Edge AI: Case Study on Autoencoder-Based Anomaly Detection in Smart Grids",
+      "topic": "toolflows",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/15/2/414/pdf?version=1768633283"
+    },
+    {
+      "identity": "10.3390/en19041091",
+      "title": "High-Level Synthesis (HLS)-Enabled Field-Programmable Gate Array (FPGA) Algorithms for Latency-Critical Plasma Diagnostics and Neural Trigger Prototyping in Next-Generation Energy Projects",
+      "topic": "toolflows",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1996-1073/19/4/1091/pdf?version=1771657902"
+    },
+    {
+      "identity": "10.1007/s11554-026-01889-x",
+      "title": "Throughput impact of software multithreading for deep-learning inference on the AMD Kria KV260",
+      "topic": "platforms",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1109/access.2023.3236974",
+      "title": "An Exploration of State-of-the-Art Automation Frameworks for FPGA-Based DNN Acceleration",
+      "topic": "platforms",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/10005208/10017269.pdf"
+    },
+    {
+      "identity": "10.1109/access.2023.3300379",
+      "title": "Real-Time Multi-Task ADAS Implementation on Reconfigurable Heterogeneous MPSoC Architecture",
+      "topic": "platforms",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/6514899/10198234.pdf"
+    },
+    {
+      "identity": "design and implementation of an embedded architecture for gemm applied to beto/bert on the kv260 som",
+      "title": "Design and Implementation of an Embedded Architecture for GEMM Applied to BETO/BERT on the KV260 SoM",
+      "topic": "platforms",
+      "reason": "ValueError: external PDF title does not match its discovery record"
+    },
+    {
+      "identity": "10.1016/j.iotcps.2023.02.004",
+      "title": "Edge AI: A survey",
+      "topic": "surveys",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1016/j.eng.2019.08.015",
+      "title": "Artificial Intelligence in Healthcare: Review and Prediction Case Studies",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.sciencedirect.com/science/article/pii/S2095809919301535/pdf"
+    },
+    {
+      "identity": "10.1145/2893356",
+      "title": "A Survey of Techniques for Approximate Computing",
+      "topic": "surveys",
+      "reason": "ConnectTimeout: HTTPSConnectionPool(host='www.osti.gov', port=443): Max retries exceeded with url: /servlets/purl/1286958 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.osti.gov', port=443) at 0x726001869810>, 'Connection to www.osti.gov timed out. (connect timeout=15)'))"
+    },
+    {
+      "identity": "10.3390/s23031279",
+      "title": "A Survey on Optimization Techniques for Edge Artificial Intelligence (AI)",
+      "topic": "surveys",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1145/3477141",
+      "title": "Computing Graph Neural Networks: A Survey from Algorithms to Accelerators",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3477141"
+    },
+    {
+      "identity": "10.1016/j.cageo.2022.105034",
+      "title": "A review of Earth Artificial Intelligence",
+      "topic": "surveys",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.3390/rs13214387",
+      "title": "Boost Precision Agriculture with Unmanned Aerial Vehicle Remote Sensing and Edge Intelligence: A Survey",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2072-4292/13/21/4387/pdf?version=1635752510"
+    },
+    {
+      "identity": "10.1145/3626314",
+      "title": "Artificial Intelligence for Safety-Critical Systems in Industrial and Transportation Domains: A Survey",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3626314"
+    },
+    {
+      "identity": "10.3390/computers12080151",
+      "title": "Convolutional Neural Networks: A Survey",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2073-431X/12/8/151/pdf?version=1690537713"
+    },
+    {
+      "identity": "10.1007/s10311-023-01617-y",
+      "title": "RETRACTED ARTICLE: Artificial intelligence-based solutions for climate change: a review",
+      "topic": "surveys",
+      "reason": "HTTPError: 404 Client Error: Not Found for url: https://pureadmin.qub.ac.uk/ws/files/492386102/Artificial_intelligence_based_solutions.pdf"
+    },
+    {
+      "identity": "10.1201/9781003162810-13",
+      "title": "A Survey of Quantization Methods for Efficient Neural Network Inference",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://api.taylorfrancis.com/content/chapters/edit/download?identifierName=doi&identifierValue=10.1201/9781003162810-13&type=chapterpdf"
+    },
+    {
+      "identity": "10.3390/s20092533",
+      "title": "Edge Machine Learning for AI-Enabled IoT Devices: A Review",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1424-8220/20/9/2533/pdf?version=1589338738"
+    },
+    {
+      "identity": "10.1109/access.2020.2982411",
+      "title": "Deep Learning for Edge Computing Applications: A State-of-the-Art Survey",
+      "topic": "surveys",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/8948470/09044329.pdf"
+    },
+    {
+      "identity": "10.23919/fruct54823.2022.9770931",
+      "title": "Artificial Intelligence in the IoT Era: A Review of Edge AI Hardware and Software",
+      "topic": "surveys",
+      "reason": "ValueError: external PDF URL must be public HTTPS"
+    },
+    {
+      "identity": "10.1145/3729215",
+      "title": "A Survey on Deep Learning Hardware Accelerators for Heterogeneous HPC Platforms",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://cris.unibo.it/bitstream/11585/1025795/1/ACM_survey.pdf"
+    },
+    {
+      "identity": "10.3390/electronics8111289",
+      "title": "Machine Learning in Resource-Scarce Embedded Systems, FPGAs, and End-Devices: A Survey",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/8/11/1289/pdf?version=1572944801"
+    },
+    {
+      "identity": "10.1109/access.2024.3358827",
+      "title": "A Review on the Application of Internet of Medical Things in Wearable Personal Health Monitoring: A Cloud-Edge Artificial Intelligence Approach",
+      "topic": "surveys",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/6514899/10415018.pdf"
+    },
+    {
+      "identity": "10.1109/ojcs.2023.3300321",
+      "title": "A Survey on ChatGPT: AI–Generated Contents, Challenges, and Solutions",
+      "topic": "surveys",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/8782664/9024218/10221755.pdf"
+    },
+    {
+      "identity": "10.1016/j.jksuci.2019.09.014",
+      "title": "Capsule Networks – A survey",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.sciencedirect.com/science/article/pii/S1319157819309322/pdf"
+    },
+    {
+      "identity": "10.3390/fi12070113",
+      "title": "An Updated Survey of Efficient Hardware Architectures for Accelerating Deep Convolutional Neural Networks",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1999-5903/12/7/113/pdf?version=1594801633"
+    },
+    {
+      "identity": "10.1109/jproc.2022.3205665",
+      "title": "Survey on Fully Homomorphic Encryption, Theory, and Applications",
+      "topic": "surveys",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.3390/fi11040100",
+      "title": "Edge Computing: A Survey On the Hardware Requirements in the Internet of Things World",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1999-5903/11/4/100/pdf?version=1556173465"
+    },
+    {
+      "identity": "10.1088/1674-4926/41/2/021402",
+      "title": "A survey of FPGA design for AI era",
+      "topic": "surveys",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.3390/mi14050897",
+      "title": "A Review of Artificial Intelligence in Embedded Systems",
+      "topic": "surveys",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1109/comst.2025.3534617",
+      "title": "Artificial Intelligence for Satellite Communication: A Survey",
+      "topic": "surveys",
+      "reason": "SSLError: HTTPSConnectionPool(host='orbilu.uni.lu', port=443): Max retries exceeded with url: /bitstream/10993/65397/1/Artificial_Intelligence_for_Satellite_Communication_A_Survey.pdf (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)')))"
+    },
+    {
+      "identity": "10.3390/computers12030060",
+      "title": "Model Compression for Deep Neural Networks: A Survey",
+      "topic": "surveys",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2073-431X/12/3/60/pdf?version=1678783805"
+    },
+    {
+      "identity": "10.3390/mi13071058",
+      "title": "An Efficient YOLO Algorithm with an Attention Mechanism for Vision-Based Defect Inspection Deployed on FPGA",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2072-666X/13/7/1058/pdf?version=1656989631"
+    },
+    {
+      "identity": "10.3390/agronomy13040987",
+      "title": "Detection of Male and Female Litchi Flowers Using YOLO-HPFD Multi-Teacher Feature Distillation and FPGA-Embedded Platform",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2073-4395/13/4/987/pdf?version=1679918871"
+    },
+    {
+      "identity": "10.3390/s23146423",
+      "title": "Efficient-Lightweight YOLO: Improving Small Object Detection in YOLO for Aerial Images",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1071/wf23044",
+      "title": "LEF-YOLO: a lightweight method for intelligent detection of four extreme wildfires based on the YOLO framework",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://connectsci.au/wf/article-lookup/doi/10.1071/WF23044"
+    },
+    {
+      "identity": "10.1145/3697467.3697591",
+      "title": "A Review of FPGA Accelerated Computing Methods for YOLO Models",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3697467.3697591?download=true"
+    },
+    {
+      "identity": "10.3390/rs13101909",
+      "title": "High-Speed Lightweight Ship Detection Algorithm Based on YOLO-V4 for Three-Channels RGB SAR Image",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2072-4292/13/10/1909/pdf?version=1620906487"
+    },
+    {
+      "identity": "10.3390/s25072270",
+      "title": "YOLO Object Detection for Real-Time Fabric Defect Inspection in the Textile Industry: A Review of YOLOv1 to YOLOv11",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1424-8220/25/7/2270/pdf?version=1743685452"
+    },
+    {
+      "identity": "10.1088/1361-6501/ad633d",
+      "title": "Enhanced feature extraction YOLO industrial small object detection algorithm based on receptive-field attention and multi-scale features",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.3390/s18124308",
+      "title": "A Fast Learning Method for Accurate and Robust Lane Detection Using Two-Stage Feature Extraction with YOLO v3",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1424-8220/18/12/4308/pdf?version=1544102825"
+    },
+    {
+      "identity": "10.11591/ijeecs.v25.i1.pp200-213",
+      "title": "A YOLO and convolutional neural network for the detection and classification of leukocytes in leukemia",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF title does not match its discovery record"
+    },
+    {
+      "identity": "10.3390/s22197420",
+      "title": "Ship Fire Detection Based on an Improved YOLO Algorithm with a Lightweight Convolutional Neural Network Model",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/1424-8220/22/19/7420/pdf?version=1664755687"
+    },
+    {
+      "identity": "10.23977/jaip.2024.070314",
+      "title": "YOLOv1 to YOLOv10: A Comprehensive Review of YOLO Variants and Their Application in Medical Image Detection",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF URL must be public HTTPS"
+    },
+    {
+      "identity": "10.1038/s41598-024-64225-y",
+      "title": "A streamlined approach for intelligent ship object detection using EL-YOLO algorithm",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.3390/rs12193118",
+      "title": "MRFF-YOLO: A Multi-Receptive Fields Fusion Network for Remote Sensing Target Detection",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2072-4292/12/19/3118/pdf?version=1600925081"
+    },
+    {
+      "identity": "10.1109/access.2020.2994282",
+      "title": "YOLO Object Recognition Algorithm and “Buy-Sell Decision” Model Over 2D Candlestick Charts",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/8948470/09092995.pdf"
+    },
+    {
+      "identity": "10.3390/electronics10091035",
+      "title": "Spelling Correction Real-Time American Sign Language Alphabet Translation System Based on YOLO Network and LSTM",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/10/9/1035/pdf?version=1619504250"
+    },
+    {
+      "identity": "10.1038/s41598-024-52054-y",
+      "title": "Evaluating YOLO architectures for detecting road killed endangered Brazilian animals",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1088/1742-6596/1229/1/012075",
+      "title": "Detection and Implementation of Driver’s Seatbelt Based on FPGA",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.7717/peerj-cs.1939",
+      "title": "Improving smart home surveillance through YOLO model with transfer learning and quantization for enhanced accuracy and efficiency",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://peerj.com/articles/cs-1939.pdf"
+    },
+    {
+      "identity": "10.14569/ijacsa.2020.0110912",
+      "title": "Pynq-YOLO-Net: An Embedded Quantized Convolutional Neural Network for Face Mask Detection in COVID-19 Pandemic Era",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF URL must be public HTTPS"
+    },
+    {
+      "identity": "10.1088/1742-6596/2006/1/012012",
+      "title": "Research on Machine Learning Optimization Algorithm of CNN for FPGA Architecture",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.3390/sci7020047",
+      "title": "A Comparative Study of YOLO, SSD, Faster R-CNN, and More for Optimized Eye-Gaze Writing",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2413-4155/7/2/47/pdf?version=1744274768"
+    },
+    {
+      "identity": "10.37188/ope.20233104.0543",
+      "title": "Yolo v3-SPP real-time target detection system based on ZYNQ",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF URL must be public HTTPS"
+    },
+    {
+      "identity": "10.3390/math12020297",
+      "title": "Traffic Sign Detection and Recognition Using YOLO Object Detection Algorithm: A Systematic Review",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2227-7390/12/2/297/pdf?version=1705473793"
+    },
+    {
+      "identity": "10.1155/2021/6555513",
+      "title": "Embedded YOLO: A Real-Time Object Detector for Small Intelligent Trajectory Cars",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://downloads.hindawi.com/journals/mpe/2021/6555513.pdf"
+    },
+    {
+      "identity": "10.1088/1742-6596/1650/3/032093",
+      "title": "Research on Dynamic Reconfiguration Technology of Neural Network Accelerator Based on Zynq",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1109/access.2021.3080136",
+      "title": "YOLBO: You Only Look Back Once–A Low Latency Object Tracker Based on YOLO and Optical Flow",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/6287639/9312710/09430527.pdf"
+    },
+    {
+      "identity": "10.22271/27084531.2024.v5.i2a.70",
+      "title": "Real-time object detection using Xilinx Zynq FPGA and tensor flow framework",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.circuitsjournal.com/article/70/5-2-5-929.pdf"
+    },
+    {
+      "identity": "10.31219/osf.io/aqsxz",
+      "title": "IoT Based Smart Mirror Using Raspberry Pi 4 and YOLO Algorithm: A Novel Framework for Interactive Display",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: paper ID collision"
+    },
+    {
+      "identity": "10.1364/opticaopen.24532636",
+      "title": "Dynamic Event Camera Object Detection and Classification Using Enhanced YOLO Deep Learning Architectur",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.36227/techrxiv.19635429.v1",
+      "title": "Real-time HOG+SVM based object detection using SoC FPGA for a UHD video stream",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.techrxiv.org/articles/preprint/Real-time_HOG_SVM_based_object_detection_using_SoC_FPGA_for_a_UHD_video_stream/19635429/1/files/34873044.pdf"
+    },
+    {
+      "identity": "10.3390/agriculture15111213",
+      "title": "Precision Weeding in Agriculture: A Comprehensive Review of Intelligent Laser Robots Leveraging Deep Learning Techniques",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2077-0472/15/11/1213/pdf?version=1748768095"
+    },
+    {
+      "identity": "10.3390/app14041664",
+      "title": "Improved YOLOv7 Algorithm for Small Object Detection in Unmanned Aerial Vehicle Image Scenarios",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2076-3417/14/4/1664/pdf?version=1708332478"
+    },
+    {
+      "identity": "10.1049/ell2.12121",
+      "title": "Efficient field‐programmable gate array‐based reconfigurable accelerator for deep convolution neural network",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1049/ell2.12121"
+    },
+    {
+      "identity": "10.1145/3615870",
+      "title": "Designing Deep Learning Models on FPGA with Multiple Heterogeneous Engines",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3615870"
+    },
+    {
+      "identity": "10.3390/electronics13081564",
+      "title": "High-Speed CNN Accelerator SoC Design Based on a Flexible Diagonal Cyclic Array",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://www.mdpi.com/2079-9292/13/8/1564/pdf?version=1713529567"
+    },
+    {
+      "identity": "10.1007/s42452-021-04766-3",
+      "title": "Design and exploration of neural network microsystem based on SiP",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1007/s00521-021-05764-7",
+      "title": "A dynamic discarding technique to increase speed and preserve accuracy for YOLOv3",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "10.1145/3774649",
+      "title": "SeeSSD: Computational Storage for Energy-Efficient Real-Time Object Detection",
+      "topic": "yolo-fpga",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3774649"
+    },
+    {
+      "identity": "10.5954/icarob.2021.os19-2",
+      "title": "Influence of FPGA implementation methods in High-Level Synthesis",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF title does not match its discovery record"
+    },
+    {
+      "identity": "2407.04943",
+      "title": "Quantizing YOLOv7: A Comprehensive Study",
+      "topic": "yolo-fpga",
+      "reason": "ValueError: external PDF title does not match its discovery record"
+    },
+    {
+      "identity": "10.3390/s24030851",
+      "title": "Fault Diagnosis in Centrifugal Pumps: A Dual-Scalogram Approach with Convolution Autoencoder and Artificial Neural Network",
+      "topic": "autoencoder-fpga",
+      "reason": "ValueError: download is not a PDF"
+    },
+    {
+      "identity": "2609.16367",
+      "title": "FINNAS: FINN-Guided Hardware-Aware NAS and Pruning for FPGA Jet Substructure Classification",
+      "topic": "toolflows",
+      "reason": "ValueError: déjà ingéré dans papers/arxiv-2609.16367-finnas-finn-guided-hardware-aware (--force pour ré-extraire ; sinon supprimer le PDF de inbox/)"
+    },
+    {
+      "identity": "2404.01757",
+      "title": "Analyzing the Single Event Upset Vulnerability of Binarized Neural Networks on SRAM FPGAs",
+      "topic": "toolflows",
+      "reason": "ValueError: external PDF title does not match its discovery record"
+    },
+    {
+      "identity": "10.1109/mm.2022.3202091",
+      "title": "RadioML Meets FINN: Enabling Future RF Applications With FPGA Streaming Architectures",
+      "topic": "toolflows",
+      "reason": "HTTPError: 418 Client Error: Unknown Code for url: https://ieeexplore.ieee.org/ielx7/40/9933375/09933377.pdf"
+    },
+    {
+      "identity": "10.1145/3186332",
+      "title": "Toolflows for Mapping Convolutional Neural Networks on FPGAs",
+      "topic": "toolflows",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3186332"
+    },
+    {
+      "identity": "10.1145/3431920.3439283",
+      "title": "S2N2: A FPGA Accelerator for Streaming Spiking Neural Networks",
+      "topic": "toolflows",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://dl.acm.org/doi/pdf/10.1145/3431920.3439283"
+    },
+    {
+      "identity": "10.1145/3470567",
+      "title": "Elastic-DF: Scaling Performance of DNN Inference in FPGA Clouds through Automatic Partitioning",
+      "topic": "toolflows",
+      "reason": "HTTPError: 403 Client Error: Forbidden for url: https://repositorio.uam.es/bitstream/10486/711818/1/9052717.pdf"
+    },
+    {
+      "identity": "10.1007/s11265-021-01733-4",
+      "title": "Implementation of the PointPillars Network for 3D Object Detection in Reprogrammable Heterogeneous Devices Using FINN",
+      "topic": "toolflows",
+      "reason": "ValueError: download is not a PDF"
+    }
+  ],
+  "attempts": 352,
+  "bytes": 531684995,
+  "queries": {
+    "yolo-fpga": [
+      "FPGA YOLO object detection accelerator",
+      45
+    ],
+    "autoencoder-fpga": [
+      "FPGA autoencoder anomaly detection",
+      35
+    ],
+    "continual-learning": [
+      "embedded continual learning hardware accelerator",
+      35
+    ],
+    "toolflows": [
+      "FINN hls4ml Vitis AI FPGA toolflow",
+      35
+    ],
+    "platforms": [
+      "Zynq Kria Versal edge AI accelerator",
+      30
+    ],
+    "surveys": [
+      "FPGA edge artificial intelligence accelerator survey",
+      20
+    ]
+  },
+  "seed_papers": [
+    "2022-feng-benchmark-analysis-yolo-performance-edge",
+    "2023-cui-survey-unsupervised-anomaly-detection-algorithms",
+    "2023-shuvo-efficient-acceleration-deep-learning-inference",
+    "2023-zhai-fpga-vehicle-detection-tracking-accelerator",
+    "2024-mittal-comprehensive-survey-deep-learning-lightweight",
+    "2025-el-zeinaty-designing-object-detection-models-tinyml",
+    "2025-hozhabr-survey-real-time-object-detection",
+    "arxiv-1612.07119-finn-framework-fast-scalable-binarized",
+    "arxiv-1711.08740-fpgaconvnet-toolflow-mapping-diverse-convolutional",
+    "arxiv-1806.01683-accelerating-cnn-inference-fpgas-survey",
+    "arxiv-1809.04570-finn-r-end-end-deep",
+    "arxiv-2010.15277-class-incremental-learning-survey-performance",
+    "arxiv-2103.05579-hls4ml-open-source-codesign-workflow",
+    "arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised",
+    "arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference",
+    "arxiv-2206.15472-device-training-256kb-memory",
+    "arxiv-2211.11647-benchmarking-edge-computing-devices-grape",
+    "arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint",
+    "arxiv-2403.07851-12-mj-per-class-device",
+    "arxiv-2409.07114-continual-incremental-learning-tinyml-device",
+    "arxiv-2409.16808-comprehensive-evaluation-deep-learning-object",
+    "arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded",
+    "arxiv-2502.15737-performance-analysis-you-only-look",
+    "arxiv-2507.18174-real-time-object-detection-classification",
+    "arxiv-2509.04153-real-time-fpga-cnns-detection",
+    "arxiv-2512.01463-hls4ml-flexible-open-source-platform",
+    "arxiv-2602.15751-enabling-low-latency-machine-learning",
+    "arxiv-2604.21280-imagehd-energy-efficient-device-continual"
+  ]
+}

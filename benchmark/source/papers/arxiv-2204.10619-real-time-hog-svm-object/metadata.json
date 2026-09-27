@@ -1,0 +1,40 @@
+{
+  "id": "arxiv-2204.10619-real-time-hog-svm-object",
+  "title": "Real-time HOG+SVM based object detection using SoC FPGA for a UHD video stream",
+  "authors": [
+    {
+      "given": "Mateusz",
+      "family": "Wasala"
+    },
+    {
+      "given": "Tomasz",
+      "family": "Kryjak"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2204.10619",
+  "url": "https://arxiv.org/abs/2204.10619",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "zynq"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

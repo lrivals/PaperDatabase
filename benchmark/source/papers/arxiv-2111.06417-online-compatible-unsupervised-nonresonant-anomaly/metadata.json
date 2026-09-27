@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2111.06417-online-compatible-unsupervised-nonresonant-anomaly",
+  "title": "Online-compatible unsupervised nonresonant anomaly detection",
+  "authors": [
+    {
+      "given": "V. M.",
+      "family": "Mikuni"
+    },
+    {
+      "given": "Benjamin",
+      "family": "Nachman"
+    },
+    {
+      "given": "David",
+      "family": "Shih"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": "10.1103/physrevd.105.055006",
+  "arxiv_id": "2111.06417",
+  "url": "https://arxiv.org/abs/2111.06417",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

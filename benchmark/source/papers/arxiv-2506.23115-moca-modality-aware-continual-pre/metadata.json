@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2506.23115-moca-modality-aware-continual-pre",
+  "title": "MoCa: Modality-aware Continual Pre-training Makes Better Bidirectional Multimodal Embeddings",
+  "authors": [
+    {
+      "given": "Haonan",
+      "family": "Chen"
+    },
+    {
+      "given": "Hong",
+      "family": "Liu"
+    },
+    {
+      "given": "Yuping",
+      "family": "Luo"
+    },
+    {
+      "given": "Liang",
+      "family": "Wang"
+    },
+    {
+      "given": "Nan",
+      "family": "Yang"
+    },
+    {
+      "given": "Furu",
+      "family": "Wei"
+    },
+    {
+      "given": "Zhicheng",
+      "family": "Dou"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2506.23115",
+  "url": "https://arxiv.org/abs/2506.23115",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

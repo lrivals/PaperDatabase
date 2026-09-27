@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2508.11347-sage-scale-aware-gradual-evolution",
+  "title": "SAGE: Scale-Aware Gradual Evolution for Continual Knowledge Graph Embedding",
+  "authors": [
+    {
+      "given": "Yifei",
+      "family": "Li"
+    },
+    {
+      "given": "Lingling",
+      "family": "Zhang"
+    },
+    {
+      "given": "Hang",
+      "family": "Yan"
+    },
+    {
+      "given": "Tianzhe",
+      "family": "Zhao"
+    },
+    {
+      "given": "Zihan",
+      "family": "Ma"
+    },
+    {
+      "given": "Muye",
+      "family": "Huang"
+    },
+    {
+      "given": "Jun",
+      "family": "Liu"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2508.11347",
+  "url": "https://arxiv.org/abs/2508.11347",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

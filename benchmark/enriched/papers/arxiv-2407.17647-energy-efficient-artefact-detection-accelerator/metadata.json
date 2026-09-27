@@ -1,0 +1,50 @@
+{
+  "id": "arxiv-2407.17647-energy-efficient-artefact-detection-accelerator",
+  "title": "An Energy-Efficient Artefact Detection Accelerator on FPGAs for Hyper-Spectral Satellite Imagery",
+  "authors": [
+    {
+      "given": "Cornell",
+      "family": "Castelino"
+    },
+    {
+      "given": "Shashwat",
+      "family": "Khandelwal"
+    },
+    {
+      "given": "Shanker",
+      "family": "Shreejith"
+    },
+    {
+      "given": "Sharatchandra Varma",
+      "family": "Bogaraju"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2407.17647",
+  "url": "https://arxiv.org/abs/2407.17647",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "zynq",
+    "int8",
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

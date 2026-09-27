@@ -1,0 +1,1010 @@
+{
+  "fingerprint": "2266b6d1de07b9e69334b20889662af43bd6c9d53ec4a418fb467d11271ee17c",
+  "papers": 200,
+  "created": 1790370556.3284874,
+  "model": "gpt-6-sol",
+  "code_hash": "0b351fb9a365f2a7599af3bbec022fcb54191fb18f7c9b547a2201aedb2ee7b6",
+  "documents": {
+    "2010-bouwmans-background-modeling-mixture-gaussians-foreground": {
+      "metadata.json": "cc14a0549803ea392cf7435ccee16e33d0bc332615f46bc40714509a3426a4de",
+      "sections.jsonl": "bc714467dbc633e283c0b268ae8dcbc64b2e68613fb68c21cf11988881814d5a",
+      "paper.pdf": "707ef8f54ca8c746e1b1c2befaa3a921e80386acb941047090c6bbb879b50bea"
+    },
+    "2020-akintayo-prognostics-combustion-instabilities-hi-speed": {
+      "metadata.json": "c2505890902b2c28c63cbd9628c7241a693b1b86e89dd5f70744544e0766d092",
+      "sections.jsonl": "6b15869d2176bc2a9ec83c6f717ddb0311a5ec4a2dec2917245be9bf04e938ce",
+      "paper.pdf": "66378a425566847d9bb8ab7a1fcea268ab14ef12a8ea03b978606aa4e06c25f7"
+    },
+    "2020-said-pynq-yolo-net-embedded-quantized": {
+      "metadata.json": "bef111fe83d2928939243ec1e1d1562bf5bf3a487d1cb888519c8344d103432e",
+      "sections.jsonl": "98d587708da8444ef344bfdcd192e70ed2556620568ffacfeda6a1b4f586af03",
+      "paper.pdf": "335276d50610e5289c5b3c96b9a8e2e3e1a797f0cda053199b4202360960bd6f"
+    },
+    "2021-martinez-alpiste-dynamic-discarding-technique-increase-speed": {
+      "metadata.json": "a766f47d6021ce73de50f7f1cd73e176651256462df6d0734ef485aa2a6fb9fd",
+      "sections.jsonl": "06cd9c202c5b92407d052286c4219d302f79435a510d525a42ea373db04ee543",
+      "paper.pdf": "9da5981f7a18e5753a612bf494414b82f38190ad410436668bccef52a16ef2e2"
+    },
+    "2021-ponnusamy-deep-learning-x-ray-baggage": {
+      "metadata.json": "8a901e1b5bc9396274ea47f2e22a639edbb3e890a53932a510af535c26312968",
+      "sections.jsonl": "494f55da5e297db9d00dfb364aaa73589af304e5a1856f56e3903b2624e7b2a8",
+      "paper.pdf": "2bf059ee8f167af5a235c75f6dc55ef6592f5b48d15a9d2ea47496ceda0ae1ac"
+    },
+    "2021-soga-energy-efficient-ecg-signals-outlier": {
+      "metadata.json": "feb4b1c93e2254858d221409a5585cb803dcc161b6415f0722c2b3e0a925a719",
+      "sections.jsonl": "0f40e60fb8ba08f630bc2d456e2527cd2d83704e04f79309784267e69c8e2acb",
+      "paper.pdf": "83b0b38db2944ceb08d862310132bd33586196363dce24f3bb079bfe1a84d01d"
+    },
+    "2022-feng-benchmark-analysis-yolo-performance-edge": {
+      "metadata.json": "290ec6fb0dbc71e198ac39c22bacbae7adea1d609a338f374359de5e3b6093f4",
+      "sections.jsonl": "05a516f0f720de15276f2cc222feb51764c25ef8f3034489c6a03053d62442bd",
+      "paper.pdf": null
+    },
+    "2022-khanam-effective-intrusion-detection-model-focal": {
+      "metadata.json": "56a524566c3a1220f146d6f9c735974c876355706dcffbc8b06792dd1386cbb9",
+      "sections.jsonl": "7d8060c77cdf997cc44ed2281dfc33325f0af348b851a4e06f0ceb0ad4781dba",
+      "paper.pdf": "1f789908db1293675dd5eff9b5de3415247c5f58b062b4d19bbb81c753dba73e"
+    },
+    "2022-velasco-gallego-radis-real-time-anomaly-detection": {
+      "metadata.json": "46a8d21bbae389f112837e523761a0e791459def4a451c4e3bab2b3057076695",
+      "sections.jsonl": "619097bba9c528665790454bb58839b8e83f47df3a5ab8a1bd34bb006c9bee5d",
+      "paper.pdf": "83fa5458fdef20a43ebc5208a5e9707ee2f13fa16b5a372e26f661d4f95c7606"
+    },
+    "2022-viswanatha-iot-smart-mirror-raspberry-pi": {
+      "metadata.json": "d6811f8434f001fd4d06bae66f6350236abf8cf59c649f3bd4224296b561cbb8",
+      "sections.jsonl": "deb849397a0dff77ed7aae089cccf51f6736275631520949350bada46627af7e",
+      "paper.pdf": "a9284dc231588ddfa4c92d33de3ae162e438bff0dd219eb55fd2b7d05e655865"
+    },
+    "2022-zhang-hfod-hardware-friendly-quantization-method": {
+      "metadata.json": "fb0f494e715c9fdeab535b3e6a43b800a47d1752629b53112253ca7d596c5bdf",
+      "sections.jsonl": "ecf058fc849125e53c7c82759e8b6ab4076e90b17f94c07b91f71b9f746c21ec",
+      "paper.pdf": "71cd02eb2690d52d9f1bb7bbf9252327fa65ea6974a907ce7b0a7c46d48a196a"
+    },
+    "2023-baker-artificial-intelligence-things-smarter-healthcare": {
+      "metadata.json": "6ecc0f58b166e3edf21c3aa0154232a8f1bfc9389fefd9b1b26ea18bbbca1708",
+      "sections.jsonl": "9771b7699f8cc0cb453898b8a7bc65ef1b8793c1ef1a70e0976c5143e3a7238b",
+      "paper.pdf": "5477d9b430611e0555cb115865d4d0e26914434fcc6a5112c52c3a6729ba6dd5"
+    },
+    "2023-cui-survey-unsupervised-anomaly-detection-algorithms": {
+      "metadata.json": "7156122bd91e1d24fc4ec6945bcfc771421e0bad0abfd4eb974c231c06f8afc9",
+      "sections.jsonl": "9393923c55b40b5581f4cdf49e1a9908289b335a5945b89b2e1a202313826647",
+      "paper.pdf": null
+    },
+    "2023-mohandoss-machine-learning-performance-analysis-video": {
+      "metadata.json": "90ce0ebd92ef10f8589b40a557c1c7207ad64d684fd58230648abdeeba8fcd1b",
+      "sections.jsonl": "e380e73b7c257d3e42e5f6c39e40351d5f1d021a7bd7ecd024cb9ac6b9d5bf59",
+      "paper.pdf": "6e3d524e361e3fa71f0e93dc29a674ef68cc221914b4de0d91fb1fa46354c4bc"
+    },
+    "2023-perez-cerrolaza-artificial-intelligence-safety-critical-systems": {
+      "metadata.json": "a51951a7310ea9ad1342f47bf02f4c0a75a55c00d8cd2d667b2ae3f1d2cf549a",
+      "sections.jsonl": "a53d55acf871dc329424a550cba98e087cc4ad08c2de894a1a4b1c748ff32303",
+      "paper.pdf": "ea5865e9afa563b8fc1d97c4c6c90f6139166bd0f09f0a6d9fb5efbc3ea2eca7"
+    },
+    "2023-shuvo-efficient-acceleration-deep-learning-inference": {
+      "metadata.json": "65a0c87bcd0e12fe186c760cc38a8e6aae2952bb10e3a6664b6ba569d9ed779a",
+      "sections.jsonl": "a9083354f763ea2019c168288593ea403bebcb27be68b86ec13768da8a74c6a6",
+      "paper.pdf": null
+    },
+    "2023-tapiador-implementing-cnn-fpga-programmable-logic": {
+      "metadata.json": "db6627a66c592937ca8d734ec053654362decad32d29fd3bb37fc873a8e09506",
+      "sections.jsonl": "38db10c91000beb55df5bf7159fd6fe71aecfa2a686cb92b02081c4e1620062c",
+      "paper.pdf": "30ea197b1733f3d8441aa96d035b62fa7421fdec7e3c142005d78ed7ab0bdd2c"
+    },
+    "2023-valente-joint-variational-auto-encoder-anomaly": {
+      "metadata.json": "23595c3a97beb3e8b04d312a718bac809f39dc30a1bc913ae05356ef239b05f7",
+      "sections.jsonl": "1672e4197486d603142d32b50e2858583e6a1241da8aab7e169245f603b8ca2c",
+      "paper.pdf": "87581aead47c2e3db8ec73afd818dfba921a66f5db2f45082f4c10e53870b3b9"
+    },
+    "2023-zhai-fpga-vehicle-detection-tracking-accelerator": {
+      "metadata.json": "d8592c92731a308fea3a9829e6ecb727499fd2ff492bc6b9aaa665fe9fc56a03",
+      "sections.jsonl": "91a9f7edfc5a386c80851ac84517081c7329fc574055d202993e6417c19240ee",
+      "paper.pdf": null
+    },
+    "2024-alshahrani-children-s-psychological-mental-health": {
+      "metadata.json": "e42914115359ed91067ee6c902107bb6e7a197dff3e7e4423cba6c1bbca42749",
+      "sections.jsonl": "a013484265154de0982feb9f67ca0bfb33432816c833dc97cc2c86ca19b73c91",
+      "paper.pdf": "94f364e3f4090a48ab0cd6c04cc9f8946527ef2cce8877ae42e2c5fbf1848015"
+    },
+    "2024-alsharari-efficient-integer-only-inference-gradient": {
+      "metadata.json": "7bfac61c8f3ac71e0e2df202c19c8cdfc72503cf5e53ff927df7608e15b3e406",
+      "sections.jsonl": "663398982e4c26a817fdbbfc2a82907b9884a9cb8d265ffc689315c55d304beb",
+      "paper.pdf": "99c4180356817d33226b0166a06f7aff4d0f6920346c5e696c3b6825cd2a8fe7"
+    },
+    "2024-castelino-energy-efficient-artefact-detection-accelerator": {
+      "metadata.json": "2ca1c247909159f476c2bb3a8d58691f60a1e150b4a1ab7fffaea4d75ea6bf79",
+      "sections.jsonl": "d555d9d8de6753670115622394f285dcc2fae2ecd0ffeeb2e1121fe8e53fb867",
+      "paper.pdf": "94c2cff7792ca3daebfbb92f2ab1b5b2310da778f7e2f29cdac30c75afa89fd7"
+    },
+    "2024-gheorghe-analyzing-real-time-object-detection": {
+      "metadata.json": "7e750a995eca5ff61c1096b7e7b451ea39ec300a8e9addefadb1cea693b58dd7",
+      "sections.jsonl": "d63da7c59c69f24d2e29350ea4cf7a8f9ae02b1027c2f226928d692da2a82e0a",
+      "paper.pdf": "4ff143f31aedec12e7f7ea1789e0ebfa500f62e9a6c2ea27782305ebecbb99dc"
+    },
+    "2024-iren-comparison-yolov5-yolov6-models-plant": {
+      "metadata.json": "0fdd9a5622fd18d6136a8643efa2e5560feaf6aca3a418d4495ceff10ff41b00",
+      "sections.jsonl": "5bc18af0b246e83ae6e7fa90e3b14e43f5afb13453afa18a412d270dddf316d3",
+      "paper.pdf": "2936fab22a3361c445687182d02656bc7ad199e9263e5b312034a06842d50a6d"
+    },
+    "2024-mittal-comprehensive-survey-deep-learning-lightweight": {
+      "metadata.json": "82d12ff1940be5b5c886752304d433a510d123c027d8bddbe754a833d7966414",
+      "sections.jsonl": "8e8a688108f0c40415602c1a84814fa4b63de1be0ad6eea75cc71d3985137377",
+      "paper.pdf": null
+    },
+    "2024-pramanta-yolo-real-time-object-detection": {
+      "metadata.json": "00a5ca4f3127cc1d856cba3753b23da2452a5728d4e8b5d7b4c6be9036ac6f2e",
+      "sections.jsonl": "dd9551f9d632eb33bd6e5dfb5e775bb6e668a741e10bdbe88ad0c9da09a3f4d7",
+      "paper.pdf": "5be6aa9d79de9dbd5bdee49776c360fb707d9dcfdbccaf9e3e867df11968212a"
+    },
+    "2024-qureshi-semantic-segmentation-yolo-detector-aerial": {
+      "metadata.json": "0884e2af51a09c95893b8f09724f84413bb912d1c9aafbe7ed8878d702c34dd8",
+      "sections.jsonl": "e4b4c5759b339bc38dab1475f71bda10325303072146227db44c36e3ae90a9e8",
+      "paper.pdf": "92bc9b7b092c62e41d4d5376bff2a60868e1e4a45f7d9dc9177e1811e0805152"
+    },
+    "2025-el-zeinaty-designing-object-detection-models-tinyml": {
+      "metadata.json": "e687abd8e6db9a2f4e637a77b5682c4b7eddc6d28688d8f423e69b354cc97e42",
+      "sections.jsonl": "e24187e636253089ef1a4ef36a50a6e72160bd0b6c06cd417b8ba811192ff597",
+      "paper.pdf": null
+    },
+    "2025-hozhabr-survey-real-time-object-detection": {
+      "metadata.json": "4df2038058d18c9d6424a45dd52b41a11a77373ec0fed9d17c7185e6ffeaa9e9",
+      "sections.jsonl": "aa1fddf572233e0a6293cdaf1fe99fe2d4a5c8f68b6c3c6d16ee4efe47327388",
+      "paper.pdf": null
+    },
+    "arxiv-1612.07119-finn-framework-fast-scalable-binarized": {
+      "metadata.json": "0a9e9f334470ae54b29cb2ad0f47440fc861028402bcdc278d3dbc3368d5ec4e",
+      "sections.jsonl": "854a1ce6cac4dba9d1ac6ff2793620ff8f7bccda5c3c36d6bb599ed717b77e30",
+      "paper.pdf": null
+    },
+    "arxiv-1701.03400-scaling-binarized-neural-networks-reconfigurable": {
+      "metadata.json": "c6066685cc788e89516fddab4d8d3e843ead57dbfd09b9667a9d06bf7f175279",
+      "sections.jsonl": "90107137674e6cd1ceecb653b944478ebf565265054045847ffe7b4dd0109afe",
+      "paper.pdf": "2b4f36f08b9ca9189bce4172a661ce33a5358e3d45702110a03d9ac8f4840508"
+    },
+    "arxiv-1705.06963-survey-neuromorphic-computing-neural-networks": {
+      "metadata.json": "d6f0531d23fdef8e9b69708e5f79daea1dfe14b10919b1a7dc9b170d2e9a1c2e",
+      "sections.jsonl": "43999e740693ba793f2e586b39dd506dc2b3942427e0e9b7ea4507f5e85ea98d",
+      "paper.pdf": "027a580c76d1a9e83e243e40f79be8dc42496307fed2b58e5a0e736e276df6f3"
+    },
+    "arxiv-1711.08740-fpgaconvnet-toolflow-mapping-diverse-convolutional": {
+      "metadata.json": "69848a9ceeb7f967c4edaa2f671df40a77f1129eacf8ccae376e82be27de2644",
+      "sections.jsonl": "36b530ca132de3ec3402b36097955c1b67be1424d339924f3b266a457ee2d824",
+      "paper.pdf": null
+    },
+    "arxiv-1712.00994-neuraghe-exploiting-cpu-fpga-synergies": {
+      "metadata.json": "fa94f6faf67983a9e4c604ee1da6db9df78cd8296e6686fa64b192281a449c7c",
+      "sections.jsonl": "96eaf61ababa55dc1602e167b72c192454c32bcac37216e4467107ea023bdbf1",
+      "paper.pdf": "ec406c270425e8ebd134f20d8564cf18bf0ae6359c94142c6c1b8f7504ff53c7"
+    },
+    "arxiv-1805.03033-efficient-design-hardware-enabled-reservoir": {
+      "metadata.json": "9b0175bc61a5228d77f71e522d47101016ca0a89b25c75277c2adac4186d8db1",
+      "sections.jsonl": "3fa513fb80a62e14ae3ba96574543b8ff448fb81d31f1f4cbb9d9253f650a3ca",
+      "paper.pdf": "207b03afb5fa8e11c9aac7e170e58e3445797f82aeb0812a21ef425f5024123d"
+    },
+    "arxiv-1806.01683-accelerating-cnn-inference-fpgas-survey": {
+      "metadata.json": "d55b49470077bdc497106c9c5946b09f479ca8d1d1345951fc5af0fd3fb02713",
+      "sections.jsonl": "8fe66de8b5e46d7f5907c38bbbed8bf0c109974eec3c9342a61b5327f4383352",
+      "paper.pdf": null
+    },
+    "arxiv-1806.08085-inference-quantized-neural-networks-heterogeneous": {
+      "metadata.json": "e7474c9d7498f3e28d9efb44fc6009accc8ecd85d9b43f992e7a9f735c1a6f01",
+      "sections.jsonl": "9a6f187bf0c6a18a49a8029b8d59d1c7525a5b408b0e178e6d4e42e343cbf34b",
+      "paper.pdf": "4b82a2c2aecfc6dcf713eb1c99fe87b1d6b6b3e7d4c2a717aca9e073dbd41ed8"
+    },
+    "arxiv-1807.00962-neuromemristive-circuits-edge-computing-review": {
+      "metadata.json": "513b42ecdc6c8a937ed559076ed13fa80b5dffa339dfb79bb49fc21fed14f215",
+      "sections.jsonl": "9efb23f3c6a0daa20dd169232f90de1330ae06aeb37c4088c423753a65b42c69",
+      "paper.pdf": "cb92b5dae0531a8637dada7b2d1c1183b4f59cbb5a1827261c21d1ae6ea5792d"
+    },
+    "arxiv-1807.04093-finn-library-extensions-design-trade": {
+      "metadata.json": "fd246f097e365c88cfe05f2540239ab07c8684e3c0c7bdaceba4a02d7688724c",
+      "sections.jsonl": "14bdc8c5ebda6bdb62e58a83a443452ba0833d10edab6640fd9e96a65401f9db",
+      "paper.pdf": "10aeeeee854a8430e8e4871160a432f1b966611319eadc6000e9bdc323365d06"
+    },
+    "arxiv-1809.04570-finn-r-end-end-deep": {
+      "metadata.json": "b7051d16fa1ad4992981c2d49393375d019b865267f935a50896b59f6450eabb",
+      "sections.jsonl": "88712086234d658c77738c8aa4d839223945b82bb3c0bd2e16f9e18f232cdb81",
+      "paper.pdf": null
+    },
+    "arxiv-1811.10276-variational-autoencoders-physics-mining-large": {
+      "metadata.json": "eaffb0b645e78b63ae143940dc65023dbfda6070321087697ab9a0f14b06d03c",
+      "sections.jsonl": "dd254a12e37ff0fc64a5229e7634081855ddddd026bcd31744f4cab63d40cc05",
+      "paper.pdf": "5330ca9468e39ec1e8d9a84bf51908a91ba00b4810eb717abe36ee9d958c5659"
+    },
+    "arxiv-1901.00121-fpga-accelerators-deep-learning-networks": {
+      "metadata.json": "45d465b600cef922ea1aa8f227d53e47f64dec33a46a3a63d5f0583c18cef1c6",
+      "sections.jsonl": "672e17b99d3dbc8d8e0a8744c3f092cd10df31dd6fafdf351a04b46a9b6e8c0a",
+      "paper.pdf": "204a553adae3cc4f58f30efb4212cd75a7e972bf954604cf2744e14626b6a115"
+    },
+    "arxiv-1901.04986-systimator-design-space-exploration-methodology": {
+      "metadata.json": "b8b5dde7321d3de2e3125fe97a2b28a5d16e2c2c70f4a903f1123b7ea20182dc",
+      "sections.jsonl": "a00852745ade4df3a12d79381c8dc450a10fcd15ec5039229877e4bca6bdfb37",
+      "paper.pdf": "c8a5fd113077d161b8e3b2ea589009aac3b1848be1274317761be70939f5c9d6"
+    },
+    "arxiv-1903.06697-graph-processing-fpgas-taxonomy-survey": {
+      "metadata.json": "9508e3e7a475c89b0fb0f744f324770340c73f0515e776c917ce2ef7516b58c5",
+      "sections.jsonl": "94da308dd18f2a3d319345400c37605d8ee0d824c59f52fed6c3ecf6da83bf59",
+      "paper.pdf": "a2e8a75e8b6615a9cce89377215ff386f07a75a38d7232ea6ead5888df81e5d3"
+    },
+    "arxiv-1904.08405-event-vision-survey": {
+      "metadata.json": "6e2d0561241ab9fb8785b3219d3be231002cce2ad63ed0303d3a605c0079efda",
+      "sections.jsonl": "23238bb6489c646847ff1339f10eed55356a42fb67b1e986d63892967d6b4cc0",
+      "paper.pdf": "88b5ff4a813e6deb6e6f653ad81b9084a95eb65350b38f37af8bf697eadd6537"
+    },
+    "arxiv-1905.10384-adversarially-trained-autoencoders-robust-unsupervised": {
+      "metadata.json": "1e3b8de96c4bc83df325ed8c5c906298a9adc5d317b8d29f8828fc72a3d9b2aa",
+      "sections.jsonl": "657cb26172c0a1afa83b87e3de78e9cb5adec5f0db38d3967d570d85a4bf63d7",
+      "paper.pdf": "76fefc7684eea7efe0a1747eca9e250f3dba5ae0bfa1a9ba9912fc87c68b9059"
+    },
+    "arxiv-1907.06119-understanding-deep-learning-techniques-image": {
+      "metadata.json": "8a0a5f7e20f5dc199aa1eaeb903639637a13d907b7d5f2704e7364ab78a6be1f",
+      "sections.jsonl": "10a8e99672cf98153ba87eb731331f017d5f21b05f0d086197b0811b2c2fd008",
+      "paper.pdf": "357bbe47938f2427fa9f7792414af2c309fc4025c918e1e8a77890a39c4bbebc"
+    },
+    "arxiv-1907.08349-convergence-edge-computing-deep-learning": {
+      "metadata.json": "a6ac5dd7e0b701f0df0a749e1bb74b4d9aefe60808ad877a91407e0acb9e274e",
+      "sections.jsonl": "56afe5043685ef4531cb00cc63f50ac60405cd22b4ddc19b7342588f267c8a22",
+      "paper.pdf": "2da20d4941d610dfc77bd85c8f8ee517d97995c59d1a04d9ec12b8f1785d0769"
+    },
+    "arxiv-1909.03742-efficient-continual-learning-neural-networks": {
+      "metadata.json": "d0ce6ee556f6d513c1c54dde0bc3bf9a9a9cd436ec2ede48e89964b3cb179ab4",
+      "sections.jsonl": "f085fa779510258bfe1498e81627e1be7c001ad8da49b316f24871b2f83a933b",
+      "paper.pdf": "043bccf9786d11502e764b7c664c7b61a753e3484f1351d7843a74549b9653ef"
+    },
+    "arxiv-1909.13396-req-yolo-resource-aware-efficient": {
+      "metadata.json": "3ad53fd66c1cc80a43c1af9d1a51a52f3e346266fafa56f0d37cfb617adac11f",
+      "sections.jsonl": "1dce1246bb8927a8e79ca714aae32520cbfaf0b355c9ed2ac2f6817dce91fc1a",
+      "paper.pdf": "a49ed47efcf6e077c2240fcde2cd7058d44b6d99361bf2be8506ddc563c57b73"
+    },
+    "arxiv-1910.03159-xyolo-model-real-time-object": {
+      "metadata.json": "7bbc6a0df54a9fdc82dd71cfb5ee799fdf248ecc6c62201fb9794c4464f09fc4",
+      "sections.jsonl": "bedb6d7ec6586ac872654fb5441f250f5f9b7ab4132b8b5b36b7174796b2e00d",
+      "paper.pdf": "0a1d58692c78d9bf34d3773ea8b756cbe9475e685f99d7820fa15537c8be4112"
+    },
+    "arxiv-1911.08739-vision-deep-learning-provide-walking": {
+      "metadata.json": "489f21b3c0b78517247b548d5cafbe69cc1867710571985c0489a3c0032b15ea",
+      "sections.jsonl": "ce2bbf6579740f990dcb188f21981d6f222e55ad2fff03757cb2a14fc2b4465a",
+      "paper.pdf": "28c1638725bb5c35576a930ac11c646d5091a884c1338c28711b5c857c23e23f"
+    },
+    "arxiv-1912.01096-semi-supervised-learning-bearing-anomaly": {
+      "metadata.json": "e8eb29668f6cf8c17fde350292ae3e19912561a3a494884d1278d74c861d0308",
+      "sections.jsonl": "3438260be1080dce0f332a1aa0e1286141986e259f8022f3cf2348d9388f90e7",
+      "paper.pdf": "8dc0c212b306fee665ca3a3b59102699f5ce07130e0a3870e2be00f98907e7e4"
+    },
+    "arxiv-1912.09789-survey-distributed-machine-learning": {
+      "metadata.json": "b51da745b33e117171d2406f816a435e6e97e0eb48a31cf417c5305e0dd73f22",
+      "sections.jsonl": "aab7378892648cd4e2036d0ebd097a1ef825e6d3e4cc2e1ffb4bafa7d934237f",
+      "paper.pdf": "84f6dd648e5898e7c776fe87ac8131f2755ed65aa71bf3f82ad16e80fd8c9060"
+    },
+    "arxiv-2001.09725-probabilistic-spike-propagation-fpga-implementation": {
+      "metadata.json": "8151ccb73f911ad732b19954ae5bc2a26136653cae4fb5b604e9c579800de608",
+      "sections.jsonl": "269efd28c5e1c4e5c9c7dd405db71a1f4ae8b666850ae3db7e6f01eb20dee86a",
+      "paper.pdf": "ad22065c52f014b8005a99c4e52544a7d6a8097167f97e3b417068abb30f4555"
+    },
+    "arxiv-2003.03852-low-precision-floating-point-arithmetic": {
+      "metadata.json": "acb58ccb1e2268d2de1f78627bf982559036d2af9c934fcaee6922e74b2d5429",
+      "sections.jsonl": "3dc517c61d6a853367dbc84254eee58806aa9013cb207027a374cf4830f20306",
+      "paper.pdf": "1a8652daa48b9abe0a9bce822d052cad5a5f31aa401ad1963b80c8370e46fc3e"
+    },
+    "arxiv-2003.06308-compressing-deep-neural-networks-fpgas": {
+      "metadata.json": "b02b687f44d2d9201bdce17c0c6323a77ed41f77e62cc723ae905295322dfce3",
+      "sections.jsonl": "6e872803bdc32aad0565c1150479a42dcc5f929cbcc576b76ba035dc4c172781",
+      "paper.pdf": "74c91a90004c3e8ff1beb5cff83b86e13fe0e3345cc9c99d222abbafc1c92280"
+    },
+    "arxiv-2006.00422-ebbinnot-hardware-efficient-hybrid-event": {
+      "metadata.json": "8b39b4378b45f1c5438be63b0347525f7a7a68cabf4274121258cb0b405c90e9",
+      "sections.jsonl": "2a58205287d537d17d3132f55c99eaa58659ea53ced8744c44a76b62954f7690",
+      "paper.pdf": "9d1a22c85522ad5fbf7763eb127ddfa46647affc004bbf88236adb4bf781030e"
+    },
+    "arxiv-2006.08357-codenet-efficient-deployment-input-adaptive": {
+      "metadata.json": "10d4c8c133abd8fab239f34dbc2e3e126ae9eb3892f144e60b372e61b9cd6807",
+      "sections.jsonl": "b04fcfd1fbfdb7a562f15c1ab05264c3476ba0a60b0e633dedef845421197c5c",
+      "paper.pdf": "ca91f4389c61f58c0ee93723dbaf9e448d2a5c1f9bcf9c6037d08926a8be5309"
+    },
+    "arxiv-2007.12099-pp-yolo-effective-efficient-implementation": {
+      "metadata.json": "f3cf753f925e48801185d68c5668b7a2734e7a09cfd5e7605e6117441d3386b7",
+      "sections.jsonl": "2267f73a3695d8fb7badb657a6f43ed93c40f9d93a2809f25f9caf213de0f180",
+      "paper.pdf": "c7b440698de4063366ebb41b405ffce90344cd3221453f948096244054cb19c5"
+    },
+    "arxiv-2009.13684-detecting-soccer-balls-reduced-neural": {
+      "metadata.json": "26fb6d51575ea5f8446d9827de49e7b06a6322727267b44063bcd6c51a0f1c72",
+      "sections.jsonl": "687bf5e530654982b026f1bc443ab7e3b3b78138ee0c17f66e303cef9258d6f2",
+      "paper.pdf": "af1a8a790fac72fc74f19ff494478bc41bf82976b164e7a81a85db4bc2148511"
+    },
+    "arxiv-2010.15156-diagnostic-data-integration-deep-neural": {
+      "metadata.json": "308783c27259f780f20cc255e6825e5097ace281d4d97cf69ea43a761ac80ef6",
+      "sections.jsonl": "f3bb24363cce0d870a4f045bde6581ec0dd2a8817db781e537d2fa68f5d5e490",
+      "paper.pdf": "0567f42e334bedc4e28c68880659a52737b33fd8db0af8c58de08b8bdad6d712"
+    },
+    "arxiv-2010.15277-class-incremental-learning-survey-performance": {
+      "metadata.json": "6cdce30a4e0b1103fb0ba97ac0489a812d1a294ee462a399ab5481391297099b",
+      "sections.jsonl": "16751d1b7fcd471fec6857ab24b269fe6094fdede5f734206ad08cc36d45f273",
+      "paper.pdf": null
+    },
+    "arxiv-2011.09073-survey-system-architectures-techniques-fpga": {
+      "metadata.json": "a6c3048e811388b04bea95f38e829117e4afc68a8b6b5d4789fe9b8fb9a37c92",
+      "sections.jsonl": "4c53d52680110d9c1a3b93f05d6eb9ccb1961fccada8919fae3f294a9b840131",
+      "paper.pdf": "4baf48f0fd1674b5b082731ecad6b8207f00b6c99cee05aa7986890f84726349"
+    },
+    "arxiv-2101.05108-fast-convolutional-neural-networks-fpgas": {
+      "metadata.json": "b95b6a34cfbd9a3e500759564ebf07d2367e79b820ed89f45ec03fed2f2677bb",
+      "sections.jsonl": "a638bd83417e081f7aa56626bd8f6348d7a8a9ab39888fb19700e4c0c16d4a4c",
+      "paper.pdf": "a0585a6c092d0109ed9d4e320bec854aa977690ff169bd6d7436856a51c15629"
+    },
+    "arxiv-2101.05850-continual-learning-knowledge-graph-embeddings": {
+      "metadata.json": "bbad6c80ca1c74ae39d3a445f138e4340415caa0755fee0b1d0cb897493b7fb1",
+      "sections.jsonl": "359d116530d52d64ee6d1977060693356070936a89751b191c9c181ca59e3cf5",
+      "paper.pdf": "9804e823738239ffaae93da44aed52a5eee12af6e56c992dd6bdf4ea13e0c9fc"
+    },
+    "arxiv-2102.01341-benchmarking-quantized-neural-networks-fpgas": {
+      "metadata.json": "e797574dee823a18d41f4531c1cf79bfaefbed60b7fc1686438f644bbd01d1ca",
+      "sections.jsonl": "6e7e9f0896815b035b05ad6eaefe4b7e9f6767fa97636e35d517b43e12d48fbb",
+      "paper.pdf": "f7ca18a24ff1db10b08470feb4c4b9be7fc9d6775b4fe2e1f239005385bcc26c"
+    },
+    "arxiv-2103.05579-hls4ml-open-source-codesign-workflow": {
+      "metadata.json": "ffcf59f30a84d656386f2e9abefbde2bbd64040543004402b18b694c41f71ca9",
+      "sections.jsonl": "fda50a82362cde5e8e76dace2760959a7af225c5349e4d9c3a503165e0bf203f",
+      "paper.pdf": null
+    },
+    "arxiv-2103.13885-supervised-contrastive-replay-revisiting-nearest": {
+      "metadata.json": "5b2db13d38693ab068c50886ba864a431370493550734f3f8917216924f67498",
+      "sections.jsonl": "5de502295ff4dc4a6ab0057b158450eac1f5d612974d035f5dc69632569ed2f5",
+      "paper.pdf": "b894eab8e6a3e06257f082fbbf08164052efabc4a61deb73b4109c4d247e437f"
+    },
+    "arxiv-2104.02303-exploration-hardware-acceleration-methods-xnor": {
+      "metadata.json": "a1cfeddd0a2711a47dd990a94bd051c55f43b9cf2ebe1f7d2b64ab0ab0232c28",
+      "sections.jsonl": "cad3feee7a0e3c46621b2dc345d271a0048f09f810a091520681f17e8f7601b8",
+      "paper.pdf": "841f291e04b1c1cb1655e83e754988b267de420f1b26d1c814b1a658a5cb6c02"
+    },
+    "arxiv-2105.07988-anomaly-detection-convolutional-graph-neural": {
+      "metadata.json": "f156947b5e363eba1cfe454276b9c69ad824f2b2f4f5bd2d0a865490dd53033f",
+      "sections.jsonl": "5740e7d372109b538a9b9be42e171d0befeff7f0f3d0cebfdae055a20e40f1ef",
+      "paper.pdf": "aaac432f5f1704bae207579644b79d645c87b4a4e6d538f3182d5faa6d0db212"
+    },
+    "arxiv-2108.00874-few-shot-domain-adaptation-end": {
+      "metadata.json": "182d94c93888ab7f97dd053693da0ea4c95012d52e7755a6ef5da5507d9c8bfa",
+      "sections.jsonl": "c3de9355be578f1558db0a4d2a4b31916c6fc9b69088ba888ab447dc23b65a4f",
+      "paper.pdf": "7b155fc2fa9ad05a4e7f76c798f40e1d9a3f6cc164d9f267228315f15b5f9589"
+    },
+    "arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised": {
+      "metadata.json": "4a3e391ea319baf6632961ec637915fa4ccd3c38ab4115cdd5ed4d43f8ca3c72",
+      "sections.jsonl": "f8c467d7dd6e07d0545942a2c579083d659933b6852ec97ece92a0cf461cb35b",
+      "paper.pdf": null
+    },
+    "arxiv-2110.06948-challenges-unsupervised-anomaly-detection-particle": {
+      "metadata.json": "829cc19a15d2670c39f235eb536a9703cbecdf2481007f507a42e14ee687de09",
+      "sections.jsonl": "fc68b91b46c7f155a2a37d541c867bb0c800bbd0a1a271e3dad6326bf4faafe3",
+      "paper.pdf": "d544b832760899bd349a780eab3d7b0db0ac231625496e5c5d818c02a7c8978a"
+    },
+    "arxiv-2110.13290-exploring-system-performance-continual-learning": {
+      "metadata.json": "7ee7ed8f54c542fd75a9aa8ae3a57f481b9df549404e7aa3b8946fd10eafe816",
+      "sections.jsonl": "bd8357a0290f04cb397857f53ca3461a8dcd8c9825e86f9320c426d1c913e320",
+      "paper.pdf": "f4f245c10274d122378843caab7dc9fda5cf94c7b74cc31692b44e9d93cd713e"
+    },
+    "arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference": {
+      "metadata.json": "4d2df87348adc1bef411ccf2e1b45d660d5622e2393afb13b8a8c7a303427e30",
+      "sections.jsonl": "7ec4edf9884b0075014651bec0c135ae267e1c25243bc0cd777322113ad71d38",
+      "paper.pdf": null
+    },
+    "arxiv-2111.06417-online-compatible-unsupervised-nonresonant-anomaly": {
+      "metadata.json": "a2f410856b6e5f810a16d0387e82fcb184a6002efec0107e0e3a3e020f9905b0",
+      "sections.jsonl": "5bb0225a29b6dc4db06de71b01f62b40273948369afee6af66cfaa9736763e86",
+      "paper.pdf": "bf075c48ba9d925c760dfc317f91aa269de502bcb1822755c3e230bb49fe5abe"
+    },
+    "arxiv-2111.07993-collie-continual-learning-language-grounding": {
+      "metadata.json": "3b36a579d02f8d30048f52e143f9e05bb181f85b7fdfe6d1aaabaf69097e9869",
+      "sections.jsonl": "443caf6c93e410b618467819fa9af139b0d0095796f5bc9e7cca2a397847b1ca",
+      "paper.pdf": "febc29c009cf784909ca5c3a634d136a7e6b0f50e0e8a9ca6d07053446ad0ebd"
+    },
+    "arxiv-2112.09660-ai-assisted-verification-biometric-data": {
+      "metadata.json": "950097c8682c885bd82053e97433c6c037e596a1b5816947087d3fb0b9aab0cd",
+      "sections.jsonl": "d510f951ac06ed7022027ca6bd417426c6ad02e1c4234a2778fb5362d5237a73",
+      "paper.pdf": "fec4189ad2425b53a35dedeca37daabb09e7c735c6f2793a9160ec2c81bfb8df"
+    },
+    "arxiv-2112.09775-adaptive-subsampling-roi-visual-tracking": {
+      "metadata.json": "c70333148a741d8bdf961d1297dd3a5e8078c1dbb4d3ef36107d68cf4c099105",
+      "sections.jsonl": "ad4a192684b0e99b04fa7145b2626703ce831a43d190116927562c8439960a72",
+      "paper.pdf": "95c4efc3f1abab93bc21af7f1fc81c9fdf358d7d00082d27257ede0c417bb8ba"
+    },
+    "arxiv-2201.11409-rtl-implementation-finn-matrix-vector": {
+      "metadata.json": "a62f2d0b37acd78e22b297ccfd1c28b8bca5b7ab6748d74cf7ae57629a8c94a1",
+      "sections.jsonl": "de1230f15294c4d12952420e19cfa1b59128670ed8fc2ce5a4bd3318b8a8e358",
+      "paper.pdf": "d1043578f60d5b028e7c6b98c5e585c9da60b19a4e201f3705a5272d69fcf944"
+    },
+    "arxiv-2203.01343-creating-simple-interpretable-anomaly-detectors": {
+      "metadata.json": "8e5b8d847c2c500c459045cbec578d29d25244710228bff01c6f779f72044947",
+      "sections.jsonl": "18906cf034d90d695dccf1981331b7f3ec82e0714da01057e5b40b888fda3273",
+      "paper.pdf": "a05da8cf7b2798c284b410e2f924e121ad89d522a46b7f4c9df2f5069c51f446"
+    },
+    "arxiv-2203.02135-continual-few-shot-relation-learning": {
+      "metadata.json": "994b8686938225e14abdbc5b0d7e9e114b6f97c0e9a32605c74902b62dc40adf",
+      "sections.jsonl": "c16413b29a916042e5e177531be073d09820b935e21143da5a2daeb2ffb7920c",
+      "paper.pdf": "f1c4ecaab4dd4b518fd4cd899b3e3497c95e909f617fdded2c18603877d0a3ad"
+    },
+    "arxiv-2203.04453-machine-learning-nextg-networks-generative": {
+      "metadata.json": "87d5a40fc6b164cb07713418be8123a25781d377800db59c31372b4fe291f466",
+      "sections.jsonl": "5c89be3629f047d8a2b2294c1171168778d0cf8bd5b254d377aa6cce2c752c56",
+      "paper.pdf": "f44e8c0bfb4e04160922fa742a8bed99f670aabf7bc41fd0769b2fd3ef54a1e5"
+    },
+    "arxiv-2203.13167-exemplar-free-continual-learning-vision": {
+      "metadata.json": "6c0e96f64caec946dab0ef474f322752ec7d2f8ec3378b357fb7ff186a0173f4",
+      "sections.jsonl": "463bcb130d8a9c45777e0ccef7672e424b4ee2cb29e279eabab87d3f059fbb49",
+      "paper.pdf": "75c7d6a26936d6d16624db74ade7996fc16147e0a5f6f9b08a9a069670c3e863"
+    },
+    "arxiv-2204.10619-real-time-hog-svm-object": {
+      "metadata.json": "e039b3f0a66efb8c1ab43dc4e543703a3b78aabe82463b8644f819091a4d2faa",
+      "sections.jsonl": "494914cda5f936d2ad638b8921b02c1e5f2f9781b5411bb2da52d4d1bd3bed73",
+      "paper.pdf": "c6597ac6b50b250b329a2d2ea881a9685bd3c94ecbab7f8ba2297b67ccdec0d0"
+    },
+    "arxiv-2205.10653-real-time-energy-efficient-siamese": {
+      "metadata.json": "43358355754f4166ff841001d61efd9e82da31ccfdd54ceaf046291febc5567a",
+      "sections.jsonl": "db9989ad38b29d04b64b4129c75dc7a8be9259ed216d474ba4dc111cbb25d96f",
+      "paper.pdf": "e0c45ac9fa99dc2e8966595001e694d44becf987a540ad0df91c03a20a00528f"
+    },
+    "arxiv-2205.13384-continual-learning-visual-search-backward": {
+      "metadata.json": "7d0749c12274c8331bb9bc17c1e7fad8728eb62421ea6814ec89505f1a5cab25",
+      "sections.jsonl": "594db5d4d6b0454b83bf6c1754a88e289b99f3fae1a44eb837de7807ff47b98b",
+      "paper.pdf": "12ff80810212c863269c5b60b1767c8dd2766f631cdb0527782ff71566d0849f"
+    },
+    "arxiv-2206.07527-qonnx-representing-arbitrary-precision-quantized": {
+      "metadata.json": "11676afa8413d2255cc40054c76d298f33ae0bc4f0adff83c316129526b110ca",
+      "sections.jsonl": "386d0acdadc7665275233ccdb4bf9636e75ba9e16d1a8960ddbbf1cc59c920a0",
+      "paper.pdf": "90b5c29464b7970523a2cbf121cddcac597d1f183a095c2c2301eb2bb945c44a"
+    },
+    "arxiv-2206.11791-open-source-fpga-ml-codesign": {
+      "metadata.json": "5cccf252bfad6d64be30c2eaea6199b88efb9ff75c64e85c0f5dc7bcbc5ea8cd",
+      "sections.jsonl": "9999e68421f2a232af670f45499a812c7e3c61b078d63f30fa66311cbc8e4431",
+      "paper.pdf": "516b30131b91fa3798d1aebe47fc4c9c6917268937a76a7b34c5d7139a9ab2e0"
+    },
+    "arxiv-2206.15472-device-training-256kb-memory": {
+      "metadata.json": "b75ce54c17ac0f718a1a1897d132c2b3d49425a039896c88d42b75a9b6486cce",
+      "sections.jsonl": "134715270af19fd7c9a289d11e32834059ab0e7fac956136c8e7d62324e2c8e3",
+      "paper.pdf": null
+    },
+    "arxiv-2207.10482-lpyolo-low-precision-yolo-face": {
+      "metadata.json": "27d0bab657b896b65d69a4c117b429136a6935a6467117acf732e9eed1875db4",
+      "sections.jsonl": "adc0e8be15db5e3e3d26bb96df1cc7c87a9e4622da9cbd983529c92a88fed402",
+      "paper.pdf": "94db978194a88b47ccb848af6c82b2fc5de3368a0619c36d42f40d455cad58ea"
+    },
+    "arxiv-2208.00773-real-time-object-detection-system": {
+      "metadata.json": "4f8f6d682a2a1397b193a05d4bca370d4a7e2cea5c7c5cbbb8cc9af9c2053922",
+      "sections.jsonl": "e19853776e63eec6cd5f8c16c7005c863093c31dcf6df8c240ee825dab750643",
+      "paper.pdf": "da3eb5877d3db2433105a5cc927cd739fe266acc9444c9e83af2ba6ec648e263"
+    },
+    "arxiv-2209.02976-yolov6-single-stage-object-detection": {
+      "metadata.json": "a61fdce689b75d3d3cfbf8ef1f3691d0e9281bd2dc6ceaf3932ec401a04d5158",
+      "sections.jsonl": "3d323bf5f47cf3f8228c7327eae2353b06d7e5c3879407dae41d7bae1b4def7f",
+      "paper.pdf": "97fc40566a0b6fef0be2ba51b59edd609802ad6b0aadd30072dda5885a32591a"
+    },
+    "arxiv-2211.11647-benchmarking-edge-computing-devices-grape": {
+      "metadata.json": "e311a1d471b42a83a328db03d133a8e4458a8e73d519302250c0d8cba649ce19",
+      "sections.jsonl": "db3a12a433907e188f68be42473ab6b543836dd19d01625b39afca4721048b15",
+      "paper.pdf": null
+    },
+    "arxiv-2301.07050-energy-efficient-reconfigurable-autoencoder-implementation": {
+      "metadata.json": "a57504ff312f8ee9646724f77346d88c252271b5a09a0e2567bc141c5dc97cbe",
+      "sections.jsonl": "1617a887b7a1a1567b256b353866397bb7ed464c2b321518b15b0bb8db0d6204",
+      "paper.pdf": "b7000dd692d331c0277585032ec0163413bbcaedf5920101ca00d47f1fdf2e90"
+    },
+    "arxiv-2301.08189-benchmarking-yolov5-yolov7-models-deepsort": {
+      "metadata.json": "c63666d6f3cbaf9cb75ef0771e4e399186d00a9644c1bfd2a92ca14fe2031004",
+      "sections.jsonl": "5b3aa10f5a664256f9dffa8eff9e5525f6fd5fca5a3e1b3c37b14edc0b786b42",
+      "paper.pdf": "394e2e678d1f05d6a0d12c57be6dc620f9c5d34d04e0b6264a511eab65a89ea4"
+    },
+    "arxiv-2303.14535-efficientad-accurate-visual-anomaly-detection": {
+      "metadata.json": "a4dea7c7b77742e0342b25d290ece42c9356926d50bcaf4051cdc47ecbc874df",
+      "sections.jsonl": "7ab98e0e4b955ca40a64bf7134c17eb4471a9e52ec1299d334c69cb5e6305bb3",
+      "paper.pdf": "d7658c53a9ccdbcd3a5bc56f1943b42c912f74c4a792c6498985a52b9135b5b6"
+    },
+    "arxiv-2304.03836-nanosecond-anomaly-detection-decision-trees": {
+      "metadata.json": "d24f8a4217472060aaa3120010a8ef5efe7d5a4b5e99a83c5ea5c30bbe86d6d3",
+      "sections.jsonl": "c4488026a48c4950a000f7ad8dd7d0238fb9fa3253550361785d06eb344fda65",
+      "paper.pdf": "97de22a3bf81b0769463a05487ae93658245496f681250901e84258ae0c8a629"
+    },
+    "arxiv-2304.05042-hybrid-combining-ann-conventional-demapping": {
+      "metadata.json": "1a1bd8f7c010dee8e385c4b8ebb583e8ca6b9b2048dd659990cc6f977704c190",
+      "sections.jsonl": "bf94ee66f515312ff929fe7ee675b258ee3d1f04252df4503ba587dd638bc7ae",
+      "paper.pdf": "0d6de6b938b7a5930cd058f1fa8011595d915fb264e929151f1ec61d8e2750a1"
+    },
+    "arxiv-2304.10618-uleen-architecture-ultra-low-energy": {
+      "metadata.json": "ab1fb4d97c6081417513240c9ab14536933068edc5ee2d2d7da016a5c63ace53",
+      "sections.jsonl": "59e13e15eea08115dea12f13f7a9a7413586e0c3987efd6c3439d3d255680b11",
+      "paper.pdf": "d8595f1d0739b0760104e8b083edf9ed42b3a1f7ccfff51b4b5de5b544c9113b"
+    },
+    "arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint": {
+      "metadata.json": "4fd8f153812554b15f0746e8db3e8942ba42c656d946de3ddbb479d9723e487e",
+      "sections.jsonl": "a1c3b5e83ddf823e6b20e0ce7fe2a462af87e7688507274b0d67fe4baddf47c1",
+      "paper.pdf": null
+    },
+    "arxiv-2307.11904-model-compression-methods-yolov5-review": {
+      "metadata.json": "c76c448aabf2db975c5d3ce334cc54555a799c9389b94bca53a761f1b07e29e3",
+      "sections.jsonl": "6747310aa1cb4dc67914f2d6ee397f825537ee809208eabf6b2f2b599c472154",
+      "paper.pdf": "66ab6f2252ccf410c3d9fc53481f31b65a8d28ec25428a26caafbcb7b6fe5859"
+    },
+    "arxiv-2307.13901-yolobench-benchmarking-efficient-object-detectors": {
+      "metadata.json": "5107287566f41c7a06c24d5ecd19e8cc975109fb961fae290444ca6d4f71d164",
+      "sections.jsonl": "7bd2fd7d198ef44595213a7af2ee4f282fca6cf02e2935eb36683414a264a353",
+      "paper.pdf": "87c8b204a3a95cecedccd947efce76d5b15448a26c129f54a572d16dc5e97e5c"
+    },
+    "arxiv-2309.01587-satay-streaming-architecture-toolflow-accelerating": {
+      "metadata.json": "aac29b031f93382536502c2ebee31fbb544948c33c4088396a157ef5f6fbe768",
+      "sections.jsonl": "e1d0427d5f7c07ce6395bee62413b9f524b4b7a87348c88846b6b2e5ebe2b309",
+      "paper.pdf": "2e09ac7a25cc9e34aa4d7f51449e9a4aa8abee624978b82e39d45222c3b0bf6d"
+    },
+    "arxiv-2310.08401-performance-power-assessment-cnn-packages": {
+      "metadata.json": "32c3692419ef87f842b8c7463d45fbcb02125c1136db6f8f3ed1a382d16cce2a",
+      "sections.jsonl": "6e62f0cec24c14bccfd8ad8bc44d4410ae632d58f37136668db1abd28b57fd69",
+      "paper.pdf": "22aebeaf0aff20ad3f83434db27a2cb1bdee4144d4c38b63b995336a32a876e0"
+    },
+    "arxiv-2311.11420-lifelearner-hardware-aware-meta-continual": {
+      "metadata.json": "9e560ceb92e4d4e6b18bd7d91532be33feeb3b8fafa0bd8ca57138fee6bc91c2",
+      "sections.jsonl": "cae4b69c79783240afd47ca82b4d4b4eeb12cd8e9379ab147b7f36a9b853309b",
+      "paper.pdf": "ce433f4b31503da59885b3218a7bd211874192723de332161d4720288ae43847"
+    },
+    "arxiv-2311.17162-fast-particle-anomaly-detection-algorithm": {
+      "metadata.json": "8fca71f77cc62859cd0bd2462c24e8e77bce37e2c2a8246a187cee7cd31397f9",
+      "sections.jsonl": "bd345dea01d268aa859f79dff3470726b777017cb8ca36bb50bfe6c5b4382046",
+      "paper.pdf": "1af921524188d6f4e3b4798db988dc69859c526f2cd99548ef1e746f13addf0b"
+    },
+    "arxiv-2401.10724-real-time-zero-day-intrusion": {
+      "metadata.json": "c190eeb5f5e0e87a7678dcb06c8fdcc1515c05116ad99bd2802935ac03a9f259",
+      "sections.jsonl": "86905cf690e51327ff95cd9548b28a6267b0b865dc454417794330451b9e1c73",
+      "paper.pdf": "b403d166a2228f9d1dcaba2334626a043a3b8d0c29620e14de0fc2b1d194ea21"
+    },
+    "arxiv-2401.12240-quantised-neural-network-accelerators-low": {
+      "metadata.json": "9c400fde3902dd1c1bc4ad4f4d20deffb44dfa2aea9518bd837ab0c5b009ea4e",
+      "sections.jsonl": "24b048a7fbd6d8afd1dc8cf967e177b11bcfa41ad0747d2448944101d5b099de",
+      "paper.pdf": "1e39e7f6b9e45fdb9d512ded17ba6684f7664dfb86a5578a5600d3d78ae2e889"
+    },
+    "arxiv-2401.13200-topology-aware-embedding-memory-continual": {
+      "metadata.json": "9063cf6f3a1aeb0ee0f6cf68cd809b1f5074e81e25c7fcd36d49649883eab27c",
+      "sections.jsonl": "b826484c03ccb0a911a39a1f727cf436085d97a00346ec3c64adfc59e9520cc5",
+      "paper.pdf": "bb0c2a0bc34e492b8ca05119ba74b8461e335cba205f6b8c30e31347a987c364"
+    },
+    "arxiv-2401.15453-bayesian-inference-accelerator-spiking-neural": {
+      "metadata.json": "bee6df305035f7dad150cb15575d2979dfb67f61f2f26f3f7cd0fe46ea166161",
+      "sections.jsonl": "a5a4df8b3c9c0d4b5cd40435489d8dc2b90e658e8d24ff539869fe411592ceb5",
+      "paper.pdf": "ae3795700253c371465ecd4b69b18299ea09cf7749263617cb1dabef0d98f2f4"
+    },
+    "arxiv-2403.01098-low-complexity-deep-learning-augmented": {
+      "metadata.json": "a36869231b5f1de4a4f199f683413613f43c175ccab130c2718872ded9fa39d7",
+      "sections.jsonl": "6ffc2f8d27780cc4f7d1f68c549cf92fa0de03669829c045587cb36f22854634",
+      "paper.pdf": "976e5ae98de9b5de3f8b51867c5bf120d197039661bb5b66cab783c9c3969b99"
+    },
+    "arxiv-2403.07851-12-mj-per-class-device": {
+      "metadata.json": "bb97d9538bd5889feec73a7f02a5ff14284e4dbb4cfaa2925969bb96d21be01e",
+      "sections.jsonl": "8d7cab03974a75a81ccd478b34837be5a752867921f52aa617297e8c28d212f0",
+      "paper.pdf": null
+    },
+    "arxiv-2403.18921-smof-streaming-modern-cnns-fpgas": {
+      "metadata.json": "1e1f589f22291729a59be094c9fbd226fe5ae1f914411de29090711a1e8833f2",
+      "sections.jsonl": "a2231ac2bc8e35c41086963404033eda7ceee222d66d873f059704af02e364e8",
+      "paper.pdf": "3faec06cf778dd603933270eb4cf2b4198738d62602acb4b26d527511540e9a3"
+    },
+    "arxiv-2404.06526-onboard-processing-hyperspectral-imagery-deep": {
+      "metadata.json": "ca830cec9b0e03794c587705be6bb96d408aa7910d2174b7da211dcb7d089567",
+      "sections.jsonl": "d73f3416d2af325b733b6be700657a8b5725c949535984cb8a4db22de8c656c7",
+      "paper.pdf": "a9f7f84f45f4e6c6f0446e5b86f27afcc0e5e5e4b71fd4641959aecf41c48a05"
+    },
+    "arxiv-2405.03715-iterative-filter-pruning-concatenation-cnn": {
+      "metadata.json": "6865bfeb2bb58fea714eba8d6d2bdc373a7ace2763adabd37a536c6a02a543d3",
+      "sections.jsonl": "2f069ebe00334cd00195d7cad5339dd398958298de8d74fd39d1bff7b7b8d39a",
+      "paper.pdf": "401706fa88e3f1b06dfad2a2925c5e9da20e186d0b6e8f33b2d943d18058ebd3"
+    },
+    "arxiv-2405.04453-continual-knowledge-graph-embedding-incremental": {
+      "metadata.json": "39b7a1c89938fc1ddbf6218885efdc4249512cb03b4cedd65182974afa7c0f40",
+      "sections.jsonl": "b88e98e50704e50bcc86fa60db2685be0a4e06aabd96979813fe5951cb1b0321",
+      "paper.pdf": "1bf330b1bbac8f6215f4f5457b559ad86d52fd9f4bd9e41e222b5157f3d0d73e"
+    },
+    "arxiv-2406.07318-embedded-graph-convolutional-networks-real": {
+      "metadata.json": "4e2449a2ce19d285a61d65f29f60bc44321d4a1f185be9f58a17aa25c6fda970",
+      "sections.jsonl": "ac04e2d0b0fb0ce61f76ae2aa054559a3dcc2f4c5e8bce85ea53b5280b0d6eb2",
+      "paper.pdf": "ac2d05805016188d825e581487e9418e9af7f562599b79649ae16607a72befee"
+    },
+    "arxiv-2406.14239-leyolo-embedded-architecture-object-detection": {
+      "metadata.json": "effc182ca9b0ee079388b89e94933af852b3dce701b3fd35e45e4d2667551623",
+      "sections.jsonl": "0c4fdf6b3b37b4d3014138350d47c911341e3c399dd3340a09868c704c3afc59",
+      "paper.pdf": "65ff60c4f425a02b9d55c22b825cd29da4364b3186affd63fde0b52bb1934a7c"
+    },
+    "arxiv-2407.05705-fast-continual-knowledge-graph-embedding": {
+      "metadata.json": "aa87a7af32e3f7be9507dd2490923b7040003e442baf6951aaa7c2df0eb6e28d",
+      "sections.jsonl": "2bb183e6997624ed6adb22690e878b101e9b413c006b13d750b102b401de118c",
+      "paper.pdf": "c71e82e5c3eae24cd38143f0c1cb2fbe9242fadf769d2e6cdb49f3b06b008409"
+    },
+    "arxiv-2407.06170-real-time-spacecraft-pose-estimation": {
+      "metadata.json": "749f0a04732ba6a72367125b1b687bed20ca0ca2db988764eaf14f83144dcfff",
+      "sections.jsonl": "7079f9f07410c5054e68a61c8ab7f5c9658dc0143d1d51605d1279e254e155d2",
+      "paper.pdf": "a60e350989b4e1cba8802efa74b0381cffec5febf0235f7900c9a172aabffcd8"
+    },
+    "arxiv-2407.08272-poweryolo-mixed-precision-model-hardware": {
+      "metadata.json": "b26f53c06cc9b5a931101367b792892303ab98398022732212b674b3668175a0",
+      "sections.jsonl": "0f3afcfdfef46432a72f97732ae7e27152549c8fe325ec719dd9d9aeb48a1a02",
+      "paper.pdf": "c25c365a1377d910f57b78ef1e37d84e0276849aef90ae157c682120a256f2bd"
+    },
+    "arxiv-2407.17647-energy-efficient-artefact-detection-accelerator": {
+      "metadata.json": "cea5917dc2aa206f40dec992c7be0ec589e0148f5230c01c80ff588d849e26d6",
+      "sections.jsonl": "e62af48facaaf7487dc9249676319baf3d356577091a0c489f987dd77bace945",
+      "paper.pdf": "a8832a23337255cc5ac3e81a7c826dd8ecf1f43ee953ca411106deeed590cb40"
+    },
+    "arxiv-2408.15561-cgra4ml-hardware-software-framework-implement": {
+      "metadata.json": "70f6a53c8ebb8263aea1326e356ec240b8419b1e2c6d76286cfbc8bb9e508b2b",
+      "sections.jsonl": "0762f6476a7118fb78091b857a636c24fd9fff1cce7ffcb84edb4377ffa2f96b",
+      "paper.pdf": "8465cd0f4abf2354474737ddc2b40ae1485363ccd5318c316c63390998db2d18"
+    },
+    "arxiv-2409.07114-continual-incremental-learning-tinyml-device": {
+      "metadata.json": "ca05e6eba6116850aa5e3de33a518d77867c992274d09cd4366c539464361f91",
+      "sections.jsonl": "e4df3381b4e597e57377e6c81b6f8605e678197983f02f4c73ce1dad613baba2",
+      "paper.pdf": null
+    },
+    "arxiv-2409.16808-comprehensive-evaluation-deep-learning-object": {
+      "metadata.json": "e57638650adac8d57f9057b679a70827e880c220b09c2e37c6999b6bedd25ba3",
+      "sections.jsonl": "0642c1dd8a92f59cd12772a4eb0b4b4de5e89aadda224c72020e908b92934e33",
+      "paper.pdf": null
+    },
+    "arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded": {
+      "metadata.json": "0476586c32c0ed7319501773e63bdbae0f3d0ec23b6b46afa39a42948fa49de9",
+      "sections.jsonl": "e6765302ca9b1dec8804d50a8cc9a4d49c0e2dabd0a6341c08dc1071f991a01e",
+      "paper.pdf": null
+    },
+    "arxiv-2411.02564-continual-llava-continual-instruction-tuning": {
+      "metadata.json": "0dd795d4a94ba64fcb7e88634de0b3654ecbd8dc875d6f191f0bab5f56eb4020",
+      "sections.jsonl": "2b1d0c3cb29c40d544f130dbb43a1547a2de322e2878b67b3b33fc92bf7635fb",
+      "paper.pdf": "8492b0d0a7d070c4a7146b9fb26c0afdef2f8bc94020568e2d90676c151aff2f"
+    },
+    "arxiv-2411.19506-real-time-anomaly-detection-l1": {
+      "metadata.json": "e8dddb1d03b255b3ea8387d741702d55e59d32231d7509e279b7561ca1f37566",
+      "sections.jsonl": "d714299aec59b5e8a07fec8449b4669fb97e1aa7a03826be80f4022a387ff6db",
+      "paper.pdf": "d2be715360ea0a9ccbf726a9801e0239d39f9f8b36a8d306cbb6f50e1f8da19c"
+    },
+    "arxiv-2412.13843-review-deep-learning-autoencoder-design": {
+      "metadata.json": "f4f13d2171ee7f1748db18a0b135e54d27361a5470df9334677dd21fbe1fedf9",
+      "sections.jsonl": "99c12ae9a50b322cd0cc8f4b214ce4a28cef66dbbb9c00574b569a28b3dcf824",
+      "paper.pdf": "da288efbdae0cc5ca83d40704c6bf43ce3c4a85abbb716309dd244835bae331f"
+    },
+    "arxiv-2501.01511-treelut-efficient-alternative-deep-neural": {
+      "metadata.json": "b549b71acb8f0647bfeed5957e9c6d99ac6fc0a0ffd1085fbf0df5a3547925fe",
+      "sections.jsonl": "fe3f297c15a52288b16a81cd08bafa396369c5a9b24f31b293a1f5e1caa637a0",
+      "paper.pdf": "fbc0c06913fffd0f048c96b4145f71cceca87b36fa2e0f1cfec6f762becf640c"
+    },
+    "arxiv-2501.07875-continual-learning-embedding-layer-surgery": {
+      "metadata.json": "562f89f144bca1eebecd0e8a54205c559ee06b11a7f6f81c9ca4a2c2a55b0e30",
+      "sections.jsonl": "2effb416d1ac427d40d9a6496438991a8333941cb5744fa483bab0a86fed05a6",
+      "paper.pdf": "b0f65a11de9999a61e988fdfdfa0883f8926988a78de3a75366ed21021fb4c89"
+    },
+    "arxiv-2502.11609-exploiting-task-relationships-continual-learning": {
+      "metadata.json": "b948c17af4d7d43658bc668c6a6168b28520ece039838e2aed9cd055cd619a28",
+      "sections.jsonl": "366acf84605df898ff9a78b740519cac18d0c30cb644f63f05b3ecf5c1258990",
+      "paper.pdf": "caf9d31383dcc7398838790004fc5339e5d6d1c502bccf4eb0ee931d44d03bb6"
+    },
+    "arxiv-2502.15737-performance-analysis-you-only-look": {
+      "metadata.json": "7fc240d9199ad77945b21601c0ebba38643654bd00435ff3d79e366d45c1551d",
+      "sections.jsonl": "999749afe150e67314e8c0e3226226f8f331bcf74a2128b028876975ff40d3e8",
+      "paper.pdf": null
+    },
+    "arxiv-2503.07371-hgo-yolo-advancing-anomaly-behavior": {
+      "metadata.json": "5354eb7ff81c85a35231f2e70d4cadced9628abf5e50deb9ecb5c43b90abef08",
+      "sections.jsonl": "312cd4be7dba659f1e4f8dc0cb695260afb84d9b7652a67899dbae12ff1edd69",
+      "paper.pdf": "fe18b206901dc9e461bc5cdbe21f170788d84e615acde7f715aef7c6dd104e45"
+    },
+    "arxiv-2503.08700-real-time-semantic-segmentation-aerial": {
+      "metadata.json": "89d45321daa03de76f07cfe476dffb4d1f287cb2ae057e87f3d349b4c9784f52",
+      "sections.jsonl": "5726b8bff7b7c21322de3be16f0d65d07005b6a9a5a1800efaa37ce1dbe466d3",
+      "paper.pdf": "952cd0eb283f6f7d859874f9970c87eed53139ee95fbba5a45fd4daf60cee266"
+    },
+    "arxiv-2503.13023-real-time-multi-object-tracking": {
+      "metadata.json": "259a1a0861bd6b0e541b271c4bebd71bb7dc625a77f676312f203c4d8fc3478c",
+      "sections.jsonl": "88018f1f07135d5c6f69cdc504cfa5396f3bb3f74847ef1a476d821b23e3476c",
+      "paper.pdf": "b801cf10cb814c9e98db5f93504090da7a97b12973c9c536be3955c781a47474"
+    },
+    "arxiv-2503.17061-replay4ncl-efficient-memory-replay-methodology": {
+      "metadata.json": "995656ee59c0efefe31b511420500b8aef6d526b74a8fe5549d810067f2998d0",
+      "sections.jsonl": "682da9c988df35a6bdc2c0452a67f053998640aaa5b9832b149e6a0291194d6c",
+      "paper.pdf": "4d49773a80408aab928f9d21a8cebb7146a97e0ab89099b25f020c5651a4a052"
+    },
+    "arxiv-2504.04661-n-torc-native-tensor-optimizer": {
+      "metadata.json": "aaf6002cd71968f6872d1935bd60b1241d703b90faa5a37d45fde6fd6ae996f1",
+      "sections.jsonl": "51a88862ea5448f64ff9d739f9be45c5212b89bd6a0bdace2f348563a9f168dd",
+      "paper.pdf": "79d4e910f0209b2cde6ddcb358248f6fdcd6c992e1a1fe8b2f74906b8627019d"
+    },
+    "arxiv-2504.06996-neural-signal-compression-raman-tinyml": {
+      "metadata.json": "74744db5f359942f782b40c29583b5882af420b10bd40b37c1e592fa06c52697",
+      "sections.jsonl": "acd367d158e8b02386e2dc54c82ca4f6e8e0f3b14c09e5fc596147724dd6fa05",
+      "paper.pdf": "780fc6e02aefb0e4b0a2ce2fe13f466e4e492eb1d3c248395a215916d22729db"
+    },
+    "arxiv-2504.09900-small-object-detection-yolo-performance": {
+      "metadata.json": "d261a29e6cd2a18688c0b1c81fbb55db2558fdd6ecdf2bde2fcbd475404d3072",
+      "sections.jsonl": "1d7a3a5a56bca31b3e7d046ee68768d820ae6541eeaa1fa7aecec0a5444e0a0d",
+      "paper.pdf": "c14135cf5998287bee61ec8658ea6321bfead9f99099c0e905c29faa7dc6e3b4"
+    },
+    "arxiv-2505.08992-dataflow-tiling-strategies-edge-ai": {
+      "metadata.json": "7a24f6f62598a375ed3a2e7c98e2bf44ffbd78da71bee4782556131fb0628ee0",
+      "sections.jsonl": "b2b6a3b8a2b4c9debe34516af2c9c6dfce2ce674daa60cdd45aa5e17ef5b5e0e",
+      "paper.pdf": "2c7fd877e9381c2615b4828957cb907a5767f85ad7efae516b4046fd14adabc7"
+    },
+    "arxiv-2506.00037-query-drift-compensation-enabling-compatibility": {
+      "metadata.json": "e5416b40acae218d681c46ed84e12440e7969d3324691448e5464874308e7df4",
+      "sections.jsonl": "8bbe4183ed32b865843f9acd726f46d7087019caf67d80e54e87d85f6ef98e78",
+      "paper.pdf": "f7ce3ac687fc65991a6f0ed1a16a91335b8a19d24cebe9501f99df8e7dcac73e"
+    },
+    "arxiv-2506.07367-survey-lut-deep-neural-networks": {
+      "metadata.json": "f88631bbd2c81920ce176af43242abb4ae08a201fc0f3a2931e216ddaea15a5c",
+      "sections.jsonl": "568fb89857a6a0e109a4607ebc16beee95c761b386f119845fdb39362f27ff6f",
+      "paper.pdf": "b6f04838e6ddde36816ba1f824f717c9deda85202b8c558c7ec5eda92f94c4db"
+    },
+    "arxiv-2506.08158-ett-ckge-efficient-task-driven": {
+      "metadata.json": "a85eca1d03b0c7897f3c46d280e5aed20e40bc37031576bc2cb1f31986f48cc8",
+      "sections.jsonl": "512924a4932cd400e5b1be330ad313daf4367b72693ac80b669b8ce82c7a1c0e",
+      "paper.pdf": "19c9d9bdf55ce22824cb4356d88d26aeb5d0be6bfae6ca9a485df7512dca700a"
+    },
+    "arxiv-2506.15432-side-channel-extraction-dataflow-ai": {
+      "metadata.json": "f6b9b34c969e517e0541dd934e8d60c25ea38c30277bc644c19d78eabe505748",
+      "sections.jsonl": "71c01951006b8f670565ae7f947b9e5a1d138a47f12b69c3e5dd1a474d084bfd",
+      "paper.pdf": "b1c772b7ac2d72fe36abb0a2c9adbda2770569f8f1d4b76b835322f7b81ebc90"
+    },
+    "arxiv-2506.19964-higher-order-neuromorphic-ising-machines": {
+      "metadata.json": "8b48ebfb0f889bc97b23eedee3f69f5128e106e454459d80d4cacd07e2b93f52",
+      "sections.jsonl": "44228f42617fbf2379f6e044af558ebf35e7c8ee864ef75b236a7385163af5d7",
+      "paper.pdf": "8b108c132a05ea3c5a241e6bc97b5aba5b8c777fe68dc5276e7d5bdd5c05c155"
+    },
+    "arxiv-2506.20810-finn-gl-generalized-mixed-precision": {
+      "metadata.json": "45de16fbcf17f1fac2f525b3da43d32d52fd6232fb4449b47f523c0e68439710",
+      "sections.jsonl": "2cddb5393d9e76830bc53318937a34b52d66a34be59c90a8bf54245a8d1312d9",
+      "paper.pdf": "e8497a0c933c646165a2ae95636a28d9ca39ec88c7765dbc4281dae22cf3005e"
+    },
+    "arxiv-2506.23115-moca-modality-aware-continual-pre": {
+      "metadata.json": "895e5a9ced99f43074bb86be9987fe0faa2b97df4c45b213701f07dea322f5c8",
+      "sections.jsonl": "c52c37672e5a14ec95b62cdfd5727caa7ba77e838dd459c5e25ffcadf443a33d",
+      "paper.pdf": "59e977466cb2d1d64e03d7b696246c472ce33438d238ad7f4b8b838324488e96"
+    },
+    "arxiv-2507.02443-red-grape-detection-accelerated-artificial": {
+      "metadata.json": "6d33c0d69fb57557fcb09f20255b268287f9b0cc38ed64d5da2f32d0afb63be9",
+      "sections.jsonl": "f50d04cf3e18f5d413e0435230bb21e89eaca1f104c44cc9a7e5e7d806010857",
+      "paper.pdf": "4e16ac7f408d1f63c0bb60b81aaf315a0b827263e2cdcaea9a307c06ca2951ed"
+    },
+    "arxiv-2507.07903-hardware-aware-feature-extraction-quantisation": {
+      "metadata.json": "1e7fad83f991d9bb79596e65a0f15b126ab5feb7dde175dc2b03f88ba5318fdc",
+      "sections.jsonl": "4369a4a340a7785e28f006cff1a3126ca7dcf921c27ab13a39a09f861f343865",
+      "paper.pdf": "9a5bc9b65e6ea5a4c3b8f7c168e318eaf67074007da07dd44da6881febc6e9f6"
+    },
+    "arxiv-2507.18174-real-time-object-detection-classification": {
+      "metadata.json": "12404e4752d370d91e43a836ba8cff894d8d247f8d10a34b576cc1a4f15a21c3",
+      "sections.jsonl": "23ca347bbabbbb54a2c999bf849816e630debe9e6eae9402a69eac5ad255c479",
+      "paper.pdf": null
+    },
+    "arxiv-2508.00063-anomaly-detection-spiking-neural-networks": {
+      "metadata.json": "5b1e3c582f5f0488c7f38771af36b4dcc593caf6ec3db24a9ba8f825fea93f86",
+      "sections.jsonl": "569b8b5652971f09d6a1fb1253a6b6acac21d53f4ccf60d7a2d1fec211fcfb50",
+      "paper.pdf": "138573cd09c75f5135e0eda6cf24cddbef2e87223f1fad6b678d2edbe7ed96e8"
+    },
+    "arxiv-2508.01800-marvel-end-end-framework-generating": {
+      "metadata.json": "c27356c890fc8ac931c14b6cd64ca0909c9685bff891ddcaf2c154fb5950db26",
+      "sections.jsonl": "05b87c2e3baab8327597a5e2e1bcfb12d60638ef65e4b87978fd9ba313e5f065",
+      "paper.pdf": "da1dfc80a4e9cf8ece5888c52b641d5e4b79912a06ac55d4a296c75d57ef1a3b"
+    },
+    "arxiv-2508.02426-learning-evolve-bayesian-guided-continual": {
+      "metadata.json": "6aefc2082d774a17defe76c917275e0e073e29c93e0fde59fff8517f789adf4a",
+      "sections.jsonl": "9ec23d27eb3979d1e65946fea1d31a4c10fef1525901732418d7407f1808e54f",
+      "paper.pdf": "52b92c543bbe82dbd80ad95bba2652251b66b0fd2f4c4cd1ec264177cf98db0c"
+    },
+    "arxiv-2508.11347-sage-scale-aware-gradual-evolution": {
+      "metadata.json": "e73670d7981c6a41a6b56b1d3b7e6217ac5f5e4f500742ffbce040d21b9f50ef",
+      "sections.jsonl": "f71dade0b626fd3083fffb809462254d85d2807f869fd903f8809b825fe5d560",
+      "paper.pdf": "6238a172953ae9fbafe068f2b9458cbeb4585ba79c4019a20197623d7b95a62e"
+    },
+    "arxiv-2508.21493-sira-scaled-integer-range-analysis": {
+      "metadata.json": "654b299ea785c8623e40c03c4420ab4611f4bff5029f3ac3850c72d2153b1695",
+      "sections.jsonl": "f2e28cc47f392c360994f58dfa97846059f66251d60e9c6ef5a42c5e02992879",
+      "paper.pdf": "aca437a9a0cdf60d3ea9bdfeca336b0bcd7cf23083cb16809aeeb33b09740916"
+    },
+    "arxiv-2508.21773-unsupervised-video-continual-learning-non": {
+      "metadata.json": "ce0d3de92212c03843eed9853f39868acddc8733814e871bc6e03e7e5387203d",
+      "sections.jsonl": "c93c108db380dfc3e158729494654b05fe12501184595514e2de7b52478432ab",
+      "paper.pdf": "82682547091f661eab3c5a991c4190950743ed29e2d2da436f3ef57e405f5395"
+    },
+    "arxiv-2509.04153-real-time-fpga-cnns-detection": {
+      "metadata.json": "5c1d8b2b3c5192a59bd209269a80d93698873909fe40956531ad491225368c0e",
+      "sections.jsonl": "2a15fac2fec27adaaacfd9f0bbc82c6a8fb078b2fc60f9a1a91ffd6e3e788984",
+      "paper.pdf": null
+    },
+    "arxiv-2509.20318-comprehensive-evaluation-yolo-deer-detection": {
+      "metadata.json": "8f6bdb85dae7b24212824e977741a950acc6fb10a2ea2f30264a9c28ab5bc9ce",
+      "sections.jsonl": "6f2a2dacaf313981b634fe89b149a9c8a6744e1007857747eb622fc45428730d",
+      "paper.pdf": "f4fbf2389688fd0ed1a8e4bce133df6c8e20497eb0b3e9e84aaa166d98bd7d70"
+    },
+    "arxiv-2509.25659-yolo-defect-detection-metal-sheets": {
+      "metadata.json": "d723c8a164fa5ef04e8b4e6c511e2fed0d141a98ee8b670b53343f4249ec4b3c",
+      "sections.jsonl": "164fdca5ae173520678f35389f238d141c63adbe41b8a3526494dc2963faa8a4",
+      "paper.pdf": "9f37004f270d1b57e77ab84f19a3f23e7af505b423dea72e7888fc91967512d4"
+    },
+    "arxiv-2510.09653-ultralytics-yolo-evolution-overview-yolo27": {
+      "metadata.json": "16286be662a5cc25f5c75d0256bb41583b71e8e7bff6efa09185b819694791c0",
+      "sections.jsonl": "7867fce96c3e458c57a62c262a679f0fe0fcf6c45178f218bdcdc88423ad0f4f",
+      "paper.pdf": "68212f9d1e79f36203c3834cf4b8e41fe699f57911563af1e8cf07b0c6b08728"
+    },
+    "arxiv-2510.15672-evaluation-fast-machine-learning-algorithms": {
+      "metadata.json": "8128210fc06a8f670f036c8ffa15fe70410ce86302086229ef621b6840355ebb",
+      "sections.jsonl": "b3efbaa4447242b75ca4586d718e465f804604f23eda46a78573c41afdf5113e",
+      "paper.pdf": "b25ed38d7e66ec5727237305bf600e05c68b0fa38c7041e5c29434e1462e3cdb"
+    },
+    "arxiv-2511.06955-fpga-accelerated-risc-v-isa": {
+      "metadata.json": "2775cb682cc6046bd474565c8bf23f13c3824a3eaaa5b4068c6e422a09b905ac",
+      "sections.jsonl": "0a980eb9ddb1c93b2bc1fcf5e25d8df00701c53a3baff245a718e5c68df68bc6",
+      "paper.pdf": "0e7489c094f9751b2773ebfa32f06d71bdd1fbd5a27326f0c0bb1a7fa1805451"
+    },
+    "arxiv-2511.07990-hardware-aware-yolo-compression-low": {
+      "metadata.json": "53b569075295f7ce1f08cd774f0dbc19f0a0879fe23ee506857cbe9633163a2a",
+      "sections.jsonl": "9a8710acfa74cec725f16c3cd3131995a6520d4eaa33b1eab54558cc1562a4f8",
+      "paper.pdf": "74d5f8470a9d028bb7e9b7bfc77cb38e985dc33aac8a2d28dd385bf8ac8ee557"
+    },
+    "arxiv-2511.11118-improving-continual-learning-knowledge-graph": {
+      "metadata.json": "2e7600d7dc9b72466132695677ded0ab4dfca46f3e883c242f09b71a1f950834",
+      "sections.jsonl": "324ed60bce09c2f7e6e153eea5e78a8d3c7366d0add70857ec65aeacfea70d9e",
+      "paper.pdf": "ba4274149c6decb5da334195d65609ebe0ecb42baf1932e82d4afac2d9afc98f"
+    },
+    "arxiv-2511.13453-hardware-optimization-android-inference-ai": {
+      "metadata.json": "4e59a12eff46638a87ae076eb8d7ec63624bf9f1001a0b8933d3e1254ce64e95",
+      "sections.jsonl": "6a1e94b3c8132ec6219613615e6421ba964892d84b0019c7bfbe2533e4a2d450",
+      "paper.pdf": "20a276d92ae4021c171a336369be55bc471b7cece2b66c0061f3d72c576eaa07"
+    },
+    "arxiv-2512.01463-hls4ml-flexible-open-source-platform": {
+      "metadata.json": "691ff4d4d8179e42ebf6b3b0435b5d90f2f7e441f94bb2a688b47929e94e802c",
+      "sections.jsonl": "8921279023a1bab0a47af65b2f387275aa29b4388dbf0b77fd7d7aac1cf3e97e",
+      "paper.pdf": null
+    },
+    "arxiv-2601.15914-latency-wall-benchmarking-off-shelf": {
+      "metadata.json": "4d8e23dc5548e35a2187978b2469f1fb1051f7c79c60b796c7e6f34a94acf5a5",
+      "sections.jsonl": "a9daf9f5840aa84473495b10e1f5c4f816d39032c4ab0aedc407c64be9795e5a",
+      "paper.pdf": "dfad24dccf368c6cf7497f36e99a39afba44d0fda0be6b74e5598f745ef5a3d0"
+    },
+    "arxiv-2602.15751-enabling-low-latency-machine-learning": {
+      "metadata.json": "3747cc366c081460e979c0736a3bfbd691e9b2e4145dc8ba997147638e99f648",
+      "sections.jsonl": "21c2a1bee6adb538c39b828755a30431147e5f6a724e499e36bc76f70fd675b4",
+      "paper.pdf": null
+    },
+    "arxiv-2602.16024-bit-width-aware-design-environment": {
+      "metadata.json": "b9e3cb8f167fab96415f73d79ba640bc4e2aa3e66b84dcea3eb50eb18b6ae500",
+      "sections.jsonl": "2428864e0dbe451de132f67154f55c80bfad7c39f27e2401a8831e55c8102523",
+      "paper.pdf": "8e1a50ac2a72db55aa975cc8d6b3228384371490f115c20570432d6ec9b3bb7b"
+    },
+    "arxiv-2603.11139-h2loop-spark-preview-continual-pretraining": {
+      "metadata.json": "6ec768380216e2d105bb779d565cc03bbba61bbde8c68de3b2443893861c6749",
+      "sections.jsonl": "01d26b6da97b091b463b04fc5f97c9257f2f296928964e9df499c38cead73ad4",
+      "paper.pdf": "d7cb626c56d564617bdd0c71103d4f761159b8b30a96d17d9559d02694dcfd2c"
+    },
+    "arxiv-2603.13490-ultra-fast-calorimeter-simulation-generative": {
+      "metadata.json": "ec0e4f7ea29f8b141b321f0668c3f6a6dc4f81136a01ea4436dca68de23cdbcd",
+      "sections.jsonl": "5c3892d48c643b785190348dc78d0bf94f01dc0b7c7c3a7d19da260cfbc01b1e",
+      "paper.pdf": "533d1e3489d4b245702fda25f38d211b3cc42c59197fec3ada693502b4be0577"
+    },
+    "arxiv-2603.13982-exploiting-temporal-parallelism-lstm-autoencoder": {
+      "metadata.json": "1a8840d2f61c43e598af87b21d1651284adaa9321f77962bc4d20e14548c587d",
+      "sections.jsonl": "0b26db21197d1b5dcae9391fdedfbebd836c562aaf02b5a5af17159caf6bce6b",
+      "paper.pdf": "c5cae06723a8514f8f6631c6cb4f5c143ffd8c5b779d3b9daf16a00a09faa7a4"
+    },
+    "arxiv-2604.08336-leveraging-complementary-embeddings-replay-selection": {
+      "metadata.json": "58666e29d4d2fdff1cb614a7b23dba81a85952246e395dc695ca74b2e932a561",
+      "sections.jsonl": "6a34aa97666ab7f120178b8391b9b9a0cada4a84a1a53496bab7ef852d2cfb01",
+      "paper.pdf": "d7c9c1e1f36888de5d3b68cd1b9bc5f6f1f71137e9ae32a6b71c0c6b6f62f983"
+    },
+    "arxiv-2604.10947-multi-faceted-continual-knowledge-graph": {
+      "metadata.json": "7de6422ee3f88a95f7f067cfcc5b58b7754769023c666bba270758407ef04477",
+      "sections.jsonl": "b1310bc9812261f4f76325e1f76f14aa625da424d59fae4a688ce495ab27a58a",
+      "paper.pdf": "34a1457ab581dc06fa660c87e8b7ad849c805852ae430d55e00bd12a3bbdb43a"
+    },
+    "arxiv-2604.13345-multi-agent-object-detection-framework": {
+      "metadata.json": "18af67a299229b3974e0e1a721739f89c31f371752f0533687975e20b42a72bd",
+      "sections.jsonl": "16519f6812bed40b5feb77e60528af937a4b8f25cbd83c2c9243257649fc79f9",
+      "paper.pdf": "9bc12488c11346e11781f5b0c6c02e75ec301c763c3c2263ebf7163539fe84a7"
+    },
+    "arxiv-2604.19401-revisiting-catastrophic-forgetting-continual-knowledge": {
+      "metadata.json": "5131bdd660a66e612f5d7c7127cb6d5bc973c58c11f27c938730310e20715222",
+      "sections.jsonl": "606389977a042b0bc98e5b9d5fc0f7605e1ef806361143527cd0325d04df1e9f",
+      "paper.pdf": "a3e3e20a5e70a52726b67eadc9d7d1809b0bb7b91078e17ca68f25f21f35127d"
+    },
+    "arxiv-2604.21280-imagehd-energy-efficient-device-continual": {
+      "metadata.json": "257ca55224c93126bf8cc26ce0ff67432c9d935f0126538b80633bc692f0174f",
+      "sections.jsonl": "589e2f871fa77c625505771fea6fcb79722d8e72f38196c41da8bafe0171324f",
+      "paper.pdf": null
+    },
+    "arxiv-2604.24455-compilation-execution-embeddable-yolo-nas": {
+      "metadata.json": "92fbc97c671615ecd0f5011abeb68ae9537a9bb331df4935ddbdaf8969f52c62",
+      "sections.jsonl": "7449a821aa1f11ba7a3c1277764596e8dbda15194df80c9a8c2d82e757b0d948",
+      "paper.pdf": "c03edda00b42a85f6e04e0954b09f7bd65dc3600b161dfa87150ac3ef6715218"
+    },
+    "arxiv-2605.06982-fastomnitmae-parallel-clause-learning-scalable": {
+      "metadata.json": "f8f512f06fbc7b84f0d66ba97996f55938d42704ef4ef5f616fcecd0d4f71a99",
+      "sections.jsonl": "2cf9f49f5a40a848297e21742ba22b49850b7d0cb4c339d2ea26d0e2b366e52c",
+      "paper.pdf": "72dca0d0a9642ad32d90383447fe3650bc0a5eb498a81f8fc77a106c558e721d"
+    },
+    "arxiv-2605.25860-sam3-assisted-training-lightweight-yolo": {
+      "metadata.json": "f064626e97a8056df2f5e55142c8da7dc2e9f3b5a339268f58682c9ea5a10240",
+      "sections.jsonl": "2405d71bbf22ec753281b35200b9125dc572f75be56706f076aeceb4472031f7",
+      "paper.pdf": "78be1e8f03b598bcb1211854e65b03a3ed3ee7847c5850c5d96b24fb36eeb1dd"
+    },
+    "arxiv-2606.00426-canonicalized-stable-list-replay-private": {
+      "metadata.json": "cf11ec3c49a77f78f22760126bbff42a6ff6e128e2a2148358dead174a3f6e03",
+      "sections.jsonl": "e1cac3b420452491369bc6a441b463a8a9ab085c8167762a5d87b20c7bde3374",
+      "paper.pdf": "6283223e65064ec626de0aa3e7abdf0bf53a4fbed1b69d8a11cd346ca7542480"
+    },
+    "arxiv-2606.03748-ultralytics-yolo26-unified-real-time": {
+      "metadata.json": "d7df7721ee87e83fdc15103306e7cb0bcf878139890edf94f89f2b7622c7af6c",
+      "sections.jsonl": "968b361f8b7f22594010d895df2eade8e7b4dc58e6b47c2e057f4bd64c01bc90",
+      "paper.pdf": "8dec3ca2adbbc78cbd4f338eb33235e4b9c13704e355e19d029fd0a4bc67fcff"
+    },
+    "arxiv-2606.06032-catastrophic-forgetting-accessibility-collapse-three": {
+      "metadata.json": "5741612411af92e018661b9d9347738c3a5002f6392fb56b01971ff655375414",
+      "sections.jsonl": "b69afd7dac5c76de44828694e53f05fdfdbfe439f43e7117293dc93d4742a336",
+      "paper.pdf": "a1042c2cd7318b30a495ab945535d37c53b26787c454f30e5d08fc68e1f4e053"
+    },
+    "arxiv-2606.07659-real-time-industrial-defect-detection": {
+      "metadata.json": "1c908f9d088dc6f2027f34553c7617c8c883822bed0b53b962fbdce037c095e9",
+      "sections.jsonl": "0f8ae5692ca71ac7e4f1b469d9dad86d64bf4070fa82dc7740d3bfc0a91167af",
+      "paper.pdf": "7a5f2a0b0cff704f3f76eadd5274e8f9319bbfb48ec2866caffe2d76580b7e92"
+    },
+    "arxiv-2606.11065-arithmetic-packing-wide-integer-datapaths": {
+      "metadata.json": "9a18a11fed24cab31db16c9df6097de5847888d03f9724d8659c3252a817b4b0",
+      "sections.jsonl": "682c792a3012c3762fb2c865f4f0cce9eb72e2352bf7bdf77e2018f19df23762",
+      "paper.pdf": "2ab208cd0dfed6242304b0fc20b263dc711309182fa9c8b357ca2a3eda1c5028"
+    },
+    "arxiv-2606.14857-chopping-distilling-variational-autoencoders-real": {
+      "metadata.json": "17874c991a77d1dfed061f10bddcf707c36379620d0ed5889309910c21b6f38e",
+      "sections.jsonl": "71d70713e77b2d910b561b32f82abdb5247602bfb3ac0279639cde193802b5b1",
+      "paper.pdf": "98902b0fb6d66a7f76d6c8c404a31dad2a7ddc2431dc32abb4c3ca6a3db24703"
+    },
+    "arxiv-2606.27772-embedded-real-time-license-plate": {
+      "metadata.json": "db1ce7cc26532fb84ebe38360c9048c44dfa242a14c203e0f0e25af687378e15",
+      "sections.jsonl": "fe7f270d06490542a72f1f8577b5624434fb2c24afc55d04d0a602fe9645ba81",
+      "paper.pdf": "63557e6dc5ff0904786f8dd6ad9a867be0f650f18ce9d1f2add674629465cca5"
+    },
+    "arxiv-2607.13106-no-attention-no-problem-dpu": {
+      "metadata.json": "79330014dc858ee2eb5f1b68f4aa15d8166e9bae99b8b8fc94a2a1cc8db61ef7",
+      "sections.jsonl": "6ac9808151b6432529dc0563c49d4403ea111116d464ce7a2a69998647dce183",
+      "paper.pdf": "2f2f6c626c015afa4f86f6f6f0ca2ac343575fd642dcb338a51635df68af659e"
+    },
+    "arxiv-2607.20302-classical-hardware-acceleration-quantum-autoencoders": {
+      "metadata.json": "eade8c76d69cb9293558d36c23cb145279486c0960f8438f21b1c24432bdcd56",
+      "sections.jsonl": "d1e1b5020eb6c83a90110a0cd58463391273277c113b1affe46a38d67c2249e3",
+      "paper.pdf": "023be37f8326298cae6a34f8684f4425ebc079c8ac34642346b5073b2b5f0fa4"
+    },
+    "arxiv-2608.03728-sat-edge-agent-hardware-loop": {
+      "metadata.json": "8ceb9397dffdd2ccb1f76c5acbd4970333d3a7c41c128c6e8caf095aae92071f",
+      "sections.jsonl": "7efc28347b1c37a6eac1656f57f1adaeb635e015b8b665aaf91e0b004e37e5b5",
+      "paper.pdf": "4f3ee0a7ff453416099c5eb500318ee9e1bc04203c399106674b0abcec510ca0"
+    },
+    "arxiv-2608.21657-model-compression-hardware-aware-acceleration": {
+      "metadata.json": "6f20ef7c8c6344ba73953baa2f76aaed97f5a16837bdf14b622457179622cbbc",
+      "sections.jsonl": "de2a5271b6fd8cde0a25716648ecd887eb32f1d725f443fad2abb00f55f7f6fc",
+      "paper.pdf": "4a2164f8731ddfede9c94526449dff1ef09b966aa6afafaac408b0f0832c44b2"
+    },
+    "arxiv-2608.24273-matched-excess-outranker-regularization-candidate": {
+      "metadata.json": "b6a386cf2f9c1392efbb5412a74284cfa0666df0cf3adf8de7c1d992401752e8",
+      "sections.jsonl": "a5b5ab1f0e04f3faba7c8332374dbf7833b3a93d2203497bc528cd9e8c06a409",
+      "paper.pdf": "7fa55ca340389c9237598d200a04c0e0621017e1013b2eea53bbc27c0b2da683"
+    },
+    "arxiv-2609.02219-hardware-accelerated-instance-segmentation-resource": {
+      "metadata.json": "2615b48507802d38d04dcfa04d8ea08d2d7a19b91bcc54a21799c2595af5d8f6",
+      "sections.jsonl": "2ec77084336245d541d79cef487499b9851da1e3e9acadc06157e9532ea7568f",
+      "paper.pdf": "faaa791220d3308a1c290c6ccb427000aa0c0ac74ec591f443c12a1ca6ce12a0"
+    },
+    "arxiv-2609.05249-proton-irradiation-characterization-open-source": {
+      "metadata.json": "21f346b86f5a2393b1386ce60ceb7d270acb6f924d8296a7100a18eb417e0cb0",
+      "sections.jsonl": "d47b589778fc3de770d33390759bbb8b72b25882cc0d9bf010b2b8fc9994e32a",
+      "paper.pdf": "921d16223ba2730fc17424986edf71ef58ff7fbb83226ca69f7eba6cc33b4b0e"
+    },
+    "arxiv-2609.24757-npu-accelerator-quantized-real-time": {
+      "metadata.json": "33035f9a29a786b5d5c08753e8d58711da3bcfb79f779b53371b147fd3a34c66",
+      "sections.jsonl": "ade34b67494916e85563be0f4c73776cfc483412a1a01c49720ffd6fd53bf8ba",
+      "paper.pdf": "544348f9bb397010f888006f325bc0a6ee05fb85172592a83a0e2b18bf98dd63"
+    },
+    "arxiv-2609.26824-finn-tro-exploiting-verification-gaps": {
+      "metadata.json": "8eeab6546bafc7dfac74973bce907daa94c5836f65b1a9be5a659629afad55b8",
+      "sections.jsonl": "f5286d38c6cac605cdcbf688e73d98b55f98514271ca8c0e8fcdb6e117ff73fc",
+      "paper.pdf": "91856b25eaf911f52f3df2ad5ca98ea1a2f67d13f675e3624cbfcf972c3905ed"
+    },
+    "arxiv-2609.26853-cope-continual-personalization-llms-sparse": {
+      "metadata.json": "2b9f1e0de5d34b34b9daa6aa6a0d5563247c76e4c9e1ff28f2dc6ddc9e9ba596",
+      "sections.jsonl": "91571a63176ad804a51bdd852b2b6c40b2a60ecc90bf061960bb1999207e55f3",
+      "paper.pdf": "9503722bc329503150499a52c416588cd4c52e4dd800843dd9645baf495c684d"
+    }
+  },
+  "git_revision": "b51577143f5fb2ad5d57062b11bf1110889b3b33"
+}

@@ -1,0 +1,59 @@
+{
+  "id": "arxiv-1807.04093-finn-library-extensions-design-trade",
+  "title": "FINN-L: Library Extensions and Design Trade-off Analysis for Variable Precision LSTM Networks on FPGAs",
+  "authors": [
+    {
+      "given": "Vladimir",
+      "family": "Rybalkin"
+    },
+    {
+      "given": "Alessandro",
+      "family": "Pappalardo"
+    },
+    {
+      "given": "Muhammad Mohsin",
+      "family": "Ghaffar"
+    },
+    {
+      "given": "Giulio",
+      "family": "Gambardella"
+    },
+    {
+      "given": "Norbert",
+      "family": "Wehn"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1807.04093",
+  "url": "https://arxiv.org/abs/1807.04093",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "zynq",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "id": "arxiv-2007.12099-pp-yolo-effective-efficient-implementation",
+  "title": "PP-YOLO: An Effective and Efficient Implementation of Object Detector",
+  "authors": [
+    {
+      "given": "Xiang",
+      "family": "Long"
+    },
+    {
+      "given": "Kaipeng",
+      "family": "Deng"
+    },
+    {
+      "given": "Guanzhong",
+      "family": "Wang"
+    },
+    {
+      "given": "Yang",
+      "family": "Zhang"
+    },
+    {
+      "given": "Qingqing",
+      "family": "Dang"
+    },
+    {
+      "given": "Yuan",
+      "family": "Gao"
+    },
+    {
+      "given": "Hui",
+      "family": "Shen"
+    },
+    {
+      "given": "Jianguo",
+      "family": "Ren"
+    },
+    {
+      "given": "Shumin",
+      "family": "Han"
+    },
+    {
+      "given": "Errui",
+      "family": "Ding"
+    },
+    {
+      "given": "Shilei",
+      "family": "Wen"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2007.12099",
+  "url": "https://arxiv.org/abs/2007.12099",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov3",
+    "yolov4"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "2023-valente-joint-variational-auto-encoder-anomaly",
+  "title": "Joint Variational Auto-Encoder for Anomaly Detection in High Energy Physics",
+  "authors": [
+    {
+      "given": "Lorenzo Conceição Lima",
+      "family": "Valente"
+    },
+    {
+      "given": "Luca",
+      "family": "Anzalone"
+    },
+    {
+      "given": "Marco",
+      "family": "Lorusso"
+    },
+    {
+      "given": "D.",
+      "family": "Bonacorsi"
+    }
+  ],
+  "year": 2023,
+  "venue": null,
+  "doi": "10.22323/1.434.0014",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.22323/1.434.0014",
+  "type": null,
+  "axes": [
+    "autoencoder-fpga",
+    "toolflows"
+  ],
+  "tags": [
+    "hls4ml",
+    "autoencoder",
+    "vae",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

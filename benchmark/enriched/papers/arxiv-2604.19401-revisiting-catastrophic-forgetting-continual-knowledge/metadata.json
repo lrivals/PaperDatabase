@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2604.19401-revisiting-catastrophic-forgetting-continual-knowledge",
+  "title": "Revisiting Catastrophic Forgetting in Continual Knowledge Graph Embedding",
+  "authors": [
+    {
+      "given": "Gerard",
+      "family": "Pons"
+    },
+    {
+      "given": "Carlos",
+      "family": "Escolano"
+    },
+    {
+      "given": "Besim",
+      "family": "Bilalli"
+    },
+    {
+      "given": "Anna",
+      "family": "Queralt"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2604.19401",
+  "url": "https://arxiv.org/abs/2604.19401",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

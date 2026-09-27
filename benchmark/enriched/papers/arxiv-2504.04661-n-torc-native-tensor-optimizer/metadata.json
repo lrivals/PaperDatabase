@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-2504.04661-n-torc-native-tensor-optimizer",
+  "title": "N-TORC: Native Tensor Optimizer for Real-time Constraints",
+  "authors": [
+    {
+      "given": "Suyash Vardhan",
+      "family": "Singh"
+    },
+    {
+      "given": "Iftakhar",
+      "family": "Ahmad"
+    },
+    {
+      "given": "David",
+      "family": "Andrews"
+    },
+    {
+      "given": "Miaoqing",
+      "family": "Huang"
+    },
+    {
+      "given": "Austin R. J.",
+      "family": "Downey"
+    },
+    {
+      "given": "Jason D.",
+      "family": "Bakos"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2504.04661",
+  "url": "https://arxiv.org/abs/2504.04661",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "hls4ml",
+    "finn"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "arxiv-2606.03748-ultralytics-yolo26-unified-real-time",
+  "title": "Ultralytics YOLO26: Unified Real-Time End-to-End Vision Models",
+  "authors": [
+    {
+      "given": "Glenn",
+      "family": "Jocher"
+    },
+    {
+      "given": "Jing",
+      "family": "Qiu"
+    },
+    {
+      "given": "Mengyu",
+      "family": "Liu"
+    },
+    {
+      "given": "Shuai",
+      "family": "Lyu"
+    },
+    {
+      "given": "Fatih Cagatay",
+      "family": "Akyon"
+    },
+    {
+      "given": "Muhammet Esat",
+      "family": "Kalfaoglu"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2606.03748",
+  "url": "https://arxiv.org/abs/2606.03748",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov26"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

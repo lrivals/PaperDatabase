@@ -1,0 +1,68 @@
+{
+  "id": "arxiv-2503.08700-real-time-semantic-segmentation-aerial",
+  "title": "Real-Time Semantic Segmentation of Aerial Images Using an Embedded U-Net: A Comparison of CPU, GPU, and FPGA Workflows",
+  "authors": [
+    {
+      "given": "Julien",
+      "family": "Posso"
+    },
+    {
+      "given": "Hugo",
+      "family": "Kieffer"
+    },
+    {
+      "given": "Nicolas",
+      "family": "Menga"
+    },
+    {
+      "given": "Omar",
+      "family": "Hlimi"
+    },
+    {
+      "given": "Sébastien",
+      "family": "Tarris"
+    },
+    {
+      "given": "Hubert",
+      "family": "Guerard"
+    },
+    {
+      "given": "Guy",
+      "family": "Bois"
+    },
+    {
+      "given": "Matthieu",
+      "family": "Couderc"
+    },
+    {
+      "given": "Eric",
+      "family": "Jenn"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2503.08700",
+  "url": "https://arxiv.org/abs/2503.08700",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn",
+    "vitis-ai"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

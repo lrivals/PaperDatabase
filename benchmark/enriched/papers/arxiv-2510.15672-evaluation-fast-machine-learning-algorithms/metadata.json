@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2510.15672-evaluation-fast-machine-learning-algorithms",
+  "title": "Evaluation of Novel Fast Machine Learning Algorithms for Knowledge-Distillation-Based Anomaly Detection at CMS",
+  "authors": [
+    {
+      "given": "Lino",
+      "family": "Gerlach"
+    },
+    {
+      "given": "Elliott",
+      "family": "Kauffman"
+    },
+    {
+      "given": "Abhishikth",
+      "family": "Mallampalli"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2510.15672",
+  "url": "https://arxiv.org/abs/2510.15672",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "quantization",
+    "autoencoder",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

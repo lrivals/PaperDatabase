@@ -1,0 +1,70 @@
+{
+  "id": "2023-perez-cerrolaza-artificial-intelligence-safety-critical-systems",
+  "title": "Artificial Intelligence for Safety-Critical Systems in Industrial and Transportation Domains: A Survey",
+  "authors": [
+    {
+      "given": "Jon",
+      "family": "Perez-Cerrolaza"
+    },
+    {
+      "given": "Jaume",
+      "family": "Abella"
+    },
+    {
+      "given": "Markus",
+      "family": "Borg"
+    },
+    {
+      "given": "Carlo",
+      "family": "Donzella"
+    },
+    {
+      "given": "Jesús",
+      "family": "Cerquides"
+    },
+    {
+      "given": "Francisco Javier",
+      "family": "Cazorla"
+    },
+    {
+      "given": "Cristofer",
+      "family": "Englund"
+    },
+    {
+      "given": "Markus",
+      "family": "Tauber"
+    },
+    {
+      "given": "George",
+      "family": "Nikolakopoulos"
+    },
+    {
+      "given": "José Luis",
+      "family": "Flores"
+    }
+  ],
+  "year": 2023,
+  "venue": "ACM Computing Surveys",
+  "doi": "10.1145/3626314",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1145/3626314",
+  "type": null,
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

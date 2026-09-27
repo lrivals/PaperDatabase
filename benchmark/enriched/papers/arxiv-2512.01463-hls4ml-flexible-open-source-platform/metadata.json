@@ -1,0 +1,252 @@
+{
+  "id": "arxiv-2512.01463-hls4ml-flexible-open-source-platform",
+  "title": "hls4ml: A Flexible, Open-Source Platform for Deep Learning Acceleration on Reconfigurable Hardware",
+  "authors": [
+    {
+      "given": "Jan-Frederik",
+      "family": "Schulte"
+    },
+    {
+      "given": "Benjamin",
+      "family": "Ramhorst"
+    },
+    {
+      "given": "Chang",
+      "family": "Sun"
+    },
+    {
+      "given": "Jovan",
+      "family": "Mitrevski"
+    },
+    {
+      "given": "Nicolò",
+      "family": "Ghielmetti"
+    },
+    {
+      "given": "Enrico",
+      "family": "Lupi"
+    },
+    {
+      "given": "Dimitrios",
+      "family": "Danopoulos"
+    },
+    {
+      "given": "Vladimir",
+      "family": "Loncar"
+    },
+    {
+      "given": "Javier",
+      "family": "Duarte"
+    },
+    {
+      "given": "David",
+      "family": "Burnette"
+    },
+    {
+      "given": "Lauri",
+      "family": "Laatu"
+    },
+    {
+      "given": "Stylianos",
+      "family": "Tzelepis"
+    },
+    {
+      "given": "Konstantinos",
+      "family": "Axiotis"
+    },
+    {
+      "given": "Quentin",
+      "family": "Berthet"
+    },
+    {
+      "given": "Haoyan",
+      "family": "Wang"
+    },
+    {
+      "given": "Paul",
+      "family": "White"
+    },
+    {
+      "given": "Suleyman",
+      "family": "Demirsoy"
+    },
+    {
+      "given": "Marco",
+      "family": "Colombo"
+    },
+    {
+      "given": "Thea",
+      "family": "Aarrestad"
+    },
+    {
+      "given": "Sioni",
+      "family": "Summers"
+    },
+    {
+      "given": "Maurizio",
+      "family": "Pierini"
+    },
+    {
+      "given": "Giuseppe Di",
+      "family": "Guglielmo"
+    },
+    {
+      "given": "Jennifer",
+      "family": "Ngadiuba"
+    },
+    {
+      "given": "Javier",
+      "family": "Campos"
+    },
+    {
+      "given": "Ben",
+      "family": "Hawks"
+    },
+    {
+      "given": "Abhijith",
+      "family": "Gandrakota"
+    },
+    {
+      "given": "Farah",
+      "family": "Fahim"
+    },
+    {
+      "given": "Nhan",
+      "family": "Tran"
+    },
+    {
+      "given": "George",
+      "family": "Constantinides"
+    },
+    {
+      "given": "Zhiqiang",
+      "family": "Que"
+    },
+    {
+      "given": "Wayne",
+      "family": "Luk"
+    },
+    {
+      "given": "Alexander",
+      "family": "Tapper"
+    },
+    {
+      "given": "Duc",
+      "family": "Hoang"
+    },
+    {
+      "given": "Noah",
+      "family": "Paladino"
+    },
+    {
+      "given": "Philip",
+      "family": "Harris"
+    },
+    {
+      "given": "Bo-Cheng",
+      "family": "Lai"
+    },
+    {
+      "given": "Manuel",
+      "family": "Valentin"
+    },
+    {
+      "given": "Ryan",
+      "family": "Forelli"
+    },
+    {
+      "given": "Seda",
+      "family": "Ogrenci"
+    },
+    {
+      "given": "Lino",
+      "family": "Gerlach"
+    },
+    {
+      "given": "Rian",
+      "family": "Flynn"
+    },
+    {
+      "given": "Mia",
+      "family": "Liu"
+    },
+    {
+      "given": "Daniel",
+      "family": "Diaz"
+    },
+    {
+      "given": "Elham",
+      "family": "Khoda"
+    },
+    {
+      "given": "Melissa",
+      "family": "Quinnan"
+    },
+    {
+      "given": "Russell",
+      "family": "Solares"
+    },
+    {
+      "given": "Santosh",
+      "family": "Parajuli"
+    },
+    {
+      "given": "Mark",
+      "family": "Neubauer"
+    },
+    {
+      "given": "Christian",
+      "family": "Herwig"
+    },
+    {
+      "given": "Ho Fung",
+      "family": "Tsoi"
+    },
+    {
+      "given": "Dylan",
+      "family": "Rankin"
+    },
+    {
+      "given": "Shih-Chieh",
+      "family": "Hsu"
+    },
+    {
+      "given": "Scott",
+      "family": "Hauck"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2512.01463",
+  "url": "https://arxiv.org/abs/2512.01463",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "hls4ml",
+    "hgq",
+    "da4ml",
+    "qkeras",
+    "qonnx",
+    "quantization",
+    "pruning",
+    "vitis-hls",
+    "oneapi",
+    "catapult",
+    "autoencoder"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : 1, 5, 6, 8, 10, 11 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

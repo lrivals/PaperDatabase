@@ -1,0 +1,40 @@
+{
+  "id": "arxiv-2001.09725-probabilistic-spike-propagation-fpga-implementation",
+  "title": "Probabilistic spike propagation for FPGA implementation of spiking neural networks",
+  "authors": [
+    {
+      "given": "Abinand",
+      "family": "Nallathambi"
+    },
+    {
+      "given": "Nitin",
+      "family": "Chandrachoodan"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2001.09725",
+  "url": "https://arxiv.org/abs/2001.09725",
+  "type": "preprint",
+  "axes": [
+    "platforms"
+  ],
+  "tags": [
+    "zynq"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

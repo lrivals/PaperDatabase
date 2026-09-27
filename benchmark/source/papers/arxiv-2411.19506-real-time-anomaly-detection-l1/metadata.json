@@ -1,0 +1,36 @@
+{
+  "id": "arxiv-2411.19506-real-time-anomaly-detection-l1",
+  "title": "Real-time Anomaly Detection at the L1 Trigger of CMS Experiment",
+  "authors": [
+    {
+      "given": "Abhijith",
+      "family": "Gandrakota"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2411.19506",
+  "url": "https://arxiv.org/abs/2411.19506",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "arxiv-2401.15453-bayesian-inference-accelerator-spiking-neural",
+  "title": "Bayesian Inference Accelerator for Spiking Neural Networks",
+  "authors": [
+    {
+      "given": "Prabodh",
+      "family": "Katti"
+    },
+    {
+      "given": "Anagha",
+      "family": "Nimbekar"
+    },
+    {
+      "given": "Chen",
+      "family": "Li"
+    },
+    {
+      "given": "Amit",
+      "family": "Acharyya"
+    },
+    {
+      "given": "Bashir M.",
+      "family": "Al-Hashimi"
+    },
+    {
+      "given": "Bipin",
+      "family": "Rajendran"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2401.15453",
+  "url": "https://arxiv.org/abs/2401.15453",
+  "type": "preprint",
+  "axes": [
+    "platforms"
+  ],
+  "tags": [
+    "zynq"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

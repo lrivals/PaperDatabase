@@ -1,0 +1,55 @@
+{
+  "id": "arxiv-2206.15472-device-training-256kb-memory",
+  "title": "On-Device Training Under 256KB Memory",
+  "authors": [
+    {
+      "given": "Ji",
+      "family": "Lin"
+    },
+    {
+      "given": "Ligeng",
+      "family": "Zhu"
+    },
+    {
+      "given": "Wei-Ming",
+      "family": "Chen"
+    },
+    {
+      "given": "Wei-Chen",
+      "family": "Wang"
+    },
+    {
+      "given": "Chuang",
+      "family": "Gan"
+    },
+    {
+      "given": "Song",
+      "family": "Han"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2206.15472",
+  "url": "https://arxiv.org/abs/2206.15472",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [
+    "quantization",
+    "pruning"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

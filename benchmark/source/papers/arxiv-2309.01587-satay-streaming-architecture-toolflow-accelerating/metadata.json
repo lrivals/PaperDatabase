@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-2309.01587-satay-streaming-architecture-toolflow-accelerating",
+  "title": "SATAY: A Streaming Architecture Toolflow for Accelerating YOLO Models on FPGA Devices",
+  "authors": [
+    {
+      "given": "Alexander",
+      "family": "Montgomerie-Corcoran"
+    },
+    {
+      "given": "Petros",
+      "family": "Toupas"
+    },
+    {
+      "given": "Zhewen",
+      "family": "Yu"
+    },
+    {
+      "given": "Christos-Savvas",
+      "family": "Bouganis"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2309.01587",
+  "url": "https://arxiv.org/abs/2309.01587",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "toolflows"
+  ],
+  "tags": [
+    "satay"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

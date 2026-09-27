@@ -1,0 +1,36 @@
+{
+  "id": "2024-iren-comparison-yolov5-yolov6-models-plant",
+  "title": "Comparison of YOLOv5 and YOLOv6 Models for Plant Leaf Disease Detection",
+  "authors": [
+    {
+      "given": "Ecem",
+      "family": "Iren"
+    }
+  ],
+  "year": 2024,
+  "venue": "Engineering Technology & Applied Science Research",
+  "doi": "10.48084/etasr.7033",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.48084/etasr.7033",
+  "type": null,
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov5",
+    "yolov6"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

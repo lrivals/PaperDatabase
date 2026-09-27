@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2103.13885-supervised-contrastive-replay-revisiting-nearest",
+  "title": "Supervised Contrastive Replay: Revisiting the Nearest Class Mean Classifier in Online Class-Incremental Continual Learning",
+  "authors": [
+    {
+      "given": "Zheda",
+      "family": "Mai"
+    },
+    {
+      "given": "Ruiwen",
+      "family": "Li"
+    },
+    {
+      "given": "Hyunwoo",
+      "family": "Kim"
+    },
+    {
+      "given": "Scott",
+      "family": "Sanner"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2103.13885",
+  "url": "https://arxiv.org/abs/2103.13885",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

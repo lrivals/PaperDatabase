@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-2112.09775-adaptive-subsampling-roi-visual-tracking",
+  "title": "Adaptive Subsampling for ROI-based Visual Tracking: Algorithms and FPGA Implementation",
+  "authors": [
+    {
+      "given": "Odrika",
+      "family": "Iqbal"
+    },
+    {
+      "given": "Victor Isaac Torres",
+      "family": "Muro"
+    },
+    {
+      "given": "Sameeksha",
+      "family": "Katoch"
+    },
+    {
+      "given": "Andreas",
+      "family": "Spanias"
+    },
+    {
+      "given": "Suren",
+      "family": "Jayasuriya"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2112.09775",
+  "url": "https://arxiv.org/abs/2112.09775",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "toolflows"
+  ],
+  "tags": [
+    "vitis-ai"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : I, II — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

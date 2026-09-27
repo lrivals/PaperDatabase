@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-2511.07990-hardware-aware-yolo-compression-low",
+  "title": "Hardware-Aware YOLO Compression for Low-Power Edge AI on STM32U5 for Weeds Detection in Digital Agriculture",
+  "authors": [
+    {
+      "given": "Charalampos S.",
+      "family": "Kouzinopoulos"
+    },
+    {
+      "given": "Yuri",
+      "family": "Manna"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2511.07990",
+  "url": "https://arxiv.org/abs/2511.07990",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov8",
+    "quantization",
+    "pruning"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

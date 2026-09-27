@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-2301.07050-energy-efficient-reconfigurable-autoencoder-implementation",
+  "title": "An Energy-Efficient Reconfigurable Autoencoder Implementation on FPGA",
+  "authors": [
+    {
+      "given": "Murat",
+      "family": "Isik"
+    },
+    {
+      "given": "Matthew",
+      "family": "Oldland"
+    },
+    {
+      "given": "Lifeng",
+      "family": "Zhou"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2301.07050",
+  "url": "https://arxiv.org/abs/2301.07050",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

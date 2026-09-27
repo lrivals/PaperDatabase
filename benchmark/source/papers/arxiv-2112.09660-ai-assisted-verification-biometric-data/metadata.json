@@ -1,0 +1,33 @@
+{
+  "id": "arxiv-2112.09660-ai-assisted-verification-biometric-data",
+  "title": "AI-Assisted Verification of Biometric Data Collection",
+  "authors": [
+    {
+      "given": "Ryan",
+      "family": "Lindsey"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2112.09660",
+  "url": "https://arxiv.org/abs/2112.09660",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

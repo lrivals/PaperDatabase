@@ -1,0 +1,55 @@
+{
+  "id": "2025-el-zeinaty-designing-object-detection-models-tinyml",
+  "title": "Designing Object Detection Models for TinyML: Foundations, Comparative Analysis, Challenges, and Emerging Solutions",
+  "authors": [
+    {
+      "given": "Christophe",
+      "family": "El Zeinaty"
+    },
+    {
+      "given": "Wassim",
+      "family": "Hamidouche"
+    },
+    {
+      "given": "Glenn",
+      "family": "Herrou"
+    },
+    {
+      "given": "Daniel",
+      "family": "Menard"
+    }
+  ],
+  "year": 2025,
+  "venue": "ACM Comput. Surv. 58(2), 50",
+  "doi": "10.1145/3744339",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1145/3744339",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "platforms"
+  ],
+  "tags": [
+    "tinyml",
+    "mcu",
+    "stm32",
+    "gap9",
+    "quantization",
+    "pruning",
+    "knowledge-distillation",
+    "nas",
+    "mcunet",
+    "tinyissimoyolo",
+    "xinet"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

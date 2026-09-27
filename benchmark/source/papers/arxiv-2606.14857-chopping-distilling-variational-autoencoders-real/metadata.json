@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2606.14857-chopping-distilling-variational-autoencoders-real",
+  "title": "Chopping and distilling variational autoencoders for real-time anomaly detection in high energy physics",
+  "authors": [
+    {
+      "given": "Max",
+      "family": "Cohen"
+    },
+    {
+      "given": "Rajat",
+      "family": "Gupta"
+    },
+    {
+      "given": "Sterre",
+      "family": "Hoogendoorn"
+    },
+    {
+      "given": "Sergey",
+      "family": "Scoville"
+    },
+    {
+      "given": "Tae Min",
+      "family": "Hong"
+    },
+    {
+      "given": "Dylan Sheldon",
+      "family": "Rankin"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2606.14857",
+  "url": "https://arxiv.org/abs/2606.14857",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "vae",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

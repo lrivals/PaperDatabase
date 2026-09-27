@@ -1,0 +1,47 @@
+{
+  "id": "2021-martinez-alpiste-dynamic-discarding-technique-increase-speed",
+  "title": "A dynamic discarding technique to increase speed and preserve accuracy for YOLOv3",
+  "authors": [
+    {
+      "given": "Ignacio",
+      "family": "Martinez‐Alpiste"
+    },
+    {
+      "given": "Gelayol",
+      "family": "Golcarenarenji"
+    },
+    {
+      "given": "Qi",
+      "family": "Wang"
+    },
+    {
+      "given": "José M. Alcaraz",
+      "family": "Calero"
+    }
+  ],
+  "year": 2021,
+  "venue": "Neural Computing and Applications",
+  "doi": "10.1007/s00521-021-05764-7",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1007/s00521-021-05764-7",
+  "type": null,
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov3"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

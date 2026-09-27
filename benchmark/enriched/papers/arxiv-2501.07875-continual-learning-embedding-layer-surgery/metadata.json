@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-2501.07875-continual-learning-embedding-layer-surgery",
+  "title": "Continual Learning with Embedding Layer Surgery and Task-wise Beam Search using Whisper",
+  "authors": [
+    {
+      "given": "Chin Yuen",
+      "family": "Kwok"
+    },
+    {
+      "given": "Jia Qi",
+      "family": "Yip"
+    },
+    {
+      "given": "Eng Siong",
+      "family": "Chng"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2501.07875",
+  "url": "https://arxiv.org/abs/2501.07875",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

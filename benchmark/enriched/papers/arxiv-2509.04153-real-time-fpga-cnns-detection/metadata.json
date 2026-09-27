@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-2509.04153-real-time-fpga-cnns-detection",
+  "title": "Real Time FPGA Based CNNs for Detection, Classification, and Tracking in Autonomous Systems: State of the Art Designs and Optimizations",
+  "authors": [
+    {
+      "given": "Safa Mohammed",
+      "family": "Sali"
+    },
+    {
+      "given": "Mahmoud",
+      "family": "Meribout"
+    },
+    {
+      "given": "Ashiyana Abdul",
+      "family": "Majeed"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2509.04153",
+  "url": "https://arxiv.org/abs/2509.04153",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "yolo-fpga",
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "vitis-ai",
+    "intel-fpga-ai-suite",
+    "hls4ml",
+    "versal",
+    "kv260",
+    "zcu102",
+    "quantization",
+    "pruning",
+    "dsp-packing",
+    "tracking",
+    "dpu"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

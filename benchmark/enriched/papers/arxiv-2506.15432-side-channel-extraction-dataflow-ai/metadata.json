@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2506.15432-side-channel-extraction-dataflow-ai",
+  "title": "Side-Channel Extraction of Dataflow AI Accelerator Hardware Parameters",
+  "authors": [
+    {
+      "given": "Guillaume",
+      "family": "Lomet"
+    },
+    {
+      "given": "Ruben",
+      "family": "Salvador"
+    },
+    {
+      "given": "Brice",
+      "family": "Colombier"
+    },
+    {
+      "given": "Vincent",
+      "family": "Grosso"
+    },
+    {
+      "given": "Olivier",
+      "family": "Sentieys"
+    },
+    {
+      "given": "Cedric",
+      "family": "Killian"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2506.15432",
+  "url": "https://arxiv.org/abs/2506.15432",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

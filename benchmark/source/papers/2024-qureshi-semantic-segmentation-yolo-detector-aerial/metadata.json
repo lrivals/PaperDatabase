@@ -1,0 +1,33 @@
+{
+  "id": "2024-qureshi-semantic-segmentation-yolo-detector-aerial",
+  "title": "Semantic Segmentation and YOLO Detector over Aerial Vehicle Images",
+  "authors": [
+    {
+      "given": "Asifa Mehmood",
+      "family": "Qureshi"
+    }
+  ],
+  "year": 2024,
+  "venue": "Computers, materials & continua/Computers, materials & continua (Print)",
+  "doi": "10.32604/cmc.2024.052582",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.32604/cmc.2024.052582",
+  "type": null,
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

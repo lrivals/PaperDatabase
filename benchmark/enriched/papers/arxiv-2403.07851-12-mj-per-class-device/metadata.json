@@ -1,0 +1,62 @@
+{
+  "id": "arxiv-2403.07851-12-mj-per-class-device",
+  "title": "12 mJ per Class On-Device Online Few-Shot Class-Incremental Learning",
+  "authors": [
+    {
+      "given": "Yoga Esa",
+      "family": "Wibowo"
+    },
+    {
+      "given": "Cristian",
+      "family": "Cioflan"
+    },
+    {
+      "given": "Thorir Mar",
+      "family": "Ingolfsson"
+    },
+    {
+      "given": "Michael",
+      "family": "Hersche"
+    },
+    {
+      "given": "Leo",
+      "family": "Zhao"
+    },
+    {
+      "given": "Abbas",
+      "family": "Rahimi"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    }
+  ],
+  "year": 2024,
+  "venue": "2024 Design, Automation & Test in Europe Conference & Exhibition (DATE)",
+  "doi": "10.23919/DATE58400.2024.10546598",
+  "arxiv_id": "2403.07851",
+  "url": "https://arxiv.org/abs/2403.07851",
+  "type": "conference",
+  "axes": [
+    "continual-learning",
+    "platforms"
+  ],
+  "tags": [
+    "mcu",
+    "gap9",
+    "mobilenet",
+    "int8",
+    "quantization",
+    "fscil"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

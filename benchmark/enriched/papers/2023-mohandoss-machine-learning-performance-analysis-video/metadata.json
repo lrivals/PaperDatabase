@@ -1,0 +1,41 @@
+{
+  "id": "2023-mohandoss-machine-learning-performance-analysis-video",
+  "title": "Machine Learning Based Performance Analysis of Video Object Detection and Classification Using Modified Yolov3 and Mobilenet Algorithm",
+  "authors": [
+    {
+      "given": "T.",
+      "family": "Mohandoss"
+    },
+    {
+      "given": "J",
+      "family": "Rangaraj"
+    }
+  ],
+  "year": 2023,
+  "venue": "Journal of Machine and Computing",
+  "doi": "10.53759/7669/jmc202303025",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.53759/7669/jmc202303025",
+  "type": null,
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov3",
+    "mobilenet"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

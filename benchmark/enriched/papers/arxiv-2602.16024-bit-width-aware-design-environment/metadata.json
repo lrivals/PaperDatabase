@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2602.16024-bit-width-aware-design-environment",
+  "title": "Bit-Width-Aware Design Environment for Few-Shot Learning on Edge AI Hardware",
+  "authors": [
+    {
+      "given": "R.",
+      "family": "Kanda"
+    },
+    {
+      "given": "H. L.",
+      "family": "Blevec"
+    },
+    {
+      "given": "N.",
+      "family": "Onizawa"
+    },
+    {
+      "given": "M.",
+      "family": "Leonardon"
+    },
+    {
+      "given": "V.",
+      "family": "Gripon"
+    },
+    {
+      "given": "T.",
+      "family": "Hanyu"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2602.16024",
+  "url": "https://arxiv.org/abs/2602.16024",
+  "type": "preprint",
+  "axes": [
+    "continual-learning",
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "pynq"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

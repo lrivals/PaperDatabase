@@ -1,0 +1,40 @@
+{
+  "id": "arxiv-2606.07659-real-time-industrial-defect-detection",
+  "title": "Real-Time Industrial Defect Detection on Edge Hardware Using Fine-Tuned YOLOv8: A Systematic Benchmark on the NEU Surface Defect Database and MVTec AD with Automotive & Battery Manufacturing Extensions",
+  "authors": [
+    {
+      "given": "Emmanuel Ezeji",
+      "family": "Somtochukwu"
+    },
+    {
+      "given": "Nitesh",
+      "family": "Rijal"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2606.07659",
+  "url": "https://arxiv.org/abs/2606.07659",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "yolov8"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

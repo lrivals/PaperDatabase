@@ -1,0 +1,66 @@
+{
+  "id": "arxiv-2508.02426-learning-evolve-bayesian-guided-continual",
+  "title": "Learning to Evolve: Bayesian-Guided Continual Knowledge Graph Embedding",
+  "authors": [
+    {
+      "given": "Linyu",
+      "family": "Li"
+    },
+    {
+      "given": "Zhi",
+      "family": "Jin"
+    },
+    {
+      "given": "Yuanpeng",
+      "family": "He"
+    },
+    {
+      "given": "Dongming",
+      "family": "Jin"
+    },
+    {
+      "given": "Yichi",
+      "family": "Zhang"
+    },
+    {
+      "given": "Haoran",
+      "family": "Duan"
+    },
+    {
+      "given": "Xuan",
+      "family": "Zhang"
+    },
+    {
+      "given": "Zhengwei",
+      "family": "Tao"
+    },
+    {
+      "given": "Nyima",
+      "family": "Tash"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2508.02426",
+  "url": "https://arxiv.org/abs/2508.02426",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

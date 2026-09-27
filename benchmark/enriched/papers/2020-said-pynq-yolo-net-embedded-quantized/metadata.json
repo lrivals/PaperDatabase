@@ -1,0 +1,38 @@
+{
+  "id": "2020-said-pynq-yolo-net-embedded-quantized",
+  "title": "Pynq-YOLO-Net: An Embedded Quantized Convolutional Neural Network for Face Mask Detection in COVID-19 Pandemic Era",
+  "authors": [
+    {
+      "given": "Yahia",
+      "family": "Said"
+    }
+  ],
+  "year": 2020,
+  "venue": "International Journal of Advanced Computer Science and Applications",
+  "doi": "10.14569/ijacsa.2020.0110912",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.14569/ijacsa.2020.0110912",
+  "type": null,
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "pynq",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : III — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

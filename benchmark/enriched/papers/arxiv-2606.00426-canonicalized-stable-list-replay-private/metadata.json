@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-2606.00426-canonicalized-stable-list-replay-private",
+  "title": "Canonicalized Stable-List Replay for Private Federated Continual Learning over Language-Model Embeddings",
+  "authors": [
+    {
+      "given": "Ibne Farabi",
+      "family": "Shihab"
+    },
+    {
+      "given": "Abu Sa-Adat Mohamed Moon-Im Al",
+      "family": "Ahsan"
+    },
+    {
+      "given": "Anuj",
+      "family": "Sharma"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2606.00426",
+  "url": "https://arxiv.org/abs/2606.00426",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

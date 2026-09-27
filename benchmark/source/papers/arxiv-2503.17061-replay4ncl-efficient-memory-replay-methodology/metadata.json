@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-2503.17061-replay4ncl-efficient-memory-replay-methodology",
+  "title": "Replay4NCL: An Efficient Memory Replay-based Methodology for Neuromorphic Continual Learning in Embedded AI Systems",
+  "authors": [
+    {
+      "given": "Mishal Fatima",
+      "family": "Minhas"
+    },
+    {
+      "given": "Rachmad Vidya Wicaksana",
+      "family": "Putra"
+    },
+    {
+      "given": "Falah",
+      "family": "Awwad"
+    },
+    {
+      "given": "Osman",
+      "family": "Hasan"
+    },
+    {
+      "given": "Muhammad",
+      "family": "Shafique"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2503.17061",
+  "url": "https://arxiv.org/abs/2503.17061",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

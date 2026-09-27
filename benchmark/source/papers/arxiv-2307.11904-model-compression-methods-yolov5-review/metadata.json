@@ -1,0 +1,50 @@
+{
+  "id": "arxiv-2307.11904-model-compression-methods-yolov5-review",
+  "title": "Model Compression Methods for YOLOv5: A Review",
+  "authors": [
+    {
+      "given": "Mohammad",
+      "family": "Jani"
+    },
+    {
+      "given": "Jamil",
+      "family": "Fayyad"
+    },
+    {
+      "given": "Younes",
+      "family": "Al-Younes"
+    },
+    {
+      "given": "Homayoun",
+      "family": "Najjaran"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2307.11904",
+  "url": "https://arxiv.org/abs/2307.11904",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov5",
+    "quantization",
+    "pruning"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

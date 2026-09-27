@@ -1,0 +1,39 @@
+{
+  "id": "arxiv-2511.13453-hardware-optimization-android-inference-ai",
+  "title": "Hardware optimization on Android for inference of AI models",
+  "authors": [
+    {
+      "given": "Iulius",
+      "family": "Gherasim"
+    },
+    {
+      "given": "Carlos García",
+      "family": "Sánchez"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2511.13453",
+  "url": "https://arxiv.org/abs/2511.13453",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

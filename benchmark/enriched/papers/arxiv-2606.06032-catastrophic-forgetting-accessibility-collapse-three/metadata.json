@@ -1,0 +1,37 @@
+{
+  "id": "arxiv-2606.06032-catastrophic-forgetting-accessibility-collapse-three",
+  "title": "Catastrophic Forgetting as Accessibility Collapse: A Three-Level Framework for Knowledge Persistence in Continual Learning",
+  "authors": [
+    {
+      "given": "Ayushman",
+      "family": "Trivedi"
+    },
+    {
+      "given": "Bhavika",
+      "family": "Melwani"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2606.06032",
+  "url": "https://arxiv.org/abs/2606.06032",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

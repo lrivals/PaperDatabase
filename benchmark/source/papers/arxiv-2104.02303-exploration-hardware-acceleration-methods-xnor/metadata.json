@@ -1,0 +1,47 @@
+{
+  "id": "arxiv-2104.02303-exploration-hardware-acceleration-methods-xnor",
+  "title": "Exploration of Hardware Acceleration Methods for an XNOR Traffic Signs Classifier",
+  "authors": [
+    {
+      "given": "Dominika",
+      "family": "Przewlocka-Rus"
+    },
+    {
+      "given": "Marcin",
+      "family": "Kowalczyk"
+    },
+    {
+      "given": "Tomasz",
+      "family": "Kryjak"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2104.02303",
+  "url": "https://arxiv.org/abs/2104.02303",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "zcu104",
+    "zynq"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

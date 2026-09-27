@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-2507.18174-real-time-object-detection-classification",
+  "title": "Real-Time Object Detection and Classification using YOLO for Edge FPGAs",
+  "authors": [
+    {
+      "given": "Rashed",
+      "family": "Al Amin"
+    },
+    {
+      "given": "Roman",
+      "family": "Obermaisser"
+    }
+  ],
+  "year": 2025,
+  "venue": "2025 International Symposium ELMAR",
+  "doi": "10.1109/ELMAR66948.2025.11193980",
+  "arxiv_id": "2507.18174",
+  "url": "https://arxiv.org/abs/2507.18174",
+  "type": "conference",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "yolov5",
+    "kv260",
+    "vitis-ai",
+    "int8",
+    "quantization"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

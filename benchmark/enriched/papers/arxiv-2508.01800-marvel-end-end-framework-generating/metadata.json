@@ -1,0 +1,68 @@
+{
+  "id": "arxiv-2508.01800-marvel-end-end-framework-generating",
+  "title": "MARVEL: An End-to-End Framework for Generating Model-Class Aware Custom RISC-V Extensions for Lightweight AI",
+  "authors": [
+    {
+      "given": "Ajay Kumar",
+      "family": "M"
+    },
+    {
+      "given": "Cian",
+      "family": "O'Mahoney"
+    },
+    {
+      "given": "Pedro Kreutz",
+      "family": "Werle"
+    },
+    {
+      "given": "Shreejith",
+      "family": "Shanker"
+    },
+    {
+      "given": "Dimitrios S.",
+      "family": "Nikolopoulos"
+    },
+    {
+      "given": "Bo",
+      "family": "Ji"
+    },
+    {
+      "given": "Hans",
+      "family": "Vandierendonck"
+    },
+    {
+      "given": "Deepu",
+      "family": "John"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2508.01800",
+  "url": "https://arxiv.org/abs/2508.01800",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "zcu104",
+    "zynq",
+    "mobilenet"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

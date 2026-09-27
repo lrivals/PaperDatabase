@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-1805.03033-efficient-design-hardware-enabled-reservoir",
+  "title": "Efficient Design of Hardware-Enabled Reservoir Computing in FPGAs",
+  "authors": [
+    {
+      "given": "Bogdan",
+      "family": "Penkovsky"
+    },
+    {
+      "given": "Laurent",
+      "family": "Larger"
+    },
+    {
+      "given": "Daniel",
+      "family": "Brunner"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1805.03033",
+  "url": "https://arxiv.org/abs/1805.03033",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

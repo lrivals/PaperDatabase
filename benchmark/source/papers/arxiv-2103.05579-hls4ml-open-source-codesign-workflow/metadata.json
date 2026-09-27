@@ -1,0 +1,154 @@
+{
+  "id": "arxiv-2103.05579-hls4ml-open-source-codesign-workflow",
+  "title": "hls4ml: An Open-Source Codesign Workflow to Empower Scientific Low-Power Machine Learning Devices",
+  "authors": [
+    {
+      "given": "Farah",
+      "family": "Fahim"
+    },
+    {
+      "given": "Benjamin",
+      "family": "Hawks"
+    },
+    {
+      "given": "Christian",
+      "family": "Herwig"
+    },
+    {
+      "given": "James",
+      "family": "Hirschauer"
+    },
+    {
+      "given": "Sergo",
+      "family": "Jindariani"
+    },
+    {
+      "given": "Nhan",
+      "family": "Tran"
+    },
+    {
+      "given": "Luca P",
+      "family": "Carloni"
+    },
+    {
+      "given": "Giuseppe Di",
+      "family": "Guglielmo"
+    },
+    {
+      "given": "Philip",
+      "family": "Harris"
+    },
+    {
+      "given": "Jeffrey",
+      "family": "Krupa"
+    },
+    {
+      "given": "Dylan",
+      "family": "Rankin"
+    },
+    {
+      "given": "Manuel",
+      "family": "Blanco Valentin"
+    },
+    {
+      "given": "Josiah",
+      "family": "Hester"
+    },
+    {
+      "given": "Yingyi",
+      "family": "Luo"
+    },
+    {
+      "given": "John",
+      "family": "Mamish"
+    },
+    {
+      "given": "Seda",
+      "family": "Orgrenci-Memik"
+    },
+    {
+      "given": "Thea",
+      "family": "Aarrestad"
+    },
+    {
+      "given": "Hamza",
+      "family": "Javed"
+    },
+    {
+      "given": "Vladimir",
+      "family": "Loncar"
+    },
+    {
+      "given": "Maurizio",
+      "family": "Pierini"
+    },
+    {
+      "given": "Adrian Alan",
+      "family": "Pol"
+    },
+    {
+      "given": "Sioni",
+      "family": "Summers"
+    },
+    {
+      "given": "Javier",
+      "family": "Duarte"
+    },
+    {
+      "given": "Scott",
+      "family": "Hauck"
+    },
+    {
+      "given": "Shih-Chieh",
+      "family": "Hsu"
+    },
+    {
+      "given": "Jennifer",
+      "family": "Ngadiuba"
+    },
+    {
+      "given": "Mia",
+      "family": "Liu"
+    },
+    {
+      "given": "Duc",
+      "family": "Hoang"
+    },
+    {
+      "given": "Edward",
+      "family": "Kreinar"
+    },
+    {
+      "given": "Zhenbin",
+      "family": "Wu"
+    }
+  ],
+  "year": 2021,
+  "venue": "TinyML Research Symposium 2021",
+  "doi": null,
+  "arxiv_id": "2103.05579",
+  "url": "https://arxiv.org/abs/2103.05579",
+  "type": "conference",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "hls4ml",
+    "quantization",
+    "pruning",
+    "qkeras",
+    "qat",
+    "asic",
+    "autoencoder"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

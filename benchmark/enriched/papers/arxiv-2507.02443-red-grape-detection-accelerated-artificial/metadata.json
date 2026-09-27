@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2507.02443-red-grape-detection-accelerated-artificial",
+  "title": "Red grape detection with accelerated artificial neural networks in the FPGA's programmable logic",
+  "authors": [
+    {
+      "given": "Sandro Costa",
+      "family": "Magalhães"
+    },
+    {
+      "given": "Marco",
+      "family": "Almeida"
+    },
+    {
+      "given": "Filipe Neves dos",
+      "family": "Santos"
+    },
+    {
+      "given": "António Paulo",
+      "family": "Moreira"
+    },
+    {
+      "given": "Jorge",
+      "family": "Dias"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2507.02443",
+  "url": "https://arxiv.org/abs/2507.02443",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn",
+    "mobilenet"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

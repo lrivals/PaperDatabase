@@ -1,0 +1,104 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "note": {
+      "type": "string"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "paper_id": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "task": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "quantization": {
+            "type": "string"
+          },
+          "accuracy_metric": {
+            "type": "string"
+          },
+          "accuracy_value": {
+            "type": "string"
+          },
+          "fps": {
+            "type": "string"
+          },
+          "gops": {
+            "type": "string"
+          },
+          "latency_ms": {
+            "type": "string"
+          },
+          "power_w": {
+            "type": "string"
+          },
+          "power_scope": {
+            "type": "string"
+          },
+          "luts": {
+            "type": "string"
+          },
+          "dsps": {
+            "type": "string"
+          },
+          "bram": {
+            "type": "string"
+          },
+          "dataset": {
+            "type": "string"
+          },
+          "toolflow": {
+            "type": "string"
+          },
+          "baseline": {
+            "type": "string"
+          },
+          "source_section": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "paper_id",
+          "model",
+          "task",
+          "platform",
+          "quantization",
+          "accuracy_metric",
+          "accuracy_value",
+          "fps",
+          "gops",
+          "latency_ms",
+          "power_w",
+          "power_scope",
+          "luts",
+          "dsps",
+          "bram",
+          "dataset",
+          "toolflow",
+          "baseline",
+          "source_section",
+          "confidence"
+        ]
+      }
+    }
+  },
+  "required": [
+    "note",
+    "rows"
+  ]
+}

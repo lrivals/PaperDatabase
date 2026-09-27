@@ -8,7 +8,7 @@
   bin/pdb synth agent [--limit N]
   bin/pdb synth report
 
-All large or generated artifacts live under .cache/bench/.
+All large or generated artifacts live under .cache/bench/; a versioned export is in benchmark/.
 """
 
 import argparse
@@ -41,7 +41,20 @@ LOCAL_MODEL_SHA256 = "701d8fa9ed214ab21bfc130cd2a7df19ca89bbef7713e2dfb19f3c6369
 LOCAL_URL = os.environ.get("PDB_BENCH_LOCAL_URL", "http://127.0.0.1:8787/v1/chat/completions")
 GENERATION_MAX_TOKENS = 6000
 # Validator, enricher, judge and agent under test: headless Claude Code (`claude -p`).
-CLAUDE = os.environ.get("PDB_BENCH_CLAUDE") or shutil.which("claude") or "claude"
+def claude_binary():
+    """The real Claude Code executable: PDB_BENCH_CLAUDE, else the newest binary bundled
+    with the desktop app, else claude on PATH. A wrapper script on PATH may rely on $HOME,
+    which the agent sandbox replaces, so the bundled binary comes first."""
+    if os.environ.get("PDB_BENCH_CLAUDE"):
+        return os.environ["PDB_BENCH_CLAUDE"]
+    bundled = sorted(Path.home().glob(".config/Claude/claude-code/*/claude"),
+                     key=lambda p: [int(x) if x.isdigit() else 0 for x in p.parent.name.split(".")])
+    found = str(bundled[-1]) if bundled else shutil.which("claude")
+    if not found:
+        raise RuntimeError("Claude Code not found; set PDB_BENCH_CLAUDE to its executable")
+    return found
+
+
 CLAUDE_MODEL = os.environ.get("PDB_BENCH_CLAUDE_MODEL", "claude-opus-5-5")
 QUOTAS = {
     "single": 40, "numeric": 40, "cross": 50,
@@ -340,7 +353,9 @@ def output_schema(expected):
         elif key == "rows":
             props[key] = {"type": "array", "items": {
                 "type": "object", "additionalProperties": False,
-                "properties": {name: {"type": "string"} for name in schema.BENCHMARK_COLUMNS},
+                "properties": {name: {"type": "string"} for name in schema.BENCHMARK_COLUMNS} | {
+                    "power_scope": {"enum": [*schema.POWER_SCOPES, schema.NR]},
+                    "confidence": {"enum": list(schema.CONFIDENCE)}},
                 "required": list(schema.BENCHMARK_COLUMNS)}}
         else:
             props[key] = {"type": "array", "items": {"type": "string"}}
@@ -362,7 +377,7 @@ def claude_result(stdout):
 
 def claude(prompt, expected, timeout=480):
     """One tool-less Claude session answering with JSON that matches `expected`."""
-    command = [CLAUDE, "-p", "--output-format", "json", "--model", CLAUDE_MODEL,
+    command = [claude_binary(), "-p", "--output-format", "json", "--model", CLAUDE_MODEL,
                "--json-schema", json.dumps(output_schema(expected)),
                "--tools", "", "--no-session-persistence", "--setting-sources", "",
                "--strict-mcp-config"]
@@ -928,8 +943,9 @@ def agent_variant(case, corpus_name, variant):
         raise ValueError("corpus version missing")
     key = f"{case['id']}-{corpus_name}-{variant}"
     output = HOME / "agent" / key
-    if (output / "result.json").exists():
-        return read(output / "result.json", {})
+    previous = read(output / "result.json", {})
+    if previous.get("answer") is not None:  # failed runs are retried
+        return previous
     output.mkdir(parents=True, exist_ok=True)
     # Claude Code sees a private config dir holding only a copy of the CLI login.
     auth = Path(os.environ.get("CLAUDE_CONFIG_DIR", Path.home() / ".claude")) / ".credentials.json"
@@ -974,7 +990,7 @@ def agent_variant(case, corpus_name, variant):
            "--chdir", "/tmp/bench", "--setenv", "PDB_RAG_ROOT", "/tmp/bench",
            "--setenv", "CLAUDE_CONFIG_DIR", "/tmp/output/claude_home",
            "--setenv", "HOME", "/tmp/output/claude_home",
-           "--", CLAUDE, "-p", "--model", CLAUDE_MODEL,
+           "--", claude_binary(), "-p", "--model", CLAUDE_MODEL,
            "--output-format", "stream-json", "--verbose",
            "--json-schema", json.dumps(answer_schema()),
            "--tools", "Bash,Read,Grep,Glob", "--permission-mode", "bypassPermissions",
@@ -1013,6 +1029,7 @@ def agent_variant(case, corpus_name, variant):
 
 
 def agent(variant, split="test", limit=60):
+    claude_binary()  # fail before any run if Claude Code is missing
     cases = sample(lines(HOME / "questions.jsonl"), split, limit)
     if not cases:
         raise RuntimeError("no validated questions for selected split")

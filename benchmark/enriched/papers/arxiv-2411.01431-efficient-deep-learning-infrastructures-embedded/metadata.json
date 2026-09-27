@@ -1,0 +1,67 @@
+{
+  "id": "arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded",
+  "title": "Efficient Deep Learning Infrastructures for Embedded Computing Systems: A Comprehensive Survey and Future Envision",
+  "authors": [
+    {
+      "given": "Xiangzhong",
+      "family": "Luo"
+    },
+    {
+      "given": "Di",
+      "family": "Liu"
+    },
+    {
+      "given": "Hao",
+      "family": "Kong"
+    },
+    {
+      "given": "Shuo",
+      "family": "Huai"
+    },
+    {
+      "given": "Hui",
+      "family": "Chen"
+    },
+    {
+      "given": "Guochu",
+      "family": "Xiong"
+    },
+    {
+      "given": "Weichen",
+      "family": "Liu"
+    }
+  ],
+  "year": 2024,
+  "venue": "ACM Transactions on Embedded Computing Systems",
+  "doi": "10.1145/3701728",
+  "arxiv_id": "2411.01431",
+  "url": "https://arxiv.org/abs/2411.01431",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "continual-learning",
+    "platforms"
+  ],
+  "tags": [
+    "nas",
+    "pruning",
+    "quantization",
+    "distillation",
+    "on-device-learning",
+    "jetson",
+    "edge-tpu",
+    "vit",
+    "llm",
+    "mobilenet"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

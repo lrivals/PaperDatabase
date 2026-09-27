@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-2208.00773-real-time-object-detection-system",
+  "title": "Real Time Object Detection System with YOLO and CNN Models: A Review",
+  "authors": [
+    {
+      "given": "V",
+      "family": "Viswanatha"
+    },
+    {
+      "given": "R K",
+      "family": "Chandana"
+    },
+    {
+      "given": "Ramachandra A",
+      "family": "C"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2208.00773",
+  "url": "https://arxiv.org/abs/2208.00773",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

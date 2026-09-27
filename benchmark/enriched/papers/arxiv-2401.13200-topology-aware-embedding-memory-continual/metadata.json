@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2401.13200-topology-aware-embedding-memory-continual",
+  "title": "Topology-aware Embedding Memory for Continual Learning on Expanding Networks",
+  "authors": [
+    {
+      "given": "Xikun",
+      "family": "Zhang"
+    },
+    {
+      "given": "Dongjin",
+      "family": "Song"
+    },
+    {
+      "given": "Yixin",
+      "family": "Chen"
+    },
+    {
+      "given": "Dacheng",
+      "family": "Tao"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2401.13200",
+  "url": "https://arxiv.org/abs/2401.13200",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

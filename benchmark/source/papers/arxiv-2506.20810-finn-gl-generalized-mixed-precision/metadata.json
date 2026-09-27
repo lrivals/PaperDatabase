@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2506.20810-finn-gl-generalized-mixed-precision",
+  "title": "FINN-GL: Generalized Mixed-Precision Extensions for FPGA-Accelerated LSTMs",
+  "authors": [
+    {
+      "given": "Shashwat",
+      "family": "Khandelwal"
+    },
+    {
+      "given": "Jakoba",
+      "family": "Petri-Koenig"
+    },
+    {
+      "given": "Thomas B.",
+      "family": "Preußer"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    },
+    {
+      "given": "Shreejith",
+      "family": "Shanker"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2506.20810",
+  "url": "https://arxiv.org/abs/2506.20810",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

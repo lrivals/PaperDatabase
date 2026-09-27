@@ -1,0 +1,54 @@
+{
+  "id": "2022-feng-benchmark-analysis-yolo-performance-edge",
+  "title": "Benchmark Analysis of YOLO Performance on Edge Intelligence Devices",
+  "authors": [
+    {
+      "given": "Haogang",
+      "family": "Feng"
+    },
+    {
+      "given": "Gaoze",
+      "family": "Mu"
+    },
+    {
+      "given": "Shida",
+      "family": "Zhong"
+    },
+    {
+      "given": "Peichang",
+      "family": "Zhang"
+    },
+    {
+      "given": "Tao",
+      "family": "Yuan"
+    }
+  ],
+  "year": 2022,
+  "venue": "Cryptography 6(2), 16",
+  "doi": "10.3390/cryptography6020016",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/cryptography6020016",
+  "type": "journal",
+  "axes": [
+    "platforms"
+  ],
+  "tags": [
+    "yolov3",
+    "yolov3-tiny",
+    "yolov4",
+    "yolov4-tiny",
+    "jetson",
+    "vpu",
+    "fp16"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

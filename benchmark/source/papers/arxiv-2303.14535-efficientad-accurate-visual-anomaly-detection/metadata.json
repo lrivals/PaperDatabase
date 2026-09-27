@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2303.14535-efficientad-accurate-visual-anomaly-detection",
+  "title": "EfficientAD: Accurate Visual Anomaly Detection at Millisecond-Level Latencies",
+  "authors": [
+    {
+      "given": "Kilian",
+      "family": "Batzner"
+    },
+    {
+      "given": "Lars",
+      "family": "Heckler"
+    },
+    {
+      "given": "Rebecca",
+      "family": "König"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2303.14535",
+  "url": "https://arxiv.org/abs/2303.14535",
+  "type": "preprint",
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

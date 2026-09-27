@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-1705.06963-survey-neuromorphic-computing-neural-networks",
+  "title": "A Survey of Neuromorphic Computing and Neural Networks in Hardware",
+  "authors": [
+    {
+      "given": "Catherine D.",
+      "family": "Schuman"
+    },
+    {
+      "given": "Thomas E.",
+      "family": "Potok"
+    },
+    {
+      "given": "Robert M.",
+      "family": "Patton"
+    },
+    {
+      "given": "J.D.",
+      "family": "Birdwell"
+    },
+    {
+      "given": "Mark E.",
+      "family": "Dean"
+    },
+    {
+      "given": "Garrett S.",
+      "family": "Rose"
+    },
+    {
+      "given": "James S.",
+      "family": "Plank"
+    }
+  ],
+  "year": 2017,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1705.06963",
+  "url": "https://arxiv.org/abs/1705.06963",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

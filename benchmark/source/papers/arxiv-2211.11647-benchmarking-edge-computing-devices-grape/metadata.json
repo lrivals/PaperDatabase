@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-2211.11647-benchmarking-edge-computing-devices-grape",
+  "title": "Benchmarking Edge Computing Devices for Grape Bunches and Trunks Detection using Accelerated Object Detection Single Shot MultiBox Deep Learning Models",
+  "authors": [
+    {
+      "given": "Sandro Costa",
+      "family": "Magalhães"
+    },
+    {
+      "given": "Filipe Neves",
+      "family": "Santos"
+    },
+    {
+      "given": "Pedro",
+      "family": "Machado"
+    },
+    {
+      "given": "António Paulo",
+      "family": "Moreira"
+    },
+    {
+      "given": "Jorge",
+      "family": "Dias"
+    }
+  ],
+  "year": 2022,
+  "venue": "Engineering Applications of Artificial Intelligence 117, 105604 (2022)",
+  "doi": "10.1016/j.engappai.2022.105604",
+  "arxiv_id": "2211.11647",
+  "url": "https://arxiv.org/abs/2211.11647",
+  "type": "journal",
+  "axes": [
+    "platforms",
+    "toolflows"
+  ],
+  "tags": [
+    "kv260",
+    "zcu104",
+    "jetson",
+    "edge-tpu",
+    "retinanet",
+    "int8"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

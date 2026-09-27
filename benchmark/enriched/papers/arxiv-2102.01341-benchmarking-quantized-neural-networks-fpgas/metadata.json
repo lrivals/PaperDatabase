@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-2102.01341-benchmarking-quantized-neural-networks-fpgas",
+  "title": "Benchmarking Quantized Neural Networks on FPGAs with FINN",
+  "authors": [
+    {
+      "given": "Quentin",
+      "family": "Ducasse"
+    },
+    {
+      "given": "Pascal",
+      "family": "Cotret"
+    },
+    {
+      "given": "Loïc",
+      "family": "Lagadec"
+    },
+    {
+      "given": "Robert",
+      "family": "Stewart"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2102.01341",
+  "url": "https://arxiv.org/abs/2102.01341",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

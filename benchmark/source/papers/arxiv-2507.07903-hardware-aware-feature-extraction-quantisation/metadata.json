@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-2507.07903-hardware-aware-feature-extraction-quantisation",
+  "title": "Hardware-Aware Feature Extraction Quantisation for Real-Time Visual Odometry on FPGA Platforms",
+  "authors": [
+    {
+      "given": "Mateusz",
+      "family": "Wasala"
+    },
+    {
+      "given": "Mateusz",
+      "family": "Smolarczyk"
+    },
+    {
+      "given": "Michal",
+      "family": "Danilowicz"
+    },
+    {
+      "given": "Tomasz",
+      "family": "Kryjak"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2507.07903",
+  "url": "https://arxiv.org/abs/2507.07903",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "zynq"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

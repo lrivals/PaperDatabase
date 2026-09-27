@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2606.11065-arithmetic-packing-wide-integer-datapaths",
+  "title": "Arithmetic Packing on Wide Integer Datapaths in DSP Primitives of Modern FPGA Devices",
+  "authors": [
+    {
+      "given": "Titus",
+      "family": "Bornträger"
+    },
+    {
+      "given": "Shane",
+      "family": "Fleming"
+    },
+    {
+      "given": "Philipp",
+      "family": "Holzinger"
+    },
+    {
+      "given": "Dietmar",
+      "family": "Fey"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    },
+    {
+      "given": "Thomas B.",
+      "family": "Preußer"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2606.11065",
+  "url": "https://arxiv.org/abs/2606.11065",
+  "type": "preprint",
+  "axes": [
+    "toolflows"
+  ],
+  "tags": [
+    "finn",
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : II — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

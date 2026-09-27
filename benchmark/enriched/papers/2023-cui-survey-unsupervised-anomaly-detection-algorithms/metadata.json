@@ -1,0 +1,42 @@
+{
+  "id": "2023-cui-survey-unsupervised-anomaly-detection-algorithms",
+  "title": "A Survey on Unsupervised Anomaly Detection Algorithms for Industrial Images",
+  "authors": [
+    {
+      "given": "Yajie",
+      "family": "Cui"
+    },
+    {
+      "given": "Zhaoxiang",
+      "family": "Liu"
+    },
+    {
+      "given": "Shiguo",
+      "family": "Lian"
+    }
+  ],
+  "year": 2023,
+  "venue": "IEEE Access",
+  "doi": "10.1109/ACCESS.2023.3282993",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/ACCESS.2023.3282993",
+  "type": "journal",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [
+    "anomaly-detection"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

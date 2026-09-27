@@ -1,0 +1,61 @@
+{
+  "id": "arxiv-2006.00422-ebbinnot-hardware-efficient-hybrid-event",
+  "title": "EBBINNOT: A Hardware Efficient Hybrid Event-Frame Tracker for Stationary Dynamic Vision Sensors",
+  "authors": [
+    {
+      "given": "Vivek",
+      "family": "Mohan"
+    },
+    {
+      "given": "Deepak",
+      "family": "Singla"
+    },
+    {
+      "given": "Tarun",
+      "family": "Pulluri"
+    },
+    {
+      "given": "Andres",
+      "family": "Ussa"
+    },
+    {
+      "given": "Pradeep Kumar",
+      "family": "Gopalakrishnan"
+    },
+    {
+      "given": "Pao-Sheng",
+      "family": "Sun"
+    },
+    {
+      "given": "Bharath",
+      "family": "Ramesh"
+    },
+    {
+      "given": "Arindam",
+      "family": "Basu"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2006.00422",
+  "url": "https://arxiv.org/abs/2006.00422",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

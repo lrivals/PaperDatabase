@@ -1,0 +1,49 @@
+{
+  "id": "2024-pramanta-yolo-real-time-object-detection",
+  "title": "YOLO real-time object detection on EV3-Robot using FPGA hardware Accelerator",
+  "authors": [
+    {
+      "given": "Dinda",
+      "family": "Pramanta"
+    },
+    {
+      "given": "Ninnart",
+      "family": "Fuengfusin"
+    },
+    {
+      "given": "Arie Rachmad",
+      "family": "Syulistyo"
+    },
+    {
+      "given": "Hakaru",
+      "family": "Tamukoh"
+    }
+  ],
+  "year": 2024,
+  "venue": "Proceedings of International Conference on Artificial Life and Robotics",
+  "doi": "10.5954/icarob.2024.os15-1",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.5954/icarob.2024.os15-1",
+  "type": null,
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "kv260"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "titre du PDF ≠ titre arXiv : « ICAROB2024 »",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-1909.13396-req-yolo-resource-aware-efficient",
+  "title": "REQ-YOLO: A Resource-Aware, Efficient Quantization Framework for Object Detection on FPGAs",
+  "authors": [
+    {
+      "given": "Caiwen",
+      "family": "Ding"
+    },
+    {
+      "given": "Shuo",
+      "family": "Wang"
+    },
+    {
+      "given": "Ning",
+      "family": "Liu"
+    },
+    {
+      "given": "Kaidi",
+      "family": "Xu"
+    },
+    {
+      "given": "Yanzhi",
+      "family": "Wang"
+    },
+    {
+      "given": "Yun",
+      "family": "Liang"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1909.13396",
+  "url": "https://arxiv.org/abs/1909.13396",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "quantization"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

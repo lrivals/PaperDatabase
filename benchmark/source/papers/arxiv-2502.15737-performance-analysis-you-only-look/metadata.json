@@ -1,0 +1,63 @@
+{
+  "id": "arxiv-2502.15737-performance-analysis-you-only-look",
+  "title": "A Performance Analysis of You Only Look Once Models for Deployment on Constrained Computational Edge Devices in Drone Applications",
+  "authors": [
+    {
+      "given": "Lucas",
+      "family": "Rey"
+    },
+    {
+      "given": "Ana M",
+      "family": "Bernardos"
+    },
+    {
+      "given": "Andrzej D",
+      "family": "Dobrzycki"
+    },
+    {
+      "given": "David",
+      "family": "Carramiñana"
+    },
+    {
+      "given": "Luca",
+      "family": "Bergesio"
+    },
+    {
+      "given": "Juan A",
+      "family": "Besada"
+    },
+    {
+      "given": "José Ramón",
+      "family": "Casar"
+    }
+  ],
+  "year": 2025,
+  "venue": "Electronics 2025, 14(3), 638",
+  "doi": "10.3390/electronics14030638",
+  "arxiv_id": "2502.15737",
+  "url": "https://arxiv.org/abs/2502.15737",
+  "type": "journal",
+  "axes": [
+    "platforms"
+  ],
+  "tags": [
+    "jetson",
+    "orin",
+    "raspberry-pi",
+    "yolov8",
+    "tensorrt",
+    "int8",
+    "fp16",
+    "drone"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "id": "arxiv-2304.10618-uleen-architecture-ultra-low-energy",
+  "title": "ULEEN: A Novel Architecture for Ultra Low-Energy Edge Neural Networks",
+  "authors": [
+    {
+      "given": "Zachary",
+      "family": "Susskind"
+    },
+    {
+      "given": "Aman",
+      "family": "Arora"
+    },
+    {
+      "given": "Igor D. S.",
+      "family": "Miranda"
+    },
+    {
+      "given": "Alan T. L.",
+      "family": "Bacellar"
+    },
+    {
+      "given": "Luis A. Q.",
+      "family": "Villon"
+    },
+    {
+      "given": "Rafael F.",
+      "family": "Katopodis"
+    },
+    {
+      "given": "Leandro S. de",
+      "family": "Araujo"
+    },
+    {
+      "given": "Diego L. C.",
+      "family": "Dutra"
+    },
+    {
+      "given": "Priscila M. V.",
+      "family": "Lima"
+    },
+    {
+      "given": "Felipe M. G.",
+      "family": "Franca"
+    },
+    {
+      "given": "Mauricio",
+      "family": "Breternitz"
+    },
+    {
+      "given": "Lizy K.",
+      "family": "John"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2304.10618",
+  "url": "https://arxiv.org/abs/2304.10618",
+  "type": "preprint",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "finn",
+    "zynq",
+    "quantization",
+    "pruning"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

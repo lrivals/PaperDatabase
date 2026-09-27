@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2509.25659-yolo-defect-detection-metal-sheets",
+  "title": "YOLO-Based Defect Detection for Metal Sheets",
+  "authors": [
+    {
+      "given": "Po-Heng",
+      "family": "Chou"
+    },
+    {
+      "given": "Chun-Chi",
+      "family": "Wang"
+    },
+    {
+      "given": "Wei-Lung",
+      "family": "Mao"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2509.25659",
+  "url": "https://arxiv.org/abs/2509.25659",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov3",
+    "yolov9"
+  ],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

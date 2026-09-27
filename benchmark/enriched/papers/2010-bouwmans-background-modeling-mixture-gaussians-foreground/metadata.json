@@ -1,0 +1,42 @@
+{
+  "id": "2010-bouwmans-background-modeling-mixture-gaussians-foreground",
+  "title": "Background Modeling using Mixture of Gaussians for Foreground Detection - A Survey",
+  "authors": [
+    {
+      "given": "Thierry",
+      "family": "Bouwmans"
+    },
+    {
+      "given": "Fida El",
+      "family": "Baf"
+    },
+    {
+      "given": "Bertrand",
+      "family": "Vachon"
+    }
+  ],
+  "year": 2010,
+  "venue": "Recent Advances in Computer Science and Communications",
+  "doi": "10.2174/1874479610801030219",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.2174/1874479610801030219",
+  "type": null,
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 1 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

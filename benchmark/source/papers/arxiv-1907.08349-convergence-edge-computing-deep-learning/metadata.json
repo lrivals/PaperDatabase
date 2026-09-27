@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-1907.08349-convergence-edge-computing-deep-learning",
+  "title": "Convergence of Edge Computing and Deep Learning: A Comprehensive Survey",
+  "authors": [
+    {
+      "given": "Xiaofei",
+      "family": "Wang"
+    },
+    {
+      "given": "Yiwen",
+      "family": "Han"
+    },
+    {
+      "given": "Victor C. M.",
+      "family": "Leung"
+    },
+    {
+      "given": "Dusit Tao",
+      "family": "Niyato"
+    },
+    {
+      "given": "Xueqiang",
+      "family": "Yan"
+    },
+    {
+      "given": "Xu",
+      "family": "Chen"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/comst.2020.2970550",
+  "arxiv_id": "1907.08349",
+  "url": "https://arxiv.org/abs/1907.08349",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-25",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

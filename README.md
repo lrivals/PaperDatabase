@@ -174,15 +174,19 @@ En complément de `pdb search`, `bin/pdb rag` indexe le corpus avec Qwen3-Embedd
 
 ## Adapter à un autre sujet de recherche
 
-Le pipeline ne dépend pas du domaine. Pour changer de sujet :
+Le pipeline ne dépend pas du domaine, et un même code sert plusieurs bases séparées, une
+par sujet ([DATA_MODEL.md §11](DATA_MODEL.md#11-plusieurs-bases--registre-basejson-profilemd)) :
 
-1. Définir les axes de veille dans `lib/schema.py` (`AXES`) et leurs titres dans
-   `bin/reindex.py` (`AXIS_TITLES`).
-2. Adapter la pré-classification automatique (`AXIS_RULES`, `TAG_RULES`) et la découverte
-   (`TOPIC_RE`, `HARDWARE_AXES`, `AXIS_QUERIES`) dans `bin/ingest.py`.
-3. Redéfinir les colonnes de `benchmarks.csv` (`BENCHMARK_COLUMNS`, `NUMERIC_COLUMNS` dans
-   `lib/schema.py`) et le template de fiche.
-4. Réécrire les règles de travail de [CLAUDE.md](CLAUDE.md) pour le domaine.
+1. `bin/pdb base new <nom> --theme "…"` crée la base (dossier, liens vers le code,
+   `profile.md`, `CLAUDE.md` générique) et l'enregistre.
+2. `/base-profile`, dans ce dossier, propose les axes de veille, les règles de
+   pré-classification et de découverte (`base.json`) et le périmètre (`profile.md`) ; le
+   profil se précise ensuite au fil des fiches, toujours sur validation de l'utilisateur.
+3. `bin/pdb base scan` puis `bin/pdb base import` reprennent dans les autres bases les articles
+   utiles au nouveau sujet.
+
+Les colonnes de `benchmarks.csv` (`BENCHMARK_COLUMNS` dans `lib/schema.py`) et le template de
+fiche restent communs à toutes les bases.
 
 ---
 
@@ -190,7 +194,8 @@ Le pipeline ne dépend pas du domaine. Pour changer de sujet :
 
 Cet outil est une vue d'ensemble destinée à l'utilisateur. **Le LLM ne s'en sert pas.**
 
-`bin/viz.py` est une application Dash locale à deux onglets.
+`bin/viz.py` est une application Dash locale à trois onglets (Graphe 3D, Généalogie, Bases),
+avec un sélecteur de la base affichée.
 
 **Graphe 3D** — le corpus en nuage de points :
 

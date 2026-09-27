@@ -12,8 +12,8 @@ Modes (combinables ; sans mode : --forward --backward) :
   --axis      recherche avec la requête par défaut d'un axe (ingest.AXIS_QUERIES).
 
 Les papiers déjà en base sont exclus. Un candidat est « dans le sujet » s'il relève d'un axe
-de ingest.HARDWARE_AXES, si son titre évoque le matériel (ingest.TITLE_TOPIC_RE) ou si son
-résumé le fait au moins deux fois (ingest.TOPIC_RE). Rien n'est ajouté à la base : relire
+de hardware_axes, si son titre évoque le matériel (title_topic_re, base.json) ou si son
+résumé le fait au moins deux fois (topic_re). Rien n'est ajouté à la base : relire
 candidates_arxiv.txt, puis `bin/pdb add --from candidates_arxiv.txt`. Voir docs/GUIDE.md.
 """
 import argparse
@@ -82,11 +82,9 @@ def reasons(e):
 
 
 def in_topic_of(title, text, axes):
-    """Contexte matériel : axe matériel, titre explicite, ou mentions répétées (ingest.py).
+    """Contexte matériel : axe matériel, titre explicite, ou mentions répétées (lib/base.py).
     Un axe thématique seul (« autoencoder », « yolo ») ne suffit pas."""
-    return (bool(set(axes) & set(ingest.HARDWARE_AXES))
-            or bool(re.search(ingest.TITLE_TOPIC_RE, title or "", re.IGNORECASE))
-            or len(re.findall(ingest.TOPIC_RE, text, re.IGNORECASE)) >= ingest.TOPIC_MIN_HITS)
+    return base.in_topic(base.CONFIG, title, text, axes)
 
 
 def assess(e):

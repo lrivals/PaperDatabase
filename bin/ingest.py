@@ -35,23 +35,13 @@ CITATION_KEYS = ("title", "authors", "year", "venue", "doi", "type")
 
 # Règles propres au domaine de la base, lues dans base.json (lib/base.py, DATA_MODEL §11).
 # Découverte (bin/discover.py) : un candidat est « dans le sujet » s'il relève d'un des
-# HARDWARE_AXES, si son titre correspond à TITLE_TOPIC_RE, ou si titre + résumé mentionnent
-# au moins TOPIC_MIN_HITS fois TOPIC_RE (contexte matériel). Une mention isolée dans le
+# hardware_axes, si son titre correspond à title_topic_re, ou si titre + résumé mentionnent
+# au moins topic_min_hits fois topic_re (contexte matériel). Une mention isolée dans le
 # résumé ne suffit pas (SqueezeNet, DoReFa-Net : « feasible FPGA deployment » en passant),
 # ni un axe thématique seul (autoencodeur, YOLO sans matériel). AXIS_QUERIES sert de requête
 # par défaut pour `discover --axis`.
 _CFG = base.CONFIG
-AXIS_RULES = tuple(_CFG["axis_rules"].items())
-HARDWARE_AXES = tuple(_CFG["hardware_axes"])
-TOPIC_RE = _CFG["topic_re"]
-TITLE_TOPIC_RE = _CFG["title_topic_re"]
-TOPIC_MIN_HITS = _CFG.get("topic_min_hits", 2)
 AXIS_QUERIES = dict(_CFG["axis_queries"])
-# La version de YOLO est commune à toutes les bases ; les autres étiquettes viennent de base.json.
-TAG_RULES = (
-    (r"\byolo ?v?(\d+)(-?tiny)?", lambda m: f"yolov{m.group(1)}" + ("-tiny" if m.group(2) else "")),
-    *(tuple(r) for r in _CFG["tag_rules"]),
-)
 
 
 # --- utilitaires ----------------------------------------------------------------------
@@ -100,22 +90,8 @@ def find_existing(arxiv_id, digest, papers_dir=None):
     return None
 
 
-SURVEY_RE = r"\bsurvey|\breview\b|\boverview\b|state of the art\b"  # titre et mots-clés seulement
-
-
 def classify(text, title_kw=""):
-    axes = [a for a, rx in AXIS_RULES if re.search(rx, text, re.IGNORECASE)]
-    if "surveys" in schema.AXES and re.search(SURVEY_RE, title_kw, re.IGNORECASE):
-        axes.insert(0, "surveys")
-    tags = []
-    for rx, name in TAG_RULES:
-        for m in re.finditer(rx, text, re.IGNORECASE):
-            t = name(m) if callable(name) else name
-            if t not in tags:
-                tags.append(t)
-            if not callable(name):
-                break
-    return axes, tags
+    return base.classify(_CFG, text, title_kw)
 
 
 def keep_classification(old, axes, tags):

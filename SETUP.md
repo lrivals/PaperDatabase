@@ -32,7 +32,7 @@ Ce que le pipeline produit, pour chaque article : des métadonnées vérifiées,
 nettoyé et découpé en sections, une fiche de lecture et une ou plusieurs lignes de benchmark.
 
 Le code sert plusieurs bases séparées : chaque base est un dossier avec son `base.json` (axes
-du domaine), et la base active est celle du répertoire courant ([DATA_MODEL.md §11](DATA_MODEL.md#11-plusieurs-bases--basejson)).
+du domaine), enregistrées dans un registre (`bin/pdb base list`) ; la base active est celle du répertoire courant, ou celle de `bin/pdb --base NOM` ([DATA_MODEL.md §11](DATA_MODEL.md#11-plusieurs-bases--registre-basejson-profilemd)).
 Ce dépôt contient la base de référence (vision embarquée sur FPGA).
 
 ---
@@ -708,8 +708,18 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 26/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 28/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 28/09/2026 (plusieurs bases).** Registre des bases (`lib/registry.py`,
+`~/.config/pdb/bases.json`), `bin/pdb --base NOM`, `bin/pdb base list|new|register|forget|use|
+info|check|scan|import` (`bin/bases.py`, `lib/bases.py`, `lib/xbase.py`) ; `base.json` minimal
+accepté (seuls `name` et `axes` requis) ; `profile.md` et skill `/base-profile` (le LLM propose,
+l'utilisateur valide ; `/paper-fiche` ajoute des suggestions en attente) ; recherche
+inter-bases (`cited_here`, `in_base`, `ref_elsewhere`) et import par copie ; `bin/pdb add`
+signale un article présent dans une autre base ; onglet Bases dans `bin/viz.py`
+(`lib/vizbases.py`). `lib/refs.py` : index des titres par longueur et préfixe (regroupement
+identique, `reindex` bien plus rapide). DATA_MODEL §11, GUIDE §8.
 
 **Bilan du 26/09/2026 (figures).** `bin/pdb plot` (`lib/plotdata.py`, `lib/plotfig.py`,
 `requirements-plot.txt`) : 15 figures statiques en trois groupes (benchmarks, évaluation du

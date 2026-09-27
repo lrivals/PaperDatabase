@@ -322,17 +322,39 @@ Procédure complète : [SETUP.md §8](../SETUP.md#8-vérification).
 
 ---
 
-## 8. Adapter à un autre sujet
+## 8. Plusieurs bases, autres sujets
 
-Le pipeline ne dépend pas du domaine. Pour en changer, il faut redéfinir :
+Le pipeline ne dépend pas du domaine : chaque sujet a sa base, un dossier séparé qui partage
+le code (DATA_MODEL §11).
 
-- les axes (`lib/schema.py`) ;
-- les règles de pré-classement, `TOPIC_RE`, `HARDWARE_AXES` et `AXIS_QUERIES`
-  (`bin/ingest.py`) ;
-- les colonnes de benchmark ;
-- les règles de travail (`CLAUDE.md`).
+**Créer une base.**
 
-Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
+```bash
+bin/pdb base new anomalies --theme "Détection d'anomalies visuelles embarquée, par autoencodeurs…"
+cd ../anomalies        # puis, dans Claude Code :  /base-profile
+```
+
+`/base-profile` lit le thème et propose des axes, des règles de classement et un périmètre
+(inclus / exclus). Il n'écrit rien sans votre accord. Ensuite, `/paper-fiche` note au fil des
+lectures des « suggestions en attente » dans `profile.md` (sous-thème émergent, papier hors
+axes…), que `/base-profile` vous soumet plus tard.
+
+**Passer d'une base à l'autre.** Travailler dans le dossier de la base suffit. Depuis
+ailleurs : `bin/pdb --base drone status`. `bin/pdb base list` montre toutes les bases ;
+`bin/pdb base use <nom>` fixe la base par défaut.
+
+**Compléter une base depuis les autres.** `bin/pdb base scan` cherche dans vos autres bases
+les articles utiles à la base courante : ceux qu'elle cite déjà sans les avoir, ceux qui
+correspondent à ses règles, et les références citées des deux côtés. Puis
+`bin/pdb base import drone:<paper_id>` copie un article, sans réextraction ; sa fiche repasse
+à `todo`, et sa pertinence est à réévaluer avec `/paper-fiche`. `/paper-discover` fait ce
+passage en premier. `bin/pdb add` signale un article déjà présent dans une autre base.
+
+**Interface.** `bin/pdb viz`, onglet **Bases** : sélecteur de base (qui s'applique aussi aux
+vues 3D et Généalogie), tableau des bases, profil et suggestions en attente, recherche dans les
+autres bases avec import de la sélection, création d'une base.
+
+Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 
 ---
 
@@ -357,6 +379,9 @@ Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
 | `bin/pdb plot [bench\|eval\|corpus] [--format pdf]` | figures statiques (PNG par défaut) dans `figures/` (`--list` : noms) |
 | `bin/pdb test` | tests |
+| `bin/pdb base list \| new \| use \| info \| check` | gérer les bases (§8) |
+| `bin/pdb base scan [--from NOM]` / `base import NOM:<id>` | articles utiles dans les autres bases / copie |
+| `bin/pdb --base NOM <commande>` | agir sur une autre base que celle du dossier courant |
 
 | Claude Code | Effet |
 |---|---|
@@ -365,6 +390,7 @@ Détails : [README.md](../README.md#adapter-à-un-autre-sujet-de-recherche).
 | `/paper-gaps` | met à jour `gaps.md` |
 | `/paper-discover [axe \| gap \| mots-clés]` | propose des papiers à ajouter et attend votre accord |
 | `/paper-ask <question>` | réponse sourcée et vérifiée depuis la base |
+| `/base-profile [consigne]` | propose d'affiner le profil de la base (axes, règles, périmètre) ; applique après accord |
 
 | Fichier | Rôle | Qui l'écrit |
 |---|---|---|

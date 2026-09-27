@@ -23,10 +23,32 @@ class DataRootTest(unittest.TestCase):
 
     def test_fallback_to_code(self):
         with tempfile.TemporaryDirectory() as d:
-            self.assertEqual(base.data_root({}, cwd=d), base.CODE)
+            env = {"PDB_REGISTRY": str(Path(d) / "absent.json")}
+            self.assertEqual(base.data_root(env, cwd=d), base.CODE)
 
 
 class ConfigTest(unittest.TestCase):
+    def test_minimal_base(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps({"name": "x", "axes": {"surveys": "S"}}))
+            cfg = base.load_config(d)
+            self.assertEqual(cfg["axis_rules"], {})
+            self.assertTrue(base.in_topic(cfg, "anything", "anything", []))
+            self.assertEqual(base.classify(cfg, "A survey of YOLOv8", "A survey"), (["surveys"], ["yolov8"]))
+
+    def test_bad_regex_rejected(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps({"name": "x", "axes": {"a": "A"},
+                                                           "axis_rules": {"a": "(unclosed"}}))
+            with self.assertRaises(ValueError):
+                base.load_config(d)
+
+    def test_classify_uses_given_config(self):
+        cfg = base.load_config(base.CODE)
+        axes, _ = base.classify(cfg, "YOLO on a Zynq FPGA")
+        self.assertIn("yolo-fpga", axes)
+        self.assertTrue(base.in_topic(cfg, "YOLO on a Zynq FPGA", "YOLO on a Zynq FPGA", axes))
+
     def test_reference_base(self):
         cfg = base.load_config(base.CODE)
         self.assertIn("surveys", cfg["axes"])

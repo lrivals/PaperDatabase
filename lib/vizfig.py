@@ -61,10 +61,15 @@ def category(node, color_by):
     return None
 
 
+# Axes de la base affichée, dans l'ordre de son base.json : bin/viz.py le met à jour quand on
+# change de base (schema.AXES reste celui de la base de démarrage).
+AXES_ORDER = list(schema.AXES)
+
+
 def category_order(nodes, color_by):
-    """Ordre fixe : axes dans l'ordre de schema.AXES, sinon par fréquence puis nom."""
+    """Ordre fixe : axes dans l'ordre de AXES_ORDER, sinon par fréquence puis nom."""
     if color_by == "axis":
-        return list(schema.AXES) + ["non classé"]
+        return list(AXES_ORDER) + ["non classé"]
     if color_by == "fiche":
         return list(schema.FICHE_STATUS)
     if color_by == "type":

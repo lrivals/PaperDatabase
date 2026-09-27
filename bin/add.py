@@ -26,7 +26,7 @@ import requests  # noqa: E402
 from lxml import etree  # noqa: E402
 
 import ingest  # noqa: E402
-from lib import base, ids, openalex  # noqa: E402
+from lib import base, ids, openalex, xbase  # noqa: E402
 
 ROOT = base.ROOT
 INBOX = ROOT / "inbox"
@@ -166,12 +166,24 @@ def read_id_list(path):
     return out
 
 
+def check_elsewhere(arxiv_id=None, doi=None):
+    """Article déjà présent dans une autre base enregistrée : le copier (pdb base import)
+    évite une nouvelle extraction et garde la fiche déjà écrite."""
+    hits = xbase.find_elsewhere({"arxiv_id": arxiv_id, "doi": doi}, ROOT)
+    if hits:
+        raise AddError("déjà dans " + ", ".join(f"la base {n} (papers/{p})" for n, p in hits)
+                       + "\n  Le copier ici (sans réextraction) : bin/pdb base import "
+                       + f"{hits[0][0]}:{hits[0][1]}")
+
+
 def acquire(arg):
     arxiv_id = ids.find_arxiv_id(arg)
     if arxiv_id:
+        check_elsewhere(arxiv_id=arxiv_id)
         return add_arxiv(arxiv_id)
     doi = ids.find_doi(arg)
     if doi:
+        check_elsewhere(doi=doi)
         return add_doi(doi)
     if arg.startswith(("http://", "https://")) or arg.startswith("www."):
         if ids.is_arxiv_url(arg):

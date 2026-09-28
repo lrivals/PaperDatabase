@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2202.06934-slicing-aided-hyper-inference-fine",
+  "title": "Slicing Aided Hyper Inference and Fine-tuning for Small Object Detection",
+  "authors": [
+    {
+      "given": "Fatih Cagatay",
+      "family": "Akyon"
+    },
+    {
+      "given": "Sinan Onur",
+      "family": "Altinuc"
+    },
+    {
+      "given": "Alptekin",
+      "family": "Temizel"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/ICIP46576.2022.9897990",
+  "arxiv_id": "2202.06934",
+  "url": "https://arxiv.org/abs/2202.06934",
+  "type": "preprint",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov5",
+    "visdrone",
+    "small-objects"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

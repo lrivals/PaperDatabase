@@ -1,0 +1,59 @@
+{
+  "id": "arxiv-1805.01831-64mw-dnn-visual-navigation-engine",
+  "title": "A 64mW DNN-based Visual Navigation Engine for Autonomous Nano-Drones",
+  "authors": [
+    {
+      "given": "Daniele",
+      "family": "Palossi"
+    },
+    {
+      "given": "Antonio",
+      "family": "Loquercio"
+    },
+    {
+      "given": "Francesco",
+      "family": "Conti"
+    },
+    {
+      "given": "Eric",
+      "family": "Flamand"
+    },
+    {
+      "given": "Davide",
+      "family": "Scaramuzza"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/JIOT.2019.2917066",
+  "arxiv_id": "1805.01831",
+  "url": "https://arxiv.org/abs/1805.01831",
+  "type": "preprint",
+  "axes": [
+    "nano-drone",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "gap8",
+    "crazyflie"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE V",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

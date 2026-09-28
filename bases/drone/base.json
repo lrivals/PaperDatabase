@@ -1,0 +1,73 @@
+{
+  "name": "Vision embarquée sur drone (détection, accélérateurs, co-design système)",
+  "axes": {
+    "surveys": "Surveys",
+    "datasets-benchmarks": "Datasets et challenges (VisDrone, UAVDT, DAC-SDC…)",
+    "drone-detection": "Détection drone / petits objets",
+    "drone-fpga": "Détection sur FPGA / SoC",
+    "counter-uav": "Contre-drone (détection et suivi de drones)",
+    "nano-drone": "Nano-drones, MCU, ASIC, neuromorphique",
+    "system-codesign": "Co-design système : calcul ↔ énergie ↔ vol",
+    "reliability": "Fiabilité du calcul embarqué",
+    "tracking-navigation": "Suivi et navigation"
+  },
+  "axis_rules": {
+    "datasets-benchmarks": "visdrone|\\bUAVDT\\b|DAC-SDC|(?:new|novel|large-scale|million-scale|public) (?:dataset|benchmark)|\\bchallenge\\b",
+    "drone-detection": "small objects?|tiny objects?|visdrone|\\bUAVDT\\b|aerial (?:images?|imagery)|drone (?:images?|imagery)",
+    "drone-fpga": "\\bFPGAs?\\b|zynq|kria|kv260|ultra96|pynq|\\bFINN\\b|vitis ai|\\bHLS\\b",
+    "nano-drone": "nano-?drones?|\\bGAP ?[89]\\b|crazyflie|micro-?controllers?|\\bMCUs?\\b|\\bASIC\\b|neuromorphic|loihi|\\bSNNs?\\b",
+    "system-codesign": "roofline|mavbench|flight time|battery|closed-loop|co-?design",
+    "reliability": "hardware reliabilit|soft errors?|fault[- ]toleran|fault injection|radiation|single[- ]event|bit[- ]flips?",
+    "tracking-navigation": "\\btracking\\b|\\btracker\\b|navigation|odometry|\\bSLAM\\b",
+    "counter-uav": "anti-?(?:uav|drone)|counter-?(?:uav|drone)|drone detection|detecting drones|air-to-air|\\bMAV detection"
+  },
+  "axis_queries": {
+    "surveys": "survey UAV onboard deep learning computing",
+    "datasets-benchmarks": "UAV drone object detection benchmark dataset",
+    "drone-detection": "small object detection drone images YOLO",
+    "drone-fpga": "FPGA object detection UAV drone",
+    "nano-drone": "nano-drone onboard neural network microcontroller",
+    "system-codesign": "UAV onboard compute energy flight co-design",
+    "reliability": "UAV computing platform hardware reliability fault",
+    "tracking-navigation": "UAV aerial tracking onboard real-time",
+    "counter-uav": "anti-UAV drone detection deep learning"
+  },
+  "hardware_axes": [
+    "drone-fpga",
+    "nano-drone",
+    "system-codesign",
+    "reliability"
+  ],
+  "topic_re": "\\bUAVs?\\b|unmanned aerial|\\bdrones?\\b|aerial (?:images?|imagery|vehicles?)|\\bMAVs?\\b|visdrone|\\bUAVDT\\b",
+  "title_topic_re": "\\bUAVs?\\b|unmanned aerial|\\bdrones?\\b|aerial|\\bMAVs?\\b|visdrone|\\bUAVDT\\b|nano-?drones?",
+  "topic_min_hits": 2,
+  "tag_rules": [
+    ["visdrone", "visdrone"],
+    ["\\bUAVDT\\b", "uavdt"],
+    ["DAC-SDC", "dac-sdc"],
+    ["\\bFINN\\b", "finn"],
+    ["vitis ai", "vitis-ai"],
+    ["\\bSATAY\\b", "satay"],
+    ["hls4ml", "hls4ml"],
+    ["kv ?260", "kv260"],
+    ["ultra96", "ultra96"],
+    ["pynq", "pynq"],
+    ["zynq", "zynq"],
+    ["jetson", "jetson"],
+    ["\\bGAP ?8\\b", "gap8"],
+    ["\\bGAP ?9\\b", "gap9"],
+    ["crazyflie", "crazyflie"],
+    ["loihi", "loihi"],
+    ["event[- ]based|event camera|\\bDVS\\b", "event-camera"],
+    ["quantiz", "quantization"],
+    ["prun", "pruning"],
+    ["\\bINT8\\b", "int8"],
+    ["small objects?|tiny objects?", "small-objects"],
+    ["transformer", "transformer"],
+    ["infrared|thermal", "infrared"],
+    ["anti-?(?:uav|drone)", "anti-uav"],
+    ["air-to-air|drones? from drones", "air-to-air"],
+    ["ground-based|static camera|ground station", "ground-to-air"],
+    ["acoustic|radar|RF signal", "multi-sensor"]
+  ]
+}

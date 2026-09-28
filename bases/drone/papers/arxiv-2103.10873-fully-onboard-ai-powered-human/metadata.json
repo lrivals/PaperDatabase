@@ -1,0 +1,70 @@
+{
+  "id": "arxiv-2103.10873-fully-onboard-ai-powered-human",
+  "title": "Fully Onboard AI-powered Human-Drone Pose Estimation on Ultra-low Power Autonomous Flying Nano-UAVs",
+  "authors": [
+    {
+      "given": "Daniele",
+      "family": "Palossi"
+    },
+    {
+      "given": "Nicky",
+      "family": "Zimmerman"
+    },
+    {
+      "given": "Alessio",
+      "family": "Burrello"
+    },
+    {
+      "given": "Francesco",
+      "family": "Conti"
+    },
+    {
+      "given": "Hanna",
+      "family": "Müller"
+    },
+    {
+      "given": "Luca Maria",
+      "family": "Gambardella"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    },
+    {
+      "given": "Alessandro",
+      "family": "Giusti"
+    },
+    {
+      "given": "Jérôme",
+      "family": "Guzzi"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2103.10873",
+  "url": "https://arxiv.org/abs/2103.10873",
+  "type": "preprint",
+  "axes": [
+    "nano-drone"
+  ],
+  "tags": [
+    "crazyflie",
+    "quantization"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table IV",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

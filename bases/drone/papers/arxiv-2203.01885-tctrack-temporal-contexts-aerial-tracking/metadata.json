@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking",
+  "title": "TCTrack: Temporal Contexts for Aerial Tracking",
+  "authors": [
+    {
+      "given": "Ziang",
+      "family": "Cao"
+    },
+    {
+      "given": "Ziyuan",
+      "family": "Huang"
+    },
+    {
+      "given": "Liang",
+      "family": "Pan"
+    },
+    {
+      "given": "Shiwei",
+      "family": "Zhang"
+    },
+    {
+      "given": "Ziwei",
+      "family": "Liu"
+    },
+    {
+      "given": "Changhong",
+      "family": "Fu"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2203.01885",
+  "url": "https://arxiv.org/abs/2203.01885",
+  "type": "preprint",
+  "axes": [
+    "tracking-navigation"
+  ],
+  "tags": [
+    "jetson",
+    "transformer"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

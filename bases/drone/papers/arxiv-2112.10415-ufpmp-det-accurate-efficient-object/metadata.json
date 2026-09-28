@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2112.10415-ufpmp-det-accurate-efficient-object",
+  "title": "UFPMP-Det: Toward Accurate and Efficient Object Detection on Drone Imagery",
+  "authors": [
+    {
+      "given": "Yecheng",
+      "family": "Huang"
+    },
+    {
+      "given": "Jiaxin",
+      "family": "Chen"
+    },
+    {
+      "given": "Di",
+      "family": "Huang"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2112.10415",
+  "url": "https://arxiv.org/abs/2112.10415",
+  "type": "preprint",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "visdrone",
+    "uavdt"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 3, Table 5, Table 8",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 9"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

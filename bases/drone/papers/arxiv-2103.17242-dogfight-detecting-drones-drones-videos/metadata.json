@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2103.17242-dogfight-detecting-drones-drones-videos",
+  "title": "Dogfight: Detecting Drones from Drones Videos",
+  "authors": [
+    {
+      "given": "Muhammad Waseem",
+      "family": "Ashraf"
+    },
+    {
+      "given": "Waqas",
+      "family": "Sultani"
+    },
+    {
+      "given": "Mubarak",
+      "family": "Shah"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2103.17242",
+  "url": "https://arxiv.org/abs/2103.17242",
+  "type": "preprint",
+  "axes": [
+    "counter-uav"
+  ],
+  "tags": [
+    "air-to-air"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural",
+  "title": "Tiny-PULP-Dronets: Squeezing Neural Networks for Faster and Lighter Inference on Multi-Tasking Autonomous Nano-Drones",
+  "authors": [
+    {
+      "given": "Lorenzo",
+      "family": "Lamberti"
+    },
+    {
+      "given": "Vlad",
+      "family": "Niculescu"
+    },
+    {
+      "given": "Michał",
+      "family": "Barcis"
+    },
+    {
+      "given": "Lorenzo",
+      "family": "Bellone"
+    },
+    {
+      "given": "Enrico",
+      "family": "Natalizio"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    },
+    {
+      "given": "Daniele",
+      "family": "Palossi"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2407.02405",
+  "url": "https://arxiv.org/abs/2407.02405",
+  "type": "preprint",
+  "axes": [
+    "nano-drone",
+    "tracking-navigation"
+  ],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

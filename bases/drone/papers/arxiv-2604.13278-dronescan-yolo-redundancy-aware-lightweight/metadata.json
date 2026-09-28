@@ -1,0 +1,40 @@
+{
+  "id": "arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight",
+  "title": "DroneScan-YOLO: Redundancy-Aware Lightweight Detection for Tiny Objects in UAV Imagery",
+  "authors": [
+    {
+      "given": "Yann V",
+      "family": "Bellec"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2604.13278",
+  "url": "https://arxiv.org/abs/2604.13278",
+  "type": "preprint",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov8",
+    "visdrone",
+    "pruning",
+    "small-objects"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 6, Table 6",
+      "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

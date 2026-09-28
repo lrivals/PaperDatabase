@@ -1,0 +1,74 @@
+{
+  "id": "arxiv-2101.08466-anti-uav-large-multi-modal",
+  "title": "Anti-UAV: A Large Multi-Modal Benchmark for UAV Tracking",
+  "authors": [
+    {
+      "given": "Nan",
+      "family": "Jiang"
+    },
+    {
+      "given": "Kuiran",
+      "family": "Wang"
+    },
+    {
+      "given": "Xiaoke",
+      "family": "Peng"
+    },
+    {
+      "given": "Xuehui",
+      "family": "Yu"
+    },
+    {
+      "given": "Qiang",
+      "family": "Wang"
+    },
+    {
+      "given": "Junliang",
+      "family": "Xing"
+    },
+    {
+      "given": "Guorong",
+      "family": "Li"
+    },
+    {
+      "given": "Jian",
+      "family": "Zhao"
+    },
+    {
+      "given": "Guodong",
+      "family": "Guo"
+    },
+    {
+      "given": "Zhenjun",
+      "family": "Han"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2101.08466",
+  "url": "https://arxiv.org/abs/2101.08466",
+  "type": "preprint",
+  "axes": [
+    "counter-uav",
+    "datasets-benchmarks"
+  ],
+  "tags": [
+    "anti-uav"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE II",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-2110.05113-learning-high-speed-flight-wild",
+  "title": "Learning High-Speed Flight in the Wild",
+  "authors": [
+    {
+      "given": "Antonio",
+      "family": "Loquercio"
+    },
+    {
+      "given": "Elia",
+      "family": "Kaufmann"
+    },
+    {
+      "given": "René",
+      "family": "Ranftl"
+    },
+    {
+      "given": "Matthias",
+      "family": "Müller"
+    },
+    {
+      "given": "Vladlen",
+      "family": "Koltun"
+    },
+    {
+      "given": "Davide",
+      "family": "Scaramuzza"
+    }
+  ],
+  "year": 2021,
+  "venue": "Science Robotics 2021 Vol. 6, Issue 59, abg5810",
+  "doi": "10.1126/scirobotics.abg5810",
+  "arxiv_id": "2110.05113",
+  "url": "https://arxiv.org/abs/2110.05113",
+  "type": null,
+  "axes": [
+    "tracking-navigation"
+  ],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "publié ailleurs selon arXiv (journal_ref : Science Robotics 2021 Vol. 6, Issue 59, abg5810) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

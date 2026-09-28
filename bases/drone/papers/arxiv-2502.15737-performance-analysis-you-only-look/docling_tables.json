@@ -1,0 +1,637 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 4,
+   "bbox": [
+    35.1,
+    368.1,
+    560.0,
+    702.2
+   ],
+   "caption": "Table 1. Comparison of energy efficiency and inference latency across reviewed studies.",
+   "rows": [
+    [
+     "Authors",
+     "Device",
+     "Model",
+     "Metrics",
+     "ApplicationArea",
+     "KeyFindings"
+    ],
+    [
+     "Baller et al. 2021 [9]",
+     "NVIDIA Jetson Nano",
+     "MobileNetV2, DNNs",
+     "Inference speed, accuracy, energy consumption",
+     "General classification",
+     "Optimized frameworks needed to improve inference time and energy use in Jetson Nano."
+    ],
+    [
+     "Li et al. 2023 [11]",
+     "NVIDIA Jetson Nano, Raspberry Pi",
+     "MobileNetV2, VGG16",
+     "Inference speed, energy consumption",
+     "IoT applications",
+     "Jetson Nano is faster and more energy-efficient than Raspberry Pi, but neither meets real-time needs for complex tasks."
+    ],
+    [
+     "Ferraz et al. 2023 [12]",
+     "NVIDIA Jetson AGX Xavier, Movidius Neural Stick",
+     "SqueezeNet, CNNs",
+     "Inference speed, energy consumption",
+     "Edge devices",
+     "Pruning and quantization improve energy efficiency and performance on AGX Xavier."
+    ],
+    [
+     "Houetal.2022[13]",
+     "NVIDIAJetson Nano, TX2, Xavier",
+     "CNN",
+     "Distributed inference performance, speedup",
+     "Edge devices",
+     "Distributed inference framework (DistrEdge) with reinforcement learning improves real-time performance."
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    35.0,
+    91.7,
+    560.2,
+    491.6
+   ],
+   "caption": "Table 1. Cont.",
+   "rows": [
+    [
+     "Authors",
+     "Device",
+     "Model",
+     "Metrics",
+     "ApplicationArea",
+     "KeyFindings"
+    ],
+    [
+     "Liang et al. 2022 [14]",
+     "Edge-cloud, NVIDIA Jetson",
+     "Edge YOLO",
+     "Real-time performance, object detection accuracy",
+     "Autonomous vehicles",
+     "Pruning and feature compression improve efficiency in edge-cloud systems, enhancing autonomous vehicle operations."
+    ],
+    [
+     "Shin and Kim 2022 [15]",
+     "NVIDIA Jetson AGX Xavier",
+     "YOLOv4-Native, YOLOv4-Tiny",
+     "Latency, energy consumption",
+     "Real-time object detection",
+     "TF-TRT and TensorRT optimizations improve real-time inference and reduce energy use on Jetson AGX Xavier."
+    ],
+    [
+     "Xiong et al. 2023 [16]",
+     "NVIDIA Jetson Xavier NX",
+     "GCGE-YOLO",
+     "mAP,FPS,energy consumption",
+     "UAV image detection",
+     "Uses GhostNet and coordinate attention to reduce computational load and improve object detection accuracy."
+    ],
+    [
+     "Hu et al. 2023 [17]",
+     "NVIDIA Jetson XavierNX, Jetson Nano",
+     "YOLO-Tiny- attention",
+     "FPS, detection precision",
+     "Wind turbine fault detection",
+     "Attention mechanisms improve fault detection accuracy on low-power edge devices, supporting real-time monitoring."
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    165.5,
+    228.7,
+    559.6,
+    401.4
+   ],
+   "caption": "Table 2. Comparison of hardware characteristics of the devices used in this study.",
+   "rows": [
+    [
+     "Feature",
+     "Raspberry Pi 5",
+     "Jetson Orin Nano",
+     "Jetson Orin NX"
+    ],
+    [
+     "CPU",
+     "4-core ARM Cortex-A76 at 2.4 GHz",
+     "6-core ARM Cortex-A78AE",
+     "8-core ARM Cortex-A78AE"
+    ],
+    [
+     "GPU",
+     "VideoCore VII",
+     "1024-core Ampere + 32 Tensor Cores",
+     "2048-core Ampere + 64 Tensor Cores"
+    ],
+    [
+     "RAM",
+     "8 GB",
+     "8 GB",
+     "16 GB"
+    ],
+    [
+     "Memory Bandwidth",
+     "Limited",
+     "Moderate",
+     "High"
+    ],
+    [
+     "Typical Power Consumption",
+     "5-7 W",
+     "7-15 W",
+     "10-25 W"
+    ],
+    [
+     "TensorRT Support",
+     "No",
+     "Yes",
+     "Yes"
+    ],
+    [
+     "Dimensions",
+     "85.6 × 56.5 mm",
+     "100 × 69.6 mm",
+     "100 × 87 mm"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    35.0,
+    304.4,
+    559.8,
+    599.3
+   ],
+   "caption": "Table 3. Summary of the performance metrics with their purpose and formulas.",
+   "rows": [
+    [
+     "Metric",
+     "Purpose",
+     "Formula"
+    ],
+    [
+     "Model Inference Speed or MIS (FPS)",
+     "Measures the speed of model inference in frames per second (FPS), reflecting the real-time processing capability. This measure will only measure the capability of the algorithm in an isolated way, without counting extra processing tasks that produce latency.",
+     "MIS = 1 Mean Inference Time (s)"
+    ],
+    [
+     "Inferences Per Minute or IPM",
+     "Calculates the total inferences in 60 s, representing the overall device throughput. IPMassesses the entire process within the device, including I/O operations, to evaluate the hardware performance comprehensively. It measures the efficiency of the program within the isolated environment of the device.",
+     "IPM = Total inferences in one minute"
+    ],
+    [
+     "Energy Consumption or E (W·s)",
+     "Indicates the total energy used during model inference, assessing the power consumption. Measured using device-specific tools (tegrastats for the Jetson and vcgencmd pmic_read_adc for the Raspberry Pi), allowing for energy estimation through the average power consumption.",
+     "E= ¯P · (t2-t1)"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    35.2,
+    92.2,
+    559.7,
+    332.7
+   ],
+   "caption": "Table 3. Cont.",
+   "rows": [
+    [
+     "Metric",
+     "Purpose",
+     "Formula"
+    ],
+    [
+     "Energy Per Inference or EPI (J/inference)",
+     "Lower EPI values signify a more efficient use of energy per prediction, providing insight into how effectively the model utilizes the available power for inference tasks. As a relative metric, EPI advances our understanding of energy efficiency comparisons across different models and systems.",
+     "EPI = Mean Power (W)×60 s IPM"
+    ],
+    [
+     "Round-Trip Time or RTT (ms)",
+     "Measures the end-to-end time for a complete inference cycle, including the network latency and processing time, providing a comprehensive assessment of the system's whole architecture's real-time performance.",
+     "RTT = Client Reception time - Request sent time"
+    ],
+    [
+     "Throughput of the System (Inferences/s)",
+     "Represents the system's capacity for continuous inferences, derived from the inverse of the RTT. Indicates the efficiency of the whole architecture in handling continuous inference requests over time.",
+     "Throughput= 1 Average RTT (s)"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    34.9,
+    104.6,
+    559.5,
+    312.8
+   ],
+   "caption": "Table 4. Table synthesizing the inference frame rate, energy consumption, inferences per minute, power, and energy per inference in joules.",
+   "rows": [
+    [
+     "Device",
+     "Model",
+     "QuantizationmAP50-95mAP50",
+     "",
+     "",
+     "MIS(FPS)",
+     "Energy Con- sumption (W·s)",
+     "Inferences per Minute",
+     "Energy per Inference (J/inference)"
+    ],
+    [
+     "Orin Nano",
+     "YOLOv8s",
+     "FP32",
+     "0.8608",
+     "0.9771",
+     "27.00",
+     "8.790",
+     "1391",
+     "0.379"
+    ],
+    [
+     "Orin Nano",
+     "YOLOv8s",
+     "FP16",
+     "0.8622",
+     "0.9771",
+     "37.90",
+     "7.836",
+     "1558",
+     "0.302"
+    ],
+    [
+     "Orin Nano",
+     "YOLOv8s",
+     "INT8",
+     "0.7968",
+     "0.9189",
+     "41.20",
+     "7.257",
+     "1949",
+     "0.223"
+    ],
+    [
+     "Orin Nano",
+     "YOLOv8n",
+     "FP32",
+     "0.8422",
+     "0.9619",
+     "37.00",
+     "8.345",
+     "2041",
+     "0.245"
+    ],
+    [
+     "Orin Nano",
+     "YOLOv8n",
+     "FP16",
+     "0.8439",
+     "0.9619",
+     "40.00",
+     "7.422",
+     "2144",
+     "0.208"
+    ],
+    [
+     "Orin Nano",
+     "YOLOv8n",
+     "INT8",
+     "0.7190",
+     "0.8272",
+     "44.90",
+     "7.483",
+     "2425",
+     "0.185"
+    ],
+    [
+     "Orin NX",
+     "YOLOv8s",
+     "FP32",
+     "0.8610",
+     "0.9781",
+     "35.65",
+     "14.155",
+     "2129",
+     "0.399"
+    ],
+    [
+     "Orin NX",
+     "YOLOv8s",
+     "FP16",
+     "0.8620",
+     "0.9780",
+     "48.24",
+     "12.815",
+     "2760",
+     "0.279"
+    ],
+    [
+     "Orin NX",
+     "YOLOv8s",
+     "INT8",
+     "0.7970",
+     "0.9195",
+     "56.32",
+     "11.002",
+     "2836",
+     "0.233"
+    ],
+    [
+     "Orin NX",
+     "YOLOv8n",
+     "FP32",
+     "0.8420",
+     "0.9621",
+     "52.19",
+     "12.480",
+     "3182",
+     "0.235"
+    ],
+    [
+     "Orin NX",
+     "YOLOv8n",
+     "FP16",
+     "0.8440",
+     "0.9622",
+     "58.82",
+     "10.853",
+     "3214",
+     "0.203"
+    ],
+    [
+     "Orin NX",
+     "YOLOv8n",
+     "INT8",
+     "0.7190",
+     "0.8276",
+     "65.83",
+     "10.305",
+     "3443",
+     "0.179"
+    ],
+    [
+     "RPI5",
+     "YOLOv8s",
+     "FP32",
+     "0.8620",
+     "0.9621",
+     "7.32",
+     "5.422",
+     "217",
+     "1.498"
+    ],
+    [
+     "RPI5",
+     "YOLOv8n",
+     "FP32",
+     "0.8440",
+     "0.9612",
+     "8.47",
+     "5.441",
+     "442",
+     "0.738"
+    ]
+   ]
+  },
+  {
+   "page": 18,
+   "bbox": [
+    35.1,
+    534.6,
+    559.3,
+    709.0
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Device.Device",
+     "Model.",
+     "Quantization.",
+     "RTT (ms).Mean",
+     "RTT (ms).Std",
+     "Processing Time (ms).Mean",
+     "Processing Time (ms).Std",
+     "Throughput.(inferences/s)"
+    ],
+    [
+     "Orin",
+     "YOLOv8n",
+     "FP16",
+     "49.70",
+     "4.59",
+     "23.81",
+     "20.12",
+     "20.12"
+    ],
+    [
+     "Orin",
+     "YOLOv8n",
+     "FP32",
+     "60.52",
+     "12.24",
+     "28.77",
+     "16.52",
+     "16.52"
+    ],
+    [
+     "Orin",
+     "Nano YOLOv8n",
+     "INT8",
+     "48.80",
+     "8.42",
+     "20.54",
+     "20.49",
+     "20.49"
+    ],
+    [
+     "Orin",
+     "YOLOv8s",
+     "FP16",
+     "49.44",
+     "6.46",
+     "28.90",
+     "20.23",
+     "20.23"
+    ],
+    [
+     "Orin",
+     "YOLOv8s",
+     "FP32",
+     "73.18",
+     "4.89",
+     "47.18",
+     "13.66",
+     "13.66"
+    ],
+    [
+     "Orin",
+     "YOLOv8s",
+     "INT8",
+     "44.27",
+     "8.27",
+     "20.62",
+     "22.59",
+     "22.59"
+    ],
+    [
+     "",
+     "YOLOv8n",
+     "FP16",
+     "34.15",
+     "3.65",
+     "16.12",
+     "29.28",
+     "29.28"
+    ],
+    [
+     "",
+     "YOLOv8n",
+     "FP32",
+     "35.76",
+     "2.28",
+     "18.25",
+     "27.97",
+     "27.96"
+    ],
+    [
+     "",
+     "Orin NX YOLOv8n",
+     "INT8",
+     "29.95",
+     "3.19",
+     "14.29",
+     "33.38",
+     "33.39"
+    ],
+    [
+     "",
+     "YOLOv8s",
+     "FP16",
+     "35.09",
+     "4.35",
+     "18.50",
+     "28.50",
+     "28.5"
+    ],
+    [
+     "",
+     "YOLOv8s",
+     "FP32",
+     "48.97",
+     "8.83",
+     "26.50",
+     "20.42",
+     "20.42"
+    ],
+    [
+     "",
+     "YOLOv8s",
+     "INT8",
+     "33.60",
+     "3.31",
+     "15.96",
+     "29.76",
+     "29.76"
+    ]
+   ]
+  },
+  {
+   "page": 20,
+   "bbox": [
+    35.3,
+    129.3,
+    559.3,
+    211.8
+   ],
+   "caption": "Table 6. Latency results in the two different deployment scenarios, edge and cloud.",
+   "rows": [
+    [
+     "Processing Environment",
+     "RTT Latency (ms)",
+     "Model Processing Latency (ms)",
+     "Communication Latency (ms)"
+    ],
+    [
+     "Edge",
+     "Mean: 35.09 Std: 4.25",
+     "Mean: 32.59 Std: 4.27",
+     "Mean: 2.50 Std: 0.34"
+    ],
+    [
+     "Cloud",
+     "Mean: 348.21 Std: 69.88",
+     "Mean: 6.82 Std: 0.05",
+     "Mean: 341.41 Std: 69.89"
+    ]
+   ]
+  },
+  {
+   "page": 22,
+   "bbox": [
+    35.0,
+    271.0,
+    559.8,
+    631.4
+   ],
+   "caption": "Table 7. Recommended configurations based on operational needs.",
+   "rows": [
+    [
+     "Operational Need",
+     "Description",
+     "Area of Interest",
+     "Recommended Configuration",
+     "Key Supporting Metrics"
+    ],
+    [
+     "Extensive Coverage and Long Duration",
+     "Extends energy autonomy for continuous monitoring of large areas without frequent recharging.",
+     "Surveillance, Environmental Monitoring",
+     "Jetson Orin Nano + YOLOv8n INT8",
+     "High FPS (44.9), Low Energy Consumption (7.483 W·s), Good Accuracy (mAP50: 0.8272)"
+    ],
+    [
+     "Critical Tracking (Real-Time)",
+     "High inference rate for rapid response and continuous tracking.",
+     "Defense, Security",
+     "Jetson Orin NX + YOLOv8n INT8",
+     "Very High FPS (65.83), Moderate Energy (10.305 W·s), Sufficient Accuracy (mAP50: 0.7190)"
+    ],
+    [
+     "High-Quality Detection",
+     "Ensures high precision in detecting fine details, ideal for infrastructure inspection.",
+     "Infrastructure Inspection",
+     "Jetson Orin Nano + YOLOv8s FP16",
+     "High Accuracy (mAP50: 0.8622), Moderate FPS (37.9), Low Energy Consumption (7.836 W·s)"
+    ],
+    [
+     "Balance of Speed and Precision",
+     "Balances speed and accuracy for emergency and rescue tasks.",
+     "Rescue and Emergency Response",
+     "Jetson Orin NX + YOLOv8s FP16/YOLOv8n INT8",
+     "High FPS (58.82/65.83), Balanced Accuracy (mAP50: 0.8620/0.7190), Efficient Energy Usage (10.853/10.305 W·s)"
+    ],
+    [
+     "Low-Cost Processing",
+     "Optimizes costs and energy for less demanding tasks without high precision or speed requirements.",
+     "Low-Demand Tasks",
+     "Jetson Orin Nano + INT8",
+     "Moderate FPS (41.2), Low Energy Consumption (7.257 W·s), Acceptable Accuracy (mAP50: 0.7968)"
+    ]
+   ]
+  }
+ ]
+}

@@ -331,7 +331,7 @@ le code (DATA_MODEL §11).
 
 ```bash
 bin/pdb base new anomalies --theme "Détection d'anomalies visuelles embarquée, par autoencodeurs…"
-cd ../anomalies        # puis, dans Claude Code :  /base-profile
+cd bases/anomalies     # puis, dans Claude Code :  /base-profile
 ```
 
 `/base-profile` lit le thème et propose des axes, des règles de classement et un périmètre
@@ -353,6 +353,10 @@ passage en premier. `bin/pdb add` signale un article déjà présent dans une au
 **Interface.** `bin/pdb viz`, onglet **Bases** : sélecteur de base (qui s'applique aussi aux
 vues 3D et Généalogie), tableau des bases, profil et suggestions en attente, recherche dans les
 autres bases avec import de la sélection, création d'une base.
+
+Les bases créées sans `--path` vivent dans `bases/<nom>/` et sont versionnées avec le dépôt
+(sans PDF). Dans un clone neuf, le registre est à refaire une fois :
+`bin/pdb base register . --name fpga`, `bin/pdb base register bases/drone --name drone`.
 
 Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 

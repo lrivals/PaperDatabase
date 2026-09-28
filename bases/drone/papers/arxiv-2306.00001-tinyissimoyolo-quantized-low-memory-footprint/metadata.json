@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint",
+  "title": "TinyissimoYOLO: A Quantized, Low-Memory Footprint, TinyML Object Detection Network for Low Power Microcontrollers",
+  "authors": [
+    {
+      "given": "Julian",
+      "family": "Moosmann"
+    },
+    {
+      "given": "Marco",
+      "family": "Giordano"
+    },
+    {
+      "given": "Christian",
+      "family": "Vogt"
+    },
+    {
+      "given": "Michele",
+      "family": "Magno"
+    }
+  ],
+  "year": 2023,
+  "venue": "IEEE AICAS 2023 (d'après le DOI 10.1109/AICAS57966.2023.10168657)",
+  "doi": "10.1109/AICAS57966.2023.10168657",
+  "arxiv_id": "2306.00001",
+  "url": "https://arxiv.org/abs/2306.00001",
+  "type": "conference",
+  "axes": [
+    "nano-drone"
+  ],
+  "tags": [
+    "tinyml",
+    "mcu",
+    "max78000",
+    "stm32",
+    "apollo4b",
+    "yolov1",
+    "int8",
+    "quantization",
+    "tflite-micro"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

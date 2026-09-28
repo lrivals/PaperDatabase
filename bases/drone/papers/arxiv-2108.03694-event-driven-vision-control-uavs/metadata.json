@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-2108.03694-event-driven-vision-control-uavs",
+  "title": "Event-driven Vision and Control for UAVs on a Neuromorphic Chip",
+  "authors": [
+    {
+      "given": "Antonio",
+      "family": "Vitale"
+    },
+    {
+      "given": "Alpha",
+      "family": "Renner"
+    },
+    {
+      "given": "Celine",
+      "family": "Nauer"
+    },
+    {
+      "given": "Davide",
+      "family": "Scaramuzza"
+    },
+    {
+      "given": "Yulia",
+      "family": "Sandamirskaya"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2108.03694",
+  "url": "https://arxiv.org/abs/2108.03694",
+  "type": "preprint",
+  "axes": [
+    "nano-drone",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "event-camera"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : II — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

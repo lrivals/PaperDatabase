@@ -216,7 +216,7 @@ def run(args):
     s.add_argument("name")
     s.add_argument("--theme", required=True, help="thème en quelques phrases (profile.md)")
     s.add_argument("--title", help="intitulé (base.json name) ; défaut : le nom")
-    s.add_argument("--path", help=f"dossier ; défaut : {CODE.parent}/<nom>")
+    s.add_argument("--path", help=f"dossier ; défaut : {CODE}/bases/<nom> (versionné avec le dépôt)")
     s = sub.add_parser("register")
     s.add_argument("path")
     s.add_argument("--name")

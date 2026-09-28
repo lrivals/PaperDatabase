@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2303.08778-fully-neuromorphic-vision-control-autonomous",
+  "title": "Fully neuromorphic vision and control for autonomous drone flight",
+  "authors": [
+    {
+      "given": "Federico",
+      "family": "Paredes-Vallés"
+    },
+    {
+      "given": "Jesse",
+      "family": "Hagenaars"
+    },
+    {
+      "given": "Julien",
+      "family": "Dupeyroux"
+    },
+    {
+      "given": "Stein",
+      "family": "Stroobants"
+    },
+    {
+      "given": "Yingfu",
+      "family": "Xu"
+    },
+    {
+      "given": "Guido de",
+      "family": "Croon"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2303.08778",
+  "url": "https://arxiv.org/abs/2303.08778",
+  "type": "preprint",
+  "axes": [
+    "nano-drone",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "loihi",
+    "event-camera"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

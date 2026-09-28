@@ -1,0 +1,51 @@
+{
+  "id": "arxiv-2411.02582-real-time-detection-small-uavs",
+  "title": "Real-Time Detection for Small UAVs: Combining YOLO and Multi-frame Motion Analysis",
+  "authors": [
+    {
+      "given": "Juanqin",
+      "family": "Liu"
+    },
+    {
+      "given": "Leonardo",
+      "family": "Plotegher"
+    },
+    {
+      "given": "Eloy",
+      "family": "Roura"
+    },
+    {
+      "given": "Cristino",
+      "family": "De Souza Junior"
+    },
+    {
+      "given": "Shaoming",
+      "family": "He"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/TAES.2025.3577592",
+  "arxiv_id": "2411.02582",
+  "url": "https://arxiv.org/abs/2411.02582",
+  "type": "preprint",
+  "axes": [
+    "counter-uav"
+  ],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE I",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

@@ -41,9 +41,12 @@ class BaseError(Exception):
 
 # ---------------------------------------------------------------- création
 
+BASES_DIR = CODE / "bases"   # bases versionnées avec le code (un seul dépôt git)
+
+
 def default_path(name):
-    """Dossier proposé pour une nouvelle base : frère du dépôt du code."""
-    return CODE.parent / name
+    """Dossier proposé pour une nouvelle base : bases/<nom> du dépôt."""
+    return BASES_DIR / name
 
 
 def create(name, theme, root=None, title=None, env=None, reindex_after=True):
@@ -58,8 +61,8 @@ def create(name, theme, root=None, title=None, env=None, reindex_after=True):
     root = Path(root).expanduser().resolve() if root else default_path(name)
     if root.exists() and any(root.iterdir()):
         raise BaseError(f"{root} existe et n'est pas vide")
-    if root == CODE or CODE in root.parents:
-        raise BaseError("une nouvelle base ne se crée pas dans le dépôt du code")
+    if (root == CODE or CODE in root.parents) and BASES_DIR not in root.parents:
+        raise BaseError(f"dans le dépôt du code, une base se crée sous {BASES_DIR}/")
 
     title = (title or "").strip() or name
     today = _dt.date.today().isoformat()

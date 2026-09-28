@@ -394,7 +394,7 @@ axes, les règles de classement et le profil changent.
 ### 11.1 Registre et base active
 
 `~/.config/pdb/bases.json` (ou `$PDB_REGISTRY`, `lib/registry.py`) associe un nom court à un
-dossier : `{"default": "fpga", "bases": {"fpga": "/…/PaperDatabase", "drone": "/…/DroneVisionDB"}}`.
+dossier : `{"default": "fpga", "bases": {"fpga": "/…/PaperDatabase", "drone": "/…/PaperDatabase/bases/drone"}}`.
 Il ne contient que des chemins ; `pdb base forget` n'efface aucun fichier.
 
 Base active (`lib/base.py`), dans l'ordre :
@@ -463,11 +463,14 @@ de papier : l'index de passages de la base active se met à jour au réindexage.
 ### 11.5 Créer une base
 
 `bin/pdb base new <nom> --theme "…" [--title "…"] [--path DIR]` (ou l'onglet Bases de
-`bin/pdb viz`) crée, par défaut dans un dossier frère du dépôt : les liens `bin`, `.venv`,
+`bin/pdb viz`) crée, par défaut dans `bases/<nom>/` du dépôt (versionnée avec lui ; les
+`.gitignore` de la base écartent PDF, TEI et cache), ou dans le dossier `--path` hors du dépôt : les liens `bin`, `.venv`,
 `.claude/commands` vers le code ; `papers/`, `inbox/`, `benchmarks.csv` (en-tête),
 `base.json` minimal (`name`, axe `surveys`), `profile.md` et `CLAUDE.md` (gabarits de
 `templates/`), `gaps.md`, `labs.md`, `.gitignore` ; puis enregistre la base et la réindexe.
 Suite : `/base-profile` dans ce dossier, pour tirer axes et règles du thème.
 
 Les commandes `bin/pdb …` et les skills lancées depuis un dossier de base agissent sur cette
-base seulement. Exemple : `../DroneVisionDB` (vision embarquée sur drone).
+base seulement. Exemple : `bases/drone/` (vision embarquée sur drone). Dans un clone neuf,
+enregistrer les bases une fois : `bin/pdb base register . --name fpga` et
+`bin/pdb base register bases/drone --name drone`.

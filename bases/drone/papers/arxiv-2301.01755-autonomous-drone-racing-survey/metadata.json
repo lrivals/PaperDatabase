@@ -1,0 +1,69 @@
+{
+  "id": "arxiv-2301.01755-autonomous-drone-racing-survey",
+  "title": "Autonomous Drone Racing: A Survey",
+  "authors": [
+    {
+      "given": "Drew",
+      "family": "Hanover"
+    },
+    {
+      "given": "Antonio",
+      "family": "Loquercio"
+    },
+    {
+      "given": "Leonard",
+      "family": "Bauersfeld"
+    },
+    {
+      "given": "Angel",
+      "family": "Romero"
+    },
+    {
+      "given": "Robert",
+      "family": "Penicka"
+    },
+    {
+      "given": "Yunlong",
+      "family": "Song"
+    },
+    {
+      "given": "Giovanni",
+      "family": "Cioffi"
+    },
+    {
+      "given": "Elia",
+      "family": "Kaufmann"
+    },
+    {
+      "given": "Davide",
+      "family": "Scaramuzza"
+    }
+  ],
+  "year": 2023,
+  "venue": "IEEE Transactions on Robotics (T-RO), Vol. 40, 2024",
+  "doi": "10.1109/TRO.2024.3400838",
+  "arxiv_id": "2301.01755",
+  "url": "https://arxiv.org/abs/2301.01755",
+  "type": null,
+  "axes": [
+    "surveys",
+    "tracking-navigation"
+  ],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "publié ailleurs selon arXiv (journal_ref : IEEE Transactions on Robotics (T-RO), Vol. 40, 2024) : type journal/conference à préciser",
+      "titre du PDF ≠ titre arXiv : « This paper has been accepted for publication in the IEEE Transactions on Robotics (T-RO), 2024. ©IEEE Autonomous Drone Racing: A Survey »",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : III — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

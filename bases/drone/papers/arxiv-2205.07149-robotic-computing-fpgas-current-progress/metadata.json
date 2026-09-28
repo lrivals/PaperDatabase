@@ -1,0 +1,63 @@
+{
+  "id": "arxiv-2205.07149-robotic-computing-fpgas-current-progress",
+  "title": "Robotic Computing on FPGAs: Current Progress, Research Challenges, and Opportunities",
+  "authors": [
+    {
+      "given": "Zishen",
+      "family": "Wan"
+    },
+    {
+      "given": "Ashwin",
+      "family": "Lele"
+    },
+    {
+      "given": "Bo",
+      "family": "Yu"
+    },
+    {
+      "given": "Shaoshan",
+      "family": "Liu"
+    },
+    {
+      "given": "Yu",
+      "family": "Wang"
+    },
+    {
+      "given": "Vijay Janapa",
+      "family": "Reddi"
+    },
+    {
+      "given": "Cong",
+      "family": "Hao"
+    },
+    {
+      "given": "Arijit",
+      "family": "Raychowdhury"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2205.07149",
+  "url": "https://arxiv.org/abs/2205.07149",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "system-codesign",
+    "drone-fpga"
+  ],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

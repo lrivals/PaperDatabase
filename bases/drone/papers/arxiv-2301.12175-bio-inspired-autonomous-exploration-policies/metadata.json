@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2301.12175-bio-inspired-autonomous-exploration-policies",
+  "title": "Bio-inspired Autonomous Exploration Policies with CNN-based Object Detection on Nano-drones",
+  "authors": [
+    {
+      "given": "Lorenzo",
+      "family": "Lamberti"
+    },
+    {
+      "given": "Luca",
+      "family": "Bompani"
+    },
+    {
+      "given": "Victor Javier",
+      "family": "Kartsch"
+    },
+    {
+      "given": "Manuele",
+      "family": "Rusci"
+    },
+    {
+      "given": "Daniele",
+      "family": "Palossi"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2301.12175",
+  "url": "https://arxiv.org/abs/2301.12175",
+  "type": "preprint",
+  "axes": [
+    "nano-drone",
+    "drone-detection"
+  ],
+  "tags": [
+    "gap8"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE IV"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": []
+}

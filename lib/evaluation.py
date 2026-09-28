@@ -35,6 +35,24 @@ K = 5
 BENCH_VALUES = ("accuracy_value", "fps", "gops", "latency_ms", "power_w", "luts", "dsps", "bram")
 
 
+# ------------------------------------------------------------------ emplacements
+
+def paths(root, code):
+    """(fixtures, results, thresholds) du banc pour la base `root`.
+
+    Une base qui a ses propres questions les met dans eval/fixtures/ ; sinon (base fpga) les
+    jeux de tests/fixtures/ du code. Les runs sont enregistrés dans
+    eval/results/ de la base ; les seuils viennent de son eval/thresholds.json, à défaut de
+    celui du code.
+    """
+    root, code = Path(root), Path(code)
+    fixtures = root / "eval" / "fixtures"
+    thresholds = root / "eval" / "thresholds.json"
+    return (fixtures if fixtures.is_dir() else code / "tests" / "fixtures",
+            root / "eval" / "results",
+            thresholds if thresholds.is_file() else code / "eval" / "thresholds.json")
+
+
 # ------------------------------------------------------------------ utilitaires
 
 def load_jsonl(path):
@@ -565,10 +583,11 @@ def speed(root, fixtures, encode_n=200, cli=True):
 
     if cli:
         pdb = [sys.executable, str(root / "bin" / "pdb.py")]
+        first_paper = next(iter(sorted(short.values())), None)
         commands = {
             "status": ["status"],
-            "bench": ["bench", "--platform", "kv260", "--cols", "model,fps,power_w"],
-            "paper": ["paper", "1612.07119"],
+            "bench": ["bench", "--cols", "model,fps,power_w", "-n", "5"],
+            "paper": ["paper", first_paper] if first_paper else ["paper", "-h"],
             "search": ["search", qs[0]],
             "show": ["show", index.short_chunk_id(cid)],
         }

@@ -2,8 +2,10 @@
 
 PaperDatabase transforme des PDF d'articles scientifiques en une base de connaissance en
 texte que Claude Code sait parcourir : il y retrouve un chiffre, compare des travaux, repère
-les zones non couvertes. Ce guide montre comment s'en servir au quotidien. Le corpus sur la
-vision embarquée sur FPGA sert d'exemple, mais le pipeline ne dépend pas du domaine.
+les zones non couvertes. Ce guide montre comment s'en servir au quotidien. Le pipeline ne
+dépend pas du domaine, et un même code gère plusieurs bases séparées (§8). Le dépôt en contient
+deux : `fpga` (vision embarquée sur FPGA), qui sert d'exemple dans ce guide, et `drone`
+(vision embarquée sur drone, dans `bases/drone/`).
 
 Pour le fonctionnement interne, voir [SETUP.md](../SETUP.md) ; pour les formats de
 fichiers, [DATA_MODEL.md](../DATA_MODEL.md).
@@ -27,6 +29,11 @@ fichiers, [DATA_MODEL.md](../DATA_MODEL.md).
           ▼
   vos questions à Claude, et bin/pdb discover / /paper-discover pour trouver la suite
 ```
+
+Tout ce schéma vaut pour **une** base : celle du dossier courant (`bases/fpga/` pour `fpga`,
+`bases/drone/` pour `drone` ; à la racine du dépôt, la base par défaut du registre). Les bases
+partagent le code et échangent des articles avec `bin/pdb base scan` et `bin/pdb base import`
+(§8).
 
 La répartition des rôles :
 
@@ -325,7 +332,14 @@ Procédure complète : [SETUP.md §8](../SETUP.md#8-vérification).
 ## 8. Plusieurs bases, autres sujets
 
 Le pipeline ne dépend pas du domaine : chaque sujet a sa base, un dossier séparé qui partage
-le code (DATA_MODEL §11).
+le code (DATA_MODEL §11). Deux bases existent aujourd'hui :
+
+| Base | Intitulé | Dossier |
+|---|---|---|
+| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | `bases/fpga/` |
+| `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` |
+
+Vue d'ensemble et captures de l'interface : [README](../README.md#plusieurs-bases-de-connaissance).
 
 **Créer une base.**
 
@@ -339,8 +353,10 @@ cd bases/anomalies     # puis, dans Claude Code :  /base-profile
 lectures des « suggestions en attente » dans `profile.md` (sous-thème émergent, papier hors
 axes…), que `/base-profile` vous soumet plus tard.
 
-**Passer d'une base à l'autre.** Travailler dans le dossier de la base suffit. Depuis
-ailleurs : `bin/pdb --base drone status`. `bin/pdb base list` montre toutes les bases ;
+**Passer d'une base à l'autre, ou travailler sur les deux en parallèle.** Travailler dans le
+dossier de la base suffit ; deux sessions Claude Code, une dans `bases/fpga/` et une
+dans `bases/drone/`, travaillent chacune sur leur base. Depuis ailleurs :
+`bin/pdb --base drone status`. `bin/pdb base list` montre toutes les bases ;
 `bin/pdb base use <nom>` fixe la base par défaut.
 
 **Compléter une base depuis les autres.** `bin/pdb base scan` cherche dans vos autres bases
@@ -356,7 +372,7 @@ autres bases avec import de la sélection, création d'une base.
 
 Les bases créées sans `--path` vivent dans `bases/<nom>/` et sont versionnées avec le dépôt
 (sans PDF). Dans un clone neuf, le registre est à refaire une fois :
-`bin/pdb base register . --name fpga`, `bin/pdb base register bases/drone --name drone`.
+`bin/pdb base register bases/fpga --name fpga`, `bin/pdb base register bases/drone --name drone`.
 
 Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 

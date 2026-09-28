@@ -175,7 +175,7 @@ def is_own_id(pid):
 
 
 def own_source(pid):
-    """Chemin (relatif à la racine) du protocole d'une mesure propre ; None si pid n'en est pas une."""
+    """Chemin (relatif au dossier de la base) du protocole d'une mesure propre ; None si pid n'en est pas une."""
     m = OWN_ID_RE.match(pid or "")
     return f"{EXPERIENCES_DIR}/{m.group(1)}.md" if m else None
 

@@ -33,7 +33,8 @@ nettoyé et découpé en sections, une fiche de lecture et une ou plusieurs lign
 
 Le code sert plusieurs bases séparées : chaque base est un dossier avec son `base.json` (axes
 du domaine), enregistrées dans un registre (`bin/pdb base list`) ; la base active est celle du répertoire courant, ou celle de `bin/pdb --base NOM` ([DATA_MODEL.md §11](DATA_MODEL.md#11-plusieurs-bases--registre-basejson-profilemd)).
-Ce dépôt contient la base de référence (vision embarquée sur FPGA).
+La racine du dépôt ne contient que le code ; les bases vivent dans `bases/<nom>/`. La base de
+référence est `bases/fpga/` (vision embarquée sur FPGA), la seconde `bases/drone/`.
 
 ---
 
@@ -42,25 +43,22 @@ Ce dépôt contient la base de référence (vision embarquée sur FPGA).
 ```
 PaperDatabase/
 ├── README.md               # présentation du projet
-├── CLAUDE.md               # mode d'emploi de la base pour l'agent
+├── CLAUDE.md               # pour l'agent : dépôt du code, renvoi vers les bases
 ├── SETUP.md                # ce fichier
 ├── DATA_MODEL.md           # schémas et conventions
-├── INDEX.md                # GÉNÉRÉ — table de tous les papiers
-├── external_refs.csv       # GÉNÉRÉ — travaux hors base les plus cités par le corpus
-├── candidates.csv          # GÉNÉRÉ par discover, non versionné — candidats OpenAlex
-├── candidates_arxiv.txt    # GÉNÉRÉ par discover, non versionné — liste pour add --from
-├── benchmarks.csv          # une ligne par configuration rapportée
-├── gaps.md                 # carte des verrous et zones non couvertes
-├── basicStart.txt          # bibliographie de départ (source d'amorçage)
+├── bases/                  # une base par dossier (détail plus bas)
+│   ├── fpga/               # base de référence : vision embarquée sur FPGA
+│   └── drone/              # vision embarquée sur drone
+├── templates/              # CLAUDE.base.md et profile.md, copiés par pdb base new
 ├── requirements.txt
 ├── requirements-viz.txt    # optionnel : dépendances de la visualisation
 ├── requirements-embed.txt  # optionnel : embeddings (sentence-transformers) pour la visualisation
 ├── requirements-docling.txt # optionnel : Docling pour les tableaux sans corps
 ├── requirements-plot.txt   # optionnel : matplotlib pour bin/pdb plot
-├── figures/                # sortie de bin/pdb plot (PNG par défaut) et manifest.json
-├── eval/                   # banc d'évaluation : thresholds.json, results/<date>-<commit>.json
+├── eval/                   # banc d'évaluation : thresholds.json (seuils par défaut)
+├── benchmark/              # export versionné du banc synthétique (pdb synth)
 ├── .venv/                  # non versionné
-├── .cache/                 # non versionné : embeddings, réponses OpenAlex
+├── .cache/bench/           # non versionné : répertoire de travail de pdb synth
 ├── docs/GUIDE.md           # guide d'utilisation (prise en main, extension du corpus)
 ├── docs/RAG.md             # requêtes sans LLM et recherche de passages
 ├── docs/EVAL.md            # banc d'évaluation du logiciel (pdb eval) et résultats
@@ -72,7 +70,8 @@ PaperDatabase/
 │   ├── ingest.py
 │   ├── reindex.py
 │   ├── discover.py         # candidats à l'ajout via OpenAlex
-│   └── viz.py              # app Dash : graphe 3D et généalogie du corpus
+│   ├── bases.py            # pdb base : list, new, register, use, info, check, scan, import
+│   └── viz.py              # app Dash : graphe 3D, généalogie, onglet Bases
 ├── lib/                    # code partagé
 │   ├── ids.py
 │   ├── tei.py
@@ -94,7 +93,12 @@ PaperDatabase/
 │   ├── vizfig.py           # figures Plotly et panneau de détail de viz.py
 │   ├── plotdata.py         # données des figures statiques (pdb plot), stdlib seulement
 │   ├── plotfig.py          # figures matplotlib de pdb plot : benchmarks, éval, corpus
-│   └── embed.py            # optionnel : embeddings avec cache (.cache/)
+│   ├── embed.py            # optionnel : embeddings avec cache (.cache/)
+│   ├── base.py             # base active, lecture de base.json, classement selon ses règles
+│   ├── registry.py         # registre des bases (~/.config/pdb/bases.json)
+│   ├── bases.py            # création, statistiques, profil, contrôle des règles
+│   ├── xbase.py            # entre bases : scan des candidats, import par copie
+│   └── vizbases.py         # onglet Bases de viz.py
 ├── tests/
 │   ├── fixtures/sample.tei.xml
 │   ├── fixtures/rag_eval*.jsonl  # questions d'évaluation : dev, holdout, FR, hors corpus
@@ -115,8 +119,34 @@ PaperDatabase/
 │   ├── test_embed.py
 │   ├── test_openalex.py    # OpenAlex simulé : découverte, ajout par DOI / liste
 │   ├── test_citation.py    # exports .bib / .ris éditeur : lecture, appariement, priorité
-│   └── test_status.py
-├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask
+│   ├── test_status.py
+│   ├── test_base.py        # base active, base.json minimal, classement
+│   ├── test_registry.py    # registre, ordre de résolution de la base active
+│   └── test_xbase.py       # scan entre bases, import, création, onglet Bases
+├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask,
+│                           # /paper-research, /base-profile
+└── tests/ …
+```
+
+Une base (`bases/fpga/`, `bases/drone/`, ou toute base créée par `pdb base new`) :
+
+```
+bases/<nom>/
+├── CLAUDE.md               # mode d'emploi de la base pour l'agent
+├── base.json               # axes, règles de classement (DATA_MODEL §11)
+├── profile.md              # thème et périmètre, affinés par /base-profile
+├── INDEX.md                # GÉNÉRÉ — table de tous les papiers
+├── external_refs.csv       # GÉNÉRÉ — travaux hors base les plus cités par le corpus
+├── candidates.csv          # GÉNÉRÉ par discover, non versionné — candidats OpenAlex
+├── candidates_arxiv.txt    # GÉNÉRÉ par discover, non versionné — liste pour add --from
+├── benchmarks.csv          # une ligne par configuration rapportée
+├── gaps.md                 # carte des verrous et zones non couvertes
+├── labs.md                 # laboratoires et équipes
+├── figures/                # sortie de bin/pdb plot (PNG par défaut) et manifest.json
+├── eval/                   # runs du banc (results/), et ses propres fixtures/, thresholds.json s'il y a lieu
+├── docs/                   # documents propres à la base (fpga : experiences/, etat-de-l-art/)
+├── .cache/                 # non versionné : index de passages, embeddings, réponses OpenAlex
+├── bin, .venv, .claude/commands   # liens vers le code (racine du dépôt)
 ├── inbox/                  # dépôt des PDF à ingérer
 └── papers/
     └── <paper_id>/
@@ -132,8 +162,8 @@ PaperDatabase/
 ```
 
 Les commandes Claude Code (`/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover`) vivent dans
-`.claude/commands/` : ce dossier est lui-même la racine du projet Claude Code (il porte
-`CLAUDE.md`).
+`.claude/commands/` à la racine ; chaque base y accède par un lien, et une session Claude Code
+ouverte dans `bases/<nom>/` lit le `CLAUDE.md` de la base (plus celui, générique, de la racine).
 
 Tests : `.venv/bin/python -m unittest discover tests` — parsing TEI sur une sortie GROBID
 réelle (`test_tei.py`), conformité DATA_MODEL (`test_schema.py`), conservation des axes et
@@ -284,14 +314,14 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `discover …` | `discover.run` | |
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
 | `search`, `show`, `verify` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), texte exact, contrôle de citation (statut `NOMBRES` si un nombre diffère) ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5 |
-| `eval [--extract\|--rag\|--speed] [--save] [--compare [JSON]]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; runs dans `eval/results/`, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
+| `eval [--extract\|--rag\|--speed] [--save] [--compare [JSON]]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
 | `plot [bench\|eval\|corpus\|all] [--only a,b] [--out DIR] [--format png\|pdf\|svg] [--list]` | `lib/plotdata.py`, `lib/plotfig.py` | figures statiques, voir ci-dessous |
 
 ### `bin/pdb plot`
 
-Figures matplotlib, écrites dans `figures/` (PNG à 200 dpi par défaut ; `--format pdf` pour
+Figures matplotlib, écrites dans `figures/` de la base active (PNG à 200 dpi par défaut ; `--format pdf` pour
 une version vectorielle, pour LaTeX). Lecture seule sur la base. Trois groupes, `--list` pour les noms :
 
 | Groupe | Source | Figures |
@@ -653,7 +683,7 @@ Dans Claude Code :
 
 ## 7. Amorçage depuis la bibliographie de départ
 
-[basicStart.txt](basicStart.txt) contient une vingtaine d'articles. Les neuf qui portent un
+[basicStart.txt](bases/fpga/basicStart.txt) contient une vingtaine d'articles. Les neuf qui portent un
 identifiant arXiv **sont ingérés** (tous par GROBID), avec cette boucle :
 
 ```bash
@@ -711,6 +741,23 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 Point au 28/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
 
+**Bilan du 28/09/2026 (base fpga dans `bases/`).** La base `fpga` quitte la racine pour
+`bases/fpga/` (papers/, benchmarks.csv, INDEX.md, gaps.md, labs.md, figures/, eval/results/,
+docs/experiences/, .cache/, basicStart.txt, CLAUDE.md) ; la racine ne contient plus que le
+code, avec un `CLAUDE.md` générique. `lib/base.REFERENCE` (= `bases/fpga`) remplace le dépôt
+du code comme dernier recours de la base active et comme configuration des dossiers sans
+`base.json`. Registre local à refaire dans un clone existant :
+`bin/pdb base forget fpga && bin/pdb base register bases/fpga --name fpga && bin/pdb base use fpga`. Banc
+relancé sur les deux bases (`pdb eval --save --compare`) : runs `2026-09-28T1039-76dc85e`
+(fpga) et `2026-09-28T1043-76dc85e` (drone), 0 écart avec les précédents, tous seuils
+atteints (docs/EVAL.md §9) ; figures `pdb plot all` régénérées pour les deux bases.
+
+**Bilan du 28/09/2026 (base drone).** Base `drone` déplacée dans le dépôt (`bases/drone/`) ;
+24 articles ajoutés ; 73 fiches sur 73 (230 lignes de benchmark ajoutées, 324 en tout) ;
+profil précisé par `/base-profile` (règle sol → air / air → air, vol agile, « AAV ») ;
+`gaps.md` 2ᵉ passe (19 gaps, dont 17 étayés) ; figures `pdb plot`. Captures de l'interface
+dans `docs/images/`.
+
 **Bilan du 28/09/2026 (plusieurs bases).** Registre des bases (`lib/registry.py`,
 `~/.config/pdb/bases.json`), `bin/pdb --base NOM`, `bin/pdb base list|new|register|forget|use|
 info|check|scan|import` (`bin/bases.py`, `lib/bases.py`, `lib/xbase.py`) ; `base.json` minimal
@@ -767,8 +814,8 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
 - Outillage : `lib/citation.py`. Un export `.bib` ou `.ris` déposé dans `inbox/` est
   apparié au PDF par DOI, sinon par titre ; ses champs priment sur l'en-tête GROBID, puis
   il est rangé dans `papers/<id>/citation.*`.
-- Nouveaux fichiers : [labs.md](labs.md) (labos et encadrants, INSA Rennes / IETR à
-  vérifier) et le protocole [docs/experiences/kv260-map-sur-cible.md](docs/experiences/kv260-map-sur-cible.md).
+- Nouveaux fichiers : [labs.md](bases/fpga/labs.md) (labos et encadrants, INSA Rennes / IETR à
+  vérifier) et le protocole [docs/experiences/kv260-map-sur-cible.md](bases/fpga/docs/experiences/kv260-map-sur-cible.md).
 - Clé `OPENALEX_API_KEY` configurée dans `~/.bashrc`.
 - 89 tests.
 
@@ -823,7 +870,7 @@ benchmark : ratios seulement) ; colonne `power_scope` dans `benchmarks.csv` (`ch
 tableaux avec corps 0,66, en-tête GROBID, valeurs de `benchmarks.csv` retrouvées dans le
 tableau cité 0,74 contre 0,86 dans le texte), recherche (nouveau jeu holdout de 25 questions :
 recall@5 hybride 0,84, contre 0,90 sur le jeu dev), questions hors corpus, `verify`, temps.
-Rapport de référence dans `eval/results/`, seuils dans `eval/thresholds.json`. 153 tests.
+Rapport de référence dans `bases/fpga/eval/results/`, seuils dans `eval/thresholds.json`. 153 tests.
 Défauts mis au jour, à corriger (tâche 12) :
 - l'alerte « pertinence faible » ne se déclenche sur aucune des 10 questions hors corpus ;
 - `verify` accepte (APPROX) une citation avec un chiffre ou un mot modifié ;
@@ -866,7 +913,7 @@ Défauts mis au jour, à corriger (tâche 12) :
    arxiv-1612.07119 §5.1), latence et FPS à batch 1 — pour combler le gap « protocole de
    mesure YOLO » de `gaps.md`, et servir de baseline aux travaux de thèse. Ajouter une
    comparaison Jetson (Orin Nano) dans les mêmes conditions. Protocole détaillé (24/09/2026,
-   non exécuté) : [docs/experiences/kv260-map-sur-cible.md](docs/experiences/kv260-map-sur-cible.md).
+   non exécuté) : [docs/experiences/kv260-map-sur-cible.md](bases/fpga/docs/experiences/kv260-map-sur-cible.md).
    Il mesure la mAP COCO val sur la carte, NMS compris, et la compare au modèle flottant et
    au modèle quantifié simulé (gap « précision non vérifiée sur la cible »).
 4. [x] **Convention puissance** (24/09/2026) : colonne `power_scope`, DATA_MODEL §7,

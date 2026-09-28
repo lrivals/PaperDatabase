@@ -22,6 +22,11 @@ corpus grossit. La démarche est la suivante : `eval --save` avant, modification
 `eval --compare`. Les temps sont affichés mais pas comparés, car ils varient d'un run à
 l'autre. Les seuils sont dans [eval/thresholds.json](../eval/thresholds.json).
 
+**Quelle base.** Le banc porte sur la base active : `bin/pdb --base drone eval` ou
+`bin/pdb eval` lancé dans `bases/drone/` évalue la base drone, avec ses propres questions et
+ses propres runs (§9). Les §1-8 décrivent la base fpga (`bases/fpga/`), base de référence
+du logiciel ; ses runs sont dans `bases/fpga/eval/results/`.
+
 ---
 
 ## 1. Extraction : métriques intrinsèques
@@ -134,7 +139,7 @@ sans GPU).
 
 ## 5. Rapport de référence (26/09/2026)
 
-`eval/results/2026-09-26T0051-80aa05e-dirty.json`. Le suffixe `-dirty` vient de ce que le banc
+`bases/fpga/eval/results/2026-09-26T0051-80aa05e-dirty.json`. Le suffixe `-dirty` vient de ce que le banc
 lui-même n'était pas encore commité ; le code mesuré est celui du commit 80aa05e. Corpus :
 28 papiers, tous extraits par GROBID, 2 398 passages.
 
@@ -241,7 +246,7 @@ MCP de RAG.md §11, le supprimerait. Le rerank multiplie par 12 la latence à ch
 
 ## 6. Corrections du 26/09/2026
 
-Mesurées avec `pdb eval --compare`. Rapports dans `eval/results/` : `…T0051…` (référence),
+Mesurées avec `pdb eval --compare`. Rapports dans `bases/fpga/eval/results/` : `…T0051…` (référence),
 `…T0100…` (première version du contrôle des nombres), `…T0108…` (version finale et
 pertinence faible), `…T0109…` (extraction avant Docling).
 
@@ -375,3 +380,117 @@ Lecture :
 - Différences de protocole : Qwen plafonne à 3 passages par papier et indexe aussi fiches et
   lignes de benchmark ; les limiter au texte original ne change pas le rappel (ligne
   « original text only » du JSON).
+
+## 9. Banc par base
+
+**Emplacements** (`evaluation.paths`) :
+
+| Élément | Chemin dans la base | Repli |
+|---|---|---|
+| questions (5 jeux du §3) | `eval/fixtures/` | `tests/fixtures/` du code, écrits pour la base fpga |
+| seuils | `eval/thresholds.json` | celui du code |
+| runs enregistrés, `--compare` | `eval/results/` | aucun : chaque base a ses runs |
+
+La base fpga (`bases/fpga/`) n'a pas de `eval/fixtures/` : elle utilise les jeux de
+`tests/fixtures/` du code et les seuils de `eval/thresholds.json` du code ; ses runs sont dans
+`bases/fpga/eval/results/`. Le commit noté dans un run est celui du code. Le
+volet temps chronomètre `bench --cols model,fps,power_w -n 5` et `paper <premier id court>`,
+qui ne dépendent plus du corpus fpga. `bin/pdb test` porte toujours sur le code.
+
+Pour une nouvelle base, écrire ses 5 jeux dans `eval/fixtures/`. Si elle n'en a pas, le banc
+tourne avec les questions fpga et le rappel ne veut alors rien dire. Il faut aussi copier les
+seuils avant le premier run.
+
+### Jeu de la base drone (28/09/2026)
+
+Questions dans [bases/drone/eval/fixtures/](../bases/drone/eval/fixtures/), même format et même
+protocole que le §3, sur 73 papiers :
+
+| Jeu | Questions | Contenu |
+|---|---|---|
+| `rag_eval.jsonl` | 20, EN | dev : un fait distinctif par papier, 20 papiers répartis sur les 9 axes |
+| `rag_eval_holdout.jsonl` | 20, EN | 20 autres papiers : 3 questions multi-papiers (modèle F-1 de 2204.10898 et Krishnan 2020 ; Loihi dans 2303.08778 et 2108.03694 ; score DAC-SDC de Xu 2021 et Zhang 2024), 2 questions sur tableaux (puissance au repos de Feng 2022, FPS et puissance selon le nombre de threads de Nguyen 2024) |
+| `rag_eval_fr.jsonl` | 8, FR | traductions de questions dev |
+| `rag_eval_neg.jsonl` | 10, EN | hors corpus ; 3 `ambiguous` (drones d'épandage, empreinte RF des télécommandes, réglementation UE), sujets cités en passant dans le corpus |
+| `rag_eval_neg_holdout.jsonl` | 10, EN | hors corpus de validation ; 2 `ambiguous` (livraison par drones, RL sur Atari) |
+
+Chaque question paraphrase un fait lu dans la fiche, sans reprendre les mots-clés du passage
+(« Cutting a large image into overlapping tiles at test time » pour SAHI, et non
+« slicing »). Les attentes sont données par `expect_from_pattern`, entre 1 et 40 sections par
+motif. Les champs `papers` et `pattern` restent dans chaque ligne.
+
+**Révisions du holdout.** Au premier run
+(`bases/drone/eval/results/2026-09-28T1011-78b56a9-dirty.json`), hybride + rerank donnait
+recall@5 0,85 et hybride 0,90, avec 3 questions manquées. Après lecture des 5 passages
+renvoyés pour chacune :
+- *concours DAC-SDC* : élargie. `2021-xu#002` répond mot pour mot (« a combination of
+  throughput, power, and detection accuracy ») et la description du concours dans SkyNet aussi ;
+  le motif d'origine ne couvrait pas ces passages ;
+- *drone qui repère d'autres drones avec sa caméra* : élargie. Dogfight (2103.17242, papier du
+  jeu dev) traite exactement ce cas ; la question admettait deux papiers ;
+- *puissance au repos* (tableau) : **non élargie**. `2022-feng#015` ne donne que la valeur du
+  NCS2 (0,64 W) ; les valeurs des Jetson ne sont que dans le Table 4. C'est un échec réel.
+
+Aucun paramètre du système n'a été réglé sur ces jeux.
+
+### Rapport de référence drone et comparaison avec fpga
+
+Run de référence drone : `bases/drone/eval/results/2026-09-28T1016-78b56a9-dirty.json`, avec
+les seuils de la base fpga fixés avant le premier run. Pour fpga, le run de référence est
+`bases/fpga/eval/results/2026-09-26T2044-65074b7.json` (45 papiers). Le suffixe `-dirty` indique que
+`lib/evaluation.py` n'était pas commité.
+
+| Métrique | fpga (45 papiers) | drone (73 papiers) |
+|---|---|---|
+| passages indexés | 3 479 | 4 525 |
+| couverture du texte : moyenne / minimum | 0,91 / 0,81 | 0,90 / 0,70 (2504.11967) |
+| tableaux avec corps | 0,88 | 0,71 (378 tableaux) |
+| en-tête : titre / année / DOI / arXiv / auteurs F1 | 0,91 / 0,42 / 0,62 / 0,72 / 0,86 | 0,92 / 0,64 / 0,70 / 0,80 / 0,94 |
+| valeurs de benchmarks.csv : dans le tableau cité / dans le texte | 0,65 / 0,76 (588) | 0,60 / 0,74 (716) |
+| dev, hybride / hybride + rerank (recall@5) | 0,90 / 1,00 | 0,95 / 1,00 |
+| holdout, hybride / hybride + rerank (recall@5) | 0,72 / 0,80 (25 q.) | 0,95 / 0,95 (20 q.) |
+| holdout, MRR hybride + rerank | 0,71 | 0,92 |
+| FR, hybride + rerank (recall@5) | 0,50 | 0,62 |
+| pertinence faible, `cos` : hors corpus / corpus signalés (validation) | 0,80 / 0,20 | 1,00 / 0,10 |
+| `verify` : exact accepté / mot remplacé accepté / chiffre modifié / autre papier | 1,00 / 0,88 / 0,00 / 0,00 | 1,00 / 0,85 / 0,00 / 0,00 |
+
+**Seuils** : tous atteints. Le recall@5 du holdout en hybride + rerank vaut 0,95 (plancher
+0,8), la couverture moyenne 0,90 (plancher 0,85) et le titre 0,92 (plancher 0,8). `verify`
+accepte toutes les citations exactes et refuse tous les chiffres modifiés et toutes les
+citations d'un autre papier.
+
+Lecture :
+- **Le holdout drone est plus facile que celui de fpga, on ne peut pas conclure que la
+  recherche marche mieux.** Le corpus drone est plus hétérogène (détection, suivi,
+  neuromorphique, course…) : un fait distinctif y a moins de voisins proches que dans un
+  corpus fpga centré sur les accélérateurs. Deux attentes ont en outre été élargies (sans
+  elles : 0,85). Avec 20 questions, 0,05 = 1 question.
+- **Échecs restants.** Le tableau de puissance au repos est manqué par tous les modes, comme
+  les tableaux du holdout fpga : un tableau est un passage court, souvent réduit à sa
+  légende. En français, 3 questions sur 8 restent manquées (bit flips, conception de bas en
+  haut, course de drones) ; le lexical y est nul.
+- **Pertinence faible** : le signal `cos` signale les 8 questions hors corpus non ambiguës de
+  validation, mais aussi 2 des 20 questions du holdout. La règle d'adoption (≤ 5 %) n'est pas
+  remplie, comme pour fpga : aucune alerte n'est réintroduite.
+- **Extraction** : la couverture minimale (0,70, survey anti-UAV 2504.11967) et le taux de
+  tableaux avec corps (0,71) sont plus bas que pour fpga ; 18 papiers ont des sections non
+  détectées. Ces valeurs ne sont pas sous un seuil, mais la base drone est la première à
+  relire si l'on améliore l'extraction des tableaux.
+
+### Nouveaux runs de référence, après le déplacement de fpga (28/09/2026)
+
+Les deux bases ont été réévaluées (tous les volets, `pdb eval --save --compare`) après le
+déplacement de la base fpga dans `bases/fpga/` (commit 76dc85e). Ces runs sont propres
+(sans `-dirty`) et remplacent les précédents comme références :
+
+| Base | Run | Comparé à | Écarts |
+|---|---|---|---|
+| fpga | `bases/fpga/eval/results/2026-09-28T1039-76dc85e.json` | `2026-09-26T2044-65074b7.json` | 0 |
+| drone | `bases/drone/eval/results/2026-09-28T1043-76dc85e.json` | `2026-09-28T1016-78b56a9-dirty.json` | 0 |
+
+Toutes les métriques du tableau ci-dessus sont reproduites à l'identique et tous les seuils
+sont atteints : le déplacement n'a changé ni l'extraction, ni l'index de passages, ni
+`verify`. Temps (médianes, non comparés) : hybride p50 126 ms (fpga) et 112 ms (drone),
+hybride + rerank p50 1,39 s et 1,14 s, `search` à froid 6,9 s et 6,7 s.
+Figures régénérées dans `bases/<nom>/figures/` (`pdb plot all`) ; la base drone a désormais
+ses figures `eval_*`.

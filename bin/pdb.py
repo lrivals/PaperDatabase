@@ -647,21 +647,22 @@ def cmd_eval(args):
     a = p.parse_args(args)
     if not (a.extract or a.rag or a.speed):
         a.extract = a.rag = a.speed = True
-    # le banc porte sur la base de référence livrée avec le code (questions des fixtures)
-    fixtures = CODE / "tests" / "fixtures"
+    # le banc porte sur la base active : ses questions (eval/fixtures/, à défaut celles du
+    # code, écrites pour la base fpga), ses seuils et ses runs enregistrés (evaluation.paths)
+    fixtures, results, thresholds_path = ev.paths(ROOT, CODE)
+    print(f"# base : {base.CONFIG['name']} ({ROOT}) ; questions : {fixtures}\n")
     res = {}
     if a.extract:
-        res["extraction"] = {"quality": ev.extraction_quality(CODE), "header": ev.header_accuracy(CODE),
-                             "tables": ev.table_values(CODE)}
+        res["extraction"] = {"quality": ev.extraction_quality(ROOT), "header": ev.header_accuracy(ROOT),
+                             "tables": ev.table_values(ROOT)}
     if a.rag:
-        res["rag"] = ev.rag_quality(CODE, fixtures)
+        res["rag"] = ev.rag_quality(ROOT, fixtures)
     if a.speed:
-        res["speed"] = ev.speed(CODE, fixtures, cli=not a.no_cli)
+        res["speed"] = ev.speed(ROOT, fixtures, cli=not a.no_cli)
     _print_eval(res)
 
     flat = ev.flatten(res)
-    results = CODE / "eval" / "results"
-    thresholds = json.loads((CODE / "eval" / "thresholds.json").read_text())
+    thresholds = json.loads(thresholds_path.read_text())
     fails = [f for f in ev.check_thresholds(flat, thresholds) if f[0].split(".")[0] in res]
     if a.compare:
         runs = sorted(results.glob("*.json"))
@@ -686,9 +687,9 @@ def cmd_eval(args):
         results.mkdir(parents=True, exist_ok=True)
         out = results / f"{stamp}-{sha}{'-dirty' if dirty else ''}.json"
         out.write_text(json.dumps({"date": stamp, "commit": sha, "dirty": bool(dirty),
-                                   "volets": sorted(res), "results": res},
+                                   "base": base.CONFIG["name"], "volets": sorted(res), "results": res},
                                   ensure_ascii=False, indent=1, default=str) + "\n")
-        print(f"\nenregistré : {out.relative_to(CODE)}")
+        print(f"\nenregistré : {out.relative_to(ROOT)}")
     return 1 if (a.compare and fails) else 0
 
 

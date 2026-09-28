@@ -21,10 +21,10 @@ class DataRootTest(unittest.TestCase):
             sub.mkdir(parents=True)
             self.assertEqual(base.data_root({}, cwd=sub), Path(d).resolve())
 
-    def test_fallback_to_code(self):
+    def test_fallback_to_reference_base(self):
         with tempfile.TemporaryDirectory() as d:
             env = {"PDB_REGISTRY": str(Path(d) / "absent.json")}
-            self.assertEqual(base.data_root(env, cwd=d), base.CODE)
+            self.assertEqual(base.data_root(env, cwd=d), base.REFERENCE)
 
 
 class ConfigTest(unittest.TestCase):
@@ -44,22 +44,22 @@ class ConfigTest(unittest.TestCase):
                 base.load_config(d)
 
     def test_classify_uses_given_config(self):
-        cfg = base.load_config(base.CODE)
+        cfg = base.load_config(base.REFERENCE)
         axes, _ = base.classify(cfg, "YOLO on a Zynq FPGA")
         self.assertIn("yolo-fpga", axes)
         self.assertTrue(base.in_topic(cfg, "YOLO on a Zynq FPGA", "YOLO on a Zynq FPGA", axes))
 
     def test_reference_base(self):
-        cfg = base.load_config(base.CODE)
+        cfg = base.load_config(base.REFERENCE)
         self.assertIn("surveys", cfg["axes"])
         self.assertLessEqual(set(cfg["axis_rules"]), set(cfg["axes"]))
 
-    def test_folder_without_marker_uses_code_config(self):
+    def test_folder_without_marker_uses_reference_config(self):
         with tempfile.TemporaryDirectory() as d:
-            self.assertEqual(base.load_config(d), base.load_config(base.CODE))
+            self.assertEqual(base.load_config(d), base.load_config(base.REFERENCE))
 
     def test_undeclared_axis_rejected(self):
-        cfg = base.load_config(base.CODE)
+        cfg = base.load_config(base.REFERENCE)
         cfg["axis_queries"] = {"inconnu": "x"}
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "base.json").write_text(json.dumps(cfg))

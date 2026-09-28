@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+FPGA = ROOT / "bases" / "fpga"   # base réelle de référence
 
 from lib import plotdata as D  # noqa: E402
 from lib import schema  # noqa: E402
@@ -52,7 +53,7 @@ class TestFamilies(unittest.TestCase):
             self.assertEqual(D.platform_family(platform), family, platform)
 
     def test_every_csv_platform_is_classified(self):
-        _, rows = __import__("lib.query", fromlist=["x"]).load_benchmarks(ROOT)
+        _, rows = __import__("lib.query", fromlist=["x"]).load_benchmarks(FPGA)
         unknown = {r["platform"] for r in rows if D.platform_family(r["platform"]) == D.OTHER}
         self.assertEqual(unknown, set(), "plateformes sans famille : compléter _FAMILY_RULES")
 
@@ -144,7 +145,7 @@ class TestFigures(unittest.TestCase):
     def test_all_figures_render_on_the_real_base(self):
         from lib import plotfig
         import matplotlib.pyplot as plt
-        ctx = plotfig.Context(ROOT)
+        ctx = plotfig.Context(FPGA)
         for name, (_, fn, _) in plotfig.FIGURES.items():
             with self.subTest(name):
                 try:

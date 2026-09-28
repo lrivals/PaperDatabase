@@ -1,0 +1,19 @@
+TY  - JOUR
+AU  - Zhang, Dezheng
+AU  - Wang, Aibin
+AU  - Mo, Ruchan
+AU  - Wang, Dong
+PY  - 2024
+DA  - 2024/01/01
+TI  - End-to-end acceleration of the YOLO object detection framework on FPGA-only devices
+JO  - Neural Computing and Applications
+SP  - 1067
+EP  - 1089
+VL  - 36
+IS  - 3
+AB  - Object detection has been revolutionized by convolutional neural networks (CNNs), but their high computational complexity and heavy data access requirements make implementing these algorithms on edge devices challenging. To address this issue, we propose an efficient object detection accelerator for YOLO series algorithm. Our architecture utilizes multiple dimensions of parallelism to accelerate the convolution computation. We employ line-buffer-based parallel data caches and dedicated data access units to minimize off-chip bandwidth pressure. Additionally, our proposed design not only accelerates the convolutional computation, but also control-intensive post-processing to achieve low detection latency. We evaluate the final design on Xilinx V7-690t FPGA device, achieving a throughput of 525 GOP/s for a batch size of 1 and 914 GOP/s for a batch size equal to 2. Compared with state-of-the-art YOLOv2 and YOLOv3 implementations, our proposed accelerator offers up to 9$$\times$$throughput improvement and 5$$\times$$shorter latency.
+SN  - 1433-3058
+UR  - https://doi.org/10.1007/s00521-023-09078-8
+DO  - 10.1007/s00521-023-09078-8
+ID  - Zhang2024
+ER  - 

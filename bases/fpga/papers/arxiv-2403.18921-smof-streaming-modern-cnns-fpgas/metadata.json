@@ -1,0 +1,47 @@
+{
+  "id": "arxiv-2403.18921-smof-streaming-modern-cnns-fpgas",
+  "title": "SMOF: Streaming Modern CNNs on FPGAs with Smart Off-Chip Eviction",
+  "authors": [
+    {
+      "given": "Petros",
+      "family": "Toupas"
+    },
+    {
+      "given": "Zhewen",
+      "family": "Yu"
+    },
+    {
+      "given": "Christos-Savvas",
+      "family": "Bouganis"
+    },
+    {
+      "given": "Dimitrios",
+      "family": "Tzovaras"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2403.18921",
+  "url": "https://arxiv.org/abs/2403.18921",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "toolflows"
+  ],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 4 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

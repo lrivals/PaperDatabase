@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-1904.00781-rilod-near-real-time-incremental",
+  "title": "RILOD: Near Real-Time Incremental Learning for Object Detection at the Edge",
+  "authors": [
+    {
+      "given": "Dawei",
+      "family": "Li"
+    },
+    {
+      "given": "Serafettin",
+      "family": "Tasci"
+    },
+    {
+      "given": "Shalini",
+      "family": "Ghosh"
+    },
+    {
+      "given": "Jingwen",
+      "family": "Zhu"
+    },
+    {
+      "given": "Junting",
+      "family": "Zhang"
+    },
+    {
+      "given": "Larry",
+      "family": "Heck"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1904.00781",
+  "url": "https://arxiv.org/abs/1904.00781",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

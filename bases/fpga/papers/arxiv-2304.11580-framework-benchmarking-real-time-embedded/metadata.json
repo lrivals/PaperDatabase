@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-2304.11580-framework-benchmarking-real-time-embedded",
+  "title": "A Framework for Benchmarking Real-Time Embedded Object Detection",
+  "authors": [
+    {
+      "given": "Michael",
+      "family": "Schlosser"
+    },
+    {
+      "given": "Daniel",
+      "family": "König"
+    },
+    {
+      "given": "Michael",
+      "family": "Teutsch"
+    }
+  ],
+  "year": 2023,
+  "venue": "In: Andres, B., Bernard, F., Cremers, D., Frintrop, S., Goldlücke, B., Ihrke, I. (eds) Pattern Recognition. DAGM GCPR 2022. Lecture Notes in Computer Science, vol 13485. Springer, Cham",
+  "doi": "10.1007/978-3-031-16788-1_33",
+  "arxiv_id": "2304.11580",
+  "url": "https://arxiv.org/abs/2304.11580",
+  "type": null,
+  "axes": [],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : In: Andres, B., Bernard, F., Cremers, D., Frintrop, S., Goldlücke, B., Ihrke, I. (eds) Pattern Recognition. DAGM GCPR 2022. Lecture Notes in Computer Science, vol 13485. Springer, Cham) : type journal/conference à préciser",
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 18 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 31 fragment(s) non réparé(s) (« classi cation »…)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

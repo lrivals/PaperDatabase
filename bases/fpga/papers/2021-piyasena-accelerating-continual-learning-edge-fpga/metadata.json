@@ -1,0 +1,44 @@
+{
+  "id": "2021-piyasena-accelerating-continual-learning-edge-fpga",
+  "title": "Accelerating Continual Learning on Edge FPGA",
+  "authors": [
+    {
+      "given": "Duvindu",
+      "family": "Piyasena"
+    },
+    {
+      "given": "Siew-Kei",
+      "family": "Lam"
+    },
+    {
+      "given": "Meiqing",
+      "family": "Wu"
+    }
+  ],
+  "year": 2021,
+  "venue": "2021 31st International Conference on Field-Programmable Logic and Applications (FPL) 294-300",
+  "doi": "10.1109/FPL53798.2021.00059",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/FPL53798.2021.00059",
+  "type": "conference",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [
+    "slda"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 22 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 27 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

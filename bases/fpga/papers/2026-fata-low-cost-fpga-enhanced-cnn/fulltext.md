@@ -1,0 +1,652 @@
+---
+id: 2026-fata-low-cost-fpga-enhanced-cnn
+title: "Low-Cost FPGA-Enhanced CNN Accelerator for Real-Time YOLO Object Detection and Classification"
+year: 2026
+backend: pymupdf
+---
+
+Received 18 January 2026, accepted 27 January 2026, date of publication 2 March 2026, date of current version 5 March 2026.
+
+Digital Object Identifier 10.1109/ACCESS.2026.3669451
+
+Low-Cost FPGA-Enhanced CNN Accelerator for Real-Time YOLO Object Detection and Classification
+
+JOHN S. FATA , (Member, IEEE), AND WAFA M. ELMANNAI , (Member, IEEE) Department of Electrical and Computer Engineering, Manhattan University, Riverdale, NY 10471, USA
+
+Corresponding author: Wafa M. Elmannai (wafa.elmannai@manhattan.edu)
+
+## Abstract
+
+This work presents a low-cost FPGA-based accelerator for real-time object detection and classification using a compressed YOLOv3-Tiny model. Existing FPGA-based CNN accelerators excel in one critical performance metric but sacrifice either throughput, accuracy, or power efficiency. This is particularly the case for low-cost devices that are resource-constrained and often heavily rely on off-chip memory which hinders performance. To address these limitations, we introduce three novel contributions: 1) an iterative structured hardware pruning algorithm that removes the least important filters from the YOLO model in small increments; 2) a quantization-aware training (QAT) algorithm that adapts the scaling factor per layer; and 3) a custom RTL memory-mapping controller that prioritizes on-chip BRAM/URAM memory allocation to improve throughput while decreasing power consumption. With this approach, the model size was reduced by 13.3× while preserving accuracy. Implemented on a low-cost Kria KV260 FPGA, the approach achieved 93.8% detection accuracy, 24.3 FPS throughput, 41.59 ms latency, and just 2.13W of power consumption. The result was a high-performing, efficient system that directly outperformed comparable low-cost designs. These results demonstrate that balanced, high-performance YOLO inference is attainable on low-cost FPGA hardware without reliance on off-chip memory.
+
+INDEX TERMS AI-accelerator, CNN model, edge computing, FPGA-based acceleration, FPGA, object detection, parallel computing, YOLO.
+
+I. INTRODUCTION Convolutional Neural Networks (CNNs) are an exceptional choice for computer vision applications such as object detection, given their strong ability to perform video or image processing. Due to the increasing computational complexity of current Deep Learning (DL) models, traditional microcontrollers are not sufficient for carrying out these tasks [1]. This is especially the case for edge computing applications, where the device operates in a resource-constrained environment [1], [2], [3]. With the parallel processing capabilities provided by Field Programmable Gate Arrays (FPGAs) and their ability to achieve low power consumption, low latency, and reconfigurability, they are well suited for accelerating the speed and improving the performance of CNNs [2], [4], [5].
+
+The associate editor coordinating the review of this manuscript and
+
+approving it for publication was Ludovico Minati .
+
+Traditional Central Processing Unit (CPU) or Graphics Processing Unit (GPU) based implementations for embedded systems can offer high performance but struggle with power consumption given the high complexity of DL tasks [6]. The parallel computing capabilities of FPGAs allow us to leverage the system to attain a balance between performance and power consumption. Such an achievement is ideal for edge computing environments where the device may be battery-operated or have minimal access to power [1], [2].
+
+There have been many efforts in recent years to design FPGA-based CNN accelerators to take advantage of the parallel computing capabilities of FPGAs, optimizing hardware workloads to improve resource utilization, and dynamically reconfiguring FPGA computational units to achieve maximum efficiency. Increased resource utilization such as on-chip memory and computational units such as Flip Flops (FFs), Look Up Tables (LUTs), and Digital Signal Processors
+
+## 2026 The Authors. This work is licensed under a Creative Commons Attribution 4.0 License.
+
+For more information, see https://creativecommons.org/licenses/by/4.0/
+
+(DSPs) can be combined into a single chip to improve the performance and energy efficiency of the FPGA [2], [7], [8], [9]. Better hardware optimizations are an avenue to be explored including advancements in high-level synthesis tools or designing an automated hardware generation system applicable to deep learning models [1], [2].
+
+Cost is a critical constraint for FPGA-based CNN accelerators, especially when deployed as edge devices [2]. A major gap in current low-cost FPGA CNN accelerators is the trade-off in performance metrics achieved. Many low-cost systems attain high throughput in terms of FPS for video processing applications, but struggle in power consumption and efficiency of the hardware. This is significant because edge computing applications typically utilize batteries or small power supplies [1], [2]. Other approaches prioritize low power consumption to accommodate the resource-limited edge computing environment, but lack in computational performance. This trade-off is inherently related to the limitations faced by low-cost FPGA platforms.
+
+Low-cost FPGAs have minimal on-chip memory, which is a high-speed memory component located within the FPGA’s Programmable Logic (PL) [4]. This type of memory is physically closer to the accelerator architecture, which also resides in the PL. The result of utilizing this memory type is faster inference speed and lower power consumption. The other memory component that can be utilized for DL model deployment is off-chip memory. While higher in capacity compared to on-chip memory, off-chip memory is not located in the FPGAs PL, resulting in higher latency, decreasing performance and increasing power consumption.
+
+This is the primary challenge faced by low-cost FPGA accelerators in the context of edge computing applications today. Typical CNNs for image or video processing require intricate models that can be computationally complex with large storage requirements. The minimal on-chip memory available for low-cost platforms requires most designs to heavily rely on off-chip memory, compromising performance and efficiency [1], [2], [4], [5].
+
+This paper details a well-balanced approach that prioritizes high throughput, low power consumption, low latency, and high efficiency utilizing a low-cost Xilinx Kria KV260 FPGA. With our approach, we directly address the tradeoff in performance metrics prevalent among similar lowcost FPGA-based systems. We introduce novel quantization and hardware pruning algorithms to compress the size of a YOLOv3-Tiny model while maintaining high accuracy. The model is trained to detect and classify 20 different object classes prevalent in both indoor and outdoor environments. This allows our design to be applicable to a broad range of potential edge computing applications.
+
+Although YOLOv3-Tiny is significantly smaller than a full-scale YOLO variant, its complexity and memory requirements still exceed the on-chip memory available on most low-cost FPGAs. This motivated our development of an adaptive Register Transfer Level (RTL) memory mapping controller implemented in the PL. This controller allocates
+
+specific layers of the YOLO model to either Block RAM (BRAM) or UltraRAM (URAM) on the FPGA based on that layer’s memory requirements. Below we list our key novel contributions that prioritize high performance, low power consumption, and high efficiency utilizing a low-cost platform:
+
+(1) An iterative structured hardware pruning algorithm
+
+designed to reduce YOLOv3-Tiny model size while maintaining accuracy. (2) A Quantization-Aware Training (QAT) algorithm that
+
+determines layer-specific scaling factors to preserve numerical stability under INT8 quantization, preserving model accuracy. (3) A custom RTL memory mapping controller that opti-
+
+mizes BRAM/URAM allocation and enables the model to run entirely in on-chip memory.
+
+The remainder of this paper is structured as follows: Section II reviews prior FPGA-based CNN accelerators designed for edge computing environments and discusses the limitations that motivate this work. Section III presents the proposed solution for our design including a workflow of hardware and software components, more detailed overview of the hardware pruning and quantization algorithms, and breakdown of the designed RTL memory mapping controller. Section III-A introduces the implementation details for each component of the design. Section III-B discusses the hardware and software results of our design and compares these results with the similar low-cost systems reviewed in Section II. Lastly, Section III-C concludes the paper and outlines directions for future research to improve upon our approach.
+
+II. MOTIVATION & RELATED WORK In 2023, the edge AI accelerator market was valued at nearly $6 billion with a Compound Annual Growth Rate (CAGR) of 30.4% over the next 6 years [3]. The high current market value and CAGR for such devices indicate a significant need for AI-based accelerators in the present day, as well as the foreseeable future. Real-time data processing, particularly for edge computing applications, is a focal point among researchers today.
+
+Works like the optimization of content cache for vehicular edge computing proposed by Khan et al. [10] prioritize prediction accuracy, reduced latency, and data privacy of edge devices. In this work Khan emphasizes factors that motivate the deployment of efficient AI models directly on edge devices. Similarly, Hussain et al. [11] demonstrate that classical Computer Vision (CV) systems face challenges related to efficiency and accuracy under varying pose and illumination. This further enforces the importance of hardware-aware techniques that are adaptive and efficient.
+
+Additionally, recent advancements in Super-Resolution (SR) research demonstrated by Ghazali et al. [12] highlight the growing need for high-performing lightweight models. Ghazali proposes a lightweight SR method that can
+
+be suitable for resource-constrained devices. The proposed approach reduces model parameters, emphasizing retained performance and accuracy with the capability of edge deployment.
+
+FPGA-based CNN accelerators have emerged as a promising solution for addressing the aforementioned design requirements. FPGAs are highly versatile due to the programmable nature of logic cells, which enables flexible optimization for resource-constrained edge computing tasks. As a result, researchers have proposed a broad range of solutions targeting different accelerator design dimensions ranging from architectural novelty and application-specific customization to aggressive power saving techniques. However, while most proposals that utilize FPGAs for edge AI applications attain impressive performance metrics, they tend to ignore cost as a driving factor in their design. These systems may perform well in terms of throughput (measure of computational performance), power consumption, and efficiency, but are very high cost.
+
+This relationship is evident in the work proposed by Syed et al. [9] where a power consumption of only 0.393- 0.66W was achieved. The minimal power consumption was coupled with a high accuracy of 90% and high efficiency of up to 0.979 Tera Operations Per Second (TOPs). The primary drawback here is that the FPGA platform utilized in this study costs approximately $15,000. Another example of this is shown in the study conducted by Zhou et al. [13]. Here they proposed an accelerated FPGA-based parallel CNN-LSTM platform that attained a power consumption ranging from 0.717-1.744W with a 96.54% model accuracy. The FPGA utilized in their study was high cost, priced at approximately $5,000.
+
+The clear relationship between cost and performance is the driving motivation for our proposed solution: to develop a low-cost, well-balanced system that not only attains impressive performance metrics, but also considers cost into the design decisions.
+
+There are several challenges faced when implementing low-cost CNN accelerators on FPGAs. The most significant challenge is limited resource availability, including lowlatency memory [2]. Low-cost FPGAs have limited on-chip memory (a few MBs) including BRAM and URAM. This type of memory can perform low latency transactions given that data is stored directly in FPGA fabric [6]. While off-chip memory on the other hand has higher capacity (up to multiple GBs), it has longer access times which reduces throughput. On-chip memory offers lower power consumption than offchip memory. Given these facts, off-chip memory should be limited, or even excluded from the design. However, the issue lies in the fact that DL models can be intricate, requiring more storage than what is offered in on-chip memory for low-cost devices.
+
+In the context of Computer Vision (CV) applications applied to edge AI devices, a very popular object detection model family is You Only Look Once (YOLO) [14]. YOLO is a CNN architecture that specializes in fast and
+
+accurate real-time object detection. While YOLO models can be quite resource intensive and require large memory capacities, simplified architectures such as the YOLO-Tiny variants are lightweight models designed to perform well on resource-constrained devices with minimal memory [1], [2] [14]. These lightweight models have been adopted in many FPGA-based accelerator designs in recent years due to these facts [1], [2] [8] [14] [15].
+
+However, even lightweight models such as the YOLO-Tiny variant can be tens to hundreds of megabytes based on the model’s architecture. Typically, compression techniques are taken to reduce model size for FPGA deployment [1], [2]. This compression is especially critical for resource-constrained devices like FPGAs that have minimal on-chip memory and logic cells available. Common model compression techniques for FPGA deployment include quantization and/or hardware pruning [2].
+
+Quantization refers to the remapping of model weights from their original 32-bit floating point value to a smaller value. Hardware pruning completely removes weights/filters in the model, drastically simplifying the model’s structure. While these techniques effectively compress model size, making their deployment on FPGAs more attainable, the accuracy can be hindered significantly. Reduced model accuracy is more prevalent especially if both hardware pruning and quantization techniques are combined [1], [15], [16], [17].
+
+There are five primary optimization approaches that can be taken when designing an FPGA-based accelerator, with each optimization direction containing specific techniques. Figure 1 highlights 5 main avenues for optimization directions and corresponding techniques that can be applied for each. It is worth noting that techniques across multiple optimization directions can, and should, be applied for a given system.
+
+These optimization techniques are not mutually exclusive, as they improve a very specific aspect of the system. When designing an FPGA-based accelerator, ideally, the system should achieve balanced performance metrics. By incorporating optimization techniques across all 5 avenues, this becomes more feasible. Below is an explanation for each optimization direction, highlighting the importance of each:
+
+1. Quantization & Compression: Deep Learning models (especially for video & image processing) can be very large in terms of storage requirements. Given the limited availability of FPGA resources, it is optimal to compress the size of the deployed model [2], [5]. 2. Memory Optimization: FPGAs are comprised of two main types of memory, on-chip and off-chip memory. On-chip memory is embedded directly within the FPGAs fabric, where the deployed accelerator architecture also resides. On-chip memory utilization results in lower latency for data retrieval and lower power consumption but is more limited in capacity. While available off-chip memory is more abundant, its
+
+FIGURE 1. FPGA CNN accelerator optimization directions & corresponding techniques.
+
+utilization results in lower performance metrics. Therefore, off-chip memory access should be avoided [2], [7], [16], [18]. 3. Reconfigurability: A main advantage for FPGAs is the ability to reconfigure hardware in the PL in real time. This can allow the system to adjust to dynamic workloads on the fly, resulting in a more efficient system [2], [5], [9], [19], [20]. 4. Energy Efficiency: For edge computing applications, low power consumption is vital. Ensuring that the system is performing high, while consuming minimal power is ideal [2], [5], [15], [21]. 5. Throughput & Parallelism: Throughput is the performance metric that signifies how computationally well the system performs. It is typically measured in Operations Performed per Second (OPS), or Frames Processed per Second (FPS) for video/image processing applications. By having high hardware parallelism (accelerated computing), you get higher throughput [16], [17], [22], [23]. Many studies have aimed at low-cost FPGA-based solutions for real-time object detection applications in edge computing environments. However, each approach has respective tradeoffs that hinder its overall performance.
+
+Hale [7] propose a dynamically partial reconfigurable CNN accelerator, designed specifically for low-power edge computing devices. For the design, they emphasized optimization of modularity and flexibility of the system. The proposed accelerator is composed of two distinct components, the PL and Processing System (PS). The PL is not entirely reconfigurable, rather the logic circuitry is divided into static and dynamic regions. This partially reconfigurable approach has the benefit of being tailored for a very spe-
+
+cific task. The system can be leveraged to achieve high performance with minimal power consumption. However, this design relied heavily on off-chip memory which hindered the system’s ability to attain high throughput.
+
+Shi et al. [8] introduce configuration layer sequence optimization to minimize configuration time overhead, while also implementing accelerator templates for dynamic regions to create a unified high-speed interface. This not only improves the overall performance of the system but also resolves the hardware resource constraints pertaining to traditional accelerator designs. This design emphasized high on-chip memory utilization, minimizing off-chip memory access. Such an approach has the potential to reduce latency, which directly promotes higher throughput. However, their results show that they attained high latency with a power consumption over 5W. This was likely due to the large size of the deployed YOLO model. Given that on-chip memory access is very limited on low-cost platforms, the deployed model needs to be minimal in size.
+
+Amin et al. [15] propose a new, highly efficient FPGAbased real-time object detection and classification system using YOLOv3 Tiny for edge computing devices. This has been applied to advanced driving assistance systems for people who have visual, auditory, cognitive, or physical declines. Traffic light colors are detected with high accuracy in realtime, which could potentially trigger mechanisms in a vehicle to respond accordingly. The deployment for this design was simplified by using the highly effective Vitis AI, which allows easy deployment and compilation to the FPGA. However, few novel contributions were made and the system consumed 5W of power during testing.
+
+Zhang et al. [16] optimize a CNN-based object detection model to efficiently map the network by leveraging an FPGA.
+
+They developed a hardware architecture in which various convolutions use a uniform module; this approach promotes low-latency and high memory bandwidth utilization rate. To optimize a YOLOv2 model, quantization, layer fusion, and the uniform implementation of various convolutions in the model were performed. The hardware model they designed configures the routers to perform calculations in different processing blocks on the FPGA. While this system achieved a very high throughput at 111.5 giga operations performed per second, the power consumption was almost 6W. This reduces the efficiency of the system drastically. Another major drawback to this design is the low accuracy it achieved.
+
+Garduño et al. [21] propose an optimized U-Net model for segmentation applied to the Corsian fire database for wildfire detection using drones. Pruning and quantization techniques were applied to the model to reduce the number of parameters by 90%. Additionally, this technique promotes an energy-efficient design, making the most use of available hardware resources without consuming high power. A major drawback to this design is that the accuracy was hindered by heavy pruning in addition to the quantization. By developing optimized pruning and quantization algorithms, the model can be reduced in size while achieving higher accuracy.
+
+Kim et al. [24] propose an optimized CNN accelerator based on the RTL. This approach achieved faster programming speed by applying low-power techniques on the FPGA. Their RTL optimization included techniques such as clock gating to eliminate residual signals, which in turn deactivates unnecessary active blocks. This reduces energy consumption by selectively deactivating inactive blocks in the hardware, directly enabling power-sensitive applications for edge computing. This design achieved remarkably low power and adequate throughput. The major drawback was the high latency. If latency was reduced, the throughput would be even higher than was recorded during testing.
+
+Irmak et al. [20] propose an energy-efficient Dynamic Partial Reconfigurable (DPR) accelerator while maintaining throughput performance. Reconfigurable designs have the advantage of optimizing resource utilization in real time. This has the potential to improve performance and minimize power consumption. Optimizations to balance resource usage and performance were considered along with the ability to implement different NN models on the same FPGA. The ability to deploy multiple NN models on the same device showcases this design’s robustness. However, this system lacked throughput achieved, especially when compared to similar systems [8], [16], [24]. This is because DPR designs do not prioritize throughput, rather efficient resource utilization and low power.
+
+While each of these low-cost systems demonstrate impressive performance for real-time edge computing applications, Table 1 reveals recurring trade-offs amongst metrics in each category. While some designs achieved high throughput (either measured in FPS or GOPs), they struggled in power consumption compared to other systems [8], [16], [21]. This directly affects the efficiency of the system which relates
+
+computational throughput to power consumed by the system. Conversely, systems that attained low power consumption saw lower throughput [7], [15], [20]. These limitations found in low-cost hardware pose significant challenges for edge computing platforms that operate under limited memory and power constraints. Our proposed methodology is designed to address these tradeoffs by combining hardware and software optimization techniques. The result will be a well-balanced system that performs well in both hardware and software domains.
+
+The low-cost systems portrayed in Table 1 will be used as a baseline to compare the performance of our proposed work. Section III-B will provide a more detailed comparison between each of these works, as well as how our work improved upon these systems. The model compression techniques applied and CNN architecture will be compared to ours for a fair comparison given that these components directly affect potential system performance. By targeting the gaps highlighted amongst these low-cost designs, our work aims to deliver a more balanced system that is tailored for resource-constrained edge computing environments.
+
+III. PROPOSED TECHNOLOGY The proposed solution is to design an accelerator utilizing a low-cost Xilinx Kria KV260 FPGA that can achieve high throughput, low power consumption, and high accuracy. Such a system is ideal for real-time computing applications where available resources are constrained. Given that the target device is low-cost, meticulous design choices are necessary due to the limited hardware resources available on the platform.
+
+Our design optimizes a custom YOLOv3-Tiny architecture for object detection and classification. Novel hardware pruning and quantization algorithms will be designed to compress model size while maintaining accuracy. The hardware design will utilize exclusively on-chip memory including BRAM and URAM. This will significantly improve the performance of the system due to lower latency, lower power consumption, higher throughput, and reduced overhead. Off-chip memory (DDR4) has significantly higher latency than on-chip memory, which has the potential for bottlenecks in real-time applications.
+
+Given that on-chip memory is embedded directly within FPGA fabric, the need to fetch stored information from off-chip sources is eliminated, improving speed. BRAM offers faster access times and is more energy efficient in comparison to URAM. However, available BRAM on the target device is minimal. Therefore, early YOLO layers responsible for feature extraction which require low latency will be stored in the BRAM. Deeper layers of the YOLO model, which require high capacity, will be allocated to URAM. A preconfigured Xilinx Deep Learning Processing Unit (DPU) optimized for the target platform’s processor will be utilized to perform layer operations in parallel, accelerating computations of the YOLOv3-Tiny model.
+
+**TABLE 1.** Summary of key performance metrics for each low-cost design.
+
+A custom memory mapping controller responsible for layer mapping in on-chip memory, dataflow optimization, and overflow scenarios will be designed. With these optimizations to the hardware design, the system will have high computational abilities on par with those of GPUs, but with much lower power consumption and latency at a reduced cost.
+
+**Figure 2** portrays the workflow for the proposed design. After training the YOLOv3-Tiny model, it will be converted to TensorFlow format before the hardware pruning and quantization for model compression. The DPU configuration and hardware design will be performed using Vivado to subsequently generate the required bitstream and hardware handoff files for deployment onto the FPGA. Vitis AI will be utilized to deploy the compiled YOLO model using Vitis AI Runtime (VART). The designed hardware’s bitstream and hardware handoff files will be booted to the FPGA using a flashed SD card. After deployment, inference tests will be performed using images and 60 FPS videos for system evaluation including accuracy, power consumption, throughput, efficiency, and resource utilization.
+
+While studies have integrated hardware pruning and quantization algorithms independently [8], [15], [21], [25], [26] due to accuracy loss concerns, the proposed approach integrates both by optimizing each algorithm to reduce accuracy loss. Additionally, exclusive on-chip memory utilization was explored in [25], however, this study utilized a high-cost FPGA with much more available on-chip memory. The proposed solution is optimized for low-cost platforms, ensuring balanced and effective performance metrics during run-time.
+
+A. ITERATIVE STRUCTURED HARDWARE PRUNING ALGORITHM Hardware pruning is an excellent way to reduce model size and optimize it for constrained devices including FPGAs.
+
+Pruning can reduce power consumption and promote faster inference by removing redundant weights in the model. While such a technique has many benefits, if not carefully designed or configured, the model can lose critical data that was learned during training, resulting in poor accuracy after deployment.
+
+The proposed solution to address this issue is to develop an iterative structured hardware pruning algorithm that fine-tunes the model as weights are removed. Such a technique ensures that as data is removed from the model, accuracy will be retained. Additionally, the algorithm aligns the YOLO model with the DPU utilized in this study by grouping filters in sets of 8 within the model, ensuring the final number of filters per layer will be a multiple of 8. This novel contribution encourages higher hardware parallelism during model inference, improving throughput. Such a grouping strategy differs individual filter inspection which is typical for traditional pruning algorithms. Given that the DPU architecture employed in this study performs MAC operations in multiples of 8, enforcing this alignment within the YOLO model results in a more computationally efficient system.
+
+Structured hardware pruning is preferred over unstructured for FPGA deployment given its hardware-friendly nature including higher hardware efficiency. Sui et al. [27] introduced a novel, hardware-friendly, pruning algorithm that prunes convolutional kernels on a row scale. Their algorithm is structured as entire rows in the convolution kernels are pruned at a time rather than individual filters. Following the pruning, the model is re-trained a single time to account for the weight lost during pruning. In contrast, the proposed algorithm in this paper is iterative as well as structured, meaning that rather than removing a certain percentage of weights at once, the algorithm will remove a small percentage of weights in several iterations. This allows the model to slowly adapt to the changes undergone, retaining high accuracy.
+
+FIGURE 2. Workflow of proposed design.
+
+After each iteration, the algorithm will fine-tune the model over multiple epochs to retain accuracy. This process continues until the pruning target is reached. Additionally, each layer of the model is pruned at a different rate depending on the importance of weights in the given layer. Other studies applied a static pruning rate across all layers [8], [25], [26]. This has the potential for significant accuracy loss and limits the overall pruning rate the model can undergo.
+
+A critical component of the proposed algorithm is to determine how important a filter is by summing up the absolute value of its weight. The filters with the lowest values will then be pruned by the algorithm. Equation (1.1) portrays how the importance of each filter is calculated. This equation is based on the standard L1-norm filter importance measure used for structured pruning, shown in [28]. The remaining equations in this section mathematically represent the novel formulation of the proposed algorithm including grouped filter selection, layer-dependent pruning scale, and mask declaration.
+
+In Equation (1.1), Ij represents the importance value. Wi,m,k, j represents the weight at spatial location (i,m), and input/output channels k and j respectively. The height and width of the filter are denoted as h and w respectively. The total number of input channels is denoted by c. This important value will be calculated for every filter within each layer of the neural network:
+
+Ij =
+
+h X
+
+i=1
+
+w X
+
+m=1
+
+c X
+
+k=1
+
+Wi,m,k,j
+
+After calculating the importance value for each filter in a layer, the algorithm groups filters based on the order of computation in each layer. After grouping, the algorithm then determines which filters to prune within the group. This
+
+determination is based on the lowest values in each group. Equation (1.2) portrays the calculation that determines how many filters within the group to prune. This number will be pre-determined before the algorithm begins as it’s based on the specified pruning rate per iteration and the group size. Np signifies the number of filters per group to be pruned, Pr is the pruning rate per iteration, and G is the group size:
+
+Np = Pr × |G|
+
+Another feature of this algorithm is that the base pruning rate, Pr, is adjusted based on the layer of the CNN. Given that early layers of the CNN are used for feature extraction, these filters should be pruned less than deeper layers. It is in the deeper layers of the CNN where more redundant, or less needed, filters and weights are prevalent. To account for this, the pruning rate is scaled depending on the current layer. This means earlier layers of the CNN will have less filters pruned in comparison to deeper layers. Equation (1.3) portrays this scaling process. Here, l depicts the current layer of the network and L represents the total number of convolutional layers:
+
+Pl
+
+r = Pr ×
+
+
+
+0.5 + 0.5 × l L −1
+
+
+
+After the number of filters to prune based on the given layer are identified, the filters with the lowest importance values within these groups are selected and have the pruning mask applied. Equation (1.4) demonstrates how the smallest values in each group are selected for pruning. The number of filters selected depends on the previously calculated Np value:
+
+arg min
+
+jεG Ij, forj = 1, . . . , Np
+
+Equation (1.5) determines whether a filter is kept or pruned. The pruning process utilizes a binary mask, a value of 1 indicates that a filter will be kept and a value of 0 indicates that pruning will be applied to that filter:
+
+Mj =
+
+(
+
+1, if filter j not pruned 0, if filter j is pruned
+
+If a weight is pruned, the filter is set to a very small random value rather than absolute zero. This will help as the model is fine-tuned after each iteration, preserving accuracy. Equation (1.6) portrays this process. Here, Wi,m,k,j represents the original weight value and W’
+
+i,m, k,j represents the value of the weight after it was pruned. If a weight was not pruned it will remain the same, but if a weight was pruned it will be set to a small random value. To achieve this, minimal random gaussian noise is added to the weight. This random gaussian noise is denoted by N(0, σ 2 ):
+
+W′
+
+i,m,k,j=MjWi,m,k,j+(1−Mj) × N(0,σ 2)
+
+This structured iterative pruning process fine-tunes the model after weights are removed until the target pruning rate is reached. It is important to note that the more aggressive you prune the model, the more likely that critical weights will be removed, significantly reducing accuracy. Equation (1.7) portrays how the pruning ratio for each iteration is determined. Here, r portrays the pruning ratio on the current iteration, Nprune_filter represents the number of filters that were pruned in the current iteration, and Ntotal_filter represents the total number of filters in the network. This iterative pruning process stops when r is greater than or equal to the specified target pruning rate, denoted by rtarget. Equation (1.8) signifies when the iterative pruning should end:
+
+r =Nprunefilter
+
+Ntotalfilter
+
+If
+
+(
+
+r ≥rtarget, Pruning Stops r < rtarget, Continue to Next Iteration
+
+B. QUANTIZATION-AWARE TRAINING (QAT) ALGORITHM Quantizing the weights within deep learning models from floating-point to 8-bit integer values is standard practice when deploying hardware-constrained devices, including FPGAs. Quantization promotes hardware efficiency by reducing power consumption and improving computation speed. However, static quantization algorithms pose the risk of reduced accuracy due to the oversimplification of the weights formed during model training. This was evident in many studies reviewed in Section II [8], [20], [21].
+
+The risk for accuracy loss is particularly amplified if hardware pruning is also applied to the model. This is because both techniques alter the model’s original structure developed during initial training. QAT is an approach that mitigates accuracy loss by fine-tuning the model as quantization effects are simulated. When the training is completed, the weights are converted to 8-bit integer values. This allows the model
+
+to adjust to quantization effects, promoting retained accuracy while still compressing model size and promoting efficient hardware usage.
+
+Previously proposed QAT algorithms do not include mechanisms for adaptively updating the scaling factor and the clipping threshold during fine-tuning [29], [30]. The clipping threshold is responsible for identifying outliers in each layer’s weights, which is then utilized for determining the best scaling factor that will minimize the loss during fine-tuning. By excluding (clipping) outliers in the INT8 mapping process, the quantized model will be more robust with potential for improved accuracy.
+
+The proposed QAT algorithm will determine the optimal scale factor for converting 32-bit floating-point weights to 8-bit integer values, simulate INT8 quantization during finetuning, and perform real quantization after fine-tuning and scale factor determination. The 8-bit integer weight values need to be within the range of -128 to 127, therefore, the scaling factor will be needed to adequately represent the converted weights. The scale factor will be dynamically determined for the weights in each layer of the network as the model is fine-tuned and quantization effects are simulated. This is a novel contribution of the proposed algorithm. Given that the scaling factor changes dynamically as quantization effects are simulated based on the loss observed during finetuning, the final quantized model will be more robust with retained accuracy.
+
+The scaling factor depends on a clipping value that is determined for every layer during each iteration of fine-tuning. The algorithm will test different clipping values and select the value that results in the least amount of information lost in the weights. Clipping is a crucial aspect of any quantization algorithm, as it ensures that the values of weights can fit into a representable INT8 range. Equation (2.1) portrays the determination of the clipping values that will be tested on weights in every layer of the network. Percentile clipping has been utilized in previous studies [29], but in this case, we adapted it to operate dynamically per model layer. The remaining equations in this section encapsulate our novel QAT process including simulated quantization, gradient-based scaling factor updates, and final INT8 weight declaration.
+
+In Equation (2.1), T represents the clipping value, w represents the stored weights in a single layer, and p represents the percentage of clipping. A higher percentage value indicates lower clipping values, whereas a higher percentage value indicates more aggressive clipping. The reason for using the percentile of the weights rather than the min or max is if an outlier weight value is present:
+
+T = percentile(|w| , p)
+
+Once the clipping value is determined, the scaling factor can be calculated. Equation (2.2) indicates how the scaling factor is determined based on T, the clipping value, and the largest INT8 value that weights can take on:
+
+S = T
+
+Using the computed scaling factor for each layer, quantization effects can be simulated in the forward pass to allow the model to be exposed to quantized versions of weights as its fine-tuned. Equation (2.3) portrays the quantized version of each weight in a layer that will be used in the forward pass. Here, wq is the quantized version of a single weight, w is the original 32-bit floating-point weight (FP32), and S is the scaling factor. This quantized weight is then rounded to a whole number as seen in Equation (2.4). After rounding, the quantized weight is clipped to fit within the required -128 to 127 range, required for INT8 quantization. This process is shown in Equation (2.5). Lastly, Equation (2.6) shows the quantized weight being scaled back to FP32 by multiplying the scaling factor again. This ensures that in the forward pass during fine-tuning that the model is trained using simulated quantization effects, but the original FP32 weights are kept during backpropagation:
+
+wq = w
+
+S
+
+wq = round(wq)
+
+wq = clip
+
+ 
+
+wq, −128, 127
+
+
+
+wq = wq×S
+
+After obtaining the quantized version of the weights from Equation (2.6), convolution using these weights can be performed in the forward pass using Equation (2.7) below. Here, y is the output of the convolution, x is the input feature map, wq is the quantized weight, and b is an unquantized bias value:
+
+y = Conv2D(x,wq, b)
+
+A cross-entropy loss function is applied to allow the model to compensate against the quantized weights. This will allow the model to learn to reduce the computed loss by adjusting the scaling factor on the next iteration of fine tuning, making it more efficient using the quantized weight values. The application of the cross-entropy loss function is given in Equation (2.8). The equation calculates the loss for all classes the model is trained on, denoted by L. The total number of classes is shown by N, yi is the ground truth label for class i, and ˆyi is the predicted probability:
+
+L = −
+
+N X
+
+i=1
+
+yi log (ˆyi)
+
+As the algorithm fine-tunes the model during fake quantization, the scaling factor is updated during backpropagation. This allows the model to adapt to the introduction of quantized weights, resulting in a more accurate model. Equation (2.9) demonstrates this process by utilizing gradient descent. A partial derivative is taken of the loss with respect to the current scaling factor, indicating the gradient. This represents how much loss exists based on the current scaling factor. The scaling factor is then adjusted promptly if the loss is very high. In the equation, L represents the loss calculated from Equation (2.8), S represents the scaling factor for a given
+
+layer in the model, and n is the learning rate:
+
+S ←S −n×∂L
+
+∂S
+
+After fine-tuning is completed and optimal scaling factors for the weights are determined, final quantization is performed. These 8-bit integer weights depend on the FP32 weights learned during fine-tuning and backpropagation, w, and the final learned scaling rate, S. Equation (2.10) portrays the final interpretation and transformation of the FP32 weights within the model:
+
+wINT8 = round
+
+w
+
+S
+
+
+
+C. CUSTOM RTL MEMORY MAPPING CONTROLLER The DPUCZDX8G is a pre-configured DPU that has been optimized for the Zynq UltraScale+ MPSoC processor. When mapped, the DPU is embedded within the PL and is responsible for accelerating AI workloads. While very efficient by default for the target FPGA platform, optimizing the memory mapping strategy will improve performance significantly.
+
+To deploy the DPU on FPGA fabric, the Vitis AI compiler is required which automatically assigns layers of the AI model to different regions of memory based on availability. This automatic memory assignment can include off-chip memory (DDR) which will result in higher latency and power consumption.
+
+If for instance, the Vitis AI compiler maps a large capacity component of the model to on-chip memory, only part may be deployed while the rest is overflowed into off-chip memory. This automatic memory assignment cannot be disabled in the Vitis AI compiler settings, which can result in an inefficient use of hardware resources. To address this limitation, the proposed memory mapping controller explicitly manages where each layer resides in memory, effectively overriding this default behavior.
+
+By bypassing this automatic memory assignment and optimizing the DPU’s memory mapping with custom RTL hardware, the design can exclusively utilize On-Chip memory (BRAM and URAM). Additionally, with our approach, specific layers of the YOLO model can be assigned to the type of on-chip memory that will be most optimal. Early convolutional layers of the YOLO model responsible for feature extraction require low latency for efficient operation. Deeper convolutional layers, including the output layers, require more storage due to their increased complexity and higher number of filters.
+
+Given that available URAM is much higher than that of BRAM, the deeper layers of the model will be assigned to URAM. Table 2 below details the memory mapping plan to optimize dataflow efficiency which reduces latency and power consumption while improving throughput.
+
+The custom memory mapping controller will not only map specific layers of the YOLO model to the specified memory region during deployment but will also adjust memory
+
+**TABLE 2.** Memory allocation overview.
+
+allocation during inference based on availability and data size. Additionally, the controller will offer two separate AXI buses for data fetching and data routing, as well as dedicated buses for BRAM and URAM access. This enables parallel memory access and limits the chance of bottlenecks or overflow on a single data transaction.
+
+In the event of data overflow, data will be stored in offchip memory. While the model will be compressed enough to entirely fit in on-chip memory, the activation maps and buffers could become very large during inference, overflowing available BRAM and URAM capacity. In this case the data will temporarily be stored in DDR memory until adequate storage is available in the on-chip memory. While this behavior resembles a cache, the controller does not implement caching policies or hierarchical memory mechanisms. The DDR functions solely as a temporary overflow buffer that stores data only until sufficient BRAM or URAM becomes available.
+
+The proposed controller will also offer burst transfers which occur when the fetched data is larger than the width of an AXI bus (128 bits). Rather than send this data over multiple AXI transactions, the burst transfer splits the large data block into multiple 128-bit bursts, allowing it to be sent on the same AXI transaction to sequential available memory addresses. This is very beneficial as it improves memory bandwidth, reduces overhead, and limits pipeline stalls. The memory mapping controller will be implemented using Verilog and consists of various components. Table 3 details each of these components. Overall, this custom RTL-based controller ensures efficient memory allocation and data transfer which improves throughput.
+
+This proposed controller, integrated with the DPU for parallel computing, offers numerous advantages over the default configuration. Advantages include efficient dataflow, improved throughput, lower power consumption, reduced latency, and minimized potential for bottlenecks during operation. With this design, the hardware will perform efficiently and is robust.
+
+IV. IMPLEMENTATION In this section, the implementation of the proposed solution is discussed. The dataset utilized for this paper, the archi-
+
+tecture and training of the utilized YOLOv3-Tiny model, the proposed hardware pruning and quantization algorithms, the hardware design including the integration of the novel memory controller, and the deployment of hardware and software components are described and elaborated. The design methodology and considerations are described in detail.
+
+A. DATASET To train our model, the PASCAL VOC2012 dataset was utilized which contains over 11,000 images ranging from 20 different classes. Given that this dataset will be used to train a YOLO model, the data needs to be structured in YOLO format within the darknet framework. The bounding box annotations for each image are initially stored in separate XML files containing critical bounding box information such as the x and y pixel coordinates for each corner of the bounding box in the image.
+
+When training a YOLO model, the bounding box annotations for each image need to be normalized between a 0- and 1-pixel value relative to the image size. This ensures annotation data will be consistent regardless of initial image size. Bounding box labels in YOLO format consist of 5 different entries in a single row for one object. If there are multiple labeled objects in a single image, the next object’s labeled bounding box information will be stored on the very next line. This format is clearly structured in a concise format for training. Additionally, YOLO training in the darknet framework expects text files for annotation data; therefore, in addition to normalizing and structuring bounding box values, the XML files need to be converted to text files.
+
+Each class in the PASCAL VOC2012 dataset is assigned to a class id; this is shown in the first column of the converted YOLO label. The following entries in the row contain the normalized pixel values of the bounding box. Below, the 20 object classes in the dataset are listed, obtained from the official PASCAL VOC2012 development kit [31]:
+
+• Person
+
+• Bird, Cat, Cow, Dog, Horse, Sheep
+
+• Airplane, Bicycle, Boat, Bus, Car, Motorbike, Train
+
+• Bottle, Chair, Dining Table, Potted Plant, Sofa, TV/Monitor
+
+**TABLE 3.** Components & functionality of custom memory controller.
+
+The PASCAL VOC2012 dataset was chosen for this study given that it provides a diverse set of objects typically encountered in both indoor and outdoor environments. Out of the 11,540 images in the dataset, 70% were allocated to the training set containing 8,078 images. For the validation set, 10% of the set (1,154 images) was used. The validation set was used to determine loss during training. Lastly, the testing set to determine the model’s accuracy was allocated the remaining 20% with 2,308 images. The testing set was utilized after pruning and quantization techniques were applied.
+
+B. YOLOv3-TINY ARCHITECTURE & TRAINING The YOLO architecture selected for this study was a custom YOLOv3-Tiny model given its lightweight nature while maintaining performance. In comparison to a full YOLOv3 model, the tiny version has fewer hidden layers and interconnections between layers and filters [32]. This makes the tiny model more applicable for the target FPGA platform given the reduced complexity and computational requirements of the neural network.
+
+The proposed YOLOv3-Tiny architecture modifies the default model structure by reducing hidden layers from the initial 21 to 19 and reducing the number of output filters to accommodate the utilized dataset. Reducing the number of hidden layers in the architecture not only reduces model complexity but also reduces the potential for overfitting during training [32]. Overfitting refers to the model memorizing input data during training which reduces the accuracy of the model when it is tested on unseen data [32].
+
+The number of output filters was modified to 75 given that the VOC2012 dataset contains 20 classes. The Leaky ReLU activation function was used for each convolutional layer, besides the YOLO heads, to improve feature extraction
+
+and accuracy. The YOLO heads are the model’s output layers and use a linear activation function because the produced bounding box prediction needs unbounded values which the linear activation function allows. The reason behind having two different output layers is due to the varying size of the detected objects in the dataset. One output layer has a feature map of 13×13×75, which is better for larger objects that the model is trained on. The other output layer has a feature map of 26 × 26×75, which is better for smaller objects.
+
+The custom YOLOv3-Tiny model uses 3×3 convolutional layers with an input image size of 416 × 416. To maintain the same dimension throughout the layers, a padding size of 1 was used to ensure consistency. To reduce training time and maximize efficiency, the pre-trained weights from the darknet framework were used for fine-tuning. The VOC2012 dataset, along with the specified model customizations, was used in conjunction with the pre-trained weights to finetune the model based on the classes present in the dataset. This approach was taken because rather than designing the architecture from scratch, the training process was simplified and minimized the loss during training. Table 4 below portrays the custom YOLOv3-Tiny architecture utilized in this study. Upon obtaining the pre-trained YOLOv3-Tiny weights and corresponding source files, the specified changes evident in Table 4 were made to the configuration file. This file allows modifications to the model’s architecture and training metrics. As mentioned, given that the dataset utilized contains 20 classes, the number of filters in the output needs to be 75 which was determined using Equation (3). This calculation follows the standard YOLO output-layer declaration defined in the official Darknet implementation:
+
+Output Filters = 3 × (5 + # of Classes)
+
+**TABLE 4.** Custom YOLOv3-Tiny architecture.
+
+Both training and validation loss were tracked during the training process. It is critical that as the model trains both the training and validation loss decreases. The purpose of tracking the validation loss is to observe whether the model overfits or underfits as the model trains. The validation loss indicates how well the model handles unseen data as it trains, whereas the training loss indicates how well the model learns from the training dataset. The model was trained for 25 epochs to ensure the model adequately learns from the dataset utilized in this study. The training and validation loss over 25 epochs
+
+is shown in Figure 3. It is evident that at around the tenth epoch, both the training and validation loss start to converge. From this point, both losses continue to decline until training ends.
+
+C. CONVERSION TO TENSORFLOW FORMAT & HARDWARE PRUNING To apply the hardware pruning algorithm on the trained YOLO model, the model first needs to be converted to Tensor- Flow format. This is because the algorithm utilizes numerous
+
+FIGURE 3. Training & validation loss over 25 epochs of training.
+
+built-in TensorFlow APIs that easily allow the retrieval of weights in each layer and update the weights as the pruning progresses. To convert the model originally trained on the darknet framework to TensorFlow format, the weights in the darknet model need to be reshaped to adequately represent a TensorFlow model. After training the YOLO model in the darknet framework, a weights file is created. These produced weights along with the configuration file detailing the architecture of the CNN are needed when converting the model to a different format. Algorithm 1 below demonstrates the process to convert the trained YOLO model from darknet to TensorFlow format. This process produced a single.h5 file that represents the trained model in TensorFlow format.
+
+After converting the model, the iterative hardware pruning algorithm can be applied. The algorithm requires specifying a target pruning rate which details the degree of pruning the model will undergo. Given that the algorithm was designed to preserve accuracy by fine-tuning after each pruning iteration and only pruning the least important filters, more aggressive pruning can be applied. This is beneficial because it will compress the model size more significantly.
+
+The proposed algorithm prunes grouped filters in each convolutional layer iteratively rather than pruning all filters at once. This is an improvement to typical hardware pruning algorithms as this approach allows the model to adapt to removed filters slowly, retaining accuracy. After each pruning iteration, the model is fine-tuned to allow the model to adapt to the removed filters. The fine-tuning dataset used was 6,000 images selected from the initial training set. The algorithm requires you to select what percentage of filters in each group should be pruned during each iteration.
+
+It’s important to note that if a high pruning rate per iteration is selected, the chance of over-pruning the model is increased which can reduce accuracy. For this reason, a pruning rate of
+
+5% per iteration was selected with a target pruning rate of 70%. This means that per iteration, 5% of the least important filters within the convolutional layers are pruned and will continue to reiterate until 70% of the least important filters are pruned. By taking this gradual approach, the model can adapt slowly to the newly structured model by fine-tuning after each iteration.
+
+**Figure 4** portrays the primary flow of events for this algorithm. The process begins by loading the converted YOLO model along with the dataset selected for fine-tuning. Each convolutional layer within the model is placed within a list to keep track of the filters that will be pruned. The algorithm only considers filters associated with convolutional layers given that these layers are responsible for the most computationally expensive calculations performed during inference. The total number of filters within each of the convolutional layers is determined before proceeding to the main component of the algorithm.
+
+The algorithm starts with the first iteration, considering the selected pruning step per iteration along with the target pruning ratio. Here, the kernel weights are computed for every convolutional layer in the model along with the importance value for each filter. Filters in each layer are grouped into groups of 8 before determining the number of filters to be pruned for the current iteration. This number is determined by the selected pruning rate. The least important filters are sorted and pruned to the assigned pruning rate before applying the pruning mask. The pruning mask assigns a 0 or 1 to a filter, signifying whether the filter was pruned or not. A 1 corresponds to no change, whereas a 0 signifies the filter was pruned.
+
+When this process finishes, the model is fine-tuned on the newly structured model for several epochs. Before initiating the algorithm, the number of epochs for fine-tuning
+
+Algorithm 1 TensorFlow Conversion Input: weights_file, config_file Output: tensorflow_model
+
+procedure CONVERT_DARKNET_TO_TENSORFLOW(weights_file, config_file, output_file)
+
+model = CREATE_TENSORFLOW_MODEL(config_file) weights = LOAD_WEIGHTS(weights_file) for each layer in model do
+
+assign weights and biases from Darknet to TensorFlow layer end for SAVE_MODEL(model, output_file) end procedure
+
+per iteration needs to be defined. 10 epochs of fine-tuning were selected to ensure the model can adequately adapt to the filters lost during pruning. This entire process continues until the target pruning ratio is reached where the pruned model is saved and a log of the final pruning ratio is printed. Additionally, the pruning masks in convolutional layers are saved in a JSON file for observation.
+
+After the iterative pruning reached its target, the model fine-tuned one last time over 10 epochs and was saved in its final pruned form. The final loss when the algorithm terminated was very low, indicating the model adapted well to filters being removed. After the pruning was completed, the final pruning ratio was displayed, which matches the pre-defined value of 0.7.
+
+The generated JSON file simply provides additional insights as to how the filters within the model were altered. For every convolutional layer in the model, filters are listed as either a 0 or 1 indicating if the filter was pruned during the operation of the algorithm based on the filters’ importance values. For the first convolutional layer, the JSON file showed that out of the original 16 filters, only 2 were pruned. This was expected given that early layers in the model contain fewer filters and are responsible for initial feature extraction. Deeper layers have more filters and will therefore contain more filters deemed to be unimportant.
+
+D. QUANTIZATION TO INT8 After pruning the model, the QAT algorithm was applied. The purpose of quantization is to further compress the model’s size by converting the weights from 32-bit floating point values to 8-bit integers. This further ensures the model will be appropriately sized with reduced computational requirements when deployed on the resource-constrained FPGA. The proposed quantization algorithm simulates fake-quantized weights as the model is fine-tuned before selecting the most stabilized scaling factor. When this scaling factor is selected, the algorithm uses this value to apply real quantization. This algorithm improves other QAT algorithms as it simulates quantized weights iteratively and fine-tunes the model during this process to select the best scaling factor for INT8 mapping. This preserves accuracy when the real quantized weights are applied.
+
+The algorithm begins by loading the pruned TensorFlow model and computing the initial scaling factor. This scaling factor will adapt as the algorithm progresses when the fake quantization effects are simulated and the model fine-tunes. The purpose of the scaling factor is to ensure weights are properly mapped in the required range for the INT8 conversion, which is [-128,127]. The best scaling factor will be selected when the real quantization is applied, minimizing accuracy loss.
+
+Every layer in the model will have its initial scales computed, and the best percentile threshold in each layer of the model will be selected for the first pass through the model. We selected potential threshold values of the 90th, 95th, or 99th percentiles. The algorithm determines which scale factor is best based on the error between the original FP32 weights and the INT8 quantized weights. When the best scaling factors have been determined for each layer, the quantized weights are used in the forward pass during fine-tuning over several specified epochs. This effectively simulates quantization effects as the model fine-tunes, allowing the model to adapt to the newly introduced weights without making any final changes to the model.
+
+When this forward pass completes, the cross-entropy loss is determined to observe how well the model adapted to the quantized weights. This is a vital component of the algorithm as this loss is used with respect to the scaling factor per layer to calculate the gradients during backpropagation. The gradients are used to restore the initial FP32 weights the model had and to update the scaling factor based on the loss. This process repeats until the loss maintains a low value for 5 consecutive epochs at which the best learned scale factors for each layer are used for final quantization.
+
+Algorithm 2 below describes the proposed QAT, as well as stating the inputs and outputs for this process. The inputs consist of the pruned model in TensorFlow format and required criteria for the algorithm including the calibration dataset for fine-tuning (with labels), the number of epochs for finetuning, and the learning rate. The output is the quantized model in ONNX format based on the best scaling factor selected for each layer of the model. The dataset for this fine-tuning does not need to be large given that the purpose for fine-tuning is to allow the model to adhere to quantization effects only. Therefore, a small subset of the original dataset
+
+FIGURE 4. Flowchart of iterative structured hardware pruning algorithm.
+
+was selected for fine-tuning (600 images and corresponding labels).
+
+A low learning rate of 1 × 10−4 was selected to allow the model to gradually adapt to quantization effects. When the final quantization occurs, the model is then converted to ONNX format. The reason for this is because the Vitis AI compiler, which will be used for deployment on the FPGA, requires the model to be in this format. This process simply utilizes the ‘tf2onnx’ Python library which makes this conversion simple.
+
+After the pruning and quantization, the newly converted YOLO model was only 2.54 MB. This is over 13.3× smaller than the initial model, offering a concise and accurate model ready for deployment on the target FPGA platform. Table 5 portrays the model’s size initially, after the hardware pruning was applied, and after the INT8 quantization was applied.
+
+E. HARDWARE DESIGN The proposed memory mapping controller assigns specific layers of the YOLO model to either BRAM or URAM based on complexity and reconfigures the mapping in real-time if data size becomes too large in a layer. During real-time inference, tensor sizes or intermediate buffers within the model may become very large and will need to be remapped appropriately. Given that available BRAM and URAM are limited, off-chip DDR memory is set as a fallback option in these instances. This ensures there are no data bottlenecks during operation, improving the efficiency of the system. Ideally, the system will utilize exclusively on-chip memory, but in the event of large tensor/buffer sizes, it will fall back to DDR when necessary. Before allocating a block of data to DDR, the controller checks the other on-chip memory source to see if it can be stored there. For example, if a block of data
+
+is supposed to be stored in BRAM based on its associated layer ID but the block will not fit in BRAM, the controller checks if it can fit in URAM. If the block also cannot fit in URAM, it will be temporarily allocated to DDR until on-chip storage becomes available. The reason for this is because the system prioritizes on-chip memory and will only fall back to DDR memory when necessary.
+
+The controller also supports burst transfers which allow a block of data to be sent in a single transaction, improving throughput and reducing latency time. To manage the memory assignment in real-time, a state machine was designed. This machine has the responsibility of either reading from or writing to memory. When the state machine is in either of these states, it stays in an idle state until an AXI signal is received, indicating a transaction is imminent. The goal is to minimize idle states as much as possible to maximize throughput and efficiency of the controller. The memory mapping controller was designed in Vivado and is based on the Verilog programming language.
+
+Algorithm 3 describes the mapping process based on the layer of the YOLO model and the handling of data overflow. Each of the 21 layers in the model is assigned an ID respectively and will receive a subsequent AXI address referencing BRAM, URAM, or DDR memory mapping. The controller is not restricted to the layers ID for memory assignment; it is merely a prioritization the controller attempts for the most efficient operation.
+
+The state machine is controlled by 3 main factors, the clock of the system, the reset signal which sets it back to an idle state, and the read or write AXI signals received. Its main purpose is to efficiently change the controllers’ state and manage AXI transactions for memory assignments. The transition between the read, write, and idle states is directly controlled by the state machine. Additionally, burst transfers
+
+Algorithm 2 Quantization Aware Training Algorithm Input: tensorflow_model, calibration_dataset, num_epochs, learning_rate Output: quantized_model.onnx
+
+procedure QUANTIZATION_AWARE_TRAINING(model, calibration_data, num_epochs, learning_rate)
+
+# Compute Initial Scale for each layer in model do
+
+thresholds = COMPUTE_PERCENTILE_THRESHOLDS(GET_WEIGHTS(layer), [90, 95, 99]) SET_SCALE(layer, SELECT_BEST_THRESHOLD(thresholds) / 127) end for # Training Loop for epoch = 1 to num_epochs do
+
+for each batch in calibration_data do
+
+inputs, labels = GET_BATCH(batch) for each layer in model do
+
+SET_WEIGHTS(layer, FAKE_QUANTIZE(GET_WEIGHTS(layer), GET_SCALE(layer)))
+
+end for loss = COMPUTE_LOSS(FORWARD_PASS(model, inputs), labels) BACKWARD_PASS(model, loss) for each layer in model do
+
+UPDATE_SCALE(layer, learning_rate) end for end for end for
+
+# Finalize Quantization for each layer in model do
+
+SET_WEIGHTS(layer, FINALIZE_QUANTIZATION(GET_WEIGHTS(layer), GET_SCALE(layer)))
+
+FREEZE_SCALE(layer) end for # Export to ONNX SET_MODEL_TO_EVAL_MODE(model)
+
+EXPORT_TO_ONNX(model, ‘‘quantized_model.onnx’’, input_shape = (1,3,416,416) ) end procedure
+
+**TABLE 5.** Model size before & after pruning + quantization.
+
+are properly handled by the state machine as they dictate whether the transaction will be a single transfer with one AXI address assigned, or multiple for a single transaction.
+
+The flow of events carried out by the state machine is shown in Figure 5. The state machine will remain in an idle state until an ‘axi_ready’ signal is received. This signal, along with the ‘axi_valid’ signal, essentially acts as a handshake
+
+between the master (memory controller) and the slave (AXI target), signifying a read or write transaction should be carried out. The ‘axi_valid’ signal is provided by the controller which ensures that both the data and corresponding address are valid. If verified, the controller transitions out of the idle state where an overflow and burst check are completed by the controller. If a data block cannot be written to BRAM or
+
+Algorithm 3 Layer Mapping Logic Input: layer_id, data_size, BRAM_available_space, URAM_available_space Output: axi_address
+
+if (layer_id >=1 && layer_id <= 10) then
+
+// Preferred: BRAM if (data_size <= BRAM_available_space) then
+
+axi_address = BRAM_BASE BRAM_available_space −= data_size else if (data_size <= URAM_available_space) then
+
+axi_address = URAM_BASE // Fallback to URAM URAM_available_space −= data_size else
+
+axi_address = DDR_BASE // Final fallback to DDR end if else if (layer_id >= 11 layer_id <= 21) then
+
+// Preferred: URAM if (data_size <= URAM_available_space) then
+
+axi_address = URAM_BASE URAM_available_space −= data_size else if (data_size <= BRAM_available_space) then
+
+axi_address = BRAM_BASE // Fallback to BRAM BRAM_available_space -= data_size else
+
+axi_address = DDR_BASE // Final fallback to DDR end if
+
+URAM, a DDR address is assigned. Whether a DDR address is issued or not, a burst check is still performed. The burst check is crucial because it ensures the block of data can be placed on the AXI bus given that the bus’s width is 128 bits. After the state machine transitions out of a read state in either single or burst mode, it returns to an idle state until an ‘axi_ready’ signal is received.
+
+Burst mode allows a large block of data to be sent, or read, using a single address. The burst mode is enabled when a block of data is larger than the AXI bus’s 128-bit width. This is a critical feature of the designed controller as it drastically reduces latency while improving throughput for large data transactions. When burst mode is enabled for a transaction, the large block of data is split into separate 16byte (128-bit) blocks, each with their own address. Only a single address is issued by the controller before the remaining blocks in the transaction automatically get mapped to available sequential addresses, improving efficiency and speed. Figure 6 demonstrates how burst mode transactions occur, assigning only a single memory address for the first block before the remaining blocks get automatically mapped by the AXI protocol. In this example, a 144-byte transaction is issued a burst transfer. The 144 bytes are split into 9 separate 16-byte blocks, where only the first block is issued a memory address by the controller. The remaining blocks automatically get assigned sequential addresses in memory and get transferred in the same transaction. The custom memory mapping controller consists of 7 inputs and 4 outputs and was added as
+
+an RTL block to the design, indicating that the block describes circuit behavior within the FPGA. The inputs include the layer associated with the received data for an appropriate mapping destination, the size of the data block, whether the controller received a read or write request, the data received from memory, as well as the handshake signal received from the target. Additionally, the controller is connected to the FPGA’s clock and includes a reset port which places the state machine back into the idle state. The outputs include the address issued by the AXI protocol, the data to be written to memory, the handshake signal from the controller to the target, and the burst mode signal. The designed controller is shown in Figure 7.
+
+The block design includes the Kria KV260’s Zynq UltraScale+ MPSoC processor and the pre-configured DPU which enables parallel processing. Vivado provides an IP BRAM block and allows off-chip DDR memory access using the processors High Performance (HP) ports. Although embedded within FPGA fabric are URAM memory slices, Vivado does not provide an IP block for integrated URAM memory access in the block design. Therefore, a URAM memory block was designed, allocated for the maximum amount of URAM blocks available on the platform. The amount of URAM available in terms of bytes is about 2.25 MB. This will provide an adequate region of low latency memory for deep layers of the deployed YOLO model.
+
+The URAM block was configured for reading or writing capabilities between the URAM slices on FPGA fabric
+
+FIGURE 5. State machine’s transition between IDLE, READ, & WRITE states.
+
+FIGURE 6. Burst transfer for 144-Byte block of data.
+
+FIGURE 7. Custom memory mapping controller in Vivado.
+
+and the memory controller. The memory controller receives commands from the DPU via the DPU’s AXI master interface. These read/write commands are based on the current layer/computations that the DPU is performing. In the block design, an AXI BRAM controller is utilized and is connected to a master on the AXI SmartConnect block. The AXI BRAM controller is also connected to a block memory generator, which is responsible for allocating BRAM on the
+
+FPGA. For this design, 648 KB of BRAM memory was allocated, which is the maximum amount available.
+
+The design operates on a 250MHz clock, which provides a balance between throughput and power consumption. A faster clock speed could have been attained using the same FPGA platform through further hardware-level timing optimizations. Such approaches include deeper pipelining of critical data paths or reducing combinational logic between registers. Each of these techniques would shorten the maxi-
+
+mum propagation delay between data transactions, improving clock speed. Additionally, wider AXI buses could reduce bottlenecks or pipeline stalls, improving throughput and clock speed. While a quicker clock speed will result in higher throughput during run-time, the power consumption is increased. This is due to the additional strain placed on the hardware. Therefore, a balanced clock is vital to maximize computational performance with minimal power consumption.
+
+The proposed block diagram for the hardware design is shown in Figure 8. Once all components were connected, a synthesis and implementation report was completed within Vivado to ensure no critical errors were detected. Upon running these reports, the bitstream (bit) and hardware handoff file (.xsa) were exported. These files are needed to deploy this custom hardware design on the FPGA.
+
+F. COMPILATION & FPGA DEPLOYMENT To compile the pruned and quantized YOLO model, the Vitis AI ‘vai_c_xir’ compiler was used. This is a tool utilized within the Vitis AI environment that converts the ‘.ONNX’ model into a ‘.xmodel’. This ‘.xmodel’ is a version of the model that will be compatible with the DPU utilized in the hardware design. The tools provided by Vitis AI streamline the compilation and deployment process of the custom model and hardware, making this process very intuitive and seamless.
+
+FIGURE 8. Proposed block design including custom memory controller & On-chip memory allocation.
+
+Before using the ‘vai_c_xir compiler’, modifications to the ‘arch.json’ file were made given that a custom hardware design has been implemented. This file declares the custom features of the hardware design including the behavior of the memory mapping controller that utilizes high onchip memory, overflow conditions for DDR utilization, the layer-specific mapping of the model, and the fingerprint of the DPU. These modifications impact how the design interacts with the DPU. This makes the modification of the ‘arch.json’ file critical in the compilation process. The fingerprint of the DPU used in the hardware design was obtained by observing the contents of the ‘.xsa’ hardware handoff files for hardware design, produced within Vivado. Once this file was modified, the ‘vai_c_xir’ compiler converted the model into a compatible ‘.xmodel’, ready to be deployed on the target FPGA platform.
+
+To deploy the compiled ‘.xmodel’ on the target FPGA and the run application code, Vitis AI Runtime (VART) was utilized. VART is used to load the ‘.xmodel’ onto the FPGA and run inference. However, before doing this, the custom hardware design needed to be built onto the FPGA. Petalinux allows a bootable Linux image to be created, enabling the hardware design to be deployed on the target FPGA platform. Within Petalinux, the hardware handoff files (.xsa) and the generated bitstream (.bit) produced by Vivado were used to make a ‘boot.bin’ file. This file is responsible for loading up the hardware design when the platform is powered on. Additionally, the Platform Management Unit (PMU) firmware file ‘pmufw.elf’ was also included in the ‘boot.bin’ creation. Proper firmware for the Kria KV260 FPGA was needed given that this platform contains an MPSoC processor. These firmware files ensure that the processor within the FPGA operates as intended without potential issue during the booting process.
+
+Another key component to the deployment of the custom hardware design is the operating system. Without an operating system, the FPGA’s processor will not function properly. Petalinux was used to create the Ubuntu image ‘image.ub’, containing the Linux-based operating system run by the FPGA. Within the ‘image.ub’ file is the root file system in which required libraries and applications are included within the operating system. Amongst those libraries needed are the VART files as this will be needed when the model is run on the FPGA and inference tests are performed. After creating the Linux operating system image, with VART included, the boot files containing the FPGA’s custom logic were written to an SD card before being loaded by the FPGA.
+
+**Figure 9** shows the FPGA loading up the Linux-based operating system and custom hardware design using the flashed SD card. Each of the connections on the FPGA are also labeled in the Figure. An explanation for each of the connections on the FPGA is given below:
+
+• 12V, 3A Power Supply →Needed to power the board
+
+• HDMI Port →Connects to a monitor, allows GUI interaction with board
+
+• USB Adapter →Used to connect wireless mouse & keyboard to board, enabling interaction with terminal
+
+• Ethernet Port →Used for SSH/Network Access
+
+• UART →Connected from board to PC, displays the terminal
+
+• SD Card Slot →Used to run the flashed OS + Boot Files on the board Table 6 provides a clear overview of the hardware platform, Linux environment, Vitis AI stack, and host details used for compilation and evaluation for the design. This summary outlines the environment utilized in this study and provides insights to reproduce the workflow for the FPGA deployment process.
+
+**TABLE 6.** Hardware, software, and host environment overview.
+
+FIGURE 9. FPGA loading flashed SD Card & labeled port connections.
+
+Once the FPGA was set up, the host machine containing the compiled ‘.xmodel’ was connected to the FPGA by using the SSH command with the target device’s IP address. The compiled model is then able to be sent to the device using SCP to run the model, perform inference tests, and obtain performance metrics for the hardware. Given that the SD card contains the necessary files for VART, once the model has been transferred to the target platform, the model can be run on the FPGA.
+
+V. RESULTS & DISCUSSION To test the design, both hardware and software evaluation procedures were prepared. For the hardware evaluation, inference tests were prepared utilizing HD 60 FPS videos resized to 416×416. The purpose of resizing the videos was to match the same format in which the YOLOv3-Tiny model was trained. To evaluate the compressed model’s performance in terms of accuracy, it was tested on images present in the VOC2012 testing dataset. These images were not used during training, which gives the model new images it has not seen during the tests. This was not only to obtain a numerical value for the model’s accuracy but also to visually observe how effective the system was at identifying and classifying objects in the images.
+
+Initially, basic application code was utilized that drew bounding boxes around detected objects and displays the name of the detected objects with a confidence threshold. The confidence threshold indicates how sure the model was that the detected object matches the displayed class in the image. A value closer to 1 indicates high confidence, whereas a value close to 0 indicates low confidence. During these initial tests, the minimum confidence threshold was set to 0.3, meaning that if the model predicts a confidence level less than 30%, that object will not be included.
+
+Initial tests to visually observe the FPGA’s effectiveness were performed on various images within the testing dataset. Figure 10 and Figure 11 portray object detection and classification results for 2 different images. In Figure 10, it is shown that the model can detect and classify 3 different objects including a bus, person, and car. Impressively, a person inside the bus who is in limited view was detected by the model with 31% confidence. Additionally, a car that was partially in frame was also detected. This demonstrates that the system can make intricate detections for objects that are not clearly visible in the frame.
+
+FIGURE 10. Detection & classification of 3 different objects in single frame.
+
+FIGURE 11. Detection & classification performed in complex frame.
+
+The other image selected for initial testing was used to evaluate the deployed model’s robustness on an image containing many objects the model can potentially identify. Figure 11 portrays the detection and classification results for an image with 13 people in the frame. Remarkably, every single person in the frame was detected and classified correctly, with a confidence threshold reaching as high as 93%. This proves the system can perform complex object detection and classification tasks for intricate frames.
+
+Beyond these observations, these detection and classification results reveal various key properties of the compressed YOLO model and accelerated design. These properties include the ability to detect partially occluded, differently scaled, and crowded scenes. This suggests that structured pruning as well as quantization processes were not detrimental to the model’s performance in terms of being able to learn discriminatory features for effective object localization. This becomes even more prominent when considering that the model has reduced its memory requirements by over 13.3× after applying the pruning and quantization. Figure 11 highlights the model’s robustness as this image included overlapping and pose variation. This asserts that the model was
+
+able to effectively retain good generalization patterns when tested on unseen data.
+
+A. SOFTWARE EVALUATION A key aspect of the design was to develop novel hardware pruning and quantization algorithms to preserve accuracy while compressing the model’s size, making it adequate for FPGA deployment. To determine the accuracy of the pruned and quantized model, a testing dataset containing 2,308 images was utilized. The accuracy was computed based on how well the model performed detections in comparison to the labeled data in the testing set. Additionally, the precision, recall, and F1 score were computed to further evaluate the model’s performance. As the model iterates through the testing set, the number of true positives (TP), true negatives (TN), false negatives (FN), and false positives (FP) are recorded and stored. These values are then used to compute the mentioned performance metrics. Equation (4) presents the standard definition of accuracy for classification tasks [33]. Here, the number of objects detected that match the labeled data is evaluated and related to any incorrect detections the model
+
+FIGURE 12. Accuracy of compressed model over number of iterations.
+
+made:
+
+Accuracy = TP + TN TP + TN + FP + FN
+
+Similarly, the precision and recall relate the number of TP to misdetections the model made. Equation (5) and Equation (6) follow the conventional definitions in statistical classification for the precision and recall, respectively [33]:
+
+Precision = TP TP + FP
+
+Recall = TP TP + FN
+
+Lastly, the F1 score defined as the harmonic mean of precision and recall [33], is shown in Equation (7):
+
+F1Score = 2 × Precision × Recall
+
+Precision + Recall
+
+To obtain these metrics, the model ran on the 3,800 testing images for 20 epochs with a batch size of 32. The accuracy was plotted over the total number of iterations during the testing. Figure 12 portrays the computed accuracy of the model as it iterates through the testing dataset over 20 epochs. You can see that the accuracy fluctuates throughout and begins at an accuracy of around 60%. However, it quickly converges to a high accuracy over 90% at approximately iteration number 250. From this point, the accuracy maintains a consistent level, demonstrating that the model did not overfit during training and adapted well to unseen data. These results are particularly impressive given the drastic reduction in size that the model underwent in terms of both the hardware pruning and quantization. Figure 13 shows the same accuracy plot at a closer view just after iteration number 2,000. While accuracy fluctuates, it does not deviate more than 2% and converges at an accuracy of approximately 93%.
+
+In addition to convergence characteristics shown in Figures 12 and 13, the stability of the accuracy curve strongly
+
+**TABLE 7.** Performance metrics of the compressed YOLO model.
+
+correlates with the underlying detection behavior of the compressed model. The rapid ascent toward high accuracy shows that pruning and quantization did not impede the ability of the model to extract features early during inference, coupled with minimal fluctuation post-convergence.
+
+These observations reflect a consistent balance between true positives and misdetections across a wide range of different scenes. This indicates that the compressed model retained its discriminative capability, along with consistent decision making.
+
+The algorithm used to evaluate these performance metrics of the compressed model determined a final value for the accuracy, as well as values for the precision, recall, and F1 score. The global accuracy, precision, recall, and F1 score are shown in Table 7 as 93.8%, 95.3%, 92.4%, and 93.8%, respectively. These impressive results confirm that the compressed model maintained its ability to perform correct detections with minimal errors. Overall, the model demonstrates robust performance on unseen data, including both indoor and outdoor environments, and was shown to be effective in dynamic scenarios.
+
+B. HARDWARE EVALUATION To evaluate the FPGA’s effectiveness, the system was tested on HD 60 FPS pre-recorded videos. Using the Vitis AI profiler, crucial performance metrics including the throughput (FPS & GOPs) and latency were obtained. These metrics
+
+FIGURE 13. Closer view of accuracy vs. iterations.
+
+provide insights on how the platform performs while running the deployed model.
+
+To determine the power consumption of the FPGA during the inference tests, the Xilinx KV260 platform management tool was used to retrieve the power consumed by the platform during that time. Another critical performance metric for the hardware is the efficiency of the platform while the model is running. The efficiency is the number of giga operations performed per second (throughput) related to the power consumed during operation (GOPS/W) as shown in numerous studies [8], [20], [24]. Once the throughput and power consumption are determined separately, the efficiency was calculated by applying Equation (8) below:
+
+Efficiency = Throughput (GOPs) Power Consumption (W)
+
+In total, 10 unique one-minute videos recorded at 60FPS were tested on the device. For each video, the Vitis AI profiler and on-chip sensor were used to determine the throughput (FPS & GOPs), latency (in milliseconds), and power consumption (measured in microwatts). It was critical to test the system on videos varying in computational intensity based on the complexity of the captured frames, as well as including both indoor and outdoor environments. This will demonstrate the system’s robustness to varying scenarios during inference. Figure 14 shows the results gathered for each of the 10 videos.
+
+The system achieved consistent results for each video, attaining impressive throughput at a low power consumption. It is evident that during some tests, the system achieved a higher throughput at the cost of higher power consumption. Subsequently, these instances saw a reduced latency and higher efficiency. This was clearly the case for trials 1, 4, 7, and 8. Conversely, instances with lower power consumption saw reduced throughput and efficiency with higher latency. The averages for each of the hardware evaluation metrics were taken to get baseline performance values for the system. These average values are shown in Table 8. Overall, the
+
+**TABLE 8.** Average hardware evaluation metrics.
+
+results show that the system is highly efficient, achieving high throughput with minimal power consumption.
+
+The hardware resource consumption of the design was obtained from the report summary generated after running synthesis and implementation reports in Vivado. This report includes essential resources used by the FPGA including LUT, FF, and DSP utilization, as well as the on-chip memory utilization of BRAM and URAM. This is a good way to verify that the custom memory mapping controller utilizes 100% of the available on-chip memory. Additionally, the custom memory mapping controller is logic-based, meaning that the FF and LUT count in the report should reflect this fact.
+
+The DPU used in the design performs the neural network operations in parallel, utilizing a high number of available DSPs on the FPGA. The report indicates that the design has a LUT, FF, and DSP utilization of 82.5%, 44.5%, and 96.4% respectively. It also shows that the on-chip memory utilization of BRAM and URAM is 100% each. This confirms that the memory mapping controller functions as intended and wastes minimal FPGA resources during operation. The report summary for hardware resource utilization is shown in Table 9.
+
+Although BRAM and URAM are completely utilized as intended, the LUTs, FFs, and DSPs had remaining availability. These unused logic resources ensure successful timing closure, avert router congestion, and eliminate the chances of unsuccessful implementations with increasing operating
+
+FIGURE 14. Hardware performance evaluated for 10 different videos.
+
+**TABLE 9.** Resource utilization summary.
+
+frequencies. The utilization of these resources signifies that our design was well optimized and does not overly strain the device which could impact efficiency and performance.
+
+The performance of the FPGA was compared to that of a CPU and GPU. The purpose of this comparison is to observe the computational power of the FPGA at a reduced power consumption. The same 10 60 FPS videos were performed on the CPU and GPU using the compressed YOLO model. The CPU utilized for this experiment was the Intel Core i7-11700K processor, equipped with 8 cores for multithreaded processing and an operating frequency of 4.5 GHz. The GPU utilized for this test was the NVIDIA GeForce 2070 with 8 GB of RAM, operating at 1750 MHz. The power consumption for the CPU and GPU was determined by logging the power consumed by the device before and after each inference test.
+
+To ensure fair comparison, the CPU and GPU evaluations were performed using the same compressed YOLO model deployed on the FPGA. On the CPU, inference was run with PyTorch 1.13 and accelerated with ONNX Runtime on an Ubuntu 22.04 host machine. For the GPU, we used PyTorch with CUDA 11.7 and enabled cuDNN kernels to
+
+utilize NVIDIA Tensor Core optimizations. Both software stacks represent highly optimized compute paths for CPUs and GPUs, respectively. However, both CPU and GPU frameworks rely on general-purpose execution, in contrast to FPGA RTL-based custom hardware and a DPU-specific execution pipeline utilizing Vitis AI Runtime. The same model architecture and weights were used on all platforms. Still, the key differences lie in the dedicated data paths, parallel compute engines, and custom memory mapping utilized by the FPGA compared to instruction-driven execution in CPU and GPU frameworks.
+
+After running the 10 inference tests on the CPU and GPU, the average values for the FPS, and power consumption were recorded. The results are shown in Table 10. Comparing the measured performance to that of the DPU utilized by the FPGA, it is clear that the FPGA is the most efficient in terms of the throughput achieved and power consumed. While the GPU achieves a higher FPS by almost double, the power consumption is over 70× higher than that of the DPU. Additionally, the CPU, which saw an FPS almost 4× lower, saw a power consumption about 37× higher than the DPU. This is particularly impressive given that the FPGA platform utilized in this study was the cheapest among the 3 evaluated hardware devices.
+
+C. COMPARISON OF RESULTS To further interpret the hardware and software performance of the proposed design, a comparative analysis was performed by observing similar works reviewed in this paper. This comparison emphasizes the throughput, power consumption, and efficiency of the system as these metrics are vital for real-time edge computing applications. Table 11 portrays
+
+**TABLE 10.** Hardware performance comparison.
+
+the performance of the proposed design versus other object detection systems that are also low cost. Low-cost systems were chosen to compare against our system for a fair comparison. This is because higher cost FPGAs contain more computational resources including a higher number of LUTs, FFs, DSPs, and on-chip memory.
+
+Each column indicates a system included in the literature review section of this paper compared to the performance metrics obtained by the proposed system. Key performance metrics including the accuracy, throughput in terms of both Giga Operations performed per second (GOPs) and frames processed per second (FPS), power consumption, and efficiency for both GOPs and FPS are included in this comparison table. These are key performance metrics that dictate how well the proposed FPGA-based accelerator performs, especially in real-time applications. Additionally, the FPGA type, model architecture, applied compression techniques, and resource availability/design utilizations are included for more detailed analysis and comparison.
+
+Each system demonstrates a specific strength which largely depends on the hardware platform utilized and optimization strategies employed. FPGAs with larger resource availability, especially on-chip memory, such as the ZYNQ used in [16] and the Ultra96-v2 in [21] were shown to have the highest throughput in terms of GOPs and FPS respectively. Higher on-chip availability promotes low latency coupled with higher hardware parallelism, which accounts for this increased throughput. However, the high throughput was at the cost of hardware efficiency and power consumption. Conversely, designs that utilized more resource-constrained devices like the KV260 or PYNQ saw lower throughput, but also lower power consumption [7], [15], [24].
+
+Among the works analyzed in Table 11, our proposed design saw the highest efficiency in terms of FPS per watt of power, attaining over a 1.7× increase over that of Sanchez et al. [21] who was closest. Shi et al. [8] and Zhang et al. [16] attained a very impressive throughput (GOPS), but struggled with power consumption, decreasing the efficiency of their systems. While Shi et al. [8] attained an adequate 10.89 FPS during experiments performed, the high-power consumption measured resulted in the lowest efficiency (FPS/W) among the designs compared.
+
+Irmak et al. [20] and Amin et al. [15] saw remarkably high accuracies at over 99%.
+
+For Irmak et al. [20], this impressive feat was accompanied by a lower power consumption than that of this work. However, although Irmak et al. [20] obtained a lower power consumption, our design had an improved throughput (GOPS) and efficiency (GOPS/W) by over 1.5× than that of Irmak’s. Kim et al. [24] saw the highest efficiency for the number of operations performed per watt of power over all compared designs. This was also paired with the lowest power consumption, at only 1.44W. While these results are extremely impressive, they only achieved an FPS of 9.17, corresponding to an efficiency in terms of FPS per watt of 6.37. This hinders the system’s real-time object detection performance.
+
+An analysis of the resource-utilization patterns in Table 11 provides clearer insight into the performance differences among the various compared systems. The design in [8] utilized nearly maximum LUTs, FFs, and DSP resources. This indicates that their accelerator was running at or near the architectural limits of the device. Such high utilization is usually possible with more parallel computation, which also increases switching activity, routing congestion, and memory bandwidth pressure. These are factors that generally contribute to increased power consumption and reduced overall efficiency. This was clearly the case for the system in [8] as they obtained the second highest power consumption at 5.52W, only behind system [16] at 5.96W. In sharp contrast, most of the systems with more moderate LUT, FF, and DSP utilizations are either compromising computational performance, or rely on additional compression techniques to stay within device limits [7], [20]. The result is lower throughput, but their power consumption was improved.
+
+In the proposed work, there has been a deliberate balance of resource utilization. The full utilization of BRAM and URAM keeps data in on-chip memory while reserving adequate capacity in terms of DSPs, LUTs, and FFs. This avoided routing bottlenecks, therefore, maintaining high performance in terms of GOPs and FPS while minimizing power consumption. Along with our balanced hardware performance, we also achieved respectable model accuracy. This can explain, together with the structured pruning and quantization-aware training, the strong efficiency in FPS/W and GOPs/W achieved by our system compared to previous works.
+
+An important consideration is how our proposed design would behave on different FPGA platforms, or with different on-chip memory utilization. For devices like those found in [16], [20], [21], and [24], the proposed design would be integrated with larger amounts of available on-chip memory. The result could provide for improved buffering and feature map tiling, as well as improved parallelism. With such a setup, the proposed design would be able to take advantage of this additional memory by reducing off-chip DDR traffic. This would provide added benefits for throughput, both in terms of raw computing power
+
+**TABLE 11.** Performance of proposed design vs. similar works.
+
+**TABLE 11.** (Continued.) Performance of proposed design vs. similar works.
+
+FIGURE 15. Performance comparison for related works vs. the proposed work.
+
+(GOPs) and application-specific performance (FPS). In turn, the improved throughput would also improve hardware efficiency given that reduced off-chip memory access would also reduce power consumption.
+
+However, increased on-chip memory is not the only factor that would impact the design. While systems [16], [20], [21], and [24] have more BRAM available, they don’t match the KV260’s balanced logic cell or DSP count. This imbalance would impose different design constraints which could limit the accelerator’s architectural complexity in practice. While the model itself is deployed to the FPGAs memory, the accelerator’s architecture (responsible for parallel computation) is implemented via the device’s logic cells and DSP slices. As a result, although a device with improved on-chip memory would reduce off-chip memory access, the decreased logic availability could bound the potential performance.
+
+The KV260 has a preferable ratio of logic cell and DSP slices to on-chip memory, which enables our proposed design to maintain a proper data flow balance between computational performance and memory utilization. Overall, these observations point to the fact that our proposed design can be deployed on different FPGA platforms, with some caveats. The balanced performance achieved by our design is shaped by the KV260’s resource availability, which influenced our development of efficient pruning and quantization algorithms, as well as the RTL controller for efficient dataflow management. This hardware-aware co-optimization is the main reason our design achieves higher energy efficiency, while maintaining competitive throughput on a mid-range device like the KV260.
+
+For a clearer visual representation amongst the compared designs, each system’s power, efficiency (both GOPS/W and FPS/W), and FPS were plotted. This plot is shown in
+
+**Figure 15.** By observing this plot, it is evident that the proposed design in this paper achieves the most balanced performance metrics while offering the highest efficiency (FPS/W) at 11.41. Interestingly, Kim et al. [24] achieved the highest efficiency in GOPS/W at 43.9 due to their system’s impressive raw computational power but saw an FPS 2.7× lower than that of our proposed design.
+
+**Figure 15** highlights the divide between our design in terms of real-time performance (FPS) and the similar works. Systems [8], [15], and [24] all saw lower FPS values than our proposed system attaining FPS values of 10.893, 15, and 9.17 respectively. While system [21] attained an impressive FPS of 33, their hardware efficiency (FPS/W) was only 6.7 compared to our 11.41. This analysis speaks to the impact that the memory mapping controller had on our systems’ computational performance. By mapping specific layers of the model to regions of on-chip memory it would benefit most from, the system is able to process data efficiently, resulting in impressive real-time performance. Additionally, the 100% utilization of BRAM and URAM while limiting DDR usage promoted low power consumption and low latency. This resulted in balanced performance metrics that exceeded what was achieved by similar low-cost systems. Overall, this comparative analysis demonstrates that the proposed hardware–software co-optimization strategy enables a level of real-time efficiency that competing low-cost FPGA systems are unable to match.
+
+VI. CONCLUSION & FUTURE WORK The proposed design attained a balance among critical performance metrics for real-time edge computing applications, addressing the evident tradeoffs prevalent among similar low-cost systems. The hardware–software co-optimized framework demonstrated a low power consumption of 2.13W, high throughput of 24.3 FPS, and strong efficiency of 11.41 FPS/W. This was enabled in part by the custom memory mapping controller, which assigned layers to BRAM or URAM based on their requirements and incorporated burst-mode and overflow-handling features to improve throughput and reduce latency. The pruning and quantization algorithms successfully compressed the YOLO model by over 13.3× while maintaining an accuracy above 93%, proving that the compression strategies employed preserved discriminative performance for resource-constrained FPGA deployment. Overall, the design proved suitable for real-time edge computing applications including Advanced Driver Assistance Systems (ADAS), smart security cameras, traffic monitoring systems, and drone applications.
+
+Future work for this design should look toward reducing power consumption and improving efficiency by adding features such as Dynamic Voltage Frequency Scaling (DVFS), allowing the device to adjust its operating conditions based on the workload. Another direction would be to incorporate a fault-tolerant mechanism so the system can continue operating even when hardware faults occur, improving reliability.
+
+A further area worth exploring is a custom reconfigurable design, particularly using Partial Dynamic Reconfiguration (DPR). With DPR, only specific regions of the FPGA PL would be reconfigured, which has the potential to increase throughput and efficiency while keeping power consumption low.

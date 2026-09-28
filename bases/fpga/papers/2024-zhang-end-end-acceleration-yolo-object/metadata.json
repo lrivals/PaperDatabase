@@ -1,0 +1,49 @@
+{
+  "id": "2024-zhang-end-end-acceleration-yolo-object",
+  "title": "End-to-end acceleration of the YOLO object detection framework on FPGA-only devices",
+  "authors": [
+    {
+      "given": "Dezheng",
+      "family": "Zhang"
+    },
+    {
+      "given": "Aibin",
+      "family": "Wang"
+    },
+    {
+      "given": "Ruchan",
+      "family": "Mo"
+    },
+    {
+      "given": "Dong",
+      "family": "Wang"
+    }
+  ],
+  "year": 2024,
+  "venue": "Neural Computing and Applications 36(3), 1067-1089",
+  "doi": "10.1007/s00521-023-09078-8",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1007/s00521-023-09078-8",
+  "type": "journal",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov2",
+    "yolov3"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 52 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 35 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

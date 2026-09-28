@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2409.01872-latent-distillation-continual-object-detection",
+  "title": "Latent Distillation for Continual Object Detection at the Edge",
+  "authors": [
+    {
+      "given": "Francesco",
+      "family": "Pasti"
+    },
+    {
+      "given": "Marina",
+      "family": "Ceccon"
+    },
+    {
+      "given": "Davide Dalle",
+      "family": "Pezze"
+    },
+    {
+      "given": "Francesco",
+      "family": "Paissan"
+    },
+    {
+      "given": "Elisabetta",
+      "family": "Farella"
+    },
+    {
+      "given": "Gian Antonio",
+      "family": "Susto"
+    },
+    {
+      "given": "Nicola",
+      "family": "Bellotto"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2409.01872",
+  "url": "https://arxiv.org/abs/2409.01872",
+  "type": "preprint",
+  "axes": [
+    "continual-learning"
+  ],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 1 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2411.01118-variational-autoencoders-source-data-reduction",
+  "title": "Variational Autoencoders for At-Source Data Reduction and Anomaly Detection in High Energy Particle Detectors",
+  "authors": [
+    {
+      "given": "Alexander",
+      "family": "Yue"
+    },
+    {
+      "given": "Haoyi",
+      "family": "Jia"
+    },
+    {
+      "given": "Julia",
+      "family": "Gonski"
+    }
+  ],
+  "year": 2024,
+  "venue": "2025 Mach. Learn.: Sci. Technol. 6 035017",
+  "doi": "10.1088/2632-2153/adf0c0",
+  "arxiv_id": "2411.01118",
+  "url": "https://arxiv.org/abs/2411.01118",
+  "type": null,
+  "axes": [
+    "autoencoder-fpga"
+  ],
+  "tags": [
+    "autoencoder",
+    "vae",
+    "anomaly-detection"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : 2025 Mach. Learn.: Sci. Technol. 6 035017) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

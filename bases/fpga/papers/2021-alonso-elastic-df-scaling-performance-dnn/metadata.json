@@ -1,0 +1,62 @@
+{
+  "id": "2021-alonso-elastic-df-scaling-performance-dnn",
+  "title": "Elastic-DF: Scaling Performance of DNN Inference in FPGA Clouds through Automatic Partitioning",
+  "authors": [
+    {
+      "given": "Tobias",
+      "family": "Alonso"
+    },
+    {
+      "given": "Lucian",
+      "family": "Petrica"
+    },
+    {
+      "given": "Mario",
+      "family": "Ruiz"
+    },
+    {
+      "given": "Jakoba",
+      "family": "Petri-Koenig"
+    },
+    {
+      "given": "Yaman",
+      "family": "Umuroglu"
+    },
+    {
+      "given": "Ioannis",
+      "family": "Stamelos"
+    },
+    {
+      "given": "Elias",
+      "family": "Koromilas"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    },
+    {
+      "given": "Kees",
+      "family": "Vissers"
+    }
+  ],
+  "year": 2021,
+  "venue": "ACM Trans. Reconfigurable Technol. Syst. 15(2), 15",
+  "doi": "10.1145/3470567",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1145/3470567",
+  "type": "journal",
+  "axes": [],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "aucun axe détecté : à classer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

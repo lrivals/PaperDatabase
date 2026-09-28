@@ -1,0 +1,65 @@
+{
+  "id": "arxiv-2607.13106-no-attention-no-problem-dpu",
+  "title": "No Attention, No Problem: DPU-Aware Attention Approximation in Modern YOLO on FPGA",
+  "authors": [
+    {
+      "given": "Suraj",
+      "family": "Karki"
+    },
+    {
+      "given": "Qazi Arbab",
+      "family": "Ahmed"
+    },
+    {
+      "given": "Thorsten",
+      "family": "Jungeblut"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2607.13106",
+  "url": "https://arxiv.org/abs/2607.13106",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "yolov26",
+    "yolov11",
+    "yolov8",
+    "obb",
+    "attention",
+    "zcu104",
+    "dpu",
+    "vitis-ai",
+    "int8",
+    "quantization",
+    "dota",
+    "dior-r"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : IV — leur texte est rattaché à la section précédente",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": [],
+  "imported_from": {
+    "base": "drone",
+    "paper_id": "arxiv-2607.13106-no-attention-no-problem-dpu",
+    "date": "2026-09-28",
+    "fiche": "done",
+    "axes": [
+      "drone-fpga"
+    ]
+  }
+}

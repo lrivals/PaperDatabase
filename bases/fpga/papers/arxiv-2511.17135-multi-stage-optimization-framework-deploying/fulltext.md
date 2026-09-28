@@ -1,0 +1,1080 @@
+---
+id: arxiv-2511.17135-multi-stage-optimization-framework-deploying
+title: "A Multi-Stage Optimization Framework for Deploying Learned Image Compression on FPGAs"
+year: 2025
+backend: pymupdf
+---
+
+A Multi-Stage Optimization Framework for Deploying Learned Image Compression on FPGAs
+
+Jiaxun Fang Shanghai Jiao Tong University, China
+
+Email: oxygenfunction@sjtu.edu.cn
+
+Li Chen Shanghai Jiao Tong University, China
+
+Email: hilichen@sjtu.edu.cn
+
+## Abstract
+
+Deep learning-based image compression (LIC) has achieved state-of-the-art rate-distortion (RD) performance, yet deploying these models on resource-constrained FPGAs remains a major challenge. This work presents a complete, multi-stage optimization framework to bridge the gap between high-performance floating-point models and efficient, hardware-friendly integerbased implementations. First, we address the fundamental problem of quantization-induced performance degradation. We propose a Dynamic Range-Aware Quantization (DRAQ) method that uses statistically-calibrated activation clipping and a novel weight regularization scheme to counteract the effects of extreme data outliers and large dynamic ranges, successfully creating a high-fidelity 8-bit integer model. Second, building on this robust foundation, we introduce two hardware-aware optimization techniques tailored for FPGAs. A progressive mixed-precision search algorithm exploits FPGA flexibility to assign optimal, non-uniform bit-widths to each layer, minimizing complexity while preserving performance. Concurrently, a channel pruning method, adapted to work with the Generalized Divisive Normalization (GDN) layers common in LIC, removes model redundancy by eliminating inactive channels. Our comprehensive experiments show that the foundational DRAQ method reduces the BD-rate overhead of a GDN-based model from 30% to 6.3%. The subsequent hardware-aware optimizations further reduce computational complexity by over 20% with negligible impact on RD performance, yielding a final model that is both state-of-theart in efficiency and superior in quality to existing FPGA-based LIC implementations.
+
+Keywords—Learned Image Compression, Model Quantization, Hardware Acceleration, FPGA, Mixed-Precision Quantization, Network Pruning.
+
+## I. INTRODUCTION
+
+The explosive growth of visual data has driven significant demand for more efficient image compression technologies. In recent years, deep learning-based image compression (LIC) has emerged as a powerful paradigm, with end-to-end trained models consistently surpassing traditional codecs like JPEG2000 and HEVC in rate-distortion (RD) performance. These models replace hand-crafted modules with powerful nonlinear transforms learned from data, enabling superior feature representation and compression.
+
+Despite their success, the practical deployment of LIC models, particularly on resource-constrained edge devices such as FPGAs, is severely hampered by their high computational complexity and memory footprint. These models typically rely on 32-bit floating-point (FP32) arithmetic and contain millions of parameters, making them unsuitable for low-power, real-time applications. Model quantization, the process of
+
+converting FP32 parameters and activations to low-bit-width integers (e.g., INT8), is an essential technique for enabling hardware acceleration. However, the direct application of standard quantization methods, such as those successful in image classification, leads to a catastrophic drop in RD performance for LIC models.
+
+This paper addresses this challenge through a comprehensive, two-stage optimization framework. Our primary thesis is that achieving high-performance, hardware-friendly LIC requires tackling the problem at two distinct levels: first, solving the fundamental data distribution challenges that cause quantization failure, and second, applying advanced, hardwareaware optimizations to the resulting integer model to maximize efficiency.
+
+The first part of our work investigates the root causes of this performance degradation. We identify that the data distributions within LIC models are fundamentally different from those in typical classification networks. They are characterized by (1) extreme outliers in weight distributions that poison the quantization range, and (2) large, channelvariant dynamic ranges in activations that lead to significant information loss. To solve this, we propose a Dynamic Range- Aware Quantization (DRAQ) framework, as illustrated in Stage I of Fig. 1.. This foundational method uses statisticallycalibrated activation clipping and a novel weight regularization scheme to produce a high-fidelity 8-bit integer model that closely matches the performance of its FP32 counterpart.
+
+The second part of our work addresses the fact that even a high-quality INT8 model is not optimally efficient for FPGAs. FPGAs offer unique opportunities for co-design that fixedfunction hardware like GPUs cannot. As shown in Stage II of Fig. 1, we exploit this by introducing two hardware-aware optimization techniques:
+
+1) Progressive Mixed-Precision Search: Recognizing that different layers have varying sensitivity to quantization and that FPGAs can implement arbitrary integer bitwidths, we develop a search algorithm to automatically assign an optimal, non-uniform bit-width to each layer. This allows for a fine-grained tradeoff between computational complexity and RD performance, a key advantage of FPGA platforms. 2) Channel Pruning via GDN-Slimming: We observe significant redundancy in LIC models, where many channels remain inactive across diverse inputs. To eliminate this, we adapt the well-known slimming channel pruning technique to work with the Generalized Divisive Normaliza-
+
+Stage I: Foundational Quantization Framework
+
+Proposed Network
+
+Activation Range Constrain t
+
+Weight Outlier Penalty
+
+DRAQ Framework
+
+Stage II: Hardware-Aware Optimization
+
+Channel Pruning via GDN -Slimming
+
+Progressive Mixed-Precision Search
+
+MConv 5x5 2M
+
+Conv 5x5 N ↓2
+
+Conv 5x5 M ↓2
+
+Clip
+
+Conv 3x3 N ↓2
+
+Clip
+
+Conv 5x5 N ↓2
+
+Clip
+
+ConvT 5x5 3 ↑2
+
+Clip
+
+ConvT 5x5 N ↑2
+
+IGDN
+
+ConvT 3x3 N ↑2
+
+Clip
+
+IGDN
+
+ConvT 5x5 N ↑2
+
+Clip
+
+IGDN
+
+Conv 3x3 M
+
+Conv 5x5 N ↓2
+
+Leaky ReLU
+
+Leaky ReLU
+
+Conv 5x5 N ↓2
+
+ConvT 3x3 2M
+
+Conv 5x5 1.5N ↑2
+
+Leaky ReLU
+
+Leaky ReLU
+
+Conv 5x5 N ↑2
+
+Conv 1x1 640
+
+Conv 1x1 512
+
+Leaky ReLU
+
+Leaky ReLU
+
+Conv 1x1 2N
+
+Q
+
+AE
+
+AD
+
+Q
+
+AE
+
+AD
+
+Concat
+
+𝑦half
+
+𝑦anchor
+
+Model Fine-tuning
+
+Clipping & Regularization
+
+Parameter Statistics
+
+Quantized Fixed-point
+
+Pretrained
+
+Ci1 Ci2 Ci3 Ci4
+
+Cin
+
+GDN1 GDN2 GDN3 GDN4
+
+GDNn
+
+Cj1 Cj2 Cj3 Cj4
+
+Cjn
+
+. . .
+
+. . .
+
+. . .
+
+. . .
+
+Slimming
+
+Ci1
+
+Ci3
+
+Cim
+
+GDN1
+
+GDN2
+
+GDNm
+
+Cj1
+
+Cj2
+
+Cjn
+
+. . .
+
+. . .
+
+. . .
+
+. . .
+
+Layer 𝑖 scaling factors 𝑎Layer 𝑗 Layer 𝑖 scaling factors 𝑎Layer 𝑗
+
+Conv a1 8bit
+
+Conv a2 7bit
+
+Conv a3 9bit
+
+Conv s1 7bit
+
+Conv s2 ?bit
+
+Conv s3 𝐼bit … …
+
+Conv h1 𝐼bit
+
+Conv h2 𝐼bit
+
+Conv h3 𝐼bit
+
+…
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxN ↓2
+
+Clip Insert
+
+-5
+
+-5
+
+**Fig. 1:** An overview of our proposed two-stage optimization framework. Stage I, the Dynamic Range-Aware Quantization (DRAQ) framework, addresses fundamental data distribution challenges by constraining activation ranges and penalizing weight outliers to create a high-fidelity integer model. Stage II applies hardware-aware optimizations tailored for FPGAs, including Channel Pruning via GDN-Slimming and a Progressive Mixed-Precision Search, to systematically balance performance and hardware complexity.
+
+tion (GDN) layers that are crucial for LIC performance but lack the Batch Normalization (BN) layers that slimming typically relies on.
+
+By integrating these techniques, we create a complete pipeline that transforms a high-performance FP32 LIC model into a pruned, mixed-precision integer model optimized for FPGA deployment. Our contributions are:
+
+A detailed analysis of the data distribution challenges unique to LIC model quantization.
+
+A foundational DRAQ framework that enables highfidelity 8-bit quantization of both ReLU and advanced GDN-based LIC models.
+
+A progressive search algorithm for mixed-precision quantization that leverages FPGA flexibility to minimize model complexity while maintaining performance near the FP32 level.
+
+A novel adaptation of channel pruning (slimming) for GDN-based architectures, effectively reducing model redundancy and computational load.
+
+A comprehensive experimental validation demonstrating that our final optimized model is more efficient and achieves a better RD performance than existing FPGA-based LIC implementations.
+
+This paper is organized as follows. Section II details the unique data distribution challenges in LIC models. Section III presents our foundational DRAQ framework. Section IV describes the hardware-aware mixed-precision and pruning optimizations. Section V provides a comprehensive experimental evaluation, and Section VI concludes the paper. This work is an extension of the research detailed in.
+
+## II. RELATED WORKS
+
+### A. Learned Image Compression
+
+The paradigm of image compression has been significantly influenced by deep learning, leading to end-to-end learned image compression (LIC) models that now outperform traditional codecs like VVC in rate-distortion (R-D) performance. The foundational architecture for most current LIC models is based on a variational autoencoder framework, first introduced by Ball´e et al. [1]. This framework consists of a nonlinear analysis transform ga that maps an image x to a latent representation y, a uniform quantizer, and a nonlinear synthesis transform gs that reconstructs the image ˆx from the quantized latents ˆy (as shown on the left in Fig. 2). To enable end-to-end training via gradient descent, the non-differentiable quantization step is typically replaced by adding uniform noise during training. The models are optimized by minimizing a rate-distortion loss: L = R+λ·D, where R is the estimated bitrate from an entropy
+
+𝑥 𝑥
+
+𝑄
+
+𝑄
+
+𝐶
+
+𝑥 𝑥
+
+𝑄
+
+𝑄
+
+𝑁(0, 𝜎2)
+
+𝑥 𝑥
+
+𝑄
+
+**Fig. 2:** The evolution of seminal LIC architectures. (Left) The foundational variational autoencoder framework where latents y are quantized and reconstructed. (Center) The addition of a hyperprior network (ha, hs) that uses side information z to model the latent distribution, improving compression rate. (Right) The joint architecture, which further incorporates an autoregressive context model (C) to create a more powerful conditional probability model for the latents, leading to superior performance.
+
+model and D is the distortion between x and ˆx, commonly measured by Mean Squared Error (MSE) or MS-SSIM.
+
+A major breakthrough was the introduction of a hyperprior network [2], which captures spatial redundancies within the latent representation y. The hyperprior acts as a side-information channel, generating parameters (e.g., the standard deviation σ) for a conditional Gaussian probability model of the latents, thereby enabling more accurate entropy modeling and improved compression efficiency (center diagram of Fig. 2). Building upon this, Minnen et al. [3] incorporated a spatial context model, employing an autoregressive component that uses previously decoded latent elements to predict the distribution (both mean µ and standard deviation σ) of the current element (right diagram of Fig. 2). This joint autoregressive and hyperprior architecture became a seminal model, surpassing the performance of the BPG codec and setting the standard for subsequent research.
+
+Recent advancements in LIC can be broadly categorized into two main streams: optimizing the network architecture of the transforms and refining the entropy models.
+
+1) Advancements in Network Architecture: To enhance the expressive power of the nonlinear transforms, researchers have integrated more sophisticated neural network modules. Chen et al. [4] introduced non-local attention mechanisms to capture global correlations, allowing the model to allocate bits adaptively based on content importance. To mitigate the high computational cost of attention, Cheng et al. [5] demonstrated that stacked residual blocks could effectively expand the receptive field, achieving comparable performance with lower complexity. More recently, the success of Transformers in vision tasks has spurred their adoption in LIC. Architectures incorporating Swin Transformer blocks [6] and hybrid CNN- Transformer designs [7] have been proposed to effectively model both local and global information, leading to state-ofthe-art R-D performance.
+
+2) Advancements in Entropy Modeling: Parallel to architectural improvements, significant efforts have been dedicated to designing more powerful and efficient entropy models. To better capture the complex, non-Gaussian distributions of
+
+latent features, Cheng et al. [5] proposed using Gaussian Mixture Models (GMMs) instead of a single Gaussian, improving probability estimation accuracy. The context model has also been a focus of optimization. To address the inherent serial processing bottleneck of spatial autoregression, He et al. proposed a parallelizable checkerboard context model [8], which divides latents into two groups that can be processed in two parallel steps, drastically accelerating decoding with minimal performance loss. They later introduced a channelwise autoregressive model [9], which groups channels and performs autoregression across channel groups, striking a balance between performance and computational complexity.
+
+### B. Model Quantization for Efficient Inference
+
+Deploying large neural networks, including LIC models, on resource-constrained devices necessitates model compression. Quantization is a key technique that reduces model size, memory bandwidth, and computational energy by converting high-precision floating-point parameters and activations (e.g., FP32) to low-bit integers (e.g., INT8). The two dominant quantization paradigms are Post-Training Quantization (PTQ) and Quantization-Aware Training (QAT).
+
+1) Post-Training Quantization (PTQ): PTQ quantizes a pre-trained model with minimal or no retraining, making it a fast and data-efficient solution. The core challenge in PTQ is determining the optimal clipping range (quantization parameters) for each tensor to balance clipping and rounding errors. While simple methods like Min-Max calibration are sensitive to outliers, others minimize metrics like Mean Squared Error (MSE) between the original and quantized tensors. More advanced techniques have been developed to improve PTQ performance. For instance, Cross-Layer Equalization (CLE) [10] rectifies large variations in weight ranges across consecutive layers by rescaling them, making the model more robust to quantization. AdaRound [11] is another powerful method that learns a task-aware rounding scheme for weight quantization, often outperforming standard nearest-rounding and preserving accuracy at lower bit-widths.
+
+2) Quantization-Aware Training (QAT): QAT simulates the effect of quantization during the training or fine-tuning process, allowing the model to adapt its weights to the quantization error. This is achieved by inserting fake quantization nodes into the network graph, which quantize and de-quantize tensors during the forward pass. Since the rounding function has zero or undefined gradients, the Straight-Through Estimator (STE) [12] is ubiquitously used to approximate the gradient of the quantizer, enabling end-to-end training. QAT generally yields higher accuracy than PTQ, especially for aggressive quantization (e.g., below 8 bits), but requires access to the training dataset and significantly more computational resources for retraining.
+
+Beyond quantization, model pruning, which removes redundant weights or structures, is often used as a complementary compression technique. Methods that combine structured pruning or neural architecture search (NAS) with quantization have shown promise in automatically discovering highly efficient and accurate compressed models [13].
+
+## III. THE CHALLENGE IN QUANTIZATION OF LIC MODELS
+
+### A. Data Distributions
+
+Standard quantization-aware training (QAT) fails for LIC models primarily because it assumes data distributions that do not hold true. Our analysis revealed two fundamental problems.
+
+1) Extreme Weight Outliers: A primary obstacle to quantizing LIC models lies in the unique statistical properties of their network weights. Our analysis reveals a consistent and challenging data distribution across all layers, which is fundamentally different from that found in standard classification networks. As illustrated by a representative convolutional layer in Fig. 3, the weights exhibit two defining characteristics:
+
+High Concentration: The vast majority of weights are densely clustered in a very narrow range around zero, indicated by a small interquartile range (IQR).
+
+Extreme Outliers: This dense cluster is accompanied by a tiny fraction of extreme outliers (e.g., ≤0.01%), with magnitudes that can be orders of magnitude larger than the core distribution.
+
+These properties, particularly the presence of extreme outliers, render conventional quantization strategies like linear min-max quantization highly ineffective. The outliers dictate an excessively wide quantization range, which leads to two critical problems:
+
+1) Significant Information Loss: The vast majority of concentrated weights are aggressively mapped to only a few quantization levels near zero. This erases the subtle but crucial variations among these weights, crippling the model’s expressive power and leading to severe performance degradation. 2) Quantization Inefficiency: A large portion of the available quantization bins remains unused, as they correspond to the vast empty space between the core distribution and the extreme outliers. This represents a significant waste of bit-width resources.
+
+For instance, in the distribution shown in Fig. 3, a single outlier near -2.5 dictates the quantization range. Removing a handful of such outliers (< 0.001% of the total) could halve the data range, effectively doubling the quantization precision for the remaining weights. Therefore, we identify these rare but extreme weight outliers as the principal barrier to achieving efficient, high-fidelity quantization in LIC models. This analysis motivates the need for a quantization framework that is robust to such distributions.
+
+2) Activation Dynamic Range Variance: A second, equally critical challenge arises from the distribution of activation values. Unlike weights, the primary issue with activations is not isolated outliers but a significant channel-wise variance in their dynamic range. As shown in Fig. 4, activations from different channels within the same layer can exhibit vastly different statistical properties.
+
+This heterogeneity becomes a major bottleneck for standard per-layer quantization, where a single scaling factor is applied to all channels in a layer. This shared factor is inevitably dictated by the channel with the widest dynamic range. Consequently, this leads to two detrimental effects:
+
+1) For low-range channels: The oversized scaling factor causes a catastrophic quantization error. Their entire data distribution, which may contain rich information, collapses into a few quantization bins near zero, effectively erasing their contribution. As seen in Fig. 4(a), many channels have a maximum activation value less than 5, while a few exceed 20. A uniform scale set by the latter would decimate the former. 2) For high-range channels: Even within the channels that dictate the scaling factor, the activation values are often not uniformly distributed. Instead, they are typically concentrated in a sub-region of their total range (Fig. 4(b)), leading to the same issue of inefficient quantization bin utilization seen in weights.
+
+Therefore, applying a naive per-layer quantization scheme to activations results in a suboptimal trade-off, where precision is sacrificed for some channels while bit-width is wasted for others.While per-channel quantization can solve this, it introduces significant computational overhead, especially on hardware not optimized for it.
+
+3) Summary of Data Distribution Challenges: In summary, our analysis identifies two fundamental obstacles to the effective quantization of learned image compression models:
+
+1) Extreme Weight Outliers: These force an overly large quantization range, which degrades precision for the vast majority of concentrated weights. 2) Large Channel-wise Dynamic Range Variance in Activations: This makes a single per-layer scaling factor suboptimal, causing significant information loss in many channels.
+
+Any successful quantization framework for LIC must directly address these two data distribution challenges. This motivates our proposed approach, which is designed to be robust to both outlier-prone weights and heterogeneous activation ranges.
+
+### B. The Quantization Challenge of GDN-based Architectures
+
+While Generalized Divisive Normalization (GDN) layers are critical for achieving better rate-distortion performance in full-precision LIC models [1], they represent a significant roadblock to effective quantization. Consequently, much of the existing work on LIC quantization sidesteps this issue by reverting to simpler, lower-performing ReLU-based backbones. Our analysis reveals that successfully quantizing GDN-based models requires overcoming two fundamental and interconnected challenges: exacerbated dynamic range and severe training instability.
+
+1) Exacerbated Dynamic Range: The dynamic range problem, already present in ReLU models, is significantly magnified in GDN-based architectures. The activation values at the output of both convolutional and GDN layers exhibit extremely large, channel-variant dynamic ranges. Crucially, without the clipping effect of a ReLU function which discards negative values, the dynamic range of activations in GDN models is substantially wider than in their ReLU counterparts. This directly translates to larger quantization step sizes, which causes more aggressive information loss and leads to a precipitous drop in model performance post-quantization.
+
+**Fig. 3:** The challenge of quantizing LIC models, illustrated by the weight distribution of a single representative convolutional layer. The boxplot for each output channel reveals a high concentration of weights near zero (indicated by the small boxes), but also a tiny fraction of extreme outliers (circles) that are orders of magnitude larger. These outliers dictate an inefficiently wide quantization range, degrading precision for the majority of weights and motivating our proposed outlier-aware framework.
+
+2) Training Instability and Convergence Failure: The inherent complexity of the transformation makes Quantization-Aware Training (QAT) notoriously difficult. The GDN operation is defined as:
+
+zi = xi (βi + P
+
+j γij|xj|αij)εi .
+
+During QAT, the input tensor xi must be quantized. However, this quantized input appears in both the numerator and the denominator, and its absolute value is taken within a nonlinear function. This complex data dependency, combined with the use of STE to approximate gradients, creates a highly unstable training dynamic. As noted in prior work [14], this often leads to a failure to converge, rendering standard QAT methods ineffective for these architectures.
+
+Addressing these twin challenges—taming the extreme dynamic range while ensuring stable training convergence—is therefore imperative to unlock the potential of high-performance LIC models in low-bitwidth, hardwareconstrained environments. This motivates our development of a specialized quantization framework tailored for the unique properties of GDN.
+
+## IV. DRAQ: A FOUNDATION FOR HIGH-FIDELITY
+
+QUANTIZATION
+
+To overcome the dual challenges of extreme weight outliers and large activation range variance, we propose a Dynamic Range-Aware Quantization (DRAQ) framework. Instead of treating quantization as a post-processing step, DRAQ integrates distribution control directly into the training process. The framework is composed of two core components designed to reshape the data distributions for higher quantization efficiency: (1) Statistically-Calibrated Activation Clipping to control activation ranges, and (2) Outlier-Aware Weight Regularization to suppress extreme weight values.
+
+The overall workflow of our method is illustrated in Fig. 5. The process begins by training a high-quality baseline quantized model. This model is then used on a calibration dataset to gather detailed statistics about its weight and activation distributions. These statistics are used to determine the optimal parameters for our clipping and regularization functions. Finally, the model undergoes a constrained fine-tuning process, where the new components are integrated to produce the final, highly efficient quantized model. The specifics of each component are detailed below.
+
+### A. Constraining Activation Dynamic Range
+
+To manage the large and variant activation ranges, we replace the standard ReLU activation function with a ClippedReLU, defined as:
+
+ClippedReLU(x, θ) = max(0, min(x, θ)),
+
+The key to our method is how we determine the upperbound threshold θ. Instead of using a fixed or naively trainable value, we determine it statistically for each layer l from a calibration dataset. We compute the mean µl and standard deviation σl of that layer’s activation distribution and set the threshold θl as:
+
+θl = µl + kσl
+
+This approach, inspired by the three-sigma rule, ensures most of the activation distribution is preserved while clipping extreme tails. We further observed that the optimal value for k is positively correlated with the rate-distortion tradeoff parameter λ used in the loss function (L = R+λD). Higher λ values, which prioritize quality (PSNR) over rate (bpp), benefit from a larger k that preserves more detail. We model this relationship with a simple but effective linear function:
+
+(a) Maximum (red) and minimum (blue) activation values per channel.
+
+(b) Frequency histograms of select channels, with inset showing detail near zero.
+
+**Fig. 4:** The challenge of activation quantization, illustrated on a single representative layer. (a) The dynamic range of activations varies dramatically across different channels, with a few channels having ranges far exceeding the majority. (b) Histograms reveal that channels also possess distinct distributions. This high channel-wise heterogeneity makes a single, shared per-layer quantization scale highly suboptimal, leading to significant information loss for most channels.
+
+k = 625λ + 2
+
+This heuristic automatically adapts the clipping strength to the target bitrate, eliminating the need for manual hyperparameter tuning.
+
+### B. Suppressing Weight Outliers via Regularization
+
+Directly clipping the extreme weight outliers is a blunt instrument that can cause irreversible information loss. We propose a more gentle approach by introducing a regularization
+
+Clipping
+
+Calibration on Dataset
+
+Constraining
+
+Dynamic Range
+
+Fine-tuning
+
+Adding Regularization
+
+Parameter
+
+Statistics
+
+Suppressing
+
+Outliers via Regularization
+
+Pre-training
+
+**Fig. 5:** The workflow of our proposed Dynamic Range-Aware Quantization (DRAQ) framework. The process involves pretraining a baseline model, using a calibration set to determine optimal parameters for clipping and regularization, and then fine-tuning the model with these constraints to achieve a highperformance quantized model.
+
+term into the loss function during the fine-tuning stage to discourage, rather than forbid, extreme values.
+
+First, we define outliers based on their statistical rarity. For each layer, we sort the weights from the pre-trained model and identify the values at the α and 1 −α percentiles (e.g., α = 0.001), which we denote as θmin and θmax, respectively. We then introduce a regularization term to the standard ratedistortion loss function that penalizes any weight w falling outside this range:
+
+Lreg = β
+
+X
+
+w>θmax
+
+|w −θmax| + β
+
+X
+
+w<θmin
+
+|w −θmin|,
+
+The total loss becomes L = R + λ · D + Lreg, where β is a coefficient controlling the regularization strength. This penalty acts as a soft constraint, gently pulling outlier weights back towards the main distribution during fine-tuning without disrupting the learned features. The thresholds θmin and θmax are periodically re-calibrated during fine-tuning to adapt to the evolving weight distribution.
+
+### C. Quantizing Generalized Divisive Normalization (GDN) Layers
+
+1) Decomposing and Quantizing the GDN Operation: For efficient hardware mapping and to simplify the complex GDN transformation, we adopt the common inference-time simplification, which sets the exponents to one:
+
+zi = xi βi + P
+
+j γij|xj|.
+
+Our key insight for quantization is that this operation can be decomposed into standard, hardware-friendly primitives. The denominator, βi + P
+
+j γij|xj|, is functionally equivalent to a depthwise convolution operation applied to the absolute value of the input, with γ as the kernel and β as the bias. The entire GDN layer can therefore be implemented as a depthwise convolution followed by an element-wise division.
+
+This decomposition informs our quantization scheme:
+
+Parameters (γ, β): The learnable parameters are quantized using a standard per-channel symmetric quantization scheme, identical to how we handle conventional convolutional layers.
+
+Input Activation (x): A critical design choice is how to quantize the input tensor x, which is used in both the numerator and the denominator. While quantizing x and its absolute value |x| separately with unique scaling factors offers theoretical precision benefits, we found this approach consistently fails to converge during QAT. The instability likely arises from compounding errors from the STE interacting with the absolute value function.
+
+Therefore, we adopt a simpler, more robust scheme: x is quantized once, and its quantized absolute value is used in the denominator’s depthwise convolution. This approach significantly improves training stability with a negligible impact on final performance.
+
+2) Calibrated Clipping for Dynamic Range Control: Quantizing the GDN operation alone is insufficient. As established, the unbounded dynamic range of its inputs remains the primary bottleneck, leading to massive quantization error that negates the performance benefits of GDN.
+
+To resolve this, we introduce the second, crucial part of our strategy: inserting a calibrated, two-sided clipping layer to tame the activation range before it enters the GDN operation (as depicted in Fig. 1). The clipping function is defined as:
+
+Clip(x, a, b) = max(a, min(x, b)),
+
+where a and b are the lower and upper clipping bounds.
+
+Crucially, these bounds are not arbitrary but are determined by the same statistics-based method used throughout our framework. After pre-training, we use a calibration dataset to find the layer-wise mean µ and standard deviation σ , setting the bounds to:
+
+a = µ −kσ and b = µ + kσ.
+
+This two-sided, statistically-grounded clipping is the key to stabilizing the training of quantized GDN models. It constrains the problematic dynamic range, allowing the model to be fine-tuned effectively and finally surpass the performance of simpler, quantized ReLU-based models.
+
+## V. HARDWARE-AWARE OPTIMIZATION FOR FPGAS
+
+The DRAQ framework provides a high-fidelity 8-bit model. However, for a target like an FPGA, which offers fine-grained control over hardware resources, we can achieve even greater efficiency. A uniform 8-bit data path may be overkill for some parts of the network and insufficient for others. We introduce two advanced optimization techniques that build upon the DRAQ-quantized model to create a solution specifically tailored for FPGAs.
+
+Quantization Precision / bit
+
+PSNR
+
+Fixed Float
+
+**Fig. 6:** The law of diminishing returns in quantization precision. For a given RD trade-off point, performance (PSNR) saturates beyond a certain bit-width (the inflection point, around 12 bits here). This motivates a mixed-precision approach to avoid wasting bits on layers that do not benefit from higher precision.
+
+### A. Progressive Mixed-Precision Search for Hardware-Efficient LIC
+
+1) The Progressive Search Algorithm: FPGAs, unlike GPUs, are not restricted to 8/16/32-bit arithmetic; they can implement custom-width datapaths (e.g., 7-bit, 10-bit), allowing for a precise tradeoff between resource usage and numerical precision. We exploit this with a progressive search algorithm to find the optimal bit-width for each layer.
+
+Our approach is motivated by the law of diminishing returns in quantization precision. As shown in Fig. 6, model performance improves as bit-width increases, but only up to a certain inflection point. Beyond this point (e.g., 12 bits in this specific configuration), further increases in precision yield negligible performance gains while continuing to increase hardware complexity. Allocating this high precision uniformly across all layers is therefore highly inefficient. This observation forms the basis for our layer-wise precision search.
+
+We propose a Progressive Mixed-Precision Search algorithm to automatically determine the optimal bit-width for each layer in a structured and efficient manner. The algorithm, illustrated in Fig. 7, proceeds as follows:
+
+1) Establish Performance Baseline: We first determine the inflection point for the entire network. We start with a high-precision model (e.g., 16-bit), which we assume has performance equivalent to the FP32 model, and record its converged loss. We then uniformly decrease the network’s bit-width, fine-tuning at each step, until the performance degradation exceeds a predefined tolerance, ε. The last precision level that met the tolerance is set as the initial, high-precision baseline for all layers. 2) Progressive Layer-wise Search: Starting from the baseline, we iterate through the network layers in a predefined order (in order of their impact on performance). For each target layer: a) We progressively decrease its bit-width while keeping
+
+all other layers at their current precision. b) After each decrease, we fine-tune the model for a few
+
+epochs.
+
+c) We find the lowest bit-width for the layer that does not
+
+violate the performance tolerance εi. d) This optimal bit-width is then fixed, and we proceed to
+
+the next layer. 3) Controlling the Trade-off: The tolerance parameter ε provides direct control over the final performance-complexity trade-off. A smaller ε yields a high-performance model with higher average bit-width, while a larger ε produces a more compact model at the cost of some performance.
+
+This algorithm can be seamlessly integrated with our DRAQ framework by applying the weight regularization during all fine-tuning steps and re-calibrating the activation clipping parameters as needed.
+
+2) Equivalent Bit-width for Complexity Budgeting: To make a fair comparison between a uniform-precision model and our mixed-precision models, we define an Equivalent Bit-width (Pm) metric. This metric computes the weighted average bit-width of a model, with weights determined by the memory footprint of each layer’s feature map. For the synthesis transform, for instance, this is calculated as:
+
+Pm = 8
+
+15P1 + 4 15P2 + 2 15P3 + 1 15P4,
+
+where Pi is the bit-width of the i-th layer. This metric allows us to create a mixed-precision model with, for example, an equivalent bit-width of 8 bits (Pm ≈8), and compare its RD performance directly against a standard, uniform 8-bit model to demonstrate the benefits of our approach.
+
+### B. Channel Pruning via GDN-Slimming
+
+While increasing model capacity by adding more channels is a standard method for improving the rate-distortion performance of LIC models, this approach leads to a direct and significant rise in computational and memory complexity. The choice of channel count presents a fundamental tradeoff: larger models achieve better compression, particularly at high bit-rates, but their deployment on resource-constrained hardware becomes infeasible. This necessitates a more sophisticated approach to model optimization than simply scaling the architecture up or down.
+
+Our motivation for channel pruning stems from a key observation: a large portion of this computational capacity is often redundant. A deeper analysis of the network’s behavior reveals that across diverse input image sequences, a consistent subset of channels exhibits perpetually low activation energy. These channels contribute minimally to the model’s final output, regardless of the input data. This consistent inactivity represents a significant opportunity for optimization. By systematically identifying and removing these redundant channels, we can create a much smaller, more efficient model that preserves the RD performance of the original, oversized architecture. This targeted pruning allows us to break the rigid trade-off between model size and performance, making SOTA compression models practical for hardware deployment.
+
+To remove these redundant channels, we adapt the network slimming methodology. The original slimming technique imposes L1 regularization on the scaling factors (γ) of Batch Normalization (BN) layers. During training, the γ factors
+
+of unimportant channels are driven to zero, allowing them to be safely pruned. A central challenge, however, is that conventional channel slimming relies on the scaling factors within Batch Normalization (BN) layers, which are absent in LIC architectures.
+
+To solve this, we modify the GDN layer to make it slimmable. We introduce a learnable, channel-wise affine transformation immediately after the standard GDN operation, consisting of a scaling factor ai and a bias bi for each channel i:
+
+z∗
+
+i = aizi + bi
+
+= aixi βi + P
+
+j γij|xj| + bi,
+
+Here, the scaling factor ai serves the same purpose as γ in a BN layer. We can now apply L1 regularization to the vector of ai factors during training:
+
+L = R + λD + η||a||1,
+
+where η is the regularization strength. This process drives the scaling factors of unimportant channels to zero. After training, we prune all channels whose ai is below a small threshold ε, along with the corresponding filters in the preceding and succeeding convolutional layers. The resulting smaller network is then fine-tuned to recover any lost performance.
+
+This entire optimization process is performed in sequence: we first apply GDN-slimming to get a structurally smaller model, and then apply the progressive mixed-precision search to the pruned model.
+
+## VI. EXPERIMENTS
+
+### A. Experimental Setup
+
+1) Datasets: Models were trained on a 72,000-image subset of the PASS dataset [15] and tested on the standard Kodak24 dataset [16].
+
+2) Evaluation Metrics: We report performance using standard PSNR vs. bits-per-pixel (bpp) curves. We use the Bjøntegaard Delta Rate (BD-rate) to provide a single metric for the average bitrate difference (overhead) compared to a reference model. We also measure computational complexity in GFLOPs.
+
+3) Training Details: All models were trained on a single NVIDIA RTX 3090 GPU. We trained on random 256 × 256 image crops with a batch size of 8. We use the Adam optimizer with an initial learning rate of 1 × 10−4 and default parameters (β1 = 0.9, β2 = 0.999). To evaluate rate-distortion performance across a range of bitrates, we train models optimized for MSE with five λ values: {0.0018, 0.0035, 0.0067, 0.013, 0.025}.
+
+For the three lower λ values, the model hyperparameters were set to N = 128, M = 192, and models were trained for 1,000,000 iterations. For the two higher λ values, we used a larger model with N = 192, M = 320 and trained for 2,000,000 iterations. The fine-tuning stage for our dynamic range-aware methods consisted of an additional 500,000 iterations.
+
+Fine-Tuning Update loss 𝐿𝑂
+
+∗
+
+Decrease Precision
+
+𝑃𝑂= 𝑃𝑂−1
+
+Global inflection 𝑃𝑂
+
+𝑃𝑂bit model Initial loss 𝐿𝑂
+
+Global inflection Search
+
+|𝐿𝑂−𝐿𝑂
+
+∗| < 𝜀0
+
+Yes
+
+No
+
+Fine-Tuning Update loss 𝐿𝑖
+
+∗
+
+Decrease Precision
+
+𝑃𝑖= 𝑃𝑖−1
+
+Current inflection 𝑃𝑖
+
+Fix precision
+
+Current 𝑃i = 𝑃𝑂
+
+Initial loss 𝐿𝑂
+
+∗
+
+|𝐿𝑖
+
+∗−𝐿𝑂
+
+∗| < 𝜀𝑖
+
+No Sort layers 𝐿 in order of their
+
+impact on performance
+
+Next layer exist
+
+Update target layer
+
+Precision of all
+
+layers {𝑷}
+
+Progressive Layer-wise Search
+
+Yes Yes
+
+No
+
+**Fig. 7:** Flowchart of the Progressive Mixed-Precision Search algorithm. The process begins by establishing a high-precision baseline for the full network, then iteratively searches for the optimal, minimal bit-width for each layer without violating a set performance degradation tolerance ε.
+
+4) Baselines and Compared Methods: To validate our approach, we conduct a comprehensive set of experiments.
+
+Backbone Architectures: We evaluate our quantization methods on two LIC architectures:
+
+◦ The seminal hyperprior model from Ball´e et al. [2]. ◦ The checkerboard context model from He et al. [8].
+
+Comparison Framework: To demonstrate the effectiveness of our proposed methods, we establish the following comparisons:
+
+◦ A Baseline Quantization Method: We apply the standard Quantization-Aware Training (QAT) scheme from [17] without any of our proposed distribution control techniques. This serves to isolate the performance gains attributable to our method. ◦ An Ablation Study on GDN vs. ReLU: To highlight the importance of our GDN-specific optimizations, we compare the performance of both ReLU-based and GDN-based backbones after applying our quantization framework. ◦ A Comparison with former Methods: We compare our final models against other published LIC quantization methods, specifically those from Hong et al. [18] and Sun et al. [19]. To ensure a fair comparison, all methods are applied to the same ReLU-based backbone, consistent with their original papers.
+
+### B. Foundational Quantization Performance (DRAQ)
+
+We evaluate our proposed Dynamic Range-Aware Quantization (DRAQ) framework on two SOTA backbones, Ball´e2018 [2] and He2021 [8]. We analyze its effectiveness against a baseline quantization method and its unique ability to unlock the performance of GDN-based models.
+
+1) Performance vs. Baseline and Full-Precision: Fig 8 presents the core rate-distortion (RD) performance of our method. The results clearly demonstrate that for both the Ball´e2018 and He2021 architectures, our DRAQ framework significantly outperforms the baseline quantization scheme. Our method substantially closes the performance gap to the full-precision (FP32) models, especially at lower bitrates, validating the effectiveness of our distribution control techniques.
+
+To quantify these improvements, we report the Bjøntegaard Delta Rate (BD-rate) in Table I. BD-rate measures the average percentage of bitrate savings for a given PSNR compared to a reference model (here, the FP32 model); a smaller value indicates better performance. Our proposed method achieves a remarkable reduction in BD-rate across all tested configurations. For instance, on the Ball´e2018-ReLU model, DRAQ reduces the BD-rate from the baseline’s 12.8% to just 4.93%. Similarly, for the more complex He2021-GDN model, the performance gap is reduced from a prohibitive 24.0% to a much more manageable 9.48%.
+
+2) Unlocking GDN Performance in the Quantized Domain: A key achievement of our work is enabling high-performance quantization for GDN-based models, which typically suffer greatly from standard quantization. As seen in Fig. 8, with
+
+Bit-rate (bpp)
+
+Balle2018-GDN [FP32]
+
+Balle2018-GDN [INT8] (ours)
+
+Balle2018-GDN [INT8] (baseline)
+
+Balle2018-ReLU [FP32]
+
+Balle2018-ReLU [INT8] (ours)
+
+Balle2018-ReLU [INT8] (baseline)
+
+(a) Ball´e2018: Quantized vs. FP32
+
+Bit-rate (bpp)
+
+He2021-GDN [FP32]
+
+He2021-GDN [INT8] (ours)
+
+He2021-GDN [INT8] (baseline)
+
+He2021-ReLU [FP32]
+
+He2021-ReLU [INT8] (ours)
+
+He2021-ReLU [INT8] (baseline)
+
+(b) He2021: Quantized vs. FP32
+
+**Fig. 8:** Rate-distortion performance comparison. Our proposed DRAQ method significantly outperforms the baseline quantization and nearly matches the performance of the full-precision models for both ReLU and GDN-based architectures.
+
+**TABLE I:** BD-Rate (%) vs. Full-Precision Models. A smaller value indicates better performance. Our proposed method consistently and significantly reduces the performance gap.
+
+Quantization Method Precision BD-Rate (%)
+
+Ball´e2018-ReLU
+
+Hong2020 [18] Baseline Sun2021 [19] Proposed (DRAQ)
+
+Ball´e2018-GDN Baseline Proposed (DRAQ)
+
+He2021-ReLU Baseline Proposed (DRAQ)
+
+He2021-GDN Baseline Proposed (DRAQ)
+
+the baseline method, the quantized GDN models (e.g., dashed green line) perform worse than their simpler ReLU counterparts (e.g., dashed blue line).
+
+However, when our DRAQ framework is applied, this trend is reversed. The quantized GDN models consistently outperform their quantized ReLU counterparts, mirroring the behavior of the FP32 models. This demonstrates that our specialized GDN quantization and clipping strategy is effective. Table II provides a point-by-point comparison, confirming that at similar bitrates, our quantized GDN models achieve superior PSNR across all tested conditions.
+
+3) Comparison with Existing Methods: Finally, we benchmark our method against other published LIC quantization techniques on the Ball´e2018-ReLU backbone. As shown in Table I, our method achieves a BD-rate of just 4.93%, substantially outperforming both Hong et al. [18] (26.5%) and Sun et al. [19] (9.01%). Notably, our method achieves this superior performance at INT8 precision, whereas the method of Hong et al. required INT10, further highlighting the efficiency of our approach.
+
+**TABLE II:** Performance Comparison of Quantized ReLU and GDN Models Using Our Proposed DRAQ Framework.
+
+Quantized ReLU Quantized GDN
+
+Ball´e2018
+
+He2021
+
+4) Ablation Study: To validate the individual contributions of our proposed components—activation range clipping and weight outlier regularization—we conduct a thorough ablation study. We compare the performance of our full DRAQ framework against three variants:
+
+1) A Baseline model with standard QAT. 2) A model with only Weight Regularization. 3) A model with only Activation Clipping.
+
+The results, summarized in Table III, clearly demonstrate the effectiveness of both components. For the Ball´e2018-ReLU model, starting from a baseline BD-rate of 12.8%, adding only weight regularization reduces it to 10.8%, while activation clipping alone achieves a more significant reduction to 6.16%. However, combining both components in our full DRAQ framework yields the best performance, achieving a BD-rate of just 4.93%. This synergy confirms that addressing both weight and activation distributions is necessary for optimal performance. Figure 9 visually corroborates these findings.
+
+Furthermore, a crucial aspect of this study is to determine if the performance gains stem from creating a more quantizationfriendly distribution or simply from an architectural improvement (i.e., that adding a Clip layer inherently improves the FP32 model). To investigate this, we applied our clipping
+
+**TABLE III:** Ablation Study Results (BD-Rate % vs. FP32). Lower is better. The results show that both components contribute to performance, with their combination being the most effective. The minimal gain from clipping in the FP32 domain confirms the improvement is primarily due to better quantization.
+
+Ablation Condition Precision BD-Rate (%)
+
+Ball´e2018-ReLU
+
+Baseline (No Clipping/Reg) Weight Reg Only Activation Clip Only Proposed (Both)
+
+He2021-GDN
+
+Baseline (No Clipping/Reg) Weight Reg Only Activation Clip Only Proposed (Both)
+
+FP32 (No Clipping) FP32 (Reference) FP32 (With Clipping) FP32 -1.02
+
+Bit-rate (bpp)
+
+FP32 (No Clipping)
+
+FP32 (With Clipping)
+
+Proposed (Both) [INT8]
+
+Activation Clip Only [INT8]
+
+Weight Reg Only [INT8]
+
+Baseline (No Clipping/Reg) [INT8]
+
+**Fig. 9:** Visual results of the ablation study on the Ball´e2018- ReLU model. The full DRAQ framework (both components, purple triangles) achieves the best rate-distortion trade-off, clearly outperforming the baseline and either individual component.
+
+strategy directly to the full-precision He2021-GDN model. As shown in the final rows of Table III, adding clipping to the FP32 model yields only a minor BD-rate improvement of - 1.02%. In stark contrast, applying the same clipping strategy in the quantized domain reduces the BD-rate penalty from 24.0% down to 11.3%—a massive improvement. This disparity confirms that the vast majority of the performance gain is indeed due to creating a more efficient data distribution for quantization, not merely from enhancing the FP32 model’s architecture.
+
+5) Analysis of Quantization Error and Data Distribution: Having established the performance benefits of our DRAQ framework, we now provide a direct analysis to verify
+
+its underlying mechanism: that it improves performance by fundamentally reshaping the data distributions to be more quantization-friendly.
+
+Reduction of Quantization Error: We first quantitatively measure the impact of our method on the mean squared quantization error (MSQE). Table IV compares the MSQE for two representative convolutional layers before (A, B) and after (A*, B*) applying our DRAQ framework. The results show a marked reduction in quantization error for both weights and activations. For instance, in Layer B, our method reduces the activation MSQE by over 60%, from 6.46e −6 to 2.48e −6. This directly confirms that our distribution control techniques lead to a more accurate low-bit representation.
+
+**TABLE IV:** Mean Squared Quantization Error (MSQE) for two representative layers before (A, B) and after (A*, B*) applying our DRAQ framework. Our method significantly reduces the error for both weights and activations.
+
+A A* B B*
+
+Weight 2.10e-6 2.02e-6 7.55e-7 6.36e-7 2.07e-6 1.03e-6 6.46e-6 2.48e-6
+
+Verification of Distribution Reshaping: Figure 10 provides a visual confirmation of how this error reduction is achieved. The boxplots illustrate the distributions of weights and activations for a convolutional layer before and after applying DRAQ. As hypothesized, our method effectively reshapes the distributions:
+
+For weights (Fig. 10a), the regularization dramatically compresses the value range by pruning the most extreme outliers, as seen by the reduced span of the whiskers and fewer outlier points.
+
+For activations (Fig. 10b), the calibrated clipping successfully tames the overall dynamic range, pulling the maximum values down significantly.
+
+These visualizations directly correspond to our design goals. By creating narrower and more concentrated data distributions, our DRAQ framework allows the fixed number of quantization bins to represent the data with much higher fidelity, which explains the superior rate-distortion performance observed in our main results.
+
+### C. Mixed-Precision Quantization Results
+
+We now evaluate the performance of our Progressive Mixed-Precision Search algorithm. We demonstrate its effectiveness in two key scenarios: achieving near-lossless performance relative to the FP32 model, and optimizing performance under a fixed complexity budget.
+
+1) Achieving Near-Lossless Performance: First, we demonstrate the algorithm’s ability to find a bit-width configuration that minimizes the performance gap to the full-precision model. By setting a strict performance tolerance (ε), the search identifies the optimal precision for each layer.
+
+**Figure 11** illustrates the resulting bit-width assignments for the Ball´e2018 model. A key finding emerges when comparing the results with and without our DRAQ framework. For a
+
+LayerA Restricted LayerA LayerB Restricted LayerB layer
+
+range
+
+(a) Weight distribution before and after applying regularization.
+
+LayerA Restricted LayerA LayerB Restricted LayerB layer
+
+range
+
+(b) Activation distribution before and after applying clipping.
+
+**Fig. 10:** Visual analysis of data distribution reshaping. Our proposed methods successfully (a) reduce the range and outliers of weights and (b) constrain the dynamic range of activations, making them more amenable to quantization.
+
+baseline quantized model (Fig. 11a), the optimal bit-widths are primarily between 10 and 12 bits. However, when our DRAQ framework is first applied (Fig. 11b), the required precision for near-lossless performance drops significantly to a range of 8 to 10 bits. This synergy demonstrates that our DRAQ method not only improves uniform-precision models but also makes them more amenable to further compression via mixedprecision quantization.
+
+The performance for the configuration in Fig. 11b is shown in the second row of Table V. With an equivalent bit-width of only 8.7 bits, the model achieves a PSNR of 34.62 dB, negligibly close to the FP32 performance of 34.71 dB.
+
+2) Optimizing for a Fixed Complexity Budget: A key advantage of our method is its ability to optimize performance for a specific hardware budget. To demonstrate this, we relaxed the tolerance ε and targeted an equivalent bit-width of approximately 8 bits. The resulting layer-wise precision assignment is shown in Fig. 12.
+
+**Table V** compares the performance of this configuration against the uniform 8-bit model. At a nearly identical bitrate and complexity budget, our mixed-precision model (Pm = 7.9 bits) achieves a PSNR of 34.35 dB, which is a significant improvement over the 34.13 dB from the uniform 8-bit model. This result highlights the primary benefit of mixed-precision quantization for hardware deployment: for a given complexity
+
+budget, intelligently reallocating bits to more sensitive layers yields a superior rate-distortion trade-off.
+
+**TABLE V:** Performance Comparison of Mixed-Precision Configurations Against FP32 and Uniform 8-bit Models.
+
+Configuration (Equiv.) Bit-Width
+
+Full Precision (FP32) Mixed Precision (Near-Lossless) Mixed Precision (Budgeted) Uniform Quantization
+
+D. GDN-Slimming Results
+
+We evaluate our GDN-Slimming technique to validate its ability to reduce model complexity while preserving ratedistortion (RD) performance.
+
+1) Analysis of Redundancy Removal: First, we verify that the method correctly identifies and removes redundant channels based on model capacity and task difficulty. We trained several He2021 models with different initial channel counts and at different RD trade-off points (λ).
+
+As shown in Table VI, our method demonstrates intelligent, adaptive pruning. When two models with different initial sizes (N = M = 192 vs. N = 128, M = 192) are pruned for the
+
+9bit
+
+10bit
+
+10bit
+
+11bit 8bit 11bit 12bit 12bit 12bit
+
+10bit 12bit 8bit 12bit 9bit
+
+Conv 5x5 3xN ↓2
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxM ↓2
+
+ConvT 5x5 Nx3 ↑2
+
+IGDN
+
+ConvT 5x5 NxN ↑2
+
+IGDN
+
+ConvT 5x5 NxN ↑2
+
+IGDN
+
+ConvT 5x5 MxN ↑2
+
+Conv 3x3 MxN
+
+LeakyReLU
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxN ↓2
+
+LeakyReLU
+
+Conv 3x3 1.5Mx2M
+
+LeakyReLU
+
+ConvT 5x5 Mx1.5M ↑2
+
+ConvT 5x5 NxM ↑2
+
+LeakyReLU
+
+Q
+
+AE
+
+AD
+
+Q
+
+AE
+
+AD
+
+𝑥
+
+𝑥
+
+(a) Optimal bit-widths for the baseline Ball´e2018 model (λ = 0.0067).
+
+8bit
+
+9bit 10bit 10bit 8bit
+
+10bit
+
+10bit
+
+10bit 8bit 10bit 10bit 10bit
+
+10bit 8bit
+
+Conv 5x5 3xN ↓2
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxM ↓2
+
+ConvT 5x5 Nx3 ↑2
+
+IGDN
+
+ConvT 5x5 NxN ↑2
+
+IGDN
+
+ConvT 5x5 NxN ↑2
+
+IGDN
+
+ConvT 5x5 MxN ↑2
+
+Conv 3x3 MxN
+
+LeakyReLU
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxN ↓2
+
+LeakyReLU
+
+Conv 3x3 1.5Mx2M
+
+LeakyReLU
+
+ConvT 5x5 Mx1.5M ↑2
+
+ConvT 5x5 NxM ↑2
+
+LeakyReLU
+
+Q
+
+AE
+
+AD
+
+Q
+
+AE
+
+AD
+
+𝑥
+
+𝑥
+
+(b) Optimal bit-widths for the DRAQ-enhanced Ball´e2018 model (λ = 0.025).
+
+**Fig. 11:** Mixed-precision assignments that achieve nearlossless performance. Applying our DRAQ framework first (b) significantly reduces the required bit-widths compared to the baseline (a) to achieve performance comparable to the FP32 model.
+
+8bit
+
+9bit 9bit 9bit 7bit
+
+9bit
+
+8bit
+
+9bit 8bit 7bit 9bit 9bit
+
+9bit 8bit
+
+Conv 5x5 3xN ↓2
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxM ↓2
+
+ConvT 5x5 Nx3 ↑2
+
+IGDN
+
+ConvT 5x5 NxN ↑2
+
+IGDN
+
+ConvT 5x5 NxN ↑2
+
+IGDN
+
+ConvT 5x5 MxN ↑2
+
+Conv 3x3 MxN
+
+LeakyReLU
+
+Conv 5x5 NxN ↓2
+
+Conv 5x5 NxN ↓2
+
+LeakyReLU
+
+Conv 3x3 1.5Mx2M
+
+LeakyReLU
+
+ConvT 5x5 Mx1.5M ↑2
+
+ConvT 5x5 NxM ↑2
+
+LeakyReLU
+
+Q
+
+AE
+
+AD
+
+Q
+
+AE
+
+AD
+
+𝑥
+
+𝑥
+
+**Fig. 12:** Mixed-precision assignment for the Ball´e2018 model targeting an equivalent bit-width of approximately 8 bits.
+
+same low-bitrate task, the resulting channel counts become much more similar, indicating that the method effectively removes initial over-parameterization.
+
+Critically, this reduction in complexity comes at a negligible cost to RD performance. Figure 13 shows that the pruned models achieve nearly identical RD curves compared to their unpruned counterparts.
+
+**TABLE VI:** Channel counts of the three main GDN layers before and after slimming, demonstrating adaptive redundancy removal.
+
+Initial Channels Pruned Channels
+
+[192, 192, 192] [110, 144, 182] [128, 128, 128] [114, 121, 125]
+
+[192, 192, 192] [142, 173, 191] [192, 192, 192] [172, 188, 190]
+
+PSNR / dB
+
+Bit Rate / bpp
+
+N=M=128 Model (No Prunning)
+
+Prunned from N=M=128
+
+Prunned from N=M=192
+
+**Fig. 13:** Rate-distortion performance of pruned models. Models with different initial sizes (e.g., N=192 vs. N=128) converge to a nearly identical RD curve after pruning. This demonstrates that the slimming method effectively removes structural redundancy without compromising performance.
+
+2) Performance vs. Complexity Trade-off: The primary benefit of pruning is achieving a more favorable balance between performance and computational cost. Table VII benchmarks our pruned GDN-Slimming model against other SOTA architectures. We measure complexity in GFLOPs per pixel and performance in terms of bitrate savings relative to the BPG codec.
+
+The results are compelling. Compared to the original He2021 model, our GDN-Slimming model reduces the total computational complexity by approximately 20% (from 138.5 to 109.9 GFLOPs/pixel). This significant reduction is achieved with only a minimal drop in bitrate savings (from 11.29% to 10.66%), and a slight reduction in encoding time. This positions our pruned model as an excellent and practical trade-off point, offering performance substantially better than Ball´e2018 at a lower complexity than He2021.
+
+**TABLE VII:** Complexity and Performance Comparison with LIC Models. Our GDN-Slimming model offers a superior trade-off point.
+
+Total GFLOPs/pixel Bitrate Savings (%) Time (ms)
+
+Minnen2018 [3] He2021 [8] GDN-Slimming (Ours) Ball´e2018 [2]
+
+### E. Final Integrated System Performance
+
+In this section, we evaluate the synergistic performance of our complete framework, which integrates Dynamic Range-
+
+Aware Quantization (DRAQ), Progressive Mixed-Precision Search, and GDN-Slimming.
+
+### F. Comparison with State-of-the-Art Implementations
+
+We first benchmark our fully integrated framework against other published FPGA-based LIC implementations. Table VIII compares our solution to F-LIC [20] and FPX-NIC [21]. Despite targeting a similar BPP, our method achieves the highest PSNR (30.14 dB) while requiring significantly lower computational complexity. Our model’s encoding pipeline demands only 75.62 GFLOPs, demonstrating superior hardware efficiency compared to its counterparts.
+
+**TABLE VIII:** Comparison with other FPGA-based LIC implementations. Our proposed framework achieves the best PSNR with the lowest computational complexity.
+
+Proposed Framework F-LIC [20] FPX-NIC [21]
+
+Hardware Platform (N/A) VCU118 ZCU104 Model Precision INT7.9 (Mixed)
+
+GFLOPs (ga only) Total Encoding GFLOPs
+
+### G. Performance vs. Complexity Trade-off
+
+To clearly illustrate the benefits of our hardware-aware optimizations (mixed-precision and pruning), Table IX provides a detailed comparison between the full-precision model, our DRAQ quantization, and the final integrated framework.
+
+While the baseline DRAQ method successfully quantizes the model to INT8 with only a minor performance drop, our final framework achieves a remarkable trade-off. For example, at λ = 0.0130, our mixed-precision and pruned model reduces the complexity of the main analysis transform (ga) by over 50% (from 312 to 149 GFLOPs) compared to the DRAQ model, while the PSNR decreases by only 0.31 dB. This demonstrates the efficacy of our hardware-aware optimizations in dramatically reducing computational load while maintaining performance close to the full-precision model, validating the core contribution of this work. By first creating a high-fidelity integer model and then applying targeted, hardware-aware optimizations, we have produced a final model that is verifiably superior in both efficiency and quality.
+
+## VII. CONCLUSION AND FUTURE WORK
+
+Deploying high-performance learned image compression on resource-constrained hardware like FPGAs requires more than a simple application of quantization. In this paper, we have presented a comprehensive, multi-stage optimization framework that addresses this challenge from the ground up.
+
+We began by identifying and solving the fundamental data distribution problems—extreme weight outliers and large activation dynamic ranges—that cause catastrophic performance loss in standard quantization. Our proposed Dynamic Range-Aware Quantization (DRAQ) framework successfully creates a high-fidelity 8-bit integer model that performs nearly identically to its full-precision floating-point parent, solving a
+
+critical bottleneck for all LIC models and, for the first time, enabling the effective quantization of advanced GDN-based architectures.
+
+Building on this robust foundation, we introduced two hardware-aware optimization techniques to maximize efficiency on FPGAs. The progressive mixed-precision search algorithm leverages the custom datapath flexibility of FPGAs to assign optimal, non-uniform bit-widths to each layer, minimizing complexity. Our novel adaptation of channel slimming to GDN-based models effectively prunes network redundancy, further reducing the computational load.
+
+The final, fully optimized model demonstrates state-of-theart performance, achieving a better rate-distortion tradeoff at a lower computational cost than existing FPGA-based implementations. This work provides a complete and validated pathway for transforming complex, high-performance LIC models into efficient, hardware-friendly solutions, paving the way for their practical application in real-world, low-power visual data systems. While this paper has demonstrated excellent results in simulation, a hardware deployment would allow for the analysis of real-world metrics such as throughput, latency, power consumption, and on-chip resource utilization. Such a deployment would provide a definitive validation of the practical benefits of our hardware-software co-design methodology.

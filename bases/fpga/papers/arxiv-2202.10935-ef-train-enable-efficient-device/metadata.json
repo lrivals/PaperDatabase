@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2202.10935-ef-train-enable-efficient-device",
+  "title": "EF-Train: Enable Efficient On-device CNN Training on FPGA Through Data Reshaping for Online Adaptation or Personalization",
+  "authors": [
+    {
+      "given": "Yue",
+      "family": "Tang"
+    },
+    {
+      "given": "Xinyi",
+      "family": "Zhang"
+    },
+    {
+      "given": "Peipei",
+      "family": "Zhou"
+    },
+    {
+      "given": "Jingtong",
+      "family": "Hu"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2202.10935",
+  "url": "https://arxiv.org/abs/2202.10935",
+  "type": "preprint",
+  "axes": [],
+  "tags": [],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "2024-aggarwal-chameleon-dual-memory-replay-online",
+  "title": "Chameleon: Dual Memory Replay for Online Continual Learning on Edge Devices",
+  "authors": [
+    {
+      "given": "Shivam",
+      "family": "Aggarwal"
+    },
+    {
+      "given": "Kuluhan",
+      "family": "Binici"
+    },
+    {
+      "given": "Tulika",
+      "family": "Mitra"
+    }
+  ],
+  "year": 2024,
+  "venue": "IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems 43(6)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "journal",
+  "axes": [
+    "continual-learning",
+    "platforms"
+  ],
+  "tags": [
+    "zcu102"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
+      "sections numérotées non détectées : I, II — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

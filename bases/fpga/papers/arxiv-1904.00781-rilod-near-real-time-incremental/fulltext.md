@@ -1,0 +1,552 @@
+---
+id: arxiv-1904.00781-rilod-near-real-time-incremental
+title: "RILOD: Near Real-Time Incremental Learning for Object Detection at the Edge"
+year: 2019
+backend: pymupdf
+---
+
+RILOD: Near Real-Time Incremental Learning for
+
+Object Detection at the Edge
+
+Dawei Li dawei.l@samsung.com Samsung Research America
+
+Mountain View, CA
+
+Serafettin Tasci s.tasci@samsung.com Samsung Research America
+
+Mountain View, CA
+
+Shalini Ghosh shalini.ghosh@samsung.com
+
+Samsung Research America
+
+Mountain View, CA
+
+Jingwen Zhu∗
+
+zhujingwen8942@gmail.com
+
+Apple Inc Cupertino, CA
+
+Junting Zhang†
+
+juntingz@usc.edu University of Southern California
+
+Los Angeles, CA
+
+Larry Heck larry.h@samsung.com Samsung Research America
+
+Mountain View, CA
+
+## Abstract
+
+Object detection models shipped with camera-equipped edge devices cannot cover the objects of interest for every user. Therefore, the incremental learning capability is a critical feature for a robust and personalized object detection system that many applications would rely on. In this paper, we present an efficient yet practical system, RILOD, to incrementally train an existing object detection model such that it can detect new object classes without losing its capability to detect old classes. The key component of RILOD is a novel incremental learning algorithm that trains end-to-end for one-stage deep object detection models only using training data of new object classes. Specifically to avoid catastrophic forgetting, the algorithm distills three types of knowledge from the old model to mimic the old model’s behavior on object classification, bounding box regression and feature extraction. In addition, since the training data for the new classes may not be available, a real-time dataset construction pipeline is designed to collect training images on-the-fly and automatically label the images with both category and bounding box annotations. We have implemented RILOD under both edge-cloud and edge-only setups. Experiment results show that the proposed system can learn to detect a new object class in just a few minutes, including both dataset construction and model training. In comparison, traditional
+
+∗Work was done when the author was a full-time employee with SRA. †Work was done when the author was a summer intern with SRA.
+
+Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear of this work owned by others than ACM must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org. ACM ISBN 978-1-4503-6733-2/19/11...$15.00
+
+fine-tuning based method may take a few hours for training, and in most cases would also need a tedious and costly manual dataset labeling step.
+
+CCS Concepts • Human-centered computing →Ubiquitous and mobile computing; • Computing methodologies →Knowledge representation and reasoning.
+
+Keywords edge computing, incremental learning, object detection, deep neural networks
+
+ACM Reference Format: Dawei Li, Serafettin Tasci, Shalini Ghosh, Jingwen Zhu, Junting Zhang, and Larry Heck. 2019. RILOD: Near Real-Time Incremental Learning for Object Detection at the Edge. In The Fourth ACM/IEEE Symposium on Edge Computing (SEC 2019), November 7–9, 2019, Arlington, VA, USA. ACM, New York, NY, USA, 14 pages. https: //doi.org/10.1145/3318216.3363317
+
+introduction Object detection is the computer vision task that identifies and localizes instances of semantic objects of a certain class (such as humans, buildings, or cars) in images or video frames. On edge devices that are equipped with advanced cameras such as smart-phones, self-driving cars, mobile robots and drones, object detection has been the backbone for many exciting applications including augmented reality, autopilot, mobile shopping, etc. These successful applications were made possible due to recent breakthroughs in deep learning based object detection, especially the one-stage object detection frameworks like YOLO [32], SSD [26] and RetinaNet [24], which enabled on-device inference for applications with realtime requirement.
+
+In this paper, we focus on a challenging but critical problem for object detection at the edge, i.e., the incremental learning of new object classes. A pre-trained deep learning model shipped with the edge devices could cover up to hundreds of object classes with reasonably good accuracy. However, each end user may have his/her personalized objects of interest that are not included in the pre-trained model, and it would not be feasible to train a general model
+
+that covers every user’s interest. Meanwhile, new objects of interest may appear from time to time (e.g., the emergence of MP3 Walkman to replace the old tape Walkman), and there’s no way to predict those future object classes.
+
+To incrementally add new object classes into the model, a straightforward way is to fine-tune the model with training data from both old and new classes. However, this naive method would not work in practice. First, due to privacy issues, the training data for old classes of the deployed model may not be available with a high possibility. Second, even the old data is available, training using a dataset containing all classes is time consuming as the training efficiency is highly correlated with the amount of training data required. For object detection at the edge, learning to detect new objects incrementally in a timely and quality-conscious manner is crucial in many application scenarios. Users of edge devices may encounter new objects of interest anywhere anytime and delayed learning on those objects would have a negative impact on the user experience. For mobile robots and drones performing military or disaster relief missions, this could play a decisive role on saving lives and properties.
+
+On the other hand, deep neural networks are known to suffer from “catastrophic forgetting" [19] — this is the phenomenon where, when training using back propagation and the standard cross-entropy loss with only training data of the new classes, the model can forget its learned knowledge on the old classes, e.g., for the object detection model, it can no longer detect objects belonging to the old classes. To deal with the “catastrophic forgetting" problem, deep learning researchers have proposed effective learning methods such as elastic weight consolidation (EWC) [19] and learning without forgetting (LwF) [22]. Those methods have focused on the object classification problem, and none of them can be directly applied to the object detection problem, especially the one-stage object detection models which simultaneously predict the object classes and the bounding box locations.
+
+We address the “catastrophic forgetting" problem of incremental learning for one-stage object detection using a novel loss function based on the knowledge distillation technique [12]. The fundamental idea is to discourage the change of predictions for the old classes including the model output of both classification and bounding box regression. Specifically, when training only with new-class data, we keep a copy of the old model to generate the output of the new data for both classification (i.e., the probability of belonging to each of the old classes) and bounding box location (i.e., the coordinates of each detected object in the image), and use distillation loss terms to minimize the changes in the new model (see Figure 3). By this way, we force the old and new models to reach a consensus on predicting the old classes. Moreover, we add a feature distillation loss term to prevent dramatic changes of features extracted from a middle neural network layer, which further reduces the catastrophic forgetting and improves the model accuracy.
+
+Unlike object classification task, the training data for object detection of a new class may not always be available since it requires both class level labels and accurate bounding boxes, annotating which is a costly and laborious job. In the absence of training data, we need to automatically build a reasonably good training dataset on-the-fly. To this end, we propose a real-time training dataset construction method for the new object classes. We show that the created dataset has accurately annotated bounding boxes around the objects corresponding to the new classes, and thus can be directly used to incrementally train the detection model.
+
+To summarize, we make the following contributions:
+
+• The first end-to-end incremental learning system for object detection at the edge in near real-time. • A new algorithm and loss function for incremental learning of one-stage object detection models to solve the “catastrophic forgetting" problem. • On-the-fly automated dataset construction algorithm to create training data for new classes with both classification and bounding box labels. • Extensive experiments that demonstrate the effectiveness and efficiency of each system component — we also investigate some trade-offs to optimize the overall system performance. • Prototype implementations of the end-to-end system on both edge-cloud and edge-only architectures. For the edge-only implementation, we develop and deploy the system completely on Jetson TX2 embedded AI platform — we show that learning of a new class completes in just a few minutes, including both dataset construction and model training. The rest of the paper is organized as follows: We review related work in Section 2. The system overview is described in Section 3. We present our efficient incremental learning method for object detection in Section 4. In Section 5, we introduce the automatic data collection and labeling algorithm. The evaluation and prototype implementation is given in Section 6. Finally we conclude the paper in Section 7.
+
+Related Work
+
+Deep Learning for Edge Vision: Deep learning, especially convolutional neural networks (CNN), has been widely used for a variety of computer vision application on the edge devices due to the recent development of light-weight deep learning SDKs [1, 21, 30, 35]. Researchers have focused on reducing the computation cost on the edge devices by compressing pre-trained deep learning models [3, 9, 10, 20], designing lightweight neural network architectures [13, 16], or hardware accelerations [15, 37] — these papers have not addressed the incremental learning problem in edge vision.
+
+Deep Incremental Learning: To address the “catastrophic forgetting" problem, deep learning researchers have recently
+
+## (préambule)
+
+**Figure 1.** System overview of RILOD. It includes 3 main components: (1) Incremental learning trigger which incorporates the logic on when the incremental learning will start and what classes will be learned (one or more new classes can be learned at a time), (2) Training dataset preparation which downloads, labels and purifies the training images for the new classes in case that there’s no available training dataset, and (3) Incremental training for new classes which applies our novel and efficient incremental learning algorithm to incrementally train the model with only the training data of the new classes while maintaining its knowledge on the old classes. Components (2) and (3) may run on a remote cloud server or locally on a mobile GPU for a fully on-device system, and both have been implemented for prototype system evaluation.
+
+developed methods in several different directions. One important approach is adding regularization [2, 19] to the neural network weights according to their importance to the old classes, i.e., it discourages the change on important weights using a smaller learning rate. The other major research direction is based the knowledge distillation [12], which uses the new data to distill the knowledge (i.e., the network output) from the old model and mimic its behavior (i.e., generate similar output) when training the new model [22, 31, 34]. Among the related work, only [34] has focused on the object detection problem. However, their approach works on the Fast-RCNN model [8], where bounding boxes proposals are computed using an additional selective search method [36] — this approach will not be able to satisfy the real-time infer-
+
+ence requirement on edge devices.
+
+Automatic Image Annotation: A related research topic to our automatic training dataset construction problem is automatic image annotation [4, 17], which is a process that relies on the computer system assigning metadata (e.g., keywords, caption) to digital images. Image annotation is generally used as a method to provide semantic labels for an image retrieval system. The labeled images is not used as training dataset to train or refine a learning model. Our approach is different from automatic image annotation — we are trying to automatically build a training dataset on-the-fly by selecting and labeling a subset of training images from noisy web-crawled images. Furthermore, our labeling algorithm not only gives the image-level labels but also object bounding box locations.
+
+System Overview
+
+In this section, we give an overview of the proposed RILOD system which has three major components as illustrated in Figure 1.
+
+The first component is the incremental learning trigger that runs on the edge devices to listen for the request of learning new classes. There could be different scenarios to initiate a new learning task. In the simplest scenario, the user directly tells the AI engine to learn a new object class that the current AI engine cannot detect. However, this scenario has an unpractical assumption that the user knows what class she/he is interested in and what existing classes the AI engine has learned.
+
+A more realistic situation is that the user does not know in advance her/his interest or the already learned classes, but would like to learn whenever new classes of interest come across. Therefore, we design an interactive way of initiating a new learning task as shown in Figure 1 — when the camera of an edge device was pointed to a certain object (e.g. a slow cooker), if the AI engine cannot detect the object using the current object-detection model with enough confidence, it prompts the user to notify that it would like to learn the new object category. If the user approves the learning request, she/he could issue a simple initiate-learning command and tell the AI engine to start the learning process. For each learning task, one or more new classes can be learned simultaneously.
+
+The second component is a training dataset preparation pipeline which constructs a set of training data in real-time for the new classes to be learned. This component will be
+
+triggered if there is not an available training dataset for the new classes to be learned. Specifically, it first downloads relevant noisy images from the Internet using the new class names as query. Then, we purify the downloaded image and generate bounding box annotations for the objects corresponding to the given class names. We will elaborate our solutions in Section 5.
+
+The third component is the model training module which learns to detect the new object using either an available training dataset or the dataset prepared by the previous system component. While training with only new-class data reduces the time cost of incremental learning, it increases the risk of catastrophicf orдettinд on the old classes. Our novel incremental learning algorithm is built on top of the powerful knowledge distillation technique which has been used for incremental learning of object classification models[22]. However, incremental learning for an object detection model is much more complicated than a classification model, since it requires preservation of not only the semantic classification capability but also its knowledge regarding the bounding box prediction. We will discuss the details in Section 4.
+
+We have implemented the end-to-end system with two different system architectures: edge-cloud and edge-only. For the edge-cloud implementation, the dataset construction and model training components run on a remote cloud-based GPU server — once the training is completed, the new model is downloaded to the edge devices for future inferences. The edge-only implementation is a fully on-device system without relying on the cloud computing resources. We have evaluated and compared both implementations in our evaluation section.
+
+Incremental learning algorithm
+
+Recap for One-stage Object Detector
+
+The goal of object detection is to recognize instances of a predefined set of object classes (e.g. people, cars, bikes, animals) and describe the locations of each detected object in the image using a bounding box. Earlier end-to-end deep learning methods adopted a two-stage architecture which first identify a set of possible bounding box locations using a region proposal network and then use a second convolutional neural network to refine the bounding box proposals and classify the object categories [33]. While two-stage object detectors can achieve very high detection accuracy, they suffer from slow inference speed and thus cannot be deployed for most edge applications which require real-time inference capability. Therefore, recent research has focused on developing one-stage object detection architectures [23, 24, 26, 32] which run faster yet provide accuracy similar to the twostage detectors.
+
+The success of one-stage detector is attributed to four critical techniques recently invented by computer vision researchers: grid-based prediction [32], anchor boxes [26],
+
+**Figure 2.** A representative one-stage object detection model architecture: RetinaNet [24]. For each cell in a grid of size W*H, it predicts (1) the probability that an object exists in each of the A anchor boxes from K different classes, and (2) the four coordinate offsets for each of the A anchor boxes to a ground-truth bounding box (if one exists).
+
+feature pyramids [23] and focal loss [24]. First, the feature maps generated by convolutional neural networks preserve the spatial information of the input image and thus [32] divide the feature maps into grids, and each grid cell is used to directly predict objects (both classification and bounding box) falling into the area. In this manner, there’s no need for a box proposal network. Second, regression learning of the four coordinates of a bounding box from random initialization makes the training extremely hard; to address this issue, [26] instead predicts bounding box offsets to some pre-defined anchor boxes with varying aspect ratios, which embed some prior information about the shape of candidate objects. Third, to better locate objects of different scales and especially the small ones, [23] proposed to predict objects with feature maps of different resolutions via a top-down pathway, i.e., the feature pyramids. Finally, the focal loss was proposed [24] to solve the class imbalance problem (e.g., there are too many boxes containing only the image background compared to the boxes actually containing an object). In particular, a scaling factor was added to the cross entropy loss such that the training focuses more on learning hard examples.
+
+In Figure 2, we show the basic architecture of the state-ofthe-art one-stage object detection method, RetinaNet [24]. RetinaNet is composed of three subnets: a Feature Net (F) for feature map extraction from different resolutions (i.e., different neural network layers), a Class Subnet (C) for object classification, and a Box Subnet (B) for bounding box regression. The Feature Net is also called a backbone network — it is usually a classification network, pre-trained using a
+
+large-scale dataset such as ImageNet [5]. At inference time, RetinaNet first uses a pre-defined classification probability
+
+F
+
+B’
+
+C’
+
+Old Model (Frozen): N’ = (F’, B’, C’)
+
+F’
+
+F
+
+B
+
+C
+
+New Model (Training): N = (F, B, C)
+
+F
+
+Bounding Box Distillation Loss
+
+Bounding Box Regression Loss
+
+Classification Distillation Loss
+
+Classification
+
+Focal Loss
+
+Feature Distillation Loss
+
+**Figure 3.** The proposed incremental learning method using RetinaNet as an example.
+
+threshold to decode only boxes with high confidence scores and then uses non-maximum suppression (nms) technique to filter out redundant predictions.
+
+Incremental Learning Method The general architecture of our incremental learning algorithm for one-stage deep object detectors is illustrated in Figure 3. To detect objects from n new classes (n ≥1), we first create a copy of the old model as N’ and then create a new model N by expanding the old model’s classification subnet to classify n more classes by adding n neurons to the network’s output layer. The weight parameters of the new model are initialized using the corresponding parameters from the old model with the exception of the newly added neurons in the output layer, which are randomly initialized.
+
+To avoid catastrophic forgetting of the old classes while training only with data for new classes, we follow the idea of learning without forgetting (LwF) [22] which has been successfully applied to the image classification problem. Specifically, LwF tries to ensure that the classification output for the old classes in the new model (i.e., the vector of the probabilities for the old classes) is close to the output of the old model on the same input image. To achieve this goal, LwF leverages the knowledge distillation [12] technique, which uses a modified cross-entropy loss — instead of using a hard one-hot ground-truth label, it uses the input image’s output from the old model as the soft ground-truth label to train the new model. The core idea here is that it discourages the change for the output of old classes. By jointly optimizing the distillation loss on the old classes and the cross-entropy loss on the new classes, LwF achieves good classification performance on predicting both old and new classes.
+
+However, only preserving the classification capability of the old model is not enough for object detection, as the new model would still lose its ability to predict correct bounding boxes for the old classes while training only using the new
+
+classes’ bounding box labels. To address this issue, we extend the knowledge distillation idea to the object detection task so that it encourages the outputs from both the classification subnet and the box subnet in the new model, in order to approximate the outputs from the old model for the old classes. Furthermore, we argue that applying distillation loss only on the model outputs is not enough to prevent forgetting on old classes. While training only with data for new classes, the intermediate features (i.e., features extracted from a middle layer) which are important for predicting old classes have also been changed during back-propagation. Therefore, we design a new distillation loss on the intermediate features extracted from the feature net, F, so that the features extracted from the new model would not be dramatically different from the old model.
+
+Detailed Loss Functions Given the analysis above, the loss function for incremental learning of the object detection model must satisfy the following three properties to avoid catastrophic forgetting:
+
+(i) Discourage changes on classification output for the old
+
+object classes. (ii) Discourage changes on bounding box locations for pre-
+
+dicted objects. (iii) Prevent dramatic changes for features extracted from
+
+intermediate neural network layers. Given an old object detection model N’ trained on m classes, and a training dataset Dnew for n new classes, our goal is to incrementally train an object detection model N which performs object detection on the complete set ofm+n classes. The loss function for our incremental detection algorithm is defined as:
+
+loss = Lf ocal(Yn, ˆYn)
+
++ λ1Lreдr(Bn, ˆBn)
+
++ λ2Ldist_clas(Yo, ˆYo)
+
++ λ3Ldist_bbox(Bo, ˆBo)
+
++ λ4Ldist_f eat(T, ˆT)
+
+(1)
+
+where λ1, λ2, λ3, and λ4 are hyper-parameters to balance the weights of different loss terms, and are all set to 1 in our experiments.
+
+The first loss term Lf ocal and the second loss term Lreдr are the standard loss functions used in [24] to train RetinaNet for the new classes where Yn represents the ground-truth one-hot classification labels, ˆYn represents the new model’s classification output over n new classes, Bn represents the ground-truth bounding box coordinates, and ˆBn represents the predicted bounding box coordinates for the ground-truth objects. 1
+
+1The box subnet outputs are actually offsets to the predefined anchor boxes. We simplify the notation in our equations.
+
+The third loss term Ldist_clas is the distillation loss for the classification subnet similar to that defined in [22, 34]. Here, Yo is the output of the frozen old model F’ for m old classes using the new training data, and ˆYo is the output of the new model F for the old classes. Specifically, the loss is calculated by the following equation:
+
+Ldist_clas(Yo, ˆYo) = 1
+
+m
+
+m Õ
+
+i=1
+
+(Y i
+
+o −ˆYo
+
+i)2 (2)
+
+The fourth loss term, Ldist_bbox, preserves the old model’s capability of correctly predicting bounding boxes for the old classes. Our insight for the bounding box distillation is that when an image is given as input to the old model, even the images does not contain any object belonging to the old classes or not, it would still predict the existence of old-class objects though with relatively low confidence score. We regard the predicted bounding boxes for those relatively low-confidence (but not too low) objects as the old model’s bounding box prediction capability. In particular, for each image, we sort the bounding boxes (i.e., the anchor boxes and the coordinate offsets) predicted with the old model based on their classification confidence scores, and select the top k bounding boxes Bo as the ground-truth for bounding box distillation loss (see the left sub-figure in Figure 4 for an example). When incrementally training the new model, we regress the new model’s bounding box predictions ˆBo corresponding to the same set of anchor boxes to the groundtruth using smooth L1 loss [8].
+
+Ldist_box(Bo, ˆBo) =
+
+Õ
+
+j ∈{x,y,w,h}
+
+smoothL1(Bj
+
+o −ˆBo
+
+j) (3)
+
+Finally, we append a novel feature distillation loss term Ldist_f eat to prevent the extracted intermediate features from drastic change. Similar to the bounding box distillation loss, we calculate the smooth L1 loss between the features extracted from the feature net of the old model T and the new model ˆT.
+
+Ldist_f eat(T, ˆT) =
+
+Õ
+
+l
+
+smoothL1(T l −ˆT l) (4)
+
+Using Exemplars of Old Classes The basic RILOD system assumes that no data from old classes are saved and learning happens only using the new class data, which are readily available or collected using the pipeline described in Section 5. This assumption reduces both the expected training time and the storage cost for incremental learning. Moreover, it increases the applicability of our system for cases where old data is not available.
+
+However, in some application scenarios some or all of the data for old classes might be available. In such cases, we can augment a small number of exemplars from this old data to our training set to ensure that at least some information about old classes is incorporated into the learning process. In this way, we can further reduce the forgetting
+
+**Figure 4.** An example demonstrating the bounding box labeling problem. First, the labels in the classification model may not match the given new class name. Second, the noisy bounding boxes may overlap with each other (e.g., (a) and (b)) and the ideal box (b) may be eliminated by simply setting a low IoU threshold for NMS.
+
+on old classes and achieve a better detection accuracy overall. Note that, even when available, using all old data is not reasonable since it will increase the training latency of the system tremendously and make it unsuitable for real-time incremental object detection. Moreover, in our experiments we observed that using only a few exemplar images per class provides similar accuracy to using all data for old classes (see Section 6).
+
+Exemplar image selection can be performed in various ways: 1) randomly select a fixed number of images from each class, 2) select images such that the average feature vector of exemplars will be closest to the class mean as in [31], 3) perform clustering for each class and pick a random image from each cluster. In this work, we preferred the last method for exemplar selection to consider in-class variation (e.g. select example images from each dog breed for dog class). In addition, even though we select a fixed number of exemplars from each class, it is also possible to fix the total number of exemplars to prevent the linear increase in exemplar dataset size as new classes are added incrementally.
+
+Data Collection and Labeling As discussed in Section 3, it is quite likely that there’s no existing labeled image for the new object class (e.g., slow cooker), but it is convenient to download a large quantity of relevant but noisy images using search engines (e.g., Google Image Search). We have designed a system module and algorithm to purify the noisy images and annotate the bounding boxes.
+
+Given a set of downloaded images matching a new class name (e.g., slow cooker), our goal is to automatically and efficiently label the images that do contain the desired objects with bounding boxes. Generally speaking, our system first generates a set of noisy bounding boxes from each downloaded candidate image which can be done using either a class-agnostic method [36, 39] or an existing deep object detector with a low confidence threshold, then we use a
+
+Algorithm 1 Automatic Dataset Construction
+
+Require: the given new class name lд Require: the downloaded images D using lд as query Require: the large-scale classification model Mcls Require: the Word2vec model Mw2v
+
+Voting for “credible labels" set Scl: 1: initialize a counter Ct for each label in Mcls 2: for each image in D do 3: produce a set of noisy bounding boxes B
+
+4: for each b in B that size(b) > thrb do 5: predict top k labels Lk using Mcls 6: for each label l in Lk do 7: Ct[l]+ = 1
+
+8: sort Ctl and append the top1 label l1 to Scl 9: for each li in sorted(Ctl) do 10: if cos_sim(li,l1) + cos_sim(li,lд) > thrd then 11: Scl .append(li) return Scl
+
+Purification for final dataset Df 12: for each image I in D do 13: for Each bounding box bi in B do 14: if Any label in predicted top k ∈Scl then 15: calculate ACCSi 16: else
+
+17: remove bi from B
+
+18: if size(B) > 1 then 19: for each box pair bi,bj do 20: if overlap(bi,bj) > thro then 21: remove the box with lower ACCS
+
+22: if size(B) ≥1 then 23: add I with B to Df return Df
+
+large-scale image classifier to verify each bounding box to filter out the bad box proposals.
+
+However, there are two vital challenges that must be addressed as shown in Figure 4. The first one is label mismatch problem in which the provided new class name does not have an exact match with the corresponding label in the large-scale classification model, e.g., a “slow cooker" may be labeled as “crock pot". In addition, the classification model is not perfect and it may classify a “slow cooker" as “pressure cooker" or just its super-class “cooker". To solve these problems, we propose a hybrid voting+semantic method based on two observations: (1) most of the downloaded images contain the objects matching the given class name, and (2) even though not perfect, the large-scale classification model still has a high recognition accuracy, e.g., we use a 11k-class model with 71.2% top-5 accuracy in our prototype system. Based on these observations, we could safely conclude that a considerable proportion of the images would have one or
+
+more bounding boxes predicted with the “true label" in the classification model. Because of this, the “true label" can be identified using a voting mechanism that sorts the labels by the number of occurrences in the classification results over the noisy bounding boxes and return the most frequent label as the “true label". In addition, other classification labels that are semantically close to both the “true label" and the given class name presumably also refer to the same object category. The semantic similarity can be measured by the distance of two labels’ word embeddings such as Word2vec [27]. The “true label" and the additional semantically verified labels
+
+form the set of “credible labels".
+
+The second challenge is the overlapping problem among bounding boxes with correct labels. Simply setting a low IoU (intersection over union) threshold for NMS can eliminate too many true positive boxes as shown in Figure 4. To deal with the overlapping-box problem, we introduce the accumulated classification confidence score (ACCS) to determine which bounding box should be retained from two overlapped boxes. Specifically, the ACCS for a bounding box is defined as the sum of the predicted classification confidence scores for labels belonging to the generated set of “credible labels". If the the overlapping between two boxes is larger than a threshold, we can discard the one with lower ACCS. Additionally, we ignore too small bounding boxes. The reason is that when you use the class name as a query to download images, the object corresponding to the class name is relatively large and clearly visible. Discarding these small boxes before sending them to the classification model also greatly reduces the computational overhead.
+
+The pseudo-code for our dataset construction pipeline is summarized in Algorithm 1. In out implementation, we set the box size threshold thrb as 1% of the image size. The word embedding similarity threshold thrd is set to 10. The overlapping threshold thro of two boxes is set to half the size of the smaller box. k is set to 5.
+
+Discussion on Dataset Construction It might seem that instead of incrementally training an object classifier using the automatically constructed dataset, the two-stage dataset construction algorithm can be directly employed to detect the new object classes without any training. However, this approach would have more storage and memory cost since it requires the deployment of two deep learning models; a detection model to create the set of noisy bounding boxes and a large-scale classification model for verification of the labels for each bounding box. In addition, it would take significantly more time for inference of a single image compared to single stage object detectors due to the significant time required for classification of box proposals.
+
+Evaluation The evaluation of RILOD focuses on answering the following questions: (1) How effective and efficient is the proposed
+
+incremental learning algorithm? (2) How effective and efficient is the automatic data construction algorithm? (3) How does this complete system work in practice? What is the running time? What are the bottlenecks in overall system design?
+
+Evaluation Dataset The following two datasets are used to evaluate the object detection accuracy for the incremental learning algorithm.
+
+• Pascal VOC 2007 [7]: This is a benchmark dataset for object detection which includes 20 object classes. In total it has 9,963 images collected from Flickr2 photosharing web-site and contains 24,640 annotated objects. We use the 5K images in the train and val splits for training, and the images in the test split for validation. • iKitchen: We collected and annotated 7K images (6K for training and 1K for validation) belonging to 10 classes of kitchen objects for an internal demonstration. Most of the images are collected using smartphones in lab and real-world environment to evaluate our system in a more realistic setting [28]. This dataset was also used in the prototype system evaluation. To evaluate the automatic dataset construction algorithm, we simulate the behavior of downloading web images using a class name as query. Specifically:
+
+• regarding Pascal VOC, for each of the 20 classes, we use the class name (e.g., chair) as the search keyword of ImageNet3 to find the matched synset, and we download 200 images from the synset along with their bounding box annotations. • regarding iKitchen, we use the Google image search to download images in real-time to demonstrate the effectiveness and efficiency of the algorithm in the prototype system evaluation. For all the model accuracy evaluations, we use the standard mean average precision (mAP) at the threshold of 0.5 IoU as the evaluation metric [6].
+
+Incremental Learning
+
+The input image for the deep neural network is resized such that the longer side is 1024 and the shorter side is then adjusted proportionally. The initial learning rate for all experiments is set to 1×10−3 and we use the Adam method [18] for optimization. The training is performed on a single NVIDIA Tesla M40 GPU, with batch size of 8. We run all our experiments using PyTorch [29].
+
+Experiment Setup For Pascal Dataset
+
+The model architecture we use for Pascal dataset is RetinaNet with ResNet-50 backbone, and we train each model for 100
+
+2https://www.flickr.com/ 3http://www.image-net.org
+
+epochs. We performed experiments for the following two scenarios:
+
+• 19+1: we train a base model with the first 19 classes and incrementally train the 20th class (i.e., the tv/monitor class). • 10+10: we train a base 10-class model and then learn 10 new classes simultaneously. The following 4 different learning schemes have been compared:
+
+• All Data: We fine-tune the old model using data from both old and new classes and use the original loss function in RetinaNet without distillation loss terms. • Catastrophic Forgetting: We train the model using the training data of only new classes and use the original loss function in RetinaNet without distillation loss terms. • w/o Feat-Distill Loss: We train the model with training data of only new classes and use the proposed loss function except the feature distillation loss term defined in Equation 4. • w Feat-Distill Loss: We train the model using training data of only new classes and we use the proposed loss function including the feature distillation loss term.
+
+Experiment Result For Pascal Dataset We present the result of 19+1 scenario in Table 1, and the result of 10+10 scenario in Table 2. In both scenarios, we observe that without the distillation loss terms, the “catastrophic forgetting" problem occurs and the mAP values for all old classes drops to 0. On the other hand, with the novel loss function we have proposed in this paper, the accuracy on the old classes is preserved while incrementally learning with training images of only the new classes. Even compared to using data of all classes, the average mAP over all classes is only reduced by less than 10%. In addition, by adding the feature distillation loss term, we observe 4.8% accuracy increase for the 19+1 scenario, and 5.9% accuracy increase for the 10+10 scenario. The results demonstrate that the proposed learning algorithm can solve the problem of “catastrophic forgetting" pretty well even in scenarios when multiple new classes are learned simultaneously.
+
+In the 19+1 scenario, the number of training images for the new “tv/monitor" class is just 279 which is only 5.5% of the 5K training dataset for all 20 classes. Even with such a limited amount of data, our model can learn the new class without forgetting the old classes. Moreover, due to its capability of learning with a small number of images, our method can significantly reduce the training time and thus is more suitable for incremental learning in edge applications.
+
+Experiment Setup For iKitchen Dataset The model architecture we use for iKitchen dataset is RetinaNet with ResNet-18 backbone. We train a base 8-class
+
+**Table 1.** Per-class accuracy of Pascal VOC (%) for 19 + 1 scenario.
+
+Method
+
+aero
+
+bike
+
+bird
+
+boat
+
+bottle
+
+bus
+
+car
+
+cat
+
+chair
+
+cow
+
+table
+
+dog
+
+horse
+
+mbike
+
+person
+
+plant
+
+sheep
+
+sofa
+
+train
+
+tv
+
+mAP Class 1-19 70.6 79.4 76.6 55.6 61.7 78.3 85.2 80.3 50.6 76.1 62.8 78.0 78.0 74.9 77.4 44.3 69.1 70.5 75.6 - - All Data 77.8 85.0 82.9 62.1 64.4 74.7 86.9 87.0 56.0 76.5 71.2 79.2 79.1 76.2 83.8 53.9 73.2 67.4 77.7 78.7 Catastrophic Forgetting w/o Feat-Distill Loss 61.9 78.5 62.5 39.2 60.9 53.2 79.3 84.5 52.3 52.6 62.8 71.5 51.8 61.5 76.8 43.8 43.8 69.7 52.9 44.6 w Feat-Distill Loss 69.7 78.3 70.2 46.4 59.5 69.3 79.7 79.9 52.7 69.8 57.4 75.8 69.1 69.8 76.4 43.2 68.5 70.9 53.7 40.4 65.0
+
+**Table 2.** Per-class accuracy of Pascal VOC (%) for 10 + 10 scenario.
+
+Method
+
+aero
+
+bike
+
+bird
+
+boat
+
+bottle
+
+bus
+
+car
+
+cat
+
+chair
+
+cow
+
+table
+
+dog
+
+horse
+
+mbike
+
+person
+
+plant
+
+sheep
+
+sofa
+
+train
+
+tv
+
+mAP Class 1-10 76.8 78.1 74.3 58.9 58.7 68.6 84.5 81.1 52.3 61.4 - - - - - - - - - - - All Data 77.8 85.0 82.9 62.1 64.4 74.7 86.9 87.0 56.0 76.5 71.2 79.2 79.1 76.2 83.8 53.9 73.2 67.4 77.7 78.7 Catastrophic Forgetting 66.3 71.5 75.2 67.7 76.4 38.6 66.6 66.6 71.1 74.5 w/o Feat-Distill Loss 67.1 64.1 45.7 40.9 52.2 66.5 83.4 75.3 46.4 59.4 64.1 74.8 77.1 67.1 63.3 32.7 61.3 56.8 73.7 67.3 w/ Feat-Distill Loss 71.7 81.7 66.9 49.6 58.0 65.9 84.7 76.8 50.1 69.4 67.0 72.8 77.3 73.8 74.9 39.9 68.5 61.5 75.5 72.4 67.9
+
+**Figure 5.** Result of adding “slow cooker" to the base 8 class model on iKitchen Dataset.
+
+object detection model by excluding two classes slow cooker (SC) and cocktail shaker (CS). The mAP for the base 8-class model is 80.1%.
+
+Then we run the following experiments: (1) 8+SC, (2) 8+CS, (3) 8+SC+CS, and (4) 8+CS+SC. In 3 and 4, we apply the proposed incremental learning method incrementally as each new class is added. Moreover, we study the trade-off between accuracy and training time of adding exemplar data from the old classes as discussed in Section 4.2.2. For all experiments, we train the model for 10 epochs using the proposed incremental learning algorithm including the feature distillation loss.
+
+Experiment Result For iKitchen Dataset
+
+As seen in in Figure 6, adding exemplars from the old classes can boost the incremental learning accuracy, especially when we are learning new classes sequentially (i.e., the 8+SC+CS and 8+CS+SC scenarios). Even by adding just 10 exemplars per old class, the mAP increases 15% to 40%. As more exemplars are added, we don’t see further significant accuracy
+
+increase. Using all the training data from old classes can be seen as a special case of adding exemplars.
+
+In Figure 5, we show the detailed accuracy for each object class in the 8+SC scenario for different number of exemplars per class (left sub-figure). First of all, we see that all the old classes maintain a good accuracy after learning the new class. In addition, we see that the accuracy for some of the base 8 classes also increases after adding the new class. The reason could be that as the model sees more diverse training samples, it can learn better features that provides better boundaries for discriminating different object classes. We have also measured the training time and the speed-up of using different number of exemplars (right sub-figure). Compared with the baseline of learning with all training data, we can achieve 38x speed-up with only 4% accuracy loss (see the 10 exemplar case).
+
+**Table 3.** Credible Labels for PASCAL Dataset.
+
+PASCAL Label Top Returned Credible Labels aeroplane ’airplane, aeroplane, plane’, ’jet, jet plane, jet-propelled plane’, ’jetliner’, ’warplane, military plane’ bicycle ’bicycle, bike, wheel, cycle’, ’safety bicycle, safety bike’, ’push-bike’, ’ordinary, ordinary bicycle’ bird ’bird’, ’passerine, passeriform bird’, ’dickeybird, dickey-bird, dickybird, dicky-bird’, ’parrot’ boat ’boat’, ’small boat’, ’dinghy, dory, rowboat’, ’sea boat’, ’rowing boat’, ’river boat’, ’cockleshell’ bottle ’bottle’, ’pop bottle, soda bottle’, ’water bottle’, ’jar’, ’smelling bottle’, ’flask’, ’jug’, ’carafe’ bus ’public transport’, ’local’, ’bus, autobus’, ’express, limited’, ’shuttle bus’, ’trolleybus, trolley coach’ car ’motor vehicle, automotive vehicle’, ’car, auto’, ’coupe’, ’sports car, sport car’, ’sedan, saloon’ cat ’domestic cat, house cat’, ’kitty, kitty-cat’, ’tom, tomcat’, ’mouser’, ’Manx, Manx cat’, ’tabby’ chair ’chair’, ’seat’, ’armchair’, ’straight chair, side chair’, ’rocking chair, rocker’, ’swivel chair’ cow ’bull’, ’cattle, cows’, ’cow’, ’bullock, steer’, ’beef, beef cattle’, ’cow, moo-cow’, ’dairy cattle’ dining table ’dining-room table’, ’dining table, board’, ’dinner table’, ’table’, ’dining-room furniture’ dog ’sporting dog, gun dog’, ’terrier’, ’retriever’, ’hunting dog’, ’Labrador retriever’, ’water dog’ horse ’horse, Equus caballus’, ’equine, equid’, ’gelding’, ’mare, female horse’, ’yearling’, ’pony’, ’dobbin’ motorbike ’motorcycle, bike’, ’wheeled vehicle’, ’trail bike, dirt bike, scrambler’, ’motor scooter, scooter’ person ’person, individual’, ’male, male person’, ’face’, ’oldster, old person’, ’man’, ’eccentric person’ potted plant ’pot, flowerpot’, ’planter’, ’houseplant’, ’bucket, pail’, ’vase’, ’crock, earthenware jar’, ’watering pot’ sheep ’sheep’, ’domestic sheep, Ovis aries’, ’ewe’, ’ram, tup’, ’black sheep’, ’wild sheep’, ’mountain sheep’ sofa ’seat’, ’sofa, couch, lounge’, ’love seat, loveseat’, ’chesterfield’, ’settee’, ’easy chair, lounge chair’ train ’train, railroad train’, ’passenger train’, ’mail train’, ’car train’, ’freight train, rattler’, ’commuter’ tv/monitor ’monitor’, ’LCD’, ’television monitor, tv monitor’, ’OLED’, ’digital display, alphanumeric display’
+
+**Table 4.** Evaluation on the quality of dataset construction.
+
+Method
+
+aero
+
+bike
+
+bird
+
+boat
+
+bottle
+
+bus
+
+car
+
+cat
+
+chair
+
+cow
+
+table
+
+dog
+
+horse
+
+mbike
+
+person
+
+plant
+
+sheep
+
+sofa
+
+train
+
+tv
+
+Avg Retention Rate (deep) 64.09 19.38 78.02 60.00 62.37 59.50 79.50 85.71 61.83 78.86 64.82 74.49 75.90 47.18 50.67 63.30 76.06 67.50 74.32 48.59 64.60 Retention Rate (ebox) 38.00 33.55 32.95 FP Rate (deep) FP Rate (ebox) 19.79 11.16 14.06 27.71 15.64 11.16 18.86 11.73
+
+**Figure 6.** The average mAP over all classes with different number of exemplars per class.
+
+Dataset Construction
+
+Experiment setup
+
+To evaluate our automatic dataset construction method, we use a pre-trained 11k-class classification model trained on
+
+the ImageNet dataset4, and a word2vec model pretrained on Google News dataset (about 100 billion words) which contains 300-dimensional vectors for 3 million different words and phrases. To generate the noisy bounding boxes from an image, we have adopted two methods including:
+
+• deep: We train an object detection model (RetinaNet) on the COCO dataset [25] by excluding the 20 classes in Pascal VOC and the two new classes in iKitchen, i.e. “slow cooker" and “cocktail shaker". For each image,
+
+we run the detector to identify bounding boxes with classification confidence scores above a low threshold 0.2. • edge: We run the EdgeBoxes [39] algorithm on each image to retain up to 20 bounding boxes based on the predicted confidence scores.
+
+Pascal 20 Classes
+
+First, we would like to demonstrate that the set of “credible labels" identified in the label set of the 11k classification model by the proposed Algorithm 1 is reasonable. The produced credible labels are given in Table 3. We can observe that our algorithm has managed to extract the semantically closest
+
+4We converted a pre-trained MXNet model to Pytorch http://data.mxnet.io/ models/imagenet-11k/.
+
+labels for the given class names. Some of the extracted class labels include rarely used words which may be ignored even by humans. These accurately identified “credible labels" is critical for removing a large number of irrelevant bounding boxes from the noisy bounding box candidate set.
+
+Second, we calculate the accuracy of the returned bounding boxes by comparing them with the ground-truth. Two evaluation metrics are used:
+
+• Retention Rate: The retention rate is defined as the percentage of images that have been labeled correctly for all the ground-truth bounding boxes. Here, we say a box is correctly labeled if the returned bounding box has IoU (intersection over union:
+
+area(Boxдth)∩area(Boxprd area(Boxдth)∪area(Boxprd ) above 0.5 to the ground-truth bounding box. • FP Rate: The false positive rate is defined as the percentage of bounding boxes that fall out of the groundtruth region. Concretely, we calculate the IoP value (intersection over prediction:
+
+area(Boxдth)∩area(Boxprd
+
+area(Boxprd )) ) to decide if the predicted bounding box is within the scope of a ground-truth bounding box. If IoP<0.5, we regard this predicted bounding box as a false positive. A high false positive rate will have serious negative impact on the training accuracy. We present the result of the bounding box extraction accuracy in Table 4. Compared with the noisy bounding boxes generated by EdgeBoxes, the boxes generated by the deep learning detection model are much more accurate in terms of both retention rate and FP rate. This can be explained by the fact that even though the deep learning model is not trained on the new classes, it has “seen" tens of thousands of images, and thus could better identify the boundaries between different semantically meaningful objects with deep learned features. On the other hand, EdgeBoxes generates bounding box proposals that rely entirely on the edges extracted from the image, and thus is not as robust. On the noisy boxes generated by the deep learning model, our algorithm achieves a high retention rate of 64.6% and low FP rate of 5.37%.
+
+The only case with a low retention rate is the bicycle class. After manually inspecting the generated bounding boxes, we observed that many bounding boxes were generated over the bicycle wheels instead of the whole bicycle. This happens because the classification model also classifies a bounding box with a bicycle wheel as “bicycle". However, since those bounding boxes would fall within the boundary of the ground-truth bounding boxes, the FP rate for the bicycle class is still only 12.4%.
+
+Incrementally Train iKitchen Dataset with Automatically Constructed Dataset For iKitchen dataset, we download 100 images for the new class with Google image search5 for incremental training. In
+
+5We only use images labeled strictly with the usage right “free to use, share or modify, even commercially".
+
+**Table 5.** iKitchen Accuracy on Automatically Constructed Dataset. (BaseO: average mAP for the base 8 classes before learning the new class; BaseN : average mAP for the base 8 classes after learning the new class; N: mAP for the new learned class; Avд: average mAP for 9 classes after learning the new class.)
+
+BaseO BaseN N ew Avд 8+SC 80.1% 80.8% 85.4% 81.3% 8+CS 80.1% 79.2% 32.2% 74.0%
+
+particular, we use the keywords “slow cooker" and “cocktail shaker" for the 8+SC and 8+CS scenarios respectively. After running the dataset construction algorithm, 71 images remain for the “slow cooker" class and 91 images remain for the “cocktail shaker" class. We train the model with 10 exemplars per old class.
+
+We show the result in Table 5. For both 8+SC and 8+CS scenarios, after learning the new class, the accuracy on the old classes almost remain unchanged. For the new learned class, we have achieved very good accuracy on the slow cooker class with mAP 85.4%. However, for 8+CS scenario, the accuracy for the new “cocktail shaker" class is relatively low with mAP 32.2%. This demonstrates that the quality of the automatically created training dataset is not consistent for different object classes. We will make further investigation on this issue in our future work.
+
+System Implementation and Efficiency
+
+To measure the latency of our incremental learning approach, we have implemented the end-to-end system and performed multiple experiments using two experimental setups. In Edge- Only setup, all steps from dataset collection to incremental training of new classes is performed on the embedded Jetson TX2 platform. While this setup has advantages like privacy protection and reduced network activity, it cannot benefit from the powerful GPU(s) on the cloud side. On the other hand, in Edge-Cloud setup, the major system components including dataset preparation and incremental model training run on the cloud server which uses a single NVIDIA Tesla M40 GPU and then the final model is transferred to a Samsung Galaxy S9 Android phone for inference. Table 7 shows the latencies for every step of the incremental learning process in both setups. Even though Edge-Only setup has no model transfer latency, overall it is much slower than Edge-Cloud setup due to the significant difference in computation power during model training. Please refer to the video in the supplementary material for a demo of our Edge-Cloud implementation.
+
+In these experiments, we used Resnet-18 as the base model, and trained the model for 10 epochs on automatically generated dataset from 100 images downloaded using Google image search plus 10 exemplar images per the base-8 class. In addition, the input image is resized that the longer side
+
+**Table 6.** Training time of different input image size on NVIDIA Tesla M40 (seconds per epoch).
+
+Input Size 10 Exemplar 30 Exemplar Small (512) Large (1024)
+
+**Table 7.** System Running Time (s).
+
+Edge-Only Edge-Cloud Download image Build dataset Train model Download model N/A Total
+
+(a) 10 Exemplars
+
+(b) 30 Exemplars
+
+**Figure 7.** Accuracy of different input sizes for 8+slow cooker.
+
+is 512 while maintaining the original aspect ratio. Note that we preferred a small image size since it has a major effect on training time. Table 6 shows that doubling the image dimensions more than doubles the training time while providing
+
+little improvement on the accuracy of the system (see Figure 7).
+
+Discussion Even though the proposed incremental learning system for object detection is fast and practical enough to be deployed in real applications, many optimizations are possible to improve the system efficiency:
+
+Model optimizations In this work, we used ResNet-50 and ResNet-18 as the backbone models. However, using a network that is primarily designed for time-critical edge applications such as MobileNet [13] can reduce the overall system time significantly by decreasing the model training time.
+
+System enhancements. Besides these model optimizations, when enough system resources are available systemlevel tricks such as, multi-gpu training, parallel image downloading and preprocessing, caching of downloaded images and pre-loading of deep models that are used in dataset generation can be employed to further reduce the overall system time.
+
+Bounding box generation for random unseen objects. In rare cases, the new objects a user is interested in might not be included in the large-scale classification model (e.g., 11k ImageNet). In such scenarios, we cannot use the proposed dataset preparation pipeline. Instead, we could possibly use unsupervised object co-localization method [38] to locate objects belonging to the same category at the cost of less accurate bounding boxes locations.
+
+Scaling the model. To maintain a good accuracy, exemplars from old classes must be included. However, this will also increase the model training time linearly. More intelligent methods of selecting the exemplars would help alleviate this problem.
+
+conclusion
+
+In this paper, we have presented RILOD, an edge system for efficient incremental learning of deep neural networks for object detection. RILOD has included a novel incremental learning algorithm which learns to detect a new object class with only training data from the new class while preventing the model from forgetting its knowledge on the old classes. Compared to the existing learning methods, this algorithm achieves 38x speed-up with negligible accuracy loss. In addition, in the absence of available training data for the new classes, RILOD introduced a real-time dataset construction method to label web-crawled images with high-precision bounding boxes and this actually makes RILOD a practical system ready for deployment. We have implemented RILOD with both edge-cloud and edge-only architectures, and demonstrated that learning of a new object class can finish in less than 2 minutes on a single GPU with superior detection accuracy.

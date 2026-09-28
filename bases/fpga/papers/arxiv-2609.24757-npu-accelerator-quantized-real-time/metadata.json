@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2609.24757-npu-accelerator-quantized-real-time",
+  "title": "NPU Accelerator: Quantized Real-Time Vehicle Detection on PYNQ-Z1 Using FINN",
+  "authors": [
+    {
+      "given": "Daniel",
+      "family": "Gutierrez"
+    },
+    {
+      "given": "Antonio",
+      "family": "Cuesta"
+    },
+    {
+      "given": "Jorge",
+      "family": "Fe"
+    },
+    {
+      "given": "Bruno",
+      "family": "Gutierrez"
+    },
+    {
+      "given": "Rashed Al",
+      "family": "Koutayni"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2609.24757",
+  "url": "https://arxiv.org/abs/2609.24757",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga",
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "yolov3-tiny",
+    "finn",
+    "pynq",
+    "zynq",
+    "quantization"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : VI — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

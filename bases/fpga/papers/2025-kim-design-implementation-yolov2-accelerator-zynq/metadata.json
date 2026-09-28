@@ -1,0 +1,43 @@
+{
+  "id": "2025-kim-design-implementation-yolov2-accelerator-zynq",
+  "title": "Design and Implementation of a YOLOv2 Accelerator on a Zynq-7000 FPGA",
+  "authors": [
+    {
+      "given": "Huimin",
+      "family": "Kim"
+    },
+    {
+      "given": "Tae-Kyoung",
+      "family": "Kim"
+    }
+  ],
+  "year": 2025,
+  "venue": null,
+  "doi": "10.3390/s25206359",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s25206359",
+  "type": null,
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
+  "tags": [
+    "yolov2",
+    "zynq",
+    "quantization"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "type de publication à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 3, Table 4, PU Data Source Reuse BRAM_0 b, Table 6, ACs tile FF tile M ACs tile FF, Table 9"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

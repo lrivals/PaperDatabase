@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-2503.04832-lightweight-embedded-fpga-deployment-learned",
+  "title": "Lightweight Embedded FPGA Deployment of Learned Image Compression with Knowledge Distillation and Hybrid Quantization",
+  "authors": [
+    {
+      "given": "Alaa",
+      "family": "Mazouz"
+    },
+    {
+      "given": "Sumanta",
+      "family": "Chaudhuri"
+    },
+    {
+      "given": "Marco",
+      "family": "Cagnanzzo"
+    },
+    {
+      "given": "Mihai",
+      "family": "Mitrea"
+    },
+    {
+      "given": "Enzo",
+      "family": "Tartaglione"
+    },
+    {
+      "given": "Attilio",
+      "family": "Fiandrotti"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2503.04832",
+  "url": "https://arxiv.org/abs/2503.04832",
+  "type": "preprint",
+  "axes": [],
+  "tags": [
+    "quantization"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

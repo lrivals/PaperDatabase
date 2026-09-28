@@ -1,0 +1,95 @@
+{
+  "id": "arxiv-1909.09709-skynet-hardware-efficient-method-object",
+  "title": "SkyNet: a Hardware-Efficient Method for Object Detection and Tracking on Embedded Systems",
+  "authors": [
+    {
+      "given": "Xiaofan",
+      "family": "Zhang"
+    },
+    {
+      "given": "Haoming",
+      "family": "Lu"
+    },
+    {
+      "given": "Cong",
+      "family": "Hao"
+    },
+    {
+      "given": "Jiachen",
+      "family": "Li"
+    },
+    {
+      "given": "Bowen",
+      "family": "Cheng"
+    },
+    {
+      "given": "Yuhong",
+      "family": "Li"
+    },
+    {
+      "given": "Kyle",
+      "family": "Rupnow"
+    },
+    {
+      "given": "Jinjun",
+      "family": "Xiong"
+    },
+    {
+      "given": "Thomas",
+      "family": "Huang"
+    },
+    {
+      "given": "Honghui",
+      "family": "Shi"
+    },
+    {
+      "given": "Wen-Mei",
+      "family": "Hwu"
+    },
+    {
+      "given": "Deming",
+      "family": "Chen"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1909.09709",
+  "url": "https://arxiv.org/abs/1909.09709",
+  "type": "preprint",
+  "axes": [],
+  "tags": [
+    "dac-sdc",
+    "ultra96",
+    "jetson",
+    "hardware-aware-nas",
+    "quantization",
+    "small-objects"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 9",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": [],
+  "imported_from": {
+    "base": "drone",
+    "paper_id": "arxiv-1909.09709-skynet-hardware-efficient-method-object",
+    "date": "2026-09-28",
+    "fiche": "done",
+    "axes": [
+      "drone-fpga",
+      "drone-detection",
+      "datasets-benchmarks",
+      "tracking-navigation"
+    ]
+  }
+}

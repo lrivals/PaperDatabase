@@ -1,15 +1,8 @@
 **/paper.pdf
 **/grobid.tei.xml
-inbox/*.pdf
-inbox/*.meta.json
-inbox/*.bib
-inbox/*.ris
 .venv/
 __pycache__/
 .cache/
-candidates.csv
-candidates_arxiv.txt
-xbase_candidates.csv
 docs/article/*.aux
 docs/article/*.bbl
 docs/article/*.blg
@@ -17,9 +10,6 @@ docs/article/*.log
 docs/article/*.out
 docs/article/*.toc
 .claude/settings.local.json
-
-# État de l'art (brouillon local, hors git pour l'instant)
-docs/etat-de-l-art/
 
 # Fichiers générés par l'extension TS-TeX de l'éditeur
 tstex_modules/

@@ -102,7 +102,7 @@ fait foi, sauf correction manuelle ultérieure.
 ## 3. Axes de veille
 
 Valeurs fermées, propres à chaque base : clé `axes` de `base.json` (§11). La table ci-dessous
-est celle de la base livrée avec le code (vision embarquée sur FPGA, reprise de
+est celle de la base de référence `bases/fpga/` (vision embarquée sur FPGA, reprise de
 `basicStart.txt`). Ajouter un axe se fait dans `base.json` seulement.
 
 | Axe | Contenu |
@@ -232,7 +232,7 @@ Une référence qui ne produit aucune clé (ni identifiant ni titre exploitable)
 
 ## 7. `benchmarks.csv`
 
-Le tableau comparatif, à la racine de `PaperDatabase/`. **Une ligne par configuration
+Le tableau comparatif, à la racine du dossier de chaque base (`bases/<nom>/benchmarks.csv`). **Une ligne par configuration
 rapportée** : un papier qui présente trois variantes (INT8, INT4, pruned) produit trois
 lignes.
 
@@ -394,7 +394,7 @@ axes, les règles de classement et le profil changent.
 ### 11.1 Registre et base active
 
 `~/.config/pdb/bases.json` (ou `$PDB_REGISTRY`, `lib/registry.py`) associe un nom court à un
-dossier : `{"default": "fpga", "bases": {"fpga": "/…/PaperDatabase", "drone": "/…/PaperDatabase/bases/drone"}}`.
+dossier : `{"default": "fpga", "bases": {"fpga": "/…/PaperDatabase/bases/fpga", "drone": "/…/PaperDatabase/bases/drone"}}`.
 Il ne contient que des chemins ; `pdb base forget` n'efface aucun fichier.
 
 Base active (`lib/base.py`), dans l'ordre :
@@ -402,7 +402,10 @@ Base active (`lib/base.py`), dans l'ordre :
 2. `$PDB_BASE` (un nom du registre) ;
 3. le premier dossier contenant `base.json`, en remontant depuis le répertoire courant ;
 4. la base par défaut du registre (`pdb base use <nom>`) ;
-5. le dépôt du code.
+5. la base de référence livrée avec le code, `bases/fpga/`.
+
+La racine du dépôt ne contient que le code : aucun `base.json` n'y est trouvé, et un dossier
+sans `base.json` (corpus de test, `pdb synth`) prend la configuration de `bases/fpga/`.
 
 `bin/pdb test` porte toujours sur le dépôt du code. `bin/pdb eval` suit la base active : ses
 questions dans `eval/fixtures/` (à défaut celles du code, `tests/fixtures/`, écrites pour la base
@@ -477,9 +480,9 @@ base seulement. Bases actuelles :
 
 | Base | Intitulé (`name`) | Dossier |
 |---|---|---|
-| `fpga` (défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | racine du dépôt |
+| `fpga` (défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | `bases/fpga/` |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` |
 
 Dans un clone neuf,
-enregistrer les bases une fois : `bin/pdb base register . --name fpga` et
+enregistrer les bases une fois : `bin/pdb base register bases/fpga --name fpga` et
 `bin/pdb base register bases/drone --name drone`.

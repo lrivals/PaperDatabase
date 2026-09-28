@@ -1,16 +1,17 @@
 """Séparation code / données : une installation du code sert plusieurs bases (DATA_MODEL §11).
 
 Une base est un dossier qui contient `base.json` (axes du domaine, règles de classement), plus
-papers/, inbox/, benchmarks.csv, profile.md… Le code (bin/, lib/, .venv) reste dans CODE.
+papers/, inbox/, benchmarks.csv, profile.md… Le code (bin/, lib/, .venv) reste dans CODE ; les
+bases versionnées avec lui vivent dans CODE/bases/<nom>/.
 
 Racine des données, dans l'ordre :
 1. $PDB_ROOT s'il est défini (`pdb --base <nom>` le fixe) ;
 2. $PDB_BASE, nom d'une base du registre (lib/registry.py) ;
 3. le premier dossier contenant base.json, en remontant depuis le répertoire courant ;
 4. la base par défaut du registre ;
-5. CODE (la base livrée avec le dépôt).
+5. REFERENCE, la base de référence livrée avec le dépôt (bases/fpga).
 
-Un dossier sans base.json (corpus de test, `pdb synth`) prend la configuration de CODE.
+Un dossier sans base.json (corpus de test, `pdb synth`) prend la configuration de REFERENCE.
 """
 import json
 import os
@@ -20,6 +21,7 @@ from pathlib import Path
 from lib import registry
 
 CODE = Path(__file__).resolve().parent.parent
+REFERENCE = CODE / "bases" / "fpga"
 MARKER = "base.json"
 
 REQUIRED = ("name", "axes")
@@ -42,14 +44,14 @@ def data_root(env=None, cwd=None):
     for d in (here, *here.parents):
         if (d / MARKER).is_file():
             return d
-    return (registry.default(env) or CODE).resolve()
+    return (registry.default(env) or REFERENCE).resolve()
 
 
 def load_config(root, path=None):
     """Configuration de la base `root` (ou du fichier `path`, pour éprouver une proposition)."""
     path = Path(path) if path else Path(root) / MARKER
     if not path.is_file():
-        path = CODE / MARKER
+        path = REFERENCE / MARKER
     cfg = json.loads(path.read_text(encoding="utf-8"))
     missing = set(REQUIRED) - set(cfg)
     if missing:

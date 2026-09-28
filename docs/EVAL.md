@@ -24,7 +24,8 @@ l'autre. Les seuils sont dans [eval/thresholds.json](../eval/thresholds.json).
 
 **Quelle base.** Le banc porte sur la base active : `bin/pdb --base drone eval` ou
 `bin/pdb eval` lancé dans `bases/drone/` évalue la base drone, avec ses propres questions et
-ses propres runs (§9). Les §1-8 décrivent la base fpga, base de référence du logiciel.
+ses propres runs (§9). Les §1-8 décrivent la base fpga (`bases/fpga/`), base de référence
+du logiciel ; ses runs sont dans `bases/fpga/eval/results/`.
 
 ---
 
@@ -138,7 +139,7 @@ sans GPU).
 
 ## 5. Rapport de référence (26/09/2026)
 
-`eval/results/2026-09-26T0051-80aa05e-dirty.json`. Le suffixe `-dirty` vient de ce que le banc
+`bases/fpga/eval/results/2026-09-26T0051-80aa05e-dirty.json`. Le suffixe `-dirty` vient de ce que le banc
 lui-même n'était pas encore commité ; le code mesuré est celui du commit 80aa05e. Corpus :
 28 papiers, tous extraits par GROBID, 2 398 passages.
 
@@ -245,7 +246,7 @@ MCP de RAG.md §11, le supprimerait. Le rerank multiplie par 12 la latence à ch
 
 ## 6. Corrections du 26/09/2026
 
-Mesurées avec `pdb eval --compare`. Rapports dans `eval/results/` : `…T0051…` (référence),
+Mesurées avec `pdb eval --compare`. Rapports dans `bases/fpga/eval/results/` : `…T0051…` (référence),
 `…T0100…` (première version du contrôle des nombres), `…T0108…` (version finale et
 pertinence faible), `…T0109…` (extraction avant Docling).
 
@@ -390,8 +391,9 @@ Lecture :
 | seuils | `eval/thresholds.json` | celui du code |
 | runs enregistrés, `--compare` | `eval/results/` | aucun : chaque base a ses runs |
 
-La base fpga est à la racine du code : elle garde ses jeux dans `tests/fixtures/` et ses runs
-dans `eval/results/`, sans rien déplacer. Le commit noté dans un run est celui du code. Le
+La base fpga (`bases/fpga/`) n'a pas de `eval/fixtures/` : elle utilise les jeux de
+`tests/fixtures/` du code et les seuils de `eval/thresholds.json` du code ; ses runs sont dans
+`bases/fpga/eval/results/`. Le commit noté dans un run est celui du code. Le
 volet temps chronomètre `bench --cols model,fps,power_w -n 5` et `paper <premier id court>`,
 qui ne dépendent plus du corpus fpga. `bin/pdb test` porte toujours sur le code.
 
@@ -435,7 +437,7 @@ Aucun paramètre du système n'a été réglé sur ces jeux.
 
 Run de référence drone : `bases/drone/eval/results/2026-09-28T1016-78b56a9-dirty.json`, avec
 les seuils de la base fpga fixés avant le premier run. Pour fpga, le run de référence est
-`eval/results/2026-09-26T2044-65074b7.json` (45 papiers). Le suffixe `-dirty` indique que
+`bases/fpga/eval/results/2026-09-26T2044-65074b7.json` (45 papiers). Le suffixe `-dirty` indique que
 `lib/evaluation.py` n'était pas commité.
 
 | Métrique | fpga (45 papiers) | drone (73 papiers) |

@@ -2,7 +2,7 @@
 
 Protocole rédigé le 24/09/2026 pour étayer le gap « Précision non vérifiée sur la cible
 après compilation et quantification » ([gaps.md](../../gaps.md), section « Mesure et
-comparaison »). Il complète la tâche 3 de [SETUP.md §9](../../SETUP.md#9-état-actuel-et-tâches-à-faire)
+comparaison »). Il complète la tâche 3 de [SETUP.md §9](../../../../SETUP.md#9-état-actuel-et-tâches-à-faire)
 (expérience de référence YOLOv5 INT8 sur KV260).
 
 Statut : **protocole, non exécuté**. Les noms d'outils et d'options suivis de « (à

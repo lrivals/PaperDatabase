@@ -20,7 +20,7 @@ class BenchTest(unittest.TestCase):
     def test_reindex_accepts_an_isolated_root(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            source = next((ROOT / "papers").glob("*/metadata.json")).parent
+            source = next((ROOT / "bases" / "fpga" / "papers").glob("*/metadata.json")).parent
             shutil.copytree(source, root / "papers" / source.name,
                             ignore=shutil.ignore_patterns("paper.pdf", "grobid.tei.xml"))
             with (root / "benchmarks.csv").open("w", newline="") as f:

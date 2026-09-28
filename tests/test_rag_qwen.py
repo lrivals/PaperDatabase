@@ -19,13 +19,13 @@ class RagTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
-        source = ROOT / "papers" / "arxiv-2507.18174-real-time-object-detection-classification"
+        source = ROOT / "bases" / "fpga" / "papers" / "arxiv-2507.18174-real-time-object-detection-classification"
         shutil.copytree(source, self.root / "papers" / source.name,
                         ignore=shutil.ignore_patterns("paper.pdf", "grobid.tei.xml"))
         with (self.root / "benchmarks.csv").open("w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=schema.BENCHMARK_COLUMNS)
             writer.writeheader()
-            with (ROOT / "benchmarks.csv").open(newline="") as original:
+            with (ROOT / "bases" / "fpga" / "benchmarks.csv").open(newline="") as original:
                 for row in csv.DictReader(original):
                     if row["paper_id"] == source.name:
                         writer.writerow(row)

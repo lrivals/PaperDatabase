@@ -30,9 +30,10 @@ fichiers, [DATA_MODEL.md](../DATA_MODEL.md).
   vos questions à Claude, et bin/pdb discover / /paper-discover pour trouver la suite
 ```
 
-Tout ce schéma vaut pour **une** base : celle du dossier courant (la racine pour `fpga`,
-`bases/drone/` pour `drone`). Les bases partagent le code et échangent des articles avec
-`bin/pdb base scan` et `bin/pdb base import` (§8).
+Tout ce schéma vaut pour **une** base : celle du dossier courant (`bases/fpga/` pour `fpga`,
+`bases/drone/` pour `drone` ; à la racine du dépôt, la base par défaut du registre). Les bases
+partagent le code et échangent des articles avec `bin/pdb base scan` et `bin/pdb base import`
+(§8).
 
 La répartition des rôles :
 
@@ -335,7 +336,7 @@ le code (DATA_MODEL §11). Deux bases existent aujourd'hui :
 
 | Base | Intitulé | Dossier |
 |---|---|---|
-| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | racine du dépôt |
+| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | `bases/fpga/` |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` |
 
 Vue d'ensemble et captures de l'interface : [README](../README.md#plusieurs-bases-de-connaissance).
@@ -353,8 +354,8 @@ lectures des « suggestions en attente » dans `profile.md` (sous-thème émerge
 axes…), que `/base-profile` vous soumet plus tard.
 
 **Passer d'une base à l'autre, ou travailler sur les deux en parallèle.** Travailler dans le
-dossier de la base suffit ; deux sessions Claude Code, une à la racine et une dans
-`bases/drone/`, travaillent chacune sur leur base. Depuis ailleurs :
+dossier de la base suffit ; deux sessions Claude Code, une dans `bases/fpga/` et une
+dans `bases/drone/`, travaillent chacune sur leur base. Depuis ailleurs :
 `bin/pdb --base drone status`. `bin/pdb base list` montre toutes les bases ;
 `bin/pdb base use <nom>` fixe la base par défaut.
 
@@ -371,7 +372,7 @@ autres bases avec import de la sélection, création d'une base.
 
 Les bases créées sans `--path` vivent dans `bases/<nom>/` et sont versionnées avec le dépôt
 (sans PDF). Dans un clone neuf, le registre est à refaire une fois :
-`bin/pdb base register . --name fpga`, `bin/pdb base register bases/drone --name drone`.
+`bin/pdb base register bases/fpga --name fpga`, `bin/pdb base register bases/drone --name drone`.
 
 Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 

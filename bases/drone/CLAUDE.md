@@ -6,9 +6,9 @@ co-design calcul ↔ énergie ↔ vol et fiabilité. Destinée à préparer une 
 dans le registre : `drone` (anciennement `DroneVisionDB`). Thème, périmètre et règles
 (sol → air / air → air, vol agile…) : [profile.md](profile.md), qui fait foi.
 
-**Base distincte** de la base « vision embarquée sur FPGA » (la racine du dépôt, `../../`),
+**Base distincte** de la base « vision embarquée sur FPGA » (`../fpga/`),
 dont elle partage le code et le dépôt git : elle vit dans `bases/drone/`, et `bin/`, `.venv`,
-`.claude/commands/` sont des liens vers la racine. La base active est détectée par le fichier
+`.claude/commands/` sont des liens vers la racine du dépôt (le code). La base active est détectée par le fichier
 `base.json` de ce dossier (axes, règles de classement ; `../../DATA_MODEL.md` §11). Ne jamais
 écrire dans la base fpga depuis ici : pour en reprendre un article, `bin/pdb base import fpga:<id>`.
 Quelques papiers y ont été copiés (DAC-SDC, SATAY, FINN…) : les deux copies évoluent
@@ -100,7 +100,7 @@ Pour ajouter un article sous paywall, il faut déposer le PDF dans `inbox/` à l
 
 ## Règles de travail
 
-Reprises de la base fpga (racine du dépôt), elles s'appliquent à toute réponse portant sur ce dossier.
+Reprises de la base fpga (`../fpga/CLAUDE.md`), elles s'appliquent à toute réponse portant sur ce dossier.
 
 **Langue.** Français par défaut. Termes techniques et titres d'articles en anglais.
 

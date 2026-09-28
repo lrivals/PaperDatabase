@@ -11,7 +11,7 @@ contient deux, qui servent à préparer une thèse :
 
 | Base | Intitulé | Dossier |
 |---|---|---|
-| `fpga` | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | racine du dépôt |
+| `fpga` | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | [`bases/fpga/`](bases/fpga/) |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | [`bases/drone/`](bases/drone/) |
 
 ---
@@ -163,8 +163,8 @@ bin/pdb add 2507.18174         # un article arXiv (ou un DOI, un PDF local, --fr
 bin/pdb discover               # papiers candidats à l'ajout (OpenAlex) → candidates.csv
 ```
 
-Ces commandes agissent sur la base du dossier courant : `fpga` à la racine, `drone` dans
-`bases/drone/` ([Plusieurs bases de connaissance](#plusieurs-bases-de-connaissance)).
+Ces commandes agissent sur la base du dossier courant : `fpga` dans `bases/fpga/`, `drone`
+dans `bases/drone/` (à la racine du dépôt : la base par défaut du registre) ([Plusieurs bases de connaissance](#plusieurs-bases-de-connaissance)).
 `add` et `ingest` réindexent d'eux-mêmes (`INDEX.md`, `external_refs.csv`). Ensuite, dans
 Claude Code : `/paper-fiche <paper_id>` produit la fiche de lecture, `/paper-discover`
 propose des papiers à ajouter, `/paper-gaps` met à jour la carte des gaps. Le détail de
@@ -191,17 +191,18 @@ Au 28/09/2026 :
 
 | Base | Intitulé | Dossier | Papiers | Fiches faites | Lignes de benchmark |
 |---|---|---|---|---|---|
-| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | racine du dépôt | 45 | 41 | 172 |
+| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | `bases/fpga/` | 45 | 41 | 172 |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 73 | 73 | 324 |
 
 La base `drone` s'appelait auparavant `DroneVisionDB` et vivait dans un dossier séparé. Chaque
 base a son `CLAUDE.md` (règles propres au domaine), son [`profile.md`](bases/drone/profile.md)
-et sa carte des gaps : [gaps.md](gaps.md) pour `fpga`, [bases/drone/gaps.md](bases/drone/gaps.md)
+et sa carte des gaps : [bases/fpga/gaps.md](bases/fpga/gaps.md) pour `fpga`, [bases/drone/gaps.md](bases/drone/gaps.md)
 pour `drone`.
 
 ### Travailler sur plusieurs bases en parallèle
 
-La base active est celle du dossier courant. Toutes les commandes et les skills agissent sur
+La base active est celle du dossier courant (hors de tout dossier de base, par exemple à la
+racine du dépôt : la base par défaut du registre). Toutes les commandes et les skills agissent sur
 cette base seulement.
 
 ```bash
@@ -211,7 +212,7 @@ bin/pdb --base drone bench -h      # viser une base depuis n'importe quel dossie
 bin/pdb base use drone             # base par défaut hors de tout dossier de base
 ```
 
-- **Deux sessions Claude Code en même temps.** Ouvrez-en une à la racine (base `fpga`) et une
+- **Deux sessions Claude Code en même temps.** Ouvrez-en une dans `bases/fpga/` (base `fpga`) et une
   dans `bases/drone/` (base `drone`). Chacune lit son propre `CLAUDE.md`, et `/paper-fiche`,
   `/paper-ask`, `/paper-gaps` n'y voient que leur base.
 - **Rien n'est partagé par accident.** Index de passages, caches OpenAlex et candidats sont
@@ -255,7 +256,7 @@ le reçoit, et sa fiche repasse à `todo`, avec un bandeau « pertinence à ré�
 Le registre est local. Après un clone, enregistrez les bases une fois :
 
 ```bash
-bin/pdb base register . --name fpga
+bin/pdb base register bases/fpga --name fpga
 bin/pdb base register bases/drone --name drone
 ```
 
@@ -330,22 +331,22 @@ Détails et limites : [SETUP.md §5](SETUP.md#binvizpy---port-8050---debug).
 ## Arborescence
 
 ```
-PaperDatabase/                # le code, et la base fpga à la racine
+PaperDatabase/                # le code seul ; les données sont dans bases/
 ├── README.md  CLAUDE.md  SETUP.md  DATA_MODEL.md
-├── base.json  profile.md     # base fpga : axes et règles, thème et périmètre
-├── INDEX.md  external_refs.csv   # générés
-├── benchmarks.csv  gaps.md  labs.md  basicStart.txt
-├── papers/<paper_id>/        # un dossier par article (base fpga)
-├── inbox/                    # PDF en attente d'ingestion (base fpga)
-├── figures/                  # sortie de bin/pdb plot (base fpga)
 ├── bases/
-│   └── drone/                # base drone : même structure (base.json, profile.md, papers/,
-│                             # benchmarks.csv, gaps.md, CLAUDE.md, figures/…) ;
-│                             # bin, .venv et .claude/commands sont des liens vers la racine
+│   ├── fpga/                 # base fpga (référence) :
+│   │   ├── CLAUDE.md  base.json  profile.md   # mode d'emploi, axes et règles, thème
+│   │   ├── INDEX.md  external_refs.csv        # générés
+│   │   ├── benchmarks.csv  gaps.md  labs.md  basicStart.txt
+│   │   ├── papers/<paper_id>/                 # un dossier par article
+│   │   ├── inbox/  figures/  eval/results/    # PDF à ingérer, pdb plot, runs de pdb eval
+│   │   ├── docs/experiences/                  # protocoles des mesures propres
+│   │   └── bin  .venv  .claude/commands       # liens vers le code (racine)
+│   └── drone/                # base drone : même structure
 ├── templates/                # CLAUDE.md et profile.md d'une nouvelle base (pdb base new)
 ├── docs/                     # GUIDE.md (utilisation), RAG.md (recherche), EVAL.md (banc),
-│                             # images/ (captures de l'interface), experiences/
-├── eval/                     # seuils et résultats du banc (pdb eval)
+│                             # images/ (captures de l'interface), article/, research/
+├── eval/                     # seuils par défaut du banc (pdb eval)
 ├── bin/                      # pdb (point d'entrée), setup.sh, grobid.sh, add.py, ingest.py,
 │                             # reindex.py, discover.py, bases.py (pdb base), viz.py
 ├── lib/                      # ids, tei, doc, pdftext, ligatures, tables, schema, refs, query, rag,
@@ -362,13 +363,13 @@ PaperDatabase/                # le code, et la base fpga à la racine
 
 Au 28/09/2026, le dépôt contient deux bases (voir [Les deux bases actuelles](#les-deux-bases-actuelles)) :
 - `fpga` : vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo et MCU. 45 articles, dont
-  41 fichés ; 172 lignes dans `benchmarks.csv` ; 24 gaps dans [gaps.md](gaps.md), dont 17
+  41 fichés ; 172 lignes dans `benchmarks.csv` ; 24 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md), dont 17
   étayés.
 - `drone` : 73 articles, tous fichés ; 324 lignes dans `benchmarks.csv` ; 19 gaps dans
   [bases/drone/gaps.md](bases/drone/gaps.md), dont 17 étayés. Les 24 derniers articles ont
   été ajoutés par dépôt manuel des PDF dans `inbox/`, avec leur export de citation.
 
-### Ce qui marche (testé : 204 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
+### Ce qui marche (testé : 205 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 
 - acquisition arXiv, DOI (via OpenAlex), PDF local, par lot ; exports `.bib` / `.ris`
   éditeur prioritaires sur l'en-tête GROBID (vérifié sur 6 exports IEEE, ACM, MDPI,
@@ -408,8 +409,8 @@ Au 28/09/2026, le dépôt contient deux bases (voir [Les deux bases actuelles](#
 
 Détail et ordre proposé : [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire).
 
-S'y ajoutent une liste de labos ([labs.md](labs.md)) et un protocole d'expérience
-([docs/experiences/](docs/experiences/)). L'avancement et les tâches à faire sont dans
+S'y ajoutent, dans la base fpga, une liste de labos ([labs.md](bases/fpga/labs.md)) et un
+protocole d'expérience ([docs/experiences/](bases/fpga/docs/experiences/)). L'avancement et les tâches à faire sont dans
 [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire).
 
 | Document | Contenu |
@@ -419,7 +420,7 @@ S'y ajoutent une liste de labos ([labs.md](labs.md)) et un protocole d'expérien
 | [docs/RAG.md](docs/RAG.md) | requêtes sans LLM et recherche de passages : spécification, évaluation, essai réel |
 | [docs/EVAL.md](docs/EVAL.md) | banc d'évaluation du logiciel (`pdb eval`) : protocole, résultats de référence, corrections mesurées |
 | [DATA_MODEL.md](DATA_MODEL.md) | schémas : `paper_id`, `metadata.json`, `sections.jsonl`, `refs.jsonl`, `benchmarks.csv`, fiche |
-| [CLAUDE.md](CLAUDE.md) | mode d'emploi et règles de travail de l'agent |
-| [INDEX.md](INDEX.md), [bases/drone/INDEX.md](bases/drone/INDEX.md) | index des articles, par base |
-| [gaps.md](gaps.md), [bases/drone/gaps.md](bases/drone/gaps.md) | cartes des gaps, par base |
-| [profile.md](profile.md), [bases/drone/profile.md](bases/drone/profile.md) | thème et périmètre de chaque base |
+| [CLAUDE.md](CLAUDE.md), [bases/fpga/CLAUDE.md](bases/fpga/CLAUDE.md), [bases/drone/CLAUDE.md](bases/drone/CLAUDE.md) | pour l'agent : dépôt du code ; mode d'emploi et règles de travail de chaque base |
+| [bases/fpga/INDEX.md](bases/fpga/INDEX.md), [bases/drone/INDEX.md](bases/drone/INDEX.md) | index des articles, par base |
+| [bases/fpga/gaps.md](bases/fpga/gaps.md), [bases/drone/gaps.md](bases/drone/gaps.md) | cartes des gaps, par base |
+| [bases/fpga/profile.md](bases/fpga/profile.md), [bases/drone/profile.md](bases/drone/profile.md) | thème et périmètre de chaque base |

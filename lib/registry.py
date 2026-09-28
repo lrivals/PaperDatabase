@@ -1,7 +1,7 @@
 """Registre des bases de l'utilisateur : nom → dossier (DATA_MODEL §11).
 
 Fichier ~/.config/pdb/bases.json (ou $PDB_REGISTRY) :
-  {"default": "fpga", "bases": {"fpga": "/…/PaperDatabase", "drone": "/…/PaperDatabase/bases/drone"}}
+  {"default": "fpga", "bases": {"fpga": "/…/PaperDatabase/bases/fpga", "drone": "/…/PaperDatabase/bases/drone"}}
 Le registre ne contient que des chemins ; oublier une base ne supprime aucun fichier.
 """
 import json

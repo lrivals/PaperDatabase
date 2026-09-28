@@ -40,8 +40,8 @@ BENCH_VALUES = ("accuracy_value", "fps", "gops", "latency_ms", "power_w", "luts"
 def paths(root, code):
     """(fixtures, results, thresholds) du banc pour la base `root`.
 
-    Une base qui a ses propres questions les met dans eval/fixtures/ ; sinon (base fpga, où
-    root == code) les jeux de tests/fixtures/ du code. Les runs sont enregistrés dans
+    Une base qui a ses propres questions les met dans eval/fixtures/ ; sinon (base fpga) les
+    jeux de tests/fixtures/ du code. Les runs sont enregistrés dans
     eval/results/ de la base ; les seuils viennent de son eval/thresholds.json, à défaut de
     celui du code.
     """

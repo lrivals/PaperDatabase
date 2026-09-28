@@ -3,7 +3,7 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-09-28T09:44:53",
+  "generated": "2026-09-28T10:43:51",
   "sources": [
    "papers/*/metadata.json"
   ],
@@ -13,7 +13,7 @@
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-09-28T09:44:53",
+  "generated": "2026-09-28T10:43:51",
   "sources": [
    "papers/*/metadata.json"
   ],
@@ -23,7 +23,7 @@
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-09-28T09:44:54",
+  "generated": "2026-09-28T10:43:52",
   "sources": [
    "benchmarks.csv"
   ],
@@ -33,7 +33,7 @@
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-09-28T09:44:57",
+  "generated": "2026-09-28T10:43:55",
   "sources": [
    "papers/*/refs.jsonl",
    "external_refs.csv"
@@ -45,7 +45,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-09-28T09:44:58",
+  "generated": "2026-09-28T10:43:55",
   "sources": [
    "benchmarks.csv",
    "papers/*/metadata.json"
@@ -287,7 +287,7 @@
   "file": "bench_fps_power.png",
   "group": "bench",
   "description": "débit vs puissance, détection / autres tâches",
-  "generated": "2026-09-28T09:44:59",
+  "generated": "2026-09-28T10:43:48",
   "sources": [
    "benchmarks.csv"
   ],
@@ -298,7 +298,7 @@
   "file": "bench_gops_per_watt.png",
   "group": "bench",
   "description": "GOPS/W par précision de calcul",
-  "generated": "2026-09-28T09:44:59",
+  "generated": "2026-09-28T10:43:48",
   "sources": [
    "benchmarks.csv"
   ],
@@ -309,7 +309,7 @@
   "file": "bench_fpga_resources.png",
   "group": "bench",
   "description": "LUT vs DSP des FPGA, par toolflow",
-  "generated": "2026-09-28T09:44:59",
+  "generated": "2026-09-28T10:43:48",
   "sources": [
    "benchmarks.csv"
   ],
@@ -320,7 +320,7 @@
   "file": "bench_accuracy_fps.png",
   "group": "bench",
   "description": "précision vs débit, un panneau par métrique",
-  "generated": "2026-09-28T09:45:00",
+  "generated": "2026-09-28T10:43:49",
   "sources": [
    "benchmarks.csv"
   ],
@@ -337,11 +337,63 @@
   "file": "bench_quantization.png",
   "group": "bench",
   "description": "précision de calcul par famille de plateforme",
-  "generated": "2026-09-28T09:45:00",
+  "generated": "2026-09-28T10:43:49",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 324,
   "total": 324
+ },
+ "eval_retrieval": {
+  "file": "eval_retrieval.png",
+  "group": "eval",
+  "description": "recall@5/@10 et MRR par mode et jeu de questions",
+  "generated": "2026-09-28T10:43:50",
+  "sources": [
+   "eval/results/2026-09-28T1043-76dc85e.json"
+  ],
+  "run": "2026-09-28T1043 · 76dc85e"
+ },
+ "eval_verify": {
+  "file": "eval_verify.png",
+  "group": "eval",
+  "description": "verdicts de pdb verify par perturbation",
+  "generated": "2026-09-28T10:43:50",
+  "sources": [
+   "eval/results/2026-09-28T1043-76dc85e.json"
+  ],
+  "run": "2026-09-28T1043 · 76dc85e"
+ },
+ "eval_extraction": {
+  "file": "eval_extraction.png",
+  "group": "eval",
+  "description": "couverture du texte et tableaux, par papier",
+  "generated": "2026-09-28T10:43:51",
+  "sources": [
+   "eval/results/2026-09-28T1043-76dc85e.json"
+  ],
+  "run": "2026-09-28T1043 · 76dc85e",
+  "n": 73
+ },
+ "eval_latency": {
+  "file": "eval_latency.png",
+  "group": "eval",
+  "description": "temps d'exécution (recherche, verify, CLI)",
+  "generated": "2026-09-28T10:43:51",
+  "sources": [
+   "eval/results/2026-09-28T1043-76dc85e.json"
+  ],
+  "run": "2026-09-28T1043 · 76dc85e"
+ },
+ "eval_history": {
+  "file": "eval_history.png",
+  "group": "eval",
+  "description": "évolution des métriques au fil des runs",
+  "generated": "2026-09-28T10:43:51",
+  "sources": [
+   "eval/results/2026-09-28T1011-78b56a9-dirty.json",
+   "eval/results/2026-09-28T1016-78b56a9-dirty.json",
+   "eval/results/2026-09-28T1043-76dc85e.json"
+  ]
  }
 }

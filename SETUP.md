@@ -747,7 +747,10 @@ docs/experiences/, .cache/, basicStart.txt, CLAUDE.md) ; la racine ne contient p
 code, avec un `CLAUDE.md` générique. `lib/base.REFERENCE` (= `bases/fpga`) remplace le dépôt
 du code comme dernier recours de la base active et comme configuration des dossiers sans
 `base.json`. Registre local à refaire dans un clone existant :
-`bin/pdb base forget fpga && bin/pdb base register bases/fpga --name fpga && bin/pdb base use fpga`.
+`bin/pdb base forget fpga && bin/pdb base register bases/fpga --name fpga && bin/pdb base use fpga`. Banc
+relancé sur les deux bases (`pdb eval --save --compare`) : runs `2026-09-28T1039-76dc85e`
+(fpga) et `2026-09-28T1043-76dc85e` (drone), 0 écart avec les précédents, tous seuils
+atteints (docs/EVAL.md §9) ; figures `pdb plot all` régénérées pour les deux bases.
 
 **Bilan du 28/09/2026 (base drone).** Base `drone` déplacée dans le dépôt (`bases/drone/`) ;
 24 articles ajoutés ; 73 fiches sur 73 (230 lignes de benchmark ajoutées, 324 en tout) ;

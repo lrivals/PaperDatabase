@@ -476,3 +476,21 @@ Lecture :
   tableaux avec corps (0,71) sont plus bas que pour fpga ; 18 papiers ont des sections non
   détectées. Ces valeurs ne sont pas sous un seuil, mais la base drone est la première à
   relire si l'on améliore l'extraction des tableaux.
+
+### Nouveaux runs de référence, après le déplacement de fpga (28/09/2026)
+
+Les deux bases ont été réévaluées (tous les volets, `pdb eval --save --compare`) après le
+déplacement de la base fpga dans `bases/fpga/` (commit 76dc85e). Ces runs sont propres
+(sans `-dirty`) et remplacent les précédents comme références :
+
+| Base | Run | Comparé à | Écarts |
+|---|---|---|---|
+| fpga | `bases/fpga/eval/results/2026-09-28T1039-76dc85e.json` | `2026-09-26T2044-65074b7.json` | 0 |
+| drone | `bases/drone/eval/results/2026-09-28T1043-76dc85e.json` | `2026-09-28T1016-78b56a9-dirty.json` | 0 |
+
+Toutes les métriques du tableau ci-dessus sont reproduites à l'identique et tous les seuils
+sont atteints : le déplacement n'a changé ni l'extraction, ni l'index de passages, ni
+`verify`. Temps (médianes, non comparés) : hybride p50 126 ms (fpga) et 112 ms (drone),
+hybride + rerank p50 1,39 s et 1,14 s, `search` à froid 6,9 s et 6,7 s.
+Figures régénérées dans `bases/<nom>/figures/` (`pdb plot all`) ; la base drone a désormais
+ses figures `eval_*`.

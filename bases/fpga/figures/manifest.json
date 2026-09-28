@@ -3,7 +3,7 @@
   "file": "bench_fps_power.png",
   "group": "bench",
   "description": "débit vs puissance, détection / autres tâches",
-  "generated": "2026-09-28T09:44:51",
+  "generated": "2026-09-28T10:43:39",
   "sources": [
    "benchmarks.csv"
   ],
@@ -14,7 +14,7 @@
   "file": "bench_gops_per_watt.png",
   "group": "bench",
   "description": "GOPS/W par précision de calcul",
-  "generated": "2026-09-28T09:44:51",
+  "generated": "2026-09-28T10:43:40",
   "sources": [
    "benchmarks.csv"
   ],
@@ -25,7 +25,7 @@
   "file": "bench_fpga_resources.png",
   "group": "bench",
   "description": "LUT vs DSP des FPGA, par toolflow",
-  "generated": "2026-09-28T09:44:52",
+  "generated": "2026-09-28T10:43:40",
   "sources": [
    "benchmarks.csv"
   ],
@@ -36,7 +36,7 @@
   "file": "bench_accuracy_fps.png",
   "group": "bench",
   "description": "précision vs débit, un panneau par métrique",
-  "generated": "2026-09-28T09:44:52",
+  "generated": "2026-09-28T10:43:41",
   "sources": [
    "benchmarks.csv"
   ],
@@ -53,7 +53,7 @@
   "file": "bench_quantization.png",
   "group": "bench",
   "description": "précision de calcul par famille de plateforme",
-  "generated": "2026-09-28T09:44:52",
+  "generated": "2026-09-28T10:43:41",
   "sources": [
    "benchmarks.csv"
   ],
@@ -64,48 +64,48 @@
   "file": "eval_retrieval.png",
   "group": "eval",
   "description": "recall@5/@10 et MRR par mode et jeu de questions",
-  "generated": "2026-09-26T20:44:47",
+  "generated": "2026-09-28T10:43:41",
   "sources": [
-   "eval/results/2026-09-26T2044-65074b7.json"
+   "eval/results/2026-09-28T1039-76dc85e.json"
   ],
-  "run": "2026-09-26T2044 · 65074b7"
+  "run": "2026-09-28T1039 · 76dc85e"
  },
  "eval_verify": {
   "file": "eval_verify.png",
   "group": "eval",
   "description": "verdicts de pdb verify par perturbation",
-  "generated": "2026-09-26T20:44:48",
+  "generated": "2026-09-28T10:43:41",
   "sources": [
-   "eval/results/2026-09-26T2044-65074b7.json"
+   "eval/results/2026-09-28T1039-76dc85e.json"
   ],
-  "run": "2026-09-26T2044 · 65074b7"
+  "run": "2026-09-28T1039 · 76dc85e"
  },
  "eval_extraction": {
   "file": "eval_extraction.png",
   "group": "eval",
   "description": "couverture du texte et tableaux, par papier",
-  "generated": "2026-09-26T20:44:48",
+  "generated": "2026-09-28T10:43:42",
   "sources": [
-   "eval/results/2026-09-26T2044-65074b7.json"
+   "eval/results/2026-09-28T1039-76dc85e.json"
   ],
-  "run": "2026-09-26T2044 · 65074b7",
+  "run": "2026-09-28T1039 · 76dc85e",
   "n": 45
  },
  "eval_latency": {
   "file": "eval_latency.png",
   "group": "eval",
   "description": "temps d'exécution (recherche, verify, CLI)",
-  "generated": "2026-09-26T20:44:48",
+  "generated": "2026-09-28T10:43:42",
   "sources": [
-   "eval/results/2026-09-26T2044-65074b7.json"
+   "eval/results/2026-09-28T1039-76dc85e.json"
   ],
-  "run": "2026-09-26T2044 · 65074b7"
+  "run": "2026-09-28T1039 · 76dc85e"
  },
  "eval_history": {
   "file": "eval_history.png",
   "group": "eval",
   "description": "évolution des métriques au fil des runs",
-  "generated": "2026-09-26T20:44:49",
+  "generated": "2026-09-28T10:43:42",
   "sources": [
    "eval/results/2026-09-26T0051-80aa05e-dirty.json",
    "eval/results/2026-09-26T0100-80aa05e-dirty.json",
@@ -115,14 +115,15 @@
    "eval/results/2026-09-26T0124-80aa05e-dirty.json",
    "eval/results/2026-09-26T0136-80aa05e-dirty.json",
    "eval/results/2026-09-26T0140-80aa05e-dirty.json",
-   "eval/results/2026-09-26T2044-65074b7.json"
+   "eval/results/2026-09-26T2044-65074b7.json",
+   "eval/results/2026-09-28T1039-76dc85e.json"
   ]
  },
  "corpus_years": {
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-09-28T09:44:46",
+  "generated": "2026-09-28T10:43:42",
   "sources": [
    "papers/*/metadata.json"
   ],
@@ -132,7 +133,7 @@
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-09-28T09:44:46",
+  "generated": "2026-09-28T10:43:43",
   "sources": [
    "papers/*/metadata.json"
   ],
@@ -142,7 +143,7 @@
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-09-28T09:44:47",
+  "generated": "2026-09-28T10:43:43",
   "sources": [
    "benchmarks.csv"
   ],
@@ -152,7 +153,7 @@
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-09-28T09:44:50",
+  "generated": "2026-09-28T10:43:46",
   "sources": [
    "papers/*/refs.jsonl",
    "external_refs.csv"
@@ -164,7 +165,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-09-28T09:44:50",
+  "generated": "2026-09-28T10:43:46",
   "sources": [
    "benchmarks.csv",
    "papers/*/metadata.json"

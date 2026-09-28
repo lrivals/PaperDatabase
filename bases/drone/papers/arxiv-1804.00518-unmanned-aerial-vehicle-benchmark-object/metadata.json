@@ -51,20 +51,24 @@
     "tracking-navigation"
   ],
   "tags": [
-    "small-objects"
+    "uavdt",
+    "small-objects",
+    "dataset",
+    "vehicle-detection",
+    "multi-object-tracking",
+    "single-object-tracking"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 4, figure shows that: I) All the"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

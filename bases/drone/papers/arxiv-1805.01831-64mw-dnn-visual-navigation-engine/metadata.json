@@ -35,25 +35,31 @@
   "type": "preprint",
   "axes": [
     "nano-drone",
-    "tracking-navigation"
+    "tracking-navigation",
+    "system-codesign"
   ],
   "tags": [
     "gap8",
-    "crazyflie"
+    "crazyflie",
+    "dronet",
+    "pulp",
+    "fixed16",
+    "quantization",
+    "end-to-end-navigation",
+    "flight-time"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE V",
       "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

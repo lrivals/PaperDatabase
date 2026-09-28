@@ -35,24 +35,36 @@
   "type": "preprint",
   "axes": [
     "counter-uav",
-    "datasets-benchmarks"
+    "datasets-benchmarks",
+    "tracking-navigation"
   ],
   "tags": [
+    "anti-uav",
     "infrared",
-    "multi-sensor"
+    "drone-vs-bird",
+    "mav-vid",
+    "faster-rcnn",
+    "ssd",
+    "yolov3",
+    "detr",
+    "sort",
+    "deepsort",
+    "tracktor",
+    "ground-to-air",
+    "small-objects",
+    "gpu"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 2"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

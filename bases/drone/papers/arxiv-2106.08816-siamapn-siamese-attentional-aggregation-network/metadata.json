@@ -32,20 +32,26 @@
   "axes": [
     "tracking-navigation"
   ],
-  "tags": [],
+  "tags": [
+    "siamese-tracker",
+    "jetson",
+    "uav123",
+    "uav20l",
+    "attention",
+    "alexnet"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE I",
       "sections numérotées non détectées : IV — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

@@ -31,23 +31,30 @@
   "type": "preprint",
   "axes": [
     "nano-drone",
-    "tracking-navigation"
+    "tracking-navigation",
+    "system-codesign"
   ],
   "tags": [
-    "event-camera"
+    "loihi",
+    "event-camera",
+    "snn",
+    "neuromorphic",
+    "on-chip-learning",
+    "closed-loop",
+    "hough-transform",
+    "davis"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : II — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

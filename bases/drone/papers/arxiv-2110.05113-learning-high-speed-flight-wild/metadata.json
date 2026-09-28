@@ -32,23 +32,27 @@
   "doi": "10.1126/scirobotics.abg5810",
   "arxiv_id": "2110.05113",
   "url": "https://arxiv.org/abs/2110.05113",
-  "type": null,
+  "type": "journal",
   "axes": [
-    "tracking-navigation"
+    "tracking-navigation",
+    "system-codesign"
   ],
-  "tags": [],
+  "tags": [
+    "jetson",
+    "end-to-end-navigation",
+    "imitation-learning",
+    "sim-to-real",
+    "drone-racing"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "publié ailleurs selon arXiv (journal_ref : Science Robotics 2021 Vol. 6, Issue 59, abg5810) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

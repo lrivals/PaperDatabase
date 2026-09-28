@@ -54,27 +54,31 @@
   "url": "https://arxiv.org/abs/2504.11967",
   "type": "preprint",
   "axes": [
-    "counter-uav",
-    "surveys"
+    "surveys",
+    "counter-uav"
   ],
   "tags": [
-    "transformer",
-    "infrared",
     "anti-uav",
-    "multi-sensor"
+    "infrared",
+    "multi-sensor",
+    "transformer",
+    "ground-to-air",
+    "dut-anti-uav",
+    "det-fly",
+    "drone-vs-bird",
+    "swarm"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 1, Table 3, Table 4"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

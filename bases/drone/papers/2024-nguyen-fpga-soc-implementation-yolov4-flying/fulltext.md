@@ -1,0 +1,308 @@
+---
+id: 2024-nguyen-fpga-soc-implementation-yolov4-flying
+title: "FPGA-SoC implementation of YOLOv4 for flying-object detection"
+year: 2024
+backend: grobid
+---
+
+## Abstract
+
+Flying-object detection has become an increasingly attractive avenue for research, particularly with the rising prevalence of unmanned aerial vehicle (UAV). Utilizing deep learning methods offers an effective means of detection with high accuracy. Meanwhile, the demand to implement deep learning models on embedded devices is growing, fueled by the requirement for capabilities that are both real-time and power efficient. FPGA have emerged as the optimal choice for its parallelism, flexibility and energy efficiency. In this paper, we propose an FPGA-based design for YOLOv4 network to address the problem of flying-object detection. Our proposed design explores and provides a suitable solution for overcoming the challenge of limited floating-point resources while maintaining the accuracy and obtain real-time performance and energy efficiency. We have generated an appropriate dataset of flying objects for implementing, training and fine-tuning the network parameters base on this dataset, and then changing some suitable components in the YOLO networks to fit for the deployment on FPGA. Our experiments in Xilinx ZCU104 development kit show that with our implementation, the accuracy is competitive with the original model running on CPU and GPU despite the process of format conversion and model quantization. In terms of speed, the FPGA implementation with the ZCU104 kit is inferior to the ultra high-end GPU, the RTX 2080Ti, but outperforms the GTX 1650. In terms of power consumption, the FPGA implementation is significantly lower than the GPU GTX 1650 about 3 times and about 7 times lower than RTX 2080Ti. In terms of energy efficiency, FPGA is completely superior to GPU with 2-3 times more efficient than the RTX 2080Ti and 3-4 times that of the GTX 1650.
+
+## 1. Introduction
+
+In recent years, image-based analysis and processing algorithms have been a hot topic and received a lot of attention. Image processing is not only applied in civilian fields but also widely in the military and healthcare fields. In these fields, aerial and remote sensing images are used to detect aircraft targets in military bases and airfields, which are of great significance for intelligence deployment. Recently, UAVs or drones have been widely used for many different purposes. With increasingly modern technology, it is equipped with many advanced and flexible functions and its price is not too expensive. UAVs are used in many fields with many different purposes and some of them can threaten security. Therefore, it is necessary to detect illegal UAVs in many different conditions and with diverse sizes. The detection of flying-object can be divided into detection methods based on Radar [1], radio frequency waves [2], or image and video [3]. In [4,5], authors indicate that the image-based detection methods are less sensitive to environmental noise compared with other methods. In [6][7][8], deep learning is used for fast flying-object detection.
+
+Developing a deep learning model involves two main phases: training and inference. Most of the applications typically run on general-purpose processors such as CPUs and especially GPUs because their architecture consists of hundreds of cores. This design feature made GPUs the current hardware platform of choice for several machine learning and deep learning applications. For the training process, speed is not a priority but achieving the highest possible accuracy to ensure the correct implementation of the model. Normally, the training of the model takes a lot of resources and time so it is done on the GPU. While providing a flexible and agile computing platform for development, GPUs or CPUs are not optimized for fast inference and poor power efficiency, especially in embedded or IoT applications. A solution is using a high-end server for machine learning inference. However, deploying at the edge has many benefits compared to deploying with a server or cloud. The reason is that data is processed immediately without having to upload to the server for saving bandwidth, faster response time and higher reliability [9].
+
+The FPGA is an excellent candidate that can solve these problems with its powerful processing power, low power consumption, and low latency. FPGAs with their inherently parallel architecture are suitable for ML and DL applications [10,11], moreover, the FPGA can be reconfigured anytime. Therefore, developers optimize and accelerate their systems by designing specialized hardware accelerators (hardware accelerators) using FPGAs. As in [12] the authors use a heterogeneous platform acceleration method (FPGA + GPU) that outperforms GPU acceleration. They show that CNN's direct hardware mapping (DHM) on embedded FPGAs outperforms GPU implementations in terms of power efficiency (approximately 25% reduction) and execution time (21% reduction in latency). A direct comparison between FPGA and GPU using DNN was done by [13] and the results showed that the FPGA used (Stratix 10) can achieve more GOP/s/Watt than the GPU (Nvidia Titan X), about 2.3-4.3 times.
+
+In this work, we propose an application-based neural network running on FPGA to detect flying-object. Our contribution can be stated as follows: (1) Build our custom dataset with different enhanced techniques to train our own network parameters for 5 custom flying-objects; (2) Evaluate different version of YOLOv3 and YOLOv4 to get the best network;
+
+(3) Propose some modifications and adaptations to YOLOv4 network to be suitable for implementation on FPGA; (4) Deploy our custom network on FPGA ZCU104 using Vitis AI tool and make a comparison with GPU platforms.
+
+## 2. Related works
+
+In the literature, several researchers implemented YOLO in FPGA for different applications. In 2018, Wei et al. [14] implemented the YOLO platform based on the Xillinx Zynq board and optimized its architecture combined with the FPGA feature. Real-time use cases of pedestrian and vehicle recognition have been demonstrated. The results of testing show that the average time to recognize a picture on this platform is 51 ms, which is 46.9 times faster than for PC platforms. Otherwise, Yap [15] proposed the fixed-point (16bit) implementation of a CNN-based object detection model. Using an OpenCL high level implementation tool, the author has generated Tiny YOLOv2 synthesis on a Cyclone V FPGA development board. The experiments show that on a working frequency of 100 MHz the proposal achieves peak performance of 21 GOPs. In 2019, REQ-YOLO, a resourceaware, systematic weight quantization framework for object recognition, was presented by Ding [16]. The author suggested a complete hardware implementation of block circulant matrices on CONV layers and developed an efficient processing element (PE) structure supporting the heterogeneous weight quantization to enable real-time and highly efficient implementations on FPGA. As a result, REQ-YOLO can greatly compress the YOLO model while only slightly degrading accuracy. Recently, in 2022, Chen [17] introduced an intelligent real-time object detection system for drones using FPGA. The neural network engine is based on the FPGA and designed to accelerate NN models. According to experimental findings, the suggested FPGA architecture effectively leverages FPGA computing resources, with corresponding DSP and LUT utilization rates of 81.56% and 72.80%. The system can detect objects at a rate of 8 frames per second and uses less power by employing the YOLOv3tiny model for quick object detection. Wenhao et al. [18] improved the YOLOv2 model by using the high concurrent capabilities of CPU + FPGA structure. The accelerator makes use of floating-point quantization, adder optimization, and various HLS optimization techniques. The PYNQ-Z2 platform of Xilinx is used to conduct the test. According to the author, the overall computing power of the accelerator is 27.1 GOP/s, the average detection accuracy is 80.6%, and the overall power consumption is 2.609 W. Only 2% of the attained precision is lost when compared to CPU and GPU, however, there is a significant reduction in power usage. A coal gangue identification method based on YOLOv4-tiny was proposed by Xu [19] and implemented on the low-power hardware platform FPGA. First, the computer platform is used to train the YOLOv4-tiny model. The combination of a BN layer and a convolution layer, along with a 16-bit fixed-point quantization further minimizes the model's computation. Second, IP kernels for convolution and pooling have been developed on the FPGA platform to accelerate convolution and pooling calculation. The proposal was tested on the self-made coal gangue dataset and the result indicated that the precision for coal gangue recognition on the FPGA platform is slightly lower than those of CPU and GPU. Hardware power consumption of the FPGA platform is only 2.86 W and the energy efficiency ratio is 10.42 and 3.47 times better than that of CPU and GPU, respectively. On the other hand, Zhang [20] presented a resource-constrained FPGA implementation of YOLOv2 with optimized data transfer and computing efficiency. Firstly, on-chip data transfer between different types of layers is allowed based on a scalable cross-layer dataflow strategy. The flexible off-chip data transfer is also offered when the intermediate results are unaffordable on-chip. A filter-level data-reuse dataflow strategy together with a filter-level parallel multiply-accumulate operation computing processing elements array is then developed. Finally, multi-level sliding buffers are developed to optimize the convolutional computing loop and reuse the input feature maps and weights. The author argued that this implementation has achieved 4.8 W of low-power consumption for executing YOLOv2, using low-resource of 8.3 Mbits on-chip memory, high throughput with 100.33 GOP/s and power efficiency is 20.90 GOP/s/W. In 2022, Zhang et al. [21] introduced a design of FPGA-Based acceleration for YOLOv4-Tiny object detection model by combining software and hardware. The author realized the accelerated detection inference process from the original 6-7 mins to 383 ms. First, the static quantization method of fixed-point numbers is chosen, the position of the decimal point is fixed and then the batch norm is added between the convolutional layer and the activation function to form a connection structure. Second, the inference speed on an FPGA with a version of ZYNQ-7020 is improved by increasing the bandwidth cap, reducing bandwidth requirements and employing a massive pipeline design. In the test of the Coco dataset, the average inference speed of the YOLOv4-Tiny object detection model is reduced from 7.13 mins per frame to 498.89 ms per frame while keeping the average accuracy value at around 95%. In the latest work in 2023, Zheng [22] presented a class YOLO target detection algorithm and deployed it to an FPGA platform. To enable the algorithm to run efficiently on FPGAs, the author quantized the model and wrote the corresponding hardware operators based on the model units. The proposed object detection accelerator has been implemented and verified on the Xilinx ZYNQ UltraScale+ MPSoCs XCZU7EV platform using Vitis HLS. Experimental results show that the detection accuracy of the algorithm model after quantizing the network to 4 bits is 87% which is comparable to that of common algorithms. The power consumption is 5.508 W which is lower than that of the CPU and GPU.
+
+3 Neural network for flying-object detection using YOLO We made use of four public datasets: the DUT Anti-UAV Detection and Tracking dataset [23], the Military Aircraft Detection dataset [24], the Military Aircraft Detection in Aerial Images dataset [25], the Flying Object dataset [26]. However, we collected more images from public photos and videos on the Internet to increase the diversity. For efficient data labeling for additional images, our method is that we train a pre-model based on the four public datasets. Here, we use the YOLOv4 network and then use this trained model to identify targets in the image that we collected to get the assigned labels of new images. We then check, correct and add missing or wrong labels with the labeling tool named LabelImg [27]. The description of four public datasets are as follows: In total, after aggregating the 4 datasets, there are 22,905 images. We found that the birds and rotated wing UAV target classes have a superior number compared to other target classes. The image quality of these two classes is also very high, the size of objects varies from very small to large compared to the image size, with a large number of images having very small objects. For the goal of being able to detect and identify small targets, it is necessary to add images for other objects classes, especially images taken at long distances so that the target is small compared to image size. The classes of drones, fighters and helicopters can be named as examples. We proceeded to collect more photos and cut image frames from videos in the internet. After adding, the total number of images in our dataset is 34,000 images where image size varies from 640 × 512 to 8508 × 5939, Fig. 1 is some examples of our custom labeled dataset. The number of additional images is 11,095 images, of which 2000 images taken from separate video sources are taken as the test set to ensure fairness when evaluating the best model in practice. The data set will be divided into the training set, the validation set, and the test set. From 34,000 images, 2000 images mentioned above will be taken as a test set to evaluate the final results of the model on real data. The remaining 32,000 images are randomly divided into training and validation sets in the commonly used ratio 8:2 as shown in Table 1, this widely accepted practice is chosen for its simplicity and effectiveness in creating a representative split without introducing biases. From the chart in Fig. 2, we can see that the classes distribution in training and validation set is roughly equal, ensuring the split is unbiased.
+
+### 3.1. Datasets preparation
+
+We train two models YOLOv3 and YOLOv4 on the training set, the quality scale of the model used is mAP 0.5 . The test set here will be used to evaluate each model after having trained a certain number of iterations. We did the training until the maximum mAP 0.5 is reached on the validation set and the average loss does not decrease any more. Since then, we have 2 sets of weights of the YOLOv3 and YOLOv4 models with the best mAP 0.5 on the validation set.
+
+### 3.2. YOLO networks adaptation for FPGA
+
+The selected detection and recognition models for implementation are YOLOv3, YOLOv4 and shortened variants of the full version, YOLOv3-tiny, YOLOv4-tiny. This section deals with the necessary modifications to the model so that it can be deployed on all three platforms: GPU, CPU, and on FPGA using Vitis AI tool. We also describe how to select hyperparameters and techniques to improve the accuracy of the model. In fact, the deep-learning processor unit (DPU) of Xilinx has some limitations on the classes, operators, and activation functions supported in the network. Therefore, we need to modify the model to be suitable for deployment on the DPU such as replacing, changing or removing some unsupported classes. Without modification, when compiling the model, unsupported classes, operators, and activation functions will be executed by the CPU thus reducing the overall performance of the system. With the use of the Darknet framework to train the model, combined with Netron [28]-a visualization tool for neural network models, it is easy to modify the model's structure. According to Xilinx DPU documentation [29], YOLOv3 and YOLOv3-tiny have a fully supported network topology so that only the network topology of YOLOv4 and YOLOv4-tiny need to be modified.
+
+#### 3.2.1. YOLOv4 modifications for FPGA
+
+Original YOLOv4 uses MISH activation function which is not supported by Xilinx DPU, so we replaced it by LeakyReLU activation function. This change reduced a little bit the accuracy of the model but not significantly. Following the research published by [30] where the author made the performance comparison of these 2 activation functions on the MS-COCO dataset, mAP of the model only decreased by 1-2%. The SPP module maxpool of the original YOLOv4 has kernel sizes of 5, 9, 13 respectively while the DPU only supports maxpool kernel with a maximum size of 8. Hence, we have some solutions such as: (1) Changing all maximum kernel sizes to 1,1,1;
+
+(2) Changing all kernel sizes to 5 × 5, 6 × 6, and 8 × 8;
+
+(3) Removing the SPP maxpool layer.
+
+Here we decided to change all kernel maxpool sizes to 5 × 5, 6 × 6, and 8 × 8 to keep the SPP layer. The purpose of SPP is to help the model learn features at different scales, thereby helping the model to accurately detect objects of different sizes. In theory, with a smaller kernel maxpool size than the original model, the output feature map will be larger, the receptive field of the model will be smaller, and the network will learn features at a smaller scale. It potentially leads to less accuracy when detecting large objects, but potentially better accuracy when detecting small targets because more details can be preserved in the feature map. The computational cost is also higher due to this change.
+
+#### 3.2.2. YOLOv4-tiny adaptation for FPGA
+
+A new feature in the original YOLOv4-tiny model is grouping by channel. Feature map is divided into two groups and only one of these groups is selected for further processing. The purpose of this feature is to select the best feature map to reduce the computational requirement and minimize the size of the model. However, DPU does not support this feature, so we will remove it and replace by a standard route. The change is shown in Fig. 3, on the left is the original YOLOv4-tiny model with segmentation group by channel and on the right is the model with this feature removed. This change does not affect model accuracy, but the model size and calculation requirements may be slightly larger.
+
+#### 3.2.3. Classes and filters in the convolutional layer before the YOLO layer
+
+The number of filters in the convolutional layers before the YOLO layer determines the number of output channels for each predicted bounding box. The default number of filters in the convolutional layers is 255, which is consistent with the original YOLO model trained on the COCO dataset with 80 feature classes. Our model has 5 feature classes so these parameters need to be changed following the Eq. 1.
+
+where the 5 feature classes correspond to classes = 5.
+
+Since the YOLO layer predicts 3 bounding boxes for each grid cell in the feature map so that num = 3, other operands take the value of 1. Finally, filters take the value of
+
+(5 + 1 + 1 + 1 + 1 + 1) × 3 = 30 .
+
+This change ensures that each YOLO class outputs the right bounding boxes to detect custom objects.
+
+#### 3.2.4. Adding a YOLO detection layer to the YOLO-tiny version
+
+Due to the fact that the simplifying versions YOLOv3-tiny and YOLOv4-tiny have poor accuracy compared to the full versions YOLOv3 and YOLOv4, especially the ability to detect small targets. For the goal of detecting flying objects in our research, these two simplifying versions may not be suitable even though they can achieve high FPS. Hence, it is necessary to improve the architecture of these two models to increase the detection ability. For more accurate detection results with small targets, the simplest change is to add 1 YOLO detection layer to these 2 models. The addition of 1 YOLO layer to the YOLOv4-tiny model is shown in Fig. 4, the original YOLO-tiny version only has 2 YOLO layers. The YOLO layer is responsible for predicting bounding box and feature class probability. After having 1 additional YOLO detection layer, the total (1) filters = (classes + width + height + x + y + confidence) × num number of YOLO detection classes will be 3 which is equal to YOLOv3 and YOLOv4 full model. It will help the detection model to be more accurate because each The YOLO layer in the network performs feature detection at a different spatial scale. Therefore, the additional layer will increase the spatial resolution of the feature map, allowing extraction of more detailed characteristics leading to better capture of the details of small targets. Of course, adding a YOLO layer will make the model heavier and decrease the processing speed. We named these 2 models YOLOv3-tiny and YOLOv4-tiny with one more layer as YOLOv3-tiny 3L and YOLOv4-tiny 3L.
+
+### 3.3. Model hyperparameters selection
+
+The learning rate is selected as the default value suggested by the YOLO network author. During training with the default learning rate value does not achieve good results, the value will be changed. Besides, training will be done for a number of iterations (max_batches) so choosing an appropriate value for max_batches is very important to avoid overfitting or underfitting. The author of the YOLO network recommends setting max_batches=classes × 2000, where classes are the number of feature classes, and max_batches is not less than the number of images in the training set and not less than 6000. The purpose is to ensure that the training model has enough repetitions to learn the characteristics of the targets and the objects. The number of iterations required for training depends on the complexity of the object, the size of the dataset, and the optimizer's learning rate. The steps value will be set to 90% of max_batches. After training 90% max_batches, the learning rate will be multiplied by a default rate of 0.1, the purpose of this is to help the model converge faster.
+
+The choice of network size is also important because it directly affects the quality of the model. The size of the network is closely related to the ability to detect small targets, it is obvious that the larger the image size, the easier it is to detect because small objects are represented in more pixels.
+
+Fig. 4 The addition of 1 YOLO layer to the YOLOv4-tiny model Usually, the default network size is selected as a 1:1 square ratio such as 416 × 416 or 640 × 640. However, few cameras have such resolution but usually 4:3 or 16:9. We chose hence the size 640 × 480 (VGA standard, 4:3 ratio) because this is a very popular and common resolution. In practice, if we choose a square ratio resolution, the image frame will be distorted when deployed in a real camera. The target will no longer keep the original scale due to the image resize, which leads to incorrect commands and reduces the accuracy of the model.
+
+NMS threshold and object class probability threshold are two parameters that directly affect the prediction results of the model. Therefore, choosing the optimal pair of these two parameters is very important. The object class probability threshold (conf_threshold) determines the minimum confidence score for a detection result to be considered as true positive. Detections with lower confidence scores will be rejected because they are more likely to be false positives. The non-maximum suppression (NMS) threshold associated with the NMS post-processing step removes duplicate bounding boxes of the same object. This threshold determines the overlap between two bounding boxes, which bounding box will be removed. A lower threshold will result in more bounding boxes being generated and a higher threshold will result in a lower number of bounding boxes with higher confidence. These 2 parameters need to be adjusted to create a balance between precision and recall. For the detection of small aerial targets, a low conf_threshold value should be used to ensure as many detections as possible, even if they have a low confidence score. The YOLO default value for conf_threshold is 0.25.Nms_threshold must also be a small value because small targets are more likely to overlap in the image. The YOLO default value for this threshold is 0.5. In order to choose the best value pair, we tried different value pairs and evaluate the mAP, precision, recall, and F1-score of the model with each pair of values to choose the most optimal value pair. We only conducted this selection for the best model. Before that, to choose the best model, the default values given by the YOLO author are considered where conf_threshold=0.25 and nms_threshold=0.5 (rated mAP@0.5).
+
+### 3.4. Model training and evaluation
+
+We decided to use the cloud platform VastAI (https:// vast. ai/) to rent the available hardware to train the models. The hardware configuration used for training is: The GPU used for training is a high-end GPU, so using an additional low-end GPU will make the evaluation more detailed and richer. Therefore, we use personal computer hardware with the configuration as follows:
+
+• GPU: NVIDIA GeForce GTX 1650 4GB GDDR6, 3.0 TFLOPS computation capacity. TDP 50W. • CPU: AMD Ryzen 5 5600H (6C/12T, 3.3/4.2GHz, 3MB L2/16MB L3). RAM: 16 GB DDR4-3200 MHz.
+
+The graph of the loss function and mAP of the models during training is shown in Fig. 5. During training, the average loss value and mAP val 0.5 are calculated after each iteration. All models will be evaluated with the best weights mAP test 0.5 on the test set. Speed is evaluated by performing inference 1 video with HD resolution of 1280 × 720, 1 m:31 s duration, 30fps, a total of 2747 frames. Testing configuration is batch = 1 and subdivisions = 1. We get the final average FPS result after completing the video.
+
+Table 2 shows the results of evaluating the accuracy of the models on the validation set. It can be seen that the models have quite high results on the validation set, which is understandable because the weights of the selected models are the weights with the highest results on the validation set. YOLOv4 and YOLOv3 models have quite similar results, not significantly different. These 2 versions are significantly superior to the shortened versions. The reduced models YOLOv3-tiny, YOLOv3-tiny 3L, YOLOv4-tiny, and YOLOv4-tiny 3L also has results that are not significantly different. Relying on the validation set alone is not enough to draw conclusions about which model is the best, so it is necessary to evaluate the models on the test set. The test set is a set of unseen model images and is selected separately from other sources than the training/validation sets. The results of the accuracy evaluation of the models on the test set are shown in Table 3. The YOLOv4 model achieved outstanding results on the accuracy scales compared to the remaining models, showing an improvement of this version compared to earlier versions of YOLOv3. From this table, we can also see that the effect of adding an extra layer of YOLO is evident with 2 models YOLOv3-tiny 3L and YOLOv4-tiny 3L. The accuracy is improved compared to the version with only 2 YOLO layers. The detailed result of AP for each target class on the test set is shown in Table 4.
+
+In Table 5, it can be seen that YOLOv3-tiny is the model that achieves the highest FPS on both high-end and lowend GPUs. The reason is that YOLOv3-tiny is the simplest model and the trade-off is poor accuracy. All the rest of the minified models (YOLOv3-tiny 3L, YOLOv4-tiny and YOLOv4-tiny 3L) also have high FPS and small model sizes and can run in real-time on both 2 GPU platforms. The two full models YOLOv3 and YOLOv4 can meet real-time requirements on high-end GPUs. However, with low-end GPUs like GTX1650, these two models have quite low FPS. In short, YOLOv4-tiny 3L is a model with pretty good accuracy compared to the rest of the reduced models. It is of course not comparable to the full YOLOv4 model but can be run in real time with even low-end GPUs is GTX 1650. Therefore, we choose 2 models YOLOv4 and YOLOv4-tiny 3L to continue deploying on FPGA. YOLOv4 is a large, complex and very heavy network model so it is necessary to reduce the computational complexity in order to meet real-time performance and energy-efficient requirements on FPGA.
+
+### 3.5. Model compression with the pruning method
+
+To reduce the size and computational requirements of the model, many methods can be considered, such as reducing the size (resolution) of the output and input of the network or reducing the number of layers of the model. However, with these two methods, the accuracy and ability to detect small targets of the model will be seriously affected. In our work, we chose an alternative called pruning method. Pruning is known as removing network nodes that do not contribute to detection. Pruning with an appropriate technique can slightly reduce the accuracy of the model (or even improve accuracy in some cases) and make the model lighter and faster. A typical pruning process consists of three stages: Firstly, training a large, overparameterized model (with too many unnecessary parameters); Secondly, pruning the trained large model according to a certain criterion; Thirdly, finetuning the trimmed model to restore accuracy. The pruning techniques can be classified into three main groups: For the YOLOv4 model, we selected the pruning technique based on the standard with the L1 standard. The L1-based is widely used and has been successfully applied to many deep learning models, showing efficiency and flexibility. This method is also simple and easy to implement and does not require adjustment of the model's hyperparameters. Some studies in state-of-the-art made comparison of different pruning techniques for the YOLOv4 model [4,[31][32][33] and achieved the best results with the pruning method based on the L1/L2 standard. In fact, L1 norm is also a type of regularization technique commonly used in machine learning and deep learning models to prevent overfitting. In the pruning technique, the L1 norm is used to determine the least significant weights in the neural network and set them to 0, which reduces the total number of parameters and improves the efficiency of the model without too much decrease in accuracy. The implementation method in our work is referenced to ideas from the authors in [33] with the input of the weights of the trained model. Illustrate the filter parameter pruning step in Fig. 6, the significance of filters, represented by blue and green rectangles, is assessed through the computation of their L1-norm. Filters with lower values are chosen for pruning, as indicated by the green circle. The pruned model experiences a reduction in accuracy, prompting the subsequent fine-tuning process. On the Darknet, the pruning process includes the following steps:
+
+• Iterating through each convolution layer of the trained model and calculate the L1 normalization of the weights for each filter in the class. • Sorting the filters in each layer in descending order according to their L1 norm. • Removing the filters with the lowest L1 norm at a preset ratio from each layer (set the weights of these filters to 0). • Adjusting the input and output channels of subsequent layers to maintain the structure of the network.
+
+• Saving the trimmed model
+
+We experimented with different pruning ratio values to find the most optimal value (pruning ratio 0.5 means that 50% of filters with the lowest standard L1 value are removed from the network). The model after pruning will be finetuned for an additional 30,000 iterations with a learning rate of 0.05 to recover the accuracy. The pruning results with different scale values are shown in Table 6. We note that the pruning ratio of 0.6 achieved the best results. The total parameter of the model and the BFLOPS calculation cost decreased by 51%, mAP val 0.5 and mAP test 0.5 were restored close to the original model. With a higher pruning ratio of 0.7, the model suffered a significant reduction in accuracy while with a lower scale, the accuracy did not increase much. The YOLOv4 model with a scale of 0.6 will be called YOLOv4pruned to distinguish it from the original YOLOv4 model and is selected for further deployment on the FPGA.
+
+Another problem that has been mentioned in Sect. 3.3 is the selection of the conf_threshold and nms_threshold parameter pairs. We have chosen YOLOv4, YOLOv4pruned and YOLOv4-tiny 3L models to deploy FPGA. We chose YOLOv4 model to find the best value pair, then evaluate the remaining 2 models on the found pair. Through the survey from keeping one value and changing the remaining value (with a 0.05 step), in Table 7, we found that conf_ threshold = 0.15 is the most optimal value. If this value is set smaller, precision will decrease significantly with a lot of FP detection. Otherwise, in Table 8, the value nms_threshold = 0.25 is the most optimal value. When nms_threshold is smaller than this value, with the same target, the model will produce many overlapping bounding boxes with the same target. In short, with the pair of values conf_threshold = 0.15 and nms_threshold = 0.25, the model achieved the best tradeoff between precision and recall. The mAP of all models are improved (increased by about 2% compared to baseline). The precision is decreased slightly or remained constant and recall was significantly improved as shown in Table 9. The experiments also show that this pair of values is suitable for detecting smaller targets. With the reduction of nms_threshold from 0.5 to 0.25, the evaluated mAP results will be mAP 0.25 instead of mAP 0.5 .
+
+Figure 7 shows some samples of the detection using GPU. From left to right are the models: YOLOv4, YOLOv4pruned and YOLOv4-tiny 3L. It can be noted that the YOLOv4 model detects small targets relatively well with the definition of small targets used (16 × 16 to 42 × 42 pix- els in the 640 × 480 image, and 27 × 27 to 73 × 73 pixels in 1280 × 720 images), having high confidence scores and less confusion among target classes. YOLOv4-pruned gives results comparable to YOLOv4. YOLOv4-tiny 3L can detect close and medium-range targets well but still has difficulty for small targets, which are more easily confused and missed than the 2 remaining models. For extremely small targets in the image such as a few pixels, all the 3 models are either undetectable or detectable but with mistaken for another target class.
+
+## 4. FPGA-Soc implementation of YOLOv4
+
+After selecting the 3 best models (YOLOv4, YOLOv4pruned and YOLOv4-tiny 3L), the next stage is to deploy these models on FPGAs with the ZCU104 kit and the Vitis AI platform.
+
+### 4.1. Converting model formats from Darknet to Tensorflow
+
+Vitis AI does not support the Darknet framework so it is necessary to convert the weights file of the model to a format compatible with Tensorflow. We can convert through 2 steps that the first is convert from Darknet weights file (.weights extension) to Keras weights file (.h5 extension). The weights are stored in converted binary format in type of floating point values (in blocks of 4 bytes) suitable for Keras. After that, the second step is from converted Keras model to TensorFlow frozen graph (.pb extension).
+
+A graph or a computational graph is a collection of Tensorflow calculations and operators that are placed into a graph. A Frozen graph is a graph converted to a serialized binary format that can be loaded into a TensorFlow graph without an initial model definition. The resulting
+
+### 4.2. Model quantization
+
+There are two main quantization methods, PTQ and QAT.
+
+Vitis AI Quantizer supports both of these methods with Ten-sorFlow 1.15. PTQ does not require retraining or labeled data. In most cases, the PTQ method is sufficient to achieve 8-bit quantization with accuracy similar to that of 32-bit float. Otherwise, QTA requires fine-tuning and labeled training data but allows lower bit quantization with possibly better model accuracy. In this project, we will use PTQ method. This step is performed using the Vitis AI quantizer which takes as input a 32-bit float model, performs preprocessing (combining batchnorm functions and removes unnecessary nodes for inference), then converts the weights/ biases and trigger values to the specified bit width (here 8 integer bits).
+
+To collect activation statistics and improve the accuracy of quantized models, the Vitis AI quantizer must run several inference iterations to calibrate the activation values. Therefore, a calibration image dataset is required as input. As recommended by Xilinx, quantization works well with 100-1000 images. Back propagation is not required so that an unlabeled data set is sufficient. Here, we use 640 images randomly taken from the training/testing set as the calibration set. After calibration, the quantized model is transformed into a DPU deployable model that conforms to the DPU's data format. This model can then be compiled by the Vitis AI compiler and deployed to the DPU.
+
+### 4.3. Program flow
+
+This is the final step to deploy the compiled model. To be able to run this model on an operating system board, a software program (application) is required that handles the communication between the processing system (PS) and the hardware core (PL) containing the DPU. This program needs to read input image from PS, perform preprocessing, provide preprocessed image to DPU on FPGA and read output from DPU and do post-processing. Xilinx supports the construction of such programs using the Vitis AI Library, which provides APIs for communication between the DPU and the microprocessor, supported languages are C++ and Python. In this project, the executable program is written in C++ language.
+
+For a program that reads image frames from a camera or video for processing and display, the purpose of this program is to test experimentally whether the implementation with the camera can meet the real-time requirements and measure the FPS rate. We found that the time to perform the pre-or post-processing is very small compared to the DPU computation. Therefore, instead of using only 1 DPU core, the frame processing program from the camera is designed to take advantage of 2 DPU cores to improve processing speed. In fact, one DPU IP can support up to 4 DPU cores but with the resources of the ZCU104 kit, only 2 DPU cores can be met. With 2 DPU cores running in parallel, we can make inferences with 2 images at the same time. The program on CPU is hence designed in a multi-thread method to be able to process many frames at the same time. Each thread is responsible for processing a separate input frame sequence, performing preprocessing and inference using its own DPU core. In this way, the system can improve overall throughput and reduces latency. An illustration of the program workflow with 2 threads is shown in Fig. 8.
+
+To achieve the highest performance (the highest FPS), it is necessary to test the program with different thread numbers to find the optimal number of threads. Multiple threads is not necessarily good as it will increase the power consumption of the system and may not be able to effectively use 2 DPU cores. The experiment on different number of threads to find the optimal value will be covered in Sect. 5.2.
+
+## 5. Experiments
+
+The ZCU104 development kit allows the design of embedded vision applications such as surveillance systems, driver assistance systems (ADAS), machine vision, augmented reality (AR), unmanned aerial vehicles and medical image processing. The MPSoC kit XCZU7EV-2FFVC1156E from the Zynq UltraScale+ MPSoC EV series supports a variety of peripherals and common couplings for embedded vision applications. The accompanying ZU7EV is equipped with a quad-core ARM Cortex-A53 application processor, a dualcore Cortex-R5 real-time processor, a Mali-400 MP2 graphics processor and programmable logic. An example of our experiments is illustrated in Fig. 9.
+
+### 5.1. Accuracy evaluation
+
+The implementation process on the model FPGA must go through the format conversion and quantization process, it is hence inevitable that the accuracy will be reduced. We evaluated the model after these steps. The scale used is mAP 0.25 with validation set and test set, and conf_threshold takes the value of 0.15. The Table 11 shows that after the steps of converting the model to Tensorflow format, quantifying the model and compiling the model, the mAP is reduced by about 6-7% depending on the model. This is acceptable due to many processes of transforming and quantizing the model from a 32-bit floating down to an 8-bit integer. The samples of the detection results of the FPGA implementation is presented in Fig. 10. We can observe that the result is slightly worse than the implementation on GPU, but not significantly. The ability to detect small targets is still guaranteed.
+
+### 5.2. Processing time
+
+On FPGA, the speed is also evaluated by the same video as on GPU to ensure fairness (video with HD resolution of 1280 × 720, length of 01:31 min, 30 fps, a total of 2747 frames). We get the final average FPS (frame per second) result after completing the video processing. We also evaluated the speed of the program when running with different numbers of threads to find the optimal value. The execution time of the whole process, on the DPU and on the microprocessor is measured when the program runs with a single thread to evaluate the processing time of each component.
+
+When running with multiple threads, we just measured FPS.
+
+In Table 12, E2E_MEAN, DPU_MEAN and CPU_ MEAN are the average processing times of an image for the whole process, of the DPU and of the CPU, respectively. These intervals are measured when the program runs with only 1 thread. It can be seen that the average processing time of the DPU dominates the entire process, while the average processing time of the CPU is very small compared to the whole process. Table 13 shows that when running with 4 threads, the models achieved the highest FPS. This could be explained that the program took advantage of the four ARM Cortex-A53 processor cores on the ZCU104 board. Testing with number of threads greater than 4 results in lower FPS.
+
+From the above results, we can note that the YOLOv4, even when running with 4 threads and 2 DPU cores, only achieves about 18 FPS. On the other hand, with YOLOv4pruned, the speed can reach 29 FPS. The shortened version of YOLOv4 is YOLOv4-tiny 3L which can run up to 125 FPS but at the expense of less accuracy.
+
+### 5.3. Power consumption
+
+For measuring power consumption in different hardware, we used a measuring device called a socket-type power meter TS-836. The power value W (Watt) will be displayed on the display of the measuring device. The method is to make power measurements during the video processing. We take the values every 3 s and compute average value after completing the video. This method is applied with the actual hardware configuration available which is the GTX 1650 GPU on our personal laptop and the ZCU104 FPGA kit. For RTX 2080 Ti GPU hardware that we rent online in the cloud, the measurement method is using specialized software to measure real-time power consumption for AMD, Intel and NVIDIA GPUs. It is called NVTOP [35]. The software method cannot be as accurate as the hardware method but gives us an approximation. The average power consumption of the RTX 2080Ti GPU and GTX 1650 GPU and ZCU104 kit without our application processing are 22 W, 28 W and 16.1 W respectively. Table 14 presents the power consumption of the 2 GPU and Table 15 is the consumption of ZCU104 by different number of threads. It is obviously that the executable program runs with more threads leading to the higher the power consumption. With only 1 thread, only 1 DPU core is used, the power consumption is hence the lowest. Power consumption increases significantly starting from running with 2 threads because 2 DPU cores are used. Combining with the results of the FPS evaluation in previous section, it can be noted that when the executable program runs with the number of threads greater than 4, the FPS is not improved but system consumes more power. Therefore, we use FPGA implementation with 4 threads to compare with the implementation on the GPU. Figure 11 summarizes the results of models deployed on GPU and FPGA hardware platforms. Figure 12 compares energy efficiency (FPS/W). In terms of speed, the FPGA implementation with the ZCU104 kit is inferior to the high-end RTX 2080Ti GPU, but outperforms the lowend GTX 1650 GPU. In terms of power consumption, the FPGA implementation is significantly outperforms the GPU, which is lower than GTX 1650 about 3 times and lower than RTX 2080Ti about 7-8 times. In terms of FPS/W energy efficiency, FPGA is also superior to GPU by 2-3 times more efficient than the RTX 2080Ti and by 3-4 times than that of the GTX 1650. The efficiency of the pruning method is clearly shown with the YOLOv4 model implemented on ZCU104 where the pruned model has a negligible decrease in accuracy (mAP val 0.25 is 88.13% compared to 88.21% before pruning and mAP test 0.25 82.41% compared to 83.70% before pruning) but the FPS is greatly improved (from 17.9 to 29). The FPS/W power efficiency is also improved compared to original model (1.04 vs 0.6, about 73% more efficient).
+
+## 6. Conclusion
+
+In this research, we presented an application based neural network and its implementation on FPGA. We enhanced our training dataset from various sources with different techniques. Our system can detect 5 well-known flying-object at a high accuracy. With our FPGA proposal, the accuracy of the YOLOv4 network is reduced at an acceptable level due to the process of format conversion and model quantization. In terms of speed, the FPGA implementation with the ZCU104 kit is inferior to the high-end RTX 2080Ti GPU, but outperforms the low-end GTX 1650 GPU. In terms of power consumption, the FPGA implementation is significantly lower than the GPU. Regarding the FPS/W energy efficiency, FPGA is completely superior to GPU by 2-3 times more efficient than the RTX 2080Ti and by 3-4 times than that of the GTX 1650. In conclusion, our application developed on FPGA can handle real-time speed while consuming significantly less power than GPU implementation. This makes FPGAs well suited for embedded vision applications requiring high power efficiency. With the application of appropriate model compression methods, complex and heavy deep learning models can also achieve real-time performance on FPGA.
+
+## Figures et tableaux
+
+**Fig. 1** Dataset examples
+
+**Fig. 2** Class frequencies in training and validation set Fig. 3 YOLOv4-tiny model modification
+
+• GPU: NVIDIA GeForce RTX 2080 Ti 11GB VRAM (GPU RAM), 19 TFLOPS (TeraFLOPS) computation capacity. TDP (Thermal Design Power) 250 W. • CPU: AMD Ryzen Threadripper PRO 3975WX 32-Cores. RAM: 37 GB.
+
+**Fig. 5** Graphs of the loss function and mAP of the different models during training
+
+• Criteria-based: L0-Norm, L1-Norm, L2-Norm, L-Inf Norm and Random. • Projection-based: PLS (Single) + VIP, PLS (Multi) + VIP, CCA (Multi) + CV and PLS (Multi) + LC. • Cluster-based: HAC+PCC.
+
+**Fig. 6** Fig.6Illustration of L1-norm based filter pruning[34]
+
+**Fig. 9** ZCU104 development kit
+
+**Fig. 10** Detection result on FPGA (from left to right: YOLOv4, YOLOv4-pruned and YOLOv4-tiny 3L)
+
+**Fig. 11** Performance comparison of deploying models on different platforms
+
+**Fig. 12** FPS/W power efficiency on different platforms
+
+**Table 1** Feature classes distribution
+
+    Class | Training | Validation | Total
+    Bird | 9225 | 2165 | 11,390
+    RW UAV | 7143 | 1882 | 9025
+    FW UAV | 7234 | 1748 | 8982
+    Fighter | 6378 | 1505 | 7883
+    Helicopter | 4014 | 922 | 
+
+**Table 2** Models evaluation on the validation setThe bold value of each column is the optimal value for the criteria when comparing among the different yolo network versions
+
+    Model | mAP val 0.5 (%) | Precision | Recall | F1-score
+    YOLOv3 | 92.07 | 0.91 | 0.89 | 0.90
+    YOLOv3-tiny | 80.01 | 0.83 | 0.70 | 0.76
+    YOLOv3-tiny 3L | 83.70 | 0.85 | 0.72 | 0.78
+    YOLOv4 | 93.0 | 0.89 | 0.91 | 0.90
+    YOLOv4-tiny | 81.76 | 0.83 | 0.70 | 0.76
+    YOLOv4-tiny 3L | 83.8 | 0.86 | 0.71 | 0.78
+
+**Table 3** Models evaluation on the test setThe bold value of each column is the optimal value for the criteria when comparing among the different yolo network versions
+
+    Model |  | mAP test 0.5 (%) | Precision | Recall | F1-score
+    YOLOv3 |  | 80.20 | 0.83 | 0.71 | 0.77
+    YOLOv3-tiny | 70.43 | 0.74 | 0.65 | 0.69
+    YOLOv3-tiny 3L | 75.06 | 0.78 | 0.67 | 0.72
+    YOLOv4 |  | 88.53 | 0.92 | 0.80 | 0.86
+    YOLOv4-tiny | 74.11 | 0.78 | 0.70 | 0.74
+    YOLOv4-tiny 3L | 77.90 | 0.80 | 0.73 | 0.76
+    Table 4 AP of each target class on test set | 
+    Model | AP for each class (%) |  | 
+     | Bird | FW UAV RW UAV Fighter Helicopter
+    YOLOv3 73.90 82.97 | 81.46 | 80.98 | 81.67
+    YOLOv3 64.85 73.25 | 76.71 | 68.15 | 69.18
+    YOLOv3 75.26 75.80 | 77.57 | 74.94 | 71.74
+    YOLOv4 85.50 92.60 | 92.48 | 84.22 | 87.86
+    YOLOv4 73.59 67.75 | 81.83 | 72.22 | 75.17
+    YOLOv4 76.04 76.84 | 82.08 | 77.13 | 77.43
+
+**Table 5** Average FPS and other parameters of the model running on the GPUThe bold value of each column is the optimal value for the criteria when comparing among the different yolo network versions
+
+    Model | No. layer BFLOPS Weights | AvgFPS | AvgFPS
+     |  |  | size (MB) | RTX2080 | GTX1650
+    YOLOv3 107 | 115.977 234 | 80.4 | 17.5
+    YOLOv3 23 | 9.681 | 33.1 | 361 | 142.8
+    YOLOv3 30 | 12.627 | 34.4 | 304.7 | 120.9
+    YOLOv4 157 | 105.900 245 | 66.9 | 16.5
+    YOLOv4 38 | 13.121 | 23.2 | 323.4 | 129.4
+    YOLOv4 45 | 15.321 | 24.1 | 274 | 114.0
+
+**Table 6** Pruning model evaluation with different scale values
+
+     | Pruning ratio Total parameters | BFLOPS Weights size (MB) | mAP val 0.5 (%) mAP test 0.5 (%) FPS | 
+     |  | (M) |  |  |  |  |  | 
+     |  |  |  |  |  |  | RTX2080 GTX1650
+     | Original | 64.2 | 105.9 | 245 | 93.00 | 88.53 | 66.9 | 16.5
+     | 0.5 | 36.1 | 59.7 | 138 | 92.90 | 87.84 | 82.2 | 21.7
+     | 0.6 | 31.5 | 52.1 | 120 | 92.86 | 87.68 | 84.3 | 23.3
+     | 0.7 | 27.2 | 45.0 | 104 | 61.30 | 59.41 | 85.6 | 24.4
+    Table 7 Conf_threshold analysis with nms_threshold | Conf. thres | Precision | Recall | F1 | TP | FP | FN | Avg IoU (%)
+    = 0.5 | 0.25 | 0.92 | 0.80 | 0.86 | 4714 | 412 | 1135 | 88.44
+     | 0.2 | 0.90 | 0.82 | 0.86 | 4786 | 553 | 1063 | 85.91
+     | 0.15 | 0.87 | 0.83 | 0.85 | 4865 | 749 | 984 | 82.78
+     | 0.1 | 0.82 | 0.85 | 0.83 | 4959 | 1096 | 890 | 77.90
+     | 0.05 | 0.73 | 0.87 | 0.79 | 5087 | 1924 | 762 | 68.63
+    Table 8 Nms_threshold analysis with conf_threshold = 0.25 | NMS thres. | Precision | Recall | F1 | TP | FP | FN | Avg IoU (%)
+     | 0.5 | 0.92 | 0.80 | 0.86 | 4714 | 412 | 1135 | 88.44
+     | 0.45 | 0.92 | 0.81 | 0.86 | 4723 | 403 | 1126 | 88.49
+     | 0.4 | 0.92 | 0.81 | 0.86 | 4732 | 394 | 1117 | 88.56
+     | 0.35 | 0.92 | 0.81 | 0.86 | 4740 | 386 | 1109 | 88.57
+     | 0.3 | 0.93 | 0.81 | 0.86 | 4743 | 383 | 1106 | 88.56
+     | 0.25 | 0.93 | 0.81 | 0.87 | 4747 | 379 | 1102 | 88.58
+     | 0.2 | 0.93 | 0.81 | 0.87 | 4746 | 380 | 1103 | 88.56
+     | 0.15 | 0.93 | 0.81 | 0.87 | 4747 | 379 | 1102 | 88.57
+     | 0.1 | 0.93 | 0.81 | 0.87 | 4747 | 379 | 1102 | 88.57
+     | 0.05 | 0.93 | 0.81 | 0.87 | 4745 | 381 | 1104 | 88.53
+
+**Table 9** Models evaluation with conf_threshold = 0.15 and nms threshold = 0.25
+
+    Model | Precision | Recall | F1 | mAP test 0.25 (%)
+    YOLOv4 | 0.88 | 0.84 | 0.86 | 90.37
+    YOLOv4-pruned | 0.85 | 0.86 | 0.85 | 89.02
+    YOLOv4-tiny 3L | 0.75 | 0.77 | 0.76 | 78.95
+
+**Table 10** 
+
+    mAP evaluation of the transformation model and the origi-
+    final model |  | 
+    Model | mAP val 0.25 (%) | mAP val 0.25 (%)
+     | Darknet | TF frozen graph
+    YOLOv4 | 95.54 | 95.50
+    YOLOv4-pruned | 95.39 | 95.36
+    YOLOv4-tiny 3L | 89.06 | 89.00
+
+**Table 11** mAP (%) of YOLOv4 models implemented on FPGA
+
+    Model | mAP val 0.25 | mAP val 0.25 | mAP test 0.25 | mAP test 0.25
+     |  | FPGA |  | FPGA
+    YOLOv4 | 95.54 | 88.21 | 90.37 | 83.70
+    YOLOv4-pruned | 95.39 | 88.13 | 89.02 | 82.41
+    YOLOv4-tiny 3L | 89.06 | 82.02 | 78.50 | 72.24
+
+**Table 12** Average processing time of each algorithm parts
+
+    Model | E2E_MEAN (ms) | DPU_ | CPU_
+     |  | MEAN (ms) | MEAN
+     |  |  | (ms)
+    YOLOv4 | 107.94 | 104.0 | 3.94
+    YOLOv4-pruned | 66.53 | 62.60 | 3.93
+    YOLOv4-tiny 3L | 19.18 | 15.27 | 3.91
+
+**Table 13** 
+
+    FPS evaluation with different number of threads | Model | Number of threads |  |  | 
+     |  | 1 | 2 | 3 | 4 | 5 | 6
+     | YOLOv4 | 9.2 | 17.3 | 17.6 | 17.9 | 17.3 | 17.1
+     | YOLOv4-pruned | 15.0 | 27.4 | 28.3 | 29.0 | 28.4 | 28.3
+     | YOLOv4-tiny 3L | 52.1 | 100.4 | 112.8 | 125.0 | 124.1 | 123.7
+    Table 14 Average power consumption of GPU |  |  |  |  | 
+    Model | Power consumption (W) |  |  |  |  | 
+     | RTX 2080 Ti | GTX 1650 |  |  |  | 
+    YOLOv4 | 255.4 | 93.7 |  |  |  | 
+    YOLOv4-pruned | 220.8 | 84.1 |  |  |  | 
+    YOLOv4-tiny 3L | 180.5 | 76.3 |  |  |  | 
+
+**Table 15** Average power consumption (W) of ZCU depending on number of threads
+
+    Model | Number of threads |  |  |  | 
+     | 1 | 2 | 3 | 4 | 5 | 6
+    YOLOv4 | 23.1 | 29.1 | 29.4 | 30.1 | 30.5 | 31.2
+    YOLOv4-pruned | 21.2 | 27.1 | 27.4 | 27.9 | 28.6 | 29.0
+    YOLOv4-tiny 3L | 19.4 | 25.8 | 26.1 | 26.4 | 27.0 | 27.8

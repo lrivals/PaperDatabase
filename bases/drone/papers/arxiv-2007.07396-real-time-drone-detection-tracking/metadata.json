@@ -20,27 +20,30 @@
   "doi": null,
   "arxiv_id": "2007.07396",
   "url": "https://arxiv.org/abs/2007.07396",
-  "type": null,
+  "type": "conference",
   "axes": [
     "counter-uav",
     "datasets-benchmarks"
   ],
   "tags": [
     "infrared",
-    "multi-sensor"
+    "multi-sensor",
+    "ground-to-air",
+    "yolov2",
+    "sensor-fusion",
+    "ads-b",
+    "lstm",
+    "bird-rejection"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "publié ailleurs selon arXiv (journal_ref : Proc. Intl Conf on Pattern Recognition, ICPR, Milan, Italy, 10-15 January 2021) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

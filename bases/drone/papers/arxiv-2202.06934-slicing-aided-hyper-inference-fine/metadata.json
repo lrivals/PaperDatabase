@@ -25,22 +25,27 @@
     "drone-detection"
   ],
   "tags": [
-    "yolov5",
     "visdrone",
-    "small-objects"
+    "xview",
+    "small-objects",
+    "slicing",
+    "sahi",
+    "yolov5",
+    "fcos",
+    "vfnet",
+    "tood"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 2"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

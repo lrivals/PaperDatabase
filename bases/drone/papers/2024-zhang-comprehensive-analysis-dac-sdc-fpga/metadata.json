@@ -1,0 +1,75 @@
+{
+  "id": "2024-zhang-comprehensive-analysis-dac-sdc-fpga",
+  "title": "A comprehensive analysis of DAC-SDC FPGA low power object detection challenge",
+  "authors": [
+    {
+      "given": "Jingwei",
+      "family": "Zhang"
+    },
+    {
+      "given": "Guoqing",
+      "family": "Li"
+    },
+    {
+      "given": "Meng",
+      "family": "Zhang"
+    },
+    {
+      "given": "Xinye",
+      "family": "Cao"
+    },
+    {
+      "given": "Yu",
+      "family": "Zhang"
+    },
+    {
+      "given": "Xiang",
+      "family": "Li"
+    },
+    {
+      "given": "Ziyang",
+      "family": "Chen"
+    },
+    {
+      "given": "Jun",
+      "family": "Yang"
+    }
+  ],
+  "year": 2024,
+  "venue": "Science China Information Sciences 67(8), 182401",
+  "doi": "10.1007/s11432-023-3958-4",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1007/s11432-023-3958-4",
+  "type": "journal",
+  "axes": [
+    "datasets-benchmarks",
+    "drone-fpga",
+    "system-codesign"
+  ],
+  "tags": [
+    "dac-sdc",
+    "ultra96",
+    "pynq",
+    "zynq",
+    "quantization",
+    "skynet",
+    "ultranet",
+    "dsp-packing",
+    "streaming-architecture",
+    "int4",
+    "small-objects"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 2",
+      "sections numérotées non détectées : 3, 4 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

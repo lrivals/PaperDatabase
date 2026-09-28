@@ -38,19 +38,24 @@
     "drone-detection"
   ],
   "tags": [
-    "crazyflie"
+    "gap8",
+    "crazyflie",
+    "early-exit",
+    "adaptive-inference",
+    "mobilenet-ssd",
+    "int8",
+    "quantization",
+    "dory"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

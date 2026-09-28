@@ -1,0 +1,65 @@
+{
+  "id": "2018-flamand-gap-8-risc-v-soc",
+  "title": "GAP-8: A RISC-V SoC for AI at the Edge of the IoT",
+  "authors": [
+    {
+      "given": "Eric",
+      "family": "Flamand"
+    },
+    {
+      "given": "Davide",
+      "family": "Rossi"
+    },
+    {
+      "given": "Francesco",
+      "family": "Conti"
+    },
+    {
+      "given": "Igor",
+      "family": "Loi"
+    },
+    {
+      "given": "Antonio",
+      "family": "Pullini"
+    },
+    {
+      "given": "Florent",
+      "family": "Rotenberg"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    }
+  ],
+  "year": 2018,
+  "venue": "2018 IEEE 29th International Conference on Application-specific Systems, Architectures and Processors (ASAP) 1-4",
+  "doi": "10.1109/ASAP.2018.8445101",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/ASAP.2018.8445101",
+  "type": "conference",
+  "axes": [
+    "nano-drone"
+  ],
+  "tags": [
+    "gap8",
+    "risc-v",
+    "pulp",
+    "hwce",
+    "mcu",
+    "ultra-low-power",
+    "asic",
+    "autotiler"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : III — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

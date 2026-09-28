@@ -1,0 +1,53 @@
+{
+  "id": "2021-liu-real-time-small-drones-detection",
+  "title": "Real-Time Small Drones Detection Based on Pruned YOLOv4",
+  "authors": [
+    {
+      "given": "Hansen",
+      "family": "Liu"
+    },
+    {
+      "given": "Kuangang",
+      "family": "Fan"
+    },
+    {
+      "given": "Qinghua",
+      "family": "Ouyang"
+    },
+    {
+      "given": "Na",
+      "family": "Li"
+    }
+  ],
+  "year": 2021,
+  "venue": "Sensors 21(10), 3374",
+  "doi": "10.3390/s21103374",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s21103374",
+  "type": "journal",
+  "axes": [
+    "drone-detection",
+    "counter-uav"
+  ],
+  "tags": [
+    "yolov4",
+    "pruning",
+    "small-objects",
+    "anti-uav",
+    "ground-to-air",
+    "data-augmentation",
+    "tesla-p100"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

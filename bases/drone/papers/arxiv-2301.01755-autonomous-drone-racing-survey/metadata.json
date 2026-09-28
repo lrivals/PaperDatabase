@@ -44,26 +44,34 @@
   "doi": "10.1109/TRO.2024.3400838",
   "arxiv_id": "2301.01755",
   "url": "https://arxiv.org/abs/2301.01755",
-  "type": null,
+  "type": "journal",
   "axes": [
     "surveys",
-    "tracking-navigation"
+    "tracking-navigation",
+    "system-codesign"
   ],
-  "tags": [],
+  "tags": [
+    "drone-racing",
+    "vio",
+    "mpc",
+    "reinforcement-learning",
+    "gate-detection",
+    "jetson",
+    "event-camera",
+    "simulators"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "publié ailleurs selon arXiv (journal_ref : IEEE Transactions on Robotics (T-RO), Vol. 40, 2024) : type journal/conference à préciser",
       "titre du PDF ≠ titre arXiv : « This paper has been accepted for publication in the IEEE Transactions on Robotics (T-RO), 2024. ©IEEE Autonomous Drone Racing: A Survey »",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : III — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

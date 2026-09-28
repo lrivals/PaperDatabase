@@ -1,0 +1,17 @@
+
+@Article{drones7080526,
+AUTHOR = {Zhang, Zhengxin},
+TITLE = {Drone-YOLO: An Efficient Neural Network Method for Target Detection in Drone Images},
+JOURNAL = {Drones},
+VOLUME = {7},
+YEAR = {2023},
+NUMBER = {8},
+ARTICLE-NUMBER = {526},
+URL = {https://www.mdpi.com/2504-446X/7/8/526},
+ISSN = {2504-446X},
+ABSTRACT = {Object detection in unmanned aerial vehicle (UAV) imagery is a meaningful foundation in various research domains. However, UAV imagery poses unique challenges, including large image sizes, small sizes detection objects, dense distribution, overlapping instances, and insufficient lighting impacting the effectiveness of object detection. In this article, we propose Drone-YOLO, a series of multi-scale UAV image object detection algorithms based on the YOLOv8 model, designed to overcome the specific challenges associated with UAV image object detection. To address the issues of large scene sizes and small detection objects, we introduce improvements to the neck component of the YOLOv8 model. Specifically, we employ a three-layer PAFPN structure and incorporate a detection head tailored for small-sized objects using large-scale feature maps, significantly enhancing the algorithm’s capability to detect small-sized targets. Furthermore, we integrate the sandwich-fusion module into each layer of the neck’s up–down branch. This fusion mechanism combines network features with low-level features, providing rich spatial information about the objects at different layer detection heads. We achieve this fusion using depthwise separable evolution, which balances parameter costs and a large receptive field. In the network backbone, we employ RepVGG modules as downsampling layers, enhancing the network’s ability to learn multi-scale features and outperforming traditional convolutional layers. The proposed Drone-YOLO methods have been evaluated in ablation experiments and compared with other state-of-the-art approaches on the VisDrone2019 dataset. The results demonstrate that our Drone-YOLO (large) outperforms other baseline methods in the accuracy of object detection. Compared to YOLOv8, our method achieves a significant improvement in mAP0.5 metrics, with a 13.4% increase on the VisDrone2019-test and a 17.40% increase on the VisDrone2019-val. Additionally, the parameter-efficient Drone-YOLO (tiny) with only 5.25 M parameters performs equivalently or better than the baseline method with 9.66M parameters on the dataset. These experiments validate the effectiveness of the Drone-YOLO methods in the task of object detection in drone imagery.},
+DOI = {10.3390/drones7080526}
+}
+
+
+

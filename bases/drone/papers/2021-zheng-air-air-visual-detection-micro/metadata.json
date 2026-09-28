@@ -1,0 +1,63 @@
+{
+  "id": "2021-zheng-air-air-visual-detection-micro",
+  "title": "Air-to-Air Visual Detection of Micro-UAVs: An Experimental Evaluation of Deep Learning",
+  "authors": [
+    {
+      "given": "Ye",
+      "family": "Zheng"
+    },
+    {
+      "given": "Zhang",
+      "family": "Chen"
+    },
+    {
+      "given": "Dailin",
+      "family": "Lv"
+    },
+    {
+      "given": "Zhixing",
+      "family": "Li"
+    },
+    {
+      "given": "Zhenzhong",
+      "family": "Lan"
+    },
+    {
+      "given": "Shiyu",
+      "family": "Zhao"
+    }
+  ],
+  "year": 2021,
+  "venue": "IEEE Robotics and Automation Letters 6(2), 1020-1027",
+  "doi": "10.1109/LRA.2021.3056059",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/LRA.2021.3056059",
+  "type": "journal",
+  "axes": [
+    "datasets-benchmarks",
+    "counter-uav",
+    "drone-detection"
+  ],
+  "tags": [
+    "air-to-air",
+    "anti-uav",
+    "det-fly",
+    "midgard",
+    "yolov3",
+    "ssd",
+    "faster-rcnn",
+    "small-objects"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE I, TABLE II, TABLE III, TABLE IV, TABLE V"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

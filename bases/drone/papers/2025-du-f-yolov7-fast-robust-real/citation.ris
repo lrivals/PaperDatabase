@@ -1,0 +1,20 @@
+TY  - JOUR
+AU  - Du, Yan
+AU  - Wu, Teng
+AU  - Dai, Zifeng
+AU  - Xie, Hui
+AU  - Hu, Changzhen
+AU  - Wei, Shengjun
+PY  - 2025
+DA  - 2025/01/10
+TI  - F-yolov7: fast and robust real-time UAV detection
+JO  - Computing
+SP  - 50
+VL  - 107
+IS  - 1
+AB  - Unmanned aerial vehicles (UAVs) have become widespread, raising concerns about security and privacy, making real-time detection of "low, slow, and small" UAVs crucial. Traditional detection systems, such as those based on radio frequency and radar, have limitations. This paper addresses challenges like low detection accuracy, high false alarm rates, and susceptibility to interference by proposing a novel detection method combining background difference and the lightweight Fast-YOLOv7 network(F-YOLOv7). The method first identifies potential UAV targets through background difference preprocessing, then optimizes model parameters with the Faster module to enhance speed and accuracy. Experiments on the DUT Anti-UAV dataset achieved a detection accuracy of 98.8%, outperforming the original YOLOv7 model’s 86.71%. This approach meets the real-time and precise detection requirements for low-altitude UAVs.
+SN  - 1436-5057
+UR  - https://doi.org/10.1007/s00607-024-01406-7
+DO  - 10.1007/s00607-024-01406-7
+ID  - Du2025
+ER  - 

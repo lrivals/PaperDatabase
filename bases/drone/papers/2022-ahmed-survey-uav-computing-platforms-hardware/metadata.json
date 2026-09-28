@@ -1,0 +1,44 @@
+{
+  "id": "2022-ahmed-survey-uav-computing-platforms-hardware",
+  "title": "A Survey on UAV Computing Platforms: A Hardware Reliability Perspective",
+  "authors": [
+    {
+      "given": "Foisal",
+      "family": "Ahmed"
+    },
+    {
+      "given": "Maksim",
+      "family": "Jenihhin"
+    }
+  ],
+  "year": 2022,
+  "venue": "Sensors 22(16), 6286",
+  "doi": "10.3390/s22166286",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s22166286",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "reliability"
+  ],
+  "tags": [
+    "soft-errors",
+    "seu",
+    "fault-tolerance",
+    "soc-fpga",
+    "zynq",
+    "pynq"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

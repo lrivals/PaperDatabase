@@ -34,20 +34,29 @@
   "url": "https://arxiv.org/abs/2204.10898",
   "type": "preprint",
   "axes": [
-    "system-codesign"
+    "system-codesign",
+    "nano-drone",
+    "reliability"
   ],
-  "tags": [],
+  "tags": [
+    "roofline",
+    "safe-velocity",
+    "skyline",
+    "jetson",
+    "pulp-dronet",
+    "navion",
+    "dronet",
+    "redundancy"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

@@ -1,0 +1,61 @@
+{
+  "id": "2024-nguyen-fpga-soc-implementation-yolov4-flying",
+  "title": "FPGA-SoC implementation of YOLOv4 for flying-object detection",
+  "authors": [
+    {
+      "given": "Dai-Duong",
+      "family": "Nguyen"
+    },
+    {
+      "given": "Dang-Tuan",
+      "family": "Nguyen"
+    },
+    {
+      "given": "Minh-Thuy",
+      "family": "Le"
+    },
+    {
+      "given": "Quoc-Cuong",
+      "family": "Nguyen"
+    }
+  ],
+  "year": 2024,
+  "venue": "Journal of Real-Time Image Processing 21(3), 63",
+  "doi": "10.1007/s11554-024-01440-w",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1007/s11554-024-01440-w",
+  "type": "journal",
+  "axes": [
+    "drone-fpga",
+    "counter-uav",
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov4",
+    "yolov4-tiny",
+    "zcu104",
+    "zynq",
+    "vitis-ai",
+    "dpu",
+    "int8",
+    "quantization",
+    "ptq",
+    "pruning",
+    "small-objects",
+    "anti-uav",
+    "ground-to-air"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

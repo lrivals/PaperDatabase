@@ -1,0 +1,347 @@
+{
+ "corpus_years": {
+  "file": "corpus_years.png",
+  "group": "corpus",
+  "description": "papiers par année et type",
+  "generated": "2026-09-28T09:44:53",
+  "sources": [
+   "papers/*/metadata.json"
+  ],
+  "n": 73
+ },
+ "corpus_axes": {
+  "file": "corpus_axes.png",
+  "group": "corpus",
+  "description": "papiers par axe, fiches done / todo",
+  "generated": "2026-09-28T09:44:53",
+  "sources": [
+   "papers/*/metadata.json"
+  ],
+  "n": 73
+ },
+ "corpus_bench_coverage": {
+  "file": "corpus_bench_coverage.png",
+  "group": "corpus",
+  "description": "part de n/r, power_scope, confidence",
+  "generated": "2026-09-28T09:44:54",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 324
+ },
+ "corpus_citations": {
+  "file": "corpus_citations.png",
+  "group": "corpus",
+  "description": "papiers les plus cités, dans et hors base",
+  "generated": "2026-09-28T09:44:57",
+  "sources": [
+   "papers/*/refs.jsonl",
+   "external_refs.csv"
+  ],
+  "n_internal": 15,
+  "n_external": 15
+ },
+ "corpus_gaps": {
+  "file": "corpus_gaps.png",
+  "group": "corpus",
+  "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
+  "generated": "2026-09-28T09:44:58",
+  "sources": [
+   "benchmarks.csv",
+   "papers/*/metadata.json"
+  ],
+  "zeros_axis": [
+   [
+    "FPGA",
+    "nano-drone"
+   ],
+   [
+    "FPGA",
+    "reliability"
+   ],
+   [
+    "GPU embarqué",
+    "reliability"
+   ],
+   [
+    "NPU / VPU",
+    "datasets-benchmarks"
+   ],
+   [
+    "NPU / VPU",
+    "drone-detection"
+   ],
+   [
+    "NPU / VPU",
+    "drone-fpga"
+   ],
+   [
+    "NPU / VPU",
+    "counter-uav"
+   ],
+   [
+    "NPU / VPU",
+    "reliability"
+   ],
+   [
+    "MCU",
+    "datasets-benchmarks"
+   ],
+   [
+    "MCU",
+    "counter-uav"
+   ],
+   [
+    "MCU",
+    "reliability"
+   ],
+   [
+    "CPU",
+    "datasets-benchmarks"
+   ],
+   [
+    "CPU",
+    "drone-fpga"
+   ],
+   [
+    "CPU",
+    "counter-uav"
+   ],
+   [
+    "CPU",
+    "system-codesign"
+   ],
+   [
+    "CPU",
+    "reliability"
+   ],
+   [
+    "CPU",
+    "tracking-navigation"
+   ],
+   [
+    "GPU bureau",
+    "reliability"
+   ],
+   [
+    "ASIC",
+    "datasets-benchmarks"
+   ],
+   [
+    "ASIC",
+    "drone-detection"
+   ],
+   [
+    "ASIC",
+    "drone-fpga"
+   ],
+   [
+    "ASIC",
+    "counter-uav"
+   ],
+   [
+    "ASIC",
+    "reliability"
+   ],
+   [
+    "autre",
+    "drone-fpga"
+   ],
+   [
+    "autre",
+    "reliability"
+   ]
+  ],
+  "zeros_task": [
+   [
+    "FPGA",
+    "anomalie"
+   ],
+   [
+    "FPGA",
+    "compression / AE"
+   ],
+   [
+    "FPGA",
+    "apprentissage continu"
+   ],
+   [
+    "FPGA",
+    "autre"
+   ],
+   [
+    "GPU embarqué",
+    "classification"
+   ],
+   [
+    "GPU embarqué",
+    "anomalie"
+   ],
+   [
+    "GPU embarqué",
+    "compression / AE"
+   ],
+   [
+    "GPU embarqué",
+    "apprentissage continu"
+   ],
+   [
+    "NPU / VPU",
+    "classification"
+   ],
+   [
+    "NPU / VPU",
+    "anomalie"
+   ],
+   [
+    "NPU / VPU",
+    "compression / AE"
+   ],
+   [
+    "NPU / VPU",
+    "apprentissage continu"
+   ],
+   [
+    "MCU",
+    "anomalie"
+   ],
+   [
+    "MCU",
+    "compression / AE"
+   ],
+   [
+    "MCU",
+    "apprentissage continu"
+   ],
+   [
+    "CPU",
+    "classification"
+   ],
+   [
+    "CPU",
+    "anomalie"
+   ],
+   [
+    "CPU",
+    "compression / AE"
+   ],
+   [
+    "CPU",
+    "apprentissage continu"
+   ],
+   [
+    "CPU",
+    "autre"
+   ],
+   [
+    "GPU bureau",
+    "classification"
+   ],
+   [
+    "GPU bureau",
+    "anomalie"
+   ],
+   [
+    "GPU bureau",
+    "compression / AE"
+   ],
+   [
+    "GPU bureau",
+    "apprentissage continu"
+   ],
+   [
+    "ASIC",
+    "détection"
+   ],
+   [
+    "ASIC",
+    "classification"
+   ],
+   [
+    "ASIC",
+    "anomalie"
+   ],
+   [
+    "ASIC",
+    "compression / AE"
+   ],
+   [
+    "ASIC",
+    "apprentissage continu"
+   ],
+   [
+    "autre",
+    "anomalie"
+   ],
+   [
+    "autre",
+    "compression / AE"
+   ],
+   [
+    "autre",
+    "apprentissage continu"
+   ]
+  ]
+ },
+ "bench_fps_power": {
+  "file": "bench_fps_power.png",
+  "group": "bench",
+  "description": "débit vs puissance, détection / autres tâches",
+  "generated": "2026-09-28T09:44:59",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 79,
+  "total": 324
+ },
+ "bench_gops_per_watt": {
+  "file": "bench_gops_per_watt.png",
+  "group": "bench",
+  "description": "GOPS/W par précision de calcul",
+  "generated": "2026-09-28T09:44:59",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 34,
+  "total": 324
+ },
+ "bench_fpga_resources": {
+  "file": "bench_fpga_resources.png",
+  "group": "bench",
+  "description": "LUT vs DSP des FPGA, par toolflow",
+  "generated": "2026-09-28T09:44:59",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 29,
+  "total": 324
+ },
+ "bench_accuracy_fps": {
+  "file": "bench_accuracy_fps.png",
+  "group": "bench",
+  "description": "précision vs débit, un panneau par métrique",
+  "generated": "2026-09-28T09:45:00",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 68,
+  "total": 324,
+  "metrics": [
+   "AP50 COCO",
+   "mean IoU % (DAC-SDC, 1 objet/image)",
+   "mAP@0.5",
+   "mAP50-95 (jeu propre, 1 cible)"
+  ]
+ },
+ "bench_quantization": {
+  "file": "bench_quantization.png",
+  "group": "bench",
+  "description": "précision de calcul par famille de plateforme",
+  "generated": "2026-09-28T09:45:00",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 324,
+  "total": 324
+ }
+}

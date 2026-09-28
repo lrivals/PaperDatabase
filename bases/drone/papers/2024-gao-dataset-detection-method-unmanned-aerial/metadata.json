@@ -1,0 +1,66 @@
+{
+  "id": "2024-gao-dataset-detection-method-unmanned-aerial",
+  "title": "A Novel Dataset and Detection Method for Unmanned Aerial Vehicles Using an Improved YOLOv9 Algorithm",
+  "authors": [
+    {
+      "given": "Depeng",
+      "family": "Gao"
+    },
+    {
+      "given": "Jianlin",
+      "family": "Tang"
+    },
+    {
+      "given": "Hongqi",
+      "family": "Li"
+    },
+    {
+      "given": "Bingshu",
+      "family": "Wang"
+    },
+    {
+      "given": "Jianlin",
+      "family": "Qiu"
+    },
+    {
+      "given": "Shuxi",
+      "family": "Chen"
+    },
+    {
+      "given": "Xiangxiang",
+      "family": "Mei"
+    }
+  ],
+  "year": 2024,
+  "venue": "Sensors 24(23), 7512",
+  "doi": "10.3390/s24237512",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s24237512",
+  "type": "journal",
+  "axes": [
+    "counter-uav",
+    "datasets-benchmarks",
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov9",
+    "anti-uav",
+    "small-objects",
+    "dotd",
+    "anti2",
+    "viewpoint-unspecified",
+    "bird-rejection"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

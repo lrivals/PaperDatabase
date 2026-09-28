@@ -51,24 +51,28 @@
   "type": "preprint",
   "axes": [
     "counter-uav",
-    "datasets-benchmarks"
+    "datasets-benchmarks",
+    "tracking-navigation"
   ],
   "tags": [
-    "anti-uav"
+    "anti-uav",
+    "infrared",
+    "rgb-t",
+    "small-objects",
+    "ground-to-air"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE II",
       "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

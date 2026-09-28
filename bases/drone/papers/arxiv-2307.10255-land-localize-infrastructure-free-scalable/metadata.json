@@ -42,20 +42,28 @@
   "url": "https://arxiv.org/abs/2307.10255",
   "type": "preprint",
   "axes": [
-    "nano-drone"
+    "nano-drone",
+    "tracking-navigation"
   ],
-  "tags": [],
+  "tags": [
+    "crazyflie",
+    "uwb",
+    "swarm",
+    "localization",
+    "cortex-m4",
+    "multi-drone",
+    "no-vision",
+    "hors-perimetre"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

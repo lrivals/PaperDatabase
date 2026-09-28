@@ -38,20 +38,25 @@
   ],
   "tags": [
     "yolov8",
-    "small-objects"
+    "small-objects",
+    "wildlife",
+    "p2-head",
+    "nwd",
+    "wiou",
+    "waid",
+    "bucktales"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "titre du PDF ≠ titre arXiv : « ICLR 2025 Machine Learning for Remote Sensing (ML4RS) Workshop DEAL-YOLO: DRONE-BASED EFFICIENT ANIMAL LO-CALIZATION USING YOLO »",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "titre du PDF ≠ titre arXiv : « ICLR 2025 Machine Learning for Remote Sensing (ML4RS) Workshop DEAL-YOLO: DRONE-BASED EFFICIENT ANIMAL LO-CALIZATION USING YOLO »"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

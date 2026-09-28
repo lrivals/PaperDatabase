@@ -26,21 +26,25 @@
   ],
   "tags": [
     "visdrone",
-    "uavdt"
+    "uavdt",
+    "small-objects",
+    "coarse-to-fine",
+    "image-packing",
+    "gfl",
+    "multi-proxy"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 3, Table 5, Table 8",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 9"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

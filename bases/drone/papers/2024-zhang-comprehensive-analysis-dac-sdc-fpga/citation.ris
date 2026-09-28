@@ -1,0 +1,22 @@
+TY  - JOUR
+AU  - Zhang, Jingwei
+AU  - Li, Guoqing
+AU  - Zhang, Meng
+AU  - Cao, Xinye
+AU  - Zhang, Yu
+AU  - Li, Xiang
+AU  - Chen, Ziyang
+AU  - Yang, Jun
+PY  - 2024
+DA  - 2024/07/24
+TI  - A comprehensive analysis of DAC-SDC FPGA low power object detection challenge
+JO  - Science China Information Sciences
+SP  - 182401
+VL  - 67
+IS  - 8
+AB  - The lower power object detection challenge (LPODC) at the IEEE/ACM Design Automation Conference is a premier contest in low-power object detection and algorithm (software)-hardware co-design for edge artificial intelligence, which has been a success in the past five years. LPODC focused on designing and implementing novel algorithms on the edge platform for object detection in images taken from unmanned aerial vehicles (UAVs), which attracted hundreds of teams from dozens of countries to participate. Our team SEUer has been participating in this competition for three consecutive years from 2020 to 2022 and obtained sixth place respectively in 2020 and 2021. Recently, we achieved the championship in 2022. In this paper, we presented the LPODC for UAV object detection from 2018 to 2022, including the dataset, hardware platform, and evaluation method. In addition, we also introduced and discussed the details of methods proposed by each year’s top three teams from 2018 to 2022 in terms of network, accuracy, quantization method, hardware performance, and total score. Additionally, we conducted an in-depth analysis of the selected entries and results, along with summarizing representative methodologies. This analysis serves as a valuable practical resource for researchers and engineers in deploying the UAV application on edge platforms and enhancing its feasibility and reliability. According to the analysis and discussion, it becomes evident that the adoption of a hardware-algorithm co-design approach is paramount in the context of tiny machine learning (TinyML). This approach surpasses the mere optimization of software and hardware as separate entities, proving to be essential for achieving optimal performance and efficiency in TinyML applications.
+SN  - 1869-1919
+UR  - https://doi.org/10.1007/s11432-023-3958-4
+DO  - 10.1007/s11432-023-3958-4
+ID  - Zhang2024
+ER  - 

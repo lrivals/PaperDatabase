@@ -1,0 +1,62 @@
+{
+  "id": "2024-huang-anti-uav410-thermal-infrared-benchmark",
+  "title": "Anti-UAV410: A Thermal Infrared Benchmark and Customized Scheme for Tracking Drones in the Wild",
+  "authors": [
+    {
+      "given": "Bo",
+      "family": "Huang"
+    },
+    {
+      "given": "Jianan",
+      "family": "Li"
+    },
+    {
+      "given": "Junjie",
+      "family": "Chen"
+    },
+    {
+      "given": "Gang",
+      "family": "Wang"
+    },
+    {
+      "given": "Jian",
+      "family": "Zhao"
+    },
+    {
+      "given": "Tingfa",
+      "family": "Xu"
+    }
+  ],
+  "year": 2024,
+  "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence 46(5), 2852-2865",
+  "doi": "10.1109/TPAMI.2023.3335338",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TPAMI.2023.3335338",
+  "type": "journal",
+  "axes": [
+    "counter-uav",
+    "tracking-navigation",
+    "datasets-benchmarks"
+  ],
+  "tags": [
+    "infrared",
+    "anti-uav",
+    "small-objects",
+    "transformer",
+    "siamese-tracker",
+    "anti-uav410",
+    "ground-to-air"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE I, TABLE II, [figure sans légende identifié, TABLE III, TABLE IV, TABLE V, TABLE VII, TABLE VIII"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

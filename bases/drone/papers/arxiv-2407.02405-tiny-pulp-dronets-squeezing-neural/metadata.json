@@ -41,18 +41,27 @@
     "nano-drone",
     "tracking-navigation"
   ],
-  "tags": [],
+  "tags": [
+    "gap8",
+    "pulp",
+    "pulp-dronet",
+    "dronet",
+    "pruning",
+    "channel-scaling",
+    "fixed-point",
+    "collision-avoidance",
+    "end-to-end-navigation",
+    "multi-tasking"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

@@ -1,0 +1,60 @@
+{
+  "id": "2023-zheng-detection-localization-tracking-multiple-mavs",
+  "title": "Detection, Localization, and Tracking of Multiple MAVs With Panoramic Stereo Camera Networks",
+  "authors": [
+    {
+      "given": "Ye",
+      "family": "Zheng"
+    },
+    {
+      "given": "Canlun",
+      "family": "Zheng"
+    },
+    {
+      "given": "Xiaoyu",
+      "family": "Zhang"
+    },
+    {
+      "given": "Fei",
+      "family": "Chen"
+    },
+    {
+      "given": "Zhang",
+      "family": "Chen"
+    },
+    {
+      "given": "Shiyu",
+      "family": "Zhao"
+    }
+  ],
+  "year": 2023,
+  "venue": "IEEE Transactions on Automation Science and Engineering 20(2), 1226-1243",
+  "doi": "10.1109/TASE.2022.3176294",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TASE.2022.3176294",
+  "type": "journal",
+  "axes": [
+    "counter-uav",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "ground-to-air",
+    "yolov5",
+    "stereo-vision",
+    "motion-detection",
+    "multi-target-tracking",
+    "rtx-3070"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE I, [figure sans légende identifié, TABLE II, TABLE III, TABLE V, TABLE VI, [figure sans légende identifié, TABLE VIII"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

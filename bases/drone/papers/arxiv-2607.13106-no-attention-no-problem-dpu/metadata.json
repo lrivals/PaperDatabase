@@ -27,21 +27,28 @@
   "tags": [
     "yolov26",
     "yolov11",
+    "yolov8",
+    "obb",
+    "attention",
+    "zcu104",
+    "dpu",
     "vitis-ai",
-    "quantization"
+    "int8",
+    "quantization",
+    "dota",
+    "dior-r"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : IV — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

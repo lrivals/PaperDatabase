@@ -1,0 +1,52 @@
+{
+  "id": "2020-seidaliyeva-real-time-accurate-drone-detection",
+  "title": "Real-Time and Accurate Drone Detection in a Video with a Static Background",
+  "authors": [
+    {
+      "given": "Ulzhalgas",
+      "family": "Seidaliyeva"
+    },
+    {
+      "given": "Daryn",
+      "family": "Akhmetov"
+    },
+    {
+      "given": "Lyazzat",
+      "family": "Ilipbayeva"
+    },
+    {
+      "given": "Eric T.",
+      "family": "Matson"
+    }
+  ],
+  "year": 2020,
+  "venue": "Sensors 20(14), 3856",
+  "doi": "10.3390/s20143856",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s20143856",
+  "type": "journal",
+  "axes": [
+    "counter-uav"
+  ],
+  "tags": [
+    "anti-uav",
+    "ground-to-air",
+    "drone-vs-bird",
+    "background-subtraction",
+    "mobilenetv2",
+    "small-objects",
+    "bird-rejection"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

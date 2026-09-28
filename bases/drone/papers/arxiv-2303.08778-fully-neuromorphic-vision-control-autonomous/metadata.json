@@ -39,20 +39,24 @@
   ],
   "tags": [
     "loihi",
-    "event-camera"
+    "event-camera",
+    "snn",
+    "optical-flow",
+    "quantization",
+    "jetson",
+    "sim-to-real"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 5"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

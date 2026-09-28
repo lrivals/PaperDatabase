@@ -27,19 +27,21 @@
   "tags": [
     "yolov3",
     "visdrone",
-    "pruning"
+    "pruning",
+    "network-slimming",
+    "spp",
+    "gtx1080ti",
+    "small-objects"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

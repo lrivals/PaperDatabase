@@ -27,20 +27,26 @@
   ],
   "tags": [
     "gap8",
-    "crazyflie"
+    "crazyflie",
+    "ai-deck",
+    "optical-flow",
+    "obstacle-avoidance",
+    "quantization",
+    "int8",
+    "gapflow",
+    "depthwise-separable"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE I, TABLE II, TABLE III, TABLE IV"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

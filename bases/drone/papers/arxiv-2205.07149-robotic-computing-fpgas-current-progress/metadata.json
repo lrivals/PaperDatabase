@@ -44,20 +44,28 @@
   "axes": [
     "surveys",
     "system-codesign",
-    "drone-fpga"
+    "drone-fpga",
+    "tracking-navigation"
   ],
-  "tags": [],
+  "tags": [
+    "fpga",
+    "robotics",
+    "slam",
+    "motion-planning",
+    "ros",
+    "partial-reconfiguration",
+    "hardware-in-the-loop",
+    "stereo-vision"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

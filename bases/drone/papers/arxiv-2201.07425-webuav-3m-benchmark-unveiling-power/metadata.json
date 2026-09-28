@@ -7,7 +7,7 @@
       "family": "Zhang"
     },
     {
-      "given": "Guanjie •",
+      "given": "Guanjie",
       "family": "Huang"
     },
     {
@@ -27,11 +27,11 @@
       "family": "Wan"
     },
     {
-      "given": "Shiming •",
+      "given": "Shiming",
       "family": "Ge"
     },
     {
-      "given": "Dacheng •",
+      "given": "Dacheng",
       "family": "Tao"
     }
   ],
@@ -45,13 +45,19 @@
     "datasets-benchmarks",
     "tracking-navigation"
   ],
-  "tags": [],
+  "tags": [
+    "webuav-3m",
+    "single-object-tracking",
+    "visdrone",
+    "small-objects",
+    "vision-language",
+    "adversarial"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 27 mot(s) réparé(s) (lib/ligatures.py)",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : .11 s 2.94 s 5.91 s 2.99 s [co, TABLE 11",
       "tableaux sans corps extrait (légende seule) : Semi-Automatic Target Annotati, TABLE 4, TABLE 5, Table 6, TABLE A: Descriptions of the 1",
@@ -60,7 +66,7 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

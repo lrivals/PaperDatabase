@@ -1,0 +1,56 @@
+{
+  "id": "2023-fu-efficient-yolov7-drone-enhanced-object",
+  "title": "Efficient YOLOv7-Drone: An Enhanced Object Detection Approach for Drone Aerial Imagery",
+  "authors": [
+    {
+      "given": "Xiaofeng",
+      "family": "Fu"
+    },
+    {
+      "given": "Guoting",
+      "family": "Wei"
+    },
+    {
+      "given": "Xia",
+      "family": "Yuan"
+    },
+    {
+      "given": "Yongshun",
+      "family": "Liang"
+    },
+    {
+      "given": "Yuming",
+      "family": "Bo"
+    }
+  ],
+  "year": 2023,
+  "venue": "Drones 7(10), 616",
+  "doi": "10.3390/drones7100616",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/drones7100616",
+  "type": "journal",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov7",
+    "visdrone",
+    "uavdt",
+    "small-objects",
+    "p2-head",
+    "sparse-convolution",
+    "rtx3090"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 9, Table 12, ] AP50[%] AP75[%] mAP s [%] mA, Table 14"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

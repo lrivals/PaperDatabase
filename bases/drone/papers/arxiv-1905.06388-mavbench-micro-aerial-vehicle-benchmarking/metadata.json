@@ -32,24 +32,34 @@
   "doi": null,
   "arxiv_id": "1905.06388",
   "url": "https://arxiv.org/abs/1905.06388",
-  "type": null,
+  "type": "conference",
   "axes": [
-    "system-codesign"
+    "system-codesign",
+    "datasets-benchmarks",
+    "tracking-navigation"
   ],
-  "tags": [],
+  "tags": [
+    "mavbench",
+    "airsim",
+    "jetson",
+    "tx2",
+    "closed-loop",
+    "simulation",
+    "octomap",
+    "ros",
+    "energy-model"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "publié ailleurs selon arXiv (journal_ref : 2018 51st Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE II"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

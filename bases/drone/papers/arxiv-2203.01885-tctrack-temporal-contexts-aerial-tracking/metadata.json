@@ -37,21 +37,26 @@
     "tracking-navigation"
   ],
   "tags": [
+    "single-object-tracking",
+    "siamese",
+    "transformer",
     "jetson",
-    "transformer"
+    "agx-xavier",
+    "uav123",
+    "dtb70",
+    "uavtrack112"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 1, Table 2"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

@@ -30,22 +30,35 @@
   "url": "https://arxiv.org/abs/2411.02582",
   "type": "preprint",
   "axes": [
-    "counter-uav"
+    "counter-uav",
+    "drone-detection"
   ],
-  "tags": [],
+  "tags": [
+    "small-objects",
+    "anti-uav",
+    "yolov5",
+    "ghost",
+    "motion-detection",
+    "optical-flow",
+    "kalman-filter",
+    "jetson",
+    "tensorrt",
+    "drone-vs-bird",
+    "fixed-wing",
+    "viewpoint-unspecified"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE I",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": []
 }

@@ -404,8 +404,10 @@ Base active (`lib/base.py`), dans l'ordre :
 4. la base par défaut du registre (`pdb base use <nom>`) ;
 5. le dépôt du code.
 
-`bin/pdb eval` et `bin/pdb test` portent toujours sur le dépôt du code (fixtures de la base de
-référence).
+`bin/pdb test` porte toujours sur le dépôt du code. `bin/pdb eval` suit la base active : ses
+questions dans `eval/fixtures/` (à défaut celles du code, `tests/fixtures/`, écrites pour la base
+fpga), ses seuils `eval/thresholds.json` et ses runs dans `eval/results/`
+([docs/EVAL.md §9](docs/EVAL.md#9-banc-par-base)).
 
 ### 11.2 `base.json`
 
@@ -471,6 +473,13 @@ de papier : l'index de passages de la base active se met à jour au réindexage.
 Suite : `/base-profile` dans ce dossier, pour tirer axes et règles du thème.
 
 Les commandes `bin/pdb …` et les skills lancées depuis un dossier de base agissent sur cette
-base seulement. Exemple : `bases/drone/` (vision embarquée sur drone). Dans un clone neuf,
+base seulement. Bases actuelles :
+
+| Base | Intitulé (`name`) | Dossier |
+|---|---|---|
+| `fpga` (défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | racine du dépôt |
+| `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` |
+
+Dans un clone neuf,
 enregistrer les bases une fois : `bin/pdb base register . --name fpga` et
 `bin/pdb base register bases/drone --name drone`.

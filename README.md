@@ -4,11 +4,15 @@ Transforme des PDF d'articles scientifiques en une **base de connaissance textue
 structurée et reliée**, qu'un LLM (ici Claude Code) peut parcourir avec `grep` et `read`
 sans jamais rouvrir un PDF.
 
-L'outil n'est lié à aucun domaine : il traite n'importe quel corpus d'articles scientifiques.
-Son **cas de test et d'usage** actuel est la préparation d'une thèse sur la vision embarquée
-sur FPGA (YOLO, autoencodeurs, apprentissage continu). Les axes, les tags et les colonnes de
-benchmark de ce dépôt sont ceux de ce cas d'usage ; ils se remplacent facilement (voir
-[Adapter à un autre sujet](#adapter-à-un-autre-sujet-de-recherche)).
+L'outil n'est lié à aucun domaine : il traite n'importe quel corpus d'articles scientifiques,
+et **un même code gère plusieurs bases de connaissance séparées**, une par sujet, utilisables
+en parallèle ([Plusieurs bases de connaissance](#plusieurs-bases-de-connaissance)). Le dépôt en
+contient deux, qui servent à préparer une thèse :
+
+| Base | Intitulé | Dossier |
+|---|---|---|
+| `fpga` | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | racine du dépôt |
+| `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | [`bases/drone/`](bases/drone/) |
 
 ---
 
@@ -159,10 +163,101 @@ bin/pdb add 2507.18174         # un article arXiv (ou un DOI, un PDF local, --fr
 bin/pdb discover               # papiers candidats à l'ajout (OpenAlex) → candidates.csv
 ```
 
+Ces commandes agissent sur la base du dossier courant : `fpga` à la racine, `drone` dans
+`bases/drone/` ([Plusieurs bases de connaissance](#plusieurs-bases-de-connaissance)).
 `add` et `ingest` réindexent d'eux-mêmes (`INDEX.md`, `external_refs.csv`). Ensuite, dans
 Claude Code : `/paper-fiche <paper_id>` produit la fiche de lecture, `/paper-discover`
 propose des papiers à ajouter, `/paper-gaps` met à jour la carte des gaps. Le détail de
 chaque script est dans [SETUP.md](SETUP.md).
+
+---
+
+## Plusieurs bases de connaissance
+
+Une base est un dossier qui contient son thème et ses articles :
+- `base.json` : axes et règles de classement ;
+- `profile.md` : thème et périmètre, en texte ;
+- `papers/`, `benchmarks.csv`, `gaps.md`, `INDEX.md`.
+
+Le code (`bin/`, `lib/`, `.venv`, les skills de `.claude/commands/`) est commun à toutes les
+bases. Un registre (`~/.config/pdb/bases.json`) donne à chaque base un nom court. Les bases
+sont indépendantes : chacune a ses fiches, ses chiffres, sa carte des gaps et son index de
+passages. Un article peut toutefois être copié de l'une à l'autre. Détails :
+[DATA_MODEL.md §11](DATA_MODEL.md#11-plusieurs-bases--registre-basejson-profilemd).
+
+### Les deux bases actuelles
+
+Au 28/09/2026 :
+
+| Base | Intitulé | Dossier | Papiers | Fiches faites | Lignes de benchmark |
+|---|---|---|---|---|---|
+| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | racine du dépôt | 45 | 41 | 172 |
+| `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 73 | 73 | 324 |
+
+La base `drone` s'appelait auparavant `DroneVisionDB` et vivait dans un dossier séparé. Chaque
+base a son `CLAUDE.md` (règles propres au domaine), son [`profile.md`](bases/drone/profile.md)
+et sa carte des gaps : [gaps.md](gaps.md) pour `fpga`, [bases/drone/gaps.md](bases/drone/gaps.md)
+pour `drone`.
+
+### Travailler sur plusieurs bases en parallèle
+
+La base active est celle du dossier courant. Toutes les commandes et les skills agissent sur
+cette base seulement.
+
+```bash
+bin/pdb base list                  # bases enregistrées, effectifs ; * = défaut, > = active
+cd bases/drone && bin/pdb status   # travailler dans la base drone
+bin/pdb --base drone bench -h      # viser une base depuis n'importe quel dossier
+bin/pdb base use drone             # base par défaut hors de tout dossier de base
+```
+
+- **Deux sessions Claude Code en même temps.** Ouvrez-en une à la racine (base `fpga`) et une
+  dans `bases/drone/` (base `drone`). Chacune lit son propre `CLAUDE.md`, et `/paper-fiche`,
+  `/paper-ask`, `/paper-gaps` n'y voient que leur base.
+- **Rien n'est partagé par accident.** Index de passages, caches OpenAlex et candidats sont
+  propres à chaque base (dans son `.cache/`).
+- **L'interface** permet de passer d'une base à l'autre sans quitter l'application (voir
+  [Visualisation](#visualisation-outil-secondaire)).
+
+### Créer une base
+
+```bash
+bin/pdb base new anomalies --theme "Détection d'anomalies visuelles embarquée, par autoencodeurs…"
+cd bases/anomalies                 # puis, dans Claude Code : /base-profile
+```
+
+`base new` crée le dossier `bases/<nom>/`, versionné avec le dépôt : liens vers le code,
+`profile.md`, `CLAUDE.md` générique et `benchmarks.csv` vide. Il enregistre aussi la base.
+`/base-profile` tire du thème des axes, des règles de classement et un périmètre (inclus,
+exclus), puis les affine au fil des lectures. Le LLM **propose un diff, et vous validez** :
+rien n'est écrit sans votre accord. `/paper-fiche` note au passage des « suggestions en
+attente » dans `profile.md` : sous-thème émergent, papier hors de tous les axes.
+
+### Compléter une base depuis les autres
+
+```bash
+bin/pdb base scan --from fpga      # dans bases/drone : articles utiles de la base fpga
+bin/pdb base import fpga:<paper_id>
+```
+
+`scan` classe trois sortes de candidats :
+- les articles d'une autre base que cette base **cite déjà** sans les avoir ;
+- ceux qui correspondent à ses règles de classement ;
+- les références citées à la fois ici et là-bas, absentes des deux bases.
+
+`import` copie un article sans refaire l'extraction. Ses axes sont recalculés pour la base qui
+le reçoit, et sa fiche repasse à `todo`, avec un bandeau « pertinence à réévaluer ».
+`bin/pdb add` refuse un article déjà présent dans une autre base et donne la commande d'import.
+`/paper-discover` parcourt les autres bases avant d'interroger OpenAlex.
+
+### Nouveau clone
+
+Le registre est local. Après un clone, enregistrez les bases une fois :
+
+```bash
+bin/pdb base register . --name fpga
+bin/pdb base register bases/drone --name drone
+```
 
 ---
 
@@ -174,18 +269,8 @@ En complément de `pdb search`, `bin/pdb rag` indexe le corpus avec Qwen3-Embedd
 
 ## Adapter à un autre sujet de recherche
 
-Le pipeline ne dépend pas du domaine, et un même code sert plusieurs bases séparées, une
-par sujet ([DATA_MODEL.md §11](DATA_MODEL.md#11-plusieurs-bases--registre-basejson-profilemd)) :
-
-1. `bin/pdb base new <nom> --theme "…"` crée la base (dossier, liens vers le code,
-   `profile.md`, `CLAUDE.md` générique) et l'enregistre.
-2. `/base-profile`, dans ce dossier, propose les axes de veille, les règles de
-   pré-classification et de découverte (`base.json`) et le périmètre (`profile.md`) ; le
-   profil se précise ensuite au fil des fiches, toujours sur validation de l'utilisateur.
-3. `bin/pdb base scan` puis `bin/pdb base import` reprennent dans les autres bases les articles
-   utiles au nouveau sujet.
-
-Les colonnes de `benchmarks.csv` (`BENCHMARK_COLUMNS` dans `lib/schema.py`) et le template de
+Un nouveau sujet, c'est une nouvelle base : voir [Créer une base](#créer-une-base). Les
+colonnes de `benchmarks.csv` (`BENCHMARK_COLUMNS` dans `lib/schema.py`) et le template de
 fiche restent communs à toutes les bases.
 
 ---
@@ -194,8 +279,15 @@ fiche restent communs à toutes les bases.
 
 Cet outil est une vue d'ensemble destinée à l'utilisateur. **Le LLM ne s'en sert pas.**
 
-`bin/viz.py` est une application Dash locale à trois onglets (Graphe 3D, Généalogie, Bases),
-avec un sélecteur de la base affichée.
+`bin/viz.py` est une application web locale écrite avec Plotly et Dash. Elle a trois onglets
+(Graphe 3D, Généalogie, Bases) et, en haut à gauche, un **sélecteur de base** : tous les
+onglets affichent la base choisie, sans relancer l'application.
+
+```bash
+.venv/bin/pip install -r requirements-viz.txt   # une fois : dépendances séparées, optionnelles
+bin/pdb viz                                     # http://127.0.0.1:8050 (--port N pour un autre port)
+bin/pdb --base drone viz                        # ouvrir directement sur la base drone
+```
 
 **Graphe 3D** — le corpus en nuage de points :
 
@@ -212,10 +304,24 @@ avec un sélecteur de la base affichée.
 des citations : ce qu'il cite, ce qui le cite, et, en option, les « suites probables »
 déduites de la similarité textuelle (signalées comme inférées).
 
-```bash
-.venv/bin/pip install -r requirements-viz.txt   # dépendances séparées, optionnelles
-.venv/bin/python bin/viz.py                     # http://127.0.0.1:8050
-```
+**Bases** — la gestion des bases, sans ligne de commande :
+
+- tableau de toutes les bases enregistrées : papiers, fiches faites, articles importés,
+  lignes de benchmark, axes, suggestions de profil en attente ;
+- profil de la base affichée (`profile.md`), avec ses axes et ses effectifs. Les suggestions
+  en attente sont mises en évidence et se valident avec `/base-profile` : l'interface ne
+  modifie jamais le profil ;
+- **Compléter depuis mes autres bases** : choix des bases à parcourir, tableau des candidats
+  (triable, filtrable, avec les raisons), puis **Importer la sélection**. Les références
+  absentes de toutes les bases affichent la commande `/paper-add` à lancer ;
+- **Nouvelle base** : nom, intitulé, dossier et thème, comme `bin/pdb base new`.
+
+![Onglet Bases : tableau des bases et profil de la base drone](docs/images/viz-bases.png)
+
+![Recherche dans les autres bases : articles de la base fpga déjà cités par la base drone](docs/images/viz-scan.png)
+
+Les onglets Graphe 3D et Généalogie sont en lecture seule. L'onglet Bases n'écrit que sur
+action explicite : « Créer la base » et « Importer la sélection ».
 
 Détails et limites : [SETUP.md §5](SETUP.md#binvizpy---port-8050---debug).
 
@@ -224,35 +330,45 @@ Détails et limites : [SETUP.md §5](SETUP.md#binvizpy---port-8050---debug).
 ## Arborescence
 
 ```
-PaperDatabase/
+PaperDatabase/                # le code, et la base fpga à la racine
 ├── README.md  CLAUDE.md  SETUP.md  DATA_MODEL.md
+├── base.json  profile.md     # base fpga : axes et règles, thème et périmètre
 ├── INDEX.md  external_refs.csv   # générés
-├── benchmarks.csv  gaps.md  basicStart.txt
-├── docs/                   # GUIDE.md (utilisation), RAG.md (recherche), EVAL.md (banc), experiences/
-├── eval/                   # seuils et résultats du banc (pdb eval)
-├── bin/                    # pdb (point d'entrée), setup.sh, grobid.sh, add.py, ingest.py,
-│                           # reindex.py, discover.py, viz.py
-├── lib/                    # ids, tei, doc, pdftext, ligatures, tables, schema, refs, query, rag,
-│                           # openalex, citation, status, evaluation, docling_tables…
+├── benchmarks.csv  gaps.md  labs.md  basicStart.txt
+├── papers/<paper_id>/        # un dossier par article (base fpga)
+├── inbox/                    # PDF en attente d'ingestion (base fpga)
+├── figures/                  # sortie de bin/pdb plot (base fpga)
+├── bases/
+│   └── drone/                # base drone : même structure (base.json, profile.md, papers/,
+│                             # benchmarks.csv, gaps.md, CLAUDE.md, figures/…) ;
+│                             # bin, .venv et .claude/commands sont des liens vers la racine
+├── templates/                # CLAUDE.md et profile.md d'une nouvelle base (pdb base new)
+├── docs/                     # GUIDE.md (utilisation), RAG.md (recherche), EVAL.md (banc),
+│                             # images/ (captures de l'interface), experiences/
+├── eval/                     # seuils et résultats du banc (pdb eval)
+├── bin/                      # pdb (point d'entrée), setup.sh, grobid.sh, add.py, ingest.py,
+│                             # reindex.py, discover.py, bases.py (pdb base), viz.py
+├── lib/                      # ids, tei, doc, pdftext, ligatures, tables, schema, refs, query, rag,
+│                             # openalex, citation, status, evaluation, docling_tables…
+│                             # base, registry, bases, xbase, vizbases (plusieurs bases)
 ├── tests/
-├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask
-├── inbox/                  # PDF en attente d'ingestion
-└── papers/<paper_id>/      # un dossier par article
+└── .claude/commands/         # /paper-add, /paper-fiche, /paper-gaps, /paper-discover,
+                              # /paper-ask, /paper-research, /base-profile
 ```
 
 ---
 
 ## État et documentation
 
-Au 26/09/2026, le corpus couvre la vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo
-et MCU :
-- 28 articles ingérés, tous via GROBID : 21 par arXiv, 7 déposés à la main avec leur export
-  de citation ;
-- 24 fiches rédigées ;
-- 109 lignes dans `benchmarks.csv` ;
-- 16 gaps dans `gaps.md`, dont 12 étayés.
+Au 28/09/2026, le dépôt contient deux bases (voir [Les deux bases actuelles](#les-deux-bases-actuelles)) :
+- `fpga` : vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo et MCU. 45 articles, dont
+  41 fichés ; 172 lignes dans `benchmarks.csv` ; 24 gaps dans [gaps.md](gaps.md), dont 17
+  étayés.
+- `drone` : 73 articles, tous fichés ; 324 lignes dans `benchmarks.csv` ; 19 gaps dans
+  [bases/drone/gaps.md](bases/drone/gaps.md), dont 17 étayés. Les 24 derniers articles ont
+  été ajoutés par dépôt manuel des PDF dans `inbox/`, avec leur export de citation.
 
-### Ce qui marche (testé : 162 tests unitaires, banc `pdb eval`, essais sur le vrai corpus)
+### Ce qui marche (testé : 204 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 
 - acquisition arXiv, DOI (via OpenAlex), PDF local, par lot ; exports `.bib` / `.ris`
   éditeur prioritaires sur l'en-tête GROBID (vérifié sur 6 exports IEEE, ACM, MDPI,
@@ -267,7 +383,11 @@ et MCU :
   Docling en option, avec OCR pour les tableaux en image (44 reconstruits sur 56, marqués
   « à vérifier ») ;
 - banc d'évaluation `bin/pdb eval` : qualité d'extraction, recherche, `verify`, temps ;
-  comparaison entre deux runs et seuils ([docs/EVAL.md](docs/EVAL.md)).
+  comparaison entre deux runs et seuils, avec un jeu de questions et des runs propres à chaque
+  base ([docs/EVAL.md](docs/EVAL.md), §9) ;
+- plusieurs bases séparées : registre, `pdb --base`, `pdb base new|scan|import`, profil
+  thématique affiné par `/base-profile` sous validation de l'utilisateur, onglet Bases de
+  l'interface.
 
 ### Ce qui manque encore
 
@@ -276,8 +396,9 @@ et MCU :
   ne sont retrouvées telles quelles dans leur tableau que dans 80 % des cas.
 - **Recherche** : les questions sur tableaux échouent encore, et l'absence de sujet n'est
   pas détectée ([docs/EVAL.md](docs/EVAL.md) §6).
-- **Généricité** : axes, regex de classification et colonnes de benchmark sont encore codés
-  en dur (voir ci-dessus) ; un profil de corpus (`corpus.toml`) est prévu.
+- **Généricité** : axes et règles de classement sont propres à chaque base (`base.json`),
+  mais les colonnes de `benchmarks.csv` restent communes, et la carte des gaps de
+  `pdb plot` utilise encore des catégories de tâches propres à la base `fpga`.
 - **Économie de tokens** : `/paper-fiche` lit encore `fulltext.md` en entier ; un digest
   déterministe et une pré-extraction des nombres sont prévus.
 - **Traçabilité automatique** : lier chaque ligne de `benchmarks.csv` à un `chunk_id` et
@@ -299,5 +420,6 @@ S'y ajoutent une liste de labos ([labs.md](labs.md)) et un protocole d'expérien
 | [docs/EVAL.md](docs/EVAL.md) | banc d'évaluation du logiciel (`pdb eval`) : protocole, résultats de référence, corrections mesurées |
 | [DATA_MODEL.md](DATA_MODEL.md) | schémas : `paper_id`, `metadata.json`, `sections.jsonl`, `refs.jsonl`, `benchmarks.csv`, fiche |
 | [CLAUDE.md](CLAUDE.md) | mode d'emploi et règles de travail de l'agent |
-| [INDEX.md](INDEX.md) | index des articles |
-| [gaps.md](gaps.md) | carte des gaps |
+| [INDEX.md](INDEX.md), [bases/drone/INDEX.md](bases/drone/INDEX.md) | index des articles, par base |
+| [gaps.md](gaps.md), [bases/drone/gaps.md](bases/drone/gaps.md) | cartes des gaps, par base |
+| [profile.md](profile.md), [bases/drone/profile.md](bases/drone/profile.md) | thème et périmètre de chaque base |

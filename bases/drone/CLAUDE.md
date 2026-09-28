@@ -1,8 +1,10 @@
-# DroneVisionDB — mode d'emploi
+# Vision embarquée sur drone (base `drone`) — mode d'emploi
 
 Base de connaissance d'articles scientifiques sur la vision embarquée sur drone : détection
 (YOLO, petits objets), accélérateurs embarqués (FPGA, MCU/nano-drone, ASIC, neuromorphique),
-co-design calcul ↔ énergie ↔ vol et fiabilité. Destinée à préparer une thèse.
+co-design calcul ↔ énergie ↔ vol et fiabilité. Destinée à préparer une thèse. Nom court
+dans le registre : `drone` (anciennement `DroneVisionDB`). Thème, périmètre et règles
+(sol → air / air → air, vol agile…) : [profile.md](profile.md), qui fait foi.
 
 **Base distincte** de la base « vision embarquée sur FPGA » (la racine du dépôt, `../../`),
 dont elle partage le code et le dépôt git : elle vit dans `bases/drone/`, et `bin/`, `.venv`,
@@ -24,7 +26,9 @@ Guide d'utilisation (pour l'humain) : [docs/GUIDE.md](../../docs/GUIDE.md).
 
 Lis du résumé vers le détail, et arrête-toi dès que tu as la réponse.
 
-1. **[INDEX.md](INDEX.md)** — quels papiers existent, sur quel axe, fichés ou non.
+1. **[INDEX.md](INDEX.md)** — quels papiers existent, sur quel axe, fichés ou non. Le
+   périmètre (ce qui est inclus, exclu, et le statut des papiers `ground-to-air`) est dans
+   [profile.md](profile.md).
 2. **[benchmarks.csv](benchmarks.csv)** — tous les chiffres (FPS, GOPS, W, LUT/DSP/BRAM,
    quantification, toolflow). Pour toute question quantitative, interroge-le avec
    `bin/pdb bench` plutôt que de le lire en entier ou de faire un `grep`. Exemple :
@@ -45,7 +49,9 @@ Lis du résumé vers le détail, et arrête-toi dès que tu as la réponse.
 5. **`papers/<id>/paper.pdf`** — ne l'ouvre pas. Il est conservé comme preuve, pas comme
    source de travail ; tout ce qu'il contient est déjà dans `fulltext.md`.
 
-**Quoi lire ensuite ?** [external_refs.csv](external_refs.csv) (généré) classe les travaux
+**Quoi lire ensuite ?** D'abord la base `fpga` : `bin/pdb base scan --from fpga` classe ses
+articles déjà cités ici, ou correspondant aux règles d'ici ; `bin/pdb base import fpga:<id>`
+les copie. Puis [external_refs.csv](external_refs.csv) (généré) classe les travaux
 absents de la base par nombre de papiers du corpus qui les citent. Données issues du parsing
 des bibliographies : à vérifier avant de les citer. Au-delà des références, `/paper-discover`
 (ou `bin/pdb discover`) produit `candidates.csv` depuis OpenAlex : citations entrantes,
@@ -64,6 +70,9 @@ chiffre à chiffre ([docs/EVAL.md](../../docs/EVAL.md) §6).
 | Commande | Effet |
 |---|---|
 | `bin/pdb status` | état de la base et prochaines actions suggérées |
+| `bin/pdb base list` / `info` / `check` | bases enregistrées ; profil, axes et suggestions en attente de celle-ci ; effet des règles de `base.json` |
+| `bin/pdb base scan [--from fpga]` / `base import fpga:<paper_id>` | articles utiles présents ou cités dans la base fpga → `xbase_candidates.csv` ; copie d'un article (fiche repassée à `todo`) |
+| `/base-profile [consigne]` | le LLM propose d'affiner `profile.md` et `base.json` ; rien n'est écrit sans accord |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ([docs/RAG.md](../../docs/RAG.md) §5.1) |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM, texte exact, contrôle d'une citation ([docs/RAG.md](../../docs/RAG.md) §5) |
 | `/paper-ask <question>` | réponse sourcée et vérifiée : `bench`, puis `search`, `show`, `verify` |
@@ -72,10 +81,11 @@ chiffre à chiffre ([docs/EVAL.md](../../docs/EVAL.md) §6).
 | `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition + ingestion + réindexation (un DOI est résolu vers sa version arXiv via OpenAlex) |
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches `done` et `benchmarks.csv` |
-| `/paper-discover [axe \| gap \| mots-clés]` | cherche des candidats (OpenAlex), propose une liste courte, n'ajoute qu'après accord de l'utilisateur |
+| `/paper-discover [axe \| gap \| mots-clés]` | cherche des candidats (base fpga d'abord, puis OpenAlex), propose une liste courte, n'ajoute qu'après accord de l'utilisateur |
 | `/paper-ask <question>` | recherche hybride et réponse documentée ; peut ajouter automatiquement les articles open access utilisés comme preuve |
+| `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation sur cette base : extraction, recherche de passages avec les questions de `eval/fixtures/`, `verify`, temps ; runs dans `eval/results/` ([docs/EVAL.md §9](../../docs/EVAL.md#9-banc-par-base)) |
 | `bin/pdb plot [bench\|eval\|corpus\|all] [--only a,b] [--format png\|pdf]` | figures statiques (PNG par défaut) dans `figures/` : benchmarks (FPS/W, GOPS/W, ressources, précision), évaluation du logiciel, statistiques du corpus et carte des gaps ; sources et effectifs dans `figures/manifest.json` (`requirements-plot.txt`, SETUP.md §5) |
-| `bin/pdb viz` (depuis ce dossier) | visualisation du corpus (app Dash, http://127.0.0.1:8050) : graphe 3D (couleur par thème, liens citations / références partagées / similarité textuelle / thèmes communs, recherche, filtres, détail avec fiche et benchmarks) et onglet Généalogie (frise des citations d'un papier ou d'un sujet). Dépendances : `requirements-viz.txt` (+ `requirements-embed.txt`, optionnel). Détails : [SETUP.md](../../SETUP.md) §5 |
+| `bin/pdb viz` (depuis ce dossier) | interface Plotly / Dash (http://127.0.0.1:8050), ouverte sur cette base, avec un sélecteur de base : graphe 3D (couleur par thème, liens citations / références partagées / similarité textuelle / thèmes communs, recherche, filtres, détail avec fiche et benchmarks), onglet Généalogie (frise des citations d'un papier ou d'un sujet) et onglet Bases (tableau des bases, profil, recherche dans la base fpga avec import, création d'une base). Dépendances : `requirements-viz.txt` (+ `requirements-embed.txt`, optionnel). Détails : [SETUP.md](../../SETUP.md) §5 |
 
 Après toute modification du corpus (fiche remplie, ligne de benchmark ajoutée) :
 `.venv/bin/python bin/reindex.py` (régénère `INDEX.md` et `external_refs.csv`) ;

@@ -24,6 +24,25 @@ except ImportError:
     rag = None
 
 
+class TestPaths(unittest.TestCase):
+    def test_base_fixtures_else_code(self):
+        with tempfile.TemporaryDirectory() as d:
+            code, base = Path(d) / "code", Path(d) / "base"
+            (code / "tests" / "fixtures").mkdir(parents=True)
+            (code / "eval").mkdir()
+            (code / "eval" / "thresholds.json").write_text("{}")
+            base.mkdir()
+            fx, res, th = ev.paths(base, code)
+            self.assertEqual((fx, th), (code / "tests" / "fixtures", code / "eval" / "thresholds.json"))
+            self.assertEqual(res, base / "eval" / "results")
+            (base / "eval" / "fixtures").mkdir(parents=True)
+            (base / "eval" / "thresholds.json").write_text("{}")
+            fx, _, th = ev.paths(base, code)
+            self.assertEqual((fx, th), (base / "eval" / "fixtures", base / "eval" / "thresholds.json"))
+            # base de référence : root == code, jeux de tests/fixtures
+            self.assertEqual(ev.paths(code, code)[0], code / "tests" / "fixtures")
+
+
 class TestHelpers(unittest.TestCase):
     def test_coverage_counts_occurrences(self):
         self.assertEqual(ev.coverage("alpha alpha beta", "alpha beta"), 2 / 3)

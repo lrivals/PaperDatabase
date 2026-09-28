@@ -51,6 +51,13 @@ PaperDatabase/
 ├── candidates_arxiv.txt    # GÉNÉRÉ par discover, non versionné — liste pour add --from
 ├── benchmarks.csv          # une ligne par configuration rapportée
 ├── gaps.md                 # carte des verrous et zones non couvertes
+├── base.json               # base fpga : axes, règles de classement (DATA_MODEL §11)
+├── profile.md              # base fpga : thème et périmètre, affinés par /base-profile
+├── bases/
+│   └── drone/              # base drone : même structure que la racine (base.json, profile.md,
+│                           # papers/, inbox/, benchmarks.csv, gaps.md, CLAUDE.md, figures/…) ;
+│                           # bin, .venv, .claude/commands : liens vers la racine
+├── templates/              # CLAUDE.base.md et profile.md, copiés par pdb base new
 ├── basicStart.txt          # bibliographie de départ (source d'amorçage)
 ├── requirements.txt
 ├── requirements-viz.txt    # optionnel : dépendances de la visualisation
@@ -72,7 +79,8 @@ PaperDatabase/
 │   ├── ingest.py
 │   ├── reindex.py
 │   ├── discover.py         # candidats à l'ajout via OpenAlex
-│   └── viz.py              # app Dash : graphe 3D et généalogie du corpus
+│   ├── bases.py            # pdb base : list, new, register, use, info, check, scan, import
+│   └── viz.py              # app Dash : graphe 3D, généalogie, onglet Bases
 ├── lib/                    # code partagé
 │   ├── ids.py
 │   ├── tei.py
@@ -94,7 +102,12 @@ PaperDatabase/
 │   ├── vizfig.py           # figures Plotly et panneau de détail de viz.py
 │   ├── plotdata.py         # données des figures statiques (pdb plot), stdlib seulement
 │   ├── plotfig.py          # figures matplotlib de pdb plot : benchmarks, éval, corpus
-│   └── embed.py            # optionnel : embeddings avec cache (.cache/)
+│   ├── embed.py            # optionnel : embeddings avec cache (.cache/)
+│   ├── base.py             # base active, lecture de base.json, classement selon ses règles
+│   ├── registry.py         # registre des bases (~/.config/pdb/bases.json)
+│   ├── bases.py            # création, statistiques, profil, contrôle des règles
+│   ├── xbase.py            # entre bases : scan des candidats, import par copie
+│   └── vizbases.py         # onglet Bases de viz.py
 ├── tests/
 │   ├── fixtures/sample.tei.xml
 │   ├── fixtures/rag_eval*.jsonl  # questions d'évaluation : dev, holdout, FR, hors corpus
@@ -115,8 +128,12 @@ PaperDatabase/
 │   ├── test_embed.py
 │   ├── test_openalex.py    # OpenAlex simulé : découverte, ajout par DOI / liste
 │   ├── test_citation.py    # exports .bib / .ris éditeur : lecture, appariement, priorité
-│   └── test_status.py
-├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask
+│   ├── test_status.py
+│   ├── test_base.py        # base active, base.json minimal, classement
+│   ├── test_registry.py    # registre, ordre de résolution de la base active
+│   └── test_xbase.py       # scan entre bases, import, création, onglet Bases
+├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask,
+│                           # /paper-research, /base-profile
 ├── inbox/                  # dépôt des PDF à ingérer
 └── papers/
     └── <paper_id>/
@@ -710,6 +727,12 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 Point au 28/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 28/09/2026 (base drone).** Base `drone` déplacée dans le dépôt (`bases/drone/`) ;
+24 articles ajoutés ; 73 fiches sur 73 (230 lignes de benchmark ajoutées, 324 en tout) ;
+profil précisé par `/base-profile` (règle sol → air / air → air, vol agile, « AAV ») ;
+`gaps.md` 2ᵉ passe (19 gaps, dont 17 étayés) ; figures `pdb plot`. Captures de l'interface
+dans `docs/images/`.
 
 **Bilan du 28/09/2026 (plusieurs bases).** Registre des bases (`lib/registry.py`,
 `~/.config/pdb/bases.json`), `bin/pdb --base NOM`, `bin/pdb base list|new|register|forget|use|

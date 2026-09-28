@@ -1,0 +1,1398 @@
+{
+ "date": "2026-09-28T1016",
+ "commit": "78b56a9",
+ "dirty": true,
+ "base": "Vision embarquée sur drone (détection, accélérateurs, co-design système)",
+ "volets": [
+  "extraction",
+  "rag",
+  "speed"
+ ],
+ "results": {
+  "extraction": {
+   "quality": {
+    "papers": 73,
+    "grobid": 73,
+    "coverage_mean": 0.9040245941828415,
+    "coverage_min": 0.6968474148802017,
+    "coverage_worst": [
+     "arxiv-2504.11967-securing-skies-comprehensive-survey-anti 0.697",
+     "2023-kaufmann-champion-level-drone-racing-deep 0.769",
+     "2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating 0.820"
+    ],
+    "words": 545186,
+    "tables": 378,
+    "tables_with_body_rate": 0.708994708994709,
+    "tables_recovered": 10,
+    "tables_docling": 10,
+    "ligature_leftover_per_10k": 0.0,
+    "papers_missed_sections": 18,
+    "papers_spaced_headings": 0,
+    "warnings_per_paper": 1.0136986301369864,
+    "per_paper": {
+     "2018-flamand-gap-8-risc-v-soc": {
+      "backend": "grobid",
+      "coverage": 0.943592552026287,
+      "words": 2827,
+      "sections": 8,
+      "tables": 2,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2019-suleiman-navion-2-mw-fully-integrated": {
+      "backend": "grobid",
+      "coverage": 0.8935998384817282,
+      "words": 7874,
+      "sections": 22,
+      "tables": 5,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "2020-krishnan-sky-not-limit-visual-performance": {
+      "backend": "grobid",
+      "coverage": 0.8530280649926145,
+      "words": 4033,
+      "sections": 11,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2020-seidaliyeva-real-time-accurate-drone-detection": {
+      "backend": "grobid",
+      "coverage": 0.9576595744680851,
+      "words": 10094,
+      "sections": 30,
+      "tables": 5,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2021-guo-fpga-uav-heterogeneous-computing-platform": {
+      "backend": "grobid",
+      "coverage": 0.9390077378243059,
+      "words": 3522,
+      "sections": 15,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2021-liu-real-time-small-drones-detection": {
+      "backend": "grobid",
+      "coverage": 0.9283276450511946,
+      "words": 8753,
+      "sections": 22,
+      "tables": 9,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2021-xu-dac-sdc-low-power-object": {
+      "backend": "grobid",
+      "coverage": 0.8712011577424024,
+      "words": 6442,
+      "sections": 23,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "2021-zheng-air-air-visual-detection-micro": {
+      "backend": "grobid",
+      "coverage": 0.9066183136899365,
+      "words": 5130,
+      "sections": 14,
+      "tables": 5,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2022-ahmed-survey-uav-computing-platforms-hardware": {
+      "backend": "grobid",
+      "coverage": 0.9162968630451416,
+      "words": 9509,
+      "sections": 42,
+      "tables": 8,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2022-feng-benchmark-analysis-yolo-performance-edge": {
+      "backend": "grobid",
+      "coverage": 0.8853038153556289,
+      "words": 6482,
+      "sections": 17,
+      "tables": 6,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 1,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2022-jung-improved-yolov5-efficient-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.9465968586387434,
+      "words": 7568,
+      "sections": 24,
+      "tables": 7,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2022-liu-sf-yolov5-lightweight-small-object": {
+      "backend": "grobid",
+      "coverage": 0.9088541666666666,
+      "words": 5253,
+      "sections": 22,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2023-cao-gcl-yolo-ghostconv-lightweight-yolo": {
+      "backend": "grobid",
+      "coverage": 0.9485407066052227,
+      "words": 12198,
+      "sections": 32,
+      "tables": 7,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "2023-fu-efficient-yolov7-drone-enhanced-object": {
+      "backend": "grobid",
+      "coverage": 0.9344415390362346,
+      "words": 8206,
+      "sections": 24,
+      "tables": 15,
+      "tables_with_body": 12,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2023-kaufmann-champion-level-drone-racing-deep": {
+      "backend": "grobid",
+      "coverage": 0.7690752905507833,
+      "words": 8093,
+      "sections": 20,
+      "tables": 3,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating": {
+      "backend": "grobid",
+      "coverage": 0.8195816385822197,
+      "words": 4770,
+      "sections": 24,
+      "tables": 4,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2023-zhang-drone-yolo-efficient-neural-network": {
+      "backend": "grobid",
+      "coverage": 0.967946014339941,
+      "words": 7775,
+      "sections": 15,
+      "tables": 7,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "2023-zhao-tph-yolov5-boosting-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.8865732202139432,
+      "words": 8584,
+      "sections": 26,
+      "tables": 8,
+      "tables_with_body": 6,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "2023-zheng-detection-localization-tracking-multiple-mavs": {
+      "backend": "grobid",
+      "coverage": 0.8845061533606816,
+      "words": 11113,
+      "sections": 28,
+      "tables": 9,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2024-gao-dataset-detection-method-unmanned-aerial": {
+      "backend": "grobid",
+      "coverage": 0.9202046035805627,
+      "words": 7184,
+      "sections": 22,
+      "tables": 7,
+      "tables_with_body": 6,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2024-huang-anti-uav410-thermal-infrared-benchmark": {
+      "backend": "grobid",
+      "coverage": 0.8667048054919908,
+      "words": 7588,
+      "sections": 21,
+      "tables": 8,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2024-nguyen-fpga-soc-implementation-yolov4-flying": {
+      "backend": "grobid",
+      "coverage": 0.8881541658794635,
+      "words": 8881,
+      "sections": 22,
+      "tables": 11,
+      "tables_with_body": 11,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "2024-zhang-comprehensive-analysis-dac-sdc-fpga": {
+      "backend": "grobid",
+      "coverage": 0.9053816391136124,
+      "words": 9329,
+      "sections": 15,
+      "tables": 8,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "2025-cali-optimized-implementation-yolov3-tiny-real": {
+      "backend": "grobid",
+      "coverage": 0.9386619301361753,
+      "words": 12888,
+      "sections": 65,
+      "tables": 19,
+      "tables_with_body": 15,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2025-du-f-yolov7-fast-robust-real": {
+      "backend": "grobid",
+      "coverage": 0.894494300266796,
+      "words": 5857,
+      "sections": 18,
+      "tables": 2,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "2025-elhence-fpga-accelerated-yolox-enhanced-attention": {
+      "backend": "grobid",
+      "coverage": 0.8266880384692447,
+      "words": 6257,
+      "sections": 25,
+      "tables": 4,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2025-hozhabr-survey-real-time-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.9581051827327136,
+      "words": 23488,
+      "sections": 59,
+      "tables": 7,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "tables_docling": 7,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "2025-yu-yolo-gcof-lightweight-low-altitude": {
+      "backend": "grobid",
+      "coverage": 0.9249473930324994,
+      "words": 5963,
+      "sections": 18,
+      "tables": 11,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1612.07119-finn-framework-fast-scalable-binarized": {
+      "backend": "grobid",
+      "coverage": 0.934935147778014,
+      "words": 8437,
+      "sections": 25,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object": {
+      "backend": "grobid",
+      "coverage": 0.9303030303030303,
+      "words": 5404,
+      "sections": 11,
+      "tables": 5,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1805.01831-64mw-dnn-visual-navigation-engine": {
+      "backend": "grobid",
+      "coverage": 0.8895785690950669,
+      "words": 9641,
+      "sections": 21,
+      "tables": 3,
+      "tables_with_body": 2,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1809.04570-finn-r-end-end-deep": {
+      "backend": "grobid",
+      "coverage": 0.852110537503796,
+      "words": 10279,
+      "sections": 22,
+      "tables": 6,
+      "tables_with_body": 6,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-1904.08008-clustered-object-detection-aerial-images": {
+      "backend": "grobid",
+      "coverage": 0.9154581919160752,
+      "words": 5787,
+      "sections": 17,
+      "tables": 4,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-1905.06388-mavbench-micro-aerial-vehicle-benchmarking": {
+      "backend": "grobid",
+      "coverage": 0.9083209509658247,
+      "words": 10008,
+      "sections": 26,
+      "tables": 1,
+      "tables_with_body": 0,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1907.11093-slimyolov3-narrower-faster-better-real": {
+      "backend": "grobid",
+      "coverage": 0.8243029984218833,
+      "words": 4653,
+      "sections": 14,
+      "tables": 2,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-1909.09709-skynet-hardware-efficient-method-object": {
+      "backend": "grobid",
+      "coverage": 0.9451814768460576,
+      "words": 6929,
+      "sections": 20,
+      "tables": 10,
+      "tables_with_body": 9,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2001.06303-detection-tracking-meet-drones-challenge": {
+      "backend": "grobid",
+      "coverage": 0.9497131697790797,
+      "words": 14340,
+      "sections": 31,
+      "tables": 5,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2007.07396-real-time-drone-detection-tracking": {
+      "backend": "grobid",
+      "coverage": 0.9296018465089441,
+      "words": 5412,
+      "sections": 14,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2101.08466-anti-uav-large-multi-modal": {
+      "backend": "grobid",
+      "coverage": 0.8209500609013398,
+      "words": 8639,
+      "sections": 16,
+      "tables": 4,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2103.09136-querydet-cascaded-sparse-query-accelerating": {
+      "backend": "grobid",
+      "coverage": 0.9189026228519747,
+      "words": 6147,
+      "sections": 14,
+      "tables": 10,
+      "tables_with_body": 8,
+      "tables_recovered": 2,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2103.10873-fully-onboard-ai-powered-human": {
+      "backend": "grobid",
+      "coverage": 0.8665217391304347,
+      "words": 10510,
+      "sections": 16,
+      "tables": 4,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2103.13933-unmanned-aerial-vehicle-visual-detection": {
+      "backend": "grobid",
+      "coverage": 0.9189546807806814,
+      "words": 5311,
+      "sections": 11,
+      "tables": 4,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2103.17242-dogfight-detecting-drones-drones-videos": {
+      "backend": "grobid",
+      "coverage": 0.8979591836734694,
+      "words": 5272,
+      "sections": 14,
+      "tables": 4,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network": {
+      "backend": "grobid",
+      "coverage": 0.9188262195121951,
+      "words": 4968,
+      "sections": 9,
+      "tables": 3,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial": {
+      "backend": "grobid",
+      "coverage": 0.8815587603559374,
+      "words": 5200,
+      "sections": 19,
+      "tables": 8,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2108.03694-event-driven-vision-control-uavs": {
+      "backend": "grobid",
+      "coverage": 0.944832659065833,
+      "words": 4612,
+      "sections": 12,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2108.11539-tph-yolov5-improved-yolov5-transformer": {
+      "backend": "grobid",
+      "coverage": 0.943382077240345,
+      "words": 4188,
+      "sections": 13,
+      "tables": 3,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2110.05113-learning-high-speed-flight-wild": {
+      "backend": "grobid",
+      "coverage": 0.9242665816326531,
+      "words": 13288,
+      "sections": 26,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2112.10415-ufpmp-det-accurate-efficient-object": {
+      "backend": "grobid",
+      "coverage": 0.8982014388489209,
+      "words": 5150,
+      "sections": 15,
+      "tables": 10,
+      "tables_with_body": 7,
+      "tables_recovered": 3,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2201.07425-webuav-3m-benchmark-unveiling-power": {
+      "backend": "grobid",
+      "coverage": 0.867841930903928,
+      "words": 16148,
+      "sections": 55,
+      "tables": 15,
+      "tables_with_body": 10,
+      "tables_recovered": 2,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 4
+     },
+     "arxiv-2202.06934-slicing-aided-hyper-inference-fine": {
+      "backend": "grobid",
+      "coverage": 0.9394887845592071,
+      "words": 3348,
+      "sections": 5,
+      "tables": 2,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking": {
+      "backend": "grobid",
+      "coverage": 0.8354028299162576,
+      "words": 6126,
+      "sections": 13,
+      "tables": 5,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis": {
+      "backend": "grobid",
+      "coverage": 0.9012147195426938,
+      "words": 8902,
+      "sections": 29,
+      "tables": 2,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2205.07149-robotic-computing-fpgas-current-progress": {
+      "backend": "grobid",
+      "coverage": 0.8973607038123167,
+      "words": 3075,
+      "sections": 9,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2209.06918-nanoflownet-real-time-dense-optical": {
+      "backend": "grobid",
+      "coverage": 0.9521360759493671,
+      "words": 3776,
+      "sections": 13,
+      "tables": 4,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2301.01755-autonomous-drone-racing-survey": {
+      "backend": "grobid",
+      "coverage": 0.9316439124742847,
+      "words": 15562,
+      "sections": 38,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2301.12175-bio-inspired-autonomous-exploration-policies": {
+      "backend": "grobid",
+      "coverage": 0.8930624760444614,
+      "words": 3965,
+      "sections": 10,
+      "tables": 3,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2303.08778-fully-neuromorphic-vision-control-autonomous": {
+      "backend": "grobid",
+      "coverage": 0.948558205767177,
+      "words": 10788,
+      "sections": 23,
+      "tables": 4,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint": {
+      "backend": "grobid",
+      "coverage": 0.9434554973821989,
+      "words": 3206,
+      "sections": 7,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2307.10255-land-localize-infrastructure-free-scalable": {
+      "backend": "grobid",
+      "coverage": 0.9296108291032149,
+      "words": 4942,
+      "sections": 13,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2312.11008-global-local-mav-detection-challenging": {
+      "backend": "grobid",
+      "coverage": 0.9220418624519436,
+      "words": 7457,
+      "sections": 17,
+      "tables": 8,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural": {
+      "backend": "grobid",
+      "coverage": 0.9347948285553682,
+      "words": 2656,
+      "sections": 5,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2409.16808-comprehensive-evaluation-deep-learning-object": {
+      "backend": "grobid",
+      "coverage": 0.8653743553263382,
+      "words": 8659,
+      "sections": 26,
+      "tables": 4,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2411.02582-real-time-detection-small-uavs": {
+      "backend": "grobid",
+      "coverage": 0.8953953953953954,
+      "words": 6103,
+      "sections": 16,
+      "tables": 6,
+      "tables_with_body": 4,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2502.15737-performance-analysis-you-only-look": {
+      "backend": "grobid",
+      "coverage": 0.9485888634630053,
+      "words": 10056,
+      "sections": 25,
+      "tables": 8,
+      "tables_with_body": 8,
+      "tables_recovered": 0,
+      "tables_docling": 1,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2503.04698-deal-yolo-drone-efficient-animal": {
+      "backend": "grobid",
+      "coverage": 0.8847352024922118,
+      "words": 3733,
+      "sections": 8,
+      "tables": 5,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2504.11967-securing-skies-comprehensive-survey-anti": {
+      "backend": "grobid",
+      "coverage": 0.6968474148802017,
+      "words": 4363,
+      "sections": 21,
+      "tables": 6,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2507.10006-vision-anti-unmanned-aerial-technology": {
+      "backend": "grobid",
+      "coverage": 0.9176029962546817,
+      "words": 11242,
+      "sections": 23,
+      "tables": 3,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2509.04153-real-time-fpga-cnns-detection": {
+      "backend": "grobid",
+      "coverage": 0.9581731329372014,
+      "words": 13445,
+      "sections": 30,
+      "tables": 7,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "tables_docling": 1,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2511.10905-yolo-drone-efficient-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.934469696969697,
+      "words": 4066,
+      "sections": 8,
+      "tables": 4,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2603.28149-blankskip-early-exit-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.8879192800654486,
+      "words": 5590,
+      "sections": 15,
+      "tables": 3,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight": {
+      "backend": "grobid",
+      "coverage": 0.9090526315789473,
+      "words": 3553,
+      "sections": 14,
+      "tables": 7,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2607.13106-no-attention-no-problem-dpu": {
+      "backend": "grobid",
+      "coverage": 0.901068597035505,
+      "words": 4589,
+      "sections": 16,
+      "tables": 3,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 1
+     }
+    }
+   },
+   "header": {
+    "title": 0.9178082191780822,
+    "year": 0.6438356164383562,
+    "doi": 0.7,
+    "arxiv_id": 0.8,
+    "authors_f1": 0.9357797334429084,
+    "n": {
+     "title": 73,
+     "year": 73,
+     "doi": 40,
+     "arxiv_id": 45,
+     "authors_f1": 73
+    },
+    "title_errors": [
+     "2021-zheng-air-air-visual-detection-micro titre : None",
+     "2023-zheng-detection-localization-tracking-multiple-mavs titre : None",
+     "arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis titre : 'Roofline Model for UAVs: A Bottleneck Analysis Tool for Onboard Compute Characterization of Autonomous Unmanned Aerial Vehicles \"All models are wrong, but some are useful.\" -George Box'",
+     "arxiv-2301.01755-autonomous-drone-racing-survey titre : 'This paper has been accepted for publication in the IEEE Transactions on Robotics (T-RO), 2024. ©IEEE Autonomous Drone Racing: A Survey'",
+     "arxiv-2409.16808-comprehensive-evaluation-deep-learning-object titre : None",
+     "arxiv-2503.04698-deal-yolo-drone-efficient-animal titre : 'ICLR 2025 Machine Learning for Remote Sensing (ML4RS) Workshop DEAL-YOLO: DRONE-BASED EFFICIENT ANIMAL LO-CALIZATION USING YOLO'"
+    ]
+   },
+   "tables": {
+    "values": 716,
+    "in_cited_table": 0.5991620111731844,
+    "in_text": 0.744413407821229,
+    "table_only_values": 393,
+    "table_only_in_cited_table": 0.6564885496183206,
+    "rows_cited_table_absent": 14,
+    "found_outside_table": {
+     "2607.13106": 14,
+     "2025-elhence": 11,
+     "2502.15737": 10,
+     "2021-zheng": 10,
+     "1612.07119": 9,
+     "1809.04570": 6,
+     "2306.00001": 6,
+     "2022-liu": 6,
+     "2103.09136": 4,
+     "2021-xu": 3,
+     "2025-cali": 3,
+     "2110.05113": 3,
+     "2025-yu": 2,
+     "1804.00518": 2,
+     "1805.01831": 2,
+     "2103.13933": 2,
+     "2301.12175": 2,
+     "2020-seidaliyeva": 1,
+     "2024-huang": 1,
+     "2024-zhang": 1,
+     "2108.00202": 1,
+     "2108.11539": 1,
+     "2202.06934": 1,
+     "2203.01885": 1,
+     "2312.11008": 1,
+     "2604.13278": 1
+    }
+   }
+  },
+  "rag": {
+   "passages": 4525,
+   "model": "BAAI/bge-small-en-v1.5",
+   "dense": true,
+   "sets": {
+    "rag_eval": {
+     "n": 20,
+     "hybrid": {
+      "recall@5": 0.95,
+      "recall@10": 0.95,
+      "mrr": 0.76,
+      "ndcg@10": 0.4373905482114613,
+      "paper@5": 0.95,
+      "misses": [
+       "Combining a single-frame detector with analysis across several frames to catch tiny distant drones"
+      ]
+     },
+     "dense": {
+      "recall@5": 0.85,
+      "recall@10": 0.85,
+      "mrr": 0.65,
+      "ndcg@10": 0.4186891762962589,
+      "paper@5": 0.9,
+      "misses": [
+       "Designing a detector bottom-up from hardware-friendly building blocks chosen for the embedded device",
+       "Using microphones alongside cameras to detect a small unmanned aircraft",
+       "Combining a single-frame detector with analysis across several frames to catch tiny distant drones"
+      ]
+     },
+     "lexical": {
+      "recall@5": 0.95,
+      "recall@10": 1.0,
+      "mrr": 0.7666666666666667,
+      "ndcg@10": 0.4197619400076709,
+      "paper@5": 1.0,
+      "misses": [
+       "Processor combining a control core with an eight-core compute cluster and a dedicated convolution unit"
+      ]
+     },
+     "hybrid+rerank": {
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.825,
+      "ndcg@10": 0.4749521038437804,
+      "paper@5": 1.0,
+      "misses": []
+     }
+    },
+    "rag_eval_holdout": {
+     "n": 20,
+     "hybrid": {
+      "recall@5": 0.95,
+      "recall@10": 1.0,
+      "mrr": 0.7446428571428572,
+      "ndcg@10": 0.49150124889671565,
+      "paper@5": 1.0,
+      "misses": [
+       "How much power do Jetson Nano, Xavier NX and a Raspberry Pi with a Neural Compute Stick draw when idle?"
+      ]
+     },
+     "dense": {
+      "recall@5": 0.75,
+      "recall@10": 0.9,
+      "mrr": 0.6375,
+      "ndcg@10": 0.4110827826210022,
+      "paper@5": 0.9,
+      "misses": [
+       "Design contest that ranks embedded object detectors jointly on accuracy, throughput and energy",
+       "How much power do Jetson Nano, Xavier NX and a Raspberry Pi with a Neural Compute Stick draw when idle?",
+       "How do frame rate and power of the YOLOv4 detector on the Zynq UltraScale+ board change with the number of threads?",
+       "A drone using its own onboard camera to spot other small drones flying nearby",
+       "Lightweight onboard computer combining programmable logic, ARM and GPU instead of a Jetson plus flight controller"
+      ]
+     },
+     "lexical": {
+      "recall@5": 0.8,
+      "recall@10": 0.85,
+      "mrr": 0.7154761904761905,
+      "ndcg@10": 0.4076963037575947,
+      "paper@5": 0.95,
+      "misses": [
+       "How much power do Jetson Nano, Xavier NX and a Raspberry Pi with a Neural Compute Stick draw when idle?",
+       "A drone using its own onboard camera to spot other small drones flying nearby",
+       "Lightweight onboard computer combining programmable logic, ARM and GPU instead of a Jetson plus flight controller",
+       "Shrinking an end-to-end navigation network so that the tiny drone's memory has room for other tasks"
+      ]
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.95,
+      "recall@10": 1.0,
+      "mrr": 0.91625,
+      "ndcg@10": 0.5675662791779968,
+      "paper@5": 1.0,
+      "misses": [
+       "How much power do Jetson Nano, Xavier NX and a Raspberry Pi with a Neural Compute Stick draw when idle?"
+      ]
+     }
+    },
+    "rag_eval_fr": {
+     "n": 8,
+     "hybrid": {
+      "recall@5": 0.625,
+      "recall@10": 0.625,
+      "mrr": 0.5,
+      "ndcg@10": 0.22808340166889246,
+      "paper@5": 0.625,
+      "misses": [
+       "Inversions de bits causées par les radiations dans les processeurs embarqués des drones",
+       "Concevoir un détecteur de bas en haut à partir de blocs adaptés au matériel embarqué",
+       "Quadrirotor autonome qui bat des pilotes humains de niveau mondial en course"
+      ]
+     },
+     "dense": {
+      "recall@5": 0.625,
+      "recall@10": 0.875,
+      "mrr": 0.38363095238095235,
+      "ndcg@10": 0.24225130628771108,
+      "paper@5": 0.75,
+      "misses": [
+       "Découper une grande image en tuiles qui se recouvrent au moment de l'inférence pour trouver les tout petits objets",
+       "Concevoir un détecteur de bas en haut à partir de blocs adaptés au matériel embarqué",
+       "Apprendre à un quadrirotor à voler vite en forêt en imitant un planificateur qui dispose d'informations privilégiées en simulation"
+      ]
+     },
+     "lexical": {
+      "recall@5": 0.0,
+      "recall@10": 0.125,
+      "mrr": 0.017857142857142856,
+      "ndcg@10": 0.009170490262420006,
+      "paper@5": 0.25,
+      "misses": [
+       "Inversions de bits causées par les radiations dans les processeurs embarqués des drones",
+       "Découper une grande image en tuiles qui se recouvrent au moment de l'inférence pour trouver les tout petits objets",
+       "Concevoir un détecteur de bas en haut à partir de blocs adaptés au matériel embarqué",
+       "Utiliser des microphones en plus des caméras pour détecter un petit aéronef sans pilote",
+       "Détecteur d'objets assez petit pour un microcontrôleur doté d'un accélérateur de CNN intégré",
+       "Quadrirotor autonome qui bat des pilotes humains de niveau mondial en course",
+       "Apprendre à un quadrirotor à voler vite en forêt en imitant un planificateur qui dispose d'informations privilégiées en simulation",
+       "Localiser un essaim de tout petits drones par mesure de distance radio, sans ancre fixe"
+      ]
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.625,
+      "recall@10": 0.75,
+      "mrr": 0.5625,
+      "ndcg@10": 0.2725557830278943,
+      "paper@5": 0.75,
+      "misses": [
+       "Inversions de bits causées par les radiations dans les processeurs embarqués des drones",
+       "Concevoir un détecteur de bas en haut à partir de blocs adaptés au matériel embarqué",
+       "Quadrirotor autonome qui bat des pilotes humains de niveau mondial en course"
+      ]
+     }
+    }
+   },
+   "low_relevance": {
+    "n": {
+     "cal_pos": 20,
+     "cal_neg": 7,
+     "val_pos": 20,
+     "val_neg": 8
+    },
+    "cos": {
+     "threshold": 0.7625,
+     "calibration": {
+      "flagged_negatives": 1.0,
+      "flagged_positives": 0.0
+     },
+     "validation": {
+      "flagged_negatives": 1.0,
+      "flagged_positives": 0.1
+     },
+     "adopted": false,
+     "neg_max": 0.761,
+     "pos_min": 0.715,
+     "pos_median": 0.8294999999999999,
+     "neg_median": 0.714,
+     "val_negatives_missed": [],
+     "val_positives_flagged": [
+      "Estimating where a person stands in front of a palm-sized flying robot so that it can follow them",
+      "Skipping most of the detector's computation on frames that contain nothing of interest"
+     ]
+    },
+    "rerank": {
+     "threshold": -2.4770308136940002,
+     "calibration": {
+      "flagged_negatives": 1.0,
+      "flagged_positives": 0.05
+     },
+     "validation": {
+      "flagged_negatives": 0.875,
+      "flagged_positives": 0.1
+     },
+     "adopted": false,
+     "neg_max": -1.095600962638855,
+     "pos_min": -5.090500831604004,
+     "pos_median": 3.5654890537261963,
+     "neg_median": -8.357513427734375,
+     "val_negatives_missed": [
+      "Aerodynamic simulation of wind turbine blades"
+     ],
+     "val_positives_flagged": [
+      "Spotting forest fires from an aerial vehicle with an attention-enhanced detector on programmable logic",
+      "Shrinking an end-to-end navigation network so that the tiny drone's memory has room for other tasks"
+     ]
+    }
+   },
+   "verify": {
+    "exact": {
+     "n": 40,
+     "accepted_rate": 1.0,
+     "status": {
+      "OK": 40
+     }
+    },
+    "mot remplacé": {
+     "n": 40,
+     "accepted_rate": 0.85,
+     "status": {
+      "APPROX": 34,
+      "ABSENT": 1,
+      "NOMBRES": 5
+     }
+    },
+    "autre papier": {
+     "n": 40,
+     "accepted_rate": 0.0,
+     "status": {
+      "ABSENT": 40
+     }
+    },
+    "chiffre modifié": {
+     "n": 34,
+     "accepted_rate": 0.0,
+     "status": {
+      "NOMBRES": 34
+     }
+    }
+   }
+  },
+  "speed": {
+   "extract_s": {
+    "2306.00001": 0.007827371002349537,
+    "2001.06303": 0.030796229002589826,
+    "2411.02582": 0.3378720289983903
+   },
+   "pymupdf_fallback_s": {
+    "2306.00001": 0.021210297003563028,
+    "2001.06303": 0.07177560800482752,
+    "2411.02582": 0.09427766299631912
+   },
+   "index_load_s": 0.26755257199693006,
+   "passages": 4525,
+   "cache_mb": 9.177202,
+   "encode_passages_per_s": 20.115015902881993,
+   "full_encode_estimate_s": 224.95632227423084,
+   "search_hybrid_ms": {
+    "p50": 111.84238299756544,
+    "p95": 145.56323999568122
+   },
+   "search_dense_ms": {
+    "p50": 105.83156600478105,
+    "p95": 127.73816700064344
+   },
+   "search_lexical_ms": {
+    "p50": 12.235376001626719,
+    "p95": 20.309623003413435
+   },
+   "search_hybrid+rerank_ms": {
+    "p50": 1332.034585000656,
+    "p95": 1550.105573995097
+   },
+   "verify_ms": 89.23660599975847,
+   "cli_s": {
+    "status": 0.13799429599748692,
+    "bench": 0.05702439000015147,
+    "paper": 0.06097134199808352,
+    "search": 5.667728963999252,
+    "show": 0.46108727600221755
+   }
+  }
+ }
+}

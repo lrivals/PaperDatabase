@@ -1,7 +1,16 @@
 # PaperDatabase — mode d'emploi
 
 Base de connaissance d'articles scientifiques sur la vision embarquée sur FPGA (YOLO,
-autoencodeurs, apprentissage continu), destinée à préparer une thèse.
+autoencodeurs, apprentissage continu), destinée à préparer une thèse. Nom court : `fpga`
+(base par défaut du registre) ; thème et périmètre : [profile.md](profile.md).
+
+**Plusieurs bases.** Le dépôt contient une seconde base, `drone` (vision embarquée sur drone :
+détection, accélérateurs, co-design système), dans [bases/drone/](bases/drone/), avec son
+propre `CLAUDE.md`. Depuis ce dossier, les commandes et les skills agissent sur la base `fpga`
+seulement. Ne jamais écrire dans `bases/drone/` depuis ici : pour reprendre un article d'une
+base à l'autre, `bin/pdb base import <base>:<paper_id>` lancé dans la base qui le reçoit.
+Mode d'emploi multi-bases : [README.md](README.md#plusieurs-bases-de-connaissance),
+[DATA_MODEL.md §11](DATA_MODEL.md#11-plusieurs-bases--registre-basejson-profilemd).
 
 Structure, scripts et procédure d'installation : [SETUP.md](SETUP.md).
 État d'avancement et tâches à faire : [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire).

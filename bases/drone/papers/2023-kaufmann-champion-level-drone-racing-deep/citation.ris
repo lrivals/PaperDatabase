@@ -1,0 +1,21 @@
+TY  - JOUR
+AU  - Kaufmann, Elia
+AU  - Bauersfeld, Leonard
+AU  - Loquercio, Antonio
+AU  - Müller, Matthias
+AU  - Koltun, Vladlen
+AU  - Scaramuzza, Davide
+PY  - 2023
+DA  - 2023/08/01
+TI  - Champion-level drone racing using deep reinforcement learning
+JO  - Nature
+SP  - 982
+EP  - 987
+VL  - 620
+IS  - 7976
+AB  - First-person view (FPV) drone racing is a televised sport in which professional competitors pilot high-speed aircraft through a 3D circuit. Each pilot sees the environment from the perspective of their drone by means of video streamed from an onboard camera. Reaching the level of professional pilots with an autonomous drone is challenging because the robot needs to fly at its physical limits while estimating its speed and location in the circuit exclusively from onboard sensors1. Here we introduce Swift, an autonomous system that can race physical vehicles at the level of the human world champions. The system combines deep reinforcement learning (RL) in simulation with data collected in the physical world. Swift competed against three human champions, including the world champions of two international leagues, in real-world head-to-head races. Swift won several races against each of the human champions and demonstrated the fastest recorded race time. This work represents a milestone for mobile robotics and machine intelligence2, which may inspire the deployment of hybrid learning-based solutions in other physical systems.
+SN  - 1476-4687
+UR  - https://doi.org/10.1038/s41586-023-06419-4
+DO  - 10.1038/s41586-023-06419-4
+ID  - Kaufmann2023
+ER  - 

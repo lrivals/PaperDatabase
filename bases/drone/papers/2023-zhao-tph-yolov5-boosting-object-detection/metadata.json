@@ -1,0 +1,58 @@
+{
+  "id": "2023-zhao-tph-yolov5-boosting-object-detection",
+  "title": "TPH-YOLOv5++: Boosting Object Detection on Drone-Captured Scenarios with Cross-Layer Asymmetric Transformer",
+  "authors": [
+    {
+      "given": "Qi",
+      "family": "Zhao"
+    },
+    {
+      "given": "Binghao",
+      "family": "Liu"
+    },
+    {
+      "given": "Shuchang",
+      "family": "Lyu"
+    },
+    {
+      "given": "Chunlei",
+      "family": "Wang"
+    },
+    {
+      "given": "Hong",
+      "family": "Zhang"
+    }
+  ],
+  "year": 2023,
+  "venue": "Remote Sensing 15(6), 1687",
+  "doi": "10.3390/rs15061687",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/rs15061687",
+  "type": "journal",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov5",
+    "transformer",
+    "p2-head",
+    "cbam",
+    "visdrone",
+    "uavdt",
+    "small-objects",
+    "code-available"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 7, Table 8",
+      "sections numérotées non détectées : 4 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-2409.16808-comprehensive-evaluation-deep-learning-object",
+  "title": "A Comprehensive Evaluation of Deep Learning Object Detection Models on Heterogeneous Edge Devices",
+  "authors": [
+    {
+      "given": "Daghash K",
+      "family": "Alqahtani"
+    },
+    {
+      "given": "Muhammad Aamir",
+      "family": "Cheema"
+    },
+    {
+      "given": "Maria A",
+      "family": "Rodriguez"
+    },
+    {
+      "given": "Adel N",
+      "family": "Toosi"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2409.16808",
+  "url": "https://arxiv.org/abs/2409.16808",
+  "type": "preprint",
+  "axes": [
+    "nano-drone"
+  ],
+  "tags": [
+    "jetson",
+    "orin",
+    "raspberry-pi",
+    "edge-tpu",
+    "hailo",
+    "yolov8",
+    "ssd",
+    "efficientdet",
+    "tensorrt",
+    "coco"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "2025-yu-yolo-gcof-lightweight-low-altitude",
+  "title": "YOLO-GCOF: A Lightweight Low-Altitude Drone Detection Model",
+  "authors": [
+    {
+      "given": "Wanjun",
+      "family": "Yu"
+    },
+    {
+      "given": "Kongxin",
+      "family": "Mo"
+    }
+  ],
+  "year": 2025,
+  "venue": "IEEE Access 13, 53053-53064",
+  "doi": "10.1109/ACCESS.2025.3553477",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/ACCESS.2025.3553477",
+  "type": "journal",
+  "axes": [
+    "counter-uav",
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov8",
+    "transformer",
+    "anti-uav",
+    "ground-to-air",
+    "small-objects",
+    "raspberry-pi",
+    "dut-anti-uav",
+    "gsconv"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE 1, TABLE 2, TABLE 3, Table 4, TABLE 4, Table 5, TABLE 5, TABLE 6, TABLE 7, TABLE 8, TABLE 9"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

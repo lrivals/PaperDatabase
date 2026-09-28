@@ -1,0 +1,47 @@
+{
+  "id": "arxiv-1907.11093-slimyolov3-narrower-faster-better-real",
+  "title": "SlimYOLOv3: Narrower, Faster and Better for Real-Time UAV Applications",
+  "authors": [
+    {
+      "given": "Pengyi",
+      "family": "Zhang"
+    },
+    {
+      "given": "Yunxin",
+      "family": "Zhong"
+    },
+    {
+      "given": "Xiaoqiong",
+      "family": "Li"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/ICCVW.2019.00011",
+  "arxiv_id": "1907.11093",
+  "url": "https://arxiv.org/abs/1907.11093",
+  "type": "preprint",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov3",
+    "visdrone",
+    "pruning",
+    "network-slimming",
+    "spp",
+    "gtx1080ti",
+    "small-objects"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

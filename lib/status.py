@@ -30,8 +30,9 @@ def _grobid_alive():
 
 def _git_dirty(root):
     try:
-        r = subprocess.run(["git", "status", "--porcelain"], cwd=root, capture_output=True,
-                           text=True, timeout=10)
+        # fichiers de cette base seulement : une base peut vivre dans bases/ d'un même dépôt
+        r = subprocess.run(["git", "status", "--porcelain", "--", ".", ":(exclude)bases"], cwd=root,
+                           capture_output=True, text=True, timeout=10)
     except (OSError, subprocess.TimeoutExpired):
         return None
     return len(r.stdout.splitlines()) if r.returncode == 0 else None

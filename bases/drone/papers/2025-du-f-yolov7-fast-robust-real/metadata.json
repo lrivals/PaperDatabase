@@ -1,0 +1,58 @@
+{
+  "id": "2025-du-f-yolov7-fast-robust-real",
+  "title": "F-yolov7: fast and robust real-time UAV detection",
+  "authors": [
+    {
+      "given": "Yan",
+      "family": "Du"
+    },
+    {
+      "given": "Teng",
+      "family": "Wu"
+    },
+    {
+      "given": "Zifeng",
+      "family": "Dai"
+    },
+    {
+      "given": "Hui",
+      "family": "Xie"
+    },
+    {
+      "given": "Changzhen",
+      "family": "Hu"
+    },
+    {
+      "given": "Shengjun",
+      "family": "Wei"
+    }
+  ],
+  "year": 2025,
+  "venue": "Computing 107(1), 50",
+  "doi": "10.1007/s00607-024-01406-7",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1007/s00607-024-01406-7",
+  "type": "journal",
+  "axes": [
+    "counter-uav"
+  ],
+  "tags": [
+    "yolov7",
+    "anti-uav",
+    "ground-to-air",
+    "background-subtraction",
+    "dut-anti-uav",
+    "small-objects",
+    "rtx4090"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

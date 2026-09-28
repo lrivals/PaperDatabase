@@ -1,0 +1,62 @@
+{
+  "id": "arxiv-2507.10006-vision-anti-unmanned-aerial-technology",
+  "title": "Vision-Based Anti Unmanned Aerial Technology: Opportunities and Challenges",
+  "authors": [
+    {
+      "given": "Guanghai",
+      "family": "Ding"
+    },
+    {
+      "given": "Yihua",
+      "family": "Ren"
+    },
+    {
+      "given": "Yuting",
+      "family": "Liu"
+    },
+    {
+      "given": "Qijun",
+      "family": "Zhao"
+    },
+    {
+      "given": "Shuiwang",
+      "family": "Li"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2507.10006",
+  "url": "https://arxiv.org/abs/2507.10006",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "counter-uav",
+    "datasets-benchmarks",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "anti-uav",
+    "infrared",
+    "anti-uav410",
+    "yolo",
+    "siamese-tracker",
+    "transformer",
+    "air-to-air",
+    "ground-to-air",
+    "small-objects"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE III"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

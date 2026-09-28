@@ -1,0 +1,300 @@
+---
+id: arxiv-2312.11008-global-local-mav-detection-challenging
+title: "Global-Local MAV Detection under Challenging Conditions based on Appearance and Motion"
+year: 2023
+backend: grobid
+---
+
+## Abstract
+
+Visual detection of micro aerial vehicles (MAVs) has received increasing research attention in recent years due to its importance in many applications. However, the existing approaches based on either appearance or motion features of MAVs still face challenges when the background is complex, the MAV target is small, or the computation resource is limited. In this paper, we propose a global-local MAV detector that can fuse both motion and appearance features for MAV detection under challenging conditions. This detector first searches MAV targets using a global detector and then switches to a local detector which works in an adaptive search region to enhance accuracy and efficiency. Additionally, a detector switcher is applied to coordinate the global and local detectors. A new dataset is created to train and verify the effectiveness of the proposed detector. This dataset contains more challenging scenarios that can occur in practice. Extensive experiments on three challenging datasets show that the proposed detector outperforms the state-of-the-art ones in terms of detection accuracy and computational efficiency. In particular, this detector can run with near real-time frame rate on NVIDIA Jetson NX Xavier, which demonstrates the usefulness of our approach for real-world applications. The dataset is available at https://github.com/WestlakeIntelligentRobotics/GLAD. In addition, A video summarizing this work is available at https://youtu.be/Tv473mAzHbU.
+
+## I. INTRODUCTION
+
+Vision-based MAV detection has attracted increasing attention in recent years due to its application in many tasks such as vision-based swarming [1]- [3], aerial see-and-avoid [4], [5], and malicious MAV detection [6]- [8]. Different from the existing works [9]- [11] that consider the ground-to-air scenario, this work focuses on the air-to-air scenario where a camera carried by a flying MAV is used to detect another flying target MAV. The air-to-air scenario is more challenging than the ground-to-air scenario because the camera itself is moving and the target MAV is often engulfed by complex background scenes such as buildings, trees, and other manmade things when the camera looks down from the top (Fig. 1(a)). Moreover, the target MAV may be extremely small in the image when seen from a distance (Fig. 1(b)). In addition, the detection algorithm must be sufficiently efficient in order to be implemented onboard with limited computational resources.
+
+H. Guo is with the College of Computer Science and Technology at Zhejiang University and the School of Engineering at Westlake University, Hangzhou, China. (e-mail: guohanqing@westlake.edu.cn) Y. Zheng, Y. Zhang, and S. Zhao are with the School of Engineering at Westlake University, Hangzhou, China. (e-mail: zhengye@westlake.edu.cn; zhangyin@westlake.edu.cn; zhaoshiyu@westlake.edu.cn) Z. Gao is with the School of Remote Sensing and Information Engineering, Wuhan University, Wuhan, China. (e-mail: gaozhinus@gmail.com) (Corresponding author: Shiyu Zhao.) In recent years, many appearance-based methods that rely on deep learning techniques have been proposed for visionbased MAV detection. For example, some state-of-the-art object detection networks such as YOLO series, R-CNN series, SSD, DETR [12]- [14] have been applied to MAV detection. These methods usually work effectively in relatively simple scenarios where the target MAV is distinct from the background and its size is relatively large in the image. However, appearance features are not stable in more complex scenarios. For example, as shown in Fig. 1(a), the background scene is extremely complex when the camera looks down from the top. The target MAV can easily get engulfed in complex background scenes such as trees or buildings. Moreover, when the target MAV flies far away from the camera, its image may only occupy a tiny portion of the image. For example, as shown in Fig. 1(b), an MAV seen from nearly 100 m only occupies 8×8 pixels in an image of 1920×1080 pixels.
+
+Although we can zoom in to detect distant MAVs, it would lead to a smaller field of view which is unfavorable to search and track moving MAVs. It is therefore necessary to develop high-performance algorithms to detect MAVs under challenging conditions.
+
+Motion features are helpful in detecting MAVs under challenging conditions. Many motion-assisted methods which combine appearance features and motion features have been proposed to detect MAVs based on, for example, background subtraction [15], [16], low-rank based methods [17], [18], spatio-temporal information [9], [10], [19], and optical flow [20]- [22]. However, motion-assisted MAV detection still faces the following challenges. First, motion cues of MAVs are difficult to separate from the background when the background is non-planar or the camera moves drastically. In particular, most of the existing motion-assisted methods assume the background scene is planar [15], [23], [24] and use affine transformation or perspective transformation to estimate the camera movement. Although this assumption is valid in some cases especially when the camera flies at a high altitude so that the height of the ground object is neglectable, it is still invalid when the flight altitude is relatively low. In this case, the ground objects such as buildings, trees, and lampposts may violate the planar assumption. Second, many existing motion-assisted methods such as the region-based sliding windows in [20] or the two-stage approach in [21] are computationally intensive and hence difficult to implement in onboard computers of MAVs. Third, most of the existing motion-assisted methods can only detect moving MAVs. Since multirotor MAVs may hover stationarily, it is necessary to develop a method that can detect both stationary and moving MAVs by integrating different types of features.
+
+To overcome the limitations of the existing approaches, we propose a new Global-Local MAV Detector (GLAD) for airto-air detection of MAVs under challenging conditions. This algorithm is composed of a global detector, a local detector, an adaptive search region, and a detector switcher. First, the global detector is used to search for MAV targets in the fullsize image. It consists of a global appearance-based detection module (GAD) and a global motion-based detection module (GMD). The GMD serves as a good assistant when the appearance features are unreliable. Second, after the MAV target has been detected by the global detector, the local detector is activated to conduct subsequent detection in a Kalman filterbased adaptive search region cropped from the neighboring area around the target. This local detector consists of a local appearance-based detection module (LAD) and a local motionbased detection module (LMD) as well. It can significantly improve the detection accuracy under challenging conditions because the target's resolution in the adaptive search region is greatly improved compared with the method based on downsampling. Third, a detector switcher is designed to adaptively coordinate the global and local detectors. The detector switcher can adaptively switch between the global and local detectors based on the detection results of the previous frames. It can avoid the local detector searching in the wrong search region when the local detector fails for a while.
+
+The main contributions and novelties of this work can be summarized as follows. 1) We propose a global-to-local method that can significantly improve the accuracy and efficiency for MAV detection under challenging conditions. This has been verified by experimental results on three challenging datasets, showing that our proposed method outperforms the existing ones including [21], [25], [26].
+
+2) We design a motion-based classifier and an appearancebased classifier that can effectively and efficiently eliminate the interruptions generated by imperfect image alignment in non-planar scenes. This is supported by experimental results in non-planar scenes where 3D structures such as high buildings, trees, and lampposts are dominant rather than a planar background assumption which is commonly used in aerial object detection such as [15], [23], [24].
+
+3) We introduce a Kalman filter-based adaptive search region to dynamically adjust the size and location of the local search region. The experimental results show that this method can further enhance the robustness of our method in the presence of occlusion and missing detection.
+
+4) We create a new dataset, named ARD-MAV, which contains 60 videos and 106,665 frames. This dataset contains more challenging scenarios that may occur in practice. Compared to the existing datasets [14], [15], [20], [27], our proposed dataset has the smallest average object size. It contains various realworld challenges such as complex backgrounds, 3D structures, abrupt camera movement, and small MAVs.
+
+## II. RELATED WORKS
+
+### A. Appearance-Based MAV Detection
+
+The existing appearance-based MAV detection works can be classified into conventional methods and deep learning methods. The conventional methods usually use feature extraction methods to obtain target features and then use a discriminant classifier to classify the MAV. In particular, the work in [28] tests Harr-like features, histogram of gradients (HOG), and local binary patterns (LBP) using cascades of boosted classifiers for MAV detection. The work in [4] uses the Adaboost algorithm with HOG features for online detection of MAV. The work in [29] uses 2-dimensional, rotation, and translation invariant Generic Fourier Descriptor (GFD) features and classifies targets as a drone or bird by a neural network. Besides, template matching and morphological filtering [2] have also been considered for MAV detection. These methods have been verified to be effective in simple cases. Nevertheless, when the shape and size of the MAV change vastly or the background is too complex, conventional methods usually have difficulties in these scenarios.
+
+On the other hand, with the fast development of deep learning in object detection, there emerge many works of MAV detection using deep learning methods. The work in [13] evaluates eight state-of-the-art deep learning algorithms on the Det-Fly dataset for MAV detection. Similarly, the authors in [12] evaluates four state-of-the-art deep learning algorithms on three representative MAV dataset (MAV-VID, Drone-vs-Bird, Anti-UAV). To further improve the object detection accuracy, the authors in [30] implement a special augmentation method and prune the convolution channel and shortcut layer of YOLOv4 for small drone detection, the authors in [31] propose a novel comprehensive approach that combines transfer learning based on simulation data and adaptive fusion to improve small object detection performance. Although deep learning methods have made great progress compared with conventional methods, there are still many challenges for appearancebased MAV detection such as complex backgrounds, motion blur, and small objects.
+
+### B. Motion-Assisted MAV Detection
+
+Motion-assisted MAV detection methods aim at detecting the MAV by combining motion features and appearance features. The existing motion-assisted MAV detection methods can be classified into stationary cameras and moving cameras. The works in [11], [32] monitor the sky with a stationary camera and then use background subtraction and CNN-based object classification for MAV detection. The works in [10], [19] fuse the spatiotemporal feature of the target for remote flying drone detection. The work in [9] adopts appearance features to exclude non-MAV moving targets and then uses a motion-based classification algorithm to distinguish MAV from other interruptions.
+
+Compared with a stationary camera, MAV detection from a moving camera is much more challenging since the movement of the background is coupled with the movement of targets. The works in [15], [33] propose a UAV-to-UAV video dataset and a general architecture for small MAV detection from a camera mounted on a moving MAV platform. The authors detect the moving MAV by subtracting neighboring frames and then identify MAV using a hybrid classifier. Similarly, the works in [20], [34] create a more challenging dataset for detecting flying objects using a single moving camera. The authors first employ two CNN networks in a sliding window fashion to obtain the motion-stabilized spatial-temporal cubes and then use the third CNN network to classify MAV in each spatial-temporal cube. The work in [21] proposes a two-stage segmentation approach. In the first stage, the authors utilize a 2-D convolution network and channel-pixel-wise attention to extract contextual information based on overlapping patches. Then, a 3-D convolution network and channel-pixel-wise attention are used to learn spatiotemporal cues and discover the missing detections of stage-1. The work in [22] proposes a feature super-resolution-based UAV detector with motion information extraction based on dense optical flow. However, these methods are either too time-consuming or only effective when the target is large enough or the background is very simple, which is challenging for air-to-air MAV detection in a cluttered environment.
+
+## III. AN OVERVIEW OF THE PROPOSED METHOD
+
+To effectively detect MAVs under challenging conditions, we propose a global-local MAV detector called GLAD. The architecture of GLAD is illustrated in Fig. 2. It consists of a global detector, a local detector, an adaptive search region, and a detector switcher.
+
+Global Detector: The global detector is composed of an appearance-based module and a motion-based module. First, YOLO is used as an appearance-based detection module for MAV detection in the full-size image. YOLO is a fast singleshot object detector based on convolutional neural networks. Our previous study [13] shows that YOLO can achieve a good balance between accuracy and speed. In this paper, YOLOv5s is trained with the proposed ARD-MAV dataset. Detailed information about the dataset is given in Section V-A.To reduce false alarms as many as possible, a high confidence threshold T 0 is adopted.
+
+When the appearance-based module fails to detect an MAV under challenging conditions, the motion-based module is activated. The motion-based module aims to detect a moving MAV and is composed of motion compensation, moving object segmentation, and MAV classification. Due to the extra temporal cues, the motion-based module shows superior performance under challenging conditions. The procedure of the motionbased detection module is presented in Section IV. Since the motion-based module is more time-consuming, it will be called only when the appearance-based module fails. The appearance-based module and the motion-based module are continuously executed until an MAV is detected.
+
+Local Detector: After the target MAV has been found by the global detector, a local detector is activated to conduct subsequent MAV detection. Considering that the target usually does not move too far between two consecutive frames, a small area around the center of the target is cropped as the search region for MAV detection. Within the local search region, a local detector is applied to detect the MAV.
+
+The local detector is composed of an appearance-based module and a local motion-based module as well. Different from the global detector, the local detector is trained with cropped images and has different parameters settings. Since the local search region only focuses on a small patch of the full-size image, the resolution of the target can be greatly improved compared to the down-sampling method, and many non-MAV interruptions are removed as well. We set a low confidence threshold T 1 to detect as many targets as possible. Although a low threshold would bring some false targets, confidence ranking and distance ranking are applied to obtain the most reliable target. Specifically, the target with the highest confidence score or the closest distance to the last target is selected as the final target.
+
+The local detector not only improves the detection accuracy but also greatly improves the computational efficiency. Since the size of the local search region is much smaller than the size of the original image, the operations including bilinear interpolation, key points selection, optical flow matching, frame difference, and object classification in the local detector are much more efficient. The details about the computational efficiency are introduced in Section V-F.
+
+Adaptive Search Region: Considering that most of the targets are small, a fixed size of 300×300 area around the center of the target in the current frame is usually enough to cover the potential location of the target in the next frame. Nevertheless, when the detectors fail to detect a target for multiple frames, a fixed search region might not cover the area of the potential targets. To improve the robustness of our method when occlusion and missing detection happen, we design an adaptive search region to dynamically adjust the size and location of the local search region.
+
+To better predict the position of the local search region, we first use the Kalman filter to estimate the target position in the next frame. In particular, we use a Kalman filter to track the relative velocity of the target rather than tracking the target's position. We do this because the position is highly non-linear when the camera moves fast, however, the relative velocity is continuous in this scenario. The Kalman filter estimates the target state x t = (v x , v y , a x , a y ) via a linear difference equation,
+
+x t = M x t-1 + w t-1 ,(1)
+
+where (v x , v y ) denotes the velocity of the target center, (a x , a y ) denotes the acceleration of the target center in Xaxis and Y-axis direction, M ∈ R 4×4 is the state transition matrix, w t-1 denotes the modeling errors or process noise.
+
+In the prediction step, the target's velocity is obtained via a dynamic model expressed as,
+
+Ẑt = N x t + v t ,(2)
+
+where Ẑt denotes the predicted measurement, N ∈ R 2×4 is the measurement matrix, and v t is the measurement noise.
+
+In the updating step, the target state is updated with the actual measure Z t if the detection is successful. However, if the detection fails, the Kalman filter will not be updated, and we directly update the target state with the optimal prediction of the last frame.
+
+After we have obtained the estimated velocity, we estimate the target position in the current frame with the following equation,
+
+p t = T (p t-1 ; H) + U t-1 ,(3)
+
+where p t denotes the coordinate of the target center, T and H denotes the 2D perspective transformation and the homography matrix, U t-1 is the velocity of the target center.
+
+Given the estimated target position, we set up a new search region in the next frame centered at the predicted target position. The size of the search region (a L × L square) is decided as following:
+
+L = 300 + T lost × 4,(4)
+
+where T lost is the number of frames that detectors fail to detect a target. Detector Switcher: Although the proposed local detector can significantly improve the detection accuracy and the adaptive search region can guide the local detector to the right search region in most cases, persistent detection failures may occasionally happen when the background is too complex or the target is too small to detect. Under these circumstances, the local detector may concentrate on a wrong search region where the true object is excluded. Besides, occlusion and abrupt camera movement may also cause the same problem. Hence, a detector switcher is designed to adaptively coordinate the global and local detectors. The switcher adaptively switches between the global detector and the local detector based on the detection results of the previous frames. Specifically, when the global and local detectors successfully detect a target MAV, the detector switcher will switch to or keep on the local detector in the next frame. When the global detector fails to detect the target MAV, the detector switcher will continue to execute detection using the global detector in the full-size image. However, if the local detector fails, the detector switcher will proceed to execute detection using the local detector in the next frame. The successive detection in the local search region can help the algorithm quickly recover from a failure status because the local detector has better detection accuracy and the target MAV usually does not move too far between consecutive frames. To avoid the local detector searching in the wrong search region, the detector switcher will switch to the global detector if the local detector fails for a while (for example 30 frames).
+
+## IV. MOTION-BASED DETECTION MODULE
+
+This section introduces the procedure of the motion-based detection module in detail. The motion-based detection module is composed of three parts, namely motion compensation, moving object segmentation, and MAV classification (see Fig. 3). First, grid-based key points and perspective transformation are used to compensate for the camera motion. Second, frame difference and morphological operation are applied to segment moving objects. Third, a motion-based classifier and an appearance-based classifier are successively utilized to eliminate non-MAV moving objects and image alignment errors. The details are given as follows.
+
+### A. Motion Compensation
+
+To separate the moving objects from the moving background, we must first align two adjacent frames so that the influence of the camera's ego-motion can be eliminated. In this paper, 2D perspective transformation is used for motion compensation because it exactly models the 2D background motion when the background results from the relative motion of a 2D plane in the 3D world and has been widely used for camera motion compensation in aerial view [15], [35], [36]. Perspective transformation requires the background to be planar or the camera only rotates. In many cases, this is a reasonable approximation since the pursuing MAV looks at the ground from a high altitude. Hence, most of the previous works only consider near planar scenes [15], [23]. We noticed that non-planar scenes containing objects such as high buildings, lampposts, trees, and wire poles which are quite prevalent in the ARD-MAV dataset can remarkably influence the motion compensation quality and generate false positives. Nevertheless, our proposed motion-based classifier and the appearance-based classifier can remove these interruptions.
+
+For computational efficiency and robustness in textureless regions such as sky and grassland, grid-based key points are used to calculate the homography matrix. We sample 30 × 20 key points uniformly distributed in each row and column across the previous frame. Then, these key points are tracked by the pyramidal Lucas-Kanade (LK) algorithm [37] to obtain the corresponding points in the current frame (one example is shown in Fig. 3(b)). After the key points are matched over two adjacent frames, the homography matrix H is calculated with the RANSAC method to reject outliers. The image in the previous frame F n-1 can be aligned with the current frame F n by the perspective transformation.
+
+Fn-1 (x, y) = HF n-1 (x, y).
+
+(
+
+)5
+
+Here, H represents the transformation matrix between F n-1 and F n , Fn-1 denotes the motion-compensated previous frame. One example of the motion-compensated frame is shown in Fig. 3(c).
+
+### B. Moving Object Segmentation
+
+After we have obtained the motion-compensated previous frame, we can highlight the moving areas with absolute differences between the current frame and the motion-compensated previous frame. In this paper, frame difference and morphological operation are used for moving object segmentation.
+
+1) Frame Difference: The frame difference is defined as follows:
+
+E n-1 = |I n (x, y) -În-1 (x, y)|,(6)
+
+where I n is the gray value of the current frame and În-1 is the gray value of the motion-compensated previous frame. Next, a threshold T 2 is applied on E n-1 to remove noises and highlight the silhouette mask of the potential moving foreground. The pixel values above the threshold T 2 are set to 255 as foreground, and below the threshold T 2 are set to 0 as background. As a result, we obtain the binarized frame difference D n-1 . Concerning frame difference, the choice of threshold T 2 greatly influences the final result of moving object segmentation. If T 2 is too small, the noise will stand out and fill the image. Conversely, if T 2 is too big, some parts of the moving foreground will be wiped out. Moreover, a fixed T 2 can hardly adapt to the change of light intensity and moving background. Therefore, we correct the threshold T 2 with a light intensity correction term T A and a background motion correction term T M .
+
+D n-1 = 255, if E n-1 > T 2 + αT A + βT M 0, otherwise.(7)
+
+T A = 1 N A (x,y)∈A |I n (x, y) -I n-1 (x, y)|(8)
+
+T M = 1 N S (x,y)∈S |P n (x, y) -P n-1 (x, y)|(9)
+
+Here, A represents the whole image pixels, N A represents the total number of pixels, and α is the light intensity suppress coefficient. S denotes the set of matched key points, N S represents the total number of the rectified key points, P is the pixel coordinates of the rectified key points, and β is the background motion correction coefficient.
+
+2) Post Processing: Frame difference method can segment the pixels belonging to moving objects, but may also contain noises, small holes, and disconnected blobs, which would cause wrong bounding boxes of the moving objects. Hence, multiple morphological operations are used to obtain the intact bounding boxes. Firstly, the morphological open and close operation are used iteratively on binarized frame difference to eliminate isolated pixels and fill the holes. Then, connected component analysis is used to obtain the total number of pixels of each object, and blobs whose area is below 30 pixels are eliminated because such small objects are usually difficult to recognize in the subsequent appearance-based classification. Finally, the maximum bounding rectangle is applied to mark the moving objects and obtain the bounding boxes. Among these bounding boxes, some adjacent bounding boxes that belong to the same object may be isolated from each other. Therefore, we merge the bounding boxes whose distance between another neighboring bounding box is smaller than D 1 .
+
+### C. MAV Classification
+
+Until now, we have obtained the candidate moving objects. However, there are still many non-MAV moving objects such as cars, pedestrians, swaying trees, shimmering water, and image alignment errors (see Fig. 3(d)). Hence, a motion-based classifier and an appearance-based classifier are successively used to separate MAV from these interruptions.
+
+1) Motion-based Classifier: In principle, the motion features of MAVs are significantly different from interruptions such as swaying trees, shimmering water, and image alignment errors which are usually irregular in moving direction and moving amplitude. Therefore, most of these interruptions can be filtered by their statistical features. Assuming that MAV is a non-deformable object, and motion vectors between two consecutive frames are consistent. We firstly extract Shi-Tomasi corner points in k th moving object of frame n, then define the motion feature f (k) n as the angle variance of motion vectors in Equation (10), and g (k)
+
+n as the velocity variance of motion vectors in Equation (12).
+
+f (k) n = dt∈D (k) n (arctan d t -µ (k) n ) 2 S (k) n (10) µ (k) n = dt∈D (k) n arctan d t S (k) n(11)
+
+g (k) n = dt∈D (k) n (||d t || -λ (k) n ) 2 S (k) n(12)
+
+λ (k) n = dt∈D (k) n ||d t || S (k) n(13)
+
+Here, D
+
+n denotes the set of motion vectors of the k th moving object of frame n and S (k) n is the number of motion vectors. Given the above motion features, we build a motion-based classifier to eliminate these interruptions. We denote y (k) n as a classification label where the zero value indicates that the k th object is noise, otherwise the k th object is the candidate MAV. The motion-based classifier is defined as follows:
+
+y (k) n = 0, if f (k) n > T 3 or g (k) n > T 4 or λ (k) < T 5 , 1, otherwise. (14
+
+)
+
+where T 3 is the empirical threshold for angle variance, T 4 is the empirical threshold for velocity variance, and T 5 is the empirical threshold for velocity amplitude.
+
+2) Appearance-based Classifier: After the filtering of the motion-based classifier, the candidate moving objects still contain some interruptions such as moving cars, pedestrians, flying birds, and image alignment errors (see Fig. 3(e)). These interruptions share similar motion features but different appearance features with MAV, we can use an appearance-based classifier to classify them into MAV and clutter. Considering that the appearance-based classifier will be called frequently and most of the common CNN architectures such as ResNet [38] and DenseNet [39] have a very deep structure that requires large computation resources, a shallow CNN network (see Fig. 4) is used to extract the feature of MAV and classify candidate moving objects into MAV and clutter. We train the proposed CNN model with local images of candidate moving objects (details about the classification dataset are introduced in Section V-A). Each convolution layer uses ReLU activation and max pooling. The final layer uses a fully connected network with a softmax activation to classify the candidate moving objects into two classes. Up to now, we can obtain the final moving MAV, as shown in Fig. 3(f).
+
+## V. EXPERIMENT
+
+### A. Datasets
+
+To evaluate the performance of the proposed GLAD algorithm, we tested our proposed algorithm on three challenging datasets. Each dataset is briefly introduced below. outdoor with different real-world challenges such as complex backgrounds, non-planar scenes, occlusion, abrupt camera movement, fast-moving MAVs, and small MAVs (some examples are shown in Fig. 6
+
+### B. Evaluation Metrics and Implementation Details
+
+1) Evaluation Metrics: Following the protocol in [21], the performance evaluation is based on Precision, Recall, F-Score, and AP. We set the intersection over union (IOU) threshold between predictions and ground truths to 0.5. Therefore, detected targets matching with ground truth with IOU > 0.5 are counted as true positives. In particular, the AP is calculated at 0.5 IOU threshold and is averaged over uniformly spaced 11 points of the precision-recall curve.
+
+2) Implementation Details: Our evaluation experiments are implemented on a computer with an NVIDIA Geforce RTX 3070 GPU. For the training and validation of YOLOv5s, the input image size is down-sampled to 640×640 as default. We use the Adam optimizer with a momentum of 0.937 and an initial learning rate of 0.01. We trained the model for 150 epochs with a batch size of 32. For the appearance-based classifier, the Adam optimizer is applied with a learning rate of 0.001. We trained the model for 100 epochs with a batch size of 64.
+
+To test the deployment efficiency of our approach on the mobile platform, we selected the NVIDIA Jetson Xavier NX processor for deployment experiments. This device has a 6core CPU and 8G of GPU memory. We apply the TensorRT engine and pycuda API to accelerate the inference speed.
+
+Table II gives the parameters settings in this paper. These parameters are well-designed based on extensive experiments.
+
+### C. Evaluation Results under Different Conditions
+
+We evaluate the proposed GLAD algorithm on 15 videos from the ARD-MAV dataset. According to the complexity of the background and target size, these videos are divided into ordinary scenes, complex backgrounds, and small MAVs. As shown in Table III, our proposed method can achieve a high success rate on ordinary scenes with nearly 100% precision and recall. For the cases of complex background and small MAVs, the detection accuracy degrades especially for small MAVs. It is important to note that the small MAV here denotes the MAV with a pixel area smaller than 100, which is difficult even for humans to recognize in the image. Some examples of detection results are illustrated in Fig. 7, we see that GLAD could successfully detect the MAV under challenging conditions.
+
+### D. Comparison with Prior Works
+
+We compare our proposed GLAD algorithm with several state-of-the-art methods on the ARD-MAV dataset. Specifically, the YOLOv5s-1 and TPH-YOLOv5l-1 uses the default 640×640 input image size, and YOLOv5s-2 and TPH-YOLOv5l-2 uses the 1536×1536 input image size for inference. All compared methods are implemented based on official codes and are fine-tuned using the pre-trained weights available with public codes. The quantitative comparison of GLAD with the compared methods on the ARD-MAV dataset is shown in Table IV. Our proposed algorithm outperforms the existing methods both on detection accuracy and computational efficiency. It is worth noting that GLAD significantly outperforms the existing methods on recall metric.
+
+The quantitative comparison of GLAD with other methods on the NPS-Drones dataset and Drone-vs-Bird dataset are shown in Table V and Table VI respectively. The experimental results of the compared methods are from [21] and [12]. The results demonstrate that our proposed algorithm outperforms the existing methods on different evaluation metrics, especially on recall metric.
+
+We attribute the better performance of GLAD over com-pared methods to several factors. First, GLAD adopts a local search region that greatly retains the valuable appearance information of small targets and targets under complex backgrounds. However, the down-sampling method adopted in compared methods such as YOLOv5, TPH-YOLOv5, and MEGA all lead to huge information loss. The tremendous improvements on recall metric when enlarging the input image size of YOLOv5s and TPH-YOLOv5 exactly confirm it. Second, the motion-based detection module can make good use of the motion features and detect the target MAV when the appearance features are unreliable under challenging conditions (some examples are shown in Fig 8). Third, our proposed GLAD algorithm can detect stationary and moving targets simultaneously because we use the appearance features and motion features independently on each module. However, the compared methods such as Dogfight [21] try to detect MAV by jointly using appearance features and motion cues. As a result, the stationary target and slow-moving target are hard to detect.
+
+### E. Ablation Studies
+
+In this section, we analyze different components of GLAD to verify their effectiveness. The experimental results in Table VII show that each component of our proposed method is important and contributes to the final performance. based detection module significantly improves detection accuracy, especially on recall metric compared with simple appearance-based methods. This improvement on recall metric might be due to the reason that the GMD can spot the subtle change between consecutive frames. Therefore, it can help generate an initial position for the local detector when the GAD fails to find an MAV under complex backgrounds and small MAV conditions. In addition, the LMD can also help the local detector maintain the right local search region when the LAD fails to detect a target.
+
+2) Influence of Appearance-based Detection Module: The experimental results in Table VII show that the appearancebased detection module also plays an important role especially VII, the local search region greatly improves the recall of the appearance-based module from 0.17 to 0.51. This huge improvement primarily owes to the higher resolution of the target in the local search region. When down-sampling the image from 1920×1080 to 640×640, the effective pixels of the target are dropped by nearly 80% and the appearance information is lost. In contrast, since the size of the local search region is smaller than the input size of YOLOv5s, the valuable appearance information of the target is completely reserved and the detection accuracy is greatly improved.
+
+On the other hand, the motion-based module benefits little from the local search region (as shown in the second and fourth row of Table VII). The motion-based module primarily relies on the motion cues and local appearance features to locate and classify the MAV. However, the local appearance features in the local search region are the same as in the full-size image. Therefore, just benefits from fewer interruptions in the local search region. In addition, a small patch occasionally impairs the motion-based module by inaccurate image alignment due to the sparse matched key points. As a result, the improvement of accuracy for the motion-based module is not as remarkable as the appearance-based module.
+
+We have also tested the influence of the adaptive search region. As shown in the sixth and seventh row of Table VII, the adaptive search region can improve the precision and recall. When occlusion and missing detection happen, a Kalman filter-based tracker can predict the target position in the coming frame, and an enlarged search region size has a better view than a fixed search region. Some examples are shown in Fig. 10.
+
+### F. Inference Time
+
+Table VIII demonstrates the frames per second (FPS) of each module on PC and Jetson Xavier NX respectively. We see that YOLOv5s is greatly accelerated with the TensorRT engine, it can reach 28.5 FPS on Jetson Xavier NX. The frame rate of the GMD and LMD is 10.6 FPS and 5.1 FPS on Jetson Xavier NX respectively.
+
+Our method executes different modules based on the detection results of the previous frames rather than executing all of them sequentially. Since the detection difficulty varies across different videos, the inference time for each test video may differ. Therefore, we calculate the average FPS across all test videos to evaluate the performance of our proposed algorithm. The average running speed on PC and Jetson Xavier NX is 146.5 FPS and 23.6 FPS respectively. Although the motionbased detection modules cannot achieve real-time inference, they are called only when the GAD/LAD fails to detect a target under challenging conditions. Therefore, the average running speed can reach nearly real-time.
+
+## VI. CONCLUSION
+
+In this paper, we proposed a global-local MAV detector for air-to-air detection of MAVs under challenging conditions. The adaptive search region adopted in our approach significantly improved the detection accuracy by improving the resolution of the target using a small cropped image. Besides, we developed a motion-based detection module, which serves as a good assistant when the appearance features are unreliable. To evaluate the effectiveness of the proposed algorithm, we created a new dataset, named ARD-MAV, which contains various challenging conditions such as complex backgrounds, non-planar scenes, occlusion, abrupt camera movement, fastmoving MAVs, and small MAVs. Specifically, this dataset has the smallest average object size among current MAV detection datasets. Experiments on the three challenging datasets verified that the proposed algorithm can effectively detect MAV under various challenging conditions and outperforms state-of-the-art methods. Importantly, the experiments on the Jetson Xavier NX platform indicated that the proposed algorithm can be deployed on an aerial platform with real-time running speed.
+
+In the future, our proposed algorithm will be extended to more types of MAVs. Moreover, an end-to-end network is necessary to be designed to simplify the training process, reduce the empirical parameters, and more effectively make use of the motion clues.
+
+## Figures et tableaux
+
+[figure sans légende identifiée] (a) Complex background. (b) Small MAV (8x8 pixels).
+
+**Fig. 1.** Examples of challenging conditions for MAV detection. Our approach can work effectively in very challenging conditions such as complex backgrounds and small-sized MAVs. Red box indicates ground-truth. Yellow box indicates the predicted bounding box by the local detector of our approach. (Top right images are better view with 500% zoom-in)
+
+**Fig. 2.** The architecture of our proposed GLAD algorithm. Given an input image of 1920×1080, we first use the global detector to obtain the initial position of the target MAV. Then, a Kalman filter-based adaptive search region is cropped around the center of the last target as the local search region. The local detector is applied to the local search region for subsequent MAV detection. Finally, a detector switcher is applied to adaptively switch between the global and local detectors in order to avoid the local detector falling into the wrong search region. The solid arrow line represents the data flow. The dashed arrow line represents signal flow.
+
+**Fig. 3.** The flowchart of the motion-based detection module.
+
+**Fig. 4.** The architecture of the appearance-based classifier. The input to the network is a 32×32×3 image. The output represents the image is an MAV or a clutter.
+
+[figure sans légende identifiée] (a) Sample frames from NPS-Drones dataset. (b) Sample frames from Drone-vs-Bird dataset.
+
+**Fig. 5.** Some sample frames from NPS-Drones dataset and Drone-vs-Bird dataset. Yellow box indicates the target drones.
+
+3 ) ARD-MAV dataset: We created a dataset, named ARD-MAV, which contains 60 video sequences and 106,665 frames. All the videos are taken by the cameras of DJI Mavic2 Pro and M300 flying at low and medium altitudes. The videos are taken
+
+[figure sans légende identifiée] (a)). Each video contains only one MAV and is about one minute long with a 30 FPS frame rate and a resolution of 1920×1080. All the objects are manually labeled by labelImg. The object size ranges from 6×3 to 136×75. The smallest object refers to an MAV photoed by the aerial camera from more than 150m. The average object size is only 0.02% of the image size. As far as we know, this is the smallest average object size among the existing MAV datasets as shown in TableI.To train the global and local appearance-based detection module, we use 45 videos for training and validation, and the rest 15 videos for testing. The training images for the local appearance-based detection module are cropped around the center of the object with a size of 320×320. Some examples of cropped images in the ARD-MAV dataset are shown in Fig. 6(a). Besides, the position distribution and size distribution are shown in Fig. 6(b). The training images for the local appearance-based classifier come from the intermediate results of moving object segmentation. The detection results after the motion-based classifier contain many non-MAV objects such as cars, pedestrians, swaying trees, shimmering water, and image alignment errors. Therefore, we manually divide these candidate moving objects into MAV and clutter (some examples are shown in Fig. 6(c)). The classification datasets include 46,268 images of clutter and 17,695 images of MAV. All the images are resized to 32×32 before training and validation.
+
+**Fig. 6.** Examples of our ARD-MAV dataset. The global appearance-based detection module is trained with original images. The local appearance-based detection module is trained with cropped images. The appearance-based classifier is trained with local images of MAV and clutter. Yellow box indicates the target MAVs.
+
+**Fig. 7.** Examples of detection results under various challenging conditions. Blue box indicates the target is detected by the motion-based detection module, Yellow box indicates the target is detected by the appearance-based detection module.
+
+**Fig. 8.** Fig. 9. Fig. 8. Some examples of the successful detection of GMD when GAD fails to detect a target.
+
+3 ) Influence of Local Search Region: In theory, the local search region is conducive to improving the resolution of targets and removing interruptions. To verify the effectiveness of the local search region, we tested the performance of the appearance-based module and the motion-based module with and without a local search region. As shown in the first and third row of Table
+
+[figure sans légende identifiée] (a) The adaptive search region predicts a right target position when missing detection happens. (b) The adaptive search region has a better view than a fixed search region.
+
+**Fig. 10.** Some examples to show the advantage of an adaptive search region. Yellow box indicates the position of the target MAV, Blue box indicates the adaptive search region, and White box indicates the fixed search region. The blue dot indicates the predicted target center.
+
+**TABLE I** COMPARISON OF DIFFERENT MAV DATASETS
+
+    Dataset | Count | Max Area Min Area Average Area
+    NPS-Drones | 70250 | 6.6e-04 | 8.2e-05 | 0.05%
+    FL-Drones | 38948 | 1.4e-01 | 2.6e-04 | 0.07%
+    DUT Anti-UAV | 10109 | 7e-01 | 1.9e-06 | 1.3%
+    Drone-vs-Bird | 104760 | 2.5e-02 | 7.2e-06 | 0.1%
+    ARD-MAV | 106665 | 3.5e-03 | 1.4e-05 | 0.02%
+
+**TABLE II** TABLE OF
+
+     | PARAMETERS SETTINGS | 
+    Notation | Description | Value
+    T 0 | Confidence threshold for global detector | 0.5
+    T 1 | Confidence threshold for local detector | 0.1
+    T 2 | Threshold for frame difference binarization | 5
+    T 3 | Threshold for angle variance | 0.8
+    T 4 | Threshold for velocity variance | 0.8
+    T 5 | Threshold for velocity amplitude | 1
+    D 1 | Threshold for bounding box merging | 15
+
+**TABLE III** THE DETECTION RESULTS OF OUR PROPOSED GLAD ALGORITHM ON
+
+     |  | DIFFERENT CONDITIONS |  | 
+    Conditions | Count | S bbox | 1 Precision Recall F-Score | AP
+    Ordinary | 9326 | 726 | 0.99 | 0.96 | 0.97 | 0.91
+    Complex | 9649 | 265 | 0.94 | 0.86 | 0.90 | 0.81
+    Small | 9347 | 63 | 0.82 | 0.67 | 0.73 | 0.58
+    Total | 28322 | 350 | 0.92 | 0.82 | 0.87 | 0.80
+
+[figure sans légende identifiée] 1) Influence of Motion-based Detection Module: The experimental results in Table VII demonstrate that the motion-
+
+**TABLE IV** QUANTITATIVE COMPARISON OF THE GLAD WITH STATE-OF-THE-ART METHODS ON ARD-MAV DATASET
+
+    Method | Precision Recall F-Score | AP | FPS
+    YOLOv5s-1 | 0.90 | 0.20 | 0.33 | 0.56 | 149.3
+    YOLOv5s-2 | 0.78 | 0.41 | 0.54 | 0.61 | 88.5
+    TPH-YOLOv5l-1 [26] | 0.87 | 0.27 | 0.41 | 0.58 | 51.5
+    TPH-YOLOv5l-2 [26] | 0.82 | 0.58 | 0.68 | 0.73 | 12.8
+    Dogfight [21] | 0.54 | 0.27 | 0.36 | 0.22 | 1.0
+    MEGA [25] | 0.45 | 0.35 | 0.39 | 0.31 | 3.5
+    GLAD | 0.92 | 0.82 | 0.87 | 0.80 146.5
+
+**TABLE V** QUANTITATIVE COMPARISON OF THE GLAD WITH STATE-OF-THE-ART METHODS ON NPS-DRONES DATASET
+
+    Method | Precision Recall F-Score | AP
+    SCRDet-H [40] | 0.81 | 0.74 | 0.77 | 0.65
+    SCRDet-R [40] | 0.79 | 0.71 | 0.75 | 0.61
+    FCOS [41] | 0.88 | 0.84 | 0.86 | 0.83
+    Mask-RCNN [42] | 0.66 | 0.91 | 0.76 | 0.89
+    MEGA [25] | 0.88 | 0.82 | 0.85 | 0.83
+    SLSA [43] | 0.47 | 0.67 | 0.55 | 0.46
+    Dogfight [21] | 0.92 | 0.91 | 0.92 | 0.89
+    GLAD | 0.92 | 0.95 | 0.93 | 0.89
+
+**TABLE VI** QUANTITATIVE COMPARISON OF THE GLAD WITH STATE-OF-THE-ART METHODS ON DRONE-VS-BIRD DATASET
+
+    Method Faster-RCNN SSD512 YOLOv3 DETR GLAD
+    AP | 0.632 | 0.629 | 0.546 | 0.667 | 0.701
+
+**TABLE VIII** THE FPS OF EACH MODULE ON PC AND JETSON XAVIER NX
+
+    Module | PC | Jetson Xavier NX
+    GAD/LAD | 149.3 | 28.5
+    GMD | 41.3 | 5.1
+    LMD | 183.9 | 10.6
+    Average FPS on all test videos 146.5 | 23.6

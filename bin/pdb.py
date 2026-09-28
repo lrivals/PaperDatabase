@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """PaperDatabase — point d'entrée unique. Lancer via bin/pdb.
 
+  pdb [--base NOM] <commande> …   agit sur la base NOM du registre (défaut : base du
+                            répertoire courant, sinon base par défaut ; DATA_MODEL §11)
+
+  base <command>            gère les bases : list, new, register, forget, use, info, check,
+                            scan (articles utiles dans les autres bases), import ; base -h
   status                    état de la base et prochaines actions
   add <id|doi|pdf>… [--from liste.txt] [--start-grobid]
                             ajoute des articles (arXiv, DOI, PDF local), ingère, réindexe
@@ -36,15 +41,35 @@
 Guide : docs/GUIDE.md. Détail des scripts : SETUP.md §5. Requêtes : docs/RAG.md.
 """
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "bin"))
+CODE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(CODE))
+sys.path.insert(0, str(CODE / "bin"))
 
-GROBID_SH = ["bash", str(ROOT / "bin" / "grobid.sh")]
+
+def _select_base(argv):
+    """`--base NOM` avant la commande : fixe PDB_ROOT avant l'import de lib.base (qui fige la
+    base active) ; les sous-processus en héritent."""
+    if argv[:1] == ["--base"] and len(argv) >= 2 or argv[:1] and argv[0].startswith("--base="):
+        name = argv[1] if argv[0] == "--base" else argv[0].split("=", 1)[1]
+        from lib import registry
+        root = registry.resolve(name)
+        if root is None:
+            sys.exit(f"base inconnue du registre : {name} (pdb base list)")
+        os.environ["PDB_ROOT"] = str(root)
+        del sys.argv[1:3 if argv[0] == "--base" else 2]
+
+
+_select_base(sys.argv[1:])
+
+from lib import base  # noqa: E402
+
+ROOT = base.ROOT  # base de données active (lib/base.py) ; CODE = le dépôt du logiciel
+GROBID_SH = ["bash", str(CODE / "bin" / "grobid.sh")]
 
 
 def ensure_grobid(start):
@@ -61,8 +86,20 @@ def ensure_grobid(start):
         print("Poursuite sans GROBID : repli PyMuPDF, métadonnées à vérifier.")
 
 
+def cmd_base(args):
+    import bases
+    return bases.run(args)
+
+
 def cmd_status(args):
-    from lib import status
+    from lib import bases, registry, status
+    name = registry.name_of(ROOT)
+    print(f"Base : {base.CONFIG['name']}" + (f" ({name})" if name else " (non enregistrée)")
+          + f"\n  {ROOT}")
+    n = len(bases.pending_suggestions(ROOT))
+    if n:
+        print(f"  {n} suggestion(s) de profil en attente : /base-profile")
+    print()
     print(status.render(status.collect(ROOT)))
     return 0
 
@@ -116,7 +153,7 @@ def cmd_grobid(args):
 
 
 def cmd_viz(args):
-    return subprocess.run([sys.executable, str(ROOT / "bin" / "viz.py"), *args]).returncode
+    return subprocess.run([sys.executable, str(CODE / "bin" / "viz.py"), *args]).returncode
 
 
 def cmd_plot(args):
@@ -509,7 +546,7 @@ def cmd_test(args):
     if "--rag" in args:
         return cmd_eval(["--rag"])
     return subprocess.run([sys.executable, "-m", "unittest", "discover", "tests", *args],
-                          cwd=ROOT).returncode
+                          cwd=CODE).returncode
 
 
 def cmd_rag(args):
@@ -610,20 +647,21 @@ def cmd_eval(args):
     a = p.parse_args(args)
     if not (a.extract or a.rag or a.speed):
         a.extract = a.rag = a.speed = True
-    fixtures = ROOT / "tests" / "fixtures"
+    # le banc porte sur la base de référence livrée avec le code (questions des fixtures)
+    fixtures = CODE / "tests" / "fixtures"
     res = {}
     if a.extract:
-        res["extraction"] = {"quality": ev.extraction_quality(ROOT), "header": ev.header_accuracy(ROOT),
-                             "tables": ev.table_values(ROOT)}
+        res["extraction"] = {"quality": ev.extraction_quality(CODE), "header": ev.header_accuracy(CODE),
+                             "tables": ev.table_values(CODE)}
     if a.rag:
-        res["rag"] = ev.rag_quality(ROOT, fixtures)
+        res["rag"] = ev.rag_quality(CODE, fixtures)
     if a.speed:
-        res["speed"] = ev.speed(ROOT, fixtures, cli=not a.no_cli)
+        res["speed"] = ev.speed(CODE, fixtures, cli=not a.no_cli)
     _print_eval(res)
 
     flat = ev.flatten(res)
-    results = ROOT / "eval" / "results"
-    thresholds = json.loads((ROOT / "eval" / "thresholds.json").read_text())
+    results = CODE / "eval" / "results"
+    thresholds = json.loads((CODE / "eval" / "thresholds.json").read_text())
     fails = [f for f in ev.check_thresholds(flat, thresholds) if f[0].split(".")[0] in res]
     if a.compare:
         runs = sorted(results.glob("*.json"))
@@ -640,9 +678,9 @@ def cmd_eval(args):
     for key, v, bound in fails:
         print(f"# seuil non atteint : {key} = {_fmt(v)} ({bound})")
     if a.save:
-        sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT,
+        sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=CODE,
                              capture_output=True, text=True).stdout.strip() or "nogit"
-        dirty = subprocess.run(["git", "status", "--porcelain", "--", "lib", "bin"], cwd=ROOT,
+        dirty = subprocess.run(["git", "status", "--porcelain", "--", "lib", "bin"], cwd=CODE,
                                capture_output=True, text=True).stdout.strip()
         stamp = datetime.datetime.now().strftime("%Y-%m-%dT%H%M")
         results.mkdir(parents=True, exist_ok=True)
@@ -650,12 +688,12 @@ def cmd_eval(args):
         out.write_text(json.dumps({"date": stamp, "commit": sha, "dirty": bool(dirty),
                                    "volets": sorted(res), "results": res},
                                   ensure_ascii=False, indent=1, default=str) + "\n")
-        print(f"\nenregistré : {out.relative_to(ROOT)}")
+        print(f"\nenregistré : {out.relative_to(CODE)}")
     return 1 if (a.compare and fails) else 0
 
 
 COMMANDS = {
-    "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
+    "base": cmd_base, "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
     "eval": cmd_eval, "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
     "verify": cmd_verify, "cites": cmd_cites, "cited-by": cmd_cited_by,

@@ -1,0 +1,51 @@
+{
+  "id": "arxiv-2103.09136-querydet-cascaded-sparse-query-accelerating",
+  "title": "QueryDet: Cascaded Sparse Query for Accelerating High-Resolution Small Object Detection",
+  "authors": [
+    {
+      "given": "Chenhongyi",
+      "family": "Yang"
+    },
+    {
+      "given": "Zehao",
+      "family": "Huang"
+    },
+    {
+      "given": "Naiyan",
+      "family": "Wang"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2103.09136",
+  "url": "https://arxiv.org/abs/2103.09136",
+  "type": "preprint",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "visdrone",
+    "small-objects",
+    "retinanet",
+    "fcos",
+    "sparse-convolution",
+    "feature-pyramid",
+    "p2-head",
+    "coco"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 2, Table 8",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 9"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

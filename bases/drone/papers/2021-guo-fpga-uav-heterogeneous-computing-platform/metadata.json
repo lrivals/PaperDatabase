@@ -1,0 +1,49 @@
+{
+  "id": "2021-guo-fpga-uav-heterogeneous-computing-platform",
+  "title": "FPGA-based UAV Heterogeneous Computing Platform Architecture",
+  "authors": [
+    {
+      "given": "Junpeng",
+      "family": "Guo"
+    },
+    {
+      "given": "Bo",
+      "family": "Jiang"
+    },
+    {
+      "given": "Hong",
+      "family": "Xu"
+    }
+  ],
+  "year": 2021,
+  "venue": "2021 6th International Conference on Computational Intelligence and Applications (ICCIA) 252-256",
+  "doi": "10.1109/ICCIA52886.2021.00056",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/ICCIA52886.2021.00056",
+  "type": "conference",
+  "axes": [
+    "drone-fpga",
+    "system-codesign"
+  ],
+  "tags": [
+    "zynq",
+    "jetson",
+    "heterogeneous-computing",
+    "px4",
+    "flight-controller",
+    "pcie",
+    "openpose"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "2023-kaufmann-champion-level-drone-racing-deep",
+  "title": "Champion-level drone racing using deep reinforcement learning",
+  "authors": [
+    {
+      "given": "Elia",
+      "family": "Kaufmann"
+    },
+    {
+      "given": "Leonard",
+      "family": "Bauersfeld"
+    },
+    {
+      "given": "Antonio",
+      "family": "Loquercio"
+    },
+    {
+      "given": "Matthias",
+      "family": "Müller"
+    },
+    {
+      "given": "Vladlen",
+      "family": "Koltun"
+    },
+    {
+      "given": "Davide",
+      "family": "Scaramuzza"
+    }
+  ],
+  "year": 2023,
+  "venue": "Nature 620(7976), 982-987",
+  "doi": "10.1038/s41586-023-06419-4",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/s41586-023-06419-4",
+  "type": "journal",
+  "axes": [
+    "tracking-navigation",
+    "system-codesign"
+  ],
+  "tags": [
+    "jetson",
+    "tx2",
+    "tensorrt",
+    "fp16",
+    "drone-racing",
+    "reinforcement-learning",
+    "sim-to-real",
+    "vio",
+    "u-net"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

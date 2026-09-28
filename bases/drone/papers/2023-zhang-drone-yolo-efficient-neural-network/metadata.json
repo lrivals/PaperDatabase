@@ -1,0 +1,38 @@
+{
+  "id": "2023-zhang-drone-yolo-efficient-neural-network",
+  "title": "Drone-YOLO: An Efficient Neural Network Method for Target Detection in Drone Images",
+  "authors": [
+    {
+      "given": "Zhengxin",
+      "family": "Zhang"
+    }
+  ],
+  "year": 2023,
+  "venue": "Drones 7(8), 526",
+  "doi": "10.3390/drones7080526",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/drones7080526",
+  "type": "journal",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov8",
+    "visdrone",
+    "small-objects",
+    "p2-head",
+    "jetson",
+    "tx2",
+    "repvgg"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

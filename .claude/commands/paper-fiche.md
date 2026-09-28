@@ -5,7 +5,13 @@ allowed-tools: Read, Edit, Write, Grep, Glob, Bash(.venv/bin/python bin/reindex.
 ---
 
 Rédige la fiche de lecture de `papers/$ARGUMENTS/`. Respecte les règles de `CLAUDE.md` et
-le contrat de `DATA_MODEL.md` (§2, §7, §8).
+le contrat de `DATA_MODEL.md` (§2, §7, §8). Le thème de la base, qui fixe la section
+« Pertinence », est dans `profile.md`.
+
+**Papier importé** (`imported_from` dans `metadata.json`) : la fiche existante a été écrite
+pour une autre base. Garde les parties factuelles après les avoir vérifiées contre
+`fulltext.md`, réécris « Pertinence » pour le thème de cette base, et retire le bandeau
+« Importée de la base… » une fois la fiche réévaluée. Ne supprime pas `imported_from`.
 
 ## Sources
 
@@ -63,12 +69,18 @@ dire dans la fiche). Colonnes et vocabulaires : `DATA_MODEL.md` §7.
 ## `metadata.json`
 
 - `status.fiche` → `"done"`.
-- Confirme ou corrige `axes` (valeurs fermées de `DATA_MODEL.md` §3) et `tags` ; retire alors
+- Confirme ou corrige `axes` (valeurs fermées : clé `axes` de `base.json`) et `tags` ; retire alors
   l'avertissement « axes déduits automatiquement… » de `extraction.warnings`.
 - Si le `type` vaut `null` et que la venue est connue, fixe-le (`journal` / `conference`).
 - Ne modifie jamais `id`.
 
 ## Fin
+
+**Profil de la base.** Si ce papier ne relève d'aucun axe de `base.json`, ou fait émerger un
+sous-thème, un terme ou une exclusion que `profile.md` ne mentionne pas, ajoute **une** ligne
+sous « ## Suggestions en attente » de `profile.md` :
+`- AAAA-MM-JJ (<paper_id>) — <proposition> — <raison>`. Ne modifie jamais `base.json` ni les
+autres sections du profil : `/base-profile` les traite avec l'utilisateur.
 
 `.venv/bin/python bin/reindex.py` : il doit terminer sans erreur. Puis résume la fiche en
 5 lignes (problème, méthode, résultat principal avec source, limite principale, pertinence)

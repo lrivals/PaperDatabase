@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2209.06918-nanoflownet-real-time-dense-optical",
+  "title": "NanoFlowNet: Real-time Dense Optical Flow on a Nano Quadcopter",
+  "authors": [
+    {
+      "given": "Rik J",
+      "family": "Bouwmeester"
+    },
+    {
+      "given": "Federico",
+      "family": "Paredes-Vallés"
+    },
+    {
+      "given": "Guido C H E",
+      "family": "De Croon"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2209.06918",
+  "url": "https://arxiv.org/abs/2209.06918",
+  "type": "preprint",
+  "axes": [
+    "nano-drone",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "gap8",
+    "crazyflie",
+    "ai-deck",
+    "optical-flow",
+    "obstacle-avoidance",
+    "quantization",
+    "int8",
+    "gapflow",
+    "depthwise-separable"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE I, TABLE II, TABLE III, TABLE IV"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

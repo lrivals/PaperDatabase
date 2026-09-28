@@ -1,0 +1,52 @@
+{
+  "id": "2022-liu-sf-yolov5-lightweight-small-object",
+  "title": "SF-YOLOv5: A Lightweight Small Object Detection Algorithm Based on Improved Feature Fusion Mode",
+  "authors": [
+    {
+      "given": "Haiying",
+      "family": "Liu"
+    },
+    {
+      "given": "Fengqian",
+      "family": "Sun"
+    },
+    {
+      "given": "Jason",
+      "family": "Gu"
+    },
+    {
+      "given": "Lixia",
+      "family": "Deng"
+    }
+  ],
+  "year": 2022,
+  "venue": "Sensors 22(15), 5817",
+  "doi": "10.3390/s22155817",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s22155817",
+  "type": "journal",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov5",
+    "small-objects",
+    "visdrone",
+    "tinyperson",
+    "wider-face",
+    "bifpn",
+    "feature-fusion"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

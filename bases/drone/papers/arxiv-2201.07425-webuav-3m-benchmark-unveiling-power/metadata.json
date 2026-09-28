@@ -1,0 +1,72 @@
+{
+  "id": "arxiv-2201.07425-webuav-3m-benchmark-unveiling-power",
+  "title": "WebUAV-3M: A Benchmark for Unveiling the Power of Million-Scale Deep UAV Tracking",
+  "authors": [
+    {
+      "given": "Chunhui",
+      "family": "Zhang"
+    },
+    {
+      "given": "Guanjie",
+      "family": "Huang"
+    },
+    {
+      "given": "Li",
+      "family": "Liu"
+    },
+    {
+      "given": "Shan",
+      "family": "Huang"
+    },
+    {
+      "given": "Yinan",
+      "family": "Yang"
+    },
+    {
+      "given": "Xiang",
+      "family": "Wan"
+    },
+    {
+      "given": "Shiming",
+      "family": "Ge"
+    },
+    {
+      "given": "Dacheng",
+      "family": "Tao"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2201.07425",
+  "url": "https://arxiv.org/abs/2201.07425",
+  "type": "preprint",
+  "axes": [
+    "datasets-benchmarks",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "webuav-3m",
+    "single-object-tracking",
+    "visdrone",
+    "small-objects",
+    "vision-language",
+    "adversarial"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues à l'extraction : 27 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : .11 s 2.94 s 5.91 s 2.99 s [co, TABLE 11",
+      "tableaux sans corps extrait (légende seule) : Semi-Automatic Target Annotati, TABLE 4, TABLE 5, Table 6, TABLE A: Descriptions of the 1",
+      "sections numérotées non détectées : 7, 10, 11, 13, 14, 15 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

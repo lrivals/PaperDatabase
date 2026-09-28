@@ -8,26 +8,19 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lib import refs, schema  # noqa: E402
+from lib import base, refs, schema  # noqa: E402
+
+ROOT = base.ROOT
 
 PAPERS = ROOT / "papers"
 BENCH = ROOT / "benchmarks.csv"
 INDEX = ROOT / "INDEX.md"
 EXTERNAL = ROOT / "external_refs.csv"
 
-AXIS_TITLES = {
-    "surveys": "Surveys et toolflows généraux",
-    "yolo-fpga": "YOLO sur FPGA",
-    "autoencoder-fpga": "Autoencodeurs sur FPGA",
-    "continual-learning": "Apprentissage continu / incrémental embarqué",
-    "toolflows": "Toolflows",
-    "platforms": "Plateformes",
-}
+AXIS_TITLES = dict(base.CONFIG["axes"])
 UNCLASSIFIED = "Non classé"
-assert set(AXIS_TITLES) == set(schema.AXES), "AXIS_TITLES à aligner sur schema.AXES"
 
 REQUIRED_FILES = ("metadata.json", "fulltext.md", "sections.jsonl", "refs.jsonl", "fiche.md")
 

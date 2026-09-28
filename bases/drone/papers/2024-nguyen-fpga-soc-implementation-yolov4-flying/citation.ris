@@ -1,0 +1,18 @@
+TY  - JOUR
+AU  - Nguyen, Dai-Duong
+AU  - Nguyen, Dang-Tuan
+AU  - Le, Minh-Thuy
+AU  - Nguyen, Quoc-Cuong
+PY  - 2024
+DA  - 2024/03/29
+TI  - FPGA-SoC implementation of YOLOv4 for flying-object detection
+JO  - Journal of Real-Time Image Processing
+SP  - 63
+VL  - 21
+IS  - 3
+AB  - Flying-object detection has become an increasingly attractive avenue for research, particularly with the rising prevalence of unmanned aerial vehicle (UAV). Utilizing deep learning methods offers an effective means of detection with high accuracy. Meanwhile, the demand to implement deep learning models on embedded devices is growing, fueled by the requirement for capabilities that are both real-time and power efficient. FPGA have emerged as the optimal choice for its parallelism, flexibility and energy efficiency. In this paper, we propose an FPGA-based design for YOLOv4 network to address the problem of flying-object detection. Our proposed design explores and provides a suitable solution for overcoming the challenge of limited floating-point resources while maintaining the accuracy and obtain real-time performance and energy efficiency. We have generated an appropriate dataset of flying objects for implementing, training and fine-tuning the network parameters base on this dataset, and then changing some suitable components in the YOLO networks to fit for the deployment on FPGA. Our experiments in Xilinx ZCU104 development kit show that with our implementation, the accuracy is competitive with the original model running on CPU and GPU despite the process of format conversion and model quantization. In terms of speed, the FPGA implementation with the ZCU104 kit is inferior to the ultra high-end GPU, the RTX 2080Ti, but outperforms the GTX 1650. In terms of power consumption, the FPGA implementation is significantly lower than the GPU GTX 1650 about 3 times and about 7 times lower than RTX 2080Ti. In terms of energy efficiency, FPGA is completely superior to GPU with 2–3 times more efficient than the RTX 2080Ti and 3–4 times that of the GTX 1650.
+SN  - 1861-8219
+UR  - https://doi.org/10.1007/s11554-024-01440-w
+DO  - 10.1007/s11554-024-01440-w
+ID  - Nguyen2024
+ER  - 

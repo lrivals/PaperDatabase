@@ -63,6 +63,9 @@ def same_title(wa, wb):
     if len(short) >= PREFIX_MIN_WORDS and long_[:len(short)] == short:
         return True
     sa, sb = " ".join(wa), " ".join(wb)
+    # borne de real_quick_ratio, calculée sans construire le SequenceMatcher (coûteux)
+    if 2 * min(len(sa), len(sb)) < FUZZY_RATIO * (len(sa) + len(sb)):
+        return False
     m = difflib.SequenceMatcher(None, sa, sb, autojunk=False)
     return (m.real_quick_ratio() >= FUZZY_RATIO and m.quick_ratio() >= FUZZY_RATIO
             and m.ratio() >= FUZZY_RATIO)
@@ -81,23 +84,61 @@ def best_title(titles):
     return min(titles, key=lambda t: (broken(t), -len(t.rstrip(" .")))) if titles else None
 
 
+_ALPHABET = {c: i for i, c in enumerate("abcdefghijklmnopqrstuvwxyz0123456789 ")}
+
+
+def _char_counts(s):
+    """Comptes par caractère ; tout autre caractère dans une case commune (la borne reste
+    supérieure ou égale au vrai quick_ratio : le filtre ne rejette jamais à tort)."""
+    v = [0] * (len(_ALPHABET) + 1)
+    for c in s:
+        v[_ALPHABET.get(c, len(_ALPHABET))] += 1
+    return v
+
+
 class _TitleIndex:
     """Titres déjà vus → cible ; recherche d'un titre voisin, filtrée par l'année."""
 
+    # Seuls deux cas peuvent rendre same_title vrai : longueurs voisines (borne du ratio), ou
+    # préfixe d'au moins PREFIX_MIN_WORDS mots, donc mêmes premiers mots. On n'examine que ces
+    # entrées-là, dans l'ordre d'insertion (la première qui correspond gagne, comme avant).
+
     def __init__(self):
-        self.entries = []   # (mots, année, cible)
+        self.entries = []               # (mots, année, cible)
+        self.vecs = []                  # comptes de caractères (borne de quick_ratio)
+        self.by_len = defaultdict(list)     # longueur du titre joint → indices
+        self.by_prefix = defaultdict(list)  # PREFIX_MIN_WORDS premiers mots → indices
 
     def add(self, title, year, target):
         words = title_words(title)
         if len(words) >= MIN_TITLE_WORDS:
+            i = len(self.entries)
             self.entries.append((words, year, target))
+            self.vecs.append(_char_counts(" ".join(words)))
+            self.by_len[len(" ".join(words))].append(i)
+            if len(words) >= PREFIX_MIN_WORDS:
+                self.by_prefix[tuple(words[:PREFIX_MIN_WORDS])].append(i)
 
     def find(self, title, year):
         words = title_words(title)
         if len(words) < MIN_TITLE_WORDS:
             return None
-        for w, y, target in self.entries:
-            if _years_compatible(year, y) and same_title(words, w):
+        n = len(" ".join(words))
+        lo, hi = n * FUZZY_RATIO / (2 - FUZZY_RATIO), n * (2 - FUZZY_RATIO) / FUZZY_RATIO
+        cand = {i for length in range(int(lo), int(hi) + 2) for i in self.by_len.get(length, ())}
+        prefix = set(self.by_prefix.get(tuple(words[:PREFIX_MIN_WORDS]), ())) \
+            if len(words) >= PREFIX_MIN_WORDS else set()
+        vec = _char_counts(" ".join(words))
+        for i in sorted(cand | prefix):
+            w, y, target = self.entries[i]
+            if not _years_compatible(year, y):
+                continue
+            # quick_ratio ≥ FUZZY_RATIO est nécessaire hors préfixe : testé ici sans difflib
+            if i not in prefix:
+                m = sum(map(min, vec, self.vecs[i]))
+                if 2 * m < FUZZY_RATIO * (n + len(" ".join(w))):
+                    continue
+            if same_title(words, w):
                 return target
         return None
 

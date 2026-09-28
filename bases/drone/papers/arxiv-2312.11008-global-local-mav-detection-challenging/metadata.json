@@ -1,0 +1,63 @@
+{
+  "id": "arxiv-2312.11008-global-local-mav-detection-challenging",
+  "title": "Global-Local MAV Detection under Challenging Conditions based on Appearance and Motion",
+  "authors": [
+    {
+      "given": "Hanqing",
+      "family": "Guo"
+    },
+    {
+      "given": "Ye",
+      "family": "Zheng"
+    },
+    {
+      "given": "Yin",
+      "family": "Zhang"
+    },
+    {
+      "given": "Zhi",
+      "family": "Gao"
+    },
+    {
+      "given": "Shiyu",
+      "family": "Zhao"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2312.11008",
+  "url": "https://arxiv.org/abs/2312.11008",
+  "type": "preprint",
+  "axes": [
+    "counter-uav",
+    "datasets-benchmarks"
+  ],
+  "tags": [
+    "air-to-air",
+    "anti-uav",
+    "jetson",
+    "jetson-xavier-nx",
+    "tensorrt",
+    "yolov5",
+    "small-objects",
+    "motion-compensation",
+    "kalman",
+    "ard-mav",
+    "drone-vs-bird",
+    "nps-drones"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, TABLE VI, TABLE VIII"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

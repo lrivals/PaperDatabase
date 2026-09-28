@@ -1,30 +1,46 @@
 #!/usr/bin/env python3
 """Visualisation du corpus : graphe 3D (papiers colorés par thème, reliés par citations,
-références partagées, similarité textuelle ou thèmes communs) et généalogie (frise des
-citations d'un papier ou d'un sujet).
+références partagées, similarité textuelle ou thèmes communs), généalogie (frise des
+citations d'un papier ou d'un sujet) et gestion des bases (onglet Bases : sélecteur, profil,
+recherche d'articles dans les autres bases, import, création).
 
     .venv/bin/pip install -r requirements-viz.txt     # une fois
     .venv/bin/pip install -r requirements-embed.txt   # optionnel : similarité par embeddings
     .venv/bin/python bin/viz.py [--port 8050] [--debug]
 
-puis ouvrir http://127.0.0.1:8050. Lecture seule : ne modifie aucun fichier de la base
-(seul le cache des embeddings est écrit, dans .cache/).
+puis ouvrir http://127.0.0.1:8050. Les vues 3D et Généalogie sont en lecture seule (seul le
+cache des embeddings est écrit, dans .cache/). L'onglet Bases écrit seulement sur action
+explicite : « Créer la base » et « Importer la sélection » (comme `pdb base new` / `import`).
 """
 import argparse
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import plotly.graph_objects as go  # noqa: E402
 from dash import Dash, Input, Output, State, ctx, dcc, html, no_update  # noqa: E402
 
-from lib import embed, graph, lineage, schema, vizfig  # noqa: E402
+from lib import base, bases, embed, graph, lineage, registry, schema, vizbases, vizfig, xbase  # noqa: E402
 from lib.vizfig import COLOR_BY, LINK_STYLE  # noqa: E402
 
+ROOT = base.ROOT
 G = graph.build(ROOT)
+vizfig.AXES_ORDER = list(base.load_config(ROOT)["axes"])
 EMBED_OK = embed.available()
+
+
+def set_base(root):
+    """Change la base affichée (application locale, mono-utilisateur : état global)."""
+    global ROOT, G
+    ROOT = Path(root).resolve()
+    vizfig.AXES_ORDER = list(base.load_config(ROOT)["axes"])
+    G = graph.build(ROOT)
+
+
+def base_title():
+    name = registry.name_of(ROOT)
+    return f"{base.load_config(ROOT)['name']}" + (f" ({name})" if name else "")
 
 
 def year_bounds():
@@ -76,7 +92,7 @@ LO, HI = year_bounds()
 TYPES_PRESENT = [t for t in (*schema.TYPES, schema.NR)
                  if any((n["type"] or schema.NR) == t for n in G.nodes.values() if n["kind"] == "paper")]
 
-app = Dash(__name__, title="PaperDatabase — corpus")
+app = Dash(__name__, title="PaperDatabase — bases et corpus")
 app.index_string = app.index_string.replace("</head>", """<style>
 body { margin: 0; background: #fcfcfb; color: #1f1f1e; font-family: system-ui, sans-serif; font-size: 14px; }
 .wrap { display: grid; grid-template-columns: 290px 1fr 380px; height: 100vh; }
@@ -98,6 +114,11 @@ details summary { cursor: pointer; font-weight: 600; margin: 8px 0; }
 button { padding: 6px 12px; border: 1px solid #c3c2b7; background: white; border-radius: 6px; cursor: pointer; margin: 0 6px 6px 0; }
 button:disabled { opacity: .45; cursor: default; }
 input[type=text] { padding: 6px 8px; border: 1px solid #c3c2b7; border-radius: 4px; width: 220px; }
+.bases-tab { padding: 8px 20px 40px; } .bases-tab h3 { margin: 22px 0 8px; }
+.form-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 10px; }
+.form-row label, .bases-tab > div > label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
+.notice { background: #fdf0d5; border-left: 3px solid #d9a441; padding: 8px 10px; margin: 8px 0; }
+.ok { color: #2f6b3a; } .err { color: #a3312a; white-space: pre-line; }
 @media (max-width: 1100px) { .wrap { grid-template-columns: 1fr; height: auto; } #graph { height: 70vh !important; } }
 </style></head>""")
 
@@ -105,7 +126,9 @@ embed_label = ("embeddings (sentence-transformers)" if EMBED_OK
                else "embeddings — pip install -r requirements-embed.txt")
 
 sidebar = html.Div(className="side", children=[
-    html.H1("Corpus"),
+    control("Base", dcc.Dropdown(id="base-select", options=vizbases.base_options(ROOT),
+                                 value=str(ROOT), clearable=False, optionHeight=50)),
+    html.H1(base_title(), id="corpus-title"),
     html.P(id="summary", className="muted"),
     control("Rechercher", dcc.Dropdown(id="search", options=search_options(False),
                                        placeholder="titre ou auteur…", optionHeight=50)),
@@ -184,6 +207,7 @@ app.layout = html.Div(className="wrap", children=[
             dcc.Tab(label="Généalogie", value="lineage", children=[
                 lineage_bar,
                 dcc.Loading(dcc.Graph(id="lineage-graph", config={"displaylogo": False}))]),
+            dcc.Tab(label="Bases", value="bases", children=[vizbases.layout()]),
         ]),
     ]),
     html.Div(className="detail", children=[
@@ -192,6 +216,9 @@ app.layout = html.Div(className="wrap", children=[
     ]),
     dcc.Store(id="selected"),
     dcc.Store(id="version", data=0),
+    dcc.Store(id="imported", data=0),      # incrémenté après un import : recharge le corpus
+    dcc.Store(id="registry-rev", data=0),  # incrémenté après une création : recharge la liste
+    dcc.Store(id="scan-data", data=[]),
 ])
 
 
@@ -200,13 +227,19 @@ app.layout = html.Div(className="wrap", children=[
 # dépendent de `version` et ne font que lire.
 
 @app.callback(Output("version", "data"), Output("similarity", "value"),
-              Input("reload", "n_clicks"), Input("similarity", "value"), State("version", "data"))
-def corpus(_, similarity, version):
+              Output("corpus-title", "children"), Output("selected", "data", allow_duplicate=True),
+              Input("reload", "n_clicks"), Input("similarity", "value"), Input("base-select", "value"),
+              Input("imported", "data"), State("version", "data"), prevent_initial_call="initial_duplicate")
+def corpus(_, similarity, root, _imported, version):
     global G
-    if ctx.triggered_id == "reload":
+    selected = no_update
+    if ctx.triggered_id == "base-select" and root and Path(root).resolve() != ROOT:
+        set_base(root)
+        selected = None
+    elif ctx.triggered_id in ("reload", "imported"):
         G = graph.build(ROOT)
     effective = G.set_similarity(similarity)
-    return (version or 0) + 1, effective
+    return (version or 0) + 1, effective, base_title(), selected
 
 
 @app.callback(Output("selected", "data"), Output("search", "value"),
@@ -303,12 +336,84 @@ def export(_, tab, fig3d, fig_lin):
     return {"content": fig.to_html(include_plotlyjs="cdn"), "filename": name}
 
 
+# ----------------------------------------------------------------- onglet Bases
+
+@app.callback(Output("bases-table", "children"), Output("bases-profile", "children"),
+              Output("scan-sources", "options"), Output("scan-sources", "value"),
+              Output("base-select", "options"),
+              Input("version", "data"), Input("registry-rev", "data"))
+def bases_panel(_, _rev):
+    others = [(n, d) for n, d in registry.all_bases()
+              if d.resolve() != ROOT and (d / "base.json").is_file()]
+    opts = [{"label": f" {n} ", "value": n} for n, _ in others]
+    return (vizbases.bases_table(ROOT), vizbases.profile_panel(ROOT), opts, [n for n, _ in others],
+            vizbases.base_options(ROOT))
+
+
+@app.callback(Output("scan-data", "data"), Output("scan-table", "data"),
+              Output("scan-table", "selected_rows"), Output("scan-msg", "children"),
+              Input("scan-run", "n_clicks"), Input("base-select", "value"),
+              State("scan-sources", "value"), State("scan-kinds", "value"), prevent_initial_call=True)
+def scan(n, _, names, kinds):
+    if ctx.triggered_id != "scan-run":        # autre base affichée : résultat périmé
+        return [], [], [], ""
+    sources = [(nm, registry.resolve(nm)) for nm in names or [] if registry.resolve(nm)]
+    if not sources:
+        return [], [], [], "Aucune autre base à parcourir."
+    rows = xbase.scan(ROOT, sources, tuple(kinds or xbase.KINDS))
+    xbase.write(rows, ROOT / xbase.OUT)
+    counts = " · ".join(f"{sum(r['kind'] == k for r in rows)} {vizbases.KIND_LABEL[k]}" for k in xbase.KINDS)
+    return rows, vizbases.scan_rows(rows), [], f"{len(rows)} candidats ({counts}) — aussi dans {xbase.OUT}"
+
+
+@app.callback(Output("scan-import", "disabled"), Input("scan-table", "selected_rows"))
+def can_import(selected):
+    return not selected
+
+
+@app.callback(Output("imported", "data"), Output("scan-msg", "children", allow_duplicate=True),
+              Output("scan-data", "data", allow_duplicate=True),
+              Output("scan-table", "data", allow_duplicate=True),
+              Output("scan-table", "selected_rows", allow_duplicate=True),
+              Input("scan-import", "n_clicks"), State("scan-data", "data"),
+              State("scan-table", "selected_rows"), State("imported", "data"), prevent_initial_call=True)
+def import_selected(_, rows, selected, imported):
+    done, msgs = vizbases.run_import(rows, selected, ROOT)
+    gone = {d["paper_id"] for d in done}
+    rows = [r for r in rows if not (r["paper_id"] and r["paper_id"] in gone)]
+    if done:
+        rc = bases.reindex(ROOT, quiet=True)
+        if rc:
+            msgs.append("reindex a signalé une erreur : lancer bin/pdb reindex pour le détail")
+    head = (f"{len(done)} article(s) importé(s) : " + ", ".join(d["paper_id"] for d in done)
+            + ". Fiches repassées à « todo » : /paper-fiche pour les réévaluer.") if done else ""
+    return ((imported or 0) + 1 if done else no_update,
+            html.Div([html.P(head, className="ok") if head else None,
+                      html.P("\n".join(msgs), className="err") if msgs else None]),
+            rows, vizbases.scan_rows(rows), [])
+
+
+@app.callback(Output("new-msg", "children"), Output("registry-rev", "data"),
+              Input("new-create", "n_clicks"),
+              State("new-name", "value"), State("new-title", "value"), State("new-path", "value"),
+              State("new-theme", "value"), State("registry-rev", "data"), prevent_initial_call=True)
+def create_base(_, name, title, path, theme, rev):
+    try:
+        root = bases.create((name or "").strip(), theme, (path or "").strip() or None, title)
+    except (bases.BaseError, ValueError, OSError) as e:
+        return html.P(str(e), className="err"), no_update
+    return (html.Div([html.P(f"Base « {name} » créée : {root}", className="ok"),
+                      html.P(f"Suite : cd {root}, puis /base-profile dans Claude Code pour en tirer "
+                             "axes et règles. Elle est déjà dans le sélecteur Base.")]),
+            (rev or 0) + 1)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--port", type=int, default=8050)
     ap.add_argument("--debug", action="store_true")
     args = ap.parse_args()
-    print(f"{summary()}\n→ http://127.0.0.1:{args.port}")
+    print(f"{base_title()} — {summary()}\n→ http://127.0.0.1:{args.port}")
     app.run(host="127.0.0.1", port=args.port, debug=args.debug)
 
 

@@ -1,0 +1,69 @@
+{
+  "id": "arxiv-2307.10255-land-localize-infrastructure-free-scalable",
+  "title": "Land & Localize: An Infrastructure-free and Scalable Nano-Drones Swarm with UWB-based Localization",
+  "authors": [
+    {
+      "given": "Mahyar",
+      "family": "Pourjabar"
+    },
+    {
+      "given": "Ahmed",
+      "family": "Alkatheeri"
+    },
+    {
+      "given": "Manuele",
+      "family": "Rusci"
+    },
+    {
+      "given": "Agata",
+      "family": "Barcis"
+    },
+    {
+      "given": "Vlad",
+      "family": "Niculescu"
+    },
+    {
+      "given": "Eliseo",
+      "family": "Ferrante"
+    },
+    {
+      "given": "Daniele",
+      "family": "Palossi"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2307.10255",
+  "url": "https://arxiv.org/abs/2307.10255",
+  "type": "preprint",
+  "axes": [
+    "nano-drone",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "crazyflie",
+    "uwb",
+    "swarm",
+    "localization",
+    "cortex-m4",
+    "multi-drone",
+    "no-vision",
+    "hors-perimetre"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

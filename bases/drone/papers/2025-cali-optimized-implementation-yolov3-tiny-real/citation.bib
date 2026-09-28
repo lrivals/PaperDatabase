@@ -1,0 +1,17 @@
+
+@Article{electronics14203993,
+AUTHOR = {Calì, Riccardo and Falaschetti, Laura and Biagetti, Giorgio},
+TITLE = {Optimized Implementation of YOLOv3-Tiny for Real-Time Image and Video Recognition on FPGA},
+JOURNAL = {Electronics},
+VOLUME = {14},
+YEAR = {2025},
+NUMBER = {20},
+ARTICLE-NUMBER = {3993},
+URL = {https://www.mdpi.com/2079-9292/14/20/3993},
+ISSN = {2079-9292},
+ABSTRACT = {In recent years, the demand for efficient neural networks in embedded contexts has grown, driven by the need for real-time inference with limited resources. While GPUs offer high performance, their size, power consumption, and cost often make them unsuitable for constrained or large-scale applications. FPGAs have therefore emerged as a promising alternative, combining reconfigurability, parallelism, and increasingly favorable cost–performance ratios. They are especially relevant in domains such as robotics, IoT, and autonomous drones, where rapid sensor fusion and low power consumption are critical. This work presents the full implementation of a neural network on a low-cost FPGA, targeting real-time image and video recognition for drone applications. The workflow included training and quantizing a YOLOv3-Tiny model with Brevitas and PyTorch, converting it into hardware logic using the FINN framework, and optimizing the hardware design to maximize use of the reprogrammable silicon area and inference time. A custom driver was also developed to allow the device to operate as a TPU. The resulting accelerator, deployed on a Xilinx Zynq-7020, could recognize 208 frames per second (FPS) when running at a 200 MHz clock frequency, while consuming only 2.55 W. Compared to Google’s Coral Edge TPU, the system offers similar inference speed with greater flexibility, and outperforms other FPGA-based approaches in the literature by a factor of three to seven in terms of FPS/W.},
+DOI = {10.3390/electronics14203993}
+}
+
+
+

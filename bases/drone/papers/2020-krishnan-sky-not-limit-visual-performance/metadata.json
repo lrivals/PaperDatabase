@@ -1,0 +1,74 @@
+{
+  "id": "2020-krishnan-sky-not-limit-visual-performance",
+  "title": "The Sky Is Not the Limit: A Visual Performance Model for Cyber-Physical Co-Design in Autonomous Machines",
+  "authors": [
+    {
+      "given": "Srivatsan",
+      "family": "Krishnan"
+    },
+    {
+      "given": "Zishen",
+      "family": "Wan"
+    },
+    {
+      "given": "Kshitij",
+      "family": "Bhardwaj"
+    },
+    {
+      "given": "Paul",
+      "family": "Whatmough"
+    },
+    {
+      "given": "Aleksandra",
+      "family": "Faust"
+    },
+    {
+      "given": "Gu-Yeon",
+      "family": "Wei"
+    },
+    {
+      "given": "David",
+      "family": "Brooks"
+    },
+    {
+      "given": "Vijay Janapa",
+      "family": "Reddi"
+    }
+  ],
+  "year": 2020,
+  "venue": "IEEE Computer Architecture Letters 19(1), 38-42",
+  "doi": "10.1109/LCA.2020.2981022",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/LCA.2020.2981022",
+  "type": "journal",
+  "axes": [
+    "system-codesign",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "roofline",
+    "f-1",
+    "jetson",
+    "xavier",
+    "tx2",
+    "intel-ncs",
+    "raspberry-pi",
+    "dronet",
+    "trailnet",
+    "vgg16",
+    "velocity",
+    "cyber-physical"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

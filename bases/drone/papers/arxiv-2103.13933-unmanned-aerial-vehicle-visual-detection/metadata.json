@@ -1,0 +1,70 @@
+{
+  "id": "arxiv-2103.13933-unmanned-aerial-vehicle-visual-detection",
+  "title": "Unmanned Aerial Vehicle Visual Detection and Tracking using Deep Neural Networks: A Performance Benchmark",
+  "authors": [
+    {
+      "given": "Brian K S",
+      "family": "Isaac-Medina"
+    },
+    {
+      "given": "Matt",
+      "family": "Poyser"
+    },
+    {
+      "given": "Daniel",
+      "family": "Organisciak"
+    },
+    {
+      "given": "Chris G",
+      "family": "Willcocks"
+    },
+    {
+      "given": "Toby P",
+      "family": "Breckon"
+    },
+    {
+      "given": "Hubert P H",
+      "family": "Shum"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/ICCVW54120.2021.00142",
+  "arxiv_id": "2103.13933",
+  "url": "https://arxiv.org/abs/2103.13933",
+  "type": "preprint",
+  "axes": [
+    "counter-uav",
+    "datasets-benchmarks",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "anti-uav",
+    "infrared",
+    "drone-vs-bird",
+    "mav-vid",
+    "faster-rcnn",
+    "ssd",
+    "yolov3",
+    "detr",
+    "sort",
+    "deepsort",
+    "tracktor",
+    "ground-to-air",
+    "small-objects",
+    "gpu"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

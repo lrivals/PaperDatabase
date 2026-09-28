@@ -1,0 +1,16 @@
+# Listes 3 (contre-drone) et 4 (autres fonctions), IDs vérifiés le 2026-09-28
+2101.08466  # Anti-UAV (Jiang et al., TMM 2023) — titre arXiv différent, à confirmer
+2007.07396  # Svanström et al., ICPR 2020
+2103.13933  # Isaac-Medina et al., ICCVW 2021
+2504.11967  # Securing the Skies [preprint]
+2507.10006  # Vision-Based Anti-UAV [preprint]
+2103.17242  # Dogfight, CVPR 2021
+2312.11008  # Guo et al., Global-Local MAV, T-ITS 2024
+2411.02582  # YOLO + multi-frame motion [preprint]
+2110.05113  # Loquercio et al., Science Robotics 2021
+2301.01755  # Hanover et al., Autonomous Drone Racing survey, T-RO 2024
+2106.08816  # SiamAPN++, IROS 2021
+2203.01885  # TCTrack, CVPR 2022
+2103.10873  # PULP-Frontnet, IEEE IoT J 2021
+2307.10255  # Land & Localize, DCOSS 2023
+2209.06918  # NanoFlowNet, ICRA 2023

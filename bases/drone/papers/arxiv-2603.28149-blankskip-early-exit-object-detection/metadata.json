@@ -1,0 +1,61 @@
+{
+  "id": "arxiv-2603.28149-blankskip-early-exit-object-detection",
+  "title": "BlankSkip: Early-exit Object Detection onboard Nano-drones",
+  "authors": [
+    {
+      "given": "Carlo",
+      "family": "Marra"
+    },
+    {
+      "given": "Beatrice Alessandra",
+      "family": "Motetti"
+    },
+    {
+      "given": "Alessio",
+      "family": "Burrello"
+    },
+    {
+      "given": "Enrico",
+      "family": "Macii"
+    },
+    {
+      "given": "Massimo",
+      "family": "Poncino"
+    },
+    {
+      "given": "Daniele Jahier",
+      "family": "Pagliari"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2603.28149",
+  "url": "https://arxiv.org/abs/2603.28149",
+  "type": "preprint",
+  "axes": [
+    "nano-drone",
+    "drone-detection"
+  ],
+  "tags": [
+    "gap8",
+    "crazyflie",
+    "early-exit",
+    "adaptive-inference",
+    "mobilenet-ssd",
+    "int8",
+    "quantization",
+    "dory"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

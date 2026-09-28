@@ -1,0 +1,74 @@
+{
+  "id": "arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object",
+  "title": "The Unmanned Aerial Vehicle Benchmark: Object Detection and Tracking",
+  "authors": [
+    {
+      "given": "Dawei",
+      "family": "Du"
+    },
+    {
+      "given": "Yuankai",
+      "family": "Qi"
+    },
+    {
+      "given": "Hongyang",
+      "family": "Yu"
+    },
+    {
+      "given": "Yifan",
+      "family": "Yang"
+    },
+    {
+      "given": "Kaiwen",
+      "family": "Duan"
+    },
+    {
+      "given": "Guorong",
+      "family": "Li"
+    },
+    {
+      "given": "Weigang",
+      "family": "Zhang"
+    },
+    {
+      "given": "Qingming",
+      "family": "Huang"
+    },
+    {
+      "given": "Qi",
+      "family": "Tian"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1804.00518",
+  "url": "https://arxiv.org/abs/1804.00518",
+  "type": "preprint",
+  "axes": [
+    "datasets-benchmarks",
+    "drone-detection",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "uavdt",
+    "small-objects",
+    "dataset",
+    "vehicle-detection",
+    "multi-object-tracking",
+    "single-object-tracking"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 4, figure shows that: I) All the"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

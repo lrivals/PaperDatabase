@@ -9,6 +9,7 @@ __pycache__/
 .cache/
 candidates.csv
 candidates_arxiv.txt
+xbase_candidates.csv
 docs/article/*.aux
 docs/article/*.bbl
 docs/article/*.blg

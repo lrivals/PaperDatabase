@@ -1,0 +1,70 @@
+{
+  "id": "arxiv-1809.04570-finn-r-end-end-deep",
+  "title": "FINN-R: An End-to-End Deep-Learning Framework for Fast Exploration of Quantized Neural Networks",
+  "authors": [
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    },
+    {
+      "given": "Thomas B.",
+      "family": "Preußer"
+    },
+    {
+      "given": "Nicholas J.",
+      "family": "Fraser"
+    },
+    {
+      "given": "Giulio",
+      "family": "Gambardella"
+    },
+    {
+      "given": "Kenneth",
+      "family": "O'brien"
+    },
+    {
+      "given": "Yaman",
+      "family": "Umuroglu"
+    },
+    {
+      "given": "Miriam",
+      "family": "Leeser"
+    },
+    {
+      "given": "Kees",
+      "family": "Vissers"
+    }
+  ],
+  "year": 2018,
+  "venue": "ACM Transactions on Reconfigurable Technology and Systems 11(3)",
+  "doi": "10.1145/3242897",
+  "arxiv_id": "1809.04570",
+  "url": "https://arxiv.org/abs/1809.04570",
+  "type": "journal",
+  "axes": [
+    "drone-fpga"
+  ],
+  "tags": [
+    "finn",
+    "pynq",
+    "ultra96",
+    "aws-f1",
+    "zynq",
+    "quantization",
+    "bnn",
+    "pruning",
+    "tincy-yolo",
+    "vivado-hls",
+    "dataflow"
+  ],
+  "added": "2026-09-24",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

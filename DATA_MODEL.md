@@ -101,8 +101,9 @@ fait foi, sauf correction manuelle ultérieure.
 
 ## 3. Axes de veille
 
-Repris de `basicStart.txt`. Valeurs fermées — en ajouter une demande de mettre à jour
-`lib/schema.py` et `reindex.py`.
+Valeurs fermées, propres à chaque base : clé `axes` de `base.json` (§11). La table ci-dessous
+est celle de la base livrée avec le code (vision embarquée sur FPGA, reprise de
+`basicStart.txt`). Ajouter un axe se fait dans `base.json` seulement.
 
 | Axe | Contenu |
 |---|---|
@@ -380,3 +381,96 @@ par ligne (`<arxiv_id>  # titre (année) — raisons`), lisible par `bin/pdb add
 
 Métadonnées OpenAlex : à vérifier au moment de l'ajout, jamais citées telles quelles.
 
+---
+
+## 11. Plusieurs bases : registre, `base.json`, `profile.md`
+
+Le code (`bin/`, `lib/`, `.venv`, `.claude/commands/`) sert plusieurs bases indépendantes. Une
+base est un dossier qui contient `base.json`, plus `papers/`, `inbox/`, `benchmarks.csv`,
+`profile.md`, `gaps.md`, `labs.md`, `CLAUDE.md` et les fichiers générés (`INDEX.md`,
+`external_refs.csv`, `.cache/`). Le schéma (§1–10) est le même pour toutes les bases ; seuls les
+axes, les règles de classement et le profil changent.
+
+### 11.1 Registre et base active
+
+`~/.config/pdb/bases.json` (ou `$PDB_REGISTRY`, `lib/registry.py`) associe un nom court à un
+dossier : `{"default": "fpga", "bases": {"fpga": "/…/PaperDatabase", "drone": "/…/PaperDatabase/bases/drone"}}`.
+Il ne contient que des chemins ; `pdb base forget` n'efface aucun fichier.
+
+Base active (`lib/base.py`), dans l'ordre :
+1. `$PDB_ROOT`, que fixe `bin/pdb --base <nom> <commande>` ;
+2. `$PDB_BASE` (un nom du registre) ;
+3. le premier dossier contenant `base.json`, en remontant depuis le répertoire courant ;
+4. la base par défaut du registre (`pdb base use <nom>`) ;
+5. le dépôt du code.
+
+`bin/pdb eval` et `bin/pdb test` portent toujours sur le dépôt du code (fixtures de la base de
+référence).
+
+### 11.2 `base.json`
+
+| Clé | Obligatoire | Contenu |
+|---|---|---|
+| `name` | oui | intitulé de la base |
+| `axes` | oui | `{id: titre}` : valeurs fermées de `metadata.axes`, titres de section d'`INDEX.md` (un axe `surveys` est reconnu depuis le titre) |
+| `axis_rules` | non | `{axe: regex}` : axes devinés à l'ingestion et à l'import (`base.classify`) |
+| `axis_queries` | non | `{axe: requête}` : `discover --axis` |
+| `hardware_axes`, `topic_re`, `title_topic_re`, `topic_min_hits` | non | critère « dans le sujet » de `discover` et de `pdb base scan` (`base.in_topic`) ; tous vides : tout est dans le sujet |
+| `tag_rules` | non | `[[regex, tag], …]` : étiquettes ; la version de YOLO est détectée pour toutes les bases |
+
+Les regex sont compilées au chargement : une regex invalide arrête toute commande avec le nom
+de la clé fautive. `pdb base check [--config proposition.json]` montre, sans rien écrire, comment
+des règles reclasseraient les papiers existants.
+
+### 11.3 `profile.md`
+
+Le thème de la base, en texte. Sections : « Thème (utilisateur) » (texte de l'utilisateur,
+jamais réécrit par le LLM), « Précisions », « Inclus », « Exclus », « Vocabulaire »,
+« Suggestions en attente » (une ligne `- AAAA-MM-JJ (<source>) — <proposition> — <raison>`),
+« Historique » (changements acceptés, datés).
+
+Le LLM propose, l'utilisateur valide : `/paper-fiche` ajoute au besoin une suggestion en
+attente ; `/base-profile` les examine, propose un diff de `profile.md` et de `base.json`
+(éprouvé par `pdb base check --config`), et n'écrit qu'après accord.
+
+### 11.4 Entre bases : `pdb base scan` et `pdb base import`
+
+`pdb base scan [--from a,b]` (`lib/xbase.py`) écrit `xbase_candidates.csv` dans la base active :
+
+| Colonne | Contenu |
+|---|---|
+| `kind` | `cited_here` : présent dans une autre base et cité par des papiers d'ici ; `in_base` : présent ailleurs, correspond aux règles d'ici ; `ref_elsewhere` : absent de toutes les bases, cité ailleurs et correspondant aux règles d'ici, ou cité ici et là-bas (au moins 3 citants en tout) |
+| `score` | ordre de lecture, pas un jugement de pertinence |
+| `source_base`, `paper_id` | où le trouver (`paper_id` vide pour `ref_elsewhere`) |
+| `n_citers_target`, `n_citers_source` | citants dans la base active / dans la source |
+| `axes_guess`, `reasons` | axes selon les règles d'ici ; raisons lisibles |
+
+Les correspondances d'articles reprennent `lib/refs.py` (arXiv, DOI, titre normalisé, titre
+voisin d'une année compatible). `bin/pdb add` refuse un article déjà présent dans une autre
+base enregistrée et indique la commande d'import.
+
+`pdb base import <base>:<paper_id>…` copie `papers/<paper_id>/` (avec `paper.pdf`, sauf
+`--no-pdf`) et les lignes de ce papier dans `benchmarks.csv`, puis réindexe. Dans la copie :
+- `axes` recalculés par les règles de la base active ; `tags` = anciens ∪ nouveaux ;
+  avertissement « axes déduits automatiquement » ;
+- `status.fiche` et le front-matter de `fiche.md` repassent à `todo`, avec en tête de fiche un
+  bandeau « Importée de la base … : pertinence à réévaluer » ;
+- `metadata.imported_from` : `{base, paper_id, date, fiche, axes}` (statut et axes d'origine).
+
+Les deux copies évoluent ensuite séparément. Aucun chemin absolu n'est stocké dans un dossier
+de papier : l'index de passages de la base active se met à jour au réindexage.
+
+### 11.5 Créer une base
+
+`bin/pdb base new <nom> --theme "…" [--title "…"] [--path DIR]` (ou l'onglet Bases de
+`bin/pdb viz`) crée, par défaut dans `bases/<nom>/` du dépôt (versionnée avec lui ; les
+`.gitignore` de la base écartent PDF, TEI et cache), ou dans le dossier `--path` hors du dépôt : les liens `bin`, `.venv`,
+`.claude/commands` vers le code ; `papers/`, `inbox/`, `benchmarks.csv` (en-tête),
+`base.json` minimal (`name`, axe `surveys`), `profile.md` et `CLAUDE.md` (gabarits de
+`templates/`), `gaps.md`, `labs.md`, `.gitignore` ; puis enregistre la base et la réindexe.
+Suite : `/base-profile` dans ce dossier, pour tirer axes et règles du thème.
+
+Les commandes `bin/pdb …` et les skills lancées depuis un dossier de base agissent sur cette
+base seulement. Exemple : `bases/drone/` (vision embarquée sur drone). Dans un clone neuf,
+enregistrer les bases une fois : `bin/pdb base register . --name fpga` et
+`bin/pdb base register bases/drone --name drone`.

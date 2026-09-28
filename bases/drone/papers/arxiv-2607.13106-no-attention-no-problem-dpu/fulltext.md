@@ -1,0 +1,179 @@
+---
+id: arxiv-2607.13106-no-attention-no-problem-dpu
+title: "No Attention, No Problem: DPU-Aware Attention Approximation in Modern YOLO on FPGA"
+year: 2026
+backend: grobid
+---
+
+## Abstract
+
+Edge-based Artificial Intelligence (AI) acceleration has recently improved progress in real-time object detection. Object detection on edge devices requires a balance between accuracy, speed and power efficiency. This paper proposes a customized Deep Learning Processor Unit (DPU)-aware architecture for attention-based YOLO variants deployed on AMD FPGAs. Specifically, we evaluate and benchmark YOLOv26 and YOLOv11-two modern attention-based YOLO variants-on the Xilinx ZCU104 across both standard and oriented object detection tasks.
+
+We replace unsupported activation functions, substitute split operations with 1x1 convolutions, and approximate the spatial attention mechanism in a DPU-compatible way. All models are then trained and evaluated across six benchmark datasets-COCO, Pascal VOC, KITTI, DOTA, DIOR-R, and an in-house human presence dataset-and benchmarked across all eight DPU configurations (B512 to B4096) in terms of mAP, FPS, latency, power, and resource utilization. Notably, YOLOv26n and YOLOv26n-OBB deliver the highest end-to-end throughput at 34.05 and 29.55 FPS for standard and oriented detection, respectively, with an average of 5% absolute reduction in accuracy due to quantization, while achieving up to approximately 3× lower power consumption compared with the state-of-the-art.
+
+## I. INTRODUCTION
+
+Object detection is the foundation of modern computer vision, which enables autonomous systems to identify and locate objects within images or video streams [1] [2]. It plays an important role across various domains, including medical imaging, autonomous driving, and surveillance systems. As these applications often require fast and reliable results, improving algorithm efficiency, speed, and accuracy remains a key research focus [3]. Many specialized domains-especially remote sensing-require rotated bounding boxes for object detection to accurately capture targets at different rotations and scales, which regular horizontal boxes can't do well [4]. Meeting these accuracy and efficiency requirements for both standard and oriented detection relies on the detector architecture.
+
+To create a robust object detector, different techniques have been developed which enhance detection algorithms based on deep learning. Convolutional Neural Networks (CNNs) have given object detection algorithms the power to perform better [5]. There are generally two types of modern object *Corresponding author detectors: two-stage detectors and single-stage detectors. The two-stage detector first generates candidate regions and then refines bounding boxes while classifying objects in a second stage. These methods achieve very high precision but are computationally expensive and have high latency. This results in less suitability for real-time applications [3]. In comparison to a one-stage detector, it treats the problem as a single-shot regression problem and makes predictions in a single step. It makes it fast, but it might have slightly lower accuracy compared to two-stage detectors [6]. YOLO (You Only Look Once) models have emerged as the state-of-the-art for this category, which has several versions. The architectures have evolved to balance accuracy with speed and ensure efficient execution on hardware-constrained devices [5].
+
+Field-Programmable Gate Arrays (FPGAs) offer a significant advantage over traditional CPUs and GPUs due to their ability to provide high performance with low power consumption [7]. They are experiencing rapid growth in the domain of AI acceleration, driven by their capacity for parallel processing and architectural optimizations. Unlike fixed-logic processors, FPGAs offer hardware-level reconfigurability, which allows developers to modify circuit logic and wiring specifically for neural network parallelisms or even switch models dynamically at runtime [8]. This architecture enables faster execution through high parallelism and custom data-paths, which is critical for real-time applications such as autonomous driving, drone navigation, and human presence detection [9]. To achieve these benefits, modern detectors and their components, such as attention mechanisms, must be adapted for commercial FPGA toolchains.
+
+Even though plenty of studies have been done on FPGAbased accelerators, there is a lack of end-to-end deployment of state-of-the-art versions of the YOLO family across both standard (horizontal) and oriented object detection tasks on an FPGA System-on-Chip (SoC). This paper presents a systematic study of adapting state-of-the-art YOLO-based detectors for AMD Vitis AI deployment, including architecture adaptations for attention-based variants, quantization, compilation, and onboard benchmarking. The main contributions of the paper are summarized as follows:
+
+1) We present a customized DPU-aware attention approximation architecture for modern object detection algorithms such as YOLOv26 and YOLOv11 for efficient deployment on an FPGA SoC using commercial tools. 2) We benchmark the end-to-end performance of these models on an FPGA across standard object detection and oriented object detection using state-of-the-art datasets.
+
+3) We evaluate performance across different architectures of the DPUCZDX8G IP core, providing a detailed analysis of latency, FPS, power, and hardware resource consumption. 4) Our work provides a quantitative baseline for deploying standard and oriented bounding box object detection models for various applications on an FPGA SoC using the Vitis AI toolchain. The remaining parts of this paper are organized as follows. Section II summarizes previous literature work on object detection algorithms and their implementation in FPGAs. Section III describes the proposed methodology used for this study. Section IV presents the study's results. Section V summarizes the work and indicates future directions for the research.
+
+## II. RELATED WORK
+
+Object detection is a fundamental task in computer vision, which has made significant advancements over the years. This section reviews the different YOLO architectures and existing work on FPGA-based acceleration of YOLO models.
+
+### A. Object Detection
+
+Early two-stage detectors, such as Faster R-CNN, achieved good detection quality, but carried a computational overhead that makes real-time edge deployment difficult [10], [11]. YOLO, introduced in 2016, is a pioneer of single-stage detectors. The model predicts bounding boxes and class probabilities simultaneously on a single pass by treating them as a direct regression problem [12]. This opened the door to realtime inference on resource-constrained devices. The YOLO family has developed considerably over time: early versions used Darknet backbones with anchor-based prediction, and later, they introduced anchor-free detection from YOLOv8, efficient feature fusion, and attention mechanisms. YOLOv11 added the C3k2 block and a spatial attention module (C2PSA), and YOLOv26 eliminated distribution focal loss and nonmaximum suppression (NMS) to further reduce complexity and post-processing overhead [14], [15].
+
+### B. FPGA Acceleration Of YOLO Models
+
+FPGAs have demonstrated a suitable inference platform for edge-based AI applications. Graphical Processing Units (GPUs) offer high computational power but consume significant power, whereas FPGAs offer reconfigurable architectures that enable parallel processing with lower power consumption [17], which makes them well-suited for YOLO-based object detection.
+
+Early studies focused on lightweight YOLO variants on lowend FPGAs. Ngo et al. [18] deployed a 12-layer YOLOv2 on a Cyclone V SoC using OpenCL-based General Matrix Multiply (GEMM) acceleration and achieved 90% accuracy at 4 FPS with only 32K LUTS. Bao et al. [19] replaced the standard convolution operation with the Winograd convolution algorithm in YOLOv2 to deploy on the PYNQ-Z2 board, reducing DSP usage and achieving 124 ms latency at 2.7W. Lee et al. [20] extended this by resolving Winograd's stride-2 reordering inefficiency via a row-stacking technique, then applying adaptive INT8 asymmetric quantization to reach 194.7 FPS at 1.57W with under 1% accuracy loss on the ZCU106 SoC. Ding et al. [21] developed REQ-YOLO for Tiny-YOLO, which uses the Alternating Direction Method of Multipliers (ADMM) to automatically determine optimal bit-widths across layers, achieving 314.2 FPS on a Virtex-7 with only 0.07% mAP loss -showing that quantization strategy matters as much as a target bit-width. Valadanzoj et al. [22] developed a high-speed YOLO accelerator specific for autonomous driving applications on an FPGA by applying a genetic algorithm to optimize fixed-point decimal positions across layers and achieved 55 FPS at 79% accuracy and 13.6W.
+
+Vitis AI is a widely adopted commercial toolchain for deploying deep learning models on Xilinx SoC platforms. Wang et al. [23] deployed YOLOv3 on the ZCU104, achieving 206.7 FPS at 3.38 FPS/W, while Amin et al. [24] reported comparable results with YOLOv3-Tiny on the Kria KV260 for traffic light detection, reaching 99% accuracy at 3.5 FPS/W. Nguyen et al. [8] achieved 29 FPS on the ZCU104 for aerial object detection with only 1% accuracy drop, and Liu et al. [25] deployed YOLOv5 for flame detection at 56 FPS and 4.147W with a 1.64% accuracy loss.
+
+A streaming data-flow architecture, such as FINN [29], is also ideal for its ultra-low latency performance, where each layer is mapped to a dedicated hardware module with continuous data transfer between stages. Calì et al. [9] applied the FINN framework to generate a dataflow accelerator for YOLOv3-Tiny, achieving 6 ms latency at 2.55W, but with degradation in mAP from 41.76% to 17.7% due to aggressive quantization. Machura et al. [26] compared the performance of Vitis AI, FINN, and custom-built accelerators on the Ultra96-V2 and found that a custom design achieved the highest throughput of 196 FPS, while FINN achieved 111 FPS through a dataflow architecture, and the Vitis AI DPU offered the most automated workflow, confirming a throughput-versusconvenience trade-off. Montgomerie-Corcoran et al. [27] developed the SATAY toolflow, which automatically generates a streaming architecture for YOLO models (YOLOv3 to YOLOv8) across multiple FPGA SoC boards. Danilowicz and Kryjak [28] deployed a nano YOLOv8 for multi-object tracking on the ZCU102 using the FINN framework, reaching 195.3 FPS at the FPGA level but only approximately 24 FPS end-to-end due to software overhead.
+
+Prior work on FPGA-based object detection has focused predominantly on earlier YOLO variants, leaving modern attention-based architectures such as YOLOv11 and YOLOv26 underexplored. Moreover, oriented object detection on FPGA remains largely unexplored. This work addresses both gaps through a systematic benchmark of YOLOv8, YOLOv11, and YOLOv26 -including OBB variants -across state-of-the-art datasets and all eight DPUCZDX8G architectures on the Xilinx ZCU104.
+
+## III. METHODOLOGY
+
+This section consists of dataset preparation, model customization, training and quantization, compilation, and deployment on the target platform. Fig. 1 shows the methodological framework we used for this study.
+
+### A. Dataset
+
+The performance of customized YOLO architectures is benchmarked using state-of-the-art datasets. COCO, Pascal VOC, and KITTI are used for standard object detection tasks, whereas DOTA and DIOR-R are used for oriented object detection. A custom-built person detection dataset is used for both tasks. The datasets are formatted according to the Ultralytics framework.
+
+The Pascal VOC dataset contains 21, 503 images across 20 object classes and serves as a standard benchmark for object detection and visual object category recognition [30]. The COCO dataset [31] consists of 200k images with 80 object categories and approximately 1.5 million annotated instances, making it one of the most widely used benchmarks for object detection evaluation. The KITTI dataset [32] has 7, 481 stereo camera images annotated across 8 object categories, and is commonly used as a standard benchmark for autonomous driving and computer vision applications. The DIOR-R dataset [33], [34] is a transformation of the DIOR dataset for oriented object detection, which contains 23, 463 high-resolution 1024 × 1024 aerial images annotated with 20 object categories. DOTA [35] is another benchmarking dataset for oriented object detection, which contains 13, 955 images, preprocessed for YOLO at a fixed 1024 × 1024 via resizing, splitting, and padding where necessary. A custom person detection dataset is built from CCTV footage and VOC dataset images (single class: person). It contains 18, 820 images at 416 × 416 and 184, 789 annotations. The dataset is split into 15, 056 training, 1, 882 validation, and 1, 882 test images. Data augmentation is applied, including horizontal flip (50%), random rotation (±15°), shear (±7°), and brightness/exposure adjustments (±10%).
+
+### B. DPU-Aware Approximations of YOLO
+
+This study implemented the nano variants of YOLOv8, YOLOv11, and YOLOv26, including both standard and oriented object detection models. This section describes the necessary DPU-aware adaptations made to the models to be deployed on the AMD FPGA using Vitis AI, as certain operators, activation functions, and classes are not supported by the DPU. Without these changes, unsupported components execute on the CPU, resulting in a reduction of the overall performance. The Ultralytics [13] library is adapted to integrate the required modifications to the model architecture and training pipeline.
+
+1) YOLOv8 and YOLOv8-OBB: YOLOv8 is an anchorfree, one-stage detector that predicts a probability distribution over the four bounding box parameters per pixel, with the final box obtained by averaging those predictions [15]. Since the Xilinx DPU does not support the Sigmoid Linear Unit (SiLU) activation function, which is present on both YOLOv8 and YOLOv8-OBB, we replaced it with the Rectified Linear Unit (ReLU) activation function. The split operation in the feature-fusion block (C2f) is unsupported, so it is replaced with equivalent linear projection operations. This is done through a 1 × 1 convolution operation, which is supported by a DPU. A 1 × 1 convolution acts as a per-pixel linear projection across channels. We initialize the 1 × 1 convolution weights as a binary selection matrix: diagonal entries are set to 1 for the required channel mapping, and all other entries are set to 0. Each output channel copies exactly one input channel, effectively reproducing the split. In this way, two 1 × 1 convolutions can extract the same two-channel groups that a split would produce, which can be seen in Fig. 2. 2) YOLOv11 and YOLOv11-OBB: YOLOv11 retains the overall structure of YOLOv8 but adds key upgrades. It replaces the previous C2f block with the C3k2 block, a more efficient CSP bottleneck that improves detection accuracy and accelerates feature extraction. The model also performs multiscale detection using three heads that process neck feature maps to produce final classification and localization outputs. [36].
+
+The most important concept introduced in YOLOv11 is spatial attention through the Cross-Stage Partial Spatial Attention (C2PSA) module. The attention mechanism enables the model to focus on important regions within the feature map, which results in more robust object detection. However, the entire attention block cannot be executed on the FPGA because reshape, transpose, matrix multiplication, and softmax operations are not natively supported by the Xilinx DPU. To overcome these hardware constraints, we propose a DPU-compatible attention approximation implemented using standard convolution and element-wise operations, shown in Fig. 3. In this implementation:
+
+1) The Query (q), Key (k), and Value (v) features are extracted using parallel 1 × 1 convolutions.
+
+2) The attention weights are approximated via a scaled element-wise product (q ⊙ k).
+
+3) The softmax activation function is replaced with the hard-sigmoid function to support normalization. 4) The result is projected back to the value channels through a 1 × 1 convolution before gated fusion with the residual context. We utilize the YOLOv11-OBB variant for oriented object detection. The architecture remains mostly similar to the standard version, but the detection head includes an additional regression branch to predict the rotation angle (θ) of bounding boxes, shown in Fig. 4. This enables the model to precisely localize tilted objects, which is critical for certain applications such as aerial imagery, industrial inspection, surveillance, etc. 3) YOLOv26 and YOLOv26-OBB: The YOLOv26 architecture is designed with the aim of an efficient edge deployment philosophy. Most of its features are retained from YOLOv11, but it introduces two major improvements: the removal of distribution focal loss (DFL) and a head supporting end-toend NMS-free inference. The DFL is replaced with a direct bounding box regression, which predicts continuous values directly (x, y, w, h, θ) [37]. This study still uses NMS to benchmark accuracy across all the datasets. To accelerate the model on FPGA, the architecture is modified using the same ReLU replacement, 1 × 1 convolution mapping, and DPUcompatible attention approximation detailed in Section III-B2.
+
+### C. Model Training and Compression
+
+The Ultralytics library is employed for training YOLO models because of its simplicity, speed, and strong out-of-thebox performance. All YOLO variants are trained with similar hyperparameter settings to ensure consistency and fairness across model comparisons. Ultralytics automatically selected the appropriate optimizer based on the number of training iterations. An initial learning rate of 0.01 was applied, decayed to a final factor of 0.01 following a cosine annealing schedule. A momentum of 0.937 and a weight decay of 0.0005 were applied to regularize training and stabilize convergence. A linear warm-up phase spanning 3 epochs was incorporated at the beginning of training to gradually ramp up the learning rate prior to the main optimization process. The input image was scaled to 416 pixels for the longer edge. The models were initialized using pre-trained checkpoints to leverage transfer learning and accelerate convergence. Mixed-precision training (FP16) was enabled throughout all experiments to reduce memory consumption and improve computational efficiency without compromising model accuracy.
+
+There are two types of quantization: post-training quantization (PTQ) and quantization-aware training (QAT). In this work, we used the PTQ method, as it is sufficient to achieve 8-bit quantization with accuracy similar to that of 32-bit. The process involves three steps: (1) pre-processing the model by fusing batch normalization layers with convolutions and removing irrelevant nodes; (2) calibrating the model on a subset of data to estimate quantization parameters (scale and zero-point); and (3) converting the model to an 8-bit integer representation in a DPU-compatible format for deployment.
+
+### D. Model Compilation
+
+The quantized model is compiled for the ZCU104 SoC board using the Vitis AI compiler, targeting the DPUCZDX8G IP. Initially, the compiler transforms the quantized model into the Xilinx Intermediate Representation (XIR), a graph-based format, acting as a key intermediate format to connect AI models with hardware by enabling quantizers, compilers, and runtimes to optimize and execute them efficiently. The graph is then divided into smaller subgraphs, where optimization is applied. The compiler also generates instruction streams for the DPU parts of the model. Finally, all necessary information is packaged for the Vitis AI runtime (VART), and the model is compiled into the .xmodel format for deployment. During the compilation process, the proper fingerprint of the DPUCZDX8G IP is specified to make the compiled model compatible with it. Vitis AI offers various architectures (B512, B800, B1024, B1152, B1600, B2304, B3136, B4096) for the DPUCZDX8G IP core based on the level of hardware parallelism and available FPGA resources. This enables a trade-off analysis between performance and hardware utilization for the model to be deployed.
+
+### E. Hardware Platform and VITIS TRD Flow
+
+The Vitis Targeted Reference Design (TRD) and the prebuilt, unmodified DPUCZDX8G IP core provided by AMD for the ZCU104 SoC are used to rebuild the hardware design using Vivado (v2022.2) and Vitis (v2022.2). The design is rebuilt for eight different DPUCZDX8G IP core architectures (B512 through B4096) by editing the existing configuration parameters in dpu_conf.vh, enabling channel augmentation, URAM, high RAM usage, and low-power mode, and re-running the standard TRD build flow. After building the project for each architecture, the arch.json, bitstream (.bit), hardware design (.hwh), device binary (.xclbin), and deployable binary image (.img) files are generated. These files are used to boot the target board with the built DPU architecture from the SD card.
+
+### F. Program Flow
+
+This is the final step in deploying the compiled model. To run the model on an FPGA SoC board, a software application is required to manage communication between the Processing System (PS) and the Programmable Logic (PL), which contains the DPU. The application is responsible for reading input images from the PS, performing pre-processing, passing the pre-processed data to the DPU on the FPGA, and then fetching the DPU output to perform post-processing as shown in Fig. 5. Pre-processing consists of scaling the input image to the appropriate size, normalizing the pixels, and sending it to the accelerator in the PL. During postprocessing, the three feature maps obtained from the three detection heads are transformed into bounding boxes, and redundant bounding boxes are removed using the NMS process. The application is developed in Python using the Vitis AI Library, which provides APIs for communication between the DPU and the ARM processor. IV. RESULTS
+
+### A. Experimental Setup
+
+An Ubuntu 24.04.4 LTS host machine with Intel(R) Core i7-13800H and 32GB of RAM is used for model preparation, quantization, and compilation, while model training is performed on high-performance GPU clusters. The Xilinx ZCU104 Evaluation Kit is used as the target deployment and benchmarking platform. The platform is equipped with an AMD Zynq UltraScale+ MPSoC EV device, which contains a quad-core ARM Cortex-A53 applications processor, 16nm FinFET+ programmable logic, making it well-suited for embedded computer vision applications.
+
+### B. Performance Evaluation
+
+We evaluated the attention-approximated models after each step for end-to-end benchmarking using the mean average precision (mAP) metric, specifically mAP@0.5:0.95, which averages precision across ten IoU thresholds to comprehensively measure detection and bounding box localization accuracy. As shown in Table I, the proposed modifications to the original models result in an average reduction of only 3% (absolute) in mAP@0.5:0.95 across most datasets for all detectors compared to baseline models. After deployment on the FPGA, the models experience an average reduction of approximately 7% in mAP@0.5:0.95 across datasets for attention-based YOLO variants as shown in Table II. This degradation is mainly due to the quantization of the models from 32-bit floating-point to 8bit integer representation. Overall, YOLOv11 and YOLOv11-OBB frequently achieve the highest performance across all datasets.
+
+### C. FPS and Latency Analysis
+
+The DPU and end-to-end (E2E) frames per second (FPS DPU , FPS E2E ) and latency (Latency DPU , As the DPUCZDX8G IP architecture scales up, FPS DPU rises and Latency DPU decreases consistently for all models, showing that the larger DPUCZDX8G architecture provides significantly higher FPS and lower latency. However, a considerable gap is found between DPU and end-to-end performance in terms of FPS and latency, which indicates a bottleneck in the post-processing step that limits the overall throughput and latency. This entails that upgrading only the architecture of the DPUCZDX8G IP core is insufficient to achieve proportional end-to-end performance. Due to the removal of distribution focal loss (DFL) and architectural optimizations, YOLOv26n and YOLOv26n-OBB achieve the highest endto-end FPS and lowest latency across all DPUCZDX8G IP core architectures, with FPS E2E of 34.05 and 29.55, and the lowest Latency E2E of 29.37 ms and 33.85 ms for standard and oriented object detection when using B4096 DPU, respectively.
+
+### D. Resource Utilization
+
+The power consumption and resource utilization reported by Vivado are shown in Table III. Both power consumption and resource utilization generally increase with the DPUCZDX8G IP core architecture, from B512 to B4096. The power consumption ranges from 4.792 W at B512 to 8.760 W at B4096, representing an increase of approximately 83%, while remaining within a reasonable power budget for embedded FPGA deployment. Overall, the B4096 configuration provides the highest parallelism and FPS at the cost of greater resource consumption.
+
+## V. CONCLUSION AND FUTURE WORK
+
+This paper presents a systematic benchmarking study of attention-based YOLO models -specifically YOLOv11 and YOLOv26, along with their oriented object detection variants -deployed on an FPGA SoC using the Vitis AI toolchain. Architectural modifications were made, such as replacing the unsupported activation function, substituting split operations with equivalent 1 × 1 convolutions, and modifying the spatial attention mechanism. To provide a quantitative baseline for FPGA-based object detection, the models were evaluated across six benchmark datasets -covering both standard and oriented object detection tasks.
+
+The results show that YOLOv26n and YOLOv26n-OBB consistently achieve the highest end-to-end frame rates of 34.05 and 29.55, respectively, at the cost of a reduction of approximately 5% (absolute) in accuracy compared with CPU execution, representing a common trade-off in edge FPGA deployment.
+
+Power consumption and hardware resource utilization scale up with DPUCZDX8G IP core, ranging from 4.792W at B512 to 8.760W at B4096, yet achieve approximately 3× lower power consumption compared with the state-of-the-art [27]. Notably, post-processing became a critical performance bottleneck due to single-core DPU execution. This limits endto-end performance regardless of the DPUCZDX8G IP core architecture used. In the future, we will extend this work to adapt the detection system without using NMS, which may result in end-to-end FPS improvement.
+
+## Figures et tableaux
+
+**Fig. 1.** The proposed methodological framework.
+
+**Fig. 2.** Original C2f block (left) and the proposed block with two 1 × 1 convolution blocks (right).
+
+**Fig. 3.** The original attention block (left) and the proposed DPU-aware attention block (right).
+
+**Fig. 4.** Standard Detection Head and Oriented Bounding Box (OBB) Head.
+
+**Fig. 5.** Implementation of the hardware-software system on the ZCU104 SoC FPGA target.
+
+**Fig. 6.** Comparison of end-to-end and DPU FPS for standard object detection models across DPUCZDX8G IP architectures.
+
+**Fig. 7.** Comparison of End-to-End and DPU FPS for oriented object detection models across DPUCZDX8G IP core architectures.
+
+**Fig. 8.** Comparison of end-to-end and DPU latency for standard and oriented object detection models across DPUCZDX8G IP core architectures.
+
+**TABLE I** MAP @0.5:0.95 OF ORIGINAL AND MODIFIED YOLO MODELS FOR STANDARD AND ORIENTED OBJECT DETECTION USING DIFFERENT DATASETS.
+
+    Standard Object Detection |  |  |  |  |  |  | 
+    Model | VOC |  |  | KITTI |  | COCO | Person Detection
+     | Original Modified Original Modified Original Modified Original Modified
+    YOLOv8n | 0.60 | 0.60 | 0.63 | 0.63 | 0.33 | 0.27 | 0.75 | 0.73
+    YOLOv11n | 0.61 | 0.59 | 0.63 | 0.60 | 0.35 | 0.31 | 0.77 | 0.75
+    YOLOv26n | 0.61 | 0.57 | 0.62 | 0.58 | 0.36 | 0.31 | 0.75 | 0.71
+    Oriented Object Detection |  |  |  |  |  |  | 
+    Model | DIOR-R |  | DOTA | Person Detection |  | 
+     | Original Modified Original Modified Original Modified |  | 
+    YOLOv8n-OBB | 0.66 | 0.66 | 0.43 | 0.43 | 0.84 | 0.84 |  | 
+    YOLOv11n-OBB | 0.62 | 0.61 | 0.44 | 0.34 | 0.86 | 0.83 |  | 
+    YOLOv26n-OBB | 0.62 | 0.60 | 0.42 | 0.32 | 0.85 | 0.81 |  | 
+
+**TABLE II** PERFORMANCE COMPARISON OF YOLO MODELS ACROSS MULTIPLE DATASETS ON CPU AND FPGA, MEASURED IN TERMS OF MAP@0.5:0.95.
+
+    Standard Object Detection |  |  |  |  |  |  | 
+    Model | VOC | KITTI | COCO | Person Detection
+     | mAP CPU 0.5:0.95 | mAP FPGA 0.5:0.95 | mAP CPU 0.5:0.95 | mAP FPGA 0.5:0.95 | mAP CPU 0.5:0.95 | mAP FPGA 0.5:0.95 | mAP CPU 0.5:0.95 | mAP FPGA 0.5:0.95
+    YOLOv8n | 0.60 | 0.45 | 0.64 | 0.34 | 0.27 | 0.26 | 0.73 | 0.66
+    YOLOv11n | 0.59 | 0.57 | 0.60 | 0.59 | 0.31 | 0.29 | 0.75 | 0.71
+    YOLOv26n | 0.57 | 0.48 | 0.58 | 0.51 | 0.31 | 0.29 | 0.71 | 0.67
+    Oriented Object Detection |  |  |  |  |  |  | 
+    Model | DIOR-R | DOTA | Person Detection |  | 
+     | mAP CPU 0.5:0.95 | mAP FPGA 0.5:0.95 | mAP CPU 0.5:0.95 | mAP FPGA 0.5:0.95 | mAP CPU 0.5:0.95 | mAP FPGA 0.5:0.95 |  | 
+    YOLOv8n-OBB | 0.66 | 0.56 | 0.43 | 0.31 | 0.84 | 0.75 |  | 
+    YOLOv11n-OBB | 0.61 | 0.53 | 0.34 | 0.30 | 0.83 | 0.79 |  | 
+    YOLOv26n-OBB | 0.60 | 0.52 | 0.32 | 0.29 | 0.81 | 0.77 |  | 
+    Latency E2E ) of each deployed model are measured on a |  |  |  | 
+    single DPU core using PETS2009-S2L1 [39], a video with |  |  |  | 
+    a resolution of 768×576 and a length of 113.57 seconds |  |  |  | 
+    (795 frames at 7 FPS), across all available DPUCZDX8G |  |  |  | 
+    IP architectures. Figures 6, 7, and 8 illustrate performance |  |  |  | 
+    scaling from the B512 to B4096 architectures for standard |  |  |  | 
+    and oriented object detection models. |  |  |  |  |  | 
+
+**TABLE III** FPGA RESOURCES UTILIZATION AND ON-CHIP POWER ACROSS DPUCZDX8G IP ARCHITECTURES
+
+    DPU | Power (W) | LUTs | BRAM | URAM | DSP | Regs
+    B4096 | 8.760 | 55.8k (24.16%) 142 (45.67%) 46 (47.92%) 710 (41.09%) 111k (21.94%)
+    B3136 | 7.864 | 50k (21.74%) | 123 (39.58%) 42 (43.75%) 566 (32.75%) | 82k (17.97%)
+    B2304 | 7.165 | 45.1k (19.66%) 104 (33.49%) 38 (39.58%) 438 (25.35%) | 71k (15.71%)
+    B1600 | 6.382 | 41.1k (17.93%) | 85 (27.40%) | 34 (35.42%) 326 (18.87%) | 61k (13.38%)
+    B1152 | 5.571 | 33.6k (14.73%) | 38 (12.34%) | 38 (39.58%) 222 (12.85%) | 49k (10.78%)
+    B1024 | 5.654 | 36.5k (16%) | 76 (24.36%) | 15 (15.63%) 230 (13.31%) | 49k (11%)
+    B800 | 5.206 | 31.2k (13.71%) | 31 (10.10%) | 34 (35.42%) | 166 (9.61%) | 42k (9.4%)
+    B512 | 4.792 | 28.2k (12.4%) | 28 (8.97%) | 15 (15.53%) | 118 (6.83%) | 35k (7.95%)

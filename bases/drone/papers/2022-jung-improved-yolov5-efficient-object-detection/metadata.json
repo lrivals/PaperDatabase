@@ -1,0 +1,42 @@
+{
+  "id": "2022-jung-improved-yolov5-efficient-object-detection",
+  "title": "Improved YOLOv5: Efficient Object Detection Using Drone Images under Various Conditions",
+  "authors": [
+    {
+      "given": "Hyun-Ki",
+      "family": "Jung"
+    },
+    {
+      "given": "Gi-Sang",
+      "family": "Choi"
+    }
+  ],
+  "year": 2022,
+  "venue": "Applied Sciences 12(14), 7255",
+  "doi": "10.3390/app12147255",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/app12147255",
+  "type": "journal",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov5",
+    "visdrone",
+    "activation-function",
+    "adverse-weather",
+    "night"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 4, Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

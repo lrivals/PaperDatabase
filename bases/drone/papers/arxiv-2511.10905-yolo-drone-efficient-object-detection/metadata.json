@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-2511.10905-yolo-drone-efficient-object-detection",
+  "title": "YOLO-Drone: An Efficient Object Detection Approach Using the GhostHead Network for Drone Images",
+  "authors": [
+    {
+      "given": "Hyun-Ki",
+      "family": "Jung"
+    }
+  ],
+  "year": 2025,
+  "venue": "Journal of Information Systems Engineering and Management, Vol. 10, No. 26s, 2025, pp. 236-247",
+  "doi": "10.52783/jisem.v10i26s.4216",
+  "arxiv_id": "2511.10905",
+  "url": "https://arxiv.org/abs/2511.10905",
+  "type": "journal",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov11",
+    "yolov8",
+    "yolov9",
+    "yolov10",
+    "visdrone",
+    "ghostconv",
+    "small-objects"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "warnings": []
+}

@@ -1,0 +1,52 @@
+{
+  "id": "2025-cali-optimized-implementation-yolov3-tiny-real",
+  "title": "Optimized Implementation of YOLOv3-Tiny for Real-Time Image and Video Recognition on FPGA",
+  "authors": [
+    {
+      "given": "Riccardo",
+      "family": "Calì"
+    },
+    {
+      "given": "Laura",
+      "family": "Falaschetti"
+    },
+    {
+      "given": "Giorgio",
+      "family": "Biagetti"
+    }
+  ],
+  "year": 2025,
+  "venue": "Electronics 14(20), 3993",
+  "doi": "10.3390/electronics14203993",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/electronics14203993",
+  "type": "journal",
+  "axes": [
+    "drone-fpga",
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov3-tiny",
+    "finn",
+    "brevitas",
+    "zynq",
+    "xc7z020",
+    "visdrone",
+    "quantization",
+    "int4",
+    "coral-edge-tpu",
+    "pynq"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 3, Table 3, Table 11, Table 13, Table 15"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

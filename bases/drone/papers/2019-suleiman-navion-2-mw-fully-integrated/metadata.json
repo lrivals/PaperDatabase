@@ -1,0 +1,59 @@
+{
+  "id": "2019-suleiman-navion-2-mw-fully-integrated",
+  "title": "Navion: A 2-mW Fully Integrated Real-Time Visual-Inertial Odometry Accelerator for Autonomous Navigation of Nano Drones",
+  "authors": [
+    {
+      "given": "Amr",
+      "family": "Suleiman"
+    },
+    {
+      "given": "Zhengdong",
+      "family": "Zhang"
+    },
+    {
+      "given": "Luca",
+      "family": "Carlone"
+    },
+    {
+      "given": "Sertac",
+      "family": "Karaman"
+    },
+    {
+      "given": "Vivienne",
+      "family": "Sze"
+    }
+  ],
+  "year": 2019,
+  "venue": "IEEE Journal of Solid-State Circuits 54(4), 1106-1119",
+  "doi": "10.1109/JSSC.2018.2886342",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/JSSC.2018.2886342",
+  "type": "journal",
+  "axes": [
+    "nano-drone",
+    "tracking-navigation",
+    "system-codesign"
+  ],
+  "tags": [
+    "asic",
+    "vio",
+    "euroc",
+    "sparsity",
+    "image-compression",
+    "65nm",
+    "zc706"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE I, TABLE II, TABLE III, TABLE IV, TABLE V",
+      "sections numérotées non détectées : III — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

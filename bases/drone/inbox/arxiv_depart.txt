@@ -1,0 +1,26 @@
+# État de l'art de départ (docs/etat-de-l-art.md), IDs vérifiés le 2026-09-28
+2001.06303  # VisDrone
+1804.00518  # UAVDT
+2201.07425  # WebUAV-3M
+1909.09709  # SkyNet
+1907.11093  # SlimYOLOv3
+2108.11539  # TPH-YOLOv5
+2112.10415  # UFPMP-Det
+2202.06934  # SAHI
+2103.09136  # QueryDet
+1904.08008  # ClusDet
+2108.00202  # HiFT
+1805.01831  # PULP-DroNet
+2301.12175  # Lamberti DATE 2023
+2407.02405  # Tiny-PULP-Dronets
+2303.08778  # Paredes-Vallés, Science Robotics 2024
+2108.03694  # Vitale ICRA 2021
+1905.06388  # MAVBench
+2204.10898  # Roofline Model for UAVs
+2205.07149  # Robotic Computing on FPGAs
+2304.06925  # YOLO-Drone (Darknet59)
+2511.10905  # YOLO-Drone (GhostHead)
+2604.13278  # DroneScan-YOLO
+2503.04698  # DEAL-YOLO
+2603.28149  # BlankSkip
+2607.13106  # No Attention, No Problem

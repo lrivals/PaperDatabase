@@ -8,9 +8,9 @@ import sys
 import time
 from pathlib import Path
 
-from lib import rag_qwen as rag
+from lib import base, rag_qwen as rag
 
-ROOT = Path(os.environ.get("PDB_RAG_ROOT", Path(__file__).resolve().parent.parent)).resolve()
+ROOT = Path(os.environ.get("PDB_RAG_ROOT", base.ROOT)).resolve()
 
 
 def run(argv):

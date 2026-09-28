@@ -1,0 +1,54 @@
+{
+  "id": "2023-cao-gcl-yolo-ghostconv-lightweight-yolo",
+  "title": "GCL-YOLO: A GhostConv-Based Lightweight YOLO Network for UAV Small Object Detection",
+  "authors": [
+    {
+      "given": "Jinshan",
+      "family": "Cao"
+    },
+    {
+      "given": "Wenshu",
+      "family": "Bao"
+    },
+    {
+      "given": "Haixing",
+      "family": "Shang"
+    },
+    {
+      "given": "Ming",
+      "family": "Yuan"
+    },
+    {
+      "given": "Qian",
+      "family": "Cheng"
+    }
+  ],
+  "year": 2023,
+  "venue": "Remote Sensing 15(20), 4932",
+  "doi": "10.3390/rs15204932",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/rs15204932",
+  "type": "journal",
+  "axes": [
+    "drone-detection"
+  ],
+  "tags": [
+    "yolov5",
+    "ghostconv",
+    "p2-head",
+    "visdrone",
+    "uavdt",
+    "small-objects",
+    "lightweight"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

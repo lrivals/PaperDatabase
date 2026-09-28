@@ -14,7 +14,8 @@ Guide d'utilisation (pour l'humain) : [docs/GUIDE.md](docs/GUIDE.md).
 
 Lis du résumé vers le détail, et arrête-toi dès que tu as la réponse.
 
-1. **[INDEX.md](INDEX.md)** — quels papiers existent, sur quel axe, fichés ou non.
+1. **[INDEX.md](INDEX.md)** — quels papiers existent, sur quel axe, fichés ou non. Thème et
+   périmètre de la base : [profile.md](profile.md).
 2. **[benchmarks.csv](benchmarks.csv)** — tous les chiffres (FPS, GOPS, W, LUT/DSP/BRAM,
    quantification, toolflow). Pour toute question quantitative, interroge-le avec
    `bin/pdb bench` plutôt que de le lire en entier ou de faire un `grep`. Exemple :
@@ -54,6 +55,10 @@ chiffre à chiffre ([docs/EVAL.md](docs/EVAL.md) §6).
 | Commande | Effet |
 |---|---|
 | `bin/pdb status` | état de la base et prochaines actions suggérées |
+| `bin/pdb base list` / `info` / `check` / `new <nom> --theme "…"` | bases enregistrées ; profil et axes de celle-ci ; effet des règles de `base.json` ; création ([DATA_MODEL.md](DATA_MODEL.md) §11) |
+| `bin/pdb base scan [--from NOM]` / `base import NOM:<paper_id>` | articles utiles présents ou cités dans mes autres bases → `xbase_candidates.csv` ; copie d'un article (fiche repassée à `todo`) |
+| `bin/pdb --base NOM <commande>` | agir sur une autre base que celle du dossier courant |
+| `/base-profile [consigne]` | le LLM propose d'affiner le profil (`profile.md`, axes et règles de `base.json`) ; rien n'est écrit sans accord |
 | `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation du logiciel : qualité d'extraction, recherche de passages, `verify`, temps ; à lancer avant/après tout changement du pipeline ([docs/EVAL.md](docs/EVAL.md)) |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ([docs/RAG.md](docs/RAG.md) §5.1) |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM, texte exact, contrôle d'une citation ([docs/RAG.md](docs/RAG.md) §5) |

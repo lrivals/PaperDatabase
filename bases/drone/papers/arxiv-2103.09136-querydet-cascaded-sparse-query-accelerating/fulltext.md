@@ -164,9 +164,12 @@ We propose QueryDet that uses a novel query mechanism Cascade Sparse Query (CSQ)
     Method | CSQ | AP AP50 AP75 | AR1 AR10 AR100 AR500 | FPS
     RetinaNet QueryDet QueryDet | - × ✓ | 26.21 44.90 27.10 28.35 48.21 28.78 28.32 48.14 28.75 | 0.52 5.35 34.63 37.21 0.51 5.96 36.48 39.42 0.51 5.96 36.45 39.35 | 2.63 1.16 2.75
 
-**Table 2** 
+**Table 2** [corps du tableau reconstruit par Docling : à vérifier]
 
-    , the discoveries are
+    Method | CSQ | AP | AP50 | AP75 | AR1 | AR10 | AR100 | AR500 | FPS
+    RetinaNet | - | 26.21 | 44.90 | 27.10 | 0.52 | 5.35 | 34.63 | 37.21 | 2.63
+    QueryDet | × | 28.35 | 48.21 | 28.78 | 0.51 | 5.96 | 36.48 | 39.42 | 1.16
+    QueryDet | ✓ | 28.32 | 48.14 | 28.75 | 0.51 | 5.96 | 36.45 | 39.35 | 2.75
 
 **Table 3.** Ablation studies on COCO mini-val set. HR stands for using of high-resolution features; RB stands for the loss re-balance between FPN layers; QH stands for whether to add QueryHead that provides extra objectiveness supervision.
 
@@ -221,4 +224,8 @@ We propose QueryDet that uses a novel query mechanism Cascade Sparse Query (CSQ)
     MobileNet V2 | RN QD QD | - × ✓ | 26.72 43.17 28.17 29.16 46.20 30.95 28.94 45.79 30.71 | 15.27 29.28 34.51 16.14 31.26 38.66 15.74 31.26 38.66 | 17.75 5.31 21.66
     ShuffelNet V2 | RN QD QD | - × ✓ | 23.04 38.32 23.75 26.07 42.34 27.30 25.85 41.96 27.08 | 12.01 25.50 35.16 13.20 28.03 36.23 12.81 28.05 36.23 | 17.45 5.26 20.02
 
-**Table 9.** Performance and speed of using our CSQ in Faster R-CNN on COCO mini-val set. two alternative query operations for comparison. The first Crop Query (CQ), in which the corresponding regions indicated by queries are cropped from the high-resolution features for subsequent computations. Note this type of query is similar to the AutoFocus[33] approach. Another one is Complete Convolution Query (CCQ) where we use regular convolutions to compute the full feature map for each layer, but only extract results from queried positions for post-processing. For CQ, we crop a 11 × 11 patch from the feature map, which is chosen to fit the receptive field of the five 3 × 3 consecutive convolutions in the detection heads. We present the results in Table5. Generally speaking, all three methods can successfully accelerate the inference with negligible AP loss. Among them, our CSQ can achieve the fastest inference speed.
+**Table 9.** Performance and speed of using our CSQ in Faster R-CNN on COCO mini-val set. two alternative query operations for comparison. The first Crop Query (CQ), in which the corresponding regions indicated by queries are cropped from the high-resolution features for subsequent computations. Note this type of query is similar to the AutoFocus[33] approach. Another one is Complete Convolution Query (CCQ) where we use regular convolutions to compute the full feature map for each layer, but only extract results from queried positions for post-processing. For CQ, we crop a 11 × 11 patch from the feature map, which is chosen to fit the receptive field of the five 3 × 3 consecutive convolutions in the detection heads. We present the results in Table5. Generally speaking, all three methods can successfully accelerate the inference with negligible AP loss. Among them, our CSQ can achieve the fastest inference speed. [corps du tableau reconstruit par Docling : à vérifier]
+
+    CSQ | AP | AP50 | AP75 | APs | APm | APl | FPS
+    × | 38.47 | 59.44 | 41.73 | 22.98 | 41.90 | 49.55 | 17.57
+    ✓ | 38.20 | 58.88 | 41.50 | 22.23 | 41.91 | 49.55 | 19.03

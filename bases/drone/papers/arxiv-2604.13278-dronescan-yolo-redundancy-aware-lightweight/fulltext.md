@@ -208,7 +208,17 @@ Future directions include native YAML integration of MSFD as a fifth detection h
     All | 0.387 | 0.553 | +0.166
     4.6 Ablation Study |  |  | 
 
-**Table 6** presents the contribution of each component at 1280px. SAL-NWD alone provides the largest gain in mAP@50-95 (+0.098) by improving localization precision on small objects. MSFD alone improves recall most significantly (+0.132) by recovering tiny objects missed at stride 8.
+**Table 6** presents the contribution of each component at 1280px. SAL-NWD alone provides the largest gain in mAP@50-95 (+0.098) by improving localization precision on small objects. MSFD alone improves recall most significantly (+0.132) by recovering tiny objects missed at stride 8. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Model | mAP@50 | mAP@50-95 | Recall | FPS | Params
+    YOLOv8s baseline | 0.387 | 0.233 | 0.374 | 71.0 | 9.83M
+    + SAL-NWD | 0.521 | 0.331 | 0.497 | 71.3 | 9.83M
+    + MSFD | 0.528 | 0.336 | 0.506 | 69.4 | 9.94M
+    + RPA | 0.514 | 0.327 | 0.491 | 82.1 | ∼9.83M
+    + RPA + MSFD | 0.531 | 0.338 | 0.508 | 79.6 | 9.94M
+    + RPA + SAL-NWD | 0.527 | 0.340 | 0.502 | 81.3 | 9.83M
+    +MSFD+SAL-NWD | 0.538 | 0.344 | 0.511 | 69.1 | 9.94M
+    DroneScan-YOLO | 0.553 | 0.356 | 0.518 | 96.7 | 10.23M
 
 **Table 6:** Ablation study at 1280px resolution.
 

@@ -1,0 +1,893 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 4,
+   "bbox": [
+    35.1,
+    114.7,
+    559.5,
+    238.5
+   ],
+   "caption": "Table 1. Comparison of recent related works.",
+   "rows": [
+    [
+     "Paper Contributions.",
+     "FunctionalModules.FCC.",
+     "FunctionalModules.CIP.",
+     "FunctionalModules..",
+     "ComputingPlatforms.COMFPGA.",
+     "ComputingPlatforms.µC.",
+     "ComputingPlatforms.COTS.",
+     "Dependability..",
+     "Dependability.Reliability.",
+     "Dependability.Reliability.CLR",
+     "Ref.."
+    ],
+    [
+     "Security and safety",
+     "7",
+     "7",
+     "3",
+     "7",
+     "7",
+     "7",
+     "3",
+     "7",
+     "7",
+     "[6]"
+    ],
+    [
+     "Challenges for civil applications",
+     "7",
+     "3",
+     "3",
+     "7",
+     "7",
+     "7",
+     "7",
+     "7",
+     "7",
+     "[10]"
+    ],
+    [
+     "Image processing NN and reliability",
+     "7",
+     "3",
+     "7",
+     "7",
+     "7",
+     "7",
+     "3",
+     "3",
+     "3",
+     "[14]"
+    ],
+    [
+     "COTS and simulator",
+     "3",
+     "7",
+     "3",
+     "7",
+     "3",
+     "3",
+     "3",
+     "3",
+     "7",
+     "[15]"
+    ],
+    [
+     "Survey of FPGA application",
+     "3",
+     "3",
+     "3",
+     "3",
+     "7",
+     "7",
+     "7",
+     "7",
+     "7",
+     "[12]"
+    ],
+    [
+     "UAV subsystems",
+     "3",
+     "3",
+     "3",
+     "3",
+     "3",
+     "3",
+     "7",
+     "7",
+     "7",
+     "[13]"
+    ],
+    [
+     "General purposes and algorithms",
+     "7",
+     "3",
+     "7",
+     "7",
+     "7",
+     "7",
+     "7",
+     "7",
+     "7",
+     "[11]"
+    ],
+    [
+     "CP and reliability aspect",
+     "3",
+     "3",
+     "3",
+     "3",
+     "3",
+     "3",
+     "3",
+     "3",
+     "3",
+     "Prop."
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    34.8,
+    114.5,
+    559.7,
+    269.0
+   ],
+   "caption": "Table 2. List of research works and their implemented FCC FMs.",
+   "rows": [
+    [
+     "CP",
+     "Devices",
+     "Sensors/Actuators",
+     "Applications",
+     "Ref."
+    ],
+    [
+     "",
+     "Xilinx Zynq SoC",
+     "C, L, R, IMU GPS R",
+     "Payload data processing Navigation Flight computation Estimation, tracking,",
+     "[18] [23] [24]"
+    ],
+    [
+     "",
+     "Xilinx Zynq SoC",
+     "C",
+     "localization",
+     "[30]"
+    ],
+    [
+     "FPGA",
+     "Xilinx Artix7, Virtex-V, Cyclone II",
+     "IMU",
+     "Flight control computing",
+     "[19]"
+    ],
+    [
+     "FPGA",
+     "Xilinx Virtex-7",
+     "C",
+     "Moving target detection",
+     "[31]"
+    ],
+    [
+     "FPGA",
+     "Xilinx Virtex-7, ZED Board, Raspberry Pi",
+     "C, L, R, IMU",
+     "Flight and payload computing",
+     "[25,29]"
+    ],
+    [
+     "FPGA",
+     "Intel DE0 nano FPGA",
+     "C, L, R, IMU",
+     "Flight and payload computing",
+     "[26]"
+    ],
+    [
+     "",
+     "Arduino Uno",
+     "IMU",
+     "Flight and navigation",
+     "[27,33]"
+    ],
+    [
+     "",
+     "PIC 32",
+     "IMU",
+     "Flight and navigation control",
+     "[28,29]"
+    ],
+    [
+     "µC",
+     "Cortex-M4",
+     "IMU",
+     "On-board flight control",
+     "[34]"
+    ],
+    [
+     "µC",
+     "",
+     "R, L",
+     "Flight controller",
+     "[21]"
+    ],
+    [
+     "",
+     "Arduino Mega 2560",
+     "L, IMU",
+     "Flight and navigation control",
+     "[22]"
+    ],
+    [
+     "",
+     "Arduino Mega",
+     "IMU Radar, L = Lidar, C",
+     "Flight computing Camera",
+     "[20,32]"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    34.7,
+    114.8,
+    559.8,
+    213.0
+   ],
+   "caption": "Table 3. Computing platforms used in object detection and tracking applications.",
+   "rows": [
+    [
+     "CP",
+     "Devices",
+     "Sensors",
+     "Applications",
+     "Ref."
+    ],
+    [
+     "FPGA",
+     "Spartan-3A DSP XC3SD1800A Intel i5 CPU, an Nvidia GTX1070 GPU Cyclone III, TMS320C6657 DSP Xilinx Ultrascale+ MPSoC",
+     "Camera",
+     "Terrain classification Target tracking and recognition Image acquisition Realtime moving target detection",
+     "[36] [37] [35] [38]"
+    ],
+    [
+     "µC",
+     "ATMEGA 328 ARM Cortex M4, NVIDIA Jetson TX2 Raspberry Pi",
+     "Gas detector Camera",
+     "Environment monitor Object detection and tracking Face detection and recognition Disaster people recognition Target detection, obstacles avoidance",
+     "[41] [40] [42] [43] [39]"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    35.1,
+    153.1,
+    560.0,
+    309.6
+   ],
+   "caption": "Table 4. The summary of FPGA-based NNAs used in UAVs.",
+   "rows": [
+    [
+     "CP",
+     "Devices Sensors",
+     "Applications",
+     "Ref."
+    ],
+    [
+     "SoC-FPGA",
+     "Xilinx Spartan-6, Raspberry Pi Xilinx Pynq-Z1 GPS Xilinx Zedboard, NVIDIA TX1 Infrared visual Xilinx FPGA Laser, Xilinx ZCU102 FPGA Zynq Ultra Scale Arria 10 FPGA, Intel core I5 CPU Intel Cyclone V FPGA Xilinx Virtex7 xc7vx690 Digilent NetFPGA-SUME FPGA Xilinx KU115",
+     "IMU,Camera Autonomousnavigationbydatafusion Object detection, SAR and Object detection by Image fusion Radar Cropland monitoring Vehicle counting Road object recognition, Vision-based navigation by YOLO Target detection Image classification Object detection, SAR Object detector by YOLOV2 Target detection by YOLOV2",
+     "[49] [47] [48] [50] [52] [51] [53] [46] [44] [45] [54] [55]"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    35.2,
+    114.8,
+    560.5,
+    221.1
+   ],
+   "caption": "Table 5. Computing platforms used in UAV communication module",
+   "rows": [
+    [
+     "CP Devices",
+     "Communication Technology",
+     "COM",
+     "Ref."
+    ],
+    [
+     "Xilinx Virtex-7",
+     "MIMO",
+     "Non-stationary channel model",
+     "[56]"
+    ],
+    [
+     "Xilinx Artix-7",
+     "TDMA Spreading, jamming",
+     "Datalink terminal Variable feedback controller",
+     "[57] [61]"
+    ],
+    [
+     "FPGA Xilinx Zynq",
+     "OFDM, CDM OFDM, MIMO",
+     "SDR system SDR system",
+     "[59] [60]"
+    ],
+    [
+     "-",
+     "Interleaving",
+     "Interleaver module",
+     "[58]"
+    ],
+    [
+     "-",
+     "5G wireless communication",
+     "Intelligent reflecting surface",
+     "[64,65]"
+    ],
+    [
+     "µC ArduPilot Mega",
+     "Single-carrier FDM, OFDM",
+     "Datalink terminal",
+     "[62]"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    34.7,
+    115.1,
+    559.7,
+    358.4
+   ],
+   "caption": "Table 6. Summary of fault and failure modes in UAVs.",
+   "rows": [
+    [
+     "Faults",
+     "Failure Modes and Effects",
+     "Computing Platforms",
+     "Sensors/Actuators",
+     "Applications",
+     "Ref."
+    ],
+    [
+     "Navigation sensors, (Software, Hardware)",
+     "UAV accurate position fail, crashes with obstacles",
+     "Xilinx FPGA SoC (ZED Board)",
+     "GPS, Battery",
+     "Critical mission",
+     "[76,81]"
+    ],
+    [
+     "Actuators gain, bias faults (Hardware)",
+     "Degradation of actuator effectiveness, collide with UAVs",
+     "-",
+     "Actuator",
+     "Control multiple UAVs",
+     "[82]"
+    ],
+    [
+     "Sensors and actuator's partial loss (Hardware)",
+     "Changed the value of roll angle, yaw rate, sideslip angle",
+     "ZAGI UAV",
+     "Gyroscope, Actuator",
+     "Safety mission",
+     "[83]"
+    ],
+    [
+     "Actuator faults (Hardware)",
+     "Altitude estimation failure of step, ramp, and oscillatory error",
+     "KARI EAV-3",
+     "",
+     "Accelerometer,IMUHighaltitudemission",
+     "[84]"
+    ],
+    [
+     "Sensors (Hardware)",
+     "Affect the stabilization of the UAV altitude and position",
+     "Zynq 7000",
+     "Gyroscope",
+     "Object detection",
+     "[85]"
+    ],
+    [
+     "Navigation sensors, (Hardware)",
+     "UAValtitudeandpositionfailure",
+     "TopXGunRobotics",
+     "GPS,Altimeter,IMU",
+     "Navigation",
+     "[86]"
+    ],
+    [
+     "Soft and Hard Error, Chip (Permanent, Transient)",
+     "The vibration of motor, accelerometer become violent, system crash",
+     "FPGA, µC",
+     "Motor, Accelerometer",
+     "SAR mission",
+     "[87,88]"
+    ],
+    [
+     "SEU (Transient)",
+     "Erroneous output, decrease accuracy, classification failure",
+     "FPGA",
+     "CNN accelerator",
+     "Identify and classify the objects",
+     "[89]"
+    ],
+    [
+     "SEU (Transient)",
+     "Image classification error, system crash, vulnerable to operating system",
+     "Pynq Z2 FPGA",
+     "CNN accelerator",
+     "Image classification",
+     "[90]"
+    ],
+    [
+     "Navigation sensors (Hardware)",
+     "Error in angular velocity and acceleration causes high risk of failure",
+     "µC",
+     "Accelerometer, Gyro, Magnetometer, GPS",
+     "Navigation",
+     "[91]"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    34.8,
+    114.9,
+    560.0,
+    603.9
+   ],
+   "caption": "Table 7. Summary of reliability enhancement in UAV system .",
+   "rows": [
+    [
+     "Approach",
+     "Safety and Reliability Enhancement",
+     "Application",
+     "Sensors/Actuator/Module",
+     "Computing Platforms",
+     "Ref."
+    ],
+    [
+     "Bayesian network",
+     "Decision making including failure management",
+     "Critical mission",
+     "GPS, Battery",
+     "Xilinx SoC-FPGA (ZED Board)",
+     "[76,80]"
+    ],
+    [
+     "Bayesian network",
+     "Decision making failure management",
+     "Critical mission",
+     "GPS, Battery",
+     "Xilinx FPGA SoC (ZED Board)",
+     "[78]"
+    ],
+    [
+     "Bayesian network",
+     "Decision making failure management",
+     "Critical mission",
+     "GPS, Battery",
+     "Xilinx FPGA SoC (ZED Board)",
+     "[79]"
+    ],
+    [
+     "Bayesian network",
+     "Embedded health management",
+     "Critical mission computing",
+     "Accelerometer",
+     "Xilinx ZED FPGA",
+     "[77]"
+    ],
+    [
+     "Bayesian network",
+     "Fault detection, isolation, and recovery",
+     "Critical mission",
+     "GPS, Battery",
+     "Xilinx Zynq FPGA",
+     "[81]"
+    ],
+    [
+     "MCM",
+     "Reliability synthesis for flight computer",
+     "Navigation",
+     "FCC",
+     "-",
+     "[92]"
+    ],
+    [
+     "MCM",
+     "Fault-tolerant architecture",
+     "SAR mission",
+     "Motor, Accelerometer",
+     "FPGA, µC",
+     "[87,88]"
+    ],
+    [
+     "MCM",
+     "fault-tolerant inertial navigation system",
+     "Navigation",
+     "IMU",
+     "µC",
+     "[91]"
+    ],
+    [
+     "Kalman",
+     "Re-configurable fault-tolerant control",
+     "Safety mission",
+     "Actuator",
+     "-",
+     "[83]"
+    ],
+    [
+     "",
+     "Fault-tolerantaccelerometer",
+     "Highaltitudemission",
+     "Accelerometer",
+     "KARI EAV-3",
+     "[84]"
+    ],
+    [
+     "",
+     "Fault-tolerant cooperative system",
+     "Navigation",
+     "GPS, Radar, IMU",
+     "-",
+     "[93]"
+    ],
+    [
+     "",
+     "Sensor and navigation fault detection",
+     "Navigation",
+     "IMU",
+     "-",
+     "[86]"
+    ],
+    [
+     "Automata",
+     "Resourcemanagement for safety purposes",
+     "Video tracking",
+     "Camera",
+     "Xilinx FPGA ARM, Neon processor",
+     "[95]"
+    ],
+    [
+     "Automata",
+     "Statistical framework for SEU",
+     "UAV communication",
+     "COM",
+     "-",
+     "[94]"
+    ],
+    [
+     "Neural network",
+     "Fault detection for sensors",
+     "Navigation",
+     "GPS, IMU",
+     "Ultra-Stick 25e UAV simulation model",
+     "[96]"
+    ],
+    [
+     "Neural network",
+     "Reliable CNN for FPGA",
+     "CNN accelerator",
+     "Accelerator",
+     "Xilinx Zynq FPGA",
+     "[89]"
+    ],
+    [
+     "Neural network",
+     "Decision making",
+     "General",
+     "FCC",
+     "Xilinx Zynq FPGA",
+     "[85]"
+    ],
+    [
+     "Neural network",
+     "failure management Analysis SEU",
+     "General",
+     "On-chip",
+     "Pynq Z2 FPGA",
+     "[90]"
+    ],
+    [
+     "Neural network",
+     "Fault-tolerant neural network",
+     "Mission",
+     "IMU",
+     "FPGA, µC",
+     "[97]"
+    ],
+    [
+     "Fuzzy logic",
+     "Fault-tolerant quadcopter",
+     "SAR mission",
+     "FCC",
+     "FPGA, µC",
+     "[98]"
+    ],
+    [
+     "Tracking algorithm",
+     "Failure detection and identification",
+     "Visual inspection",
+     "Camera",
+     "Odroid U3",
+     "[99]"
+    ],
+    [
+     "Polygonal linear consecutive",
+     "Mission reliability",
+     "Mission",
+     "Node-based",
+     "-",
+     "[100]"
+    ],
+    [
+     "Cooperative control model",
+     "Fault-tolerant for cooperative drone",
+     "Control multiple UAVs",
+     "Actuator",
+     "-",
+     "[82]"
+    ],
+    [
+     "Model-freecontrol",
+     "Algorithmicoptimization",
+     "Controlling in unstructured environments",
+     "Underactuated manipulator",
+     "-",
+     "[101]"
+    ],
+    [
+     "Event-triggered",
+     "Resource optimization",
+     "Networked control systems",
+     "Actuator",
+     "-",
+     "[102,103]"
+    ],
+    [
+     "Unifiedmodeling",
+     "Automatictestingplatform",
+     "Real-timefight simulation",
+     "FCC",
+     "Pixhawk autopilot",
+     "[104]"
+    ]
+   ]
+  },
+  {
+   "page": 20,
+   "bbox": [
+    165.8,
+    132.2,
+    414.3,
+    774.5
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "APSoC",
+     "AllProgrammableSystem-on-Chip"
+    ],
+    [
+     "AI",
+     "Artificial intelligence"
+    ],
+    [
+     "BN",
+     "BayesianNetwork"
+    ],
+    [
+     "CIP",
+     "Computation-IntensivePayload"
+    ],
+    [
+     "CLR",
+     "Cross-layerReliability"
+    ],
+    [
+     "CNN",
+     "ConvolutionalNeuralNetwork"
+    ],
+    [
+     "COM",
+     "CommunicationModule"
+    ],
+    [
+     "COTS",
+     "Commercial-Off-The-Shelf"
+    ],
+    [
+     "CP",
+     "Computing Platform"
+    ],
+    [
+     "DL",
+     "DeepLearning"
+    ],
+    [
+     "DM",
+     "DecisionManager"
+    ],
+    [
+     "DNN",
+     "DeepNeuralNetwork"
+    ],
+    [
+     "DPR",
+     "DynamicPartialReconfiguration"
+    ],
+    [
+     "DSP",
+     "DigitalSignalProcessor"
+    ],
+    [
+     "FCC",
+     "FlightControlComputer"
+    ],
+    [
+     "FDM",
+     "FrequencyDivisionMultiplexing"
+    ],
+    [
+     "FFT",
+     "Fast Fourier Transform"
+    ],
+    [
+     "5G",
+     "Fifth-Generation"
+    ],
+    [
+     "FM",
+     "FunctionalModule"
+    ],
+    [
+     "FPGA",
+     "Field-ProgrammableGateArray"
+    ],
+    [
+     "GNC",
+     "GuidanceNavigationandControl"
+    ],
+    [
+     "GPS",
+     "GlobalPositioningSystem"
+    ],
+    [
+     "GPU",
+     "GraphicalProcessingUnit"
+    ],
+    [
+     "HM",
+     "HealthManagement"
+    ],
+    [
+     "HW",
+     "Hardware"
+    ],
+    [
+     "IMU",
+     "InertialMeasurementUnit"
+    ],
+    [
+     "ISO",
+     "InternationalOrganisationforStandardisation"
+    ],
+    [
+     "Lidar",
+     "LightDetectionandRanging"
+    ],
+    [
+     "MCM",
+     "MarkovChainsModel"
+    ],
+    [
+     "MIMO",
+     "Multiple-InputMultiple-Output"
+    ],
+    [
+     "ML",
+     "MachineLearning"
+    ],
+    [
+     "µC",
+     "Micro-Controller"
+    ],
+    [
+     "µP",
+     "Microprocessor"
+    ],
+    [
+     "NN",
+     "NeuralNetwork"
+    ],
+    [
+     "NNA",
+     "NeuralNetworkAccelerator"
+    ],
+    [
+     "OS",
+     "OperatingSystem"
+    ],
+    [
+     "PCA",
+     "PrincipalComponentAnalysis"
+    ],
+    [
+     "PID",
+     "ProportionalIntegralDerivative"
+    ],
+    [
+     "QoE",
+     "QualityofExperience"
+    ],
+    [
+     "QoS",
+     "QualityofService"
+    ],
+    [
+     "Radar",
+     "RadioDetectionandRanging"
+    ],
+    [
+     "SAR",
+     "SearchandRescue"
+    ],
+    [
+     "SDR",
+     "Software-DefinedRadio"
+    ],
+    [
+     "SEU",
+     "Single-EventUpset"
+    ],
+    [
+     "SoC",
+     "System-on-Chip"
+    ],
+    [
+     "SoS",
+     "Systems of Systems"
+    ],
+    [
+     "SW",
+     "Software"
+    ],
+    [
+     "TPU",
+     "TensorProcessingUnit"
+    ],
+    [
+     "UAS UAV",
+     "UnmannedAerialSystem UnmannedAerialVehicle"
+    ],
+    [
+     "YOLO",
+     "YouOnlyLookOnce"
+    ]
+   ]
+  }
+ ]
+}

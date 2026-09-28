@@ -31,12 +31,13 @@
   ],
   "added": "2026-09-28",
   "extraction": {
-    "backend": "pymupdf",
-    "ok": false,
+    "backend": "grobid",
+    "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon arXiv (journal_ref : 2025 Mach. Learn.: Sci. Technol. 6 035017) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 2"
     ]
   },
   "status": {

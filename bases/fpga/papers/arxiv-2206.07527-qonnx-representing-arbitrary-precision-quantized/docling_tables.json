@@ -1,0 +1,189 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    59.4,
+    77.7,
+    551.5,
+    178.2
+   ],
+   "caption": "TABLE I COMPARISON OF DIFFERENT ONNX-BASED QUANTIZED NEURAL NETWORK INTERMEDIATE REPRESENTATIONS.",
+   "rows": [
+    [
+     "",
+     "Arbitrary pre- cision",
+     "Rounding variants",
+     "Below 8-bits precision",
+     "Weights-only quantization",
+     "Avoid op. du- plication",
+     "High-precision output"
+    ],
+    [
+     "QONNX (this work)",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "QCDQ (this work)",
+     "×",
+     "×",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "Quantized op. with clipping (this work)",
+     "×",
+     "×",
+     "✓",
+     "×",
+     "×",
+     "×"
+    ],
+    [
+     "QDQ [12]",
+     "×",
+     "×",
+     "×",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "Integer op. [12]",
+     "×",
+     "×",
+     "×",
+     "×",
+     "×",
+     "✓"
+    ],
+    [
+     "Quantized op. [12]",
+     "×",
+     "×",
+     "×",
+     "×",
+     "×",
+     "×"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    51.4,
+    80.0,
+    560.1,
+    165.2
+   ],
+   "caption": "TABLE III THE MODELS IN THE QONNX MODEL ZOO.",
+   "rows": [
+    [
+     "Model name",
+     "Dataset",
+     "Accuracy",
+     "Inputbits",
+     "Weightbits",
+     "Act.bits",
+     "MACs",
+     "BOPs",
+     "Weights",
+     "Totalweightbits"
+    ],
+    [
+     "MobiletNet-w4a4",
+     "ImageNet",
+     "71.14%",
+     "8",
+     "4",
+     "4",
+     "557381408",
+     "74070028288",
+     "4208224",
+     "16 839 808"
+    ],
+    [
+     "CNV-w1a1",
+     "CIFAR-10",
+     "84.22%",
+     "8",
+     "1",
+     "1",
+     "57906176",
+     "107672576",
+     "1542848",
+     "1 542 848"
+    ],
+    [
+     "CNV-w1a2",
+     "CIFAR-10",
+     "87.80%",
+     "8",
+     "1",
+     "2",
+     "57906176",
+     "165578752",
+     "1542848",
+     "1 542 848"
+    ],
+    [
+     "CNV-w2a2",
+     "CIFAR-10",
+     "89.03%",
+     "8",
+     "2",
+     "2",
+     "57906176",
+     "331157504",
+     "1542848",
+     "3 085 696"
+    ],
+    [
+     "TFC-w1a1",
+     "MNIST",
+     "93.17%",
+     "8",
+     "1",
+     "1",
+     "59 008",
+     "59 008",
+     "59 008",
+     "59 008"
+    ],
+    [
+     "TFC-w1a2",
+     "MNIST",
+     "94.79%",
+     "8",
+     "1",
+     "2",
+     "59 008",
+     "118 016",
+     "59 008",
+     "59 008"
+    ],
+    [
+     "TFC-w2a2",
+     "MNIST",
+     "96.60%",
+     "8",
+     "2",
+     "2",
+     "59 008",
+     "236 032",
+     "59 008",
+     "118 016"
+    ]
+   ]
+  }
+ ]
+}

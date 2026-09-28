@@ -1,0 +1,539 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 6,
+   "bbox": [
+    50.4,
+    79.7,
+    561.4,
+    476.8
+   ],
+   "caption": "TABLE I DETAILED INFORMATION ON THE MAIN SCENE, TYPE AND TOTAL, MODAL, COMPLEXITY, UAV TYPE, AND MULTIMODAL OF THE ABOVE DATASET",
+   "rows": [
+    [
+     "Dataset",
+     "Main Scene",
+     "Type and Total",
+     "Modality",
+     "Complexity",
+     "UAV Type",
+     "Multimodal"
+    ],
+    [
+     "4th-Anti-UAV[55]",
+     "Sky,Urban,Mountain,Forest",
+     "Video410",
+     "IR",
+     "Large",
+     "Not available",
+     "No"
+    ],
+    [
+     "Anti2 [56]",
+     "Sky,Urban,Mountain,Forest",
+     "Image 5062",
+     "RGB",
+     "Medium",
+     "Not available",
+     "No"
+    ],
+    [
+     "MMFW-UAV [57]",
+     "Sky,Urban,Forest",
+     "Image 147,417",
+     "RGB and IR",
+     "Large",
+     "DJI M30T, Fixed-wing UAV",
+     "Yes"
+    ],
+    [
+     "Anti-MUAV15[58]",
+     "City,sky,lake,bushest",
+     "video 15",
+     "IR",
+     "Medium",
+     "Not available",
+     "No"
+    ],
+    [
+     "SynDroneVision[59]",
+     "Campus,City,Farm, Industrial area",
+     "Image 140,038",
+     "RGB",
+     "Large",
+     "DJI Phantom, DJI Tello Ryze and other UAVs",
+     "No"
+    ],
+    [
+     "Wongetal.dataset[60]",
+     "Crowd,Buildings",
+     "Image 1000",
+     "RGB",
+     "Small",
+     "Not available",
+     "No"
+    ],
+    [
+     "MMAUD [61]",
+     "Sky,Industrial,Parking,Roof, Urban,Noise",
+     "Multi-category",
+     "RGB",
+     "Large",
+     "DJl Phantom 4, DJI Avata FPV, DJl Mavic 3, DJL M300 and DJl Mavic 2",
+     "Yes"
+    ],
+    [
+     "ARD-MAV[62]",
+     "Sky,Urban,Rural,Mountain",
+     "Image106,665 Video 60",
+     "RGB",
+     "Large",
+     "DJI Mavic2 Pro",
+     "Yes"
+    ],
+    [
+     "ICG-Drone [63]",
+     "Urban, Indoor",
+     "Image 1, 823 Video 5",
+     "RGB",
+     "Medium",
+     "DJI F450, DJI Tello and QAV250",
+     "Yes"
+    ],
+    [
+     "SIDD [64]",
+     "City, Mountain, Sea, Sky",
+     "Image 4737",
+     "IR",
+     "Medium",
+     "Not available",
+     "No"
+    ],
+    [
+     "Anti-UAV410[17]",
+     "Mountain,Building,Urban",
+     "Video 410",
+     "IR",
+     "Large",
+     "Not available",
+     "No"
+    ],
+    [
+     "DUTAnti-UAV[65]",
+     "Sky,Jungles,Urban,Rural",
+     "Image 1, 000 Video 20",
+     "RGB",
+     "Medium",
+     "Not available",
+     "Yes"
+    ],
+    [
+     "SIRST-V2 [66]",
+     "Sky, City, Sea",
+     "Image 1, 024",
+     "IR",
+     "Small",
+     "Not available",
+     "No"
+    ],
+    [
+     "Anti - UAV [48]",
+     "Sky,Urban,Mountain",
+     "VideoRGB318 Video IR318",
+     "RGB and IR",
+     "Large",
+     "DJI and Parrot",
+     "Yes"
+    ],
+    [
+     "UAV-Detection-Dataset [67]",
+     "Airport",
+     "Audio 90 Video RGB 285 Video IR365",
+     "RGB and IR",
+     "Large",
+     "DJI Phantom4 Pro,DJI Flame Wheel and Hubsan H107D+",
+     "Yes"
+    ],
+    [
+     "Li et al. Dataset [68]",
+     "Sky,Lawn,Forest",
+     "Video 27",
+     "RGB",
+     "Medium",
+     "Yuneec",
+     "No"
+    ],
+    [
+     "Det-Fly [69]",
+     "Sky,Field,Urban,Mountain",
+     "Image13,271",
+     "RGB",
+     "Medium",
+     "DJI M210 and DJI Mavic",
+     "No"
+    ],
+    [
+     "MIDGARD[70]",
+     "Fields,Urban,Indoor,Forest",
+     "Image 7, 595",
+     "RGB",
+     "Medium",
+     "Not available",
+     "No"
+    ],
+    [
+     "Real World [43]",
+     "Sky, Urban, Rural",
+     "Image 56, 821",
+     "RGB",
+     "Medium",
+     "Not available",
+     "No"
+    ],
+    [
+     "TIB-Net [71]",
+     "College, illumination",
+     "Image 2, 860",
+     "RGB",
+     "Small",
+     "Not available",
+     "No"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    50.7,
+    79.8,
+    561.0,
+    375.2
+   ],
+   "caption": "TABLE II DETAILED INFORMATION ON THE SOURCE, PUBLIC LINKS, AND ACCESS TIME OF THE DATASET",
+   "rows": [
+    [
+     "Dataset",
+     "Year",
+     "Source",
+     "Public Link",
+     "Access Data"
+    ],
+    [
+     "4th-Anti-UAV [55]",
+     "2025",
+     "CVPR",
+     "https://anti-uav.github.io/",
+     "26-Feb-25"
+    ],
+    [
+     "Anti2 [56]",
+     "2025",
+     "MDPI",
+     "https://github.com/gdpinntit/-anti-interference-and-anti-UAV-dataset",
+     "26-Feb-25"
+    ],
+    [
+     "MMFW-UAV [57]",
+     "2025",
+     "SCI DATA",
+     "https://doi.org/10.57760/sciencedb.07839",
+     "19-Jun-25"
+    ],
+    [
+     "Anti-MUAV15 [58]",
+     "2025",
+     "EXPERTSYSTAPPL",
+     "https://github.com/Shihan0325/Anti-MUAV15",
+     "19-Jun-25"
+    ],
+    [
+     "SynDroneVision [59]",
+     "2025",
+     "WACV",
+     "https://zenodo.org/records/13360116",
+     "18-Jun-25"
+    ],
+    [
+     "Wong et al. dataset [60]",
+     "2025",
+     "IJCNN",
+     "https://github.com/yjwong1999/IJCNN2025-DvB",
+     "18-Jun-25"
+    ],
+    [
+     "MMAUD [61]",
+     "2024",
+     "ICRA",
+     "https://github.com/ntu-aris/MMAUD",
+     "6-Jan-25"
+    ],
+    [
+     "ARD-MAV [62]",
+     "2024",
+     "IEEE TITS",
+     "https://github.com/WindyLab/Global-Local-MAV-Detection",
+     "6-Jan-25"
+    ],
+    [
+     "ICG-Dron [63]",
+     "2024",
+     "IEEE T-IV",
+     "https://github.com/NTU-ICG/multiUAV -detection-tracking",
+     "8-Nov-24"
+    ],
+    [
+     "SIDD [64]",
+     "2023",
+     "MDPI",
+     "https://github.com/Dang-zy/SIDD",
+     "8-Nov-24"
+    ],
+    [
+     "Anti-UAV410 [17]",
+     "2023",
+     "IEEE TPAMI",
+     "https://github.com/HwangBo94/Anti-UAV410",
+     "8-Nov-24"
+    ],
+    [
+     "DUT Anti-UAV [65]",
+     "2022",
+     "IEEE TITS",
+     "https://github.com/wangdongdut/DUT-Anti-UAV",
+     "8-Nov-24"
+    ],
+    [
+     "SIRST-V2 [66]",
+     "2022",
+     "IEEE TGRS",
+     "https://github.com/YimianDai/open-sirst-v2",
+     "8-Nov-24"
+    ],
+    [
+     "Anti-UAV [48]",
+     "2021",
+     "IEEE TMM",
+     "https://github.com/ucas-vg/Anti-UAV",
+     "24-Sep-24"
+    ],
+    [
+     "UAV-Detection-Dataset[67]",
+     "2021",
+     "Data Brief",
+     "https://github.com/UAV DetectionThesis/UAV -detection-dataset",
+     "6-Dec-24"
+    ],
+    [
+     "Li et al. Dataset [68]",
+     "2020",
+     "IROS",
+     "https://github.com/CenekAlbl/UAV -tracking-datasets",
+     "24-Sep-24"
+    ],
+    [
+     "Det-Fly [69]",
+     "2020",
+     "IEEE RA-L",
+     "https://github.com/Jake-WU/Det-Fly",
+     "6-Dec-24"
+    ],
+    [
+     "MIDGARD [70]",
+     "2020",
+     "ICRA",
+     "https://mrs.felk.cvut.cz/midgard",
+     "6-Dec-24"
+    ],
+    [
+     "Real World [43]",
+     "2020",
+     "IEEE Access",
+     "https://github.com/Maciullo/UAV DetectionDataset/tree/master",
+     "6-Dec-24"
+    ],
+    [
+     "TIB-Net [71]",
+     "2020",
+     "IEEE Access",
+     "https://github.com/kyn0v/TIB-Net",
+     "6-Dec-24"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    49.0,
+    79.4,
+    562.0,
+    474.3
+   ],
+   "caption": "TABLE III DETAILED DESCRIPTION OF THE DATASETS USED, EXPERIMENTAL RESULTS, AND EXPERIMENTAL ENVIRONMENTS FOR DIFFERENT METHODS.",
+   "rows": [
+    [
+     "Category",
+     "Method",
+     "Dataset",
+     "Experimental Result",
+     "Experimental Environment"
+    ],
+    [
+     "",
+     "DotD-YOLOv9-C [56]",
+     "Self-built dataset Anti2",
+     "mAP=92.60%",
+     "NVIDA GeForce RTX 4060, Ubuntu 18.04, PyTorch 2.3.0, Python 3.8.19"
+    ],
+    [
+     "",
+     "YOLOv6v3-Based [98]",
+     "Self-built dataset UETT4K Anti-UAV",
+     "Precision=96.2%, Recall=90.0%, F1=93.5% mAP50=92.7%, mAP50-95=70.3%, FPS=36.4",
+     "sys-220GP-TRN server with dual A30 GPUs (24GB+26GB), 256GB memory, Intel Xeon Gold 6354, PyTorch"
+    ],
+    [
+     "",
+     "c-MPDIoU [100]",
+     "City-UAV, Anti-UAV [48], DUT ANTI-UAV [65]",
+     "City-UAV AP=93.4% Anti-UAV AP=88.1% DUT ANTI-UAV AP=96.7%",
+     "RTX 3090, Intel Xeon Silver 4210R, PyTorch, CUDA 12.1, Ubuntu 20.04"
+    ],
+    [
+     "",
+     "YOLOv11-Based [92]",
+     "DUT ANTI-UAV [65]",
+     "Precision=96.9%, Recall=89.8%, mAP50=95.2%, mAP50-95=65.7%, FPS=91",
+     "Ubuntu 22.04, RTX 3090, PyTorch"
+    ],
+    [
+     "",
+     "NFE-YOLO [93]",
+     "UESTC Anti-UAV",
+     "Precision=98.3%, Recall=96.1%, mAP50=98.7%, mAP75=90.8%",
+     "Ryzen 5 3400G, 16GB RAM, Tesla T4 (×2), PyTorch1.11.0, Torchvision0.11.0"
+    ],
+    [
+     "UAV-based Detection",
+     "LDHD-Net [94]",
+     "Anti-UAV410,SIDD[64]",
+     "AP=95.6%",
+     "Windows 11, PyTorch 1.13.0, Torchvision 0.14.0, Python 3.8.15, CUDA 11.6.1"
+    ],
+    [
+     "",
+     "BRA-YOLOv10 [95]",
+     "SIDD [64]",
+     "Precision=98.9%, Recall=92.3%, mAP50=96.5%, mAP50-95=67.6%",
+     "RTX 4090, PyTorch 2.0.1, Python 3.9.19, Ubuntu 18.04, CUDA 11.7"
+    ],
+    [
+     "",
+     "ISTD-DETR [96]",
+     "Anti-UAV410, SIRST",
+     "SIRST: Precision=94.8%, Recall=94%, mAP50=96.4% Anti-UAV410:mAP50=96.2%,mAP50-95=55.3%,FPS=133.1",
+     "Ubuntu22.04.1,RTXA5000"
+    ],
+    [
+     "",
+     "LAMS-YOLO [97]",
+     "Self-built dataset",
+     "F1=92.58%, Precision=96.10%, Recall=86.30%, mAP30=93.4%, mAP95=74.7%",
+     "Ubuntu 20.04, Tensor Core A100, Python 3.9.11, PyTorch 1.10.0"
+    ],
+    [
+     "",
+     "GAN-UAV-YOLOv10s [101]",
+     "SIDD",
+     "Accuracy=96%, Recall=84%, mAP50=92%",
+     "RTX3090, Intel E5-2667v, PyTorch 1.13.1, Python 3.10.13"
+    ],
+    [
+     "",
+     "YOLOv8-E [102]",
+     "Real ward [43]",
+     "Precision=98.5%, Recall=95.8%, mAP=98.4%, mAP50-95=72.1%, FPS=57.4",
+     "Windows 10, GTX 1050 Ti, CUDA 11.8, Python 3.9.19, PyTorch 2.0.0"
+    ],
+    [
+     "",
+     "StrongSiamTracker [113]",
+     "4th-Anti-UAV,Anti-UAV410",
+     "Anti-UAV410acc=66.73%",
+     "2× RTX 4090, Python 3.7, PyTorch 1.8.1"
+    ],
+    [
+     "",
+     "DLST [114]",
+     "Anti-UAV410",
+     "SA=68.81%",
+     "RTX 4090, PyTorch"
+    ],
+    [
+     "",
+     "PPTracker [115]",
+     "4th-Anti-UAV",
+     "MOTA=67.9%",
+     "2× RTX 3090, PyTorch"
+    ],
+    [
+     "",
+     "SiamDT [17]",
+     "Self-built Anti-UAV410",
+     "SA=68.19%",
+     "Not provided"
+    ],
+    [
+     "",
+     "SiamUF [111]",
+     "Public datasets [135], [136]",
+     "Precision=83.07%, AUC=65.66%, FPS=30",
+     "RTX3090, PyTorch, Python"
+    ],
+    [
+     "UAV-based Tracking",
+     "CAMTracker [112]",
+     "Anti-UAV410",
+     "Precision=88.56%, AUC=66.68%, SA=67.10%",
+     "i5-13600KF, RTX4090, PyTorch 1.13, CUDA 11.7"
+    ],
+    [
+     "",
+     "TransIST [126]",
+     "Public:[135],[136],[137]",
+     "AUC=66.0%,Accuracy=88.1%,FPS=30",
+     "Not provided"
+    ],
+    [
+     "",
+     "UTTracker [127]",
+     "1st & 2nd Anti-UAV [55]",
+     "1st: AUC=77.9%, Precision=98.0% 2nd: AUC=72.4%, Precision=93.4%",
+     "4× RTX 3090, Python 3.6, PyTorch 1.7.1"
+    ],
+    [
+     "",
+     "ISD-UNet [80]",
+     "Self-built dataset",
+     "TCR=96.4%, AP=44.7%",
+     "GTX (24GB), AMD EPYC 7302@3.0GHz, PyTorch1.12.1, Python 3.9, Ubuntu 18.04.6"
+    ],
+    [
+     "",
+     "Fuse-Before-Track [133]",
+     "Self-built dataset",
+     "RMS error: within meters (distance), below 1 m/s (speed)",
+     "Echoflight MESA, FLIR Blackfly, Ublox LEA-6T, M8T, DJI M100"
+    ],
+    [
+     "",
+     "RTM-UAVDet [134]",
+     "Anti-UAV [48]",
+     "AP=66.1%, FPS=72.4",
+     "RTX 3090, Python 3.8, Torch 1.7.1"
+    ]
+   ]
+  }
+ ]
+}

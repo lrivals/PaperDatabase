@@ -99,4 +99,21 @@ The proposed slicing aided hyper inference scheme can directly be integrated int
     TOOD+SF+SAHI+FI | 19.2 | 14.6 | 22.3 | 14.7
     TOOD+SF+SAHI+FI+PO | 20.4 | 14.9 | 23.5 | 17.6
 
-**Table 2:** Mean
+**Table 2:** Mean [corps du tableau reconstruit par Docling : à vérifier]
+
+    Setup | AP50 | AP50s | AP50m | AP50l
+    FCOS+FI | 2.20 | 0.10 | 1.80 | 7.30
+    FCOS+SF+SAHI | 15.8 | 11.9 | 18.4 | 11.0
+    FCOS+SF+SAHI+PO | 17.1 | 12.2 | 20.2 | 12.8
+    FCOS+SF+SAHI+FI | 15.7 | 11.9 | 18.4 | 14.3
+    FCOS+SF+SAHI+FI+PO | 17.0 | 12.2 | 20.2 | 15.8
+    VFNet+FI | 2.10 | 0.50 | 1.80 | 6.80
+    VFNet+SF+SAHI | 16.0 | 11.9 | 17.6 | 13.1
+    VFNet+SF+SAHI+PO | 17.7 | 13.7 | 19.7 | 15.4
+    VFNet+SF+SAHI+FI | 15.8 | 11.9 | 17.5 | 15.2
+    VFNet+SF+SAHI+FI+PO | 17.5 | 13.7 | 19.6 | 17.6
+    TOOD+FI | 2.10 | 0.10 | 2.00 | 5.20
+    TOOD+SF+SAHI | 19.4 | 14.6 | 22.5 | 14.2
+    TOOD+SF+SAHI+PO | 20.6 | 14.9 | 23.6 | 17.0
+    TOOD+SF+SAHI+FI | 19.2 | 14.6 | 22.3 | 14.7
+    TOOD+SF+SAHI+FI+PO | 20.4 | 14.9 | 23.5 | 17.6

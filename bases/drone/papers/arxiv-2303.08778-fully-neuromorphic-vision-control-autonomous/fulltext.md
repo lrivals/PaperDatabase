@@ -317,4 +317,10 @@ thrust is still necessary.
      |  | -1.768999
     Max. body rate | ω B max [rad/s] | 
 
-**Table 5.** Coefficients used during real-world tests.
+**Table 5.** Coefficients used during real-world tests. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Description | Symbol | Value
+    Visual observable smoothing | an,w | [0.90, 0.90, 0.95, 0.90]T
+    Visual observable scaling | bn,w | [0.9, 0.9, 1.0, 1.0]T
+    Proportional gains (thrust, roll, pitch, yaw) | P | [0.10, 0.06, 0.06, 4.0]T
+    Integral gains (thrust, roll, pitch, yaw) | I | [0.0001, 0.0003, 0.0003, 0]T

@@ -29,7 +29,7 @@
   ],
   "year": 2019,
   "venue": "arXiv preprint",
-  "doi": null,
+  "doi": "10.1145/3318216.3363317",
   "arxiv_id": "1904.00781",
   "url": "https://arxiv.org/abs/1904.00781",
   "type": "preprint",
@@ -39,12 +39,15 @@
   "tags": [],
   "added": "2026-09-28",
   "extraction": {
-    "backend": "pymupdf",
-    "ok": false,
+    "backend": "grobid",
+    "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
       "axes déduits automatiquement, à confirmer dans /paper-fiche",
-      "aucune section détectée"
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 5, Table 6",
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 5, Table 6, Table 7",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, [figure sans légende identifié",
+      "sections numérotées non détectées : 4 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {

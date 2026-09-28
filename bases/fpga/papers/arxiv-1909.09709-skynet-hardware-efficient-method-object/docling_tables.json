@@ -1,0 +1,559 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    71.2,
+    114.5,
+    525.3,
+    258.1
+   ],
+   "caption": "Table 1. DAC-SDC winning entries from both GPU and FPGA tracks. They follow a top-down approach, from choosing reference DNNs to applying optimization strategies on software and hardware sides, so that they compress DNNs with improved hardware efficiency. Optimizationsinclude: 1©inputresizing, 2©networkpruning, 3©dataquantization,and 4©TensorRT(Vanholder,2016)onsoftware,and 5©CPU-FPGAtaskpartition, 6©double-pumpedDSP, 7©fine-grainedpipeline, 8©clockgating,and 9©multithreadingonhardware.",
+   "rows": [
+    [
+     "RANK",
+     "GPU-TRACK",
+     "REFERENCE DNN",
+     "OPTIMIZATIONS",
+     "OPTIMIZATIONS"
+    ],
+    [
+     "'19 2ND",
+     "THINKER (XIONG ET AL., 2019)",
+     "SHUFFLENET + RETINANET",
+     "1© 2© 3©",
+     "9©"
+    ],
+    [
+     "'19 3RD",
+     "DEEPZS (DENG ET AL., 2019)",
+     "TINY YOLO",
+     "NOT CLEAR",
+     "9©"
+    ],
+    [
+     "'18 1ST",
+     "ICT-CAS (LU ET AL., 2018)",
+     "TINY YOLO",
+     "1© 2© 3© 4©",
+     "NOT CLEAR"
+    ],
+    [
+     "'18 2ND",
+     "DEEPZ (DENG & ZHUO, 2018)",
+     "TINY YOLO",
+     "NOT CLEAR",
+     "9©"
+    ],
+    [
+     "'18 3RD",
+     "SDU-LEGEND (ZANG ET AL., 2018)",
+     "YOLOV2",
+     "1© 2© 3©",
+     "9©"
+    ],
+    [
+     "RANK",
+     "FPGA-TRACK",
+     "REFERENCE DNN",
+     "OPTIMIZATIONS",
+     "OPTIMIZATIONS"
+    ],
+    [
+     "'192ND",
+     "XJTUTRIPLER(ZHAOETAL.,2019)",
+     "SHUFFLENETV2 + YOLO",
+     "2©3©",
+     "5©6©8©"
+    ],
+    [
+     "'193RD",
+     "SYSTEMSETHZ(KARA&ALONSO,2019)",
+     "SQUEEZENET + YOLO",
+     "1© 2© 3©",
+     "7©"
+    ],
+    [
+     "'18 1ST",
+     "TGIIF (ZENG ET AL., 2018)",
+     "SSD",
+     "1©2©3©",
+     "5©6©"
+    ],
+    [
+     "'18 2ND",
+     "SYSTEMSETHZ (KARA ET AL., 2018)",
+     "SQUEEZENET + YOLO",
+     "1© 2© 3©",
+     "7©"
+    ],
+    [
+     "'18 3RD",
+     "ISMART2 (HAO ET AL., 2018)",
+     "MOBILENET + YOLO",
+     "1©2©3©",
+     "5©7©"
+    ]
+   ]
+  },
+  {
+   "page": 4,
+   "bbox": [
+    77.6,
+    307.8,
+    266.4,
+    380.5
+   ],
+   "caption": "Table 2. Accuracy on DAC-SDC dataset using ResNet, VGG, and SkyNet backbones and the same back-end for object detection.",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2"
+    ],
+    [
+     "BACKBONEDNN",
+     "#OFPARAMETER",
+     "IOU"
+    ],
+    [
+     "RESNET-18",
+     "11.18M",
+     "0.61"
+    ],
+    [
+     "RESNET-34",
+     "21.28M",
+     "0.26"
+    ],
+    [
+     "RESNET-50",
+     "23.51M",
+     "0.32"
+    ],
+    [
+     "VGG-16",
+     "14.71M",
+     "0.25"
+    ],
+    [
+     "SKYNET (OURS)",
+     "0.44M",
+     "0.73"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    307.4,
+    103.4,
+    541.3,
+    331.1
+   ],
+   "caption": "Table 3. The SkyNet architecture with number of channels shown in the bracket. Each convolutional layer except the last one is followed by a BN and a ReLU (omitted for conciseness).",
+   "rows": [
+    [
+     "CONFIGURATIONS OF SKYNET.A",
+     "CONFIGURATIONS OF SKYNET.B",
+     "CONFIGURATIONS OF SKYNET.C",
+     "CONFIGURATIONS OF SKYNET.BUNDLE"
+    ],
+    [
+     "INPUT (3×160×360 COLOR IMAGE)",
+     "INPUT (3×160×360 COLOR IMAGE)",
+     "INPUT (3×160×360 COLOR IMAGE)",
+     "INPUT (3×160×360 COLOR IMAGE)"
+    ],
+    [
+     "",
+     "DW-CONV3 (3) PW-CONV1 (48)",
+     "DW-CONV3 (3) PW-CONV1 (48)",
+     "#1"
+    ],
+    [
+     "2×2 MAX-POOLING",
+     "2×2 MAX-POOLING",
+     "2×2 MAX-POOLING",
+     "2×2 MAX-POOLING"
+    ],
+    [
+     "",
+     "DW-CONV3 (48) PW-CONV1 (96)",
+     "DW-CONV3 (48) PW-CONV1 (96)",
+     "#2"
+    ],
+    [
+     "2×2 MAX-POOLING",
+     "2×2 MAX-POOLING",
+     "2×2 MAX-POOLING",
+     "2×2 MAX-POOLING"
+    ],
+    [
+     "",
+     "DW-CONV3 (96) PW-CONV1 (192)",
+     "DW-CONV3 (96) PW-CONV1 (192)",
+     "#3"
+    ],
+    [
+     "[Bypass Start] FM Reordering (768) 2×2 MAX-POOLING",
+     "[Bypass Start] FM Reordering (768) 2×2 MAX-POOLING",
+     "[Bypass Start] FM Reordering (768) 2×2 MAX-POOLING",
+     "[Bypass Start] FM Reordering (768) 2×2 MAX-POOLING"
+    ],
+    [
+     "",
+     "DW-CONV3 (192) PW-CONV1 (384)",
+     "DW-CONV3 (192) PW-CONV1 (384)",
+     "#4"
+    ],
+    [
+     "",
+     "DW-CONV3 (384) PW-CONV1 (512)",
+     "DW-CONV3 (384) PW-CONV1 (512)",
+     "#5"
+    ],
+    [
+     "",
+     "[Bypass End] FM Concatenated DW-CONV3 (512+768) PW-CONV1 (48)",
+     "[Bypass End] FM Concatenated DW-CONV3 (512+768) PW-CONV1 (96)",
+     "#6"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    319.3,
+    253.6,
+    526.6,
+    337.5
+   ],
+   "caption": "Table 4. Validation accuracy of SkyNet.",
+   "rows": [
+    [
+     "DNN MODEL",
+     "PARAMETERSIZE",
+     "IOU"
+    ],
+    [
+     "SKYNET A - RELU",
+     "1.27 MB",
+     "0.653"
+    ],
+    [
+     "SKYNET A - RELU6",
+     "1.27 MB",
+     "0.673"
+    ],
+    [
+     "SKYNET B - RELU",
+     "1.57 MB",
+     "0.685"
+    ],
+    [
+     "SKYNET B - RELU6",
+     "1.57 MB",
+     "0.703"
+    ],
+    [
+     "SKYNET C - RELU",
+     "1.82 MB",
+     "0.713"
+    ],
+    [
+     "SKYNET C - RELU6",
+     "1.82 MB",
+     "0.741"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    123.2,
+    74.0,
+    471.4,
+    193.5
+   ],
+   "caption": "Table 5. GPU final results from DAC-SDC'19 and '18 using the hidden test set with 50K images, evaluated by a TX2 GPU.",
+   "rows": [
+    [
+     "TEAM NAME",
+     "IOU",
+     "FPS",
+     "POWER(W)",
+     "TOTALSCORE"
+    ],
+    [
+     "RESULTS FROM 2019",
+     "RESULTS FROM 2019",
+     "RESULTS FROM 2019",
+     "RESULTS FROM 2019",
+     "RESULTS FROM 2019"
+    ],
+    [
+     "SKYNET (OURS)",
+     "0.731",
+     "67.33",
+     "13.50",
+     "1.504"
+    ],
+    [
+     "THINKER (XIONG ET AL., 2019)",
+     "0.713",
+     "28.79",
+     "8.55",
+     "1.442"
+    ],
+    [
+     "DEEPZS (DENG ET AL., 2019)",
+     "0.723",
+     "26.37",
+     "15.12",
+     "1.422"
+    ],
+    [
+     "RESULTS FROM 2018",
+     "RESULTS FROM 2018",
+     "RESULTS FROM 2018",
+     "RESULTS FROM 2018",
+     "RESULTS FROM 2018"
+    ],
+    [
+     "ICT-CAS (LU ET AL., 2018)",
+     "0.698",
+     "24.55",
+     "12.58",
+     "1.373"
+    ],
+    [
+     "DEEPZ (DENG & ZHUO, 2018)",
+     "0.691",
+     "25.30",
+     "13.27",
+     "1.359"
+    ],
+    [
+     "SDU-LEGEND(ZANGETAL.,2018)",
+     "0.685",
+     "23.64",
+     "10.31",
+     "1.358"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    109.6,
+    222.7,
+    485.2,
+    341.9
+   ],
+   "caption": "Table 6. FPGA final results in DAC-SDC'19 and '18 using the hidden test set with 50K images. Designs in 2019 are evaluated on a Ultra96 FPGA while designs in 2018 use a Pynq-Z1 FPGA.",
+   "rows": [
+    [
+     "TEAM NAME",
+     "IOU",
+     "FPS",
+     "POWER(W)",
+     "TOTALSCORE"
+    ],
+    [
+     "RESULTS IN 2019",
+     "RESULTS IN 2019",
+     "RESULTS IN 2019",
+     "RESULTS IN 2019",
+     "RESULTS IN 2019"
+    ],
+    [
+     "SKYNET (OURS)",
+     "0.716",
+     "25.05",
+     "7.26",
+     "1.526"
+    ],
+    [
+     "XJTU TRIPLER (ZHAO ET AL., 2019)",
+     "0.615",
+     "50.91",
+     "9.25",
+     "1.394"
+    ],
+    [
+     "SYSTEMSETHZ(KARA&ALONSO,2019)",
+     "0.553",
+     "55.13",
+     "6.69",
+     "1.318"
+    ],
+    [
+     "RESULTS IN 2018",
+     "RESULTS IN 2018",
+     "RESULTS IN 2018",
+     "RESULTS IN 2018",
+     "RESULTS IN 2018"
+    ],
+    [
+     "TGIIF (ZENG ET AL., 2018)",
+     "0.624",
+     "11.96",
+     "4.20",
+     "1.267"
+    ],
+    [
+     "SYSTEMSETHZ (KARA ET AL., 2018)",
+     "0.492",
+     "25.97",
+     "2.45",
+     "1.179"
+    ],
+    [
+     "ISMART2 (HAO ET AL., 2018)",
+     "0.573",
+     "7.35",
+     "2.59",
+     "1.164"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    68.6,
+    532.6,
+    275.8,
+    603.3
+   ],
+   "caption": "Table 7. Validation accuracy results regarding different quantization schemes during FPGA implementation",
+   "rows": [
+    [
+     "Scheme",
+     "FeatureMap",
+     "Weight",
+     "Accuracy(IoU)"
+    ],
+    [
+     "0",
+     "Float32",
+     "Float32",
+     "0.741"
+    ],
+    [
+     "1",
+     "9 bits",
+     "11 bits",
+     "0.727"
+    ],
+    [
+     "2",
+     "9 bits",
+     "10 bits",
+     "0.714"
+    ],
+    [
+     "3",
+     "8 bits",
+     "11 bits",
+     "0.690"
+    ],
+    [
+     "4",
+     "8 bits",
+     "10 bits",
+     "0.680"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    327.3,
+    91.6,
+    521.2,
+    142.8
+   ],
+   "caption": "Table 8. Performance of SiamRPN++ trackers on GOT-10k with different backbones evaluated on single NVIDIA 1080Ti.",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    [
+     "Backbone",
+     "AO",
+     "SR0.50",
+     "SR0.75",
+     "FPS"
+    ],
+    [
+     "AlexNet",
+     "0.354",
+     "0.385",
+     "0.101",
+     "52.36"
+    ],
+    [
+     "ResNet-50",
+     "0.365",
+     "0.411",
+     "0.115",
+     "25.90"
+    ],
+    [
+     "SkyNet",
+     "0.364",
+     "0.391",
+     "0.116",
+     "41.22"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    327.4,
+    179.9,
+    521.2,
+    221.3
+   ],
+   "caption": "Table 9. Performance of SiamMask trackers on GOT-10k with different backbones evaluated on single NVIDIA 1080Ti.",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    [
+     "Backbone",
+     "AO",
+     "SR0.50",
+     "SR0.75",
+     "FPS"
+    ],
+    [
+     "ResNet-50 SkyNet",
+     "0.380",
+     "0.439",
+     "0.153",
+     "17.44"
+    ],
+    [
+     "",
+     "0.390",
+     "0.442",
+     "0.158",
+     "30.15"
+    ]
+   ]
+  }
+ ]
+}

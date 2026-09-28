@@ -54,7 +54,7 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "tableaux sans corps extrait (légende seule) : Table I",
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table I",
       "sections numérotées non détectées : II — leur texte est rattaché à la section précédente"
     ]
   },

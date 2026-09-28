@@ -1,0 +1,186 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 8,
+   "bbox": [
+    165.6,
+    114.0,
+    559.9,
+    403.2
+   ],
+   "caption": "Appl. Sci. 2022, 12, x FOR PEER REVIEW",
+   "rows": [
+    [
+     "Dataset",
+     "Experimental Conditions",
+     "Number of Images"
+    ],
+    [
+     "Training",
+     "Clear day Cloudy day Rainy day Snowy day Evening Night Low altitude High altitude",
+     "260 260 260 260 260 260 260 260"
+    ],
+    [
+     "Validation",
+     "Clear day Cloudy day Rainy day Snowy day Evening Night Low altitude High altitude Clear day",
+     "120 120 120 120 120 120 120 120"
+    ],
+    [
+     "Testing",
+     "Cloudy day Rainy day Snowy day Evening Night Low altitude High altitude",
+     "40 40 40 40 40 40 40 40 8 of 17"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    165.4,
+    717.4,
+    559.9,
+    841.6
+   ],
+   "caption": "Table 1. Dataset classification by various experimental conditions. 3. Experiment and Results",
+   "rows": [
+    [
+     "Dataset Experimental Conditions 3.1. Experimental Setup and Flowchart",
+     "Number of Images"
+    ],
+    [
+     "Clear day 260 Cloudy day 260 Rainy day 260 For the experiment, the basic environment of the experiment was conducted in Google Colab. Colab is well organized with a GPU environment, so we used it. We also trained and compared with same data acquired by drone shooting. The difference between the",
+     "Clear day 260 Cloudy day 260 Rainy day 260 For the experiment, the basic environment of the experiment was conducted in Google Colab. Colab is well organized with a GPU environment, so we used it. We also trained and compared with same data acquired by drone shooting. The difference between the"
+    ],
+    [
+     "Training Snowy day original YOLOv5 model and the YOLOv5_Our model is",
+     "260 follows. The weight trained"
+    ],
+    [
+     "Evening",
+     "260"
+    ],
+    [
+     "Night",
+     "260"
+    ],
+    [
+     "Low altitude",
+     "260"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    30.7,
+    529.6,
+    582.8,
+    571.2
+   ],
+   "caption": "Table 2. Comparison table of best performance by models.",
+   "rows": [
+    [
+     "Model",
+     "",
+     "Backbone",
+     "Precision",
+     "Recall",
+     "F-1Score",
+     "mAP(0.5)",
+     ""
+    ],
+    [
+     "YOLOv5 Appl. Sci. 2022, 12, x FOR PEER REVIEW",
+     "",
+     "CSPdarknet",
+     "90.1",
+     "89.8",
+     "89.9",
+     "94.6",
+     "12 of 17"
+    ],
+    [
+     "",
+     "YOLOv5_Ours",
+     "CSPdarknet",
+     "90.7",
+     "87.4",
+     "89.0",
+     "95.5",
+     ""
+    ]
+   ]
+  },
+  {
+   "page": 13,
+   "bbox": [
+    165.5,
+    445.6,
+    560.3,
+    517.2
+   ],
+   "caption": "Table 3. key indicators of YOLOv5_Ours model. Table 3. Key indicators of YOLOv5_Ours model.",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    [
+     "Parameter Precision/% Recall/% F1-Score/% Parameter Precision/% Recall/% F1-Score/%",
+     "Person 97.1 84.3 90.2 Person 97.1 84.3 90.2",
+     "Car 87.4 94.6 90.9 Car 87.4 94.6 90.9",
+     "Notice 87.7 83.1 85.3 Notice 87.7 83.1 85.3",
+     "Total 90.7 87.4 88.8 Total 90.7 87.4 88.8 14 of 17"
+    ],
+    [
+     "mAP (0.5)/% mAP (0.5)/%",
+     "97.3 97.3",
+     "96.2 96.2",
+     "93.0 93.0",
+     "95.5 95.5"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    165.5,
+    223.9,
+    563.1,
+    294.0
+   ],
+   "caption": "Table 4. Comparison of performance by previous YOLO models and YOLOv5_Ours. Table 4. Comparison of performance by previous YOLO models and YOLOv5_Ours.",
+   "rows": [
+    [
+     "Model Model",
+     "Backbone Backbone",
+     "mAP (0.5) mAP (0.5)"
+    ],
+    [
+     "YOLOv3 YOLOv3",
+     "Darknet53 Darknet53",
+     "93.9 93.9"
+    ],
+    [
+     "YOLOv4 YOLOv4",
+     "CSPdarknet CSPdarknet",
+     "91.0 91.0"
+    ],
+    [
+     "YOLOv5 YOLOv5",
+     "CSPdarknet CSPdarknet",
+     "94.6 94.6"
+    ],
+    [
+     "YOLOv5_Ours YOLOv5_Ours",
+     "CSPdarknet CSPdarknet",
+     "95.5 95.5"
+    ]
+   ]
+  }
+ ]
+}

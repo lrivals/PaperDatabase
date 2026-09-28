@@ -53,12 +53,12 @@
     "ok": true,
     "warnings": [
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE I",
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE I",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "done"
-  },
-  "warnings": []
+  }
 }

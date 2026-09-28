@@ -161,11 +161,29 @@ FFNFigure 4. Figure 4. Structure of the adaptive temporal transformer. The left 
 
 **Figure 9.** Recording of real-world tests on the embedded platform. The tracking targets are marked with red while the CLE represents the center location error. To avoid unpredictable disclosure of personally identifiable information, images are processed merely. consists of two perspectives, e.g., feature extraction and similarity refinement. Specifically, in this work, AT-Trans and online TAdaCNN are the first attempts for exhaustively exploring temporal contexts. Besides, attributing to our online updating strategy, unnecessary operations and memory loading are avoided. Extensive experiments on four benchmarks and real-world tests on our UAV demonstrate the effectiveness and efficiency of our framework. We hope that our framework can inspire further research in aerial and even general tracking with temporal contexts.
 
-**Table 1.** Comparison of inference time and parameters on NVIDIA Jetson AGX Xavier. Here, we use 287×287×3 as the input image and only evaluate the inference time of the CNN.
+**Table 1.** Comparison of inference time and parameters on NVIDIA Jetson AGX Xavier. Here, we use 287×287×3 as the input image and only evaluate the inference time of the CNN. [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 2.** Overall performance on UAVTrack112 L. The best three performances are respectively highlighted with red, green, and blue colors.
+    Backbone | Inference time | Parameters
+    AlexNet [40] | 3.4ms | 2.47M
+    VGG11 [58] | 3.7ms | 9.22M
+    ResNet18 [30] | 10.1ms | 11.2M
+    MobileNet v2 [56] | 13.7ms | 2.2M
+    EfficientNet [60] | 27.4ms | 39.4K
+    SqueezeNet1 0 [37] | 8.8ms | 735.42K
+    ShuffleNet v2 x0.5 [77] | 16.6ms | 341.8K
 
-    Trackers | Succ. | Prec. | Trackers | Succ.
+**Table 2.** Overall performance on UAVTrack112 L. The best three performances are respectively highlighted with red, green, and blue colors. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Trackers | Succ. | Prec. | Trackers | Succ. | Prec.
+    AutoTrack[47] | 0.405 | 0.675 | C-COT[17] | 0.422 | 0.691
+    ARCF [33] | 0.399 | 0.640 | UDT+[66] | 0.405 | 0.637
+    STRCF [43] | 0.360 | 0.609 | ECO[12] | 0.436 | 0.684
+    UDT [66] | 0.388 | 0.620 | TADT[46] | 0.462 | 0.712
+    SRDCF [16] | 0.320 | 0.508 | SiameseFC[2] | 0.452 | 0.690
+    CoKCF [75] | 0.283 | 0.520 | DaSiamRPN[80] | 0.479 | 0.729
+    BACF [38] | 0.358 | 0.593 | SiamAPN++[7] | 0.537 | 0.735
+    DSiam [27] | 0.321 | 0.512 | SiamRPN++[41] | 0.559 | 0.773
+    HiFT [6] | 0.551 | 0.734 | TCTrack(ours) | 0.582 | 0.786
 
 **Table 2** reports the comparison of TC-Track and other SOTA trackers. Thanks to our comprehen-
 

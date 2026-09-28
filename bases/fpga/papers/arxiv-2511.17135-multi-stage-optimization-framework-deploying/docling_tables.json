@@ -1,0 +1,450 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 10,
+   "bbox": [
+    59.7,
+    353.3,
+    289.8,
+    468.9
+   ],
+   "caption": "TABLE I: BD-Rate (%) vs. Full-Precision Models. A smaller value indicates better performance. Our proposed method consistently and significantly reduces the performance gap.",
+   "rows": [
+    [
+     "Model",
+     "QuantizationMethod",
+     "Precision",
+     "BD-Rate(%)"
+    ],
+    [
+     "Ball ´e2018-ReLU",
+     "Hong2020 [18] Baseline Sun2021 [19] Proposed",
+     "INT10 INT8 INT8",
+     "26.5 12.8 9.01"
+    ],
+    [
+     "Ball ´e2018-ReLU",
+     "(DRAQ)",
+     "INT8",
+     "4.93"
+    ],
+    [
+     "Ball´e2018-GDN",
+     "Baseline",
+     "INT8",
+     "30.0"
+    ],
+    [
+     "Ball´e2018-GDN",
+     "Proposed (DRAQ)",
+     "INT8",
+     "6.30"
+    ],
+    [
+     "He2021-ReLU",
+     "Baseline",
+     "INT8",
+     "15.3"
+    ],
+    [
+     "He2021-ReLU",
+     "Proposed (DRAQ)",
+     "INT8",
+     "6.82"
+    ],
+    [
+     "He2021-GDN",
+     "Baseline",
+     "INT8",
+     "24.0"
+    ],
+    [
+     "He2021-GDN",
+     "Proposed (DRAQ)",
+     "INT8",
+     "9.48"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    337.2,
+    341.8,
+    552.0,
+    444.7
+   ],
+   "caption": "TABLE II: Performance Comparison of Quantized ReLU and GDN Models Using Our Proposed DRAQ Framework.",
+   "rows": [
+    [
+     "Model",
+     "λ",
+     "QuantizedReLU.BPP",
+     "QuantizedReLU.PSNR(dB)",
+     "QuantizedGDN.BPP",
+     "QuantizedGDN.PSNR(dB)"
+    ],
+    [
+     "Ball ´e2018",
+     "0.0018",
+     "0.13 0.20",
+     "27.75 29.28",
+     "0.13 0.21 0.33",
+     "27.97 29.51"
+    ],
+    [
+     "Ball ´e2018",
+     "0.0035",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Ball ´e2018",
+     "0.0067",
+     "0.31",
+     "30.88",
+     "",
+     "31.18"
+    ],
+    [
+     "Ball ´e2018",
+     "0.0130",
+     "0.49",
+     "32.55",
+     "0.50",
+     "32.94"
+    ],
+    [
+     "He2021",
+     "0.0018",
+     "0.13",
+     "27.93",
+     "0.13",
+     "28.05"
+    ],
+    [
+     "He2021",
+     "0.0035",
+     "0.20",
+     "29.40",
+     "0.20",
+     "29.52"
+    ],
+    [
+     "He2021",
+     "0.0067",
+     "0.31",
+     "30.97",
+     "0.31",
+     "31.21"
+    ],
+    [
+     "He2021",
+     "0.0130",
+     "0.47",
+     "32.73",
+     "0.48",
+     "33.20"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    52.0,
+    133.8,
+    297.1,
+    244.7
+   ],
+   "caption": "TABLE III: Ablation Study Results (BD-Rate % vs. FP32). Lower is better. The results show that both components contribute to performance, with their combination being the most effective. The minimal gain from clipping in the FP32 domain confirms the improvement is primarily due to better quantization.",
+   "rows": [
+    [
+     "Model",
+     "Ablation Condition",
+     "Precision",
+     "BD-Rate(%)"
+    ],
+    [
+     "Ball ´e2018-ReLU",
+     "Baseline (No Clipping/Reg) Weight Reg Only Activation Clip Only Proposed (Both)",
+     "INT8 INT8 INT8",
+     "12.8 10.8 6.16"
+    ],
+    [
+     "He2021-GDN",
+     "Baseline (No Clipping/Reg) Weight Reg Only Activation Clip Only Proposed (Both)",
+     "INT8 INT8 INT8 INT8",
+     "24.0 18.9 11.3"
+    ],
+    [
+     "He2021-GDN",
+     "",
+     "INT8",
+     "4.93"
+    ],
+    [
+     "",
+     "",
+     "",
+     "9.48"
+    ],
+    [
+     "",
+     "FP32 (No Clipping)",
+     "FP32",
+     "(Reference)"
+    ],
+    [
+     "",
+     "FP32 (With Clipping)",
+     "FP32",
+     "-1.02"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    356.4,
+    274.3,
+    533.2,
+    310.7
+   ],
+   "caption": "TABLE IV: Mean Squared Quantization Error (MSQE) for two representative layers before (A, B) and after (A*, B*) applying our DRAQ framework. Our method significantly reduces the error for both weights and activations.",
+   "rows": [
+    [
+     "",
+     "A",
+     "A*",
+     "B",
+     "B*"
+    ],
+    [
+     "Weight Activation",
+     "2.10e-6 2.07e-6",
+     "2.02e-6 1.03e-6",
+     "7.55e-7 6.46e-6",
+     "6.36e-7 2.48e-6"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    320.2,
+    513.3,
+    569.0,
+    565.0
+   ],
+   "caption": "TABLE V: Performance Comparison of Mixed-Precision Configurations Against FP32 and Uniform 8-bit Models.",
+   "rows": [
+    [
+     "Configuration",
+     "(Equiv.)Bit-Width",
+     "BPP",
+     "PSNR(dB)"
+    ],
+    [
+     "Full Precision (FP32)",
+     "32",
+     "0.737",
+     "34.71"
+    ],
+    [
+     "Mixed Precision (Near-Lossless)",
+     "8.7",
+     "0.725",
+     "34.62"
+    ],
+    [
+     "Mixed Precision (Budgeted)",
+     "7.9",
+     "0.726",
+     "34.35"
+    ],
+    [
+     "Uniform Quantization",
+     "8.0",
+     "0.725",
+     "34.13"
+    ]
+   ]
+  },
+  {
+   "page": 13,
+   "bbox": [
+    365.9,
+    101.4,
+    524.0,
+    158.7
+   ],
+   "caption": "TABLE VI: Channel counts of the three main GDN layers before and after slimming, demonstrating adaptive redundancy removal.",
+   "rows": [
+    [
+     "λ",
+     "InitialChannels",
+     "PrunedChannels"
+    ],
+    [
+     "0.0035",
+     "[192, 192, 192] [128, 128, 128]",
+     "[110, 144, 182] [114, 121, 125]"
+    ],
+    [
+     "0.0067",
+     "[192, 192, 192]",
+     "[142, 173, 191]"
+    ],
+    [
+     "0.0130",
+     "[192, 192, 192]",
+     "[172, 188, 190]"
+    ]
+   ]
+  },
+  {
+   "page": 13,
+   "bbox": [
+    318.0,
+    622.6,
+    588.4,
+    675.0
+   ],
+   "caption": "TABLE VII: Complexity and Performance Comparison with LIC Models. Our GDN-Slimming model offers a superior trade-off point.",
+   "rows": [
+    [
+     "Model",
+     "TotalGFLOPs/pixel",
+     "BitrateSavings(%)",
+     "Time(ms)"
+    ],
+    [
+     "Minnen2018 [3]",
+     "138.5",
+     "13.53",
+     "2.300"
+    ],
+    [
+     "He2021 [8]",
+     "138.5",
+     "11.29",
+     "0.072"
+    ],
+    [
+     "GDN-Slimming (Ours)",
+     "109.9",
+     "10.66",
+     "0.067"
+    ],
+    [
+     "Ball´e2018 [2]",
+     "120.8",
+     "5.72",
+     "0.062"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    48.1,
+    254.3,
+    310.9,
+    331.9
+   ],
+   "caption": "TABLE VIII: Comparison with other FPGA-based LIC implementations. Our proposed framework achieves the best PSNR with the lowest computational complexity.",
+   "rows": [
+    [
+     "",
+     "ProposedFramework",
+     "F-LIC[20]",
+     "FPX-NIC[21]"
+    ],
+    [
+     "Hardware Platform",
+     "(N/A) INT7.9 (Mixed)",
+     "VCU118 INT8",
+     "ZCU104 INT8"
+    ],
+    [
+     "Model Precision",
+     "",
+     "",
+     ""
+    ],
+    [
+     "PSNR (dB)",
+     "30.14",
+     "29.94",
+     "29.89"
+    ],
+    [
+     "BPP",
+     "0.2574",
+     "0.2542",
+     "0.2565"
+    ],
+    [
+     "GFLOPs (ga only)",
+     "71.64",
+     "91.48",
+     "380.44"
+    ],
+    [
+     "Total Encoding GFLOPs",
+     "75.62",
+     "96.51",
+     "393.53"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    171.6,
+    89.4,
+    448.4,
+    216.8
+   ],
+   "caption": "TABLE IX: Performance and complexity trade-offs. Our final framework significantly reduces computational complexity compared to both the FP32 and baseline quantized models (DRAQ) with only a minor impact on RD performance.",
+   "rows": [
+    [
+     "Method",
+     "λ",
+     "(Equiv.)Precision",
+     "",
+     "gaGFLOPs BPP",
+     "PSNR(dB)"
+    ],
+    [
+     "Full Precision",
+     "0.0018 0.0035 0.0067 0.0130",
+     "FP32",
+     "105.79 105.79 105.79 311.96",
+     "0.1253 0.2033 0.3134 0.4707",
+     "28.05 29.54 31.20 32.97"
+    ],
+    [
+     "DRAQ",
+     "0.0018 0.0035 0.0067 0.0130",
+     "INT8",
+     "105.79 105.79 105.79 311.96",
+     "0.1266 0.2011 0.3129 0.4731",
+     "27.93 29.41 30.97 32.73"
+    ],
+    [
+     "Proposed",
+     "0.0018 0.0035 0.0067 0.0130",
+     "INT7.9 INT8.0 INT7.9 INT8.1",
+     "61.26 65.04 71.64 149.44",
+     "0.1250 0.2029 0.3138 0.4743",
+     "27.81 29.28 31.03 32.42"
+    ]
+   ]
+  }
+ ]
+}

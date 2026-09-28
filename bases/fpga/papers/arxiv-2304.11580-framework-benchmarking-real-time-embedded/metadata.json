@@ -25,15 +25,13 @@
   "tags": [],
   "added": "2026-09-28",
   "extraction": {
-    "backend": "pymupdf",
-    "ok": false,
+    "backend": "grobid",
+    "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon arXiv (journal_ref : In: Andres, B., Bernard, F., Cremers, D., Frintrop, S., Goldlücke, B., Ihrke, I. (eds) Pattern Recognition. DAGM GCPR 2022. Lecture Notes in Computer Science, vol 13485. Springer, Cham) : type journal/conference à préciser",
       "aucun axe détecté : à classer dans /paper-fiche",
-      "ligatures perdues à l'extraction : 18 mot(s) réparé(s) (lib/ligatures.py)",
-      "ligatures perdues : 31 fragment(s) non réparé(s) (« classi cation »…)",
-      "aucune section détectée"
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 2"
     ]
   },
   "status": {

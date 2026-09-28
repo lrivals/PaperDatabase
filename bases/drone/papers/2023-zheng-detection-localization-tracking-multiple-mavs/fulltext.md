@@ -397,17 +397,55 @@ Fig. Simulation results of 4 sensing nodes 7 MAVs. Due to the limited observatio
 
 **Fig. 17.** The running time for each module in the proposed system. The K , Y , P, T i , C, L, and T t denote KNN, YOLOv5, pre-screening, multi-target image tracking, classification, localization, and trajectory-based multi-target tracking, respectively.
 
-**TABLE I** THE SPECIFICATION OF THE CAMERA USED IN THE PROPOSED SYSTEM
+**TABLE I** THE SPECIFICATION OF THE CAMERA USED IN THE PROPOSED SYSTEM [corps du tableau reconstruit par Docling : à vérifier]
+
+    Camera model (manufacturer) | DS-2CD6984F-IHS/NFC HIKVISION
+    Number of lenses | 4
+    Resolution (height×width) | 1280×720 (1 lens) 1280×2880 (4 lenses)
+    Focal length | 2.8 mm
+    Field of view (each lens) | 50° (horizontal) 100°(vertical)
+    Frame rate | 25 FPS
 
 [figure sans légende identifiée] Spatial Metric of a Potential MAV Input: m i , a bounding box of the potential MAV; S, a set stored N bounding boxes of the potential MAV, S = {s 1 , s 2 , . . . , s N }; Output: The spatial metric of the target P S ; 1 DEFINITION f (•), a function counting the size of a set;
 
-**TABLE II** THE PERFORMANCE OF THE PROPOSED ALGORITHM UNDER DIFFERENT ILLUMINATION CONDITIONS IN THE INDOOR ENVIRONMENT
+**TABLE II** THE PERFORMANCE OF THE PROPOSED ALGORITHM UNDER DIFFERENT ILLUMINATION CONDITIONS IN THE INDOOR ENVIRONMENT [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE III** THE PERFORMANCE OF THE PROPOSED ALGORITHM ON PANORAMIC IMAGES IN THE OUTDOOR ENVIRONMENTTABLE IV THE PERFORMANCE OF THE PROPOSED ALGORITHM FOR DIFFERENT TYPES OF MAVS IN THE OUTDOOR ENVIRONMENT
+    Image sequences.Image sequences | Illumination condition.Illumination condition | Sequence length.Sequence length | Range (m).min | Range (m).max | Range (m).mean | Precision.Precision | Recall.Recall | F1-score.F1-score | AP.AP
+    ID_IS1 | 285 LUX | 251 | 4.06 | 9.14 | 5.36 | 99.20% | 98.80% | 98.40% | 98.01%
+    ID_IS2 | 196 LUX | 851 | 4.74 | 10.60 | 7.09 | 94.57% | 81.90% | 87.78% | 77.77%
+    ID_IS3 | 65 LUX | 951 | 5.32 | 12.21 | 6.78 | 79.77% | 85.80% | 82.68% | 74.43%
+    ID_IS4 | 7 LUX | 1046 | 3.84 | 12.43 | 5.75 | 84.22% | 62.51% | 71.76% | 57.75%
 
-**TABLE V** THE PERFORMANCE OF DIFFERENT ALGORITHMS IN DETECTING UNKNOWN MAV
+**TABLE III** THE PERFORMANCE OF THE PROPOSED ALGORITHM ON PANORAMIC IMAGES IN THE OUTDOOR ENVIRONMENTTABLE IV THE PERFORMANCE OF THE PROPOSED ALGORITHM FOR DIFFERENT TYPES OF MAVS IN THE OUTDOOR ENVIRONMENT [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE VI** LOCALIZATION ERROR. Num DENOTES THE NUMBER OF MATCHED FEATURE POINTS TO COMPUTE THE TARGET DISTANCE
+    Image sequences.Image sequences | MAVs.MAVs | Sequence length.Sequence length | Range (m).min | Range (m).max | Range (m).mean | Precision.Precision | Recall.Recall | F1-score.F1-score | AP.AP
+    OD_PIS1 | M300 | 1000 | 29.81 | 88.18 | 48.06 | 99.72% | 91.05% | 95.19% | 91.01%
+    OD_PIS2 | M300 | 1351 | 30.57 | 91.07 | 49.39 | 100.00% | 88.90% | 94.12% | 88.90%
+    OD_PIS3 | 2×M300 | 2162 | 31.40 | 230.92 | 57.85 | 99.86% | 89.30% | 94.29% | 89.25%
+
+**TABLE V** THE PERFORMANCE OF DIFFERENT ALGORITHMS IN DETECTING UNKNOWN MAV [corps du tableau reconstruit par Docling : à vérifier]
+
+    Algorithm | Cascade R-CNN | Grid R-CNN | RetinaNet | YOLOv5-x | Ours
+    AP | 92.6% | 92.2% | 89.5% | 91.7% | 97.7%
+    Runtime | 217 ms | 313 ms | 154 ms | 105 ms | 119 ms
+
+**TABLE VI** LOCALIZATION ERROR. Num DENOTES THE NUMBER OF MATCHED FEATURE POINTS TO COMPUTE THE TARGET DISTANCE [corps du tableau reconstruit par Docling : à vérifier]
+
+    Truh (m). | DJI M300.Num | DJI M300.Estimated (m) | DJI M300.Error (m) | DJI Mavic 2.Num | DJI Mavic 2.Estimated (m) | DJI Mavic 2.Error (m) | DJI Phantom 4.Num | DJI Phantom 4.Estimated (m) | DJI Phantom 4.Error (m)
+    15.0 | 73 | 13.83 | 1.17 (7.80%) | 9 | 14.58 | 0.42 (2.80%) | 7 | 15.19 | 0.19 (1.27%)
+    20.3 | 15 | 18.63 | 1.67 (8.23%) | 5 | 18.73 | 1.57 (7.73%) | 5 | 19.47 | 0.83 (4.09%)
+    25.2 | 18 | 23.94 | 1.26 (5.00%) | 2 | 22.10 | 3.10 (12.3%) | 2 | 24.25 | 0.95 (3.77%)
+    30.6 | 14 | 29.88 | 0.72 (2.35%) | 4 | 29.70 | 0.90 (2.94%) | 2 | 29.86 | 0.74 (2.42%)
+    35.6 | 8 | 34.18 | 1.42 (3.99%) | 3 | 36.68 | 1.08 (3.03%) | 2 | 34.77 | 0.83 (2.33%)
+    40.9 | 9 | 39.47 | 1.43 (3.50%) | 2 | 42.49 | 1.59 (3.89%) | 2 | 40.52 | 0.38 (0.93%)
+    45.5 | 9 | 44.39 | 1.11 (2.44%) | 2 | 44.88 | 0.62 (1.36%) | 1 | 45.42 | 0.08 (0.18%)
+    50.8 | 5 | 51.75 | 0.95 (1.87%) | 2 | 49.38 | 1.42 (2.80%) | 1 | 48.49 | 2.31 (4.55%)
+    55.5 | 4 | 56.43 | 0.93 (1.68%) |  |  |  |  |  | 
+    60.5 | 4 | 60.79 | 0.29 (0.48%) |  |  |  |  |  | 
+    65.9 | 0 | 60.51 | 5.39 (8.18%) |  |  |  |  |  | 
+    69.7 | 2 | 72.63 | 2.93 (4.20%) |  |  |  |  |  | 
+    74.6 | 0 | 70.01 | 4.59 (6.15%) |  |  |  |  |  | 
+    79.7 | 0 | 79.18 | 0.52 (0.65%) |  |  |  |  |  | 
 
 **TABLE VII** THE PERFORMANCE OF DIFFERENT MULTI-TARGET TRACKING ALGORITHMS
 

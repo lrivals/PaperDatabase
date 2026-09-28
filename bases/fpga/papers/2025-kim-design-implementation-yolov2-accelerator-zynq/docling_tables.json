@@ -1,0 +1,575 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 5,
+   "bbox": [
+    165.7,
+    143.9,
+    559.7,
+    386.7
+   ],
+   "caption": "Table 1. Definitions of the variables.",
+   "rows": [
+    [
+     "Variables",
+     "Definition"
+    ],
+    [
+     "Is",
+     "Size of IFM (13/26/52/104/208/416)"
+    ],
+    [
+     "Ic",
+     "Size of IFM channel"
+    ],
+    [
+     "Os",
+     "Size of OFM"
+    ],
+    [
+     "Oc",
+     "Size of OFM channel"
+    ],
+    [
+     "Qb",
+     "Size of quantization in bytes [Bytes]"
+    ],
+    [
+     "Bc",
+     "Bias channel size"
+    ],
+    [
+     "K",
+     "Kernel size"
+    ],
+    [
+     "S",
+     "Stride size"
+    ],
+    [
+     "NF",
+     "Number of filters"
+    ],
+    [
+     "NIR",
+     "NumberofIFMreuseBRAMaddresses"
+    ],
+    [
+     "NW",
+     "NumberofweightBRAMs"
+    ],
+    [
+     "NI",
+     "Number of IFMBRAMs"
+    ],
+    [
+     "NO",
+     "NumberofOFMBRAMs"
+    ],
+    [
+     "Tr",
+     "Size of tiles in the row direction"
+    ],
+    [
+     "Tc",
+     "Size of tiles in the column direction"
+    ],
+    [
+     "Trmp",
+     "Size of tiles in the row direction for max pooling"
+    ],
+    [
+     "Tcmp",
+     "Size of tiles in the column direction for max pooling"
+    ],
+    [
+     "FFtile",
+     "Numberofflip-flopsrequiredforthetilestorage"
+    ],
+    [
+     "BRAMReuse MACstile",
+     "CapacityoftheIFMreuseBRAM[Bytes] TheMACcountforasingletile"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    165.5,
+    513.8,
+    559.6,
+    580.5
+   ],
+   "caption": "Table 2. Definitions of FPGA hardware resource abbreviations.",
+   "rows": [
+    [
+     "Abbreviation",
+     "Definition"
+    ],
+    [
+     "LUT",
+     "Look-Up Table"
+    ],
+    [
+     "FF",
+     "Flip-Flop"
+    ],
+    [
+     "BRAM",
+     "36 Kb Block Random Access Memory"
+    ],
+    [
+     "DSP",
+     "Digital Signal Processing"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    35.0,
+    92.8,
+    559.5,
+    199.2
+   ],
+   "caption": "Table 3. Maximum possible sizes of IFM, bias, and weight.",
+   "rows": [
+    [
+     "",
+     "Maximum IFM (Bytes)",
+     "MaximumBias (Bytes)",
+     "MaximumWeight (Bytes)"
+    ],
+    [
+     "Required bytes",
+     "I 2 s × Ic ×Qb",
+     "B 2 c ×Qb",
+     "NF × K 2 × Ic × Qb"
+    ],
+    [
+     "32 bit",
+     "416 2 × 32 × 4 (22.15 MB)",
+     "1280 × 4 (5.12 KB)",
+     "1024 × 3 2 × 1280 × 4 (47.19 MB)"
+    ],
+    [
+     "16 bit",
+     "416 2 × 32 × 2 (11.08 MB)",
+     "1280 × 2 (2.56 KB)",
+     "1024 × 3 2 × 1280 × 2 (23.59 MB = 1024 × 23.04 KB)"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    35.6,
+    340.4,
+    559.1,
+    605.0
+   ],
+   "caption": "Table 4. State transition of the IFM reuse BRAM.",
+   "rows": [
+    [
+     "Steps",
+     "ProcessingStep (IFM Row)",
+     "PUDataSource",
+     "ReuseBRAM_0 b State",
+     "ReuseBRAM_1 b State",
+     "NumberofIFM Data Stored"
+    ],
+    [
+     "1",
+     "P a 0; 0 to Tr - 1",
+     "Memory",
+     "Read",
+     "Idle",
+     "(K - S) × Tc"
+    ],
+    [
+     "2",
+     "0 to Tr - 1",
+     "Memory",
+     "Read",
+     "Idle",
+     "(K - S) × Tc × NIR"
+    ],
+    [
+     "3",
+     "P P+1; P × (Tr - (K - S)) to P × (Tr - (K - S)) + Tr -",
+     "1 Memory + BRAM_0",
+     "Write",
+     "Read",
+     "(K - S) × Tc"
+    ],
+    [
+     "4",
+     "P×(Tr-(K-S))to P × (Tr - (K - S)) + Tr -",
+     "1 Memory + BRAM_0",
+     "Write",
+     "Read",
+     "(K - S) × Tc × NIR"
+    ],
+    [
+     "5",
+     "P P+1; P × (Tr - (K - S)) to P × (Tr - (K - S)) + Tr -",
+     "1 Memory + BRAM_1",
+     "Read",
+     "Write",
+     "(K - S) × Tc"
+    ],
+    [
+     "6",
+     "P×(Tr-(K-S))to P × (Tr - (K - S)) + Tr -",
+     "1 Memory + BRAM_1",
+     "Read",
+     "Write",
+     "(K - S) × Tc × NIR"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    34.3,
+    104.7,
+    559.4,
+    296.5
+   ],
+   "caption": "Table 5. Convolution resource utilization according to Tc and the number and size of the IFM reuse BRAM.",
+   "rows": [
+    [
+     "",
+     "Is × Is × Ic",
+     "Tc = 418",
+     "Tc = 210",
+     "Tc = 106",
+     "Tc = 54",
+     "Tc = 28",
+     "Tc = 15"
+    ],
+    [
+     "Convolution Resource Utilization [%]",
+     "416 × 416 × 3 208 × 208 × 32",
+     "100% 50%",
+     "100% 50% 25%",
+     "100%",
+     "100%",
+     "",
+     "100%"
+    ],
+    [
+     "Convolution Resource Utilization [%]",
+     "104 × 104 × 64 52 × 52 × 128",
+     "25% 12.5%",
+     "",
+     "50%",
+     "",
+     "100%",
+     ""
+    ],
+    [
+     "Convolution Resource Utilization [%]",
+     "26 × 26 × 256 13 × 13 × 1280",
+     "6.25% 3.125%",
+     "12.5% 6.25%",
+     "25% 12.5%",
+     "50% 25%",
+     "50%",
+     ""
+    ],
+    [
+     "Maximum NIR (Is = 13, Ic = 1280)",
+     "",
+     "40",
+     "80",
+     "160",
+     "320",
+     "640",
+     "1280"
+    ],
+    [
+     "BRAMReuse",
+     "",
+     "133.76 KB",
+     "133.4 KB",
+     "135.68 KB",
+     "138.24 KB",
+     "143.36 KB",
+     "153.6 KB"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    165.5,
+    422.0,
+    559.2,
+    493.8
+   ],
+   "caption": "Table 6. Required MACstile and FFtile counts according to Tr for Tc = 15 and Tc = 28.",
+   "rows": [
+    [
+     "",
+     "Tr.3.MACstile",
+     "Tr.3.FFtile",
+     "Tr.4.MACstile",
+     "Tr.4.FFtile",
+     "Tr.5.MACstile",
+     "Tr.5.FFtile",
+     "Tr.6.MACstile",
+     "Tr.6.FFtile"
+    ],
+    [
+     "Tc = 15",
+     "117",
+     "720",
+     "234",
+     "960",
+     "351",
+     "1200",
+     "468",
+     "1440"
+    ],
+    [
+     "Tc = 28",
+     "234",
+     "1344",
+     "468",
+     "1792",
+     "702",
+     "2240",
+     "936",
+     "2688"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    165.5,
+    462.2,
+    559.9,
+    770.0
+   ],
+   "caption": "Table 7. FSM states of the main controller and their operations.",
+   "rows": [
+    [
+     "State",
+     "Name",
+     "Description"
+    ],
+    [
+     "1",
+     "Idle",
+     "Initial state of the accelerator. The main controller receives the layer configuration and Acc_start signal from the PS via AXI-Lite."
+    ],
+    [
+     "2",
+     "Start",
+     "Preparation stage. Based on the received layer information, the main controller generates control data and issues signals to other controllers and PUs."
+    ],
+    [
+     "3-1",
+     "MP",
+     "Max pooling stage. The RDMA2 controller loads IFM data into MP BRAMs, which are processed through the max pooling pre-processing unit, max pooling processing unit, and post-processing unit. OFM data are grouped into 64-bit packets, stored in OFM BRAMs, and then transferred to external memory via WDMA0. The Acc_Lock controller monitors OFM BRAM occupancy to manage pipeline flow."
+    ],
+    [
+     "3-2",
+     "Conv",
+     "Convolution stage. The RDMA0 controller loads bias and weight data into their respective BRAMs, while the RDMA2 controller loads IFM data. Pre-processed data are sent to either the 1×1 or 3×3 con- volution PU, followed by the Leaky ReLU PU and post-processing unit. Processed OFM data are grouped, stored in OFM BRAMs, and transferred to memory via WDMA0. Pipeline flow is regulated by the Acc_Lock controller."
+    ],
+    [
+     "4",
+     "Done",
+     "Completionstage.ThemaincontrollersendsAcc_donetothePSvia AXI-Lite and resets all units in preparation for the next layer."
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    165.5,
+    439.2,
+    559.5,
+    504.7
+   ],
+   "caption": "Table 8. Synthesis and implementation results.",
+   "rows": [
+    [
+     "Resource",
+     "Used",
+     "Available",
+     "Utilization [%]"
+    ],
+    [
+     "LUT",
+     "26,147",
+     "53,200",
+     "49.15%"
+    ],
+    [
+     "FF",
+     "17,605",
+     "106,400",
+     "16.55%"
+    ],
+    [
+     "BRAM",
+     "98",
+     "140",
+     "70.00%"
+    ],
+    [
+     "DSP",
+     "126",
+     "220",
+     "57.27%"
+    ]
+   ]
+  },
+  {
+   "page": 20,
+   "bbox": [
+    34.7,
+    92.5,
+    559.8,
+    289.7
+   ],
+   "caption": "Table 9. Comparison with the previous YOLO accelerator.",
+   "rows": [
+    [
+     "",
+     "[41]",
+     "[42]",
+     "[43]",
+     "[44]",
+     "This Work"
+    ],
+    [
+     "Target FPGA",
+     "ZedBoard",
+     "ZedBoard YOLOv3-Tiny COCO",
+     "Zynq-7000SoCs",
+     "ZCU102 YOLOv2 COCO 48.1",
+     "Zybo-Z7-20 YOLOv2"
+    ],
+    [
+     "Model",
+     "YOLOv4-Tiny",
+     "",
+     "YOLOv3",
+     "",
+     ""
+    ],
+    [
+     "Dataset",
+     "COCO",
+     "",
+     "UA-DETRAC",
+     "",
+     "COCO"
+    ],
+    [
+     "mAP (%)",
+     "40.2",
+     "30.9",
+     "71.1",
+     "",
+     "48.1"
+    ],
+    [
+     "Model GFLOPs",
+     "7.5",
+     "5.6",
+     "19.5",
+     "29.5",
+     "29.5"
+    ],
+    [
+     "LUT",
+     "31 K (58%)",
+     "26 K (49%)",
+     "38 K (71%)",
+     "95K(35%)",
+     "26K(49%)"
+    ],
+    [
+     "FF",
+     "31 K (29%)",
+     "46 K (43%)",
+     "43 K (40%)",
+     "90K(17%)",
+     "17K(17%)"
+    ],
+    [
+     "BRAM (36 Kb)",
+     "132 (94%)",
+     "92.5 (66%)",
+     "132.5 (94%)",
+     "245.5 (27%)",
+     "98 (70%)"
+    ],
+    [
+     "DSP",
+     "149 (67%)",
+     "160 (72%)",
+     "144 (65%)",
+     "609 (24%)",
+     "126 (57%)"
+    ],
+    [
+     "Frequency [MHz]",
+     "100",
+     "100",
+     "230",
+     "300",
+     "100"
+    ],
+    [
+     "Latency [ms]",
+     "18,025",
+     "532",
+     "310",
+     "288",
+     "12,639"
+    ],
+    [
+     "GOPS 1",
+     "0.4",
+     "10.5",
+     "62.9",
+     "102.43",
+     "2.33"
+    ],
+    [
+     "GOPS/DSP",
+     "0.003",
+     "0.07",
+     "0.437",
+     "0.168",
+     "0.018"
+    ],
+    [
+     "Energy [mJ] 2",
+     "42,900",
+     "1787.52",
+     "471.2",
+     "3398.4",
+     "25,720.37"
+    ],
+    [
+     "Power [W]",
+     "1.994",
+     "3.4",
+     "1.52",
+     "11.8",
+     "2.035"
+    ]
+   ]
+  }
+ ]
+}

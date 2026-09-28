@@ -139,15 +139,50 @@ In the future, to detect unknown UAVs in various environments, the dataset shoul
 
 **Fig. 6.** The AP of different viewing angles. This figure is divided into three parts which are Top (top view), Fro (front view), and Bot (bottom view). The vertical axis of each part, which is the AP of the algorithms, is from 0.5 to 1.0. The mAP of each part is about 0.78 (Top), 0.72 (Fro), and 0.85 (Bot), respectively. The marker in each part represents the performance of the algorithm.
 
-**TABLE I** THE HYPERPARAMETERS IN OUR IMPLEMENTATION OF THE EIGHT ALGORITHMS[34], we choose DarkNet-53 for YOLOv3 in our experiments. The original optimizers are used. The learning rate (LR), momentum, weight decay, and iteration are finely tuned based on extensive tests.
+**TABLE I** THE HYPERPARAMETERS IN OUR IMPLEMENTATION OF THE EIGHT ALGORITHMS[34], we choose DarkNet-53 for YOLOv3 in our experiments. The original optimizers are used. The learning rate (LR), momentum, weight decay, and iteration are finely tuned based on extensive tests. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE II** THE AP OF THE EIGHT ALGORITHMS TESTED ON DET-FLY (%)
+    hyperparameter | backbone | optimizer | input_size | LR | momentum | weight_decay | iteration
+    Cascade R-CNN | ResNet-50 | SGD | [640,640] | 1e-2 | 0.9 | 1e-4 | 6,652
+    FPN | ResNet-50 | SGD | [600,600] | 1e-3 | 0.9 | 1e-5 | 49,993
+    Faster R-CNN | ResNet-50 | SGD | [1000,600] | 1e-2 | 0.9 | 1e-4 | 6,652
+    Grid R-CNN | ResNet-50 | SGD | [600,600] | 2e-2 | 0.9 | 1e-4 | 46,564
+    RefineDet | ResNet-50 | SGD | [320,320] | 1e-3 | 0.9 | 5e-4 | 30,000
+    RetinaNet | ResNet-50 | SGD | [600,600] | 2e-4 | 0.9 | 1e-4 | 13,304
+    SSD512 | ResNet-50 | SGD | [512,512] | 1e-3 | 0.9 | 5e-4 | 46,564
+    YOLOv3 | DarkNet-53 | Adam | [416,416] | 1e-3 | 0.9 | 5e-4 | 7,000
 
-**TABLE III** THE AP FOR DIFFERENT ENVIRONMENTAL BACKGROUND SCENES (%) F: field, U: urban, M: mountain, S: sky
+**TABLE II** THE AP OF THE EIGHT ALGORITHMS TESTED ON DET-FLY (%) [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE IV** THE AP FOR DIFFERENT CHALLENGING CONDITIONS (%)
+    dataset | Cascade R-CNN | RetinaNet | RefineDet | FPN | Faster R-CNN | Grid R-CNN | SSD512 | YOLOv3
+    Det-Fly | 79.4 | 77.9 | 69.5 | 78.7 | 70.5 | 82.4 | 78.7 | 72.3
 
-    * S: Strong/weak light, M: Motion blur,
-    P: Partial occlusion.
+**TABLE III** THE AP FOR DIFFERENT ENVIRONMENTAL BACKGROUND SCENES (%) F: field, U: urban, M: mountain, S: sky [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE V** THE AP OF THE EIGHT ALGORITHMS TESTED ON MIDGARD (%)
+    algorithms algorithms | F F | U U | S S | M M
+    Cascade R-CNN Cascade R-CNN | 67.9 67.9 | 64.7 64.7 | 93.1 93.1 | 84.8 84.8
+    FPN FPN | 71.9 71.9 | 70.4 70.4 | 87.2 87.2 | 71.7 71.7
+    Faster R-CNN Faster R-CNN | 64.1 64.1 | 48.9 48.9 | 87.6 87.6 | 78.9 78.9
+    Grid R-CNN Grid R-CNN | 78.0 78.0 | 76.1 76.1 | 89.1 89.1 | 83.5 83.5
+    RefineDet RefineDet | 70.4 70.4 | 44.7 44.7 | 84.2 84.2 | 77.2 77.2
+    RetinaNet RetinaNet | 73.7 73.7 | 67.5 67.5 | 89.5 89.5 | 77.3 77.3
+    SSD512 SSD512 | 73.6 73.6 | 65.6 65.6 | 92.3 92.3 | 78.7 78.7
+    YOLOv3 YOLOv3 | 69.1 69.1 | 58.4 58.4 | 83.5 83.5 | 79.6 79.6
+    mean AP mean AP | 71.1 71.1 | 62.0 62.0 | 88.3 88.3 | 80.0 80.0
+
+**TABLE IV** THE AP FOR DIFFERENT CHALLENGING CONDITIONS (%) [corps du tableau reconstruit par Docling : à vérifier]
+
+    algorithms | S | M | P
+    Cascade R-CNN | 73.3 | 81.5 | 37.3
+    FPN | 67.9 | 83.1 | 43.0
+    Faster R-CNN | 68.7 | 76.2 | 34.6
+    Grid R-CNN | 83.1 | 84.3 | 40.0
+    RefineDet | 68.4 | 76.0 | 33.4
+    RetinaNet | 69.1 | 78.3 | 37.3
+    SSD512 | 68.6 | 76.0 | 38.2
+    YOLOv3 | 65.3 | 80.9 | 33.3
+    mean AP | 70.6 | 79.5 | 37.1
+
+**TABLE V** THE AP OF THE EIGHT ALGORITHMS TESTED ON MIDGARD (%) [corps du tableau reconstruit par Docling : à vérifier]
+
+    dataset | Cascade R-CNN | RetinaNet | RefineDet | FPN | Faster R-CNN | Grid R-CNN | SSD512 | YOLOv3
+    MIDGARD | 89.4 | 88.8 | 85.8 | 85.8 | 89.1 | 90.1 | 89.1 | 87.7

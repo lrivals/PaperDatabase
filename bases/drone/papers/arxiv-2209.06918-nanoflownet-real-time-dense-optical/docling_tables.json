@@ -1,0 +1,148 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 4,
+   "bbox": [
+    151.0,
+    175.0,
+    460.5,
+    222.2
+   ],
+   "caption": "TABLE I: Quantitative results on MPI Sintel. ¹At a resolution of 96x224. ²At a resolution of 112x160, including vision thread.",
+   "rows": [
+    [
+     "Method.",
+     "MPISintel(train)[EPE].Clean",
+     "MPISintel(train)[EPE].Final",
+     "Framerate[FPS].GPU¹",
+     "Framerate[FPS].GAP8²",
+     "Parameters.Parameters"
+    ],
+    [
+     "FlowNet2-xs",
+     "9.054",
+     "9.458",
+     "150",
+     "-",
+     "1,978,250"
+    ],
+    [
+     "NanoFlowNet (ours)",
+     "7.122",
+     "7.979",
+     "141",
+     "5.57",
+     "170,881"
+    ],
+    [
+     "NanoFlowNet-s(ours)",
+     "9.559",
+     "10.047",
+     "151",
+     "9.34",
+     "46,749"
+    ]
+   ]
+  },
+  {
+   "page": 4,
+   "bbox": [
+    90.9,
+    256.5,
+    261.2,
+    303.4
+   ],
+   "caption": "TABLE II: Quantitative comparison of different methods of detail guidance.",
+   "rows": [
+    [
+     "Detail guidancemethod.Detail guidancemethod",
+     "MPI Sintel (train).Clean",
+     "MPI Sintel (train).Final"
+    ],
+    [
+     "None",
+     "7.636",
+     "8.119"
+    ],
+    [
+     "Edge detect",
+     "7.404",
+     "8.141"
+    ],
+    [
+     "Motion boundaries",
+     "7.122",
+     "7.979"
+    ]
+   ]
+  },
+  {
+   "page": 4,
+   "bbox": [
+    312.7,
+    256.7,
+    568.9,
+    292.6
+   ],
+   "caption": "TABLE III: Quantitative comparison of the original and the modified strided STDC block. ¹At a resolution of 96x224. ²At a resolution of 112x160, including vision thread.",
+   "rows": [
+    [
+     "StridedSTDCblock.",
+     "MPISintel(train)[EPE].Clean",
+     "MPISintel(train)[EPE].Final",
+     "Framerate[FPS].GPU¹",
+     "Framerate[FPS].GAP8²"
+    ],
+    [
+     "Unmodified",
+     "7.483",
+     "8.114",
+     "136",
+     "4.84"
+    ],
+    [
+     "Modified",
+     "7.122",
+     "7.979",
+     "141",
+     "5.57"
+    ]
+   ]
+  },
+  {
+   "page": 4,
+   "bbox": [
+    329.5,
+    338.6,
+    541.6,
+    375.3
+   ],
+   "caption": "TABLE IV: Quantitative comparison of grayscale vs. color input framebased architectures. ¹At a resolution of 96x224. ²At a resolution of 112x160, including vision thread.",
+   "rows": [
+    [
+     "Mode.Mode",
+     "MPISintel(train)[EPE].Clean",
+     "MPISintel(train)[EPE].Final",
+     "Framerate[FPS].GPU¹",
+     "GAP8²"
+    ],
+    [
+     "Color",
+     "7.726",
+     "8.344",
+     "141",
+     "5.18"
+    ],
+    [
+     "Grayscale",
+     "7.122",
+     "7.979",
+     "141",
+     "5.57"
+    ]
+   ]
+  }
+ ]
+}

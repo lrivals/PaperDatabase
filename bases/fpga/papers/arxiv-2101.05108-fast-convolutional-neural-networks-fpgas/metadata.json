@@ -109,7 +109,7 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
+      "tableaux reconstruits par Docling, chiffres à vérifier : [figure sans légende identifié",
       "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
     ]
   },

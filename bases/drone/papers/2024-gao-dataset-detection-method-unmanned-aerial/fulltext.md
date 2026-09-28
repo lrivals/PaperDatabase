@@ -312,4 +312,10 @@ Sensors 2024 , 17 Figure 7. Figure 7. Some correct detection results of DotD-YOL
     CIoU | 97.6% | 84.0% | 95.0% | 86.1% | 91.4% | 0.9% | 4.2%
     DotD | 97.8% | 87.1% | 94.2% | 91.4% | 92.6% | 1.6% | 3.1%
 
-**Table 5.** The
+**Table 5.** The [corps du tableau reconstruit par Docling : à vérifier]
+
+    Methods Indexes UAV.Methods Indexes UAV | UAV Bird Categories.95.3% Bird | UAV Bird Categories.72.4% Helicopter | Helicopter Airplane.Helicopter Airplane | Airplane mAP FPR.Airplane mAP FPR | mAP FNR.mAP FNR
+    Querydet [6] DETR [35] GIoU 96.3% | 97.4% 80.6% | 82.9% 93.5% | 91.7% 93.2% 86.0% | 84.8% 87.7% 90.3% 2.5% | 86.0% 90.3% 5.4%
+    YOLOv9-C [29] DIoU 96.8% | 97.6% 85.0% | 84.0% 92.5% | 95.0% 84.2% | 86.1% 90.7% 2.2% | 90.7% 4.6%
+    GFL [36] CIoU 97.6% | 98.1% 84.0% | 82.4% 95.0% | 95.6% 86.1% | 89.5% 91.4% 0.9% | 91.4% 4.2%
+    DotD-YOLOv9-C DotD 97.8% | 97.8% 87.1% | 87.1% 94.2% | 94.2% 91.4% | 91.4% 92.6% 1.6% | 92.6% 3.1%

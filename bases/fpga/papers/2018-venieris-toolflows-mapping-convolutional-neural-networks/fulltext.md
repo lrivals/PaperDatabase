@@ -283,7 +283,15 @@ Fig. Comparison on mapping AlexNet and VGG16 on Arria 10.
 
 **Fig. 8.** CNN computation and memory evolution (circle size is relative to the amount of weights).
 
-**Table 2.** Performance Comparison of AlexNet on Zynq and UltraScale Platforms
+**Table 2.** Performance Comparison of AlexNet on Zynq and UltraScale Platforms [corps du tableau reconstruit par Docling : à vérifier]
+
+    Caffeine** | UltraScale KU060 | 200 MHz | 331.68 kLUTs | 2760 | 4.7 MB | Q8.816-bitfixed-point | 163.00 (CONV) | 165.00 (OVRL) | 0.81 (CONV) | 0.83 (OVRL) | 0.0983 (CONV) | 0.0996 (OVRL) | - |  | - | 
+    Snowflake | Zynq XC7Z045 | 250 MHz | 218.60 kLUTs | 900 | 2.4 MB | Q8.816-bitfixed-point | 120.30 (CONV) | - | 0.55 (CONV) |  | - | 0.1336 (CONV) | - | 9.95 ms (CONV) | - | resource-normalized metrics.
+    DnnWeaver | ZynqXC7Z020 | 150 MHz | 53.20 kLUTs | 220 | 0.6 MB | Q3.1316-bitfixed-point | 20.16 (CONV) | 20.51 (OVRL) | 0.38 (CONV) | 0.38 (OVRL) |  | 0.0916 (CONV) | 0.0932 (OVRL) | - | - | is used for the
+    DeepBurning | ZynqXC7Z020 ZynqXC7Z045 | MHz 100 MHz | kLUTs 218.60 kLUTs | 900 | MB 2.4 MB | 16-bitfixed-point 16-bitfixed-point | (CONV) 108.25 (CONV) | 57.31 (OVRL) | (CONV) 0.49 (CONV) | (OVRL) | 0.26 (OVRL) | (CONV) 0.1203 (CONV) | (OVRL) 0.0637 (OVRL) | ms (CONV) 12.30 ms (CONV) | ms (OVRL) 25.47 ms (OVRL) | available resources. Therefore, the 60%
+    fpgaConvNet | Zynq XC7Z045 | 125 MHz 100 | 218.60 kLUTs 53.20 | 900 220 | 2.4 MB 0.6 | Q8.816-bitfixed-point | 197.40 (CONV) 18.53 | - 15.29 (OVRL) | 0.90 (CONV) 0.35 | - | 0.29 0.0842 | 0.2193 (CONV) | - 0.0695 | 8.22 ms (CONV) 71.75 | - 95.48 | have an up-limit of 60% of the
+     | Zynq XC7Z020 | 125 MHz | 53.20 kLUTs | 220 | 0.6 MB | Q8.816-bitfixed-point | 38.30 (CONV) | - | Density 0.72 | (CONV) | - | 0.1709 (CONV) | - | 12.70ms(CONV) | - | use of SDAccel is reported to
+     | FPGA Platform | Frequency | Logic Capacity | DSPs* | On-chip Memory | ArithmeticPrecision | Performance | (GOp/s) | Performance | (GOp/s/kLUT) |  | Performance Density | (GOp/s/DSP) | Latency(batchsize=1) | * 25×18 DSP configurations. | ** Caffeine's
 
 **Table 3.** Performance Comparison of VGG16 on Zynq and UltraScale Platforms
 

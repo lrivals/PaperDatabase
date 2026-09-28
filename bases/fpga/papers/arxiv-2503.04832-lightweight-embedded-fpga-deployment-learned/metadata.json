@@ -33,18 +33,22 @@
   "arxiv_id": "2503.04832",
   "url": "https://arxiv.org/abs/2503.04832",
   "type": "preprint",
-  "axes": [],
+  "axes": [
+    "autoencoder-fpga"
+  ],
   "tags": [
-    "quantization"
+    "quantization",
+    "pruning",
+    "autoencoder"
   ],
   "added": "2026-09-28",
   "extraction": {
-    "backend": "pymupdf",
-    "ok": false,
+    "backend": "grobid",
+    "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
       "aucun axe détecté : à classer dans /paper-fiche",
-      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE III"
     ]
   },
   "status": {

@@ -40,12 +40,11 @@
     "ok": true,
     "warnings": [
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 2, Table 8",
-      "tableaux sans corps extrait (légende seule) : Table 2, Table 9"
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 2, Table 9"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "done"
-  },
-  "warnings": []
+  }
 }

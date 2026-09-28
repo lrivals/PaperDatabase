@@ -35,8 +35,8 @@
   "tags": [],
   "added": "2026-09-28",
   "extraction": {
-    "backend": "pymupdf",
-    "ok": false,
+    "backend": "grobid",
+    "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
       "axes déduits automatiquement, à confirmer dans /paper-fiche"

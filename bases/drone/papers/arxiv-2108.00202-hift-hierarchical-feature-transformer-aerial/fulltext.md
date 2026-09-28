@@ -179,10 +179,11 @@ In this work, a novel hierarchical feature transformer for efficient aerial trac
 
 **Figure 7.** Visualization of real-world tests on the embedded platform. The tracking results and ground truth are marked with red and green boxes. The CLE score below the blue dotted line is considered as the success tracking result in the real-world tests.
 
-**Table 2.** Overall evaluation on UAV20L[39]. The top nine trackers are reported.The top three trackers are respectively marked by red, green, and blue color. Prec. and Succ. respectively denote precision score at 20 pixels and AUC of success plot.
+**Table 2.** Overall evaluation on UAV20L[39]. The top nine trackers are reported.The top three trackers are respectively marked by red, green, and blue color. Prec. and Succ. respectively denote precision score at 20 pixels and AUC of success plot. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Prec. 0.585 0.589 0.609 0.588 | 0.599 0.603 0.665 | 0.696 0.763
-    Succ. 0.401 0.427 0.459 0.443 | 0.402 0.391 0.465 | 0.528 0.566
+     | UDT+ [44] | ECO [9] | TADT [35] | DeepST- RCF[33] | Siames- eFC[2] | DSiam [24] | DaSiam | SiamRP- RPN[53]N++[31] | HiFT (ours)
+    Prec. |  |  | 0.5850.5890.609 | 0.588 | 0.599 | 0.603 | 0.665 | 0.696 | 0.763
+    Succ. |  |  | 0.4010.4270.459 | 0.443 | 0.402 | 0.391 | 0.465 | 0.528 | 0.566
 
 **Table 3.** Average evaluation on four aerial tracking benchmarks. Our tracker outperforms all other trackers with an obvious improvement. The best three performances are respectively highlighted with red, green, and blue color.
 
@@ -202,7 +203,15 @@ In this work, a novel hierarchical feature transformer for efficient aerial trac
     HiFT (ours) 0.626 0.416 0.772 0.584 0.638 0.431 0.751 0.537
     ∆ (%) | 3.63 | 6.81 | 5.98 | 4.40 | 6.20 6.43 10.42 9.79
 
-**Table 5.** This work considers Baseline as the model with only feature extraction and regression & classification network. OT denotes original standard transformer (with object query). FT indicates the original transformer with the feature map (instead of object query) but without the proposed modulation layer. HFT
+**Table 5.** This work considers Baseline as the model with only feature extraction and regression & classification network. OT denotes original standard transformer (with object query). FT indicates the original transformer with the feature map (instead of object query) but without the proposed modulation layer. HFT [corps du tableau reconstruit par Docling : à vérifier]
+
+    Trackers | Precision | ∆pre (%) | Success | ∆suc (%)
+    Baseline | 0.611 | - | 0.463 | -
+    Baseline+OT | 0.597 | -2.29 | 0.446 | -3.67
+    Baseline+FT | 0.675 | +10.47 | 0.496 | +7.13
+    Baseline+HFT+PE | 0.689 | +12.77 | 0.523 | +12.96
+    Baseline+HFT+RL | 0.629 | +2.95 | 0.486 | +4.97
+    Baseline+HFT(HiFT) | 0.763 | +24.88 | 0.566 | +22.25
 
 **Table 5.** Ablation study of different components of HiFT. For the detailed explanation of Baseline, OT, FT, HFT, PE, and RL, please kindly refer to the text in Sec. 4.3.3. ∆ denotes the improvement compared with the Baseline tracker. the full version of the proposed hierarchical feature transformer. PE represents direct positional encoding to M 5 (HiFT leaves out position encoding in M 5 as demonstrated in Sec. 3.2.2). RL represents the rectangle label used in the traditional trackers. For fairness, each version of the tracker adopts the same training strategy except for the investigated module. Discussion on transformer architecture: As shown in Table5, adding the original transformer with object queries (Baseline+OT) directly lowers the performance of Baseline by about 2.29% on precision and 3.67% on success rate, which proves that object queries hardly perform well in SOT with novel target objects. Replacing object query with the feature map, Baseline+FT raises tracking precision by 10.47%. Further adopting the modulation layer, Baseline+HFT, yields the best performance by 24.88%. All the aforementioned results can be com-
 
@@ -231,10 +240,12 @@ In this work, a novel hierarchical feature transformer for efficient aerial trac
     Remark 6: Please note that more ablation studies are re-
     ported in supplement material.
 
-**Table 6** 
+**Table 6** [corps du tableau reconstruit par Docling : à vérifier]
 
-    127 FPS | 74 FPS
-    71 FPS | 133 FPS
+    Tracker | HiFT(ours) | SiamGAT[22] | SiamCAR[23] | SiamBAN[8] | PrDiMP[14] | SiamRPN++[31] | SiamRPN++[31] | SiamMask[46] | ATOM[10]
+    Backbone | AlexNet | GoogleNet | ResNet-50 | ResNet-50 | ResNet-18 | ResNet-50 | MobileNet | ResNet-50 | ResNet-18
+    Avg. Prec. | 0.783 | 0.751 | 0.739 | 0.763 | 0.741 | 0.774 | 0.748 | 0.740 | 0.738
+    Avg. FPS | 129.87 | 90.01 | 71.74 | 73.25 | 25.94 | 71.59 | 115.03 | 77.30 | 34.94
 
 [figure sans légende identifiée] ATOM[10]
 

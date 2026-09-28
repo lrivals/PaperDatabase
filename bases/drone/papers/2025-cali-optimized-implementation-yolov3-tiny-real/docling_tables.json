@@ -1,0 +1,1440 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 10,
+   "bbox": [
+    165.3,
+    227.2,
+    559.8,
+    516.9
+   ],
+   "caption": "Table 1. Architectural details of the quantized YOLOv3-Tiny Model.",
+   "rows": [
+    [
+     "Layer Type",
+     "Input",
+     "Output",
+     "Kernel",
+     "Stride",
+     "Activation"
+    ],
+    [
+     "QuantConv",
+     "416×416×3",
+     "416×416×8",
+     "3×3",
+     "1",
+     "QuantReLU"
+    ],
+    [
+     "MaxPooling",
+     "416×416×8",
+     "208×208×8",
+     "2×2",
+     "2",
+     "-"
+    ],
+    [
+     "QuantConv",
+     "208×208×8",
+     "208×208×8",
+     "3×3",
+     "1",
+     "QuantReLU"
+    ],
+    [
+     "MaxPooling",
+     "208×208×8",
+     "104×104×8",
+     "2×2",
+     "2",
+     "-"
+    ],
+    [
+     "QuantConv",
+     "104×104×8",
+     "104×104×16",
+     "3×3",
+     "1",
+     "QuantReLU"
+    ],
+    [
+     "MaxPooling",
+     "104×104×16",
+     "52×52×16",
+     "2 × 2",
+     "2",
+     "-"
+    ],
+    [
+     "QuantConv",
+     "52×52×16",
+     "52 × 52 × 32",
+     "3 × 3",
+     "1",
+     "QuantReLU"
+    ],
+    [
+     "MaxPooling",
+     "52×52×32",
+     "26 × 26 × 32",
+     "2 × 2",
+     "2",
+     "-"
+    ],
+    [
+     "QuantConv",
+     "26×26×32",
+     "26 × 26 × 56",
+     "3 × 3",
+     "1",
+     "QuantReLU"
+    ],
+    [
+     "MaxPooling",
+     "26×26×56",
+     "13 × 13 × 56",
+     "2 × 2",
+     "2",
+     "-"
+    ],
+    [
+     "QuantConv",
+     "13×13×56",
+     "13×13×104",
+     "3×3",
+     "1",
+     "QuantReLU"
+    ],
+    [
+     "MaxPooling",
+     "13×13×104",
+     "13×13×104",
+     "2×2",
+     "2",
+     "-"
+    ],
+    [
+     "QuantConv",
+     "13×13×104",
+     "13×13×208",
+     "3×3",
+     "1",
+     "QuantReLU"
+    ],
+    [
+     "QuantConv",
+     "13×13×208",
+     "13 × 13 × 56",
+     "1 × 1",
+     "1",
+     "QuantReLU"
+    ],
+    [
+     "QuantConv",
+     "13×13×56",
+     "13×13×104",
+     "3×3",
+     "1",
+     "QuantReLU"
+    ],
+    [
+     "QuantConv",
+     "13×13×104",
+     "13 × 13 × 18",
+     "3 × 3",
+     "1",
+     "QuantHardTanh"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    165.1,
+    459.7,
+    559.8,
+    662.0
+   ],
+   "caption": "Table 2. Package versions used in the Kaggle environment.",
+   "rows": [
+    [
+     "Package",
+     "Version"
+    ],
+    [
+     "matplotlib",
+     "3.5.1"
+    ],
+    [
+     "numpy",
+     "1.26.3"
+    ],
+    [
+     "opencv-python",
+     "4.10.0.84"
+    ],
+    [
+     "pillow",
+     "11.1.0"
+    ],
+    [
+     "PyYAML",
+     "6.0.2"
+    ],
+    [
+     "requests",
+     "2.32.3"
+    ],
+    [
+     "scipy",
+     "1.15.0"
+    ],
+    [
+     "torch",
+     "1.13.1"
+    ],
+    [
+     "torchvision",
+     "0.14.1"
+    ],
+    [
+     "tqdm",
+     "4.67.1"
+    ],
+    [
+     "brevitas",
+     "0.9.0"
+    ],
+    [
+     "tensorboard",
+     "2.15.2"
+    ],
+    [
+     "pandas",
+     "2.2.3"
+    ],
+    [
+     "seaborn",
+     "0.13.2"
+    ],
+    [
+     "thop",
+     "0.1.1.post2209072238"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    164.9,
+    90.2,
+    559.5,
+    173.5
+   ],
+   "caption": "Table 3. Training configuration parameters.",
+   "rows": [
+    [
+     "Parameter",
+     "Value"
+    ],
+    [
+     "Number of Epochs",
+     "300"
+    ],
+    [
+     "Batch Size",
+     "64"
+    ],
+    [
+     "Image Size",
+     "416 × 416"
+    ],
+    [
+     "Optimizer",
+     "SGD"
+    ],
+    [
+     "Patience",
+     "30"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    165.5,
+    566.6,
+    559.5,
+    649.0
+   ],
+   "caption": "Table 4. DSP Utilization for Different Configurations.",
+   "rows": [
+    [
+     "DSP TYPE",
+     "Activations: [4,4]-bit (U)INT Weights: [4,4]-bit INT",
+     "Activations: (4,8]-bit (U)INT Weights: (4,8]-bit INT"
+    ],
+    [
+     "HLS DSP",
+     "1 MAC/DSP",
+     "1 MAC/DSP"
+    ],
+    [
+     "RTL DSP48E1",
+     "4 MAC/DSP",
+     "2 MAC/DSP"
+    ],
+    [
+     "RTL DSP48E2",
+     "4 MAC/DSP",
+     "2 MAC/DSP"
+    ],
+    [
+     "RTL DSP58",
+     "3 MAC/DSP",
+     "3 MAC/DSP"
+    ]
+   ]
+  },
+  {
+   "page": 26,
+   "bbox": [
+    165.5,
+    337.9,
+    559.4,
+    451.4
+   ],
+   "caption": "Table 5. Validation results for the original and final pruned model, trained on the VisDrone dataset limited to the single class 'car'.",
+   "rows": [
+    [
+     "Metric",
+     "YOLOv3-Tiny Original",
+     "YOLOv3-Tiny Pruned"
+    ],
+    [
+     "Precision (P)",
+     "67.06%",
+     "48.16%"
+    ],
+    [
+     "Recall (R)",
+     "38.44%",
+     "17.16%"
+    ],
+    [
+     "mAP@0.5",
+     "41.76%",
+     "17.68%"
+    ],
+    [
+     "Box loss",
+     "0.1220",
+     "0.1531"
+    ],
+    [
+     "Object loss",
+     "0.1653",
+     "0.3049"
+    ],
+    [
+     "Classification loss",
+     "0",
+     "0"
+    ]
+   ]
+  },
+  {
+   "page": 26,
+   "bbox": [
+    170.5,
+    559.1,
+    449.9,
+    638.6
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Resource",
+     "Utilization",
+     "Available",
+     "Utilization %"
+    ],
+    [
+     "LUT",
+     "41,810",
+     "53,200",
+     "78.59"
+    ],
+    [
+     "LUTRAM",
+     "3736",
+     "17,400",
+     "21.47"
+    ],
+    [
+     "FF",
+     "49,258",
+     "106,400",
+     "46.30"
+    ],
+    [
+     "BRAM",
+     "138",
+     "140",
+     "98.57"
+    ],
+    [
+     "DSP",
+     "204",
+     "220",
+     "92.73"
+    ]
+   ]
+  },
+  {
+   "page": 27,
+   "bbox": [
+    167.2,
+    77.2,
+    555.2,
+    147.3
+   ],
+   "caption": "Figure 17. Timing analysis generated by Vivado.",
+   "rows": [
+    [
+     "Setup",
+     "Hold",
+     "Hold",
+     "Pulse Width",
+     "Pulse Width",
+     "Pulse Width"
+    ],
+    [
+     "Worst Negative Slack (WNS): 1.251 ns",
+     "",
+     "Worst Hold Slack (WHS):",
+     "0.039 ns",
+     "Worst Pulse Width Slack (WPWS):",
+     "3.750 ns"
+    ],
+    [
+     "Total Negative Slack (TNS):",
+     "0.000 ns",
+     "Total Hold Slack (THS):",
+     "0.000 ns",
+     "Total Pulse Width Negative Slack (TPWS): 0.000 ns",
+     ""
+    ],
+    [
+     "Number of Failing Endpoints:",
+     "0",
+     "Number of Failing Endpoints:",
+     "0",
+     "Number of Failing Endpoints:",
+     "0"
+    ],
+    [
+     "Total Number of Endpoints:",
+     "147,347",
+     "Total Number of Endpoints:",
+     "147,347",
+     "Total Number of Endpoints:",
+     "57,474"
+    ],
+    [
+     "All user specified timing constraints are met.",
+     "All user specified timing constraints are met.",
+     "All user specified timing constraints are met.",
+     "All user specified timing constraints are met.",
+     "All user specified timing constraints are met.",
+     "All user specified timing constraints are met."
+    ]
+   ]
+  },
+  {
+   "page": 27,
+   "bbox": [
+    165.3,
+    389.5,
+    559.6,
+    573.6
+   ],
+   "caption": "Table 6. Per-MVU MAC operations and weight parameters.",
+   "rows": [
+    [
+     "Layer",
+     "MAC Operations",
+     "Weights",
+     "Data Type"
+    ],
+    [
+     "MVAU_rtl_0",
+     "37,380,096",
+     "216",
+     "8b-8b"
+    ],
+    [
+     "MVAU_rtl_1",
+     "24,920,064",
+     "576",
+     "4b-4b"
+    ],
+    [
+     "MVAU_hls_0",
+     "12,460,032",
+     "1152",
+     "4b-4b"
+    ],
+    [
+     "MVAU_rtl_2",
+     "12,460,032",
+     "4608",
+     "4b-4b"
+    ],
+    [
+     "MVAU_hls_1",
+     "10,902,528",
+     "16,128",
+     "4b-4b"
+    ],
+    [
+     "MVAU_hls_2",
+     "8,858,304",
+     "52,416",
+     "4b-4b"
+    ],
+    [
+     "MVAU_hls_3",
+     "32,902,272",
+     "194,688",
+     "4b-4b"
+    ],
+    [
+     "MVAU_hls_4",
+     "1,968,512",
+     "11,648",
+     "4b-4b"
+    ],
+    [
+     "MVAU_rtl_3",
+     "8,858,304",
+     "52,416",
+     "4b-4b"
+    ],
+    [
+     "MVAU_rtl_4",
+     "2,847,312",
+     "16,848",
+     "4b-8b"
+    ],
+    [
+     "Total",
+     "(8b-8b) 37,380,096 (4b-4b) 113,330,048 (4b-8b) 2,847,312",
+     "(8b) 17,064 (4b) 333,632 -",
+     "-"
+    ]
+   ]
+  },
+  {
+   "page": 28,
+   "bbox": [
+    165.4,
+    90.0,
+    559.5,
+    167.6
+   ],
+   "caption": "Table 7. Resource utilization: estimated vs. actual.",
+   "rows": [
+    [
+     "Resource",
+     "Estimated",
+     "Actual",
+     "Available",
+     "Util%"
+    ],
+    [
+     "BRAM_18K",
+     "200",
+     "138",
+     "140",
+     "98.57"
+    ],
+    [
+     "LUT",
+     "26,694",
+     "41,605",
+     "53,200",
+     "78.20"
+    ],
+    [
+     "DSP",
+     "202",
+     "204",
+     "220",
+     "92.73"
+    ],
+    [
+     "URAM",
+     "0",
+     "-",
+     "-",
+     "-"
+    ]
+   ]
+  },
+  {
+   "page": 28,
+   "bbox": [
+    165.2,
+    492.7,
+    559.6,
+    563.8
+   ],
+   "caption": "Table 8. Estimated, simulated, and measured performance at 100MHz.",
+   "rows": [
+    [
+     "Metric",
+     "Estimated",
+     "RTLSim",
+     "Actual (FINN)"
+    ],
+    [
+     "Total Cycles",
+     "4,586,895 → critical path",
+     "-",
+     "-"
+    ],
+    [
+     "MaxCycles(Node)",
+     "216,320(StreamingMaxPool_hls_0)",
+     "741,670",
+     "-"
+    ],
+    [
+     "Latency (ms)",
+     "45.87",
+     "7.41",
+     "11.56"
+    ],
+    [
+     "Throughput (FPS)",
+     "462.28",
+     "134.83",
+     "104.39"
+    ]
+   ]
+  },
+  {
+   "page": 29,
+   "bbox": [
+    165.5,
+    241.0,
+    559.5,
+    330.0
+   ],
+   "caption": "Table 9. Throughput Test Results at Different PL Clock Frequencies.",
+   "rows": [
+    [
+     "Clock(MHz)",
+     "Batch",
+     "Runtime(ms)",
+     "Throughput(FPS)",
+     "DRAMIn(Mb/s)",
+     "DRAMOut(Mb/s)"
+    ],
+    [
+     "50",
+     "1",
+     "22.774",
+     "43.909",
+     "22.796",
+     "0.134"
+    ],
+    [
+     "50",
+     "100",
+     "1915.531",
+     "52.205",
+     "27.103",
+     "0.159"
+    ],
+    [
+     "100",
+     "1",
+     "11.564",
+     "86.473",
+     "44.894",
+     "0.263"
+    ],
+    [
+     "100",
+     "100",
+     "957.986",
+     "104.386",
+     "54.194",
+     "0.318"
+    ],
+    [
+     "200",
+     "1",
+     "6.068",
+     "164.786",
+     "85.552",
+     "0.501"
+    ],
+    [
+     "200",
+     "100",
+     "479.189",
+     "208.686",
+     "108.343",
+     "0.635"
+    ]
+   ]
+  },
+  {
+   "page": 29,
+   "bbox": [
+    165.5,
+    361.1,
+    559.8,
+    499.0
+   ],
+   "caption": "Table 10. Mean and standard deviation of per-stage inference timings.",
+   "rows": [
+    [
+     "Parameter",
+     "50MHz (ms)",
+     "100MHz (ms)",
+     "200MHz (ms)"
+    ],
+    [
+     "Preprocessing",
+     "32.907 ± 1.040",
+     "34.043 ± 1.212",
+     "32.191 ± 1.490"
+    ],
+    [
+     "Driver Exec",
+     "28.913 ± 0.700",
+     "17.891 ± 0.788",
+     "12.121 ± 0.326"
+    ],
+    [
+     "Rescale",
+     "0.511 ± 0.213",
+     "0.500 ± 0.176",
+     "0.481 ± 0.024"
+    ],
+    [
+     "Detect",
+     "4.988 ± 1.137",
+     "4.670 ± 0.237",
+     "4.746 ± 4.502"
+    ],
+    [
+     "NMS",
+     "10.399 ± 2.644",
+     "9.335 ± 1.051",
+     "9.232 ± 2.383"
+    ],
+    [
+     "Box Process",
+     "11.373 ± 2.778",
+     "11.211 ± 3.170",
+     "10.749 ± 2.950"
+    ],
+    [
+     "TotalPostprocess †",
+     "27.980±5.046",
+     "26.362 ± 3.643",
+     "25.819 ± 8.754"
+    ]
+   ]
+  },
+  {
+   "page": 30,
+   "bbox": [
+    165.7,
+    341.2,
+    560.2,
+    532.6
+   ],
+   "caption": "Table 11. Vivado power estimation for top-level modules.",
+   "rows": [
+    [
+     "Name",
+     "Power (W)"
+    ],
+    [
+     "top_wrapper",
+     "3.129"
+    ],
+    [
+     "top_i",
+     "3.129"
+    ],
+    [
+     "StreamingDataflowPartition_1",
+     "1.554"
+    ],
+    [
+     "inst",
+     "1.554"
+    ],
+    [
+     "axi_interconnect_0",
+     "0.004"
+    ],
+    [
+     "s00_couplers",
+     "0.003"
+    ],
+    [
+     "idma0",
+     "0.019"
+    ],
+    [
+     "inst",
+     "0.019"
+    ],
+    [
+     "odma0",
+     "0.012"
+    ],
+    [
+     "inst",
+     "0.012"
+    ],
+    [
+     "smartconnect_0",
+     "0.042"
+    ],
+    [
+     "inst",
+     "0.042"
+    ],
+    [
+     "zynq_ps",
+     "1.497"
+    ],
+    [
+     "inst",
+     "1.497"
+    ]
+   ]
+  },
+  {
+   "page": 30,
+   "bbox": [
+    165.4,
+    607.0,
+    559.5,
+    730.3
+   ],
+   "caption": "Table 12. Breakdown of Vivado on-chip power consumption.",
+   "rows": [
+    [
+     "On-Chip Component",
+     "Power(W)",
+     "Used",
+     "Available",
+     "Utilization(%)"
+    ],
+    [
+     "Clocks",
+     "0.124",
+     "4",
+     "-",
+     "-"
+    ],
+    [
+     "Slice Logic",
+     "0.428",
+     "114,377",
+     "-",
+     "-"
+    ],
+    [
+     "LUT as Logic",
+     "0.384",
+     "37,928",
+     "53,200",
+     "71.29"
+    ],
+    [
+     "CARRY4",
+     "0.025",
+     "4605",
+     "13,300",
+     "34.62"
+    ],
+    [
+     "Register",
+     "0.014",
+     "49,049",
+     "106,400",
+     "46.10"
+    ],
+    [
+     "F7/F8 Muxes",
+     "0.002",
+     "1749",
+     "53,200",
+     "3.29"
+    ],
+    [
+     "LUTasDistributedRAM",
+     "0.002",
+     "2478",
+     "17,400",
+     "14.24"
+    ],
+    [
+     "LUT as Shift Register",
+     "<0.001",
+     "1215",
+     "17,400",
+     "6.98"
+    ]
+   ]
+  },
+  {
+   "page": 31,
+   "bbox": [
+    165.3,
+    90.4,
+    559.5,
+    208.1
+   ],
+   "caption": "Table 12. Cont.",
+   "rows": [
+    [
+     "On-Chip Component",
+     "Power(W)",
+     "Used",
+     "Available",
+     "Utilization(%)"
+    ],
+    [
+     "Others",
+     "0.000",
+     "2531",
+     "-",
+     "-"
+    ],
+    [
+     "Signals",
+     "0.612",
+     "94,868",
+     "-",
+     "-"
+    ],
+    [
+     "Block RAM",
+     "0.262",
+     "138",
+     "140",
+     "98.57"
+    ],
+    [
+     "DSPs",
+     "0.207",
+     "204",
+     "220",
+     "92.73"
+    ],
+    [
+     "PS7",
+     "1.496",
+     "1",
+     "-",
+     "-"
+    ],
+    [
+     "Static Power",
+     "0.229",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Total",
+     "3.358",
+     "",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "page": 31,
+   "bbox": [
+    165.5,
+    335.8,
+    559.5,
+    397.8
+   ],
+   "caption": "Table 13. Measured board power consumption.",
+   "rows": [
+    [
+     "Configuration",
+     "Power (W)"
+    ],
+    [
+     "Idle (no bitstream)",
+     "1.9"
+    ],
+    [
+     "50 MHz",
+     "2.12"
+    ],
+    [
+     "100 MHz",
+     "2.38"
+    ],
+    [
+     "200 MHz",
+     "2.55"
+    ]
+   ]
+  },
+  {
+   "page": 31,
+   "bbox": [
+    165.3,
+    597.2,
+    559.3,
+    688.7
+   ],
+   "caption": "Table 14. Inference performance efficiency (FPS/W) at different clock frequencies and batch sizes.",
+   "rows": [
+    [
+     "Clock(MHz)",
+     "BatchSize",
+     "Throughput(FPS)",
+     "Power(W)",
+     "Efficiency(FPS/W)"
+    ],
+    [
+     "50",
+     "1 100",
+     "43.91 52.21",
+     "2.12 2.12",
+     "20.71 24.63"
+    ],
+    [
+     "100",
+     "1 100",
+     "86.47 104.39",
+     "2.38 2.38",
+     "36.32 43.86"
+    ],
+    [
+     "200",
+     "1 100",
+     "164.79 208.69",
+     "2.55 2.55",
+     "64.63 81.88"
+    ]
+   ]
+  },
+  {
+   "page": 34,
+   "bbox": [
+    165.7,
+    353.5,
+    559.9,
+    432.8
+   ],
+   "caption": "Table 15. Comparison of inference performance and efficiency between Coral TPU and FINN on a Z-Turn board.",
+   "rows": [
+    [
+     "Metric",
+     "Coral Edge TPU.250MHz",
+     "Coral Edge TPU.500MHz",
+     "FINN on Z-Turn Board.50MHz",
+     "FINN on Z-Turn Board.100MHz",
+     "FINN on Z-Turn Board.200MHz"
+    ],
+    [
+     "Latency (ms)",
+     "9.69",
+     "6.73",
+     "22.77 ‡",
+     "11.56 ‡",
+     "6.07 ‡"
+    ],
+    [
+     "Throughput (FPS)",
+     "103.2",
+     "148.7",
+     "43.91",
+     "86.47",
+     "164.8"
+    ],
+    [
+     "Power (W)",
+     "1.2 †",
+     "2.4 †",
+     "2.12",
+     "2.38",
+     "2.55"
+    ],
+    [
+     "Efficiency (FPS/W)",
+     "86.0",
+     "62.0",
+     "20.7",
+     "36.3",
+     "64.5"
+    ]
+   ]
+  },
+  {
+   "page": 34,
+   "bbox": [
+    35.0,
+    646.5,
+    559.5,
+    714.1
+   ],
+   "caption": "Table 16. Comparison of YOLOv3-Tiny-like implementations on different FPGA platforms.",
+   "rows": [
+    [
+     "Reference",
+     "FPGABoard",
+     "Precision",
+     "Clock (MHz)",
+     "LUT (units)",
+     "DSP (units)",
+     "BRAM (units)",
+     "Latency (ms)",
+     "Throughput (FPS)",
+     "Power (W)",
+     "Efficiency (FPS/W)"
+    ],
+    [
+     "[12] FINN-R",
+     "PYNQ-Z1",
+     "1W3A",
+     "100",
+     "46.5K",
+     "-",
+     "280(18K)",
+     "33.44",
+     "29.9",
+     "2.5",
+     "11.96"
+    ],
+    [
+     "[48] SATAY",
+     "VCU110",
+     "8W16A",
+     "220",
+     "127K",
+     "1780",
+     "2090.5(36K)",
+     "14.3",
+     "69.93",
+     "15.4",
+     "4.54"
+    ],
+    [
+     "[48] SATAY",
+     "VCU118",
+     "8W16A",
+     "255",
+     "431K",
+     "6687",
+     "2148 (36 K)",
+     "6.8",
+     "147.06",
+     "42.9",
+     "3.43"
+    ],
+    [
+     "[63] LPYOLO",
+     "Z7020",
+     "4W4A",
+     "100",
+     "39.4K",
+     "203",
+     "91 (18 K)",
+     "52.3",
+     "19.12",
+     "2.4",
+     "7.97"
+    ],
+    [
+     "This Work",
+     "Z7020",
+     "4W4A",
+     "200",
+     "37.9K",
+     "204",
+     "138 (18 K)",
+     "4.79",
+     "208.77",
+     "2.55",
+     "81.85"
+    ]
+   ]
+  },
+  {
+   "page": 36,
+   "bbox": [
+    165.0,
+    137.1,
+    394.6,
+    773.8
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "AI",
+     "Artificial Intelligence"
+    ],
+    [
+     "AOI",
+     "Area of Interest"
+    ],
+    [
+     "ASIC",
+     "Application-SpecificIntegratedCircuit"
+    ],
+    [
+     "AXI",
+     "Advanced eXtensible Interface"
+    ],
+    [
+     "BN",
+     "Batch Normalization"
+    ],
+    [
+     "BNN",
+     "BinarizedNeuralNetwork"
+    ],
+    [
+     "CIG",
+     "Convolution Input Generator"
+    ],
+    [
+     "CLB",
+     "Configurable Logic Block"
+    ],
+    [
+     "CMOS",
+     "ComplementaryMetal-Oxide-Semiconductor"
+    ],
+    [
+     "CNN",
+     "ConvolutionalNeuralNetwork"
+    ],
+    [
+     "COCO",
+     "CommonObjectsinContext"
+    ],
+    [
+     "CUDA",
+     "ComputeUnifiedDeviceArchitecture"
+    ],
+    [
+     "CPU",
+     "Central Processing Unit"
+    ],
+    [
+     "DL",
+     "Deep Learning"
+    ],
+    [
+     "DMA",
+     "DirectMemoryAccess"
+    ],
+    [
+     "DNN",
+     "DeepNeuralNetwork"
+    ],
+    [
+     "DPU",
+     "Deep-LearningProcessingUnit"
+    ],
+    [
+     "DSP",
+     "Digital Signal Processing"
+    ],
+    [
+     "FPGA",
+     "Field-ProgrammableGateArray"
+    ],
+    [
+     "FPS",
+     "Frames per Second"
+    ],
+    [
+     "GPU",
+     "GraphicsProcessingUnit"
+    ],
+    [
+     "HLS",
+     "High-LevelSynthesis"
+    ],
+    [
+     "HTTP",
+     "HyperTextTransferProtocol"
+    ],
+    [
+     "IMU",
+     "Inertial Measurement Unit"
+    ],
+    [
+     "IoU",
+     "Intersection over Union"
+    ],
+    [
+     "IoT",
+     "Internet of Things"
+    ],
+    [
+     "IP",
+     "Intellectual Property"
+    ],
+    [
+     "ISA",
+     "Instruction Set Architecture"
+    ],
+    [
+     "LUT",
+     "Look Up Table"
+    ],
+    [
+     "MAC",
+     "MultiplyAndAccumulate"
+    ],
+    [
+     "mAP",
+     "MeanAveragePrecision"
+    ],
+    [
+     "MMIO",
+     "MemoryMappedI/O"
+    ],
+    [
+     "MVU",
+     "Matrix-VectormultiplicationUnit"
+    ],
+    [
+     "NMS",
+     "Non-MaximumSuppression"
+    ],
+    [
+     "NPU",
+     "NeuralProcessingUnits"
+    ],
+    [
+     "NVDLA",
+     "NVIDIADeepLearningAccelerator"
+    ],
+    [
+     "ONNX",
+     "OpenNeuralNetworkExchange"
+    ],
+    [
+     "OOM",
+     "OutOfMemory"
+    ],
+    [
+     "PE",
+     "Processing Element"
+    ],
+    [
+     "PL",
+     "Programmable Logic"
+    ],
+    [
+     "PS",
+     "Processing System"
+    ],
+    [
+     "PTQ",
+     "Post-Training Quantization"
+    ],
+    [
+     "QAT",
+     "Quantization-AwareTraining"
+    ],
+    [
+     "QONNX",
+     "QuantizedOpenNeuralNetworkExchange"
+    ],
+    [
+     "RTL",
+     "Register Transfer Level"
+    ],
+    [
+     "RTOS",
+     "Real Time Operating System"
+    ],
+    [
+     "SIMD SoC",
+     "SingleInstruction,MultipleData System on a Chip"
+    ],
+    [
+     "SWG",
+     "SlidingWindowGenerator"
+    ]
+   ]
+  },
+  {
+   "page": 37,
+   "bbox": [
+    165.2,
+    74.1,
+    333.0,
+    162.3
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "TCP",
+     "Transmission Control Protocol"
+    ],
+    [
+     "TNS",
+     "Total Negative Slack"
+    ],
+    [
+     "TOPS",
+     "Tera Operations Per Second"
+    ],
+    [
+     "TPU",
+     "Tensor Processing Unit"
+    ],
+    [
+     "WNS",
+     "WorstNegativeSlack"
+    ],
+    [
+     "XSA",
+     "Xilinx Support Archive"
+    ],
+    [
+     "YOLO",
+     "YouOnlyLookOnce"
+    ]
+   ]
+  }
+ ]
+}

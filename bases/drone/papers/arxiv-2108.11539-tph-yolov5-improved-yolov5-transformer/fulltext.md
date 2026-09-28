@@ -131,11 +131,31 @@ This work was supported by National Natural Science Foundation of China (6207202
 
 **Figure 9.** Some visualization results from our TPH-YOLOv5 on testset-challenge, different category use bounding boxes with different color. The performance is good at localization tiny objects, dense objects and objects blurred by motion.
 
-**Table 1.** The comparison of the performance in VisDrone2021 testset-challenge4.3. Ablation StudiesOn VisDrone2021-DET testset-dev. we analyze importance of each proposed component on local testset-dev as we cannot test these on VisDrone2021 competition server, the number of submissions to the competition server is very valuable. The impact of each component is listed in the table 2.
+**Table 1.** The comparison of the performance in VisDrone2021 testset-challenge4.3. Ablation StudiesOn VisDrone2021-DET testset-dev. we analyze importance of each proposed component on local testset-dev as we cannot test these on VisDrone2021 competition server, the number of submissions to the competition server is very valuable. The impact of each component is listed in the table 2. [corps du tableau reconstruit par Docling : à vérifier]
 
-    62.05
+    Methods | mAP(%) | AP50(%)
+    RetinaNet[29] | 11.81 | 21.37
+    RefineDet[60] | 14.90 | 28.76
+    DetNet59[26] | 15.26 | 29.23
+    Cascade-RCNN[3] | 16.09 | 31.91
+    FPN[28] | 16.51 | 32.20
+    Light-RCNN[25] | 16.53 | 32.78
+    CornetNet[24] | 17.41 | 34.12
+    RRNet (2019 2nd )[4] | 29.13 | 55.82
+    DPNet-ensemble(2019SOTA)[8] | 29.62 | 54.00
+    SMPNet (2020 2nd )[47] | 35.98 | 59.53
+    DPNetV3 (2020 SOTA)[47] | 37.37 | 62.05
+    TPH-YOLOv5 ensemble | 39.18 | \
 
-**Table 2.** Ablation Study on VisDrone2021 testset-dev.
+**Table 2.** Ablation Study on VisDrone2021 testset-dev. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Methods | mAP (%) | AP50 (%)
+    YOLOv5 | 28.88 | 49.33
+    YOLOv5+P2 | 31.03(↑2.15) | 51.61(↑2.28)
+    YOLOv5+P2+transformer | 32.84(↑1.81) | 53.87(↑2.26)
+    TPH-YOLOv5 (previous+CBAM) | 33.63(↑0.79) | 54.77(↑0.90)
+    TPH-YOLOv5+ms-testing | 34.90(↑1.27) | 56.40(↑1.63)
+    TPH-YOLOv5+ms-testing+Classifier | 35.74(↑0.84) | 57.31(↑0.91)
 
 **Table 3.** Comparison of TPH-YOLOv5 models' performances on VisDrone2021 testset-dev for each category.
 

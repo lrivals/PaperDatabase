@@ -129,8 +129,8 @@ This work presents the first multi-objective autonomous nano-drone, pursuing the
     0.75× | 0.5 | 80% | 37% | 43% | 50%
      | 1 | 37% | 27% | 43% | 33%
 
-**TABLE IV** POWER BREAKDOWN OF THE ROBOTIC PLATFORM.
+**TABLE IV** POWER BREAKDOWN OF THE ROBOTIC PLATFORM. [corps du tableau reconstruit par Docling : à vérifier]
 
-     | Motors | CF elect. AI-deck Multi-ranger | Total
+     | Motors | CFelect. | AI-deck | Multi-ranger | Total
     Power [W] | 7.32 | 0.277 | 0.134 | 0.286 | 8.02
     Percentage | 91.31% | 3.45% | 1.67% | 3.57% | 100%

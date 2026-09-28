@@ -254,14 +254,12 @@ Second, work [12], considering CNN's communication issue, chooses to maximize da
     stride (S) | 4 | 1 | 1 | 1 | 1
     set # | 2 | 2 | 2 | 2 | 2
 
-**Table 3:** 
+**Table 3:** [corps du tableau reconstruit par Docling : à vérifier]
 
-    Data sharing relations of communication
-    part | 
      | irrelevant dimension(s)
-    input f m | to
+    input fm | to
     weights | row,col
-    output f m | ti
+    output fm | ti
 
 **Table 4:** Layer specific optimal solution and crosslayer optimization
 
@@ -274,7 +272,7 @@ Second, work [12], considering CNN's communication issue, chooses to maximize da
     Total | - | 963804
     Cross-Layer Optimization | 64, 7 | 1008246
 
-**Table 6:** FPGA Resource utilization [corps du tableau reconstruit par PyMuPDF : à vérifier]
+**Table 6:** FPGA Resource utilization [corps du tableau reconstruit par PyMuPDF : à vérifier] [corps du tableau reconstruit par Docling : à vérifier]
 
     Resource | DSP | BRAM | LUT | FF
     Used | 2240 | 1024 | 186251 | 205704

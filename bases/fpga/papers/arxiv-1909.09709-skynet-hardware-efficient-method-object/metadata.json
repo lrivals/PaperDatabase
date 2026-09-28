@@ -71,25 +71,12 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : Table 9",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 9"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "todo"
-  },
-  "warnings": [],
-  "imported_from": {
-    "base": "drone",
-    "paper_id": "arxiv-1909.09709-skynet-hardware-efficient-method-object",
-    "date": "2026-09-28",
-    "fiche": "done",
-    "axes": [
-      "drone-fpga",
-      "drone-detection",
-      "datasets-benchmarks",
-      "tracking-navigation"
-    ]
   }
 }

@@ -24,11 +24,12 @@
   ],
   "added": "2026-09-28",
   "extraction": {
-    "backend": "pymupdf",
-    "ok": false,
+    "backend": "grobid",
+    "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "aucun axe détecté : à classer dans /paper-fiche"
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE IV"
     ]
   },
   "status": {

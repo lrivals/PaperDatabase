@@ -215,26 +215,104 @@ FIGURE 11. LayerCAM rendering of model validation datasets before and afterimpro
 
 FIGURE 13. YOLOv8 (a) and YOLO-GCOF (b) Detection results on the Raspberry Pi4B.
 
-**TABLE 1.** Configuration of experimental training.
+**TABLE 1.** Configuration of experimental training. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 2.** Comparison results of modules using different dynamic technologies.
+    Parameters | Information
+    Epoch | 300
+    Image size | 640×640
+    Batch | 32
+    Close_mosaic | 0
+    Ir0 | 0.01
+    Irf | 0.01
+    Optimizer | SGD
+    Works | 4
 
-**TABLE 3.** Comparison results of different attention modules.
+**TABLE 2.** Comparison results of modules using different dynamic technologies. [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 4** shows the test results of Detect-OGCH module with various group configurations on the dataset used in this study, where x denotes the number of channels in the input to Detect-OGCH module, and the table values indicate the group count in the three convolution layers of the Detect-OGCH backbone module. As shown in the table, it is evident that properly configuring the number of groups is crucial for maximizing the performance of Detect-OGCH module.
+    Modules | mAP@ 50 | mAP@50- 95 | Params /M | GFLOPS/ G
+    C2f | 91.5% | 58.8% | 3.0 | 8.1
+    DGCST | 90.4% | 57.4% | 2.6 | 7.0
+    C2f-DynamicConv | 91.6% | 59.5% | 4.4 | 6.9
+    DynamicHGNetV2 | 90.9% | 58.8% | 2.5 | 6.7
+    C2f-DySnakeConv | 91.4% | 58.9% | 3.2 | 8.2
+    GI-DGCST | 91.9% | 58.9% | 2.6 | 7.2
+
+**TABLE 3.** Comparison results of different attention modules. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Modules | mAP@ 50 | mAP@50- 95 | Params /M | GFLOPS/ G
+    Module 1 | 91.8% | 59% | 1.9 | 6.8
+    Module 2 | 91.1% | 58.9% | 1.9 | 6.9
+    Module 3 | 91.6% | 59.1% | 2.0 | 7.3
+    Module 4 | 92.1% | 59.5% | 1.9 | 6.9
+
+**Table 4** shows the test results of Detect-OGCH module with various group configurations on the dataset used in this study, where x denotes the number of channels in the input to Detect-OGCH module, and the table values indicate the group count in the three convolution layers of the Detect-OGCH backbone module. As shown in the table, it is evident that properly configuring the number of groups is crucial for maximizing the performance of Detect-OGCH module. [corps du tableau reconstruit par Docling : à vérifier]
+
+    g1 | g2 | g3 | mAP@ 50 | mAP@ 50-95 | Params /M | GFLOPS/ G
+    x//8 | x//8 | x//8 | 91.7% | 59.7% | 2.5 | 6.0
+    x//16 | x//16 | x//16 | 91.6% | 58.8% | 2.8 | 6.9
+    x//32 | x//32 | x//32 | .91.1% | 58.9% | 3.3 | 8.5
+    x//8 | x//4 | x//8 | 91% | 58.6% | 2.4 | 5.8
+    x//16 | x//8 | x//16 | 91.4% | 59.2% | 2.6 | 6.5
+    x//32 | x//16 | x//32 | 91.2% | 59.3% | 3.0 | 7.7
 
 **TABLE 4.** Experimental results of different group configurations.
 
-**Table 5** 
+**Table 5** [corps du tableau reconstruit par Docling : à vérifier]
 
-    presents the test
+    Methods | F1 | mAP@50 | mAP@50-95
+    CIoU | 89.7% | 91.5% | 58.8%
+    SIoU | 89% | 91.1% | 58.6%
+    WIoU | 89.4% | 91.2% | 59.2%
+    Inner-SIoU | 88.9% | 90.7% | 58.6%
+    Focaler-SIoU(0.20,0.85) | 89.7% | 91.4% | 58.6%
+    Focaler-SIoU(0.25,0.80) | 89.4% | 91.6% | 58.7%
+    Focaler-SIoU(0.25,0.85) | 89.7% | 91.7% | 58.4%
+    Focaler-SIoU(0.25,0.90) | 88.8% | 90.6% | 58.3%
+    Focaler-SIoU(0.25,0.95) | 88.6% | 90.9% | 58.4%
+    Focaler-SIoU(0.30,0.85) | 88.9% | 91.3% | 58.5%
 
 **TABLE 5.** Comparison results of different IoU loss functions.
 
-**TABLE 6.** Results of ablation experiment.
+**TABLE 6.** Results of ablation experiment. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 7.** Comparison results of detection performance of different models on the A&T dataset.
+    Exp | GI- DGCST | CSA- HSFPN | Detect- OGCH | Focaler- SIoU | F1 | MAP@50 | MAP@50-95 | PARAMS/M | GFLOPS
+    Exp 1 | √ |  |  |  | 89.7% | 91.5% | 58.8% | 3.0 | 8.1
+    Exp 2 |  |  |  |  | 89.8% | 91.9% | 58.9% | 2.6 | 7.2
+    Exp 3 |  | √ |  |  | 90% | 92.1% | 59.5% | 1.9 | 6.9
+    Exp 3 | √ | √ |  |  | 90.1% | 92.4% | 59.5% | 1.5 | 6.1
+    Exp 4 |  |  | √ |  | 89.5% | 91.7% | 59.7% | 2.5 | 6.0
+    Exp 5 | √ | √ | √ |  | 89.6% | 92.3% | 59.9% | 1.2 | 4.1
+    Exp 6 |  |  |  | √ | 89.7% | 91.7% | 58.4% | 3.0 | 8.1
+    Exp 7 | √ | √ | √ | √ | 90.7% | 92.6% | 59.5% | 1.2 | 4.1
 
-**TABLE 8.** Comparison results of different detection models.
+**TABLE 7.** Comparison results of detection performance of different models on the A&T dataset. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE 9.** Comparison results of different models on the DUT-Anti-UAV dataset.
+    Models | F1 | mAP@50 | mAP@50-95
+    YOLOv5n | 86.9% | 90% | 56.4%
+    YOLOv7-t | 93.3% | 91.7% | 54%
+    YOLOv8n | 89.7% | 91.5% | 58.8%
+    YOLOv9-t | 89% | 91.6% | 58.3%
+    YOLOv10n | 86.5% | 90.9% | 58.6%
+    YOLO11n | 89.4% | 90.9% | 58.5%
+    YOLOv8-GCOF | 90.7% | 92.6% | 59.5%
+
+**TABLE 8.** Comparison results of different detection models. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Models | Params/M | GFLOPs/G | Model Size(MB)
+    YOLOv5n | 1.7 | 4.1 | 3.67
+    YOLOv7-t | 6.0 | 13 | 11.7
+    YOLOv8n | 3.0 | 8.1 | 5.97
+    YOLOv9-t | 2.6 | 10.7 | 5.84
+    YOLOv10n | 2.7 | 8.2 | 5.53
+    YOLO11n | 2.5 | 6.3 | 5.24
+    YOLOv8-GCOF | 1.2 | 4.1 | 2.68
+
+**TABLE 9.** Comparison results of different models on the DUT-Anti-UAV dataset. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Models | F1 | mAP@50 | mAP@50-95
+    YOLOv7-t | 88.8% | 91.2% | 60.8%
+    YOLOv8n | 88.9% | 90.9% | 62.8%
+    YOLOv9-t | 88.0% | 89.7% | 61.9%
+    YOLOv10n | 89.1% | 90.9% | 62.3%
+    YOLO11n | 89.9% | 91.3% | 61.3%
+    YOLOv8-GCOF | 89.4% | 91.5% | 61.2%

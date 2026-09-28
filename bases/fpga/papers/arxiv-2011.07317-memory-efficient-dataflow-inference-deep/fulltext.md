@@ -130,12 +130,14 @@ The FCMP methodology presented in this work enables increased memory resource ut
     II. BACKGROUND AND PREVIOUS WORK
     A. FPGA Dataflow Inference of Quantized CNNs
 
-**Table I** for the accelerators in the BNN-Pynq collection. Note how the BRAM utilization is highest of all resource types.
+**Table I** for the accelerators in the BNN-Pynq collection. Note how the BRAM utilization is highest of all resource types. [corps du tableau reconstruit par Docling : à vérifier]
 
-    BRAM Weight Buffer | Unfold 2x | Buffer Weight BRAM BRAM
-     | Unfold 4x | 
-    BRAM BRAM BRAM BRAM
-     | Weight Buffer | 
+    Accelerator | BRAM (%) | LUT (%) | DSP (%)
+    CNV-W1A1 | 88 | 49 | 11
+    CNV-W1A2 | 94 | 76 | 12
+    CNV-W2A2 | 100 | 70 | 15
+    LFC-W1A1 | 78 | 53 | 2
+    LFC-W1A2 | 79 | 92 | 2
 
 **TABLE II:** Comparison of Selected FPGA Dataflow Accelerators for ImageNet
 

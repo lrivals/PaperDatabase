@@ -52,12 +52,12 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, TABLE VI, TABLE VIII"
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE VI, TABLE VIII",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "done"
-  },
-  "warnings": []
+  }
 }

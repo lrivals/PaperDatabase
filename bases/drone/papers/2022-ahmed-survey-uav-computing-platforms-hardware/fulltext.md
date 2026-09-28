@@ -348,7 +348,10 @@ Recent fault-tolerant techniques focus on either sensor/actuator faults or on-ch
     µC | ARM Cortex M4, NVIDIA Jetson TX2 Raspberry Pi | Camera | Object detection and tracking Face detection and recognition Disaster people recognition | [40] [42] [43]
      |  |  | Target detection, obstacles avoidance | [39]
 
-**Table 4** shows several representative FPGA-based CPs used as accelerators in NNA applications for the UAVs.
+**Table 4** shows several representative FPGA-based CPs used as accelerators in NNA applications for the UAVs. [corps du tableau reconstruit par Docling : à vérifier]
+
+    CP | Devices Sensors | Applications | Ref.
+    SoC-FPGA | Xilinx Spartan-6, Raspberry Pi Xilinx Pynq-Z1 GPS Xilinx Zedboard, NVIDIA TX1 Infrared visual Xilinx FPGA Laser, Xilinx ZCU102 FPGA Zynq Ultra Scale Arria 10 FPGA, Intel core I5 CPU Intel Cyclone V FPGA Xilinx Virtex7 xc7vx690 Digilent NetFPGA-SUME FPGA Xilinx KU115 | IMU,Camera Autonomousnavigationbydatafusion Object detection, SAR and Object detection by Image fusion Radar Cropland monitoring Vehicle counting Road object recognition, Vision-based navigation by YOLO Target detection Image classification Object detection, SAR Object detector by YOLOV2 Target detection by YOLOV2 | [49] [47] [48] [50] [52] [51] [53] [46] [44] [45] [54] [55]
 
 **Table 4.** The summary of FPGA-based NNAs used in UAVs.
 

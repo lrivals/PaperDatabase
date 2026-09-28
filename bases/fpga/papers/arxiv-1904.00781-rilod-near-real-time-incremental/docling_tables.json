@@ -1,0 +1,533 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 9,
+   "bbox": [
+    55.3,
+    94.7,
+    556.4,
+    176.1
+   ],
+   "caption": "Table 1. Per-class accuracy of Pascal VOC (%) for 19 + 1 scenario.",
+   "rows": [
+    [
+     "Method",
+     "aero",
+     "bike",
+     "bird",
+     "boat",
+     "bottle",
+     "bus",
+     "car",
+     "cat",
+     "chair",
+     "cow",
+     "table",
+     "dog",
+     "horse",
+     "mbike",
+     "person",
+     "plant",
+     "sheep",
+     "sofa",
+     "train",
+     "tv",
+     "mAP"
+    ],
+    [
+     "Class 1-19 All Data",
+     "77.8",
+     "85.0 0",
+     "82.9 0",
+     "62.1 0",
+     "64.4",
+     "74.7",
+     "86.9",
+     "87.0",
+     "56.0",
+     "76.5",
+     "71.2",
+     "79.2",
+     "79.1",
+     "76.2",
+     "83.8",
+     "53.9",
+     "70.679.476.655.661.778.385.280.350.676.162.878.078.074.977.444.369.170.575.6 73.2",
+     "67.4 0",
+     "77.7",
+     "- 78.7",
+     "- 74.7"
+    ],
+    [
+     "CatastrophicForgetting",
+     "0",
+     "",
+     "",
+     "",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0 43.8",
+     "0 43.8",
+     "",
+     "0",
+     "68.9",
+     "3.4"
+    ],
+    [
+     "w/oFeat-DistillLoss wFeat-DistillLoss",
+     "61.9",
+     "78.5",
+     "62.5",
+     "39.2",
+     "60.9",
+     "53.2",
+     "79.3",
+     "84.5",
+     "52.3",
+     "52.6",
+     "62.8",
+     "71.5",
+     "51.8",
+     "61.5",
+     "76.8",
+     "",
+     "",
+     "69.7",
+     "52.9",
+     "44.6",
+     "60.2"
+    ],
+    [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "69.778.370.246.459.569.379.779.952.769.857.475.869.169.876.443.268.570.953.740.465.0",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    55.3,
+    210.9,
+    556.4,
+    292.3
+   ],
+   "caption": "Table 2. Per-class accuracy of Pascal VOC (%) for 10 + 10 scenario.",
+   "rows": [
+    [
+     "Method",
+     "aero",
+     "bike",
+     "bird",
+     "boat",
+     "bottle",
+     "bus",
+     "car",
+     "cat",
+     "chair",
+     "cow",
+     "table",
+     "dog",
+     "horse",
+     "mbike",
+     "person",
+     "plant",
+     "sheep",
+     "sofa",
+     "train",
+     "tv",
+     "mAP"
+    ],
+    [
+     "Class 1-10 All Data CatastrophicForgetting",
+     "77.8 0",
+     "76.878.174.358.958.768.684.581.152.361.4 85.0 0",
+     "82.9 0",
+     "62.1 0",
+     "64.4 0",
+     "74.7 0",
+     "86.9 0",
+     "87.0 0",
+     "56.0",
+     "76.5",
+     "- 71.2",
+     "- 79.2",
+     "- 79.1",
+     "- 76.2",
+     "- 83.8",
+     "- 53.9",
+     "- 73.2",
+     "- 67.4",
+     "- 77.7",
+     "- 78.7",
+     "- 74.7"
+    ],
+    [
+     "w/oFeat-DistillLoss",
+     "67.1",
+     "64.1",
+     "45.7",
+     "40.9",
+     "52.2",
+     "66.5",
+     "",
+     "",
+     "46.4",
+     "59.4",
+     "64.1",
+     "66.371.575.267.776.438.666.666.671.174.533.7",
+     "",
+     "67.1",
+     "63.3",
+     "32.7",
+     "",
+     "56.8",
+     "73.7",
+     "67.3",
+     ""
+    ],
+    [
+     "w/Feat-DistillLoss",
+     "",
+     "",
+     "",
+     "",
+     "71.781.766.949.658.065.984.776.850.169.467.072.877.373.874.939.968.561.575.572.467.9",
+     "",
+     "83.4",
+     "75.3",
+     "0",
+     "0",
+     "",
+     "74.8",
+     "77.1",
+     "",
+     "",
+     "",
+     "61.3",
+     "",
+     "",
+     "",
+     "62.0"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    69.6,
+    94.2,
+    540.0,
+    315.6
+   ],
+   "caption": "Table 3. Credible Labels for PASCAL Dataset.",
+   "rows": [
+    [
+     "PASCAL Label",
+     "Top Returned Credible Labels"
+    ],
+    [
+     "aeroplane",
+     "'airplane, aeroplane, plane', 'jet, jet plane, jet-propelled plane', 'jetliner', 'warplane, military plane'"
+    ],
+    [
+     "bicycle",
+     "'bicycle, bike, wheel, cycle', 'safety bicycle, safety bike', 'push-bike', 'ordinary, ordinary bicycle'"
+    ],
+    [
+     "bird",
+     "'bird', 'passerine, passeriformbird', 'dickeybird, dickey-bird, dickybird, dicky-bird', 'parrot'"
+    ],
+    [
+     "boat",
+     "'boat', 'small boat', 'dinghy, dory, rowboat', 'sea boat', 'rowing boat', 'river boat', 'cockleshell'"
+    ],
+    [
+     "bottle",
+     "'bottle', 'pop bottle, soda bottle', 'water bottle', 'jar', 'smelling bottle', 'flask', 'jug', 'carafe'"
+    ],
+    [
+     "bus",
+     "'public transport', 'local', 'bus, autobus', 'express, limited', 'shuttle bus', 'trolleybus, trolley coach'"
+    ],
+    [
+     "car",
+     "'motor vehicle, automotive vehicle', 'car, auto', 'coupe', 'sports car, sport car', 'sedan, saloon'"
+    ],
+    [
+     "cat",
+     "'domestic cat, house cat', 'kitty, kitty-cat', 'tom, tomcat', 'mouser', 'Manx, Manx cat', 'tabby'"
+    ],
+    [
+     "chair",
+     "'chair', 'seat', 'armchair', 'straight chair, side chair', 'rocking chair, rocker', 'swivel chair'"
+    ],
+    [
+     "cow",
+     "'bull', 'cattle, cows', 'cow', 'bullock, steer', 'beef, beef cattle', 'cow, moo-cow', 'dairy cattle'"
+    ],
+    [
+     "dining table",
+     "'dining-room table', 'dining table, board', 'dinner table', 'table', 'dining-room furniture'"
+    ],
+    [
+     "dog",
+     "'sporting dog, gun dog', 'terrier', 'retriever', 'hunting dog', 'Labrador retriever', 'water dog'"
+    ],
+    [
+     "horse",
+     "'horse, Equus caballus', 'equine, equid', 'gelding', 'mare, female horse', 'yearling', 'pony', 'dobbin'"
+    ],
+    [
+     "motorbike",
+     "'motorcycle, bike', 'wheeled vehicle', 'trail bike, dirt bike, scrambler', 'motor scooter, scooter'"
+    ],
+    [
+     "person",
+     "'person, individual', 'male, male person', 'face', 'oldster, old person', 'man', 'eccentric person'"
+    ],
+    [
+     "potted plant",
+     "'pot, flowerpot', 'planter', 'houseplant', 'bucket, pail', 'vase', 'crock, earthenware jar', 'watering pot'"
+    ],
+    [
+     "sheep",
+     "'sheep', 'domestic sheep, Ovis aries', 'ewe', 'ram, tup', 'black sheep', 'wild sheep', 'mountain sheep'"
+    ],
+    [
+     "sofa",
+     "'seat', 'sofa, couch, lounge', 'love seat, loveseat', 'chesterfield', 'settee', 'easy chair, lounge chair'"
+    ],
+    [
+     "train",
+     "'train, railroad train', 'passenger train', 'mail train', 'car train', 'freight train, rattler', 'commuter'"
+    ],
+    [
+     "tv/monitor",
+     "'monitor', 'LCD', 'televisionmonitor, tvmonitor', 'OLED', 'digital display, alphanumeric display'"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    55.0,
+    349.9,
+    556.8,
+    412.1
+   ],
+   "caption": "Table 4. Evaluation on the quality of dataset construction.",
+   "rows": [
+    [
+     "Method",
+     "aero",
+     "bike",
+     "bird",
+     "boat",
+     "bottle",
+     "bus",
+     "car",
+     "cat",
+     "chair",
+     "cow",
+     "table",
+     "dog",
+     "horse",
+     "mbike",
+     "person",
+     "plant",
+     "sheep",
+     "sofa",
+     "train",
+     "tv",
+     "Avg"
+    ],
+    [
+     "RetentionRate(deep)",
+     "64.09 38.00",
+     "19.38 25.5",
+     "78.02 26.5",
+     "60.00 37.37",
+     "62.37 36.0",
+     "59.50 35.5",
+     "79.50 43.5",
+     "85.71 29.0",
+     "61.83 48.0",
+     "78.86 16.29",
+     "64.82 47.5",
+     "74.49 23.0",
+     "75.90 19.0",
+     "47.18 40.5",
+     "50.67 26.0",
+     "63.30 24.5",
+     "76.06 31.33",
+     "67.50 41.0",
+     "74.32 37.0",
+     "48.59 33.55",
+     "64.60"
+    ],
+    [
+     "RetentionRate(ebox) FP Rate (deep) FP Rate (ebox)",
+     "0.00 4.5",
+     "12.41 11.5",
+     "1.74 19.79",
+     "3.73 11.16",
+     "11.11 9.64",
+     "3.01 2.5",
+     "2.01 3.51",
+     "4.02 9.54",
+     "4.71 6.63",
+     "3.43 9.55",
+     "15.63 13.5",
+     "1.16 14.19",
+     "1.55 13.0",
+     "9.34 12.0",
+     "3.51 14.06",
+     "12.50 27.71",
+     "2.13 15.64",
+     "6.12 11.16",
+     "1.68 6.03",
+     "7.62 18.86",
+     "32.95 5.37 11.73"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    326.1,
+    154.6,
+    547.3,
+    187.6
+   ],
+   "caption": "Table 5. iKitchen Accuracy on Automatically Constructed Dataset. (BaseO : average mAP for the base 8 classes before learning the new class; BaseN : average mAP for the base 8 classes after learning the new class; N : mAP for the new learned class; Avд: average mAP for 9 classes after learning the new class.)",
+   "rows": [
+    [
+     "",
+     "Bas eO",
+     "BaseN",
+     "New",
+     "Avд"
+    ],
+    [
+     "8+SC",
+     "80.1%",
+     "80.8%",
+     "85.4%",
+     "81.3%"
+    ],
+    [
+     "8+CS",
+     "80.1%",
+     "79.2%",
+     "32.2%",
+     "74.0%"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    57.6,
+    106.8,
+    288.1,
+    139.6
+   ],
+   "caption": "Table 6. Training time of different input image size on NVIDIA Tesla M40 (seconds per epoch).",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2"
+    ],
+    [
+     "Input Size",
+     "10 Exemplar",
+     "30 Exemplar"
+    ],
+    [
+     "Small (512)",
+     "8.3",
+     "14.1"
+    ],
+    [
+     "Large (1024)",
+     "17.2",
+     "30.7"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    54.8,
+    179.9,
+    290.9,
+    243.3
+   ],
+   "caption": "Table 7. System Running Time (s).",
+   "rows": [
+    [
+     "",
+     "Edge-Only",
+     "Edge-Cloud"
+    ],
+    [
+     "Download image",
+     "16",
+     "10"
+    ],
+    [
+     "Build dataset",
+     "44",
+     "21"
+    ],
+    [
+     "Train model",
+     "233",
+     "83"
+    ],
+    [
+     "Download model",
+     "N/A",
+     "5"
+    ],
+    [
+     "Total",
+     "293",
+     "119"
+    ]
+   ]
+  }
+ ]
+}

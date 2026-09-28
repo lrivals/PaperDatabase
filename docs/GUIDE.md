@@ -319,7 +319,8 @@ Procédure complète : [SETUP.md §8](../SETUP.md#8-vérification).
 | Symptôme | Cause probable | Solution |
 |---|---|---|
 | `Environnement Python absent` | `.venv` non créé | `bash bin/setup.sh` |
-| `GROBID ne répond pas`, backend `pymupdf` | conteneur arrêté | `bin/pdb grobid start`, puis `bin/pdb ingest --force <pdf>` pour ré-extraire |
+| `GROBID ne répond pas`, backend `pymupdf` | conteneur arrêté | `bin/pdb grobid start`, puis `bin/pdb ingest --force papers/<id>/paper.pdf` pour ré-extraire (id et fiche conservés). À faire avant Docling : sans `grobid.tei.xml`, les tableaux ne sont pas repérés et n'apparaissent pas dans « tableaux à vérifier » |
+| id `unknown-…` ou `…-untitled`, mauvais premier auteur | en-tête mal lu (PDF d'auteur, thèse) | déposer l'export de citation (`.bib` ou `.ris` ; pas `.nbib`) dans `inbox/` avec le PDF, puis réingérer. Il est apparié par DOI ou par titre : sans titre extrait, corriger `metadata.json` à la main |
 | Premier démarrage de GROBID très long | téléchargement de l'image Docker (~1 Go) | patienter, ou `docker logs grobid` |
 | `déjà ingéré` | même id arXiv, même DOI ou même PDF | rien à faire ; `--force` pour ré-extraire (la fiche n'est jamais écrasée) |
 | `pas de version arXiv pour <DOI>` | article sous paywall | §4.5 |

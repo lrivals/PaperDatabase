@@ -29,13 +29,13 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : Table 6, Table 6",
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 6",
+      "tableaux sans corps extrait (légende seule) : Table 6",
       "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "done"
-  },
-  "warnings": []
+  }
 }

@@ -306,8 +306,28 @@ Thanks to the support by the Guangxi Natural Science Foundation (Grant No. 2024G
     challenging scenarios such as strong lighting, motion blur, and |  | 
     partial occlusion of targets. |  |  | 
 
-**TABLE III** DETAILED DESCRIPTION OF THE DATASETS USED, EXPERIMENTAL RESULTS, AND EXPERIMENTAL ENVIRONMENTS FOR DIFFERENT METHODS.
+**TABLE III** DETAILED DESCRIPTION OF THE DATASETS USED, EXPERIMENTAL RESULTS, AND EXPERIMENTAL ENVIRONMENTS FOR DIFFERENT METHODS. [corps du tableau reconstruit par Docling : à vérifier]
 
     Category | Method | Dataset | Experimental Result | Experimental Environment
-     | DotD-YOLOv9-C [56] |  |  | 
-    UAV-based Detection |  |  |  |
+     | DotD-YOLOv9-C [56] | Self-built dataset Anti2 | mAP=92.60% | NVIDA GeForce RTX 4060, Ubuntu 18.04, PyTorch 2.3.0, Python 3.8.19
+     | YOLOv6v3-Based [98] | Self-built dataset UETT4K Anti-UAV | Precision=96.2%, Recall=90.0%, F1=93.5% mAP50=92.7%, mAP50-95=70.3%, FPS=36.4 | sys-220GP-TRN server with dual A30 GPUs (24GB+26GB), 256GB memory, Intel Xeon Gold 6354, PyTorch
+     | c-MPDIoU [100] | City-UAV, Anti-UAV [48], DUT ANTI-UAV [65] | City-UAV AP=93.4% Anti-UAV AP=88.1% DUT ANTI-UAV AP=96.7% | RTX 3090, Intel Xeon Silver 4210R, PyTorch, CUDA 12.1, Ubuntu 20.04
+     | YOLOv11-Based [92] | DUT ANTI-UAV [65] | Precision=96.9%, Recall=89.8%, mAP50=95.2%, mAP50-95=65.7%, FPS=91 | Ubuntu 22.04, RTX 3090, PyTorch
+     | NFE-YOLO [93] | UESTC Anti-UAV | Precision=98.3%, Recall=96.1%, mAP50=98.7%, mAP75=90.8% | Ryzen 5 3400G, 16GB RAM, Tesla T4 (×2), PyTorch1.11.0, Torchvision0.11.0
+    UAV-based Detection | LDHD-Net [94] | Anti-UAV410,SIDD[64] | AP=95.6% | Windows 11, PyTorch 1.13.0, Torchvision 0.14.0, Python 3.8.15, CUDA 11.6.1
+     | BRA-YOLOv10 [95] | SIDD [64] | Precision=98.9%, Recall=92.3%, mAP50=96.5%, mAP50-95=67.6% | RTX 4090, PyTorch 2.0.1, Python 3.9.19, Ubuntu 18.04, CUDA 11.7
+     | ISTD-DETR [96] | Anti-UAV410, SIRST | SIRST: Precision=94.8%, Recall=94%, mAP50=96.4% Anti-UAV410:mAP50=96.2%,mAP50-95=55.3%,FPS=133.1 | Ubuntu22.04.1,RTXA5000
+     | LAMS-YOLO [97] | Self-built dataset | F1=92.58%, Precision=96.10%, Recall=86.30%, mAP30=93.4%, mAP95=74.7% | Ubuntu 20.04, Tensor Core A100, Python 3.9.11, PyTorch 1.10.0
+     | GAN-UAV-YOLOv10s [101] | SIDD | Accuracy=96%, Recall=84%, mAP50=92% | RTX3090, Intel E5-2667v, PyTorch 1.13.1, Python 3.10.13
+     | YOLOv8-E [102] | Real ward [43] | Precision=98.5%, Recall=95.8%, mAP=98.4%, mAP50-95=72.1%, FPS=57.4 | Windows 10, GTX 1050 Ti, CUDA 11.8, Python 3.9.19, PyTorch 2.0.0
+     | StrongSiamTracker [113] | 4th-Anti-UAV,Anti-UAV410 | Anti-UAV410acc=66.73% | 2× RTX 4090, Python 3.7, PyTorch 1.8.1
+     | DLST [114] | Anti-UAV410 | SA=68.81% | RTX 4090, PyTorch
+     | PPTracker [115] | 4th-Anti-UAV | MOTA=67.9% | 2× RTX 3090, PyTorch
+     | SiamDT [17] | Self-built Anti-UAV410 | SA=68.19% | Not provided
+     | SiamUF [111] | Public datasets [135], [136] | Precision=83.07%, AUC=65.66%, FPS=30 | RTX3090, PyTorch, Python
+    UAV-based Tracking | CAMTracker [112] | Anti-UAV410 | Precision=88.56%, AUC=66.68%, SA=67.10% | i5-13600KF, RTX4090, PyTorch 1.13, CUDA 11.7
+     | TransIST [126] | Public:[135],[136],[137] | AUC=66.0%,Accuracy=88.1%,FPS=30 | Not provided
+     | UTTracker [127] | 1st & 2nd Anti-UAV [55] | 1st: AUC=77.9%, Precision=98.0% 2nd: AUC=72.4%, Precision=93.4% | 4× RTX 3090, Python 3.6, PyTorch 1.7.1
+     | ISD-UNet [80] | Self-built dataset | TCR=96.4%, AP=44.7% | GTX (24GB), AMD EPYC 7302@3.0GHz, PyTorch1.12.1, Python 3.9, Ubuntu 18.04.6
+     | Fuse-Before-Track [133] | Self-built dataset | RMS error: within meters (distance), below 1 m/s (speed) | Echoflight MESA, FLIR Blackfly, Ublox LEA-6T, M8T, DJI M100
+     | RTM-UAVDet [134] | Anti-UAV [48] | AP=66.1%, FPS=72.4 | RTX 3090, Python 3.8, Torch 1.7.1

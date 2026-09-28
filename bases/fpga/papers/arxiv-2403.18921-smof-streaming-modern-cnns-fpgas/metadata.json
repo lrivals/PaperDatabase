@@ -32,12 +32,13 @@
   "tags": [],
   "added": "2026-09-28",
   "extraction": {
-    "backend": "pymupdf",
-    "ok": false,
+    "backend": "grobid",
+    "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
       "axes déduits automatiquement, à confirmer dans /paper-fiche",
-      "ligatures perdues à l'extraction : 4 mot(s) réparé(s) (lib/ligatures.py)"
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE V",
+      "tableaux sans corps extrait (légende seule) : Pipeline Depth Initiation Rate"
     ]
   },
   "status": {

@@ -203,12 +203,67 @@ Navion is fabricated in a 65-nm CMOS technology. Several important parameters ca
 
 **Fig. 16.** With and without adaptation comparisons for the 11 sequences in EuRoC data set. (a) Trajectory error. (b) Energy consumption.
 
-**TABLE I** SIZE OF DIFFERENT MEMORY BLOCKS IN NAVION, SHOWING NUMBERS BEFORE AND AFTER OPTIMIZATIONS IN SECTION IV
+**TABLE I** SIZE OF DIFFERENT MEMORY BLOCKS IN NAVION, SHOWING NUMBERS BEFORE AND AFTER OPTIMIZATIONS IN SECTION IV [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE II** MAIN
+     | Memory.Blocks | Size (kB).Before | Size (kB).After | Savings.
+     | Frame Buffers | 1410 | 317.6 | 4.4×
+     | Line Buffers | 78.2 | 78.2 | 
+    VFE | Tracking Data | 18.2 | 18.2 | 二
+     | Features Candidates | 16 | 16 | 二
+     | Keyframe Data | 11.7 | 11.7 | 二
+    IFE | Integrated Data | 2 | 2 | 一
+     | Factor Graph | 1012 | 205.6 | 4.9×
+     | Linear Solver Data | 882.4 | 163.5 | 5.4×
+    BE | Horizon States | 5.2 | 5.2 | 一
+     | Shared Memory | 36 | 36 | 一
+    Total | Total | 3471.7 | 854 | 4.1×
 
-**TABLE III** VIO AVERAGE ERROR, THROUGHPUT, AND POWER PROCESSING EUROC DATA SET
+**TABLE II** MAIN [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE IV** VIO
+    Parameter | Parameter | Maximum Value
+    Frame resolution | Frame resolution | 752×480
+    Number of features per frame | Number of features per frame | 200
+    Feature Tracking | Pyramid (PFr) | 3 levels
+    Feature Tracking | Cell size (CFT) | 15× 15 pixels
+    Feature Tracking | Iterations (IFT) | 30 per level
+    Stereo | Template size (Ts) | 51× 5 pixels
+    Stereo | Search region (Rs) | 421 × 5 pixels
+    Backend | Horizon size | 20 Keyframes
+    Backend | Feature age | 10 Keyframes
+    Backend | Feature tracks | 4000 tracks
 
-**TABLE V** NAVION 'S ERROR, THROUGHPUT, CLOCK FREQUENCIES, AND POWER NUMBERS FOR DIFFERENT CONFIGURATIONS, WITH AND WITHOUT ADAPTATION. NUMBERS ARE AVERAGES OVER EUROC DATA SET
+**TABLE III** VIO AVERAGE ERROR, THROUGHPUT, AND POWER PROCESSING EUROC DATA SET [corps du tableau reconstruit par Docling : à vérifier]
+
+    Platform | Platform | Xeon | ARM | Navion
+    Trajectory error (cm) | Trajectory error (cm) | 16.98 | 16.98 | 23.25
+    Trajectory error (%) | Trajectory error (%) | 0.22% | 0.22% | 0.28%
+    Average tracking throughput (fps) | Average tracking throughput (fps) | 63 | 19 | 71
+     | Frontend Average KF | 19 | 3 | 45
+     | Backend | 35 | 6 | 32
+     | throughput (fps) Total | 12 | 2 | 19
+     | Average power (W) | 27.9 | 2.4 | 0.024
+    Energy (mJ/KF) | Energy (mJ/KF) | 3638.6 | 1573.2 | 2.3
+
+**TABLE IV** VIO [corps du tableau reconstruit par Docling : à vérifier]
+
+    Name.Name | Parameters.Features/frame | Parameters.Horizon size | Error.Error
+    MH_1 | 35 | 10 | 0.33%
+    MH_2 | 35 | 10 | 0.22%
+    MH_3 | 35 | 10 | 0.22%
+    MH_4 | 150 | 10 | 0.29%
+    MH_5 | 100 | 15 | 0.30%
+    V1_1 | 35 | 10 | 0.21%
+    V1_2 | 35 | 10 | 0.19%
+    V1_3 | 35 | 10 | 0.33%
+    V2_1 | 50 | 10 | 0.33%
+    V2_2 | 35 | 10 | 0.16%
+    V2_3 | 50 | 15 | 0.34%
+
+**TABLE V** NAVION 'S ERROR, THROUGHPUT, CLOCK FREQUENCIES, AND POWER NUMBERS FOR DIFFERENT CONFIGURATIONS, WITH AND WITHOUT ADAPTATION. NUMBERS ARE AVERAGES OVER EUROC DATA SET [corps du tableau reconstruit par Docling : à vérifier]
+
+    Configuration.Traj. Error | Without Adaptation.Max Rate.0.28% | Without Adaptation.Fixed Dist.0.28% | Without Adaptation.Fixed Rate.0.28% | With Adaptation.Max Rate.0.27% | With Adaptation.Fixed Dist..0.27% | With Adaptation.Fixed Rate.0.27%
+    VFE Clock (MHz) | 62.5 | 45.7 | 16.8 | 62.5 | 18.6 | 6.6
+    BE Clock (MHz) | 83.3 | 60.9 | 22.5 | 83.3 | 24.8 | 8.8
+    Tracking (fps) | 71 | 41 | 20 | 142 | 41 | 20
+    KF (fps) | 19 | 14 | 5 | 49 | 14 | 5
+    Power (mW) | 24 | 18 | 6 | 22 | 7 | 2

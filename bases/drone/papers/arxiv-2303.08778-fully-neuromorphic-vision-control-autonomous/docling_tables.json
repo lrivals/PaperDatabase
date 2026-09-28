@@ -1,0 +1,344 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 7,
+   "bbox": [
+    98.9,
+    79.6,
+    516.6,
+    165.2
+   ],
+   "caption": "Table 1. Quantitative comparison between different architectures. Bottom right corner, in bold, indicates the eventual architecture. Row-wise architecture choices and column-wise design decisions impact test performance in average endpoint error (EPE).",
+   "rows": [
+    [
+     "",
+     "Fullimage",
+     "+2xDown.",
+     "+Cornercrop",
+     "+Limitevents",
+     "+Loihiquant."
+    ],
+    [
+     "Conv-GRU ANN",
+     "+2.45%",
+     "Best,0.056EPE",
+     "+0.94%",
+     "+2.94%",
+     "-"
+    ],
+    [
+     "Conv-RNN SNN",
+     "+42.48%",
+     "+41.96%",
+     "+42.25%",
+     "+25.48%",
+     "+25.32%"
+    ],
+    [
+     "Self-RNNSNN(ours)",
+     "+94.16%",
+     "+76.45%",
+     "+48.00%",
+     "+38.74%",
+     "+50.04%"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    66.6,
+    122.6,
+    536.4,
+    319.3
+   ],
+   "caption": "Table 2. Approximate energy and power characteristics for various devices on three sequences: slow, medium and fast. On average, slow has 28.6 events/inf, medium has 106.9 events/inf, and fast has 186.6 events/inf. Delta power is the difference between idle and running (total) power, and is used to compute energy per inference. Dynamic power is the power needed for switching and short-circuiting, while static power is due to leakage; together they sum to running (total) power as well. Nahuku is a board with 32 Loihi chips (Kapoho Bay has 2). A Nahuku configuration where no spikes are sent and only chips and cores are allocated (no synapses) is included as 'empty'. Jetson Nano has a low-power (5W) and high-power (10W) mode.",
+   "rows": [
+    [
+     "Device",
+     "Seq.",
+     "Static[W]",
+     "Dynamic[W]",
+     "Idle[W]",
+     "Running[W]",
+     "Delta[W]",
+     "Inf/s",
+     "µJ/Inf"
+    ],
+    [
+     "Nahuku 32 (empty)",
+     "any",
+     "0.861",
+     "0.040",
+     "0.897",
+     "0.901",
+     "0.004",
+     "60496",
+     "0.071"
+    ],
+    [
+     "Nahuku 32",
+     "slow",
+     "0.899",
+     "0.048",
+     "0.935",
+     "0.947",
+     "0.012",
+     "1637",
+     "7.165"
+    ],
+    [
+     "",
+     "medium",
+     "0.900",
+     "0.044",
+     "0.936",
+     "0.945",
+     "0.008",
+     "411",
+     "20.602"
+    ],
+    [
+     "",
+     "fast",
+     "0.902",
+     "0.043",
+     "0.938",
+     "0.946",
+     "0.007",
+     "274",
+     "27.207"
+    ],
+    [
+     "Jetson Nano (5W)",
+     "slow",
+     "-",
+     "-",
+     "1.053",
+     "2.229",
+     "1.177",
+     "14",
+     "86111.152"
+    ],
+    [
+     "",
+     "medium",
+     "-",
+     "-",
+     "1.027",
+     "2.245",
+     "1.218",
+     "14",
+     "85576.977"
+    ],
+    [
+     "",
+     "fast",
+     "-",
+     "-",
+     "1.030",
+     "2.238",
+     "1.208",
+     "14",
+     "86187.999"
+    ],
+    [
+     "Jetson Nano (10W)",
+     "slow",
+     "-",
+     "-",
+     "1.043",
+     "2.974",
+     "1.931",
+     "26",
+     "75246.618"
+    ],
+    [
+     "",
+     "medium",
+     "-",
+     "-",
+     "1.058",
+     "2.981",
+     "1.923",
+     "26",
+     "75347.505"
+    ],
+    [
+     "",
+     "fast",
+     "-",
+     "-",
+     "1.044",
+     "2.991",
+     "1.947",
+     "25",
+     "76522.389"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    41.3,
+    79.7,
+    290.9,
+    282.3
+   ],
+   "caption": "Table 3. List of hardware components used for the real-world test flights.",
+   "rows": [
+    [
+     "Component",
+     "Product"
+    ],
+    [
+     "Frame",
+     "GEPRC Mark 4 225 mm"
+    ],
+    [
+     "Motor",
+     "Emax 2306 Eco II Series"
+    ],
+    [
+     "Propellor",
+     "Ethix S5 5 inch"
+    ],
+    [
+     "Battery",
+     "Tattu FunFly 1800mAh 4S"
+    ],
+    [
+     "Flight Controller",
+     "Pixhawk 4 Mini"
+    ],
+    [
+     "ESC",
+     "SpeedyBee 45A BL32 4in1"
+    ],
+    [
+     "Single-boardcomputer",
+     "UPSquaredATOMQuadCore08/64"
+    ],
+    [
+     "Event-based camera",
+     "DAVIS240C"
+    ],
+    [
+     "Neuromorphicprocessor",
+     "IntelLoihi,KapohoBayformfactor"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    320.1,
+    67.8,
+    570.4,
+    314.4
+   ],
+   "caption": "Table 4. Coefficients used during simulation and training.",
+   "rows": [
+    [
+     "Description",
+     "Symbol",
+     "Value"
+    ],
+    [
+     "Drone mass",
+     "m [kg]",
+     "1.535"
+    ],
+    [
+     "Drone arm",
+     "r [m]",
+     "0.255"
+    ],
+    [
+     "Min. motor speed",
+     "wmin [rpm]",
+     "150"
+    ],
+    [
+     "Max. motor speed",
+     "wmax [rpm]",
+     "1500"
+    ],
+    [
+     "Motor time constant",
+     "tw [s]",
+     "0.025 1.329825e-6,"
+    ],
+    [
+     "Motor thrust map",
+     "a, b, c",
+     "0.003836, -1.768999"
+    ],
+    [
+     "Max. body rate",
+     "wBmax [rad/s]",
+     "[6.0, 6.0, 6.0]T 188.84, 0, 90.0"
+    ],
+    [
+     "Camera intrinsic matrix",
+     "K",
+     "⎡⎢⎢⎢⎣ 0, 188.99, 90.0 0, 0, 1 ⎤⎥⎥⎥⎦"
+    ],
+    [
+     "Camera rotation w.r.t. body",
+     "RCB",
+     "⎡⎢⎢⎢⎣ 1, 0, 0 0, -1, 0 0, 0, -1 ⎤⎥⎥⎥⎦"
+    ],
+    [
+     "Cameratranslationw.r.t.body",
+     "T CB [m]",
+     "[-0.005, 0.077, -0.033]T"
+    ],
+    [
+     "Lower altitude bound",
+     "pWB z,min [m]",
+     "0.2"
+    ]
+   ]
+  },
+  {
+   "page": 18,
+   "bbox": [
+    41.4,
+    495.0,
+    291.1,
+    566.0
+   ],
+   "caption": "Table 5. Coefficients used during real-world tests.",
+   "rows": [
+    [
+     "Description",
+     "Symbol",
+     "Value"
+    ],
+    [
+     "Visual observable smoothing",
+     "an,w",
+     "[0.90, 0.90, 0.95, 0.90]T"
+    ],
+    [
+     "Visual observable scaling",
+     "bn,w",
+     "[0.9, 0.9, 1.0, 1.0]T"
+    ],
+    [
+     "Proportional gains (thrust, roll, pitch, yaw)",
+     "P",
+     "[0.10, 0.06, 0.06, 4.0]T"
+    ],
+    [
+     "Integral gains (thrust, roll, pitch, yaw)",
+     "I",
+     "[0.0001, 0.0003, 0.0003, 0]T"
+    ]
+   ]
+  }
+ ]
+}

@@ -1,6 +1,6 @@
 {
  "docling": "2.130.0",
- "ocr": false,
+ "ocr": true,
  "tables": [
   {
    "page": 1,

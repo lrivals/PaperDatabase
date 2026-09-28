@@ -1,0 +1,170 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    311.5,
+    673.7,
+    549.8,
+    742.8
+   ],
+   "caption": "TABLE I MEAN AVERAGE PRECISION (MAP) OF THE SSD CNNS TRAINED ON GOOGLE OPENIMAGES AND FINETUNED ON THE HIMAX DATASET.",
+   "rows": [
+    [
+     "Testing dataset.",
+     "Fine-tuning.",
+     "Format.",
+     "SSD size.1×",
+     "SSD size.0.75×",
+     "SSD size.0.5×"
+    ],
+    [
+     "OpenImages",
+     "no",
+     "float32",
+     "59%",
+     "47%",
+     "43%"
+    ],
+    [
+     "Himax",
+     "no",
+     "float32",
+     "50%",
+     "41%",
+     "29%"
+    ],
+    [
+     "Himax",
+     "yes",
+     "float32",
+     "55%",
+     "46%",
+     "43%"
+    ],
+    [
+     "Himax",
+     "yes",
+     "int8",
+     "50%",
+     "48%",
+     "32%"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    36.8,
+    96.9,
+    291.6,
+    143.2
+   ],
+   "caption": "TABLE II SSD CNNS' ONBOARD PERFORMANCE.",
+   "rows": [
+    [
+     "SSD",
+     "Parameters",
+     "Operations",
+     "Efficiency",
+     "Throughput"
+    ],
+    [
+     "1×",
+     "4.7M",
+     "534MMAC",
+     "5.3MAC/cycles",
+     "1.6 FPS"
+    ],
+    [
+     "0.75×",
+     "2.7M",
+     "358MMAC",
+     "5.9MAC/cycles",
+     "2.3 FPS"
+    ],
+    [
+     "0.5×",
+     "1.2M",
+     "193MMAC",
+     "5.3MAC/cycles",
+     "4.3 FPS"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    310.1,
+    98.1,
+    551.9,
+    198.7
+   ],
+   "caption": "TABLE III AVERAGE DETECTION RATE: 6 OBJECTS, 5 RUNS OF 3 MINUTES EACH.",
+   "rows": [
+    [
+     "SSD.SSD",
+     "Flight speed [m/s].Flight speed [m/s]",
+     "Detection rate.Pseudo random",
+     "Detection rate.Wall following",
+     "Detection rate.Spiral",
+     "Detection rate.Rotateand measure"
+    ],
+    [
+     "1.0×",
+     "0.1 0.5 1",
+     "27% 90% 83%",
+     "63% 50% 53%",
+     "67% 73% 70%",
+     "53% 53% 47%"
+    ],
+    [
+     "0.75×",
+     "0.1 0.5 1",
+     "27% 80% 37%",
+     "50% 37% 27%",
+     "33% 43% 43%",
+     "47% 50% 33%"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    39.5,
+    96.3,
+    288.7,
+    134.4
+   ],
+   "caption": "TABLE IV POWER BREAKDOWN OF THE ROBOTIC PLATFORM.",
+   "rows": [
+    [
+     "",
+     "Motors",
+     "CFelect.",
+     "AI-deck",
+     "Multi-ranger",
+     "Total"
+    ],
+    [
+     "Power [W]",
+     "7.32",
+     "0.277",
+     "0.134",
+     "0.286",
+     "8.02"
+    ],
+    [
+     "Percentage",
+     "91.31%",
+     "3.45%",
+     "1.67%",
+     "3.57%",
+     "100%"
+    ]
+   ]
+  }
+ ]
+}

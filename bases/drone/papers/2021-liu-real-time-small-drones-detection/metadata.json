@@ -43,7 +43,8 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : Table 1, Table 1"
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 1",
+      "tableaux sans corps extrait (légende seule) : Table 1"
     ]
   },
   "status": {

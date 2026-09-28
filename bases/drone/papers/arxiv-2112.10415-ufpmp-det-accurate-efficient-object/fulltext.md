@@ -242,9 +242,16 @@ Algorithm 1: Foreground Region Generation Input: Bounding boxes B c Output: Merg
     100 | 24.0 37.6 | 27.1
     200 | 24.6 38.7 | 28.0
 
-**Table 8:** The impact of the size of BoIW (N ) on the performance of MP-Det w.r.t. AP/AP50/AP75 (%) on UAVDT. [corps du tableau reconstruit par PyMuPDF : à vérifier]
+**Table 8:** The impact of the size of BoIW (N ) on the performance of MP-Det w.r.t. AP/AP50/AP75 (%) on UAVDT. [corps du tableau reconstruit par PyMuPDF : à vérifier] [corps du tableau reconstruit par Docling : à vérifier]
 
-    β | FR | AP AP50 AP75
-    1.3 1.5 1.7 | 32.46 24.53 21.07 | 33.9 61.7 33.5 36.6 62.4 36.7 35.6 61.3 35.8
+    SizeofBoIW(N) | AP | AP50 | AP75
+    50 | 22.3 | 36.1 | 25.2
+    100 | 24.0 | 37.6 | 27.1
+    200 | 24.6 | 38.7 | 28.0
 
-**Table 9:**
+**Table 9:** [corps du tableau reconstruit par Docling : à vérifier]
+
+    β | FR | AP | AP50 | AP75
+    1.3 | 32.46 | 33.9 | 61.7 | 33.5
+    1.5 | 24.53 | 36.6 | 62.4 | 36.7
+    1.7 | 21.07 | 35.6 | 61.3 | 35.8

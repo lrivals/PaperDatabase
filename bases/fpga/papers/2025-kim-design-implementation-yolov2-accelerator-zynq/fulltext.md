@@ -316,7 +316,7 @@ In future work, the performance can be further improved by exploring multi-filte
     BRAM Reuse Capacity of the IFM reuse BRAM [Bytes]
     MACs tile | 
 
-**Table 2.** Definitions of FPGA hardware resource abbreviations.
+**Table 2.** Definitions of FPGA hardware resource abbreviations. [corps du tableau reconstruit par Docling : à vérifier]
 
     Abbreviation | Definition
     LUT | Look-Up Table
@@ -324,12 +324,22 @@ In future work, the performance can be further improved by exploring multi-filte
     BRAM | 36 Kb Block Random Access Memory
     DSP | Digital Signal Processing
 
-**Table 3.** Maximum possible sizes of IFM, bias, and weight.
+**Table 3.** Maximum possible sizes of IFM, bias, and weight. [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 4.** State transition of the IFM reuse BRAM.
+     | Maximum IFM (Bytes) | MaximumBias (Bytes) | MaximumWeight (Bytes)
+    Required bytes | I 2 s × Ic ×Qb | B 2 c ×Qb | NF × K 2 × Ic × Qb
+    32 bit | 416 2 × 32 × 4 (22.15 MB) | 1280 × 4 (5.12 KB) | 1024 × 3 2 × 1280 × 4 (47.19 MB)
+    16 bit | 416 2 × 32 × 2 (11.08 MB) | 1280 × 2 (2.56 KB) | 1024 × 3 2 × 1280 × 2 (23.59 MB = 1024 × 23.04 KB)
 
-    Steps Processing Step
-    (IFM Row)
+**Table 4.** State transition of the IFM reuse BRAM. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Steps | ProcessingStep (IFM Row) | PUDataSource | ReuseBRAM_0 b State | ReuseBRAM_1 b State | NumberofIFM Data Stored
+    1 | P a 0; 0 to Tr - 1 | Memory | Read | Idle | (K - S) × Tc
+    2 | 0 to Tr - 1 | Memory | Read | Idle | (K - S) × Tc × NIR
+    3 | P P+1; P × (Tr - (K - S)) to P × (Tr - (K - S)) + Tr - | 1 Memory + BRAM_0 | Write | Read | (K - S) × Tc
+    4 | P×(Tr-(K-S))to P × (Tr - (K - S)) + Tr - | 1 Memory + BRAM_0 | Write | Read | (K - S) × Tc × NIR
+    5 | P P+1; P × (Tr - (K - S)) to P × (Tr - (K - S)) + Tr - | 1 Memory + BRAM_1 | Read | Write | (K - S) × Tc
+    6 | P×(Tr-(K-S))to P × (Tr - (K - S)) + Tr - | 1 Memory + BRAM_1 | Read | Write | (K - S) × Tc × NIR
 
 PU Data Source Reuse BRAM_0 b State Reuse BRAM_1 b State Number of IFM Data Stored
 
@@ -346,9 +356,11 @@ PU Data Source Reuse BRAM_0 b State Reuse BRAM_1 b State Number of IFM Data Stor
     Maximum N IR (I s = 13, I c = 1280) |  | 40 | 80 | 160 | 320 | 640 | 1280
     BRAM Reuse |  | 133.76 KB | 133.4 KB | 135.68 KB | 138.24 KB | 143.36 KB | 153.6 KB
 
-**Table 6.** Required MACs tile and FF tile counts according to T r for T c = 15 and T c = 28.
+**Table 6.** Required MACs tile and FF tile counts according to T r for T c = 15 and T c = 28. [corps du tableau reconstruit par Docling : à vérifier]
 
-    T r
+     | Tr.3.MACstile | Tr.3.FFtile | Tr.4.MACstile | Tr.4.FFtile | Tr.5.MACstile | Tr.5.FFtile | Tr.6.MACstile | Tr.6.FFtile
+    Tc = 15 | 117 | 720 | 234 | 960 | 351 | 1200 | 468 | 1440
+    Tc = 28 | 234 | 1344 | 468 | 1792 | 702 | 2240 | 936 | 2688
 
 ACs tile FF tile M ACs tile FF tile M ACs tile FF tile M ACs tile FF tile
 
@@ -387,6 +399,21 @@ ACs tile FF tile M ACs tile FF tile M ACs tile FF tile M ACs tile FF tile
     § Clocks | 0.052 W | (3%) | MP BRAM 0.0162 W |  | Filter BRAM 0.0679 W
     (a) |  |  |  | (b) |  |  | 
 
-**Table 9.** Comparison with the previous YOLO accelerator.
+**Table 9.** Comparison with the previous YOLO accelerator. [corps du tableau reconstruit par Docling : à vérifier]
 
-    [41] | [42] | [43] | [44] | This Work
+     | [41] | [42] | [43] | [44] | This Work
+    Target FPGA | ZedBoard | ZedBoard YOLOv3-Tiny COCO | Zynq-7000SoCs | ZCU102 YOLOv2 COCO 48.1 | Zybo-Z7-20 YOLOv2
+    Model | YOLOv4-Tiny |  | YOLOv3 |  | 
+    Dataset | COCO |  | UA-DETRAC |  | COCO
+    mAP (%) | 40.2 | 30.9 | 71.1 |  | 48.1
+    Model GFLOPs | 7.5 | 5.6 | 19.5 | 29.5 | 29.5
+    LUT | 31 K (58%) | 26 K (49%) | 38 K (71%) | 95K(35%) | 26K(49%)
+    FF | 31 K (29%) | 46 K (43%) | 43 K (40%) | 90K(17%) | 17K(17%)
+    BRAM (36 Kb) | 132 (94%) | 92.5 (66%) | 132.5 (94%) | 245.5 (27%) | 98 (70%)
+    DSP | 149 (67%) | 160 (72%) | 144 (65%) | 609 (24%) | 126 (57%)
+    Frequency [MHz] | 100 | 100 | 230 | 300 | 100
+    Latency [ms] | 18,025 | 532 | 310 | 288 | 12,639
+    GOPS 1 | 0.4 | 10.5 | 62.9 | 102.43 | 2.33
+    GOPS/DSP | 0.003 | 0.07 | 0.437 | 0.168 | 0.018
+    Energy [mJ] 2 | 42,900 | 1787.52 | 471.2 | 3398.4 | 25,720.37
+    Power [W] | 1.994 | 3.4 | 1.52 | 11.8 | 2.035

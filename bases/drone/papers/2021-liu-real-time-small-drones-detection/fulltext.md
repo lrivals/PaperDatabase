@@ -253,9 +253,12 @@ Sensors 2021 , 18 Figure 10. Figure 10. Performance comparison of the YOLOv4, ti
 
 **Figure 11.** Examples of detection results: (a) ground truth; (b) tiny-YOLOv4; (c) pruned-YOLOv4; and (d) pruned-YOLOv4 after augmentation. The ground truth box, truth prediction box and false prediction box are black, red and purple, respectively.
 
-**Table 1** in the case of the Microsoft Common Objects in Context (MS COCO) dataset [32]. According to statistics, there are
+**Table 1** in the case of the Microsoft Common Objects in Context (MS COCO) dataset [32]. According to statistics, there are [corps du tableau reconstruit par Docling : à vérifier]
 
-    Sensors 2021, 21, 3374 | 8 of 16
+    Object | Min Rectangle Area | Max Rectangle Area
+    Small Object | 0 × 0 | 32 × 32
+    Medium Object | 32 × 32 | 96 × 96
+    Large Object | 96 × 96 | ¥ × ¥
 
 **Table 1.** Definitions of the small, medium, and large object in MS COCO.
 

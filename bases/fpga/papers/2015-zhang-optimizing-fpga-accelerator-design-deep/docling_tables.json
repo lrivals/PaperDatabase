@@ -1,0 +1,541 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    76.6,
+    392.8,
+    269.9,
+    481.7
+   ],
+   "caption": "Table 1: CNN configurations",
+   "rows": [
+    [
+     "Layer",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    [
+     "inputfm(N)",
+     "3",
+     "48",
+     "256",
+     "192",
+     "192"
+    ],
+    [
+     "outputfm(M)",
+     "48",
+     "128",
+     "192",
+     "192",
+     "128"
+    ],
+    [
+     "fm row (R)",
+     "55",
+     "27",
+     "13",
+     "13",
+     "13"
+    ],
+    [
+     "fmcol. (C)",
+     "55",
+     "27",
+     "13",
+     "13",
+     "13"
+    ],
+    [
+     "kernel (K)",
+     "11",
+     "5",
+     "3",
+     "3",
+     "3"
+    ],
+    [
+     "stride (S)",
+     "4",
+     "1",
+     "1",
+     "1",
+     "1"
+    ],
+    [
+     "set #",
+     "2",
+     "2",
+     "2",
+     "2",
+     "2"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    69.8,
+    183.4,
+    276.7,
+    265.0
+   ],
+   "caption": "Table 2: Data sharing relations of CNN code",
+   "rows": [
+    [
+     "",
+     "inputfm",
+     "weights",
+     "output fm"
+    ],
+    [
+     "trr",
+     "dependent",
+     "irrelevant",
+     "independent"
+    ],
+    [
+     "tcc",
+     "dependent",
+     "irrelevant",
+     "independent"
+    ],
+    [
+     "too",
+     "irrelevant",
+     "independent",
+     "independent"
+    ],
+    [
+     "tii",
+     "independent",
+     "independent",
+     "irrelevant"
+    ],
+    [
+     "i",
+     "dependent",
+     "independent",
+     "irrelevant"
+    ],
+    [
+     "j",
+     "dependent",
+     "independent",
+     "irrelevant"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    93.7,
+    350.2,
+    252.6,
+    395.7
+   ],
+   "caption": "Table 3: Data sharing relations of communication part",
+   "rows": [
+    [
+     "",
+     "irrelevant dimension(s)"
+    ],
+    [
+     "input fm",
+     "to"
+    ],
+    [
+     "weights",
+     "row,col"
+    ],
+    [
+     "output fm",
+     "ti"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    52.9,
+    182.3,
+    300.2,
+    280.2
+   ],
+   "caption": "Table 4: Layer specific optimal solution and crosslayer optimization",
+   "rows": [
+    [
+     "",
+     "OptimalUnrollFactor 〈T m, T n〉",
+     "ExecutionCycles"
+    ],
+    [
+     "Layer 1",
+     "〈48, 3〉",
+     "366025"
+    ],
+    [
+     "Layer 2",
+     "〈20, 24〉",
+     "237185"
+    ],
+    [
+     "Layer 3",
+     "〈96, 5〉",
+     "160264"
+    ],
+    [
+     "Layer 4",
+     "〈95, 5〉",
+     "120198"
+    ],
+    [
+     "Layer 5",
+     "〈32, 15〉",
+     "80132"
+    ],
+    [
+     "Total",
+     "-",
+     "963804"
+    ],
+    [
+     "Cross-Layer Optimization",
+     "〈64, 7〉",
+     "1008246"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    332.5,
+    659.4,
+    536.4,
+    705.6
+   ],
+   "caption": "Table 6: FPGA Resource utilization",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    [
+     "Resource",
+     "DSP",
+     "BRAM",
+     "LUT",
+     "FF"
+    ],
+    [
+     "Used",
+     "2240",
+     "1024",
+     "186251",
+     "205704"
+    ],
+    [
+     "Available",
+     "2800",
+     "2060",
+     "303600",
+     "607200"
+    ],
+    [
+     "Utilization",
+     "80%",
+     "50%",
+     "61.3%",
+     "33.87%"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    53.0,
+    71.7,
+    580.1,
+    234.9
+   ],
+   "caption": "Table 5: Comparison to previous implementations",
+   "rows": [
+    [
+     "",
+     "ICCD2013 [12]",
+     "ASAP2009 [14]",
+     "FPL2009[6]",
+     "FPL2009[6]",
+     "PACT2010 [2]",
+     "ISCA2010[3]",
+     "OurImpl."
+    ],
+    [
+     "Precision",
+     "fixed point",
+     "16bitsfixed",
+     "48bitsfixed",
+     "48bitsfixed",
+     "fixedpoint",
+     "48bitsfixed",
+     "32bitsfloat"
+    ],
+    [
+     "Frequency",
+     "150MHz",
+     "115 MHz",
+     "125 MHz",
+     "125 MHz",
+     "125 MHz",
+     "200 MHz",
+     "100 MHz"
+    ],
+    [
+     "FPGAchip",
+     "Virtex6 VLX240T",
+     "Virtex5 LX330T",
+     "Spartan-3A DSP3400",
+     "Virtex4SX35",
+     "Virtex5 SX240T",
+     "Virtex5 SX240T",
+     "Virtex7 VX485T"
+    ],
+    [
+     "FPGA ca- pacity",
+     "37,680 slices 768 DSP",
+     "51,840 slices 192 DSP",
+     "23,872 slices 126 DSP",
+     "15,360 slices 192 DSP",
+     "37,440 slices 1056 DSP",
+     "37,440 slices 1056 DSP",
+     "75,900 slices 2800 DSP"
+    ],
+    [
+     "LUTtype",
+     "6-inputLUT",
+     "6-inputLUT",
+     "4-inputLUT",
+     "4-inputLUT",
+     "6-inputLUT",
+     "6-inputLUT",
+     "6-inputLUT"
+    ],
+    [
+     "CNN Size",
+     "2.74GMAC",
+     "0.53GMAC",
+     "0.26GMAC",
+     "0.26GMAC",
+     "0.53GMAC",
+     "0.26GMAC",
+     "1.33GFLOP"
+    ],
+    [
+     "Performance",
+     "8.5GMACS",
+     "3.37GMACS",
+     "2.6GMACS",
+     "2.6GMACS",
+     "3.5GMACS",
+     "8GMACS",
+     "61.62 GFLOPS"
+    ],
+    [
+     "Performance",
+     "17 GOPS",
+     "6.74 GOPS",
+     "5.25 GOPS",
+     "5.25 GOPS",
+     "7.0 GOPS",
+     "16 GOPS",
+     "61.62 GOPS"
+    ],
+    [
+     "Performance Density",
+     "4.5E-04 GOPs/Slice",
+     "1.3E-04 GOPs/Slice",
+     "2.2E-04 GOPs/Slice",
+     "3.42E-04 GOPs/Slice",
+     "1.9E-04 GOPs/Slice",
+     "4.3E-04 GOPs/Slice",
+     "8.12E-04 GOPS/Slice"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    55.1,
+    271.7,
+    291.1,
+    393.2
+   ],
+   "caption": "Table 7: Performance comparison to CPU",
+   "rows": [
+    [
+     "float",
+     "CPU 2.20GHz (ms)",
+     "CPU 2.20GHz (ms)",
+     "FPGA",
+     "FPGA"
+    ],
+    [
+     "32 bit",
+     "1thd-O3",
+     "16thd-O3",
+     "(ms)",
+     "GFLOPS"
+    ],
+    [
+     "layer 1",
+     "98.18",
+     "19.36",
+     "7.67",
+     "27.50"
+    ],
+    [
+     "layer 2",
+     "94.66",
+     "27.00",
+     "5.35",
+     "83.79"
+    ],
+    [
+     "layer 3",
+     "77.38",
+     "24.30",
+     "3.79",
+     "78.81"
+    ],
+    [
+     "layer 4",
+     "65.58",
+     "18.64",
+     "2.88",
+     "77.94"
+    ],
+    [
+     "layer 5",
+     "40.70",
+     "14.18",
+     "1.93",
+     "77.61"
+    ],
+    [
+     "Total",
+     "376.50",
+     "103.48",
+     "21.61",
+     "-"
+    ],
+    [
+     "Overall GFLOPS",
+     "3.54",
+     "12.87",
+     "61.62",
+     "61.62"
+    ],
+    [
+     "Speedup",
+     "1.00x",
+     "3.64x",
+     "17.42x",
+     "17.42x"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    52.8,
+    413.6,
+    296.1,
+    480.6
+   ],
+   "caption": "Table 8: Power consumption and energy",
+   "rows": [
+    [
+     "",
+     "Intel Xeon 2.20GHz.1thread-O3",
+     "Intel Xeon 2.20GHz.16threads-O3",
+     "FPGA."
+    ],
+    [
+     "Power (Watt)",
+     "95.00",
+     "95.00",
+     "18.61"
+    ],
+    [
+     "Comparison",
+     "5.1x",
+     "5.1x",
+     "1x"
+    ],
+    [
+     "Energy (J)",
+     "35.77",
+     "9.83",
+     "0.40"
+    ],
+    [
+     "Comparison",
+     "89.4x",
+     "24.6x",
+     "1x"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    342.8,
+    439.4,
+    529.4,
+    496.8
+   ],
+   "caption": "Table 9: Resource occupation comparison",
+   "rows": [
+    [
+     "32-bit",
+     "DSP",
+     "LUT",
+     "FF"
+    ],
+    [
+     "Fixed point(adder)",
+     "2",
+     "0",
+     "0"
+    ],
+    [
+     "Fixed point(mul.)",
+     "2",
+     "0",
+     "0"
+    ],
+    [
+     "Floatingpoint(adder)",
+     "2",
+     "214",
+     "227"
+    ],
+    [
+     "Floating point(mul.)",
+     "3",
+     "135",
+     "128"
+    ]
+   ]
+  }
+ ]
+}

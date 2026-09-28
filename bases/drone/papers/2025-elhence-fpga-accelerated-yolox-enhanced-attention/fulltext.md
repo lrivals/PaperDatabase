@@ -291,15 +291,39 @@ To improve scalability, we plan to evaluate multicamera setups and extend datase
 
 **Fig. 8.** Power consumption from Vivado power estimator reports at max DPU core configuration. (a) ZCU102 power consumption. (b) ZCU104 power consumption. (c) KV260 power consumption.
 
-**TABLE III** COMPARISON OF DIFFERENT MODELS
+**TABLE III** COMPARISON OF DIFFERENT MODELS [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE IV** EFFECT OF PREPROCESSING, QUANTIZATION, AND PRUNING ON LCAM YOLOX
+    Network Model | Input Size | Model Parameters (M) | FP32 Accuracy (mAP) | Quantized Accuracy (mAP) | RMSE | FPS
+    YOLOv3 | 416 | 65.2 | 0.62306 | 0.6076 | 0.0842 | 145
+    YOLOv5 | 640 | 7.2 | 0.7406 | 0.7277 | 0.0651 | 182
+    YOLOX-m | 640 | 25.3 | 0.7845 | 0.7694 | 0.0573 | 185
+    MobileNetV2 | 640 | 4.3 | 0.6823 | 0.6645 | 0.0912 | 13
+    EfficientDet | 640 | 3.9 | 0.7342 | 0.7156 | 0.0784 | 98
+    Faster R-CNN | 800 | 42.1 | 0.7912 | 0.7734 | 0.0635 | 12
+    RetinaNet | 800 | 37.8 | 0.7821 | 0.7645 | 0.0678 | 16
+    LCAM YOLOX | 640 | 9.6 | 0.7989 | 0.7811 | 0.0489 | 195
 
-    TABLE V
-    ABLATION STUDY OF LCAM YOLOX
-    TABLE VI
-    FPGA RESOURCE UTILIZATION ACROSS DIFFERENT BOARDS AND CORE CONFIGURATIONS
+**TABLE IV** EFFECT OF PREPROCESSING, QUANTIZATION, AND PRUNING ON LCAM YOLOX [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE VII** PERFORMANCE AND COST ANALYSIS OF LCAM-YOLOX MODEL ON DIFFERENT BOARDS WITH VARIOUS DPU CONFIGURATIONS Fig. 7. Clock cycle analysis across different thread configurations.
+    LCAM-YOLOX.LCAM-YOLOX | Quantization(FP32 to INT8) and Pruning (30%).Before | Quantization(FP32 to INT8) and Pruning (30%).Preprocessing | Quantization(FP32 to INT8) and Pruning (30%).After | Reduction.Reduction
+    Weights [M] | 9.60 | 9.60 | 6.72 | X1.43
+    FLOPS [G] | 8.45 | 8.45 | 6.31 | X1.34
+    RMSE | 0.0489 | 0.0472 | 0.0495 | 
+    mAP | 0.7989 | 0.8163 | 0.7811 | 
+    FPS | 76 | 76 | 195 | X2.56
 
-**TABLE VIII** COMPARISON
+**TABLE VII** PERFORMANCE AND COST ANALYSIS OF LCAM-YOLOX MODEL ON DIFFERENT BOARDS WITH VARIOUS DPU CONFIGURATIONS Fig. 7. Clock cycle analysis across different thread configurations. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Board.Board | Device.Device | DPU Cores.DPU Cores | Performance (FPS).1C | Performance (FPS).2C | Performance (FPS).3C | Performance (FPS).4C | Single Core Power (W).Single Core Power (W) | Peak Performance (TOPS).Peak Performance (TOPS) | Cost ($).Cost ($)
+    KV260 | XCK26 Ultrascale+ | Up to 2 | 195 | 387 | N/A | N/A | 9.72 | 1.23 | 400
+    ZCU104 | ZU7EV Ultrascale+ | Up to 2 | 193 | 337 | N/A | N/A | 12.82 | 2.46 | 1,200
+    ZCU102 | ZU9 Ultrascale+ | Up to 3 | 185 | 319 | 481 | N/A | 20.53 | 3.45 | 3,000
+    NVIDIA Jetson Nano | MaxwellTM architecture | 128 cores | 65 FPS | 65 FPS | 65 FPS | 65 FPS | 8.61 | 0.56 | 200
+    STM32H7A3 | Arm Cortex-M7 Processor | 1 core | 15 FPS | 15 FPS | 15 FPS | 15 FPS | 0.7 | 0.28 | 45
+
+**TABLE VIII** COMPARISON [corps du tableau reconstruit par Docling : à vérifier]
+
+    FPGA Board Configuration | Vivado Simulation (W) | Onboard Measurement (W)
+    ZCU102 (4 DPU Cores, 300 MHz) | 21.64 | 22.13
+    ZCU104 (2 DPU Cores, 300 MHz) | 13.17 | 13.20
+    KV260 (2 DPU Cores, 300 MHz) | 10.24 | 10.45

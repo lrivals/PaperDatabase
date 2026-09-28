@@ -50,7 +50,8 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : TABLE I, [figure sans légende identifié, TABLE II, TABLE III, TABLE V, TABLE VI, [figure sans légende identifié, TABLE VIII"
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE I, TABLE II, TABLE III, TABLE V, TABLE VI",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, [figure sans légende identifié, TABLE VIII"
     ]
   },
   "status": {

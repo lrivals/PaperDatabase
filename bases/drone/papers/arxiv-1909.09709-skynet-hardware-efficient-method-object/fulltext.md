@@ -299,8 +299,8 @@ In this paper, we proposed SkyNet, as well as a hardwareefficient method to gene
     ResNet-50 0.365 | 0.411 | 0.115 | 25.90
     SkyNet | 0.364 | 0.391 | 0.116 | 41.22
 
-**Table 9.** Performance of SiamMask trackers on GOT-10k with different backbones evaluated on single NVIDIA 1080Ti.
+**Table 9.** Performance of SiamMask trackers on GOT-10k with different backbones evaluated on single NVIDIA 1080Ti. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Backbone | AO | SR0.50 SR0.75 F P S
-    ResNet-50 0.380 | 0.439 | 0.153 | 17.44
-    SkyNet | 0.390 | 0.442 | 0.158 | 30.15
+    Backbone | AO | SR0.50 | SR0.75 | FPS
+    ResNet-50 SkyNet | 0.380 | 0.439 | 0.153 | 17.44
+     | 0.390 | 0.442 | 0.158 | 30.15

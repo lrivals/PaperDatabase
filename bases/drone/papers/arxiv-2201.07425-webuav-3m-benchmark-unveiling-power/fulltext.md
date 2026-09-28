@@ -375,7 +375,7 @@ To qualitatively analyze different methods, we demonstrate the visual tracking r
 
 **Fig. 2:** Fig.2: A glance at some diverse video sequences and annotations in WebUAV-3M. All sequences are divided into 12 superclasses, including person, building, vehicle, vessel, public transport, aircraft, animal, agricultural machinery, industry machine, plant, artifact and natural object. Each sequence is attached to a semantic label: "target class" or "motion class". WebUAV-3M populates 223 target classes and 63 motion classes in total. In addition, we provide a natural language specification and two audio descriptions for each sequence. Best viewed in color.
 
-ai rc ra ft ( 8 ha rv es te r ir ri ga ti on _s ys te m pl ou gh in g_ m ac hi fine ri ce _t ra ns pl an te r tr ac to r tr ac to r_ w it h_ pl an te r ap ar tm en t ba tt file m en ts be ac on be ll_ to w er ca nt on _t flow er ca st file ce ll_ to w er ch im fine y ch in a_ pa vi lio n ch ur ch _t flow er do m e el ev at or fe rr is _w he el fe rr is _w he el _p od ga ze bo gr ea t_ w al l_ of _c hi na hi nd u_ te m pl e ho te l ke ep la nd m ar k lib ra ry lib ra ry _g at e m ch od -r te n m us eu m ob se rv at io n_ de ck ob se rv at or y_ do m e of fic e_ bu ild in g pa go da pa rt _o f_ or ie nt al _p ea rl _t flow er pa rt _o f_ tv _t flow er py lo n ra di o_ te file sc op e re d_ st ar sk ys cr ap er st ad iu m st on e_ to w er ta i_ ji te nt -s ha pe d_ ho us e th ea tr e tv _t flow er w at er _t flow er w in dm ill w in do w bu lld oz er co ns tr uc ti on _h an gi ng _b as ke t di gg in g_ bu ck et ex ca va to r ga nt ry _c ra fine ro ad _r ol file r w in d_ tu rb in e_ bl ad e w in d_ tu rb in e_ bl ad e_ ti p ar ti cu la te d_ bu s co ac h do ub file -d ec ke r_ bu s fr ei gh t_ tr ai n hi gh _s pe ed _t ra in lig ht _r ai l lo co m ot iv e m in ib us m on or ai l pa ss en ge r_ tr ai n ra pi d_ tr an si t ra pi t_ tr an si t si gh ts ee in g_ tr ai n si ng file -d ec ke r_ bu s al l-t er ra in _v eh ic file bi ke bo x_ tr uc k ca bl e_ ca r ca b ca r_ ca rr ie r_ tr ai file r co nc re te _m ix er _t ru ck co nt ai fine r_ tr uc k co nv er ti bl e dr op si de _t ru ck el ec tr ic _c ar t el ec tr ic _c ar el ec tr ic _t ri cy cl e ga rb ag e_ tr uc k go -k ar t go lf_ ca rt ha tc hb ac k je ep lim ou si fine m in iv an m ot or iz ed _t ri cy cl e pi ck up po lic e_ va n se da n si gh ts ee in g_ five hi cl e sn flow m ob ile sp or ts _c ar st ak e_ tr uc k st re et _s w ee pe r_ tr uc k su v ta nk _t ru ck va n w at er in g_ ca rt ba m bo o_ ra ft ba rg e ba rg e_ ca rr ie r bo w bu lk _c ar rifier ca ta m ar an ca tb oa t co nt ai fine r_ sh ip di ng hy fe rr y fis hi ng _b oa t ga ily -p ai nt ed _p file as ur e-bo at ge fine ra l_ ca rg o_ five ss el hi gh _s pe ed _c at am ar an ho five rc ra ft m ot or bo at oa rs oc ea n_ lin er oi l_ ta nk er pe da lo ra ci ng _b oa t ra ci ng _d in gh y re sc ue _b oa t ru bb er _b oa t sa ilb oa t sc ho on er si gh ts ee in g_ cr ui se sl oo p sp ee db oa t su rv ei lla nc e_ sh ip ti m be r_ ca rr ie r tr im ar an tu gb oa t w at er _s co ot er w oo de n_ bo at ya ch tFig. 3: Fig. 3: The number of videos per group of object classes. Best viewed by zooming in.
+ai rc ra ft ( 8 ha rv es te r ir ri ga ti on _s ys te m pl ou gh in g_ m ac hi fine ri ce _t ra ns pl an te r tr ac to r tr ac to r_ w it h_ pl an te r ap ar tm en t ba tt file m en ts be ac on be fill_ to w er ca nt on _t flow er ca st file ce fill_ to w er ch im fine y ch in a_ pa vi lio n ch ur ch _t flow er do m e el ev at or fe rr is _w he el fe rr is _w he el _p od ga ze bo gr ea t_ w al l_ of _c hi na hi nd u_ te m pl e ho te l ke ep la nd m ar k lib ra ry lib ra ry _g at e m ch od -r te n m us eu m ob se rv at io n_ de ck ob se rv at or y_ do m e of fic e_ bu ild in g pa go da pa rt _o f_ or ie nt al _p ea rl _t flow er pa rt _o f_ tv _t flow er py lo n ra di o_ te file sc op e re d_ st ar sk ys cr ap er st ad iu m st on e_ to w er ta i_ ji te nt -s ha pe d_ ho us e th ea tr e tv _t flow er w at er _t flow er w in dm ill w in do w bu lld oz er co ns tr uc ti on _h an gi ng _b as ke t di gg in g_ bu ck et ex ca va to r ga nt ry _c ra fine ro ad _r ol file r w in d_ tu rb in e_ bl ad e w in d_ tu rb in e_ bl ad e_ ti p ar ti cu la te d_ bu s co ac h do ub file -d ec ke r_ bu s fr ei gh t_ tr ai n hi gh _s pe ed _t ra in lig ht _r ai l lo co m ot iv e m in ib us m on or ai l pa ss en ge r_ tr ai n ra pi d_ tr an si t ra pi t_ tr an si t si gh ts ee in g_ tr ai n si ng file -d ec ke r_ bu s al l-t er ra in _v eh ic file bi ke bo x_ tr uc k ca bl e_ ca r ca b ca r_ ca rr ie r_ tr ai file r co nc re te _m ix er _t ru ck co nt ai fine r_ tr uc k co nv er ti bl e dr op si de _t ru ck el ec tr ic _c ar t el ec tr ic _c ar el ec tr ic _t ri cy cl e ga rb flag e_ tr uc k go -k ar t go lf_ ca rt ha tc hb ac k je ep lim ou si fine m in iv an m ot or iz ed _t ri cy cl e pi ck up po lic e_ va n se da n si gh ts ee in g_ five hi cl e sn flow m ob ile sp or ts _c ar st ak e_ tr uc k st re et _s w ee pe r_ tr uc k su v ta nk _t ru ck va n w at er in g_ ca rt ba m bo o_ ra ft ba rg e ba rg e_ ca rr ie r bo w bu lk _c ar ri er ca ta m ar an ca tb oa t co nt ai fine r_ sh ip di ng hy fe rr y fis hi ng _b oa t ga ily -p ai nt ed _p file as ur e-bo at ge fine ra l_ ca rg o_ five ss el hi gh _s pe ed _c at am ar an ho five rc ra ft m ot or bo at oa rs oc ea n_ lin er oi l_ ta nk er pe da lo ra ci ng _b oa t ra ci ng _d in gh y re sc ue _b oa t ru bb er _b oa t sa ilb oa t sc ho on er si gh ts ee in g_ cr ui se sl oo p sp ee db oa t su rv ei lla nc e_ sh ip ti m be r_ ca rr ie r tr im ar an tu gb oa t w at er _s co ot er w oo de n_ bo at ya ch tFig. 3: Fig. 3: The number of videos per group of object classes. Best viewed by zooming in.
 
 2
 
@@ -447,9 +447,13 @@ Semi-Automatic Target Annotation Manual Grounding Initial bbox Model Initializat
     CVAT4 | Semi-automatic | 1.71 s | 3.76 s | 6.12 s | 3.86 s
     SATA (Ours) | Semi-automatic | 0.11 s | 2.94 s | 5.91 s | 2.99 s
 
-**TABLE 4:** The details of the seven scenario subtest sets. # denotes the number of the corresponding item.
+**TABLE 4:** The details of the seven scenario subtest sets. # denotes the number of the corresponding item. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Scenario | Low light Long-
+    Scenario | Lowlight | Long-termocclusion | Small targets | High-speedmotion | Targetdistortions | Dual-dynamicdisturbances | Adversarialexamples
+    #Superclass | 11 | 10 | 10 | 11 | 12 | 11 | 10
+    #Motion class | 11 | 13 | 6 | 13 | 9 | 14 | 10
+    #Target class | 44 | 39 | 46 | 49 | 47 | 40 | 41
+    #Videos | 100 | 100 | 100 | 100 | 100 | 100 | 100
 
 term occlusion Small targets High-speed motion Target distortions Dual-dynamic disturbances Adversarial examples
 
@@ -458,12 +462,66 @@ term occlusion Small targets High-speed motion Target distortions Dual-dynamic d
     #Target class | 44 | 39 | 46 | 49 | 47 | 40 | 41
     #Videos | 100 | 100 | 100 | 100 | 100 | 100 | 100
 
-**TABLE 5:** Overall tracking results of the 43 baseline trackers on WebUAV-3M test set. The trackers are ranked by publication time. The top two results of the performance are indicated in bold and underlined. The "properties column" denotes the attributes of different trackers: correlation filter (yes/no), Siamese network (yes/no), deep learning (yes/no), feature representation (Transformer, CNN -convolutional neural networks, HOG -histogram of gradients, CN -color names, CH -color histogram and Gray -grayscale features), and pretraining (yes/no).
+**TABLE 5:** Overall tracking results of the 43 baseline trackers on WebUAV-3M test set. The trackers are ranked by publication time. The top two results of the performance are indicated in bold and underlined. The "properties column" denotes the attributes of different trackers: correlation filter (yes/no), Siamese network (yes/no), deep learning (yes/no), feature representation (Transformer, CNN -convolutional neural networks, HOG -histogram of gradients, CN -color names, CH -color histogram and Gray -grayscale features), and pretraining (yes/no). [corps du tableau reconstruit par Docling : à vérifier]
 
-    Tracker | Publication | Performance Pre nPre AUC cAUC mAcc | FPS | CF Siamese DL | Properties Feature | Pretraining
-    01. KCF |  |  |  |  |  | 
+    Tracker.Tracker | Publication.Publication | Performance.Pre | Performance.nPre AUC | Performance.cAUC | Performance.mAcc | Performance.FPS | Properties. | Properties.CFSiameseDL | Properties. | Properties.Feature | Properties.Pretraining
+    01. KCF [85] | TPAMI-2015 | 0.457 | 0.294 0.272 | 0.245 | 0.271 | 132.9@CPU | 3 | 7 | 7 | HOG | 7
+    02. CF2 [50] | ICCV-2015 |  | 0.5380.3560.343 | 0.311 | 0.343 | 4.3@CPU | 3 | 7 | 3 | CNN | 7
+    03.DeepSRDCF[51] | ICCVW-2015 |  | 0.5860.4670.402 | 0.365 | 0.405 | 3.7@CPU | 3 | 7 | 3 | CNN,HOG,CN | 7
+    04. MDNet [74] | CVPR-2016 | 0.561 | 0.446 0.390 | 0.347 | 0.392 | 1.6@GPU | 7 | 7 | 3 | CNN | 3
+    05. SiamFC [60] | ECCVW-2016 | 0.534 | 0.393 0.351 | 0.317 | 0.352 | 78.2@GPU | 7 | 3 | 3 | CNN | 3
+    06. GOTURN [75] | ECCV-2016 | 0.375 | 0.238 0.215 | 0.178 | 0.212 | 86.9@GPU | 7 | 7 | 3 | CNN | 3
+    07. CCOT [52] | ECCV-2016 |  | 0.6140.4880.408 | 0.365 | 0.411 | 2.6@GPU | 3 | 7 | 3 | CNN | 7
+    08. ECO [53] | CVPR-2017 |  | 0.6570.5150.450 | 0.412 | 0.454 | 5.8@GPU | 3 | 7 | 3 | CNN,HOG,CN | 7
+    09. CACF [86] | CVPR-2017 | 0.601 | 0.479 0.412 | 0.375 | 0.414 | 34.8@CPU | 3 | 7 | 7 | HOG,CH | 7
+    10. BACF [87] | ICCV-2017 | 0.612 | 0.497 0.422 | 0.382 | 0.426 | 38.5@CPU | 3 | 7 | 7 | HOG | 7
+    11. DSiam [61] | ICCV-2017 |  | 0.6140.4890.437 | 0.401 | 0.440 | 25.3@CPU | 7 | 3 | 3 | CNN | 3
+    12. VITAL [76] | CVPR-2018 | 0.519 | 0.417 0.361 | 0.323 | 0.364 | 3.2@GPU | 7 | 7 | 3 | CNN | 3
+    13. SiamRPN [47] | CVPR-2018 | 0.519 | 0.367 0.345 | 0.317 | 0.346 | 142.8@GPU | 7 | 3 | 3 | CNN | 3
+    14. STRCF [54] | CVPR-2018 |  | 0.6310.5100.447 | 0.404 | 0.451 | 8.3@GPU | 3 | 7 | 3 | CNN,HOG,CN | 7
+    15. MCCT [88] | CVPR-2018 | 0.623 | 0.498 0.440 | 0.404 | 0.444 | 44.1@CPU | 3 | 7 | 7 | HOG,CN | 7
+    16.DaSiamRPN[62] | ECCV-2018 | 0.4890.3470.310 |  | 0.289 | 0.310 | 98.4@GPU | 7 | 3 | 3 | CNN | 3
+    17.MetaTracker[77] | ECCV-2018 |  | 0.6050.4040.376 | 0.336 | 0.376 | 3.6@GPU | 7 | 7 | 3 | CNN | 3
+    18. ACT [78] | ECCV-2018 | 0.518 | 0.388 0.343 | 0.305 | 0.344 | 28.7@GPU | 7 | 7 | 3 | CNN | 3
+    19.SiamMask[63] | CVPR-2019 |  | 0.6150.4970.435 | 0.396 | 0.438 | 50.6@GPU | 7 | 3 | 3 | CNN | 3
+    20.SiamPRN++[9] | CVPR-2019 |  | 0.6070.4820.433 | 0.401 | 0.437 | 32.5@GPU | 7 | 3 | 3 | CNN | 3
+    21. ATOM [7] | CVPR-2019 |  | 0.4390.3510.291 | 0.261 | 0.292 | 28.6@GPU | 3 | 7 | 3 | CNN | 3
+    22. SiamDW [64] | CVPR-2019 |  | 0.5590.4470.373 | 0.327 | 0.374 | 39.5@GPU | 7 | 3 | 3 | CNN | 3
+    23. UDT [66] | CVPR-2019 |  | 0.5720.4650.416 | 0.379 | 0.419 | 68.2@GPU | 7 | 3 | 3 | CNN | 3
+    24. ARCF [89] | ICCV-2019 | 0.613 | 0.490 0.405 | 0.363 | 0.407 | 57.6@CPU | 3 | 7 | 7 | HOG,CN,Gray | 7
+    25. LADCF [55] | TIP-2019 |  | 0.4700.3750.339 | 0.307 | 0.342 | 8.6@GPU | 3 | 7 | 3 | CNN,HOG,CN | 7
+    26. UpdateNet [65] | ICCV-2019 |  | 0.5360.3800.360 | 0.330 | 0.360 | 76.3@GPU | 7 | 3 | 3 | CNN | 3
+    27. DiMP [57] | ICCV-2019 |  | 0.5440.4410.364 | 0.336 | 0.367 | 37.6@GPU | 3 | 7 | 3 | CNN | 3
+    28.SiamFC++[67] | AAAI-2020 | 0.5540.4310.388 |  | 0.352 | 0.391 | 86.2@GPU | 7 | 3 | 3 | CNN | 3
+    29. SiamCAR [68] | CVPR-2020 | 0.6420.5120.412 |  | 0.378 | 0.415 | 46.7@GPU | 7 | 3 | 3 | CNN | 3
+    30. PrDiMP [58] | CVPR-2020 | 0.6740.5750.514 |  | 0.484 | 0.521 | 32.4@GPU | 3 | 7 | 3 | CNN | 3
+    31.AutoTrack[56] | CVPR-2020 | 0.6180.4950.446 |  | 0.412 | 0.450 | 55.8@CPU | 3 | 7 | 7 | HOG,CN,Gray | 7
+    32.SiamBAN[69] | CVPR-2020 | 0.6150.4980.438 |  | 0.401 | 0.442 | 37.1@GPU | 7 | 3 | 3 | CNN | 3
+    33. UTrack [2] | ACMMM-2020 | 0.540 | 0.438 0.362 | 0.333 | 0.364 | 21.6@GPU | 3 | 7 | 3 | CNN | 3
+    34. Ocean [70] | ECCV-2020 | 0.5050.4090.369 |  | 0.325 | 0.366 | 65.3@GPU | 7 | 3 | 3 | CNN | 3
+    35. RPT [71] | ECCVW-2020 | 0.660 | 0.546 0.495 | 0.462 | 0.501 | 33.2@GPU | 7 | 3 | 3 | CNN | 3
+    36. SiamGAT [72] | CVPR-2021 |  | 0.5730.4740.393 | 0.349 | 0.395 | 88.5@GPU | 7 | 3 | 3 | CNN | 3
+    37.LightTrack[80] | CVPR-2021 |  | 0.6020.4940.458 | 0.415 | 0.459 | 64.9@GPU | 7 | 7 | 3 | CNN | 3
+    38. TrDiMP [83] | CVPR-2021 |  | 0.6000.4760.399 | 0.370 | 0.402 | 23.0@GPU3 |  | 7 |  | 3CNN,Transformer | 3
+    39. TransT [82] | CVPR-2021 |  | 0.6180.5090.448 | 0.422 | 0.453 | 53.5@GPU | 7 | 3 |  | 3CNN,Transformer | 3
+    40.AlphaRefine[79] | CVPR-2021 | 0.5150.4130.3600.3140.358122.6@GPU7 | 0.7530.6430.593 | 0.562 | 0.602 | 42.3@GPU | 3 | 7 3 | 3 3CNN,Transformer | CNN | 3 3
+    41. HiFT [84] 42. AutoMatch [73] | ICCV-2021 ICCV-2021 | 0.6180.4960.454 |  | 0.416 | 0.458 | 63.1@GPU | 7 | 3 | 3 | CNN | 3
+    43. KeepTrack [59] | ICCV-2021 |  | 0.7100.6030.543 | 0.512 |  | 33.9@GPU | 3 | 7 | 3 | CNN | 3
+     |  |  |  |  | 0.550 |  |  |  |  |  | 
 
-**Table 6** 
+**Table 6** [corps du tableau reconstruit par Docling : à vérifier]
+
+    Tracker | Training data | Pre | nPre | AUC | cAUC | mAcc
+    GOTURN | ALOV++, ImageNet DET | 0.375 | 0.238 | 0.215 | 0.178 | 0.212
+    MDNet | ImageNet-VID | 0.561 | 0.446 | 0.390 | 0.347 | 0.392
+    ATOM | LaSOT,GOT-10k,TrackingNet,COCO | 0.439 | 0.351 | 0.291 | 0.261 | 0.292
+    SiamFC | ImageNet VID | 0.534 | 0.393 | 0.351 | 0.317 | 0.352
+    SiamRPN | ImageNetVID,YouTube-BB | 0.519 | 0.367 | 0.345 | 0.317 | 0.346
+    GOTURN |  | 0.499 | 0.355 | 0.318 | 0.280 | 0.318
+    MDNet |  | 0.603 | 0.506 | 0.445 | 0.409 | 0.450
+    ATOM | WebUAV-3M train set | 0.580 | 0.435 | 0.390 | 0.344 | 0.387
+    SiamFC |  | 0.629 | 0.521 | 0.454 | 0.417 | 0.458
+    SiamRPN |  | 0.617 | 0.514 | 0.453 | 0.415 | 0.457
 
 **TABLE 6:** The results obtained after retraining five deep trackers on WebUAV-3M.
 
@@ -527,4 +585,23 @@ term occlusion Small targets High-speed motion Target distortions Dual-dynamic d
     VisDrone→VisDrone GOT-10k→VisDrone WebUAV-3M→VisDrone | 0.356/0.375 0.350/0.389 0.404/0.433 | 0.435/0.474 0.501/0.548 0.553/0.596 | 0.327/0.355 0.532/0.584 0.562/0.615 | 0.373/0.401 0.461/0.507 0.506/0.548
     VisDrone→WebUAV-3M GOT-10k→WebUAV-3M WebUAV-3M→WebUAV-3M | 0.102/0.133 0.203/0.238 0.280/0.318 | 0.359/0.398 0.355/0.388 0.417/0.458 | 0.155/0.174 0.386/0.431 0.415/0.457 | 0.205/0.235 0.315/0.352 0.371/0.411
 
-TABLE A: Descriptions of the 17 attributes in WebUAV-3M.
+TABLE A: Descriptions of the 17 attributes in WebUAV-3M. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Attribute | Definition
+    01.LR | Thetargetboxissmallerthan400pixelsinatleastoneframe.
+    02.PO | Thetargetispartiallyoccludedinthesequence.
+    03.FO | Thetargetisfullyoccludedinthesequence.
+    04.OV | Thetargetcompletelyleavesthevideoframe.
+    05.FM | Themotionofthegroundtruthislargerthan20pixels.
+    06.CM | Abruptmotionofthecamera.
+    07.VC | Viewpointaffectstargetappearancesignificantly.
+    08.ROT | Thetargetrotatesintheimage.
+    09.DEF | Thetargetisdeformableduringtracking.
+    10.BC | Thebackgroundhasasimilarappearanceasthetarget.
+    11.SV | Theratiooftheboundingboxisoutsidetherange[0.5,2].
+    12.ARV | Theratioofboundingboxaspectratioisoutsidetherage[0.5,2].
+    13.IV | Theilluminationinthetargetregionchanges.
+    14.MB | Thetargetregionisblurredduetotargetorcameramotion.
+    15.COM | Thecomplexityof thecurrentvideo(easyormediumorhard).
+    16. SIZ | The size s= √w×h of current video is small (s< √640×480 pixels), or medium (√640×480 pixels≤s≤ √1280×720 pixels), or large (s> √1280×720 pixels).
+    17. LEN | The length (l) of current video is short (l≤600 frames, 20s for 30 fps), or medium (600<l≤1800 frames, 60s for 30 fps), or long(l>1800 frames).

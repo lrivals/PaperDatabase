@@ -251,6 +251,13 @@ In this paper, we present a real-time drone detection algorithm, the accuracy of
     gopro_006 | 0.735 | 0.691 | 0.712
     Overall | 0.701 | 0.788 | 0.742
 
-**Table 2.** Comparison results.
+**Table 2.** Comparison results. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Methods Methods | Precision Precision | Recall Recall | F1-Score F1-Score | F1-Score F1-Score
+    [28] [30] [14] [39] Our approach [28] [30] [14] [38] Our approach | 0.103 0.103 | 0.146 0.146 | 0.121 | 0.121
+    [28] [30] [14] [39] Our approach [28] [30] [14] [38] Our approach | 0.795 0.795 | 0.591 0.591 | 0.678 | 0.678
+    [28] [30] [14] [39] Our approach [28] [30] [14] [38] Our approach | 0.756 0.756 | 0.713 0.713 | 0.734 | 0.734
+    [28] [30] [14] [39] Our approach [28] [30] [14] [38] Our approach | 0.524 0.524 0.701 | 0.342 0.342 0.788 | 0.414 | 0.414 0.742
+    [28] [30] [14] [39] Our approach [28] [30] [14] [38] Our approach | 0.701 | 0.788 | 0.742 | 
 
 **Table 2.** Comparison results.

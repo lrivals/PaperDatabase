@@ -1,0 +1,617 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 4,
+   "bbox": [
+    352.5,
+    87.6,
+    521.3,
+    186.0
+   ],
+   "caption": "TABLE I THE SPECIFICATION OF THE CAMERA USED IN THE PROPOSED SYSTEM",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "Camera model (manufacturer)",
+     "DS-2CD6984F-IHS/NFC HIKVISION"
+    ],
+    [
+     "Number of lenses",
+     "4"
+    ],
+    [
+     "Resolution (height×width)",
+     "1280×720 (1 lens) 1280×2880 (4 lenses)"
+    ],
+    [
+     "Focal length",
+     "2.8 mm"
+    ],
+    [
+     "Field of view (each lens)",
+     "50° (horizontal) 100°(vertical)"
+    ],
+    [
+     "Frame rate",
+     "25 FPS"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    103.9,
+    87.8,
+    507.7,
+    170.8
+   ],
+   "caption": "TABLE II THE PERFORMANCE OF THE PROPOSED ALGORITHM UNDER DIFFERENT ILLUMINATION CONDITIONS IN THE INDOOR ENVIRONMENT",
+   "rows": [
+    [
+     "Image sequences.Image sequences",
+     "Illumination condition.Illumination condition",
+     "Sequence length.Sequence length",
+     "Range (m).min",
+     "Range (m).max",
+     "Range (m).mean",
+     "Precision.Precision",
+     "Recall.Recall",
+     "F1-score.F1-score",
+     "AP.AP"
+    ],
+    [
+     "ID_IS1",
+     "285 LUX",
+     "251",
+     "4.06",
+     "9.14",
+     "5.36",
+     "99.20%",
+     "98.80%",
+     "98.40%",
+     "98.01%"
+    ],
+    [
+     "ID_IS2",
+     "196 LUX",
+     "851",
+     "4.74",
+     "10.60",
+     "7.09",
+     "94.57%",
+     "81.90%",
+     "87.78%",
+     "77.77%"
+    ],
+    [
+     "ID_IS3",
+     "65 LUX",
+     "951",
+     "5.32",
+     "12.21",
+     "6.78",
+     "79.77%",
+     "85.80%",
+     "82.68%",
+     "74.43%"
+    ],
+    [
+     "ID_IS4",
+     "7 LUX",
+     "1046",
+     "3.84",
+     "12.43",
+     "5.75",
+     "84.22%",
+     "62.51%",
+     "71.76%",
+     "57.75%"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    104.3,
+    216.5,
+    507.0,
+    286.0
+   ],
+   "caption": "TABLE III THE PERFORMANCE OF THE PROPOSED ALGORITHM ON PANORAMIC IMAGES IN THE OUTDOOR ENVIRONMENT",
+   "rows": [
+    [
+     "Image sequences.Image sequences",
+     "MAVs.MAVs",
+     "Sequence length.Sequence length",
+     "Range (m).min",
+     "Range (m).max",
+     "Range (m).mean",
+     "Precision.Precision",
+     "Recall.Recall",
+     "F1-score.F1-score",
+     "AP.AP"
+    ],
+    [
+     "OD_PIS1",
+     "M300",
+     "1000",
+     "29.81",
+     "88.18",
+     "48.06",
+     "99.72%",
+     "91.05%",
+     "95.19%",
+     "91.01%"
+    ],
+    [
+     "OD_PIS2",
+     "M300",
+     "1351",
+     "30.57",
+     "91.07",
+     "49.39",
+     "100.00%",
+     "88.90%",
+     "94.12%",
+     "88.90%"
+    ],
+    [
+     "OD_PIS3",
+     "2×M300",
+     "2162",
+     "31.40",
+     "230.92",
+     "57.85",
+     "99.86%",
+     "89.30%",
+     "94.29%",
+     "89.25%"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    52.3,
+    331.5,
+    559.2,
+    442.1
+   ],
+   "caption": "TABLE IV THE PERFORMANCE OF THE PROPOSED ALGORITHM FOR DIFFERENT TYPES OF MAVS IN THE OUTDOOR ENVIRONMENT",
+   "rows": [
+    [
+     "MAVs.MAVs",
+     "Image sequences.Image sequences",
+     "Weather condition.Weather condition",
+     "Illumination condition.Illumination condition",
+     "Sequence length.Sequence length",
+     "Range (m).min",
+     "Range (m).max",
+     "Range (m).mean",
+     "Precision.Precision",
+     "Recall.Recall",
+     "F1-score.F1-score",
+     "AP.AP"
+    ],
+    [
+     "Phantom 4",
+     "OD_IS1 OD_IS2",
+     "Cloudy",
+     "Weak",
+     "1200 800",
+     "24.04 17.75",
+     "109.84 42.70",
+     "45.22 28.11",
+     "97.67% 100.00%",
+     "94.42% 96.00%",
+     "96.02% 97.96%",
+     "93.36% 96.00%"
+    ],
+    [
+     "M300",
+     "OD_IS3 OD_IS4",
+     "Sunny",
+     "Strong",
+     "1352 1491",
+     "15.18 13.31",
+     "93.85 146.04",
+     "36.24 42.93",
+     "72.72% 100.00%",
+     "98.96% 98.59%",
+     "83.83% 99.29%",
+     "96.48% 98.59%"
+    ],
+    [
+     "Mavic 2",
+     "OD_IS5 OD_IS6",
+     "Cloudy",
+     "Medium",
+     "948 1041",
+     "8.99 8.28",
+     "65.73 51.96",
+     "22.50 19.70",
+     "100.00% 91.21%",
+     "99.79% 99.71%",
+     "99.89% 95.27%",
+     "99.79% 99.48%"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    150.4,
+    87.7,
+    460.9,
+    130.7
+   ],
+   "caption": "TABLE V THE PERFORMANCE OF DIFFERENT ALGORITHMS IN DETECTING UNKNOWN MAV",
+   "rows": [
+    [
+     "Algorithm",
+     "Cascade R-CNN",
+     "Grid R-CNN",
+     "RetinaNet",
+     "YOLOv5-x",
+     "Ours"
+    ],
+    [
+     "AP",
+     "92.6%",
+     "92.2%",
+     "89.5%",
+     "91.7%",
+     "97.7%"
+    ],
+    [
+     "Runtime",
+     "217 ms",
+     "313 ms",
+     "154 ms",
+     "105 ms",
+     "119 ms"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    69.9,
+    87.9,
+    541.4,
+    233.2
+   ],
+   "caption": "TABLE VI LOCALIZATION ERROR. Num DENOTES THE NUMBER OF MATCHED FEATURE POINTS TO COMPUTE THE TARGET DISTANCE",
+   "rows": [
+    [
+     "Truh (m).",
+     "DJI M300.Num",
+     "DJI M300.Estimated (m)",
+     "DJI M300.Error (m)",
+     "DJI Mavic 2.Num",
+     "DJI Mavic 2.Estimated (m)",
+     "DJI Mavic 2.Error (m)",
+     "DJI Phantom 4.Num",
+     "DJI Phantom 4.Estimated (m)",
+     "DJI Phantom 4.Error (m)"
+    ],
+    [
+     "15.0",
+     "73",
+     "13.83",
+     "1.17 (7.80%)",
+     "9",
+     "14.58",
+     "0.42 (2.80%)",
+     "7",
+     "15.19",
+     "0.19 (1.27%)"
+    ],
+    [
+     "20.3",
+     "15",
+     "18.63",
+     "1.67 (8.23%)",
+     "5",
+     "18.73",
+     "1.57 (7.73%)",
+     "5",
+     "19.47",
+     "0.83 (4.09%)"
+    ],
+    [
+     "25.2",
+     "18",
+     "23.94",
+     "1.26 (5.00%)",
+     "2",
+     "22.10",
+     "3.10 (12.3%)",
+     "2",
+     "24.25",
+     "0.95 (3.77%)"
+    ],
+    [
+     "30.6",
+     "14",
+     "29.88",
+     "0.72 (2.35%)",
+     "4",
+     "29.70",
+     "0.90 (2.94%)",
+     "2",
+     "29.86",
+     "0.74 (2.42%)"
+    ],
+    [
+     "35.6",
+     "8",
+     "34.18",
+     "1.42 (3.99%)",
+     "3",
+     "36.68",
+     "1.08 (3.03%)",
+     "2",
+     "34.77",
+     "0.83 (2.33%)"
+    ],
+    [
+     "40.9",
+     "9",
+     "39.47",
+     "1.43 (3.50%)",
+     "2",
+     "42.49",
+     "1.59 (3.89%)",
+     "2",
+     "40.52",
+     "0.38 (0.93%)"
+    ],
+    [
+     "45.5",
+     "9",
+     "44.39",
+     "1.11 (2.44%)",
+     "2",
+     "44.88",
+     "0.62 (1.36%)",
+     "1",
+     "45.42",
+     "0.08 (0.18%)"
+    ],
+    [
+     "50.8",
+     "5",
+     "51.75",
+     "0.95 (1.87%)",
+     "2",
+     "49.38",
+     "1.42 (2.80%)",
+     "1",
+     "48.49",
+     "2.31 (4.55%)"
+    ],
+    [
+     "55.5",
+     "4",
+     "56.43",
+     "0.93 (1.68%)",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "60.5",
+     "4",
+     "60.79",
+     "0.29 (0.48%)",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "65.9",
+     "0",
+     "60.51",
+     "5.39 (8.18%)",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "69.7",
+     "2",
+     "72.63",
+     "2.93 (4.20%)",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "74.6",
+     "0",
+     "70.01",
+     "4.59 (6.15%)",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "79.7",
+     "0",
+     "79.18",
+     "0.52 (0.65%)",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    111.3,
+    88.6,
+    499.8,
+    261.6
+   ],
+   "caption": "TABLE VII THE PERFORMANCE OF DIFFERENT MULTI-TARGET TRACKING ALGORITHMS",
+   "rows": [
+    [
+     "Algorithm",
+     "Node 1 (6 targets).position RMSE (m)",
+     "Node 1 (6 targets).velocity RMSE (m/s)",
+     "Node 1 (6 targets).Runtime (ms)",
+     "Node 2 (6 targets).position RMSE (m)",
+     "Node 2 (6 targets).velocity RMSE (m/s)",
+     "Node 2 (6 targets).Runtime (ms)"
+    ],
+    [
+     "CV+GNN",
+     "2.0652",
+     "4.8892",
+     "14.6012",
+     "2.5271",
+     "5.6899",
+     "13.2343"
+    ],
+    [
+     "CV+GNN+Refinement (Ours)",
+     "1.3946",
+     "1.5689",
+     "14.9781",
+     "1.8837",
+     "1.9152",
+     "13.5639"
+    ],
+    [
+     "IMM+GNN",
+     "1.7760",
+     "2.8915",
+     "87.4625",
+     "2.3863",
+     "3.6973",
+     "75.0003"
+    ],
+    [
+     "IMM+GNN+Refinement",
+     "1.2313",
+     "1.1349",
+     "87.8010",
+     "1.8971",
+     "1.6529",
+     "75.3294"
+    ],
+    [
+     "",
+     "Node 3 (5 targets)",
+     "Node 3 (5 targets)",
+     "Node 3 (5 targets)",
+     "Node 4 (6 targets)",
+     "Node 4 (6 targets)",
+     "Node 4 (6 targets)"
+    ],
+    [
+     "Algorithm",
+     "position RMSE (m)",
+     "velocity RMSE (m/s)",
+     "Runtime (ms)",
+     "position RMSE (m)",
+     "velocity RMSE (m/s)",
+     "Runtime (ms)"
+    ],
+    [
+     "CV+GNN",
+     "2.0905",
+     "4.2104",
+     "11.2876",
+     "2.4057",
+     "5.3874",
+     "13.4468"
+    ],
+    [
+     "CV+GNN+Refinement (Ours)",
+     "1.7739",
+     "1.6799",
+     "11.5478",
+     "1.6197",
+     "1.8134",
+     "13.7891"
+    ],
+    [
+     "IMM+GNN",
+     "2.0037",
+     "3.0187",
+     "56.6449",
+     "2.5232",
+     "3.8045",
+     "72.8935"
+    ],
+    [
+     "IMM+GNN+Refinement",
+     "1.6266",
+     "1.3951",
+     "56.8980",
+     "1.9321",
+     "1.8062",
+     "73.2047"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    152.7,
+    88.1,
+    458.7,
+    121.7
+   ],
+   "caption": "TABLE VIII THE PERFORMANCE OF THE PROPOSED SYSTEM IN TRACKING 7 TARGETS",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7"
+    ],
+    [
+     "Target position RMSE (m)",
+     "1 1.2344",
+     "2 1.1483",
+     "3 1.9766",
+     "4 1.0925",
+     "5 1.8200",
+     "6 1.2354",
+     "7 1.4286"
+    ]
+   ]
+  }
+ ]
+}

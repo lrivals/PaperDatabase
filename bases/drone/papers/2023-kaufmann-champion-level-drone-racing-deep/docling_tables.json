@@ -1,0 +1,396 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 4,
+   "bbox": [
+    41.0,
+    394.1,
+    292.9,
+    461.8
+   ],
+   "caption": "Fig. 3 | Results. a, Lap-time results. We compare Swift against the human pilots in time-trial races. Lap times indicate best single lap times and best average times achieved in a heat of three consecutive laps. The reported statistics are computed over a dataset recorded during one week on the race track, which corresponds to 483 (115) data points for Swift, 331 (221) for A. Vanover, 469 (338) for T. Bitmatta and 345 (202) for M. Schaepper. The first number is the number of single laps and the second is the number of three consecutive laps. The dark points in each distribution correspond to laps flown in race conditions. b, Head-to-head results. We report the number of head-to-head races flown by each pilot, the number of wins and losses, as well as the win ratio.",
+   "rows": [
+    [
+     "",
+     "Number of races",
+     "Best time-to-finish",
+     "Wins",
+     "Losses",
+     "Win ratio"
+    ],
+    [
+     "A. Vanover versus Swift",
+     "9",
+     "17.956 s",
+     "4",
+     "5",
+     "0.44"
+    ],
+    [
+     "T. Bitmatta versus Swift",
+     "7",
+     "18.746 s",
+     "3",
+     "4",
+     "0.43"
+    ],
+    [
+     "M. Schaepper versus Swift",
+     "9",
+     "21.160 s",
+     "3",
+     "6",
+     "0.33"
+    ],
+    [
+     "Swift versus human pilots",
+     "25",
+     "17.465 s",
+     "15",
+     "10",
+     "0.60"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    39.2,
+    81.7,
+    186.8,
+    174.0
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "a Hyperparameter",
+     "Value"
+    ],
+    [
+     "γ (discount factor)",
+     "069"
+    ],
+    [
+     "ε (importance ratio clipping)",
+     "0.2"
+    ],
+    [
+     "λ1",
+     "1.0"
+    ],
+    [
+     "λ2",
+     "0.02"
+    ],
+    [
+     "λ3",
+     "-10.0"
+    ],
+    [
+     "λ₄",
+     "-2e-4"
+    ],
+    [
+     "λ5",
+     "-1e-4"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    38.5,
+    193.8,
+    545.6,
+    298.4
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "",
+     "Approach",
+     "Lap time in seconds",
+     "Ground-truth observations Gate margin in meters",
+     "Completion in %",
+     "Lap time in seconds",
+     "Noisy observations Gate margin in meters",
+     "Completion in %"
+    ],
+    [
+     "Idealized dyn.",
+     "Zero-Shot Transfer [33]",
+     "4.88",
+     "0.63— 0.46",
+     "100",
+     "1",
+     "n/a —n/a",
+     "0"
+    ],
+    [
+     "",
+     "Domain Randomization",
+     "5.06",
+     "0.60 — 0.47",
+     "100",
+     "1",
+     "0.43— 0.30",
+     "9"
+    ],
+    [
+     "",
+     "Time-Opt. Traj. + MPC [26]",
+     "4.60",
+     "0.50 — 0.25",
+     "100",
+     "1",
+     "0.48 — 0.29",
+     "9"
+    ],
+    [
+     "",
+     "Ours",
+     "4.88",
+     "0.63— 0.46",
+     "100",
+     "5.26",
+     "0.56 — 0.44",
+     "100"
+    ],
+    [
+     "Realistic dyn.",
+     "Zero-Shot Transfer [33]",
+     "1",
+     "0.62—0.62",
+     "4",
+     "1",
+     "0.41—0.21",
+     "9"
+    ],
+    [
+     "",
+     "Domain Randomization",
+     "1",
+     "0.28 — 0.28",
+     "4",
+     "1",
+     "0.47—0.45",
+     "9"
+    ],
+    [
+     "",
+     "Time-Opt. Traj. + MPC [26]",
+     "1",
+     "n/a -n/a",
+     "0",
+     "1",
+     "0.23— 0.23",
+     "4"
+    ],
+    [
+     "",
+     "Ours",
+     "5.20",
+     "0.51—0.30",
+     "100",
+     "5.42",
+     "0.48 — 0.23",
+     "100"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    38.7,
+    321.4,
+    546.1,
+    403.3
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "",
+     "Autonomous Drone.Speed in m/s",
+     "Autonomous Drone.Power in W",
+     "Autonomous Drone.Thrust in N",
+     "Autonomous Drone.Time in s",
+     "Length in m",
+     "Speed in m/s",
+     "Power in W",
+     "Vanover Thrust in N",
+     "Time in s",
+     "Length in m",
+     "Bitmatta.Speed in m/s",
+     "Bitmatta.Power in W",
+     "Bitmatta.Thrust in N",
+     "Bitmatta.Time in s",
+     "Bitmatta.Length in m",
+     "Schaepper.Speed in m/s",
+     "Schaepper.Power in W",
+     "Schaepper.Thrust in N",
+     "Schaepper.Time in s",
+     "Schaepper.Length in m"
+    ],
+    [
+     "Segment 1",
+     "6.52",
+     "548.14",
+     "19.80",
+     "1.27",
+     "8.27",
+     "5.62",
+     "348.91",
+     "14.96",
+     "1.42",
+     "7.98",
+     "5.93",
+     "365.78",
+     "15.87",
+     "1.36",
+     "8.07",
+     "4.92",
+     "201.06",
+     "10.47",
+     "1.59",
+     "7.82"
+    ],
+    [
+     "Segment 2",
+     "13.72",
+     "852.20",
+     "29.01",
+     "1.82",
+     "25.01",
+     "13.83",
+     "863.85",
+     "29.22",
+     "1.83",
+     "25.31",
+     "13.72",
+     "854.36",
+     "28.95",
+     "1.89",
+     "25.94",
+     "10.76",
+     "508.29",
+     "19.97",
+     "2.36",
+     "25.35"
+    ],
+    [
+     "Segment 3",
+     "13.70",
+     "798.69",
+     "27.60",
+     "1.96",
+     "26.89",
+     "13.86",
+     "853.69",
+     "28.98",
+     "2.09",
+     "28.91",
+     "13.16",
+     "727.36",
+     "25.50",
+     "2.23",
+     "29.35",
+     "12.66",
+     "636.78",
+     "23.47",
+     "2.40",
+     "30.34"
+    ],
+    [
+     "Segment 4",
+     "13.43",
+     "1047.05",
+     "33.69",
+     "1.61",
+     "21.62",
+     "12.97",
+     "953.47",
+     "31.62",
+     "1.60",
+     "20.72",
+     "13.47",
+     "1035.91",
+     "3.39",
+     "1.67",
+     "22.53",
+     "13.11",
+     "885.53",
+     "29.95",
+     "1.77",
+     "23.20"
+    ],
+    [
+     "Full Race",
+     "13.11",
+     "866.48",
+     "29.16",
+     "17.46",
+     "228.85",
+     "12.96",
+     "843.50",
+     "28.65",
+     "17.96",
+     "232.79",
+     "12.89",
+     "822.50",
+     "27.96",
+     "18.74",
+     "241.52",
+     "11.55",
+     "623.53",
+     "22.95",
+     "21.16",
+     "244.49"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    285.7,
+    79.9,
+    545.5,
+    145.9
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "b Approach Approach",
+     "Lap time in seconds Lap time in seconds",
+     "Gate margin in meters Gate margin in meters",
+     "Completion in % Completion in %"
+    ],
+    [
+     "Zero-Shot Transfer [33] Zero-Shot Transfer [33]",
+     "4.92 4.92",
+     "0.57—0.41 0.57—0.41",
+     "42 42"
+    ],
+    [
+     "Domain Randomization Domain Randomization",
+     "1 1",
+     "0.34—0.23 0.34 — 0.23",
+     "19 19"
+    ],
+    [
+     "Time-Opt. Traj. + MPC [26] Time-Opt. Traj. + MPC [26]",
+     "1 1",
+     "0.51—0.41 0.51—0.41",
+     "19 19"
+    ],
+    [
+     "Ours Ours",
+     "5.26 5.26",
+     "0.56—0.44 0.56 — 0.44",
+     "100 100"
+    ]
+   ]
+  }
+ ]
+}

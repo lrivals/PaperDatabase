@@ -1,0 +1,940 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 8,
+   "bbox": [
+    79.4,
+    254.4,
+    406.4,
+    363.5
+   ],
+   "caption": "Table 1. Comparisons of the three levels of parallelism",
+   "rows": [
+    [
+     "Parallelism",
+     "Batch-level Parallelism",
+     "Feature-map-level Parallelism",
+     "Channel-level Parallelism"
+    ],
+    [
+     "Large Batch Size Small Batch Size",
+     "advantaged disadvantaged",
+     "little impact little impact",
+     "little impact little impact"
+    ],
+    [
+     "LargeFeatureMapSize SmallFeatureMapSize LargeChannelNumber Small Channel Number",
+     "littleimpact littleimpact littleimpact little impact",
+     "advantaged disadvantaged little impact little impact",
+     "little impact little impact advantaged disadvantaged"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    53.2,
+    112.6,
+    432.2,
+    423.1
+   ],
+   "caption": "Table 2. Definitions of Symbols",
+   "rows": [
+    [
+     "Notation",
+     "Description"
+    ],
+    [
+     "𝑖 , 𝑗",
+     "Index of a Conv layer"
+    ],
+    [
+     "𝐵",
+     "Batch size"
+    ],
+    [
+     "𝑁 𝑖",
+     "Number of the input channels of the 𝑖th Conv layer"
+    ],
+    [
+     "𝑀𝑖",
+     "Number of the output channels of the 𝑖th Conv layer"
+    ],
+    [
+     "𝑅𝑖",
+     "Number of the rows of the OFMs for the 𝑖th Conv layer"
+    ],
+    [
+     "𝐶𝑖",
+     "NumberofthecolumnsoftheOFMsforthe𝑖thConvlayer"
+    ],
+    [
+     "𝑖",
+     "Size of the weights kernel for the 𝑖th Conv layer"
+    ],
+    [
+     "𝑆 𝑖",
+     "Stride for the 𝑖th Conv layer"
+    ],
+    [
+     "𝐴𝑖[𝑏,𝑚,𝑟,𝑐]",
+     "Activationforthe𝑖thConvlayerinFP"
+    ],
+    [
+     "𝐿𝑖[𝑏,𝑛,𝑟,𝑐]",
+     "Lossforthe𝑖thConvlayerinBP"
+    ],
+    [
+     "𝑊𝑖[𝑛,𝑚,𝑘𝑟,𝑘𝑐]",
+     "Weightsforthe𝑖thConvlayer"
+    ],
+    [
+     "𝑑𝑊𝑖[𝑛,𝑚,𝑘𝑟,𝑘𝑐]",
+     "Weightsgradientsforthe𝑖thConvlayerinWU"
+    ],
+    [
+     "𝑇𝑚",
+     "Number of the output channels in a tile of output features in each Conv layer"
+    ],
+    [
+     "𝑇𝑛",
+     "Number of the input channels in a tile of input features in each Conv layer"
+    ],
+    [
+     "𝑇𝑟 𝑖",
+     "Number of the rows in a tile of output features in the 𝑖th Conv layer"
+    ],
+    [
+     "𝑇𝑐 𝑖",
+     "Number of the columns in a tile of output features in the 𝑖th Conv layer"
+    ],
+    [
+     "𝑀𝑖 _𝑜𝑛",
+     "Number of the output channels of the weights that stored on-chip in the 𝑖th Conv layer"
+    ],
+    [
+     "𝑅 𝑗 _𝑖𝑛",
+     "Number of the rows of the IFMs for the 𝑗th Conv layer"
+    ],
+    [
+     "𝐶 𝑗 _𝑖𝑛",
+     "Number of the columns of the IFMs for the 𝑗th Conv layer"
+    ],
+    [
+     "𝑇𝑟 𝑗 _𝑖𝑛",
+     "Number of the rows in a tile of input features in the 𝑗th Conv layer"
+    ],
+    [
+     "𝑇𝑐 𝑗 _𝑖𝑛",
+     "Number of the columns in a tile of input features in the 𝑗th Conv layer"
+    ]
+   ]
+  },
+  {
+   "page": 25,
+   "bbox": [
+    64.6,
+    112.6,
+    421.4,
+    341.5
+   ],
+   "caption": "Table3. ExperimentalResultsofTheBaselinewithTheBCHWDataLayout",
+   "rows": [
+    [
+     "AlexNet",
+     "Process",
+     "[𝑇𝑟 𝑖𝐵𝑎𝑠𝑒 ,𝑇𝑐 𝑖𝐵𝑎𝑠𝑒 ]",
+     "Acceleration (cycles)",
+     "Reallocation (cycles)",
+     "Total (cycles)"
+    ],
+    [
+     "Conv 1",
+     "FP BP WU",
+     "[11, 11] N/A [11, 11]",
+     "6,732,837 N/A 4,496,029",
+     "151,846,336 N/A 152,110,235",
+     "158,579,173 N/A 156,606,264"
+    ],
+    [
+     "Conv 2",
+     "FP",
+     "[27, 27]",
+     "7,105,292",
+     "69,743,160",
+     "76,848,452"
+    ],
+    [
+     "",
+     "BP",
+     "[27, 27]",
+     "7,066,705",
+     "68,271,764",
+     "75,338,469"
+    ],
+    [
+     "",
+     "WU",
+     "[27, 27]",
+     "9,258,823",
+     "57,303,397",
+     "66,562,220"
+    ],
+    [
+     "Conv 3",
+     "FP",
+     "[13, 13]",
+     "2,410,532",
+     "101,062,954",
+     "103,473,486"
+    ],
+    [
+     "",
+     "BP",
+     "[13, 13]",
+     "2,401,320",
+     "98,646,892",
+     "101,048,212"
+    ],
+    [
+     "",
+     "WU",
+     "[13, 13]",
+     "4,448,898",
+     "83,566,193",
+     "88,015,091"
+    ],
+    [
+     "Conv 4",
+     "FP",
+     "[13, 13]",
+     "3,596,425",
+     "150,012,382",
+     "153,608,807"
+    ],
+    [
+     "",
+     "BP",
+     "[13, 13]",
+     "3,596,400",
+     "149,621,995",
+     "153,218,395"
+    ],
+    [
+     "",
+     "WU",
+     "[13, 13]",
+     "6,669,238",
+     "126,214,297",
+     "132,883,535"
+    ],
+    [
+     "Conv 5",
+     "FP",
+     "[13, 13]",
+     "2,401,212",
+     "102,632,162",
+     "105,033,374"
+    ],
+    [
+     "",
+     "BP",
+     "[13, 13]",
+     "2,410,637",
+     "99,408,011",
+     "101,818,648"
+    ],
+    [
+     "",
+     "WU",
+     "[13, 13]",
+     "4,448,751",
+     "84,518,969",
+     "88,967,720"
+    ],
+    [
+     "Total",
+     "",
+     "",
+     "67,043,099",
+     "1,494,958,747",
+     "1,562,001,846"
+    ]
+   ]
+  },
+  {
+   "page": 25,
+   "bbox": [
+    72.4,
+    378.4,
+    413.3,
+    606.8
+   ],
+   "caption": "Table4. ExperimentalResultsofTheBaselinewithTheBHWCDataLayoutandDataReuse",
+   "rows": [
+    [
+     "AlexNet",
+     "Process",
+     "[𝑇𝑟 𝑖𝐵𝑎𝑠𝑒 ,𝑇𝑐 𝑖𝐵𝑎𝑠𝑒 ]",
+     "Acceleration (cycles)",
+     "Reallocation (cycles)",
+     "Total (cycles)"
+    ],
+    [
+     "Conv 1",
+     "FP BP WU",
+     "[11, 11] N/A [11, 11]",
+     "8,094,251 N/A 4,495,794",
+     "N/A N/A 161,048,775",
+     "8,094,251 N/A 165,544,569"
+    ],
+    [
+     "Conv 2",
+     "FP BP WU",
+     "[27, 27] [27, 27] [27, 27]",
+     "7,383,996 7,382,504 7,848,249",
+     "N/A 68,200,715 N/A",
+     "7,383,996 75,583,219 7,848,249"
+    ],
+    [
+     "Conv 3",
+     "FP BP WU",
+     "[13, 13] [13, 13] [13, 13]",
+     "2,531,247 2,529,216 3,345,845",
+     "N/A 100,372,954 N/A",
+     "2,531,247 102,902,170 3,345,845"
+    ],
+    [
+     "Conv 4",
+     "FP BP WU",
+     "[13, 13] [13, 13] [13, 13]",
+     "3,745,972 3,745,922 4,999,576",
+     "N/A 148,657,460 N/A",
+     "3,745,972 152,403,382 4,999,576"
+    ],
+    [
+     "Conv 5",
+     "FP BP",
+     "[13, 13] [13, 13]",
+     "2,529,173 2,531,318",
+     "N/A 100,586,051",
+     "2,529,173 103,117,369"
+    ],
+    [
+     "",
+     "WU",
+     "[13, 13]",
+     "3,364,408",
+     "N/A",
+     "3,364,408"
+    ],
+    [
+     "Total",
+     "",
+     "",
+     "64,527,471",
+     "578,865,955",
+     "643,393,426"
+    ]
+   ]
+  },
+  {
+   "page": 26,
+   "bbox": [
+    80.4,
+    112.9,
+    405.4,
+    341.7
+   ],
+   "caption": "Table5. ExperimentalResultsValidatingDataReshapingApproach",
+   "rows": [
+    [
+     "AlexNet",
+     "Process",
+     "[𝑇𝑟 𝑖 ,𝑇𝑐 𝑖 ]",
+     "WithoutWeightReuse (cycles)",
+     "After Weight Reuse (cycles)"
+    ],
+    [
+     "Conv 1",
+     "FP BP WU",
+     "[2, 55] N/A [2, 55]",
+     "11,498,545 N/A 9,598,744",
+     "11,419,835 N/A 9,299,086"
+    ],
+    [
+     "Conv 2",
+     "FP BP WU",
+     "[27, 27] [27, 27] [27, 27]",
+     "7,283,187 7,128,663 7,910,148",
+     "7,312,794 7,146,578 7,430,533"
+    ],
+    [
+     "Conv 3",
+     "FP BP WU",
+     "[13, 13] [13, 13] [13, 13]",
+     "2,491,672 2,461,694 3,402,418",
+     "2,510,310 2,671,392"
+    ],
+    [
+     "Conv 4",
+     "FP BP WU",
+     "[13, 13] [13, 13] [13, 13]",
+     "3,689,930 3,688,961 5,053,485",
+     "2,706,696 3,708,934 3,972,757"
+    ],
+    [
+     "Conv 5",
+     "FP BP",
+     "[13, 13] [13, 13]",
+     "2,462,778 2,490,897",
+     "4,014,651 2,475,263 2,686,910"
+    ],
+    [
+     "",
+     "WU",
+     "[13, 13]",
+     "3,373,373",
+     "2,677,726"
+    ],
+    [
+     "Total",
+     "",
+     "",
+     "72,534,495",
+     "70,033,465"
+    ]
+   ]
+  },
+  {
+   "page": 28,
+   "bbox": [
+    52.0,
+    112.5,
+    433.9,
+    329.8
+   ],
+   "caption": "Table6. ExperimentalResultsValidatingThePerformanceModel",
+   "rows": [
+    [
+     "AlexNet",
+     "Process",
+     "[𝑇𝑟 𝑖 ,𝑇𝑐 𝑖 ,𝑀𝑖 _𝑜𝑛]",
+     "OurModel(cycles)",
+     "On-board(cycles)",
+     "Deviation"
+    ],
+    [
+     "Conv 1",
+     "FP BP WU",
+     "[2, 55, 96] N/A [2, 55, 96]",
+     "11,504,640 N/A 9,043,384",
+     "11,419,835 N/A 9,299,086",
+     "0.74% N/A 2.75%"
+    ],
+    [
+     "Conv 2",
+     "FP",
+     "[27, 27, 112]",
+     "7,309,808",
+     "7,312,794",
+     "0.04%"
+    ],
+    [
+     "",
+     "BP",
+     "[27, 27, 48]",
+     "7,126,784",
+     "7,146,578",
+     "0.28%"
+    ],
+    [
+     "",
+     "WU",
+     "[27, 27, 112]",
+     "7,423,616",
+     "7,430,533",
+     "0.09%"
+    ],
+    [
+     "Conv 3",
+     "FP",
+     "[13, 13, 112]",
+     "2,478,272",
+     "2,510,310",
+     "1.28%"
+    ],
+    [
+     "",
+     "BP",
+     "[13, 13, 112]",
+     "2,566,987",
+     "2,671,392",
+     "3.91%"
+    ],
+    [
+     "",
+     "WU",
+     "[13, 13, 112]",
+     "2,682,240",
+     "2,706,696",
+     "0.90%"
+    ],
+    [
+     "Conv 4",
+     "FP",
+     "[13, 13, 112]",
+     "3,646,400",
+     "3,708,934",
+     "1.69%"
+    ],
+    [
+     "",
+     "BP",
+     "[13, 13, 112]",
+     "3,861,220",
+     "3,972,757",
+     "2.81%"
+    ],
+    [
+     "",
+     "WU",
+     "[13, 13, 112]",
+     "3,960,960",
+     "4,014,651",
+     "1.34%"
+    ],
+    [
+     "Conv 5",
+     "FP",
+     "[13, 13, 112]",
+     "2,432,368",
+     "2,475,263",
+     "1.73%"
+    ],
+    [
+     "",
+     "BP",
+     "[13, 13, 112]",
+     "2,618,372",
+     "2,686,910",
+     "2.55%"
+    ],
+    [
+     "",
+     "WU",
+     "[13, 13, 112]",
+     "2,640,640",
+     "2,677,726",
+     "1.38%"
+    ],
+    [
+     "Total",
+     "",
+     "",
+     "69,295,691",
+     "70,033,465",
+     "1.05%"
+    ]
+   ]
+  },
+  {
+   "page": 29,
+   "bbox": [
+    74.2,
+    114.4,
+    411.9,
+    332.6
+   ],
+   "caption": "Table 7. Experimental Results on the '1X' CNN",
+   "rows": [
+    [
+     "",
+     "Baseline [22]",
+     "Ours",
+     "Ours"
+    ],
+    [
+     "Platform",
+     "Stratix10GX",
+     "PYNQ-Z1",
+     "ZCU102"
+    ],
+    [
+     "Frequency (MHz)",
+     "240",
+     "100",
+     "100"
+    ],
+    [
+     "DSP Utilization",
+     "1699 (30%)",
+     "212 (96.4%)",
+     "1315 (52.2%)"
+    ],
+    [
+     "𝐷𝐶𝑜𝑛𝑣 (𝐷𝐶𝑜𝑛𝑣/𝑈𝑠𝑒𝑑 𝐷𝑆𝑃𝑠)",
+     "",
+     "180 (84.9%)",
+     "1280 (97.3%)"
+    ],
+    [
+     "BRAM Utillization",
+     "10.6 (4.4%)",
+     "123 (87.9%)",
+     "324 (35.5%)"
+    ],
+    [
+     "𝐵𝐶𝑜𝑛𝑣(𝐵𝐶𝑜𝑛𝑣/𝑈𝑠𝑒𝑑 𝐵𝑅𝐴𝑀𝑠)",
+     "",
+     "108 (87.8%)",
+     "288 (88.9%)"
+    ],
+    [
+     "Power (W)",
+     "20.6",
+     "1.85 (11.14X)",
+     "6.89 (2.99X)"
+    ],
+    [
+     "Data Type",
+     "Fixed 16",
+     "FP 32",
+     "FP 32"
+    ],
+    [
+     "Batch Size",
+     "40",
+     "128",
+     "128"
+    ],
+    [
+     "Latency/Image (ms)",
+     "0.36",
+     "14.32",
+     "2.08"
+    ],
+    [
+     "Throughput",
+     "163 GOPS",
+     "4.08 GFLOPS",
+     "28.15 GFLOPS"
+    ],
+    [
+     "Nominal Throughput (GOPS× precision)",
+     "2608",
+     "130.56",
+     "900.8"
+    ],
+    [
+     "Energy Efficiency",
+     "7.90GOPS/W",
+     "2.21GFLOPS/W",
+     "4.09GFLOPS/W"
+    ],
+    [
+     "Nominal Effciency (GOPS× precision/W)",
+     "126.4",
+     "70.72",
+     "130.88 (1.04X)"
+    ]
+   ]
+  },
+  {
+   "page": 31,
+   "bbox": [
+    69.7,
+    112.6,
+    416.2,
+    231.9
+   ],
+   "caption": "Table8. ExperimentalResultsonAlexNetandVgg-16",
+   "rows": [
+    [
+     "Network",
+     "AlexNet",
+     "Vgg-16withoutBNVgg-16withBN",
+     ""
+    ],
+    [
+     "DSP Utilization",
+     "1513 (60.0%)",
+     "1508 (59.8%)",
+     "1680 (66.7%)"
+    ],
+    [
+     "𝐷𝐶𝑜𝑛𝑣(𝐷𝐶𝑜𝑛𝑣/𝑈𝑠𝑒𝑑𝐷𝑆𝑃𝑠)",
+     "1280(84.6%)",
+     "1280 (84.9%)",
+     "1280 (76.2%)"
+    ],
+    [
+     "BRAM Utillization",
+     "857 (94.0%)",
+     "787 (86.3%)",
+     "812 (89.0%)"
+    ],
+    [
+     "𝐵𝐶𝑜𝑛𝑣(𝐵𝐶𝑜𝑛𝑣/𝑈𝑠𝑒𝑑𝐵𝑅𝐴𝑀𝑠)",
+     "672(78.4%)",
+     "672 (85.4%)",
+     "672 (82.8%)"
+    ],
+    [
+     "Power (W)",
+     "7.736",
+     "7.712",
+     "8.208"
+    ],
+    [
+     "Batch Size",
+     "128",
+     "16",
+     "8"
+    ],
+    [
+     "Throughput (GFLOPS)",
+     "34.52",
+     "46.99",
+     "40.08"
+    ],
+    [
+     "Efficiency (GFLOPS/W)",
+     "4.46",
+     "6.09",
+     "4.88"
+    ]
+   ]
+  },
+  {
+   "page": 33,
+   "bbox": [
+    64.7,
+    112.8,
+    421.3,
+    367.8
+   ],
+   "caption": "Table 9. Comparison of Different FPGA-based Training Accelerators",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    [
+     "Accelerator",
+     "Chowetal. 2017 [36]",
+     "DarkFPGA 2020 [23]",
+     "Seo et al. 2020 [40]",
+     "FeCaffe 2020 [41]",
+     "Ours"
+    ],
+    [
+     "Platform",
+     "ZU19EG",
+     "XCVU9P",
+     "Stratix10MX",
+     "Stratix10",
+     "ZCU102"
+    ],
+    [
+     "Technology",
+     "16nm",
+     "16nm",
+     "14nm",
+     "14nm",
+     "16nm"
+    ],
+    [
+     "DSP Util.",
+     "1500",
+     "4202",
+     "1040",
+     "1796",
+     "1508"
+    ],
+    [
+     "Freq. (MHz)",
+     "200",
+     "200",
+     "185",
+     "253",
+     "100"
+    ],
+    [
+     "Power (W)",
+     "14.24",
+     "13.5",
+     "≈20",
+     "N/A",
+     "7.712"
+    ],
+    [
+     "Network",
+     "LeNet-10",
+     "Vgg-like",
+     "ResNet-20",
+     "AlexNet",
+     "Vgg-16"
+    ],
+    [
+     "Dataset",
+     "CIFAR-10",
+     "CIFAR-10",
+     "CIFAR-10",
+     "ImageNet",
+     "ImageNet"
+    ],
+    [
+     "Data Type",
+     "FP 32",
+     "Fixed 8",
+     "FP 16",
+     "FP 32",
+     "FP 32"
+    ],
+    [
+     "Throughput",
+     "86.12 GFLOPS",
+     "1417 GOPS",
+     "≈180 GFLOPS",
+     "≈24 GFLOPS",
+     "46.99 GFLOPS"
+    ],
+    [
+     "Energy Effi.",
+     "6.05 GFLOPS/W",
+     "104.96 GOPS/W",
+     "≈9 GFLOPS/W",
+     "N/A",
+     "6.09 GFLOPS/W"
+    ],
+    [
+     "Nominal Thro.(GOPS × precision)",
+     "2755.84",
+     "11336",
+     "≈2880",
+     "≈768",
+     "1503.68"
+    ],
+    [
+     "Nominal Effi. (GOPS × precision/W)",
+     "193.6",
+     "839.68",
+     "≈144",
+     "N/A",
+     "194.88"
+    ]
+   ]
+  },
+  {
+   "page": 33,
+   "bbox": [
+    124.4,
+    404.9,
+    361.5,
+    514.4
+   ],
+   "caption": "Table 10. Experimental Results on LeNet-10 Compared with Chow et al. [36]",
+   "rows": [
+    [
+     "",
+     "Chow et al. [36]",
+     "Ours"
+    ],
+    [
+     "Platform",
+     "ZU19EG",
+     "ZCU102"
+    ],
+    [
+     "Frequency (MHz)",
+     "200",
+     "100"
+    ],
+    [
+     "DSP Utilization",
+     "1699 (76.2%)",
+     "1315 (52.2%)"
+    ],
+    [
+     "BRAMUtillization",
+     "174(17.7%)",
+     "340 (37.3%)"
+    ],
+    [
+     "Power (W)",
+     "14.24",
+     "7.14"
+    ],
+    [
+     "Throughput",
+     "86.12GFLOPS",
+     "15.47GFLOPS"
+    ],
+    [
+     "EnergyEfficiency",
+     "6.05GFLOPS/W",
+     "2.17GFLOPS/W"
+    ]
+   ]
+  },
+  {
+   "page": 34,
+   "bbox": [
+    131.0,
+    111.8,
+    354.7,
+    222.7
+   ],
+   "caption": "Table11. ExperimentalResultsonAlexNetComparedwithFeCaffe[41]",
+   "rows": [
+    [
+     "",
+     "FeCaffe [41]",
+     "Ours"
+    ],
+    [
+     "Platform",
+     "Stratix 10",
+     "ZCU102"
+    ],
+    [
+     "Frequency (MHz)",
+     "253",
+     "100"
+    ],
+    [
+     "DSPUtilization",
+     "1796(31.2%)",
+     "1513 (60.0%)"
+    ],
+    [
+     "BRAMUtillization",
+     "N/A",
+     "857 (94.0%)"
+    ],
+    [
+     "Power (W)",
+     "N/A",
+     "7.736"
+    ],
+    [
+     "Throughput",
+     "≈24GFLOPS",
+     "34.52GFLOPS"
+    ],
+    [
+     "Energy Efficiency",
+     "N/A",
+     "4.46GFLOPS/W"
+    ]
+   ]
+  }
+ ]
+}

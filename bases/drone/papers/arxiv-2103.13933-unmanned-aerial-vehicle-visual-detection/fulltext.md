@@ -157,10 +157,10 @@ This study serves as a baseline for the community to work towards UAV-specific d
     Anti-UAV IR | SSD512 YOLOv3 | 0.590 0.975 0.591 0.976 | 0.639 0.643 | 0.518 0.636 0.533 0.638 | -- | 0.649 0.609 0.651 0.620 | 0.681 0.675 | --
      | DETR | 0.599 0.980 | 0.655 | 0.525 0.642 | - | 0.671 0.633 | 0.701 | -
 
-**Table 2:** Detection inference time
+**Table 2:** Detection inference time [corps du tableau reconstruit par Docling : à vérifier]
 
-    Model | GFLOPS FPS Params
-    Faster RCNN | 207 | 18.0 | 41M
+    Model | GFLOPSFPSParams |  | 
+    FasterRCNN | 207 | 18.0 | 41M
     SSD512 | 88 | 32.4 | 24M
     YOLOv3 | 70 | 36.0 | 61M
     DETR | 86 | 21.4 | 41M

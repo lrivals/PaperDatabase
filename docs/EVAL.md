@@ -324,6 +324,8 @@ Lecture :
   Table 9 ne garde que la colonne « Average » ; hozhabr Table 5 contient des fragments
   d'OCR illisibles. La mention « reconstruit par Docling : à vérifier » est indispensable.
   Ces tableaux ne doivent pas alimenter `benchmarks.csv` sans relecture contre le PDF.
+- **Suite (29/09/2026)** : passage étendu aux deux bases, avec OCR ; voir §9, « Docling sur
+  les deux bases ».
 
 ## 7. Limites du banc
 
@@ -494,3 +496,47 @@ sont atteints : le déplacement n'a changé ni l'extraction, ni l'index de passa
 hybride + rerank p50 1,39 s et 1,14 s, `search` à froid 6,9 s et 6,7 s.
 Figures régénérées dans `bases/<nom>/figures/` (`pdb plot all`) ; la base drone a désormais
 ses figures `eval_*`.
+
+### Docling sur les deux bases (29/09/2026)
+
+Passage Docling sur tous les papiers dont des tableaux étaient restés sans corps et qui
+n'avaient pas encore de `docling_tables.json` : 20 papiers fpga, 40 papiers drone
+(`pdb ingest --reparse --tables docling <ids>`). Un second passage avec OCR
+(`--ocr`) a suivi sur les papiers qui en avaient encore : 18 papiers fpga, 22 papiers drone
+(1 h 15). Avant cela, 17 papiers fpga ajoutés le 28/09 alors que GROBID était arrêté
+(backend `pymupdf`, sans `grobid.tei.xml`) ont été réextraits par
+`pdb ingest --force papers/<id>/paper.pdf`. Sans TEI, leurs tableaux n'étaient pas repérés
+et n'apparaissaient donc pas dans « tableaux à vérifier ».
+
+Tableaux signalés par `pdb status` (sans corps / reconstruits) :
+
+| Base | Avant | Après GROBID (fpga) | Docling | + OCR |
+|---|---|---|---|---|
+| fpga (69 papiers) | 31 / 79 | 63 / 83 | 41 / 108 | **31 / 118** |
+| drone (73 papiers) | 108 / 20 | — | 59 / 71 | **24 / 106** |
+
+`pdb eval --extract --compare` contre les runs de référence du 28/09 (non remplacés, ces
+runs ne couvrant que l'extraction) :
+
+| Métrique | fpga | drone |
+|---|---|---|
+| tableaux avec corps | 0,88 → 0,87 (233 → 401 tableaux ; 110 Docling, 8 PyMuPDF) | **0,71 → 0,90** (378 ; 96 Docling, 10 PyMuPDF) |
+| valeurs dans le tableau cité / tableaux seuls | 0,65 → 0,63 / 0,71 → 0,67 | 0,60 → 0,63 / 0,66 → 0,67 |
+| couverture moyenne / minimum | 0,91 → 0,90 / 0,81 → 0,57 | 0,90 → 0,91 / 0,70 → 0,77 |
+
+Lecture :
+- **drone** : l'effet de Docling se lit directement, car le corpus n'a pas changé. Le taux
+  de tableaux avec corps rejoint celui de fpga. Les valeurs de `benchmarks.csv` retrouvées
+  dans leur tableau montent de 3 points : c'est le premier gain de Docling sur ces valeurs
+  (§6 n'en trouvait aucun sur fpga).
+- **fpga** : les écarts mêlent Docling et les 24 papiers ajoutés le 28/09. La baisse des
+  valeurs retrouvées vient des 23 lignes de benchmark importées avec
+  arxiv-2607.13106, dont 14 valeurs sont hors du tableau cité. Le minimum de couverture
+  (0,57) est la thèse NTU `2021-piyasena-fpga-acceleration-continual-learning` (103 pages).
+- **Restes** : 31 + 24 tableaux sans corps, dont de faux tableaux (prose ou algorithme
+  classés en tableau par GROBID). Les 14 tableaux sans corps de `2026-fata-low-cost-fpga-enhanced-cnn`
+  sont à regarder en premier. Les tableaux reconstruits (224 en tout) portent la mention
+  « à vérifier » et ne doivent pas alimenter `benchmarks.csv` sans relecture.
+- `pdb test` : 204 tests sur 205 réussissent. `test_rag_qwen.test_external_import_is_isolated`
+  échoue parce qu'il ne peut pas charger un modèle depuis huggingface.co ; aucun code n'a
+  changé.

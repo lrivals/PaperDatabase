@@ -1,0 +1,376 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 6,
+   "bbox": [
+    351.6,
+    627.5,
+    520.2,
+    667.0
+   ],
+   "caption": "TABLE I RESOURCE UTILIZATION FOR CHAMELEON",
+   "rows": [
+    [
+     "",
+     "DSP",
+     "BRAM",
+     "LUTs"
+    ],
+    [
+     "Available",
+     "2520",
+     "656",
+     "233707"
+    ],
+    [
+     "Utilized",
+     "1164",
+     "632",
+     "169428"
+    ],
+    [
+     "Percentage(%)",
+     "46.19",
+     "96.34",
+     "72.50"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    50.8,
+    93.7,
+    563.7,
+    382.9
+   ],
+   "caption": "TABLE II STANDARD DEVIATION ACROSS TEN RUNS.",
+   "rows": [
+    [
+     "Method",
+     "Replay Buffer Size (# of Samples)",
+     "Memory Overhead (MB)",
+     "OpenLORIS Accall (%)",
+     "CORe50 Accall (%)"
+    ],
+    [
+     "JOINT (upper bound) Finetune (lower bound)",
+     "-",
+     "-",
+     "97.14 ± 0.24 65.97 ± 10.18",
+     "81.48 ± 0.86 16.86 ± 1.61"
+    ],
+    [
+     "EWC++ [20] LWF [21] SLDA [30]",
+     "-",
+     "13.0 12.5 1.2",
+     "61.89 ± 4.27 72.57 ± 1.21 90.17 ± 0.44",
+     "23.22 ± 2.19 27.91 ± 3.67 77.20 ± 0.23"
+    ],
+    [
+     "GSS [22]",
+     "100 200 500 1500",
+     "48.8 53.6 68.0 204.0",
+     "91.20 ± 0.32 92.00 ± 1.04 91.99 ± 0.63 95.50 ± 0.38",
+     "43.51 ± 3.85 47.47 ± 1.42 48.57 ± 1.96 53.19 ± 3.45"
+    ],
+    [
+     "ER [11]",
+     "100 200 500 1500",
+     "4.8 9.6 24.0 72.0",
+     "90.45 ± 0.58 90.68 ± 0.84 93.72 ± 0.19 95.50 ± 0.38",
+     "32.61 ± 2.25 36.07 ± 4.15 62.31 ± 2.12 63.33 ± 2.20"
+    ],
+    [
+     "DER [12]",
+     "100 200 500 1500",
+     "4.9 9.8 24.5 73.5",
+     "90.33 ± 0.35 92.12 ± 0.31 94.37 ± 0.41 95.50 ± 0.38",
+     "58.72 ± 2.64 62.15 ± 2.34 67.35 ± 3.14 68.73 ± 0.53"
+    ],
+    [
+     "Latent Replay [14]",
+     "100 200 500 1500",
+     "3.2 6.4 16.0 48.0",
+     "90.57 ± 0.46 92.32 ± 0.19 94.89 ± 0.54 95.50 ± 0.38",
+     "71.89 ± 1.23 72.87 ± 0.14 75.43 ± 0.56 79.07 ± 0.16"
+    ],
+    [
+     "Chameleon (ours)",
+     "Ms=10,Ml=100 Ms=10,Ml=200 Ms=10,Ml=500",
+     "Ms=0.3,Ml=3.2 Ms=0.3,Ml=16",
+     "96.10 ± 0.12 96.43 ± 0.47 96.70 ± 0.62",
+     "79.48 ± 0.99 79.56 ± 0.17"
+    ],
+    [
+     "(Ms = Short-term",
+     "",
+     "Ms=0.3,Ml=6.4",
+     "",
+     ""
+    ],
+    [
+     "memory",
+     "",
+     "",
+     "",
+     "79.86 ± 0.31"
+    ],
+    [
+     "Ml = Long-term memory)",
+     "Ms=10,Ml=1500",
+     "Ms=0.3,Ml=48.0",
+     "97.10 ± 0.24",
+     "79.92 ± 0.12"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    50.7,
+    442.7,
+    560.9,
+    504.3
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Method.Method",
+     "Memory Overhead.Memory Overhead",
+     "Learning Scheme 1.Accall (%)",
+     "Learning Scheme 1.Accpref (%)",
+     "Learning Scheme 2.Accall (%)",
+     "Learning Scheme 2.Accpref (%)",
+     "Learning Scheme 3.Accall (%)",
+     "Learning Scheme 3.Accpref (%)"
+    ],
+    [
+     "JOINT(upperbound)",
+     "-",
+     "78.58 ± 0.36",
+     "-",
+     "77.98 ± 0.28",
+     "-",
+     "76.36 ± 0.4",
+     "-"
+    ],
+    [
+     "Finetune(lowerbound)",
+     "-",
+     "62.96 ± 0.97",
+     "-",
+     "59.07 ± 1.13",
+     "-",
+     "62.0 ± 1.59",
+     "-"
+    ],
+    [
+     "SLDA [30]",
+     "1.2 MB",
+     "73.91±0.21",
+     "84.76±5.47",
+     "75.02±0.15",
+     "81.43±5.16",
+     "73.66±0.22",
+     "84.58±4.81"
+    ],
+    [
+     "Latent Replay [14]",
+     "48 MB",
+     "74.6±0.75",
+     "91.32±2.15",
+     "75.04±0.19",
+     "84.29±4.53",
+     "72.47±0.49",
+     "86.84±4.54"
+    ],
+    [
+     "Chameleon(ours)",
+     "Ms=0.3,Ml=3.2MB",
+     "74.50±1.05",
+     "92.63±2.27",
+     "76.67±1.23",
+     "86.31±2.89",
+     "73.79±1.23",
+     "91.48±2.18"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    77.3,
+    82.8,
+    532.2,
+    157.1
+   ],
+   "caption": "TABLE IV THIS TABLE SHOWS SIZE AND ACCURACY AT DIFFERENT LAYERS FOR MOBILENETV1. ALL RESULTS ARE AVERAGED OVER 10 RUNS.",
+   "rows": [
+    [
+     "Layer.Layer",
+     "LayerDimension.LayerDimension",
+     "LayerSize.LayerSize",
+     "Learning Scheme 1.Accall (%)",
+     "Learning Scheme 1.Accpref (%)",
+     "Learning Scheme 2.Accall (%)",
+     "Learning Scheme 2.Accpref (%)",
+     "Learning Scheme 3.Accall (%)",
+     "Learning Scheme 3.Accall (%)"
+    ],
+    [
+     "Layer 19",
+     "8×8×512",
+     "32768",
+     "74.00",
+     "93.33",
+     "74.16",
+     "90.68",
+     "71.06",
+     "92.00"
+    ],
+    [
+     "Layer 20",
+     "8×8×512",
+     "32768",
+     "73.78",
+     "93.38",
+     "72.73",
+     "89.69",
+     "70.36",
+     "93.51"
+    ],
+    [
+     "Layer 21",
+     "8×8×512",
+     "32768",
+     "74.56",
+     "91.37",
+     "75.66",
+     "90.54",
+     "71.89",
+     "94.13"
+    ],
+    [
+     "Layer 23",
+     "8×8×512",
+     "32768",
+     "73.42",
+     "92.40",
+     "75.05",
+     "88.09",
+     "71.09",
+     "90.58"
+    ],
+    [
+     "Layer 25",
+     "4×4×512",
+     "8192",
+     "68.31",
+     "90.59",
+     "71.56",
+     "86.80",
+     "64.31",
+     "91.69"
+    ],
+    [
+     "Layer 27",
+     "4×4×1024",
+     "16384",
+     "69.61",
+     "92.67",
+     "72.83",
+     "89.55",
+     "67.69",
+     "93.11"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    157.5,
+    180.2,
+    451.5,
+    219.9
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Chameleon",
+     "Accall(%)",
+     "Accpref(%)"
+    ],
+    [
+     "withonlyLong-TermMemoryUpdate&Retrieval",
+     "69.64±1.97",
+     "87.16±3.35"
+    ],
+    [
+     "withonlyShort-TermMemoryUpdate&Retrieval",
+     "66.11±1.51",
+     "90.93±4.11"
+    ],
+    [
+     "with both rehearsal strategies",
+     "73.79±1.23",
+     "91.48±2.18"
+    ]
+   ]
+  },
+  {
+   "page": 13,
+   "bbox": [
+    75.2,
+    83.0,
+    533.4,
+    147.7
+   ],
+   "caption": "TABLE VI PERFORMANCE COMPARISON OF CHAMELEON-ACCEL ON EDGE DEVICES.",
+   "rows": [
+    [
+     "Method",
+     "Memory Overhead (MB).",
+     "Accall (%).",
+     "Jetson Nano.Latency (ms)",
+     "Jetson Nano.Energy (J)",
+     "ZCU102 FPGA.Latency (ms)",
+     "ZCU102 FPGA.Energy (J)",
+     "EdgeTPU.Latency (ms)"
+    ],
+    [
+     "Latent Replay",
+     "48.0",
+     "79.07 ± 0.16",
+     "115",
+     "1.14",
+     "2788",
+     "8.62",
+     "-"
+    ],
+    [
+     "SLDA",
+     "1.2",
+     "77.20 ± 0.23",
+     "69",
+     "0.68",
+     "-",
+     "-",
+     "554"
+    ],
+    [
+     "Chameleon-Accel",
+     "Ms=0.3,Ml=3.2",
+     "79.48 ± 0.99",
+     "33",
+     "0.31",
+     "413",
+     "1.22",
+     "47"
+    ]
+   ]
+  }
+ ]
+}

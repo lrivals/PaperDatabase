@@ -1,0 +1,250 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 7,
+   "bbox": [
+    41.6,
+    348.9,
+    552.4,
+    435.0
+   ],
+   "caption": "Table1.Hardware and Software Parameters of the Training System",
+   "rows": [
+    [
+     "Name",
+     "Parameters"
+    ],
+    [
+     "Development environment",
+     "Google Colab"
+    ],
+    [
+     "Graphics",
+     "Nvidia, Tesla T4"
+    ],
+    [
+     "Installed RAM",
+     "25GB"
+    ],
+    [
+     "CUDA Version",
+     "12.2"
+    ],
+    [
+     "Programming language",
+     "Python 3.10.12"
+    ],
+    [
+     "Deep learning framework",
+     "PyTorch 2.3.0"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    41.5,
+    254.6,
+    552.2,
+    360.9
+   ],
+   "caption": "Table2.Comparison of Experimental Results Between YOLOv11 and YOLO-Drone",
+   "rows": [
+    [
+     "Method",
+     "Precision (%)",
+     "Recall (%)",
+     "F-1 Score (%)",
+     "Inference Speed (ms)",
+     "mAP 0.5 (%)"
+    ],
+    [
+     "YOLOv11",
+     "39.6",
+     "30.9",
+     "34.7",
+     "2.0",
+     "29.9"
+    ],
+    [
+     "YOLO-Drone",
+     "40.0",
+     "31.5",
+     "35.2",
+     "1.8",
+     "30.4"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    41.7,
+    398.9,
+    552.4,
+    472.8
+   ],
+   "caption": "Table3.Comparison of Results with Various State-of-the-Art (SOTA) Object Detection Models",
+   "rows": [
+    [
+     "Method",
+     "Precision (%)",
+     "Recall (%)",
+     "F-1 Score (%)",
+     "GFLOPs",
+     "mAP 0.5 (%)"
+    ],
+    [
+     "YOLOv8",
+     "41.2",
+     "30.6",
+     "35.1",
+     "8.2",
+     "30.3"
+    ],
+    [
+     "YOLOv9",
+     "41.0",
+     "30.0",
+     "34.6",
+     "7.9",
+     "30.1"
+    ],
+    [
+     "YOLOv10",
+     "40.6",
+     "30.2",
+     "34.6",
+     "8.2",
+     "29.8"
+    ],
+    [
+     "YOLOv11",
+     "39.6",
+     "30.9",
+     "34.7",
+     "6.6",
+     "29.9"
+    ],
+    [
+     "YOLO-Drone",
+     "40.0",
+     "31.5",
+     "35.2",
+     "6.7",
+     "30.4"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    41.7,
+    93.3,
+    552.5,
+    238.1
+   ],
+   "caption": "Table4.Comparison of Experimental Results for Each Class in the YOLO-Drone Model",
+   "rows": [
+    [
+     "Class",
+     "Instances",
+     "Precision (%)",
+     "Recall (%)",
+     "F-1 Score (%)",
+     "mAP 0.5 (%)"
+    ],
+    [
+     "All",
+     "38759",
+     "40.0",
+     "31.5",
+     "35.2",
+     "30.4"
+    ],
+    [
+     "Pedestrian",
+     "8844",
+     "38.3",
+     "34.6",
+     "36.3",
+     "31.9"
+    ],
+    [
+     "People",
+     "5125",
+     "49.2",
+     "21.5",
+     "29.9",
+     "25.3"
+    ],
+    [
+     "Bicycle",
+     "1287",
+     "21.4",
+     "9.0",
+     "12.6",
+     "6.5"
+    ],
+    [
+     "Car",
+     "14064",
+     "60.0",
+     "74.0",
+     "66.2",
+     "73.9"
+    ],
+    [
+     "Van",
+     "1975",
+     "42.2",
+     "37.2",
+     "39.5",
+     "35.9"
+    ],
+    [
+     "Truck",
+     "750",
+     "37.4",
+     "26.9",
+     "31.2",
+     "25.1"
+    ],
+    [
+     "Tricycle",
+     "1045",
+     "35.2",
+     "19.4",
+     "25.0",
+     "17.6"
+    ],
+    [
+     "Awning-Tricycle",
+     "532",
+     "22.7",
+     "13.5",
+     "16.9",
+     "10.2"
+    ],
+    [
+     "Bus",
+     "251",
+     "52.3",
+     "41.0",
+     "45.9",
+     "44.3"
+    ],
+    [
+     "Motor",
+     "4486",
+     "41.1",
+     "37.5",
+     "39.3",
+     "33.2"
+    ]
+   ]
+  }
+ ]
+}

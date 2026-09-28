@@ -286,15 +286,15 @@ In the future, our proposed algorithm will be extended to more types of MAVs. Mo
     Dogfight [21] | 0.92 | 0.91 | 0.92 | 0.89
     GLAD | 0.92 | 0.95 | 0.93 | 0.89
 
-**TABLE VI** QUANTITATIVE COMPARISON OF THE GLAD WITH STATE-OF-THE-ART METHODS ON DRONE-VS-BIRD DATASET
+**TABLE VI** QUANTITATIVE COMPARISON OF THE GLAD WITH STATE-OF-THE-ART METHODS ON DRONE-VS-BIRD DATASET [corps du tableau reconstruit par Docling : à vérifier]
 
-    Method Faster-RCNN SSD512 YOLOv3 DETR GLAD
+    Method | Faster-RCNN | SSD512 | YOLOv3 | DETR | GLAD
     AP | 0.632 | 0.629 | 0.546 | 0.667 | 0.701
 
-**TABLE VIII** THE FPS OF EACH MODULE ON PC AND JETSON XAVIER NX
+**TABLE VIII** THE FPS OF EACH MODULE ON PC AND JETSON XAVIER NX [corps du tableau reconstruit par Docling : à vérifier]
 
-    Module | PC | Jetson Xavier NX
+    Module | PC | JetsonXavierNX
     GAD/LAD | 149.3 | 28.5
     GMD | 41.3 | 5.1
     LMD | 183.9 | 10.6
-    Average FPS on all test videos 146.5 | 23.6
+    AverageFPSonalltestvideos | 146.5 | 23.6

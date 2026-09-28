@@ -1,0 +1,343 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    313.6,
+    172.5,
+    573.9,
+    279.6
+   ],
+   "caption": "TABLE I: Summary of related works",
+   "rows": [
+    [
+     "Application",
+     "Spectral range",
+     "Model type"
+    ],
+    [
+     "HSI classification",
+     "",
+     ""
+    ],
+    [
+     "Mean Shift Filtering (2010) [20]",
+     "400-2500nm",
+     "PCA+MSF"
+    ],
+    [
+     "SSAE (2015) [22]",
+     "430-860nm",
+     "SSAE+SVM"
+    ],
+    [
+     "3D CAE (2020) [23]",
+     "400-2500nm",
+     "3DCAE"
+    ],
+    [
+     "HCapsNet (2021) [9]",
+     "400-2500nm",
+     "PCA+CAE+CapNet"
+    ],
+    [
+     "Cloud Detection (Anomalies)",
+     "",
+     ""
+    ],
+    [
+     "CloudScout (2020) [15]",
+     "RGB",
+     "QCNN"
+    ],
+    [
+     "CloudScout Extended (2021) [17]",
+     "RGB",
+     "QCNN"
+    ],
+    [
+     "CloudSatNet (2022) [16]",
+     "RGB",
+     "QCNN"
+    ]
+   ]
+  },
+  {
+   "page": 4,
+   "bbox": [
+    344.5,
+    64.0,
+    527.3,
+    148.1
+   ],
+   "caption": "TABLE II: HSI Dataset specification",
+   "rows": [
+    [
+     "Dataset",
+     "Spatial size",
+     "Spectral bands",
+     "Spectral range(nm)"
+    ],
+    [
+     "Indian Pines",
+     "145x145",
+     "200",
+     "400-2500"
+    ],
+    [
+     "Salinas Valley",
+     "512x217",
+     "204",
+     "400-2500"
+    ],
+    [
+     "University of Pavia",
+     "610x610",
+     "103",
+     "430-860"
+    ],
+    [
+     "Kennedy Space Center",
+     "512x614",
+     "224",
+     "400-2500"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    310.8,
+    349.1,
+    564.1,
+    393.2
+   ],
+   "caption": "TABLE III: Inference accuracy percentage metrics of the 2D CAE in different phases from FP32 to INT8 quantisation",
+   "rows": [
+    [
+     "Model",
+     "Accuracy",
+     "F1",
+     "Recall",
+     "Precision",
+     "FNR",
+     "FPR"
+    ],
+    [
+     "Full precision CAE",
+     "98.92",
+     "94.05",
+     "91.0",
+     "100.0",
+     "11.24",
+     "0.0"
+    ],
+    [
+     "8-bit QCAE",
+     "90.4",
+     "0.0",
+     "0.0",
+     "0.0",
+     "100",
+     "0.0"
+    ],
+    [
+     "8-bitfinetunedQCAE",
+     "98.70",
+     "92.77",
+     "88.76",
+     "100.0",
+     "13.48",
+     "0.0"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    323.1,
+    518.3,
+    551.1,
+    618.0
+   ],
+   "caption": "TABLE IV: Confusion matrix of different quantisation and deployment.",
+   "rows": [
+    [
+     "Model.",
+     "Message Type.",
+     "Predicted.Similar",
+     "Predicted.Anomalous"
+    ],
+    [
+     "FP32 CAE",
+     "True Similar True Anomalous",
+     "79 0",
+     "10 837"
+    ],
+    [
+     "VitisAIINT8QCAE",
+     "TrueSimilar True Anomalous",
+     "77 0",
+     "12 837"
+    ],
+    [
+     "PytorchINT8QCAE",
+     "TrueSimilar True",
+     "81 0",
+     "8"
+    ],
+    [
+     "",
+     "Anomalous",
+     "",
+     "837"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    311.4,
+    659.3,
+    560.5,
+    716.7
+   ],
+   "caption": "TABLE V: Comparison of inference accuracy against related works in the literature.",
+   "rows": [
+    [
+     "Model",
+     "Precision",
+     "Platform",
+     "Accuracy",
+     "FPR"
+    ],
+    [
+     "CloudScout[15]",
+     "16b-float",
+     "Myriad-2VPU",
+     "92.3",
+     "1.03"
+    ],
+    [
+     "CloudScout ext.[17]",
+     "8b-int",
+     "ZCU106",
+     "92.0",
+     "-"
+    ],
+    [
+     "CloudSatNet[16]",
+     "4b-int",
+     "Zynq-7020",
+     "94.84",
+     "2.23"
+    ],
+    [
+     "Proposed CAE",
+     "8b-int",
+     "ZCU104",
+     "98.70",
+     "0.00"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    51.1,
+    75.9,
+    297.1,
+    209.2
+   ],
+   "caption": "TABLE VI: Performance of the QCAE on the B4096 DPU configuration along with other models.",
+   "rows": [
+    [
+     "Impact on per frame latency (ms), FPS & power consumption (W).Accelerator",
+     "Impact on per frame latency (ms), FPS & power consumption (W).Latency",
+     "Impact on per frame latency (ms), FPS & power consumption (W).FPS",
+     "Impact on per frame latency (ms), FPS & power consumption (W).Pidle",
+     "Impact on per frame latency (ms), FPS & power consumption (W).Ptot"
+    ],
+    [
+     "Ours (ZCU104,INT8)",
+     "4",
+     "250",
+     "4.6",
+     "5.38"
+    ],
+    [
+     "Ours (Xavier NX,INT8)",
+     "10.36",
+     "96.52",
+     "2.2",
+     "7.6"
+    ],
+    [
+     "Ours (Xavier NX,FP16)",
+     "19.09",
+     "52.38",
+     "2.2",
+     "8.2"
+    ],
+    [
+     "CloudScout [15]",
+     "325",
+     "3.07",
+     "-",
+     "1.8"
+    ],
+    [
+     "CloudScout Extended [17]",
+     "141.68",
+     "7.05",
+     "-",
+     "3.4"
+    ],
+    [
+     "CloudSatNet [16]",
+     "64.68",
+     "15.46",
+     "2.3",
+     "2.5"
+    ],
+    [
+     "% Resource Utilisation on the platforms",
+     "% Resource Utilisation on the platforms",
+     "% Resource Utilisation on the platforms",
+     "% Resource Utilisation on the platforms",
+     "% Resource Utilisation on the platforms"
+    ],
+    [
+     "Accelerator",
+     "LUT",
+     "FF",
+     "DSP",
+     "BRAM/URAM"
+    ],
+    [
+     "Ours (XCZU7EV, INT8)",
+     "27.17",
+     "25.03",
+     "40.74",
+     "35.42 / 47.92"
+    ],
+    [
+     "CloudScout Ext [17] (XCZU7EV)",
+     "23.09",
+     "3.79",
+     "67.30",
+     "21.79 / 56.25"
+    ],
+    [
+     "CloudSatNet [16] (Zynq-7020)",
+     "69.05",
+     "48.61",
+     "13.64",
+     "62.5 / -"
+    ]
+   ]
+  }
+ ]
+}

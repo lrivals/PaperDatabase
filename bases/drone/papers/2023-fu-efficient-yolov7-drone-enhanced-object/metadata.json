@@ -46,7 +46,8 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : Table 9, Table 12, ] AP50[%] AP75[%] mAP s [%] mA, Table 14"
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 9, Table 12, Table 14",
+      "tableaux sans corps extrait (légende seule) : ] AP50[%] AP75[%] mAP s [%] mA"
     ]
   },
   "status": {

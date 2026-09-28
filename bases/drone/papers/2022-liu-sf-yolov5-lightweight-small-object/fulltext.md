@@ -248,7 +248,12 @@ Image
     SF-YOLOv5L | 640 | 75.1 | 39.7 | 15.5 | 91.2 | 49.4
     improvement | - | +1.4 | +2.1 | -51.3% | +54.8% | +51.5%
 
-**Table 4.** Performance comparison between YOLOv5s and SF-YOLOv5 on other datasets.
+**Table 4.** Performance comparison between YOLOv5s and SF-YOLOv5 on other datasets. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Dataset | Methods |  |  |  | SizemAP@0.5mAP@0.5:0.95Parameters(M) | FLOPs(G) | InferenceTime(ms)
+    TinyPerson | YOLOv5s SF-YOLOv5 improvement | 640 640 - | 18.7 20.0 +1.3 | 6.0 6.5 +0.5 | 7.02 2.23 -68.2% | 15.8 13.8 -12.7% | 12.8 11.0 -14.1%
+    VisDrone | YOLOv5s SF-YOLOv5 improvement | 640 640 - | 33.0 34.3 +1.3 | 17.9 18.2 +0.3 | 7.04 2.24 -68.2% | 15.9 13.8 -13.2% | 12.6 11.5 -8.7%
+    VOC2012 | YOLOv5s SF-YOLOv5-P5 improvement | 640 640 - | 60.8 61.2 +0.4 | 37.0 38.3 +1.3 | 7.06 4.59 -34.9% | 15.9 15.7 -1.3% | 25.8 24.8 -3.9%
 
 5:0.95 Parameters (M) FLOPs (G) Inference Time (ms)
 

@@ -70,13 +70,13 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table IV",
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table IV",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
       "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "done"
-  },
-  "warnings": []
+  }
 }

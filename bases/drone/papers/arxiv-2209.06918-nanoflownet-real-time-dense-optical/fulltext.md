@@ -125,19 +125,28 @@ In this work, we introduced a lightweight CNN architecture for dense optical flo
 
 **Fig. 9:** Overview of the cluttered, obstacle avoidance environment. Obstacles are outlined in purple, while texture-enhancing mats and curtains in orange.
 
-**TABLE I:** Quantitative results on MPI Sintel. ¹At a resolution of 96x224. ²At a resolution of 112x160, including vision thread.
+**TABLE I:** Quantitative results on MPI Sintel. ¹At a resolution of 96x224. ²At a resolution of 112x160, including vision thread. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Detail guidance method | MPI Sintel (train) Clean Final
+    Method. | MPISintel(train)[EPE].Clean | MPISintel(train)[EPE].Final | Framerate[FPS].GPU¹ | Framerate[FPS].GAP8² | Parameters.Parameters
+    FlowNet2-xs | 9.054 | 9.458 | 150 | - | 1,978,250
+    NanoFlowNet (ours) | 7.122 | 7.979 | 141 | 5.57 | 170,881
+    NanoFlowNet-s(ours) | 9.559 | 10.047 | 151 | 9.34 | 46,749
+
+**TABLE II:** Quantitative comparison of different methods of detail guidance. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Detail guidancemethod.Detail guidancemethod | MPI Sintel (train).Clean | MPI Sintel (train).Final
     None | 7.636 | 8.119
     Edge detect | 7.404 | 8.141
     Motion boundaries | 7.122 | 7.979
 
-**TABLE II:** Quantitative comparison of different methods of detail guidance.
+**TABLE III:** Quantitative comparison of the original and the modified strided STDC block. ¹At a resolution of 96x224. ²At a resolution of 112x160, including vision thread. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE III:** Quantitative comparison of the original and the modified strided STDC block. ¹At a resolution of 96x224. ²At a resolution of 112x160, including vision thread.
+    StridedSTDCblock. | MPISintel(train)[EPE].Clean | MPISintel(train)[EPE].Final | Framerate[FPS].GPU¹ | Framerate[FPS].GAP8²
+    Unmodified | 7.483 | 8.114 | 136 | 4.84
+    Modified | 7.122 | 7.979 | 141 | 5.57
 
-    Mode | MPI Sintel (train) [EPE] Frame rate [FPS] Clean Final GPU¹ GAP8²
+**TABLE IV** [corps du tableau reconstruit par Docling : à vérifier]
+
+    Mode.Mode | MPISintel(train)[EPE].Clean | MPISintel(train)[EPE].Final | Framerate[FPS].GPU¹ | GAP8²
     Color | 7.726 | 8.344 | 141 | 5.18
     Grayscale | 7.122 | 7.979 | 141 | 5.57
-
-**TABLE IV**

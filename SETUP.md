@@ -940,10 +940,11 @@ Défauts mis au jour, à corriger (tâche 12) :
    - Anupreetham et al. [67] (NMS pipeliné sur FPGA) et D. Zhang et al. [86] (détecteur
      entièrement sur FPGA), cités par 2025-hozhabr : références dans son `refs.jsonl`.
 8. [ ] **Tableaux** (liste dans `bin/pdb status`, « tableaux à vérifier ») : Docling branché le
-   26/09/2026. 12 tableaux restent sans corps, dont au moins 7 blocs qui ne sont pas des
-   tableaux (prose, algorithme ou note classés en tableau par GROBID) ; restent notamment
-   2409.07114 Tables II et IV, et 2211.11647. Les 44 tableaux reconstruits (41 Docling, 3
-   PyMuPDF) sont à relire avant tout usage chiffré. Défauts déjà repérés : cui Table 9
+   26/09/2026, puis passé (avec OCR) sur les deux bases le 29/09/2026 (EVAL.md §9). Restent
+   sans corps 31 tableaux dans fpga et 24 dans drone, dont de faux tableaux (prose,
+   algorithme ou note classés en tableau par GROBID). Restent notamment les 14 tableaux de
+   2026-fata, 2409.07114 Tables II et IV, et 2211.11647. Les tableaux reconstruits (fpga 118,
+   drone 106) sont à relire avant tout usage chiffré. Défauts déjà repérés : cui Table 9
    (colonnes perdues), hozhabr Table 5 (fragments OCR), Tables 9-10 (paysage pivoté), FINN
    Table 3 (colonnes décalées, BRAM SFC-max), 2512.01463 Table 3 (DSP/LUT inversés ?).
 9. [ ] **Vérifications contre le PDF** des chiffres lus en figures seulement : 2211.11647
@@ -988,8 +989,8 @@ Défauts mis au jour, à corriger (tâche 12) :
 | Axes et tags à la ré-extraction | conservés depuis le 24/09/2026 : fiche `done` → inchangés ; fiche `todo` → union anciens + nouveaux (`keep_classification`) |
 | Index et contrôle de cohérence (`reindex.py`) | fonctionnel, 0 erreur ; contrôle de conformité DATA_MODEL complet (`test_schema.py`) ; génère aussi `external_refs.csv` |
 | Références (`lib/refs.py`) | rapprochement par clés exactes + fusion des titres quasi identiques (ligatures perdues, coquilles, titres tronqués ; ±1 an), titre d'affichage le moins abîmé ; testé (`test_refs.py`) ; utilisé par la vue 3D et `reindex.py` |
-| Classement des références externes | `external_refs.csv` : 319 travaux hors base cités par ≥ 2 papiers (DATA_MODEL §9) |
-| Tableaux réduits à leur légende (`lib/tables.py`, `lib/docling_tables.py`) | depuis le 26/09/2026 : repli `find_tables()` PyMuPDF (tableaux à filets, 3 reconstruits), puis Docling (41 reconstruits, OCR pour shuvo, cui, hozhabr) ; tableaux avec corps 0,66 → 0,90 (EVAL.md §6) ; testé (`test_tables.py`) ; 12 restent sans corps, dont au moins 7 faux tableaux. **Manque** : relecture des tableaux reconstruits (erreurs de colonnes, fragments d'OCR) |
+| Classement des références externes | `external_refs.csv` : travaux hors base cités par ≥ 2 papiers (DATA_MODEL §9) ; 576 pour fpga, 466 pour drone au 29/09/2026 |
+| Tableaux réduits à leur légende (`lib/tables.py`, `lib/docling_tables.py`) | depuis le 26/09/2026 : repli `find_tables()` PyMuPDF (tableaux à filets), puis Docling, avec OCR pour les tableaux en image ; passé sur les deux bases le 29/09/2026 : tableaux avec corps 0,87 (fpga, 401 tableaux, 110 Docling) et 0,71 → 0,90 (drone, 96 Docling) (EVAL.md §6 et §9) ; testé (`test_tables.py`) ; restent sans corps 31 (fpga) et 24 (drone), dont de faux tableaux. **Manque** : relecture des tableaux reconstruits (erreurs de colonnes, fragments d'OCR) |
 | Hiérarchie des titres de `fulltext.md` | titres parasites filtrés, niveau 3 géré, sections non détectées par GROBID signalées dans `extraction.warnings` |
 | Commandes Claude Code `/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover` | écrites (`.claude/commands/`) ; `/paper-fiche` rodé sur 24 papiers (surveys, benchmarks multi-plateformes, MCU) ; `/paper-discover` rodée le 24/09/2026 (vision embarquée, baseline Orin), avec la clé OpenAlex |
 | Fichiers de citation éditeur (`lib/citation.py`) | depuis le 24/09/2026 : lecture `.bib` / `.ris` sans dépendance, appariement au PDF par DOI puis par titre, priorité sur l'en-tête GROBID, conservation dans `papers/<id>/citation.*` ; testé (`test_citation.py`) et vérifié en réel sur 6 exports (IEEE, ACM, MDPI, Springer) |

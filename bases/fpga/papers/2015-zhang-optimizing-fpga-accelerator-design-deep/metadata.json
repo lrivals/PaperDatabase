@@ -52,7 +52,7 @@
     "ok": true,
     "warnings": [
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 6",
-      "tableaux sans corps extrait (légende seule) : Table 3"
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 3, Table 6"
     ]
   },
   "status": {

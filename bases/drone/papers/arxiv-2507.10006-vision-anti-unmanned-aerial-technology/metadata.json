@@ -51,12 +51,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : TABLE III"
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE III"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "done"
-  },
-  "warnings": []
+  }
 }

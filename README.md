@@ -381,8 +381,8 @@ Au 28/09/2026, le dépôt contient deux bases (voir [Les deux bases actuelles](#
 - découverte de candidats OpenAlex, `external_refs.csv`, `pdb status` avec prochaines
   actions ;
 - tableaux réduits à leur légende : reconstruction PyMuPDF des tableaux à filets, puis
-  Docling en option, avec OCR pour les tableaux en image (44 reconstruits sur 56, marqués
-  « à vérifier ») ;
+  Docling en option, avec OCR pour les tableaux en image (passé sur les deux bases : 224
+  tableaux reconstruits, marqués « à vérifier » ; 0,87 et 0,90 des tableaux ont un corps) ;
 - banc d'évaluation `bin/pdb eval` : qualité d'extraction, recherche, `verify`, temps ;
   comparaison entre deux runs et seuils, avec un jeu de questions et des runs propres à chaque
   base ([docs/EVAL.md](docs/EVAL.md), §9) ;

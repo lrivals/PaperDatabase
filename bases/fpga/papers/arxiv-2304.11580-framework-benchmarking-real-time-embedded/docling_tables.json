@@ -1,0 +1,145 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 11,
+   "bbox": [
+    134.4,
+    114.5,
+    482.5,
+    244.3
+   ],
+   "caption": "Table 1: Comparison of the optimized models across all used frameworks using all available quantization modes.",
+   "rows": [
+    [
+     "Framework",
+     "Device",
+     "Precision",
+     "Inference Time",
+     "Absolute Power",
+     "Relative Power",
+     "Efficiency",
+     "mAP"
+    ],
+    [
+     "TensorFlowCPU",
+     "",
+     "FP32",
+     "767.16ms",
+     "N/A",
+     "N/A",
+     "N/A",
+     "40.7"
+    ],
+    [
+     "TensorRT",
+     "Jetson",
+     "FP32",
+     "69.75ms",
+     "28W",
+     "18.5W0.45",
+     "FPS W",
+     "39.8"
+    ],
+    [
+     "TensorRT",
+     "Jetson",
+     "FP16",
+     "35.32ms",
+     "20W",
+     "10.5W1.17",
+     "FPS W",
+     "39.8"
+    ],
+    [
+     "TensorRT",
+     "Jetson",
+     "INT8",
+     "22.0ms",
+     "16.5W",
+     "7.0W",
+     "2.05 FPS W",
+     "38.6"
+    ],
+    [
+     "VitisAI",
+     "ZCU104",
+     "INT8",
+     "54.42ms",
+     "23W",
+     "7.0W",
+     "1.31 FPS W",
+     "37.5"
+    ],
+    [
+     "VitisAIZooZCU104",
+     "",
+     "INT8",
+     "67.84ms",
+     "22.5W",
+     "6.5W",
+     "1.40 FPS W",
+     "38.3"
+    ],
+    [
+     "ZooPrunedZCU104",
+     "",
+     "INT8",
+     "48.42ms",
+     "21.6W",
+     "5.6W",
+     "1.97 FPS W",
+     "36.5"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    154.8,
+    378.6,
+    461.0,
+    451.5
+   ],
+   "caption": "Table 2: Runtime on Nvidia Jetson in different power modes.",
+   "rows": [
+    [
+     "",
+     "MAXN",
+     "30W",
+     "15W",
+     "10W"
+    ],
+    [
+     "Pre-Process",
+     "8.78 ms",
+     "10.91 ms",
+     "16.43 ms",
+     "17.11 ms"
+    ],
+    [
+     "Inference",
+     "22.0 ms",
+     "26.22 ms",
+     "33.75 ms",
+     "61.76 ms"
+    ],
+    [
+     "Post-Process",
+     "39.45 ms",
+     "48.62 ms",
+     "68.12 ms",
+     "71.71 ms"
+    ],
+    [
+     "Total",
+     "70.23 ms",
+     "85.75 ms",
+     "118.3 ms",
+     "150.58 ms"
+    ]
+   ]
+  }
+ ]
+}

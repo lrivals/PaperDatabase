@@ -1,0 +1,470 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 9,
+   "bbox": [
+    60.9,
+    246.3,
+    287.0,
+    367.4
+   ],
+   "caption": "TABLE I SIZE OF DIFFERENT MEMORY BLOCKS IN NAVION, SHOWING NUMBERS BEFORE AND AFTER OPTIMIZATIONS IN SECTION IV",
+   "rows": [
+    [
+     "",
+     "Memory.Blocks",
+     "Size (kB).Before",
+     "Size (kB).After",
+     "Savings."
+    ],
+    [
+     "",
+     "Frame Buffers",
+     "1410",
+     "317.6",
+     "4.4×"
+    ],
+    [
+     "",
+     "Line Buffers",
+     "78.2",
+     "78.2",
+     ""
+    ],
+    [
+     "VFE",
+     "Tracking Data",
+     "18.2",
+     "18.2",
+     "二"
+    ],
+    [
+     "",
+     "Features Candidates",
+     "16",
+     "16",
+     "二"
+    ],
+    [
+     "",
+     "Keyframe Data",
+     "11.7",
+     "11.7",
+     "二"
+    ],
+    [
+     "IFE",
+     "Integrated Data",
+     "2",
+     "2",
+     "一"
+    ],
+    [
+     "",
+     "Factor Graph",
+     "1012",
+     "205.6",
+     "4.9×"
+    ],
+    [
+     "",
+     "Linear Solver Data",
+     "882.4",
+     "163.5",
+     "5.4×"
+    ],
+    [
+     "BE",
+     "Horizon States",
+     "5.2",
+     "5.2",
+     "一"
+    ],
+    [
+     "",
+     "Shared Memory",
+     "36",
+     "36",
+     "一"
+    ],
+    [
+     "Total",
+     "Total",
+     "3471.7",
+     "854",
+     "4.1×"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    61.3,
+    420.4,
+    286.8,
+    541.0
+   ],
+   "caption": "TABLE II MAIN PROGRAMMABLE PARAMETERS WITH THEIR MAXIMUM VALUES",
+   "rows": [
+    [
+     "Parameter",
+     "Parameter",
+     "Maximum Value"
+    ],
+    [
+     "Frame resolution",
+     "Frame resolution",
+     "752×480"
+    ],
+    [
+     "Number of features per frame",
+     "Number of features per frame",
+     "200"
+    ],
+    [
+     "Feature Tracking",
+     "Pyramid (PFr)",
+     "3 levels"
+    ],
+    [
+     "Feature Tracking",
+     "Cell size (CFT)",
+     "15× 15 pixels"
+    ],
+    [
+     "Feature Tracking",
+     "Iterations (IFT)",
+     "30 per level"
+    ],
+    [
+     "Stereo",
+     "Template size (Ts)",
+     "51× 5 pixels"
+    ],
+    [
+     "Stereo",
+     "Search region (Rs)",
+     "421 × 5 pixels"
+    ],
+    [
+     "Backend",
+     "Horizon size",
+     "20 Keyframes"
+    ],
+    [
+     "Backend",
+     "Feature age",
+     "10 Keyframes"
+    ],
+    [
+     "Backend",
+     "Feature tracks",
+     "4000 tracks"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    451.9,
+    214.1,
+    556.7,
+    412.0
+   ],
+   "caption": "Fig. 10. Die photograph and summary of the chip specifications.",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "Technology",
+     "65nmCMOS"
+    ],
+    [
+     "Chip area (mm²)",
+     "4.0 x 5.0"
+    ],
+    [
+     "Core area (mm²)",
+     "3.54 × 4.54"
+    ],
+    [
+     "Logic gates",
+     "2,043 kgates"
+    ],
+    [
+     "SRAM",
+     "854 k8"
+    ],
+    [
+     "VFE Frequency",
+     "62.5 MHz"
+    ],
+    [
+     "BE Frequency",
+     "83.3MHz"
+    ],
+    [
+     "Supply",
+     "1 V"
+    ],
+    [
+     "Resolution",
+     "752 × 480"
+    ],
+    [
+     "IMU rate",
+     "52 kHz"
+    ],
+    [
+     "Tracking rate",
+     "28 - 171 fps"
+    ],
+    [
+     "Keyframe rate",
+     "16 - 90 fps"
+    ],
+    [
+     "Average Power",
+     "24 mW"
+    ],
+    [
+     "Peak GOPS",
+     "59.1"
+    ],
+    [
+     "Peak GFLOPS",
+     "5.7"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    324.5,
+    97.6,
+    549.9,
+    178.0
+   ],
+   "caption": "TABLE III VIO AVERAGE ERROR, THROUGHPUT, AND POWER PROCESSING EUROC DATA SET",
+   "rows": [
+    [
+     "Platform",
+     "Platform",
+     "Xeon",
+     "ARM",
+     "Navion"
+    ],
+    [
+     "Trajectory error (cm)",
+     "Trajectory error (cm)",
+     "16.98",
+     "16.98",
+     "23.25"
+    ],
+    [
+     "Trajectory error (%)",
+     "Trajectory error (%)",
+     "0.22%",
+     "0.22%",
+     "0.28%"
+    ],
+    [
+     "Average tracking throughput (fps)",
+     "Average tracking throughput (fps)",
+     "63",
+     "19",
+     "71"
+    ],
+    [
+     "",
+     "Frontend Average KF",
+     "19",
+     "3",
+     "45"
+    ],
+    [
+     "",
+     "Backend",
+     "35",
+     "6",
+     "32"
+    ],
+    [
+     "",
+     "throughput (fps) Total",
+     "12",
+     "2",
+     "19"
+    ],
+    [
+     "",
+     "Average power (W)",
+     "27.9",
+     "2.4",
+     "0.024"
+    ],
+    [
+     "Energy (mJ/KF)",
+     "Energy (mJ/KF)",
+     "3638.6",
+     "1573.2",
+     "2.3"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    324.3,
+    527.4,
+    549.7,
+    675.2
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Name.Name",
+     "Parameters.Features/frame",
+     "Parameters.Horizon size",
+     "Error.Error"
+    ],
+    [
+     "MH_1",
+     "35",
+     "10",
+     "0.33%"
+    ],
+    [
+     "MH_2",
+     "35",
+     "10",
+     "0.22%"
+    ],
+    [
+     "MH_3",
+     "35",
+     "10",
+     "0.22%"
+    ],
+    [
+     "MH_4",
+     "150",
+     "10",
+     "0.29%"
+    ],
+    [
+     "MH_5",
+     "100",
+     "15",
+     "0.30%"
+    ],
+    [
+     "V1_1",
+     "35",
+     "10",
+     "0.21%"
+    ],
+    [
+     "V1_2",
+     "35",
+     "10",
+     "0.19%"
+    ],
+    [
+     "V1_3",
+     "35",
+     "10",
+     "0.33%"
+    ],
+    [
+     "V2_1",
+     "50",
+     "10",
+     "0.33%"
+    ],
+    [
+     "V2_2",
+     "35",
+     "10",
+     "0.16%"
+    ],
+    [
+     "V2_3",
+     "50",
+     "15",
+     "0.34%"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    323.7,
+    101.8,
+    550.3,
+    178.2
+   ],
+   "caption": "TABLE V NAVION'S ERROR, THROUGHPUT, CLOCK FREQUENCIES, AND POWER NUMBERS FOR DIFFERENT CONFIGURATIONS, WITH AND WITHOUT ADAPTATION. NUMBERS ARE AVERAGES OVER EUROC DATA SET",
+   "rows": [
+    [
+     "Configuration.Traj. Error",
+     "Without Adaptation.Max Rate.0.28%",
+     "Without Adaptation.Fixed Dist.0.28%",
+     "Without Adaptation.Fixed Rate.0.28%",
+     "With Adaptation.Max Rate.0.27%",
+     "With Adaptation.Fixed Dist..0.27%",
+     "With Adaptation.Fixed Rate.0.27%"
+    ],
+    [
+     "VFE Clock (MHz)",
+     "62.5",
+     "45.7",
+     "16.8",
+     "62.5",
+     "18.6",
+     "6.6"
+    ],
+    [
+     "BE Clock (MHz)",
+     "83.3",
+     "60.9",
+     "22.5",
+     "83.3",
+     "24.8",
+     "8.8"
+    ],
+    [
+     "Tracking (fps)",
+     "71",
+     "41",
+     "20",
+     "142",
+     "41",
+     "20"
+    ],
+    [
+     "KF (fps)",
+     "19",
+     "14",
+     "5",
+     "49",
+     "14",
+     "5"
+    ],
+    [
+     "Power (mW)",
+     "24",
+     "18",
+     "6",
+     "22",
+     "7",
+     "2"
+    ]
+   ]
+  }
+ ]
+}

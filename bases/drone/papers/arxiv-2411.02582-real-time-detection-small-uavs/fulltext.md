@@ -228,10 +228,12 @@ In this paper, we proposed GL-YOMO, an advanced realtime detection method design
     13: | if detector = 'global' then
     14: | 
 
-**TABLE I** THRESHOLD PARAMETER CONFIGURATION [corps du tableau reconstruit par PyMuPDF : à vérifier]
+**TABLE I** THRESHOLD PARAMETER CONFIGURATION [corps du tableau reconstruit par PyMuPDF : à vérifier] [corps du tableau reconstruit par Docling : à vérifier]
 
     Notation | Value | Notation | Value | Notation | Value
-    Ng Nl Rs | 30 60 4/5 | τg τl ∆p | 0.3 0.1 50 | k1 k2 k3 | 1 0.6 0.4
+    Ng | 30 | τg | 0.3 | k1 | 1
+    Nl | 60 | τl | 0.1 | k2 | 0.6
+    Rs | 4/5 | ∆p | 50 | k3 | 0.4
 
 **TABLE II** COMPARISON OF THE GL-YOMO WITH STATE-OF-THE-ART METHODS ON DRONE-VS-BIRD DATESET
 

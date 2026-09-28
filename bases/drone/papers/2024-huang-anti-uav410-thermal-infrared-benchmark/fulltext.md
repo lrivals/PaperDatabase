@@ -227,18 +227,123 @@ In our future work, we plan to further enhance the dataset by adding more inform
 
 **Fig. 6.** Qualitative comparison. We selected challenging sequences from the Anti-UAV410 dataset and visualized the results of state-of-the-art trackers along with SiamDT. Comparisons are shown for 6 attributes: TC (Thermal Crossover), SV (Scale Variation), OC (Occlusion), OV (Out-of-View), DBC (Dynamic Background Clutter), FM (Fast Motion). Best viewed in color and zoom.
 
-**TABLE I** ILLUSTRATION OF ATTRIBUTES IN ANTI-UAV410
+**TABLE I** ILLUSTRATION OF ATTRIBUTES IN ANTI-UAV410 [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE II** COMPARISON OF SOME POPULAR TIR DATASETS AND ANTI-UAV410, THE TARGET SIZE IS CALCULATED BY THE DIAGONAL OF THE BOUNDING BOXES, AND THE FRAME NUMBERS OF CORRESPONDING SIZE ARE REPORTED
+     | Attribute Description
+    OV | Out-of-View (90): the target leaves the view.
+    OC | Occlusion (42): the target is partially or heavily oc- cluded
+    TC | Thermal Crossover (256): the target has a similar tem- perature to other objects or background surroundings.
+    FM | Fast Motion (188): the target's motion between two adjacent frames is larger than 60 pixels.
+    SV | Scale Variation (84): the ratio of the bounding boxes of the first frame and the current frame is out of the range [0.66,1.5].
+    DBC | Dynamic Background Clutter (77): there are dynamic changes in the background around the target
+
+**TABLE II** COMPARISON OF SOME POPULAR TIR DATASETS AND ANTI-UAV410, THE TARGET SIZE IS CALCULATED BY THE DIAGONAL OF THE BOUNDING BOXES, AND THE FRAME NUMBERS OF CORRESPONDING SIZE ARE REPORTED [corps du tableau reconstruit par Docling : à vérifier]
+
+    Dataset | Tiny | Small | Normal | Large
+    LSOTB-TIR | 0 | 7625 | 30910 | 568294
+    VOT-TIR2015 | 0 | 480 | 2165 | 8624
+    VOT-TIR2016 | 0 | 1681 | 3037 | 9145
+    VOT-RGBTIR2019 | 283 | 790 | 4849 | 14161
+    PTB-TIR | 0 | 1883 | 6325 | 73925
+    Anti-UAV | 858 | 6419 | 88181 | 198317
+    Anti-UAV410 | 17071 | 126649 | 97942 | 196735
 
 [figure sans légende identifiée] Training with Anti-UAV410: To validate the effectiveness of our proposed training set in improving the performance of trackers for TIR UAV target tracking, we conducted comparison experiments on representative deep trackers with training using
 
-**TABLE III** RAW STATE ACCURACY (%) OF STATE-OF-THE-ART TRACKERS ON ANTI-UAV410 TEST AND VALIDATION SETSthe Anti-UAV410 training set. All re-trained trackers retain default settings and default pre-training weights, the experimental results are shown in TableIV. Specifically, the numbers on the left side of the table represent the results obtained using the original models provided by the authors, while the numbers on the right side indicate the results after training with our proposed training set. With the inclusion of our Anti-UAV410 training set, the performance of the trackers has been improved to a certain extent on both the validation and test sets. Remarkably there are six trackers that have improved their performance by more than 10% on both sets with the help of the Anti-UAV410 dataset. This clearly demonstrates the value of our dataset in enhancing the performance of trackers for anti-UAV applications.The proposed SiamDT method ranks the first place with scores of 68.19 and 71.65 on the test and validation set, respectively. SiamDT has a slight performance gain over the global two-stage tracking methods GlobalTrack and Siam R-CNN,
+**TABLE III** RAW STATE ACCURACY (%) OF STATE-OF-THE-ART TRACKERS ON ANTI-UAV410 TEST AND VALIDATION SETSthe Anti-UAV410 training set. All re-trained trackers retain default settings and default pre-training weights, the experimental results are shown in TableIV. Specifically, the numbers on the left side of the table represent the results obtained using the original models provided by the authors, while the numbers on the right side indicate the results after training with our proposed training set. With the inclusion of our Anti-UAV410 training set, the performance of the trackers has been improved to a certain extent on both the validation and test sets. Remarkably there are six trackers that have improved their performance by more than 10% on both sets with the help of the Anti-UAV410 dataset. This clearly demonstrates the value of our dataset in enhancing the performance of trackers for anti-UAV applications.The proposed SiamDT method ranks the first place with scores of 68.19 and 71.65 on the test and validation set, respectively. SiamDT has a slight performance gain over the global two-stage tracking methods GlobalTrack and Siam R-CNN, [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE IV** RESULTS OF REPRESENTATIVE DEEP BASED TRACKERS TRAINED USING ANTI-UAV410 TRAIN SET Fig.
+    Methods | Source | Test | Validation
+    RGB Trackers SiamFC++ [46] | AAAI20 | 41.03 | 45.15
+    PrDiMP50 [47] | CVPR20 | 51.87 | 53.35
+    Super_DiMP [48] |  | 53.12 | 55.87
+    KYS [49] | ECCV20 | 44.70 | 49.61
+    GlobalTrack [42] | AAAI20 | 59.34 | 63.39
+    SiamCAR [39] | CVPR20 | 41.73 | 48.18
+    SiamBAN [38] | CVPR20 | 36.69 | 38.36
+    Siam R-CNN [12] | CVPR20 | 60.54 | 64.81
+    ROAM [50] | CVPR20 | 42.41 | 47.77
+    TrDiMP [51] | CVPR21 | 50.20 | 55.47
+    TransT [52] | CVPR21 | 48.85 | 55.24
+    STMTrack [53] | CVPR21 | 38.98 | 41.24
+    HiFT [54] | ICCV21 | 33.84 | 41.74
+    Stark-ST50 [55] | ICCV21 | 54.07 | 61.43
+    Stark-ST101 [55] | ICCV21 | 54.15 | 59.57
+    KeepTrack [56] | ICCV21 | 55.97 | 58.34
+    RTS [57] | ECCV22 | 54.68 | 57.19
+    Unicorn-Large [58] | ECCV22 | 56.55 | 59.38
+    Unicorn-Tiny [58] | ECCV22 | 55.42 | 58.93
+    AiATrack [59] | ECCV22 | 53.91 | 55.24
+    OSTrack-256 [60] | ECCV22 | 43.75 | 52.60
+    OSTrack-384 [60] | ECCV22 | 53.53 | 59.20
+    SLT-TransT [61] | ECCV22 | 50.90 | 57.62
+    TCTrack [62] | CVPR22 | 35.37 | 35.05
+    ToMP50 [63] | CVPR22 | 52.95 | 55.56
+    ToMP101 [63] | CVPR22 | 54.52 | 60.14
+    SwinTrack-Tiny [64] | NIPS22 | 51.23 | 56.83
+    SwinTrack-Base [64] | NIPS22 | 52.41 | 55.76
+    JointNLT [65] | CVPR23 | 48.92 | 54.36
+    SeqTrack-B256 [66] | CVPR23 | 52.87 | 56.38
+    SeqTrack-B384 [66] | CVPR23 | 49.97 | 53.01
+    ARTrack [67] | CVPR23 | 48.50 | 52.46
+    DropTrack [68] | CVPR23 | 52.99 | 59.78
+    GRM [69] | CVPR23 | 42.25 | 50.84
+    ROMTrack [70] | ICCV23 | 48.13 | 55.08
+    MixFormerV2-B [71] | NIPS23 | 55.22 | 59.71
+    TIR Trackers |  |  | 
+    MMNet [74] | AAAI20 | 27.95 | 35.26
+    MLSSNet [72] | TMM'20 | 26.51 | 34.97
+    CMD-DiMP [73] | ACM MM21 | 52.75 | 56.18
 
-**TABLE V** PERFORMANCE OF SIAMDT ON ANTI-UAV, LASOT, AND GOT-10 K DATASET
+**TABLE IV** RESULTS OF REPRESENTATIVE DEEP BASED TRACKERS TRAINED USING ANTI-UAV410 TRAIN SET Fig. [corps du tableau reconstruit par Docling : à vérifier]
 
-**TABLE VII** EFFECT OF DIFFERENT BACKBONES IN SIAMDT
+    Methods | Original model Training Datasets | Test | Validation | Training Datasets | Trained model Test | Validation
+    PrDiMP50 | LaSOT, GOT10k, TrackingNet, COCO | 51.87 | 53.35 | Anti-UAV410 | 54.69(+ 5.4%) | 62.52(+17.2%)
+    Super_DiMP | LaSOT, GOT10k, TrackingNet, COCO | 53.12 | 55.87 | Anti-UAV410 | 59.68(+12.3%) | 64.56(+15.6%)
+    KYS | LaSOT, GOT10k, TrackingNet | 44.70 | 49.61 | Anti-UAV410 | 44.90(+ 0.4%) | 49.91(+ 0.6%)
+    GlobalTrack | LaSOT, GOT10k, COCO | 59.34 | 63.39 | Anti-UAV410 | 66.45(+12.0%) | 70.63(+11.1%)
+    SiamBAN | ImageNet, YouTube-BB, LaSOT, GOT10k, COCO | 36.69 | 38.36 | Anti-UAV410 | 47.32(+29.0%) | 46.55(+21.4%)
+    Siam R-CNN | ImageNet, YouTube-VOS, LaSOT, GOT-10k | 60.54 | 64.81 | Anti-UAV410 | 63.00(+ 4.1%) | 68.25(+ 5.3%)
+    Stark-ST101 | LaSOT, GOT-10k, TrackingNet, COCO | 54.15 | 59.57 | Anti-UAV410 | 57.15(+ 5.5%) | 64.18(+ 7.7%)
+    KeepTrack | LaSOT, GOT10k, TrackingNet, COCO | 55.97 | 58.34 | Anti-UAV410 | 56.80(+ 1.5%) | 59.36(+ 1.7%)
+    AiATrack | LaSOT, GOT-10k, TrackingNet, COCO | 53.91 | 55.24 | Anti-UAV410 | 59.56 (+10.5%) | 66.04(+19.6%)
+    TCTrack | ImageNet, LaSOT, GOT-10k | 35.37 | 35.05 | Anti-UAV410 | 41.64(+17.7%) | 41.08(+17.2%)
+    ToMP50 | LaSOT, GOT-10k, TrackingNet, COCO | 52.95 | 55.56 | Anti-UAV410 | 55.09(+ 4.0%) | 64.30(+15.7%)
+    ToMP101 | LaSOT, GOT-10k, TrackingNet, COCO | 54.52 | 60.14 | Anti-UAV410 | 55.10(+ 1.1%) | 63.78(+ 6.1%)
+    SwinTrack-Tiny | LaSOT, GOT-10k, TrackingNet, COCO | 51.23 | 56.83 | Anti-UAV410 | 53.15(+ 3.7%) | 60.84(+ 7.1%)
+    SwinTrack-Base | LaSOT, GOT-10k, TrackingNet, COCO | 52.41 | 55.76 | Anti-UAV410 | 55.74(+ 6.4%) | 63.57(+14.0%)
+    DropTrack | LaSOT, GOT-10k, TrackingNet, COCO | 52.99 | 59.78 | Anti-UAV410 | 60.15(+13.5%) | 66.16(+10.7%)
+    MixFormerV2-B | LaSOT, GOT-10k, TrackingNet, COCO | 55.22 | 59.71 | Anti-UAV410 | 59.65(+ 8.0%) | 64.32(+ 7.7%)
+    SiamDT |  |  |  | Anti-UAV410 | 68.19 | 71.65
 
-**TABLE VIII** EFFECT OF DIFFERENT LOSS FUNCTIONS IN SIAMDT recent popular Swin Transformer backbone. Additionally, we can see from the table that a deeper network does not necessarily lead to better tracking results. This is because small targets occupy fewer pixels, and deeper features have lower resolution, which can result in inaccurate tracking results.
+**TABLE V** PERFORMANCE OF SIAMDT ON ANTI-UAV, LASOT, AND GOT-10 K DATASET [corps du tableau reconstruit par Docling : à vérifier]
+
+     | Source | Anti-UAV SA | AUC | LaSOT P | PNorm | AO | GOT-10k SR50 | SR75
+    ATOM [75] | CVPR19 | 55.6 | 51.5 | 50.5 | 57.6 | 55.6 | 63.4 | 40.2
+    SiamRPN++ [41] | CVPR19 | 43.0 | 49.6 | 49.1 | 56.9 | 51.7 | 61.6 | 32.5
+    DiMP50 [76] | ICCV19 | 59.8 | 56.9 | 56.7 | 65.0 | 61.1 | 71.7 | 49.2
+    ROAM [50] | CVPR20 | 44.9 | 44.7 | 44.5 | 54.3 | 46.5 | 53.2 | 23.6
+    SiamCAR [39] | CVPR20 | 49.8 | 50.7 | 51.0 | 60.0 | 56.9 | 67.0 | 41.5
+    GlobalTrack [42] | AAAI20 | 71.3 | 52.1 | 52.9 | 59.9 |  |  | 
+    SiamBAN [38] | CVPR20 | 51.0 | 51.4 | 52.1 | 59.8 |  |  | 
+    SiamGAT [77] | CVPR21 |  | 53.9 | 53.0 | 63.3 | 62.7 | 74.3 | 48.8
+    TransT [52] | CVPR21 | 52.1 | 64.9 | 69.0 | 73.8 | 67.1 | 76.8 | 60.9
+    TrDiMP [51] | CVPR21 | 54.8 | 63.9 | 61.4 |  | 67.1 | 77.7 | 58.3
+    KeepTrack [56] | ICCV21 | 61.1 | 67.1 | 70.2 | 77.2 |  |  | 
+    AiATrack [59] | ECCV22 | 58.9 | 69.0 | 73.8 | 79.4 | 69.6 | 80.0 | 63.2
+    SwinTrack-Tiny [64] | NIPS22 | 56.0 | 67.2 | 70.8 |  | 71.3 | 81.9 | 64.5
+    SwinTrack-Base [64] | NIPS22 | 57.2 | 71.3 | 76.5 |  | 72.4 | 80.5 | 67.8
+    SiamDT | Ours | 72.2 | 57.7 | 60.1 | 68.3 | 64.2 | 72.2 | 57.0
+
+**TABLE VII** EFFECT OF DIFFERENT BACKBONES IN SIAMDT [corps du tableau reconstruit par Docling : à vérifier]
+
+    Backbones | test | val | Backbones | test | val
+    DarkNetV3 | 58.61 | 65.73 | ResNeXt101 | 66.83 | 70.87
+    ResNet50 | 66.93 | 70.83 | Swin-Tiny | 68.19 | 71.65
+    ResNet101 | 66.74 | 70.60 | Swin-Small | 67.70 | 71.38
+    ResNeXt50 | 67.40 | 71.03 | Swin-Base | 67.40 | 71.26
+
+**TABLE VIII** EFFECT OF DIFFERENT LOSS FUNCTIONS IN SIAMDT recent popular Swin Transformer backbone. Additionally, we can see from the table that a deeper network does not necessarily lead to better tracking results. This is because small targets occupy fewer pixels, and deeper features have lower resolution, which can result in inaccurate tracking results. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Loss function | test | val | Loss function | test | val
+    L1 | 68.20 | 71.27 | GIOU | 68.11 | 71.49
+    Smooth L1 | 68.19 | 71.65 | DIOU | 68.04 | 71.33

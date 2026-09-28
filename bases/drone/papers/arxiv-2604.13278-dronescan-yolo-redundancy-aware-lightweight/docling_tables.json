@@ -1,0 +1,377 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 6,
+   "bbox": [
+    197.6,
+    261.1,
+    413.8,
+    338.1
+   ],
+   "caption": "Table 1: SAL-NWD λ ablation. Loss values on nearby and distant predictions. λ=0.5 optimally balances NWD gradient stability and CIoU geometric precision.",
+   "rows": [
+    [
+     "λ",
+     "Loss(nearby)",
+     "Loss(distant)",
+     "Note"
+    ],
+    [
+     "0.0",
+     "0.614",
+     "1.847",
+     "Pure CIoU"
+    ],
+    [
+     "0.3",
+     "0.430",
+     "1.312",
+     ""
+    ],
+    [
+     "0.5",
+     "0.308",
+     "0.958",
+     "Selected"
+    ],
+    [
+     "0.7",
+     "0.185",
+     "0.724",
+     ""
+    ],
+    [
+     "1.0",
+     "0.001",
+     "0.921",
+     "Pure NWD"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    192.2,
+    450.1,
+    419.5,
+    516.1
+   ],
+   "caption": "Table 2: RPA-Block threshold θ sensitivity. Measured on random weights. θ=0.85 triggers no premature pruning, activating only on trained weights where genuine redundancy emerges.",
+   "rows": [
+    [
+     "θ",
+     "Sparsity",
+     "Active/64",
+     "Note"
+    ],
+    [
+     "0.10",
+     "21.88%",
+     "50/64",
+     "Very aggressive"
+    ],
+    [
+     "0.20",
+     "0.00%",
+     "64/64",
+     "Aggressive"
+    ],
+    [
+     "0.30",
+     "0.00%",
+     "64/64",
+     "Moderate"
+    ],
+    [
+     "0.85",
+     "∼15-20%*",
+     "∼50-55/64*",
+     "Selected"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    193.5,
+    616.2,
+    418.3,
+    683.0
+   ],
+   "caption": "Table 3: RPA-Block lazy update interval sensitivity. N=5 achieves equivalent final sparsity to N=1 at 5× lower recomputation cost.",
+   "rows": [
+    [
+     "N",
+     "@ep15",
+     "@ep25",
+     "@ep50",
+     "Note"
+    ],
+    [
+     "1",
+     "73.44%",
+     "73.44%",
+     "73.44%",
+     "Maxcost"
+    ],
+    [
+     "3",
+     "70.31%",
+     "70.31%",
+     "70.31%",
+     ""
+    ],
+    [
+     "5",
+     "71.88%",
+     "71.88%",
+     "71.88%",
+     "Selected"
+    ],
+    [
+     "10",
+     "0.00%",
+     "71.88%",
+     "71.88%",
+     "Delayedonset"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    130.0,
+    586.2,
+    481.2,
+    668.6
+   ],
+   "caption": "Table 4: Comparison with state-of-the-art on VisDrone2019-DET. All results on validation split. † No inference speed reported. DroneScan-YOLO achieves the best mAP/Params efficiency ratio.",
+   "rows": [
+    [
+     "Model",
+     "Res.",
+     "mAP@50",
+     "mAP@50-95",
+     "Recall",
+     "Params",
+     "FPS"
+    ],
+    [
+     "YOLOv5s",
+     "640",
+     "0.231",
+     "0.125",
+     "0.363",
+     "7.2M",
+     "99.0"
+    ],
+    [
+     "YOLOv8s",
+     "640",
+     "0.387",
+     "0.233",
+     "0.374",
+     "9.83M",
+     "∼71"
+    ],
+    [
+     "YOLO-LE",
+     "640",
+     "0.399",
+     "0.225",
+     "0.369",
+     "4.0M",
+     "93.0"
+    ],
+    [
+     "DAU-YOLO",
+     "640",
+     "0.561",
+     "0.328",
+     "0.473",
+     "28.9M",
+     "†"
+    ],
+    [
+     "DroneScan-YOLO",
+     "1280",
+     "0.553",
+     "0.356",
+     "0.518",
+     "10.23M",
+     "96.7"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    158.2,
+    100.9,
+    453.5,
+    249.0
+   ],
+   "caption": "Table 5: Per-class AP@50 on VisDrone2019-DET validation split. ⋆ = primary tiny-object classes targeted by MSFD and SAL-NWD.",
+   "rows": [
+    [
+     "Class",
+     "YOLOv8s640px",
+     "DS-YOLO1280px",
+     "∆"
+    ],
+    [
+     "Pedestrian",
+     "0.412",
+     "0.644",
+     "+0.232"
+    ],
+    [
+     "People ⋆",
+     "0.314",
+     "0.514",
+     "+0.200"
+    ],
+    [
+     "Bicycle ⋆",
+     "0.114",
+     "0.328",
+     "+0.214"
+    ],
+    [
+     "Car",
+     "0.786",
+     "0.890",
+     "+0.104"
+    ],
+    [
+     "Van",
+     "0.439",
+     "0.591",
+     "+0.152"
+    ],
+    [
+     "Truck",
+     "0.386",
+     "0.519",
+     "+0.133"
+    ],
+    [
+     "Tricycle ⋆",
+     "0.273",
+     "0.451",
+     "+0.178"
+    ],
+    [
+     "Awning-tricycle ⋆",
+     "0.156",
+     "0.237",
+     "+0.081"
+    ],
+    [
+     "Bus",
+     "0.567",
+     "0.720",
+     "+0.153"
+    ],
+    [
+     "Motor",
+     "0.419",
+     "0.642",
+     "+0.223"
+    ],
+    [
+     "All",
+     "0.387",
+     "0.553",
+     "+0.166"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    137.0,
+    424.5,
+    475.1,
+    539.9
+   ],
+   "caption": "Table 6: Ablation study at 1280px resolution. Each module is added incrementally to the YOLOv8s backbone trained at 1280px.",
+   "rows": [
+    [
+     "Model",
+     "mAP@50",
+     "mAP@50-95",
+     "Recall",
+     "FPS",
+     "Params"
+    ],
+    [
+     "YOLOv8s baseline",
+     "0.387",
+     "0.233",
+     "0.374",
+     "71.0",
+     "9.83M"
+    ],
+    [
+     "+ SAL-NWD",
+     "0.521",
+     "0.331",
+     "0.497",
+     "71.3",
+     "9.83M"
+    ],
+    [
+     "+ MSFD",
+     "0.528",
+     "0.336",
+     "0.506",
+     "69.4",
+     "9.94M"
+    ],
+    [
+     "+ RPA",
+     "0.514",
+     "0.327",
+     "0.491",
+     "82.1",
+     "∼9.83M"
+    ],
+    [
+     "+ RPA + MSFD",
+     "0.531",
+     "0.338",
+     "0.508",
+     "79.6",
+     "9.94M"
+    ],
+    [
+     "+ RPA + SAL-NWD",
+     "0.527",
+     "0.340",
+     "0.502",
+     "81.3",
+     "9.83M"
+    ],
+    [
+     "+MSFD+SAL-NWD",
+     "0.538",
+     "0.344",
+     "0.511",
+     "69.1",
+     "9.94M"
+    ],
+    [
+     "DroneScan-YOLO",
+     "0.553",
+     "0.356",
+     "0.518",
+     "96.7",
+     "10.23M"
+    ]
+   ]
+  }
+ ]
+}

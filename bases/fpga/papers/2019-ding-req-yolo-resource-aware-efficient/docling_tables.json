@@ -1,0 +1,232 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 9,
+   "bbox": [
+    126.3,
+    116.4,
+    485.2,
+    217.9
+   ],
+   "caption": "Table 1: Comparison of equal-distance-based quantization method and heterogeneous-based quantization method on the YOLO-3 model (block size 16).",
+   "rows": [
+    [
+     "Model.Model",
+     "Layer.Layer",
+     "Comp. Size.Comp. Size",
+     "Comm..In _ size",
+     "Comm..Out _ size",
+     "Bound Type.Bound Type",
+     "Equal-distance-based.Latency(µs)",
+     "Equal-distance-based.ModelSize",
+     "Heterogeneous-based.Latency(µs)",
+     "Heterogeneous-based.ModelSize"
+    ],
+    [
+     "",
+     "Conv0",
+     "173,056",
+     "519,168",
+     "692,224",
+     "Comm. -bound",
+     "872.5",
+     "0.16kb",
+     "881.3",
+     "0.13kb"
+    ],
+    [
+     "",
+     "Conv1",
+     "86,528",
+     "692,224",
+     "32,448",
+     "Comm. -bound",
+     "442.2",
+     "6.75kb",
+     "443.6",
+     "5.63kb"
+    ],
+    [
+     "",
+     "Conv2",
+     "21,632",
+     "32,448",
+     "173,056",
+     "Comm. -bound",
+     "219.3",
+     "27.0kb",
+     "216.2",
+     "22.5kb"
+    ],
+    [
+     "",
+     "Conv3",
+     "21,632",
+     "173,056",
+     "86,528",
+     "Comm. -bound",
+     "119.8",
+     "108.0kb",
+     "120.5",
+     "90.0kb"
+    ],
+    [
+     "",
+     "YOLO-3 Conv4",
+     "21,632",
+     "86,528",
+     "43,264",
+     "Comp. -bound",
+     "117.1",
+     "432.0kb",
+     "54.5",
+     "360.0kb"
+    ],
+    [
+     "",
+     "Conv5",
+     "21,632",
+     "43,264",
+     "86,528",
+     "Comp. -bound",
+     "117.9",
+     "1.69Mb",
+     "69.4",
+     "1.41Mb"
+    ],
+    [
+     "",
+     "Conv6",
+     "86,528",
+     "86,528",
+     "173,056",
+     "Comp. -bound",
+     "905.1",
+     "3.38Mb",
+     "430.4",
+     "2.81Mb"
+    ],
+    [
+     "",
+     "Conv7",
+     "173,056",
+     "173,056",
+     "173,056",
+     "Comp. -bound",
+     "1,832.7",
+     "286.88kb",
+     "872.7",
+     "239.06kb"
+    ],
+    [
+     "",
+     "Conv8",
+     "16,224",
+     "173,056",
+     "19,244",
+     "Comp. -bound",
+     "174.3",
+     "37.88kb",
+     "93.2",
+     "26.57kb"
+    ],
+    [
+     "",
+     "Total",
+     "621,920",
+     "-",
+     "-",
+     "-",
+     "4,801.0",
+     "5.93Mb",
+     "3,183.6",
+     "4.95Mb"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    66.4,
+    251.6,
+    545.2,
+    316.2
+   ],
+   "caption": "Table 2: Comparison among different tiny YOLO implementations.",
+   "rows": [
+    [
+     "Implementation",
+     "TitanX-YOLO [38]",
+     "OurGTX-YOLO",
+     "OurTX2-YOLO",
+     "Virtex-YOLO [33]",
+     "Zynq-YOLO [15]",
+     "Our FPGA-YOLO0 (Equal-distance-based)",
+     "Our FPGA-YOLO1 (Heterogeneous-based)"
+    ],
+    [
+     "Device Type",
+     "TitanX",
+     "",
+     "GTX1070GPUTX2embeddedGPUXilinxVirtex-7485t",
+     "",
+     "Zynq7020",
+     "ADM-7V3 FPGA",
+     "ADM-7V3 FPGA"
+    ],
+    [
+     "Memory",
+     "12GB GDDR5",
+     "8GB GDDR5",
+     "8 GB LPDDR4",
+     "4.5MBBRAM",
+     "0.6MBBRAM",
+     "6.6 MB BRAM",
+     "6.6 MB BRAM"
+    ],
+    [
+     "Clock Freq.",
+     "1.0 GHz",
+     "1.6 GHz",
+     "1.3 GHz",
+     "0.14 GHz",
+     "0.15 GHz (Peak)",
+     "0.2 GHz",
+     "0.2 GHz"
+    ],
+    [
+     "Performance (FPS)",
+     "155",
+     "220.8",
+     "28.4",
+     "21",
+     "8",
+     "208.2",
+     "314.2"
+    ],
+    [
+     "Power (W)",
+     "180",
+     "140",
+     "10.8",
+     "-",
+     "-",
+     "23",
+     "21"
+    ],
+    [
+     "Energy Efficiency (FPS/W)",
+     "0.9",
+     "1.6",
+     "2.6",
+     "-",
+     "-",
+     "9.1",
+     "15.0"
+    ]
+   ]
+  }
+ ]
+}

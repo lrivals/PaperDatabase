@@ -1,0 +1,225 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 5,
+   "bbox": [
+    311.0,
+    106.4,
+    540.8,
+    196.1
+   ],
+   "caption": "Table 1. Comparison of inference time and parameters on NVIDIA Jetson AGX Xavier. Here, we use 287×287×3 as the input image and only evaluate the inference time of the CNN.",
+   "rows": [
+    [
+     "Backbone",
+     "Inference time",
+     "Parameters"
+    ],
+    [
+     "AlexNet [40]",
+     "3.4ms",
+     "2.47M"
+    ],
+    [
+     "VGG11 [58]",
+     "3.7ms",
+     "9.22M"
+    ],
+    [
+     "ResNet18 [30]",
+     "10.1ms",
+     "11.2M"
+    ],
+    [
+     "MobileNet v2 [56]",
+     "13.7ms",
+     "2.2M"
+    ],
+    [
+     "EfficientNet [60]",
+     "27.4ms",
+     "39.4K"
+    ],
+    [
+     "SqueezeNet1 0 [37]",
+     "8.8ms",
+     "735.42K"
+    ],
+    [
+     "ShuffleNet v2 x0.5 [77]",
+     "16.6ms",
+     "341.8K"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    309.7,
+    395.6,
+    543.4,
+    487.1
+   ],
+   "caption": "Table 2. Overall performance on UAVTrack112 L. The best three performances are respectively highlighted with red, green, and blue colors.",
+   "rows": [
+    [
+     "Trackers",
+     "Succ.",
+     "Prec.",
+     "Trackers",
+     "Succ.",
+     "Prec."
+    ],
+    [
+     "AutoTrack[47]",
+     "0.405",
+     "0.675",
+     "C-COT[17]",
+     "0.422",
+     "0.691"
+    ],
+    [
+     "ARCF [33]",
+     "0.399",
+     "0.640",
+     "UDT+[66]",
+     "0.405",
+     "0.637"
+    ],
+    [
+     "STRCF [43]",
+     "0.360",
+     "0.609",
+     "ECO[12]",
+     "0.436",
+     "0.684"
+    ],
+    [
+     "UDT [66]",
+     "0.388",
+     "0.620",
+     "TADT[46]",
+     "0.462",
+     "0.712"
+    ],
+    [
+     "SRDCF [16]",
+     "0.320",
+     "0.508",
+     "SiameseFC[2]",
+     "0.452",
+     "0.690"
+    ],
+    [
+     "CoKCF [75]",
+     "0.283",
+     "0.520",
+     "DaSiamRPN[80]",
+     "0.479",
+     "0.729"
+    ],
+    [
+     "BACF [38]",
+     "0.358",
+     "0.593",
+     "SiamAPN++[7]",
+     "0.537",
+     "0.735"
+    ],
+    [
+     "DSiam [27]",
+     "0.321",
+     "0.512",
+     "SiamRPN++[41]",
+     "0.559",
+     "0.773"
+    ],
+    [
+     "HiFT [6]",
+     "0.551",
+     "0.734",
+     "TCTrack(ours)",
+     "0.582",
+     "0.786"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    49.2,
+    241.1,
+    550.3,
+    323.4
+   ],
+   "caption": "Table 3. Ablation study of different components of adaptive temporal transformer on UAV123 [54]. TIF denotes the temporal information filter in the AT-Trans (Fig. 4). SF/MF refer to single-frame (SF) training, i.e., the standard tracking-by-detection training method and our multi-frame (MF) training method. CI/RI refer to convolutional initialization and random initialization for temporal prior knowledge. Query denotes which feature map is used as the query in the adaptive temporal encoder in AT-Trans mentioned in Sec. 3.2.",
+   "rows": [
+    [
+     "Model",
+     "Train Init. Query",
+     "Train Init. Query",
+     "Camera Motion.Prec.",
+     "Succ.",
+     "Fast.Prec.",
+     "motion.Succ.",
+     "Partial.Prec.",
+     "Occlusion.Succ.",
+     "Prec.",
+     "Overall.Succ."
+    ],
+    [
+     "Transformer Transformer+TIF Transformer Transformer+TIF Transformer+TIF Transformer+TIF",
+     "SF SF MF MFCI MF",
+     "- Fmt-1 - Fmt-1 MFCIFmt-1 RIFmt-1 Ft CI Fmt-1",
+     "0.750 0.7672.3%↑ 0.7492.4%↓ 0.7793.9%↑ 0.7854.7%↑ 0.8108.0%↑",
+     "0.549 0.5785.3%↑ 0.5257.6%↓ 0.5927.8%↑ 0.5876.9%↑ 0.61512.0%↑",
+     "0.712 0.7201.1%↑ 0.7192.4%↓ 0.7667.6%↑ 0.7262.0%↑ 0.79311.3%↑",
+     "0.509 0.5253.1%↑ 0.5007.6%↓ 0.56611.2%↑ 0.5283.7%↑ 0.58615.1%↑",
+     "0.663 0.6670.6%↑ 0.6392.4%↓ 0.6701.1%↑ 0.6762.0%↑ 0.7107.1%↑",
+     "0.458 0.4743.5%↑ 0.4157.6%↓ 0.4835.5%↑ 0.4804.8%↑ 0.51011.4%↑",
+     "0.750 0.7652.0%↑ 0.7322.4%↓ 0.7722.9%↑ 0.7712.8%↑ 0.8006.7%↑",
+     "0.550 0.5734.2%↑ 0.5087.6%↓ 0.5866.6%↑ 0.5805.5%↑ 0.6049.8%↑"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    51.1,
+    354.5,
+    287.0,
+    412.6
+   ],
+   "caption": "Table 4. Different sequence lengths for the online TAdaConv on UAV123 [54].",
+   "rows": [
+    [
+     "Different Variations",
+     "OverallPrecision",
+     "OverallSuccess"
+    ],
+    [
+     "Transformer",
+     "0.750",
+     "0.550"
+    ],
+    [
+     "Transformer+TAdaConv (L=1)",
+     "0.7490.1%↓",
+     "0.5612.0%↑"
+    ],
+    [
+     "Transformer+TAdaConv (L=2)",
+     "0.7743.2%↑",
+     "0.5734.2%↑"
+    ],
+    [
+     "Transformer+TAdaConv(L=3)",
+     "0.7763.5%↑",
+     "0.5805.5%↑"
+    ]
+   ]
+  }
+ ]
+}

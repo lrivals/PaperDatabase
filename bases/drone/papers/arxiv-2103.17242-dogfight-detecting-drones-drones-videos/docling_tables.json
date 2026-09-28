@@ -1,0 +1,196 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 7,
+   "bbox": [
+    52.0,
+    559.1,
+    283.7,
+    668.8
+   ],
+   "caption": "Table 1. Quantitative comparison of the proposed approach with several state of the art approaches on the NPS dataset [24].",
+   "rows": [
+    [
+     "Method",
+     "Precision",
+     "Recall",
+     "F1score",
+     "AP"
+    ],
+    [
+     "SCRDet-H [42]",
+     "0.81",
+     "0.74",
+     "0.77",
+     "0.65"
+    ],
+    [
+     "SCRDet-R [42]",
+     "0.79",
+     "0.71",
+     "0.75",
+     "0.61"
+    ],
+    [
+     "FCOS [36]",
+     "0.88",
+     "0.84",
+     "0.86",
+     "0.83"
+    ],
+    [
+     "Mask-RCNN[13]",
+     "0.66",
+     "0.91",
+     "0.76",
+     "0.89"
+    ],
+    [
+     "MEGA [7]",
+     "0.88",
+     "0.82",
+     "0.85",
+     "0.83"
+    ],
+    [
+     "SLSA [39]",
+     "0.47",
+     "0.67",
+     "0.55",
+     "0.46"
+    ],
+    [
+     "Proposed",
+     "0.92",
+     "0.91",
+     "0.92",
+     "0.89"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    310.2,
+    302.4,
+    542.6,
+    412.8
+   ],
+   "caption": "Table 2. Quantitative comparison of the proposed approach with several state of the art approaches on the FL-Drones dataset [33].",
+   "rows": [
+    [
+     "Method",
+     "Precision",
+     "Recall",
+     "F1score",
+     "AP"
+    ],
+    [
+     "SCRDet-H [42]",
+     "0.54",
+     "0.62",
+     "0.58",
+     "0.52"
+    ],
+    [
+     "SCRDet-R [42]",
+     "0.55",
+     "0.62",
+     "0.58",
+     "0.52"
+    ],
+    [
+     "FCOS [36]",
+     "0.69",
+     "0.70",
+     "0.69",
+     "0.62"
+    ],
+    [
+     "Mask-RCNN[13]",
+     "0.76",
+     "0.68",
+     "0.72",
+     "0.68"
+    ],
+    [
+     "MEGA [7]",
+     "0.71",
+     "0.72",
+     "0.71",
+     "0.65"
+    ],
+    [
+     "SLSA [39]",
+     "0.57",
+     "0.72",
+     "0.64",
+     "0.61"
+    ],
+    [
+     "Proposed",
+     "0.84",
+     "0.76",
+     "0.80",
+     "0.72"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    70.7,
+    162.5,
+    265.5,
+    256.8
+   ],
+   "caption": "Table 3. Ablation study of different components of our method on NPS dataset. The first row shows the proposed approach employing only cross-entropy loss (CE). The second row represents results incorporating focal loss and Distance-IOU loss (L). The third row demonstrates results employing channel-wise attention (L+ CA). After that we show results using pixel-wise attention (L+ PA). Finally, the last two rows show results after stage-1 and stage-2 respectively.",
+   "rows": [
+    [
+     "Method",
+     "Precision",
+     "Recall",
+     "F1score"
+    ],
+    [
+     "CE",
+     "0.87",
+     "0.82",
+     "0.85"
+    ],
+    [
+     "L",
+     "0.88",
+     "0.84",
+     "0.86"
+    ],
+    [
+     "L+ CA",
+     "0.88",
+     "0.86",
+     "0.87"
+    ],
+    [
+     "L+ PA",
+     "0.89",
+     "0.85",
+     "0.87"
+    ],
+    [
+     "Stage-1",
+     "0.92",
+     "0.88",
+     "0.90"
+    ],
+    [
+     "Stage-1+Stage-2",
+     "0.92",
+     "0.91",
+     "0.92"
+    ]
+   ]
+  }
+ ]
+}

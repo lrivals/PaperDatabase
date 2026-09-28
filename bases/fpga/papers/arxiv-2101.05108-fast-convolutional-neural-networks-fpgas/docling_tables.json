@@ -1,0 +1,302 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 1,
+   "bbox": [
+    79.1,
+    330.2,
+    532.3,
+    513.6
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3"
+    ],
+    [
+     "Jennifer Ngadiuba California Institute of Technology Pasadena, CA 91125, USA",
+     "Christoffer Petersson‡, Hampus Linander Zenseact Gothenburg, 41756, Sweden",
+     "Christoffer Petersson‡, Hampus Linander Zenseact Gothenburg, 41756, Sweden",
+     "Yutaro Iiyama ICEPP, University of Tokyo Tokyo, Japan"
+    ],
+    [
+     "Giuseppe Di Guglielmo Columbia University, New York, NY 10027, USA",
+     "Javier Duarte University of California San Diego La Jolla, CA 92093, USA",
+     "Javier Duarte University of California San Diego La Jolla, CA 92093, USA",
+     "Philip Harris, Dylan Rankin Massachusetts Institute of Technology Cambridge, MA 02139, USA"
+    ],
+    [
+     "Sergo Jindariani, Kevin Pedro, Nhan Tran Fermi National Accelerator Laboratory Batavia, IL 60510, USA",
+     "Sergo Jindariani, Kevin Pedro, Nhan Tran Fermi National Accelerator Laboratory Batavia, IL 60510, USA",
+     "Mia Liu Purdue University West Lafayette, IN 47907, USA",
+     "Edward Kreinar HawkEye360 Herndon, VA 20170, USA"
+    ],
+    [
+     "Zhenbin Wu University of Illinois at Chicago Chicago, IL 60607, USA",
+     "Zhenbin Wu University of Illinois at Chicago Chicago, IL 60607, USA",
+     "Duc Hoang Rhodes College Memphis, TN 38112, USA",
+     "Duc Hoang Rhodes College Memphis, TN 38112, USA"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    120.4,
+    326.6,
+    491.6,
+    414.4
+   ],
+   "caption": "Table 1: Number of trainable weights, floating-point operations, energy consumption and layer size in bits for each convolutional or dense layer (not including the activation layers). Batch normalization and pooling layers are not included as they are negligible in size and energy consumption in comparison. The energy is estimated assuming a 45 nm process using QTOOLS. The total energy and bit size includes all model layers.",
+   "rows": [
+    [
+     "Layername",
+     "Layertype",
+     "Inputshape",
+     "Weights",
+     "MFLOPs",
+     "Energy[nJ]",
+     "Bitsize"
+    ],
+    [
+     "Conv 0",
+     "Conv2D",
+     "(32,32,3)",
+     "432",
+     "0.778",
+     "1,795",
+     "3,456"
+    ],
+    [
+     "Conv 1",
+     "Conv2D",
+     "(15,15,16)",
+     "2,304",
+     "0.779",
+     "1,802",
+     "18,432"
+    ],
+    [
+     "Conv 2",
+     "Conv2D",
+     "(6,6,16)",
+     "3,456",
+     "0.110",
+     "262",
+     "27,648"
+    ],
+    [
+     "Dense 0",
+     "Dense",
+     "(96)",
+     "4,032",
+     "0.008",
+     "26",
+     "32,256"
+    ],
+    [
+     "Dense 1",
+     "Dense",
+     "(42)",
+     "2,688",
+     "0.005",
+     "17",
+     "21,504"
+    ],
+    [
+     "Output",
+     "Dense",
+     "(64)",
+     "65",
+     "0.001",
+     "4",
+     "5,200"
+    ],
+    [
+     "Model total",
+     "",
+     "",
+     "12,858",
+     "1.71",
+     "3,918",
+     "170,816"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    72.8,
+    109.2,
+    540.5,
+    135.5
+   ],
+   "caption": "Table 2: Per-layer heterogeneous quantization configuration obtained with AUTOQKERAS, the total estimated energy consumption and model size in bits of the AutoQ (AQ) model. The energy is estimated assuming a 45 nm process using QTOOLS.",
+   "rows": [
+    [
+     "Model.Model",
+     "Precision per layer.Conv2D",
+     "Precision per layer.ReLU",
+     "Precision per layer.Conv2D",
+     "Precision per layer.ReLU",
+     "Precision per layer.Conv2D",
+     "Precision per layer.ReLU",
+     "Precision per layer.Dense",
+     "Precision per layer.ReLU",
+     "Precision per layer.Dense",
+     "Precision per layer.ReLU",
+     "Precision per layer.Dense",
+     "Precision per layer.Softmax",
+     "Energy[nJ].",
+     "Bitsize."
+    ],
+    [
+     "AQ",
+     "〈4,0〉",
+     "〈3, 1〉",
+     "〈4, 0〉",
+     "〈3, 1〉",
+     "〈4, 0〉",
+     "〈8,4〉",
+     "〈4,0〉",
+     "〈4,2〉",
+     "〈4,0〉",
+     "〈8,2〉",
+     "〈6,0〉",
+     "〈16, 6〉",
+     "465",
+     "45,240"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    73.6,
+    528.8,
+    540.8,
+    607.1
+   ],
+   "caption": "FPGA: Xilinx Virtex UltraScale+ VU9P",
+   "rows": [
+    [
+     "Model",
+     "Accuracy",
+     "DSP",
+     "LUT",
+     "FF",
+     "BRAM",
+     "Latency[cc]",
+     "II [cc]"
+    ],
+    [
+     "BF 14-bit",
+     "0.87",
+     "6,377(93.2%)",
+     "228,823(19.4%)",
+     "80,278(3.4%)",
+     "66.5(3%)",
+     "1,035(5.2µs)",
+     "1,030"
+    ],
+    [
+     "BP 14-bit",
+     "0.93",
+     "3,341(48.9%)",
+     "145,089(12.3%)",
+     "65,482(2.8%)",
+     "66.5(3%)",
+     "1,035(5.2µs)",
+     "1,030"
+    ],
+    [
+     "Q 7-bit",
+     "0.94",
+     "175(2.5%)",
+     "150,981(12.8%)",
+     "35,628(1.5%)",
+     "67.0(3%)",
+     "1,034(5.2µs)",
+     "1,029"
+    ],
+    [
+     "QP 7-bit",
+     "0.94",
+     "174 (2.5%)",
+     "111,152(9.4%)",
+     "32,554(1.4%)",
+     "67.0(3%)",
+     "1,035(5.2µs)",
+     "1,030"
+    ],
+    [
+     "AQ",
+     "0.88",
+     "72 (1.0%)",
+     "48,027(4.0%)",
+     "15,242(0.6%)",
+     "32.5(2%)",
+     "1,059(5.3µs)",
+     "1,029"
+    ],
+    [
+     "AQP",
+     "0.88",
+     "70 (1.0%)",
+     "38,795(3.3%)",
+     "14,802(0.6%)",
+     "30.5(1%)",
+     "1,059(5.3µs)",
+     "1,029"
+    ]
+   ]
+  },
+  {
+   "page": 18,
+   "bbox": [
+    73.3,
+    147.8,
+    541.1,
+    185.9
+   ],
+   "caption": "FPGA: Xilinx Zynq XC7Z020 SoC",
+   "rows": [
+    [
+     "",
+     "DSP",
+     "LUT",
+     "FF",
+     "BRAM(18kb)",
+     "Latency[cc]",
+     "II [cc]",
+     "frame/s"
+    ],
+    [
+     "Available",
+     "220",
+     "53,200",
+     "106,400",
+     "280",
+     "-",
+     "-",
+     "-"
+    ],
+    [
+     "Used",
+     "213(97%)",
+     "48,259(91%)",
+     "35,118(33%)",
+     "122 (44%)",
+     "17,085(171µs)",
+     "16,385",
+     "2,831"
+    ]
+   ]
+  }
+ ]
+}

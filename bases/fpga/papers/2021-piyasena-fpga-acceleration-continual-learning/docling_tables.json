@@ -1,0 +1,1830 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 10,
+   "bbox": [
+    73.5,
+    263.5,
+    522.5,
+    733.4
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "Acknowledgments................................ Abstract......................................",
+     "v vi"
+    ],
+    [
+     "ListofFigures . . . . . . . . . . . . .",
+     ". . . . . . . . . . . . . . . . . . . . . xii"
+    ],
+    [
+     "ListofTables . . . . . . . . . . . . . .",
+     ". . . . . . . . . . . . . . . . . . . . . xiv"
+    ],
+    [
+     "ListofAbbreviations . . . . . . . . .",
+     ". . . . . . . . . . . . . . . . . . . . . xv"
+    ],
+    [
+     "Introduction",
+     "2"
+    ],
+    [
+     "1.1Background..................................",
+     "2 1.1.1FPGAAcceleratorsforEdgeAI................... 3"
+    ],
+    [
+     "",
+     "1.1.2ContinualLearningforEdgeAI................... 5"
+    ],
+    [
+     "1.2ResearchObjectives..............................",
+     "6"
+    ],
+    [
+     "1.3ResearchContributions............................",
+     "7"
+    ],
+    [
+     "1.4ThesisOutline.................................",
+     "8"
+    ],
+    [
+     "1.5Publications..................................",
+     "9"
+    ],
+    [
+     "LiteratureReview",
+     "11"
+    ],
+    [
+     "2.1",
+     "EdgeComputingSystemsforCNNInference . . . . . . . . . . . . . . . . 11"
+    ],
+    [
+     "",
+     "2.2ContinualLearning.............................. 13"
+    ],
+    [
+     "2.2.1",
+     "EvaluationSettings.......................... 14 2.2.2TransferLearning........................... 19"
+    ],
+    [
+     "2.2.3 . . .",
+     "Few-ShotLearning . . . . . . . . . . . . . . . . . . . . . . . 19"
+    ],
+    [
+     "",
+     "2.2.4CurriculumLearning......................... 19"
+    ],
+    [
+     "",
+     "2.2.5Meta-Learning ............................ 19"
+    ],
+    [
+     "2.3",
+     "HardwareAccelerationofCNNtraining. . . . . . . . . . . . . . . . . . . 20"
+    ],
+    [
+     "2.3.1",
+     "End-to-endCNNtraining . . . . . . . . . . . . . . . . . . . . . . 20"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    78.5,
+    122.6,
+    530.0,
+    734.2
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2"
+    ],
+    [
+     "2.4Summary",
+     "",
+     "2.3.2On-ChipContinualLearning..................... 21 ................................... 22"
+    ],
+    [
+     "",
+     "Hardware Accelerator for a Self-Organizing Neural Network",
+     "24"
+    ],
+    [
+     "3 3.1",
+     "Introduction.................................. 3.2ModelBackground.............................. 3.2.1 SONNAlgorithm . . . . . . .",
+     "24 25 . . . . . . . . . . . . . . . . . . . . 26 26"
+    ],
+    [
+     "3.4",
+     ".",
+     "35 36"
+    ],
+    [
+     "",
+     "Accelerator for Streaming Linear Discriminant",
+     "38"
+    ],
+    [
+     "3.3",
+     "3.3.1 3.3.2 3.3.3 Analysis",
+     "3.2.1.1 Step1.WinnerSelection(WSEL) . . . . . . . . . . . . 3.2.1.2 Step2.NeuronAdd(NADD)............... 26 3.2.1.3 Step3.NeuronTrain(NTRAIN) . . . . . . . . . . . . . 28 ProposedHardwareArchitecture . . . . . . . . . . . . . . . . . . . . . . 28 OverviewofArchitecture . . . . . . . . . . . . . . . . . . . . . . . 28 HardwareApproximations . . . . . . . . . . . . . . . . . . . . . . 29 ExploitingParallelism........................ 30 . . . . . . . . . . . ."
+    ],
+    [
+     "4",
+     "Hardware",
+     ""
+    ],
+    [
+     "4.1",
+     "",
+     "43 43"
+    ],
+    [
+     "",
+     "Introduction..................................",
+     ""
+    ],
+    [
+     "",
+     "4.2ModelBackground..............................",
+     "42"
+    ],
+    [
+     "",
+     ". 4.2.2 ProposedSLDAVariant . .",
+     ". . . . . . . . . . . . . . . . . . . . 46"
+    ],
+    [
+     "",
+     "",
+     "45"
+    ],
+    [
+     "",
+     "4.2.3ModelSummary",
+     ""
+    ],
+    [
+     "",
+     "3.3.4 FunctionalUnits . . . . . . . 3.3.4.1 PEMatrix ......................... 3.3.4.2 Neuromodulator . . .",
+     ". . . . . . . . . . . . . . . . . . . . 31 31"
+    ],
+    [
+     "",
+     "3.3.4.3",
+     ". . . . . . . 32"
+    ],
+    [
+     "",
+     "",
+     "Controller.......................... 34 . . . . . . . . . . . . . . ."
+    ],
+    [
+     "",
+     ". .",
+     ". . . . . . . . . . . . . . . . . . ."
+    ],
+    [
+     "",
+     "3.3.5 LatencyandStorageAnalysis",
+     "34"
+    ],
+    [
+     "",
+     "Hardware-SoftwareExecution . . .",
+     ". . . ."
+    ],
+    [
+     "",
+     "3.5ExperimentalResults.............................",
+     "37"
+    ],
+    [
+     "",
+     "3.5.1ModelEvaluation...........................",
+     ""
+    ],
+    [
+     "",
+     "3.5.2HardwareEvaluation.........................",
+     ""
+    ],
+    [
+     "",
+     "3.6Summary",
+     ""
+    ],
+    [
+     "",
+     "",
+     "..................................."
+    ],
+    [
+     "",
+     "4.2.1 SLDAAlgorithm . . . . . .",
+     "44"
+    ],
+    [
+     "",
+     "",
+     ". ."
+    ],
+    [
+     "",
+     "",
+     ". . . . . . . . . . . . . . . . . . . ..........................."
+    ],
+    [
+     "",
+     "ProposedHardwareDesign. .",
+     "46"
+    ],
+    [
+     "4.3",
+     "",
+     ". . . . . . . . . . . . . . . . . . . . . . . . 46"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    75.7,
+    123.0,
+    522.3,
+    733.1
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2"
+    ],
+    [
+     "",
+     "",
+     "4.3.1Overview............................... 46"
+    ],
+    [
+     "",
+     "4.3.2 ComputeUnits . . . . . . . . .",
+     ". . . . . . . . . . . . . . . . . . . 48"
+    ],
+    [
+     "",
+     "4.3.2.1 GEMMCore",
+     "........................ 48"
+    ],
+    [
+     "",
+     "4.3.2.2 VectorProcessingUnit",
+     ". . . . . . . . . . . . . . . . . . . 49"
+    ],
+    [
+     "4.3.3",
+     "InstructionSetArchitecture(ISA)",
+     ". . . . . . . . . . . . . . . . . 49"
+    ],
+    [
+     "4.3.4",
+     "HardwareExecutionofSLDA .",
+     ". . . . . . . . . . . . . . . . . . . 50"
+    ],
+    [
+     "",
+     "4.3.5 HardwareOptimizations . . . .",
+     ". . . . . . . . . . . . . . . . . . . 51"
+    ],
+    [
+     "",
+     "4.3.5.1 TileSkipping........................",
+     "51"
+    ],
+    [
+     "",
+     "4.3.5.2 Fixed-PointQuantization",
+     ". . . . . . . . . . . . . . . . . 52"
+    ],
+    [
+     "",
+     "4.3.5.3 Accuracyvs.E\u0000ciencyTradeo↵",
+     ". . . . . . . . . . . . . 52"
+    ],
+    [
+     "",
+     "4.3.5.4 ScratchpadMemoryDesign................",
+     "52"
+    ],
+    [
+     "",
+     "4.4ExperimentalResults.............................",
+     "53"
+    ],
+    [
+     "",
+     "4.4.1ModelComparison..........................",
+     "54"
+    ],
+    [
+     "",
+     "4.4.2 Fixed-PointQuantization . . .",
+     ". . . . . . . . . . . . . . . . . . . 57"
+    ],
+    [
+     "",
+     "4.4.3 HardwareEvaluation . . . . . .",
+     ". . . . . . . . . . . . . . . . . . . 57"
+    ],
+    [
+     "",
+     "4.5Summary ...................................",
+     "60"
+    ],
+    [
+     "Full",
+     "Deep Continual Learning Pipeline on FPGA",
+     "61"
+    ],
+    [
+     "5.1",
+     "Introduction..................................",
+     "61"
+    ],
+    [
+     "5.2",
+     "Zynqmmapdrv:CustomLinuxDeviceDriverforE\u0000cientPS-PLCommu- nication . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+     "61"
+    ],
+    [
+     "",
+     "5.2.1 PlatformDeviceInterface . . .",
+     ". . . . . . . . . . . . . . . . . . . 62"
+    ],
+    [
+     "5.2.2",
+     "CharacterDeviceInterface DMABu↵erAllocation.",
+     ". . . . . . . . . . . . . . . . . . . . . . 63"
+    ],
+    [
+     "",
+     "5.2.3 . . . .",
+     ". . . . . . . . . . . . . . . . . . . 64"
+    ],
+    [
+     "",
+     "5.2.4",
+     ". . . . . . . . . . . . . . . . . . . 64"
+    ],
+    [
+     "",
+     "MemoryMappingtoUserSpace",
+     ""
+    ],
+    [
+     "",
+     "5.2.5 PerformanceEvaluationofSLDAbasedonZynqmmapdrv",
+     ". . . . 65"
+    ],
+    [
+     "5.3",
+     "FullOn-ChipContinualLearningPipeline",
+     ". . . . . . . . . . . . . . . . . 67"
+    ],
+    [
+     "",
+     "5.3.1DesignOverview........................... 5.4ExperimentalResults.............................",
+     "68 71"
+    ],
+    [
+     "",
+     "...................................",
+     ""
+    ],
+    [
+     "",
+     "5.5Summary",
+     "72"
+    ]
+   ]
+  },
+  {
+   "page": 13,
+   "bbox": [
+    78.4,
+    122.3,
+    529.6,
+    303.0
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3"
+    ],
+    [
+     "6",
+     "Conclusions and Future Directions",
+     "Conclusions and Future Directions",
+     "73"
+    ],
+    [
+     "",
+     "",
+     "6.1Conclusions ..................................",
+     "73"
+    ],
+    [
+     "",
+     "",
+     "6.2FutureDirections...............................",
+     "74"
+    ],
+    [
+     "",
+     "6.2.1",
+     "SparsityinSLDA. . . . . . . . . . . . . . . . . . . . . . . . . . .",
+     "74"
+    ],
+    [
+     "",
+     "",
+     "6.2.2ReplaybasedTraining ........................",
+     "75"
+    ],
+    [
+     "",
+     "6.2.3",
+     "Semi-SupervisedLearning . . . . . . . . . . . . . . . . . . . . . .",
+     "75"
+    ],
+    [
+     "",
+     "6.2.4",
+     "FederatedLearning..........................",
+     "76"
+    ],
+    [
+     "",
+     "6.2.5",
+     "SecurityandDataPrivacyofContinualLearningSystems . . . .",
+     "76"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    88.6,
+    262.8,
+    522.5,
+    732.6
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2"
+    ],
+    [
+     "",
+     "1.1Cloudbasedvson-devicecontinuallearning................",
+     "6"
+    ],
+    [
+     "2.1",
+     "Architectural di↵erence between Multi-Task and Single-Task continual learning . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+     ". . 16"
+    ],
+    [
+     "2.2",
+     "Incrementalbatchvsonlinecontinual learningsetting . . . . . . . . .",
+     ". . 16"
+    ],
+    [
+     "2.3",
+     "Backpropagationiterationsteps . . . . . . . . . . . . . . . . . . . . .",
+     ". . 20"
+    ],
+    [
+     "",
+     "2.4Continuallearningmodelarchitecture....................",
+     "23"
+    ],
+    [
+     "",
+     "3.1Proposedmodel................................",
+     "24"
+    ],
+    [
+     "",
+     "3.2Overviewofproposedarchitecture......................",
+     "29"
+    ],
+    [
+     "",
+     "3.3PEMatrixdataflow..............................",
+     "30"
+    ],
+    [
+     "",
+     "3.4PCstructure .................................",
+     "33"
+    ],
+    [
+     "",
+     "3.5ProcessingColumn(PC)structure .....................",
+     "33"
+    ],
+    [
+     "3.6",
+     "Hardwareblockdiagram . . . . . . . . . . . . . . . . . . . . . . . . .",
+     ". . 35"
+    ],
+    [
+     "3.7",
+     "Hardware-softwareexecution. . . . . . . . . . . . . . . . . . . . . . .",
+     ". . 36"
+    ],
+    [
+     "",
+     "3.8Modelgrowthcomparison ..........................",
+     "37"
+    ],
+    [
+     "3.9",
+     "Modelbehaviour . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+     ". . 38"
+    ],
+    [
+     "",
+     "3.10HardwareLatencybehaviour. . . . . . . . . . . . . . . . . . . . . . .",
+     ". . 39"
+    ],
+    [
+     "",
+     "3.11On-chipmemoryconsumptionvsencounteredclasses(CoRE50) . . .",
+     ". . 40"
+    ],
+    [
+     "",
+     "4.1DeepSLDAmodel[1] ............................",
+     "44"
+    ],
+    [
+     "4.2",
+     "Hardwarearchitecture . . . . . . . . . . . . . . . . . . . . . . . . . .",
+     ". . 47"
+    ],
+    [
+     "",
+     "4.3GEMMcore..................................",
+     "47"
+    ],
+    [
+     "4.4",
+     "GEMMcoretileoperation . . . . . . . . . . . . . . . . . . . . . . . .",
+     ". . 49"
+    ],
+    [
+     "4.5",
+     "Instructionsetformats . . . . . . . . . . . . . . . . . . . . . . . . . .",
+     ". . 50"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    95.7,
+    122.0,
+    529.7,
+    321.5
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "4.6",
+     "HardwareexecutionofSLDAtrainingstepspersample . . . . . . . . . . 51"
+    ],
+    [
+     "4.7",
+     "Top-1accuracyvsencounteredclassescomparison(CoRE50). . . . . . . 54"
+    ],
+    [
+     "4.8",
+     "Top-1accuracyvsencounteredclassescomparison(CUB200-2011) . . . 54"
+    ],
+    [
+     "4.9",
+     "Memoryvsencounteredclasses . . . . . . . . . . . . . . . . . . . . . . . 56"
+    ],
+    [
+     "5.1",
+     "Zynqmmapdrvdevicedriver inZynqMPSoC . . . . . . . . . . . . . . . . 62"
+    ],
+    [
+     "5.2",
+     "Zynqmmapdrvmemorymapping . . . . . . . . . . . . . . . . . . . . . . . 65"
+    ],
+    [
+     "5.3",
+     "XilinxDPUhardwarearchitecture[2] . . . . . . . . . . . . . . . . . . . . 68"
+    ],
+    [
+     "",
+     "5.4Designflowoffullcontinuallearningpipeline................ 69"
+    ],
+    [
+     "",
+     "5.5Fullcontinuallearningpipelinearchitectureoverview........... 70"
+    ],
+    [
+     "5.6",
+     "Hardware-softwareexecution. . . . . . . . . . . . . . . . . . . . . . . . . 70"
+    ]
+   ]
+  },
+  {
+   "page": 16,
+   "bbox": [
+    88.4,
+    262.2,
+    522.1,
+    561.8
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "2.1",
+     "Summaryofcontinual learningapproaches . . . . . . . . . . . . . . . . . 18"
+    ],
+    [
+     "",
+     "3.1Modelperformanceevaluation........................ 39"
+    ],
+    [
+     "3.2",
+     "Hardwaredesignparameters . . . . . . . . . . . . . . . . . . . . . . . . . 39"
+    ],
+    [
+     "3.3",
+     "Latency(us)comparisonforCPU,GPUandFPGA. . . . . . . . . . . . 40"
+    ],
+    [
+     "3.4",
+     "Averagetraininglatencyandpowercomparison . . . . . . . . . . . . . . 41"
+    ],
+    [
+     "3.5",
+     "Hardwareresultsandcomparison . . . . . . . . . . . . . . . . . . . . . . 41"
+    ],
+    [
+     "",
+     "4.1Modelcomparison............................... 55"
+    ],
+    [
+     "4.2",
+     "Fixed-pointsensitivityevaluation . . . . . . . . . . . . . . . . . . . . . . 57"
+    ],
+    [
+     "4.3",
+     "Hardwareperformanceimpactduetoquantization. . . . . . . . . . . . . 58"
+    ],
+    [
+     "4.4",
+     "Hardwareexecutioncomparison . . . . . . . . . . . . . . . . . . . . . . . 59"
+    ],
+    [
+     "5.1",
+     "HardwareperformancewithZynqmmapdrvdriver . . . . . . . . . . . . . 66"
+    ],
+    [
+     "5.2",
+     "Hardwareexecutioncomparison . . . . . . . . . . . . . . . . . . . . . . . 66"
+    ],
+    [
+     "5.3",
+     "OpensourceFPGAbasedCNNimplementations . . . . . . . . . . . . . 69"
+    ],
+    [
+     "5.4",
+     "Hardwareexecutioncomparison . . . . . . . . . . . . . . . . . . . . . . . 72"
+    ]
+   ]
+  },
+  {
+   "page": 35,
+   "bbox": [
+    180.4,
+    117.0,
+    430.0,
+    724.6
+   ],
+   "caption": "Table 2.1: Summary of continual learning approaches",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "Transfer Learning",
+     "⇥ X ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ X ⇥ X ⇥ X ⇥ ⇥ ⇥ ⇥ X"
+    ],
+    [
+     "End-to-End Learning",
+     "X ⇥ X X X X X X ⇥ X ⇥ X ⇥ X X X X ⇥"
+    ],
+    [
+     "Pseudo online",
+     "⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ X X X X ⇥"
+    ],
+    [
+     "Pure online",
+     "⇥ X ⇥ ⇥ ⇥ X ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ X ⇥ ⇥ ⇥ ⇥ X"
+    ],
+    [
+     "Incremental Batch",
+     "X ⇥ X X X ⇥ X X X X X X ⇥ ⇥ ⇥ ⇥ ⇥ ⇥"
+    ],
+    [
+     "Multi Task",
+     "X X X X X X X X X X ⇥"
+    ],
+    [
+     "Single Task",
+     "⇥ X⇥ ⇥ ⇥ ⇥ ⇥ X⇥ ⇥ X⇥ ⇥ X⇥ ⇥ X⇥ ⇥ X⇥ X⇥ ⇥"
+    ],
+    [
+     "Other",
+     "⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ XX"
+    ],
+    [
+     "Replay Based",
+     "⇥ X ⇥ ⇥ ⇥ X X ⇥ X ⇥ X ⇥ X X X X X ⇥"
+    ],
+    [
+     "Architecture Based",
+     "⇥ ⇥ X ⇥ ⇥ ⇥ ⇥ ⇥ X X X ⇥ ⇥ ⇥ ⇥ ⇥ ⇥ ⇥"
+    ],
+    [
+     "RegularizationBased",
+     "X X ⇥ X X X X X ⇥ X X X ⇥ X ⇥ ⇥ ⇥ ⇥"
+    ],
+    [
+     "",
+     "LwF [80] Geppnet [85] PNN [81] EwC [75] SI [77] GEM [90] iCaRL [88] Online EwC [76] Fearnet [84] DEN [82] GDM [83] MAS [78] ExStream [89] AGEM [91] MIR [92] GSS [94] TinyEM [95] SLDA [1]"
+    ]
+   ]
+  },
+  {
+   "page": 56,
+   "bbox": [
+    90.2,
+    135.5,
+    517.8,
+    254.9
+   ],
+   "caption": "Table 3.1: Model performance evaluation",
+   "rows": [
+    [
+     "Method.Method",
+     "Accuracy(%).Object",
+     "Accuracy(%).Category",
+     "TrainTime (LL/total) s.TrainTime (LL/total) s",
+     "Mem. requirement (Params + Data, MB).Mem. requirement (Params + Data, MB)"
+    ],
+    [
+     "Naive4",
+     "2",
+     "10",
+     "-",
+     "-"
+    ],
+    [
+     "O✏ine 5",
+     "89.64",
+     "95.86",
+     "-",
+     "-"
+    ],
+    [
+     "ExStream1 [89]",
+     "67.45",
+     "81.68",
+     "70.92/139.75",
+     "1.906 + 1.563"
+    ],
+    [
+     "iCaRL0 [88]",
+     "36.99",
+     "52.33",
+     "2359.4/2359.4",
+     "136 + 75"
+    ],
+    [
+     "GwR2",
+     "62.472",
+     "82.3",
+     "37.37/85.46",
+     "1.53 + 0"
+    ],
+    [
+     "Proposed3",
+     "63.98",
+     "84.39",
+     "27.87/71.21",
+     "0.69 + 0"
+    ]
+   ]
+  },
+  {
+   "page": 56,
+   "bbox": [
+    184.9,
+    349.8,
+    422.6,
+    391.6
+   ],
+   "caption": "Table 3.2: Hardware design parameters",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    [
+     "#A",
+     "#2",
+     "#<0G",
+     "⇠<0G",
+     "#486⌘<0G",
+     "Frequency"
+    ],
+    [
+     "27",
+     "32",
+     "2048",
+     "8096",
+     "29",
+     "200Mhz"
+    ]
+   ]
+  },
+  {
+   "page": 57,
+   "bbox": [
+    71.0,
+    305.8,
+    521.7,
+    379.3
+   ],
+   "caption": "Table 3.3: Latency (us) comparison for CPU, GPU and FPGA",
+   "rows": [
+    [
+     "Step",
+     "GPU0",
+     "CPU1",
+     "FPGA",
+     "FPGA w/ host2"
+    ],
+    [
+     "WSEL (min-max)",
+     "554.14-679.19",
+     "191.50-796.14",
+     "0.73-3.29",
+     "2.34-5.11"
+    ],
+    [
+     "NTRAIN(mean±std)",
+     "1,175.25±49.14",
+     "494.33±36.76",
+     "0.65±0.27",
+     "2.36±0.27"
+    ],
+    [
+     "NADD (mean std)",
+     "",
+     "",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "page": 58,
+   "bbox": [
+    165.5,
+    142.3,
+    443.2,
+    210.7
+   ],
+   "caption": "Table 3.4: Average training latency and power comparison",
+   "rows": [
+    [
+     "",
+     "GPU",
+     "CPU",
+     "FPGA",
+     "FPGA w/ host"
+    ],
+    [
+     "Latency(us)",
+     "1809.88",
+     "1,007.50",
+     "2.64",
+     "4.35"
+    ],
+    [
+     "Power (W)",
+     "33.00",
+     "50.00",
+     "5.36",
+     "5.36"
+    ]
+   ]
+  },
+  {
+   "page": 58,
+   "bbox": [
+    88.6,
+    244.2,
+    519.3,
+    449.6
+   ],
+   "caption": "Table 3.5: Hardware results and comparison",
+   "rows": [
+    [
+     "",
+     "[119]",
+     "[120]",
+     "[118]",
+     "Proposed"
+    ],
+    [
+     "Design Parameters",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Feature Extractor",
+     "Inception-V3",
+     "InceptionV3",
+     "-",
+     "Resnet-18"
+    ],
+    [
+     "Input dimension",
+     "2,048",
+     "2,048",
+     "100",
+     "512"
+    ],
+    [
+     "Dataset",
+     "CIFAR10",
+     "CIFAR10",
+     "MNIST",
+     "CoRE50"
+    ],
+    [
+     "Output Classes",
+     "10",
+     "10",
+     "10",
+     "50"
+    ],
+    [
+     "Bit-Precision",
+     "16-bit",
+     "16-bit",
+     "16-bit",
+     "8-bit/16-bit"
+    ],
+    [
+     "Synthesis Results",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Device",
+     "XC7VX690T",
+     "XCVU13P",
+     "XC7VX690T",
+     "XCZU9EG"
+    ],
+    [
+     "LUT",
+     "265,680",
+     "152,546",
+     "232,111",
+     "115,656"
+    ],
+    [
+     "FF",
+     "-",
+     "-",
+     "⇠5,000",
+     "104,680"
+    ],
+    [
+     "DSP",
+     "2,048",
+     "2064",
+     "3,000",
+     "1,184"
+    ],
+    [
+     "BRAM (36kb)",
+     "-",
+     "-",
+     "-",
+     "415.5"
+    ],
+    [
+     "Max Frequency (Mhz)",
+     "209",
+     "204",
+     "93",
+     "200"
+    ]
+   ]
+  },
+  {
+   "page": 72,
+   "bbox": [
+    82.6,
+    276.8,
+    525.6,
+    574.2
+   ],
+   "caption": "Table 4.1: Model comparison",
+   "rows": [
+    [
+     "",
+     "Top-1Accuracy.Object",
+     "Top-1Accuracy.Category",
+     "PeakMemoryconsumption(MB).Params",
+     "PeakMemoryconsumption(MB).Data",
+     "PeakMemoryconsumption(MB).Param+Data",
+     "Train time (s).Train time (s)"
+    ],
+    [
+     "CoRE50",
+     "CoRE50",
+     "CoRE50",
+     "CoRE50",
+     "CoRE50",
+     "CoRE50",
+     "CoRE50"
+    ],
+    [
+     "Naive 0",
+     "2",
+     "10.09",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    [
+     "O✏ine 1",
+     "90.08",
+     "95.24",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    [
+     "ExStream",
+     "71.49",
+     "83.76",
+     "2.98",
+     "1.56",
+     "4.54",
+     "524.24"
+    ],
+    [
+     "SONN",
+     "66.12",
+     "85.01",
+     "1.60",
+     "0.00",
+     "1.60",
+     "391.78"
+    ],
+    [
+     "SLDAStaticCov",
+     "72.78",
+     "86.12",
+     "0.20",
+     "0.00",
+     "0.20",
+     "224.28"
+    ],
+    [
+     "SLDADiagCov",
+     "74.34",
+     "87.41",
+     "0.20",
+     "0.00",
+     "0.20",
+     "265.06"
+    ],
+    [
+     "SLDAPlasticCov",
+     "80.79",
+     "91.46",
+     "1.20",
+     "0.00",
+     "1.20",
+     "285.15"
+    ],
+    [
+     "CUB200",
+     "CUB200",
+     "CUB200",
+     "CUB200",
+     "CUB200",
+     "CUB200",
+     "CUB200"
+    ],
+    [
+     "Naive 0",
+     "Naive 0",
+     "0.67",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    [
+     "O✏ine 1",
+     "O✏ine 1",
+     "60.54",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    [
+     "ExStream",
+     "ExStream",
+     "52.46",
+     "2.55",
+     "6.25",
+     "8.80",
+     "526.31"
+    ],
+    [
+     "SONN",
+     "SONN",
+     "44.85",
+     "1.87",
+     "0.00",
+     "1.87",
+     "89.10"
+    ],
+    [
+     "SLDAStaticCov",
+     "SLDAStaticCov",
+     "58.26",
+     "0.78",
+     "0.00",
+     "0.78",
+     "75.52"
+    ],
+    [
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "61.11",
+     "0.79",
+     "0.00",
+     "0.79",
+     "78.21"
+    ],
+    [
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "62.98",
+     "1.78",
+     "0.00",
+     "1.78",
+     "88.72"
+    ]
+   ]
+  },
+  {
+   "page": 74,
+   "bbox": [
+    78.3,
+    135.4,
+    527.1,
+    258.3
+   ],
+   "caption": "Table 4.2: Fixed-point sensitivity evaluation",
+   "rows": [
+    [
+     "",
+     "",
+     "SLDAPlasticCov.CoRE50 (object)",
+     "SLDAPlasticCov.CoRE50 (Category)",
+     "SLDAPlasticCov.CUB200",
+     "SLDAStaticCov.CoRE50 (object)",
+     "SLDAStaticCov.CoRE50 (Category)",
+     "SLDAStaticCov.CUB200",
+     "SLDADiagCov.CoRE50 (object)",
+     "SLDADiagCov.CoRE50 (Category)",
+     "SLDADiagCov.CUB200"
+    ],
+    [
+     "Baseline",
+     "FP32",
+     "80.79",
+     "91.46",
+     "61.95",
+     "72.88",
+     "86.02",
+     "58.72",
+     "74.34",
+     "87.14",
+     "60.73"
+    ],
+    [
+     "",
+     "FxP<32,4,28>",
+     "81.01",
+     "91.55",
+     "61.82",
+     "72.83",
+     "86.08",
+     "58.78",
+     "74.38",
+     "87.32",
+     "60.72"
+    ],
+    [
+     "Group1 (Activation/",
+     "FxP<24,4,20> FxP<16,4,12>",
+     "81.01 81.05",
+     "91.55 91.64",
+     "61.82",
+     "72.83 72.87",
+     "86.08 86.08",
+     "58.78 58.85",
+     "74.38 74.38",
+     "87.32 87.32",
+     "60.72 60.91"
+    ],
+    [
+     "Mean/Weights)",
+     "FxP<8,4,4>",
+     "34.77",
+     "49.36",
+     "61.69 14.60",
+     "39.48",
+     "70.34",
+     "35.79",
+     "27.97",
+     "54.33",
+     "17.38"
+    ],
+    [
+     "",
+     "FxP<24,4,20>",
+     "3.82",
+     "12.74",
+     "61.43",
+     "72.83",
+     "86.08",
+     "58.79",
+     "74.39",
+     "87.33",
+     "60.66"
+    ],
+    [
+     "Group2 (Covariance/",
+     "FxP<16,4,12>",
+     "0.84",
+     "6.76",
+     "2.90",
+     "72.79",
+     "86.08",
+     "58.85",
+     "74.57",
+     "87.28",
+     "60.40"
+    ],
+    [
+     "Bias)",
+     "FxP<8,4,4>",
+     "2.05",
+     "12.14",
+     "2.19",
+     "72.43",
+     "86.31",
+     "59.37",
+     "2.00",
+     "10.00",
+     "0.52"
+    ]
+   ]
+  },
+  {
+   "page": 75,
+   "bbox": [
+    78.7,
+    134.9,
+    514.5,
+    314.7
+   ],
+   "caption": "Table 4.3: Hardware performance impact due to quantization",
+   "rows": [
+    [
+     "",
+     "LUT",
+     "FF",
+     "DSP",
+     "BRAM",
+     "Latency (us)",
+     "Latency w/host (us)",
+     "Power (W)"
+    ],
+    [
+     "SONN",
+     "115,656",
+     "104,680",
+     "1,184",
+     "415",
+     "0.48",
+     "4.35",
+     "5.36"
+    ],
+    [
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov"
+    ],
+    [
+     "FP32",
+     "176,683",
+     "224,081",
+     "1,850",
+     "311.00",
+     "83.85",
+     "260.74",
+     "4.91"
+    ],
+    [
+     "FxP<16,32>⇤",
+     "70,051",
+     "113,831",
+     "921",
+     "310.00",
+     "51.76",
+     "212.65",
+     "3.72"
+    ],
+    [
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov"
+    ],
+    [
+     "FP32",
+     "32,584",
+     "51,619",
+     "405",
+     "69.50",
+     "14.56",
+     "162.40",
+     "3.35"
+    ],
+    [
+     "FxP<16,32>⇤",
+     "18,630",
+     "27,503",
+     "197",
+     "69.50",
+     "10.08",
+     "162.69",
+     "3.16"
+    ],
+    [
+     "SLDAStaticCov",
+     "SLDAStaticCov",
+     "SLDAStaticCov",
+     "SLDAStaticCov",
+     "SLDAStaticCov",
+     "SLDAStaticCov",
+     "SLDAStaticCov",
+     "SLDAStaticCov"
+    ],
+    [
+     "FP32",
+     "32,584",
+     "51,619",
+     "405",
+     "69.50",
+     "5.48",
+     "155.73",
+     "3.36"
+    ],
+    [
+     "FxP<16,32>⇤",
+     "18,630",
+     "27,503",
+     "197",
+     "69.50",
+     "5.85",
+     "153.82",
+     "3.22"
+    ]
+   ]
+  },
+  {
+   "page": 76,
+   "bbox": [
+    132.7,
+    135.2,
+    474.9,
+    431.1
+   ],
+   "caption": "Table 4.4: Hardware execution comparison",
+   "rows": [
+    [
+     "",
+     "",
+     "GPU (Jetson TX1 )",
+     "FPGA (ZCU102 )"
+    ],
+    [
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov"
+    ],
+    [
+     "Latency",
+     "Time (us) Latency factor",
+     "979.08 4.60",
+     "212.65 1.00"
+    ],
+    [
+     "Power",
+     "Power (W) Energy/ train sample (J) Energy factor",
+     "4.15 4.06E-03 5.14",
+     "3.72 7.91E-04 1.00"
+    ],
+    [
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov"
+    ],
+    [
+     "Latency",
+     "Time (us) Latency factor",
+     "271.20 1.67",
+     "162.69 1.00"
+    ],
+    [
+     "Power",
+     "Power (W) Energy/ train sample (J) Energy factor",
+     "5.35 1.45E-03 2.82",
+     "3.16 5.14E-04 1.00"
+    ],
+    [
+     "Latency Power",
+     "SLDAStaticCov Time (us) Latency factor Power (W) Energy/ train sample (J) Energy factor",
+     "199.82 1.30 4.30 8.59E-04 1.73",
+     "153.82 1.00 3.22 4.95E-04 1.00"
+    ]
+   ]
+  },
+  {
+   "page": 83,
+   "bbox": [
+    71.5,
+    149.6,
+    518.6,
+    301.2
+   ],
+   "caption": "Table 5.1: Hardware performance with Zynqmmapdrv driver",
+   "rows": [
+    [
+     "",
+     "LUT",
+     "FF",
+     "DSP",
+     "BRAM",
+     "Latency (us)",
+     "Power(W)"
+    ],
+    [
+     "SONN",
+     "115,656.00",
+     "104,680.00",
+     "1,184.00",
+     "415.50",
+     "4.35",
+     "5.36"
+    ],
+    [
+     "SLDAPlasticCov (FxP<16, 32>)",
+     "73,435.00",
+     "83,485.00",
+     "914.00",
+     "317.50",
+     "47.85",
+     "3.61/3.97"
+    ],
+    [
+     "SLDADiagCov (FxP<16, 32>)",
+     "18,068.00",
+     "25,283.00",
+     "194.00",
+     "69.5",
+     "8.3",
+     "3.16/3.34"
+    ],
+    [
+     "SLDAStaticCov (FxP<16, 32>)",
+     "18,068.00",
+     "25,283.00",
+     "194.00",
+     "69.5",
+     "4.76",
+     "3.16/3.34"
+    ]
+   ]
+  },
+  {
+   "page": 83,
+   "bbox": [
+    99.2,
+    369.7,
+    490.3,
+    702.9
+   ],
+   "caption": "Table 5.2: Hardware execution comparison",
+   "rows": [
+    [
+     "",
+     "CPU (ARM A53 )",
+     "GPU (Jetson Xavier NX ⇤",
+     ") FPGA (ZCU102 )"
+    ],
+    [
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov",
+     "SLDAPlasticCov"
+    ],
+    [
+     "Av. latency(us) Latency factor Power(static/total)(W) Energy/trainsample(J) Energy factor Av. latency(us) Latency factor",
+     "1,159.21 24.23 3.6/4.04 4.68E-03 24.62 25.69 3.09",
+     "182.01 3.80 3.23 / 6.47 1.18E-03 6.20 98.25 11.84 3.23 / 4.34",
+     "47.85 1.00 3.61 / 3.97 1.90E-04 1.00 8.30 1.00"
+    ],
+    [
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov",
+     "SLDADiagCov"
+    ],
+    [
+     "Power(static/total)(W) Energy/trainsample(J) Energy factor Av. latency(us) Latency factor",
+     "3.16/3.51 9.02E-05 3.25 2.80",
+     "76.07 15.98 3.23 / 3.49",
+     "4.76 1.00"
+    ],
+    [
+     "",
+     "SLDAStaticCov 0.59 3.16/3.29",
+     "4.26E-04 15.38",
+     "3.16 / 3.34 2.77E-05 1.00"
+    ],
+    [
+     "",
+     "9.21E-06",
+     "2.65E-04",
+     "1.59E-05"
+    ],
+    [
+     "Energy/trainsample(J)",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Power(static/total)(W)",
+     "",
+     "",
+     ""
+    ],
+    [
+     "",
+     "",
+     "",
+     "3.16 / 3.34"
+    ],
+    [
+     "Energy factor",
+     "0.58",
+     "16.69",
+     "1.00"
+    ]
+   ]
+  },
+  {
+   "page": 86,
+   "bbox": [
+    78.2,
+    140.8,
+    529.6,
+    355.0
+   ],
+   "caption": "Table 5.3: Open source FPGA based CNN implementations",
+   "rows": [
+    [
+     "",
+     "VTA-TVM[153]",
+     "T-DLA[154]",
+     "CHaiDNN[155]",
+     "DPU[2]"
+    ],
+    [
+     "Performance",
+     "Performance",
+     "Performance",
+     "Performance",
+     "Performance"
+    ],
+    [
+     "Board FPS (Resnet18) FPS (Resnet50) Top-1/5 Accuracy (Resnet18 / Imagenet) Top-1/5 Accuracy",
+     "XilinxPynq-Z1 2.38 NA 37 / 63",
+     "XilinxZedboard 20.48 NA 65.6 / -",
+     "XilinxZCU102 NA 41.99 -",
+     "XilinxZCU102 170 68.8 66.94/88.25"
+    ],
+    [
+     "Resource consumption",
+     "Resource consumption",
+     "Resource consumption",
+     "Resource consumption",
+     "Resource consumption"
+    ],
+    [
+     "(Resnet50 / Imagenet) LUT",
+     "- -",
+     "- 37,772",
+     "72.97/91.11 161,983",
+     "73.34/91.31 53,540"
+    ],
+    [
+     "FF",
+     "-",
+     "50,508",
+     "151,616",
+     "105,008"
+    ],
+    [
+     "DSP",
+     "-",
+     "202",
+     "1,352",
+     "562"
+    ],
+    [
+     "BRAM (36K)",
+     "-",
+     "97",
+     "676",
+     "257"
+    ]
+   ]
+  },
+  {
+   "page": 89,
+   "bbox": [
+    124.3,
+    136.5,
+    469.3,
+    336.2
+   ],
+   "caption": "Table 5.4: Hardware execution comparison",
+   "rows": [
+    [
+     "",
+     "DPU ⇤",
+     "DPU ⇤ + SLDAPlasticCov",
+     "DPU ⇤ + SLDADiagCov"
+    ],
+    [
+     "LUT",
+     "58,703",
+     "142,215",
+     "90,059"
+    ],
+    [
+     "FF",
+     "106,024",
+     "210,541",
+     "138,076"
+    ],
+    [
+     "DSP",
+     "704",
+     "1616",
+     "896"
+    ],
+    [
+     "BRAM",
+     "261",
+     "553.5",
+     "313.5"
+    ],
+    [
+     "Power (W)",
+     "4.42 /",
+     "5.29 /",
+     "4.81/"
+    ],
+    [
+     "(Static/Total)",
+     "8.16",
+     "9.00",
+     "8.69"
+    ],
+    [
+     "Latency(us)",
+     "5,875.44",
+     "5,929.00",
+     "5,883.70"
+    ],
+    [
+     "FPS",
+     "170.20",
+     "168.67",
+     "169.96"
+    ],
+    [
+     "Energy/Image (J)",
+     "0.048",
+     "0.056",
+     "0.054"
+    ],
+    [
+     "Accuracy(Obj/Cat)",
+     "NA",
+     "78.79/89.46",
+     "71.81 / 85.37"
+    ]
+   ]
+  }
+ ]
+}

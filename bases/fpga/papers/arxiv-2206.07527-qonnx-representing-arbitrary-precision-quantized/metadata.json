@@ -75,13 +75,12 @@
   ],
   "added": "2026-09-28",
   "extraction": {
-    "backend": "pymupdf",
-    "ok": false,
+    "backend": "grobid",
+    "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
       "axes déduits automatiquement, à confirmer dans /paper-fiche",
-      "ligatures perdues à l'extraction : 55 mot(s) réparé(s) (lib/ligatures.py)",
-      "ligatures perdues : 15 fragment(s) non réparé(s) (« classi cation »…)"
+      "tableaux sans corps extrait (légende seule) : TABLE II"
     ]
   },
   "status": {

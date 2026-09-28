@@ -1,0 +1,488 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    48.2,
+    62.3,
+    566.9,
+    155.8
+   ],
+   "caption": "TABLE I: Comparison of our work with related works.",
+   "rows": [
+    [
+     "Works.Architecture Style",
+     "Snowflake [1].",
+     "Angle-eye [2].Single Engine Architectures",
+     "Brainwave [10].Single Engine Architectures",
+     "[11].Single Engine Architectures",
+     "[12].Single Engine Architectures",
+     "VitisAI [13].",
+     "DeepBurning [14].Streaming",
+     "FINN [4].Streaming",
+     "DeepBuilder [15].Architectures",
+     "HPIPE [6].Streaming",
+     "SMOF Our work.Streaming"
+    ],
+    [
+     "Classification Detection",
+     "✓",
+     "✓",
+     "✓ ✗",
+     "✓ ✗",
+     "✗ ✗",
+     "✓",
+     "✓ ✗",
+     "✓",
+     "✓",
+     "✓ ✓ ✗",
+     "✓ ✓ ✓"
+    ],
+    [
+     "",
+     "✗",
+     "✓",
+     "",
+     "",
+     "",
+     "✓",
+     "",
+     "✗",
+     "✓",
+     "",
+     ""
+    ],
+    [
+     "Segmentation",
+     "✗",
+     "✗",
+     "✗",
+     "✗",
+     "✓",
+     "✓",
+     "✗",
+     "✗",
+     "✗",
+     "",
+     ""
+    ],
+    [
+     "2D CNN",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓",
+     "✓"
+    ],
+    [
+     "3D CNN",
+     "✗",
+     "✗",
+     "✗",
+     "✓",
+     "✗",
+     "✗",
+     "✗",
+     "✗",
+     "✗",
+     "✗",
+     "✓"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    448.2,
+    102.8,
+    560.0,
+    216.0
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "model batchsize",
+     "UNet 1"
+    ],
+    [
+     "latency throughput",
+     "47 ms 21fps"
+    ],
+    [
+     "BRAM",
+     "6062 (89%) 3654(85%) 864(90%)"
+    ],
+    [
+     "DSP",
+     ""
+    ],
+    [
+     "URAM",
+     ""
+    ],
+    [
+     "LUT",
+     "1040K (88%)"
+    ],
+    [
+     "FF",
+     "841K (36%)"
+    ],
+    [
+     "BW",
+     "225Gbps (37%)"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    48.6,
+    82.1,
+    300.5,
+    210.8
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Algorithm 1 Design Space",
+     "Exploration"
+    ],
+    [
+     "Require: G, b",
+     "▷ CNN graph, batch size"
+    ],
+    [
+     "Require:R,BW,tri S initialize(G) 1⃝ for S ∈ G do",
+     "▷on-chiprsc,bandwidth,reconftime"
+    ],
+    [
+     "while ∑v R(v) ≤ R alloc parallel(S, alloc on alloc off chip(S, BW)",
+     "▷resourceminimal subgraphs 4⃝"
+    ],
+    [
+     "R) chip(S,",
+     "and ∑v BW(v) ≤ BW do 2⃝ R) 3⃝"
+    ],
+    [
+     "merge subgraph(Si,Sj) ∀Si,Sj ∈G",
+     "5⃝"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    48.2,
+    334.9,
+    297.0,
+    422.2
+   ],
+   "caption": "TABLE II: HW related symbols of the model graph G",
+   "rows": [
+    [
+     "Symbols",
+     "Definitions"
+    ],
+    [
+     "rin v σin v ρv λv N in G",
+     "Standard input rate in of vertex v Size of the input feature map of vertex v Pipeline depth of vertex v Latency estimation for vertex v The first node of the graph G"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    310.5,
+    581.7,
+    562.0,
+    692.8
+   ],
+   "caption": "TABLE III: Characteristics of the evaluated CNN models.",
+   "rows": [
+    [
+     "Model",
+     "Dataset",
+     "MACs (G)",
+     "Params (M)",
+     "#Layers",
+     "#Conv Layers",
+     "Input Dims",
+     "Accuracy (%)"
+    ],
+    [
+     "Yolov8n",
+     "COCO±[39]",
+     "4.37",
+     "3.16",
+     "115",
+     "63",
+     "(3, 640, 640)",
+     "37.10 (f32) 37.10 (fp16) 29.60 (fp8) 35.10 (bfp8)"
+    ],
+    [
+     "UNet",
+     "CamVid‡[40]",
+     "130.12",
+     "28.96",
+     "53",
+     "23",
+     "(3, 368, 480)",
+     "71.67 (f32) 71.67 (fp16) 60.62 (fp8) 71.75 (bfp8)"
+    ],
+    [
+     "UNet3D",
+     "BraTS2020∓[41]",
+     "918.64",
+     "5.65",
+     "52",
+     "19",
+     "(4, 155, 240, 240)",
+     "85.34 (f32) 85.23 (fp16) 1.15 (fp8) 85.34 (bfp8)"
+    ],
+    [
+     "X3D-M",
+     "UCF101†[42]",
+     "6.97",
+     "3.82",
+     "396",
+     "115",
+     "(3, 16, 256, 256)",
+     "96.40 (f32) 96.40 (fp16) 0.81 (fp8) 96.29 (bfp8)"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    310.9,
+    285.7,
+    560.5,
+    360.6
+   ],
+   "caption": "TABLE IV: Breakdown and impact of model partitioning with device reconfiguration on UNet3D designs targeting different batch sizes.",
+   "rows": [
+    [
+     "Batch Size",
+     "1",
+     "4",
+     "16",
+     "64"
+    ],
+    [
+     "Number of partitions",
+     "4",
+     "5",
+     "6",
+     "6"
+    ],
+    [
+     "Batch Latency (sec)",
+     "0.77",
+     "2.76",
+     "9.54",
+     "36.69"
+    ],
+    [
+     "BatchComputeTime(sec)",
+     "0.53",
+     "2.43",
+     "9.13",
+     "36.28"
+    ],
+    [
+     "BatchReconfigTime(sec)",
+     "0.24",
+     "0.33",
+     "0.41",
+     "0.41"
+    ],
+    [
+     "Reconfig Contribution on Batch Latency (%)",
+     "31.16",
+     "11.95",
+     "4.29",
+     "1.11"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    48.0,
+    72.0,
+    562.3,
+    187.7
+   ],
+   "caption": "TABLE V: Comparison of FPGA accelerator architectures generated by SMOF with prior state-of-the-art works on four major computer vision tasks (segmentation, detection, 3D segmentation, action recognition).",
+   "rows": [
+    [
+     "",
+     "S.Basalama[43]",
+     "S.Liu[12]",
+     "S.Liu[44]",
+     "Vitis-AI[13]",
+     "SMOF (Ours)",
+     "SMOF (Ours)",
+     "A.Montgomerie[23]",
+     "SMOF(Ours)",
+     "P. Toupas [34]",
+     "SMOF (Ours)",
+     "SMOF (Ours)"
+    ],
+    [
+     "Model Model Type Input Size MACs Precision",
+     "UNet† 2D 256 × 256 12 Float32",
+     "UNet† 2D 512 × 512 5.9 W16A16",
+     "UNet† 2D 256 × 256 27.4 W8A8",
+     "UNet† 2D 128 × 128 5.6 W16A16",
+     "UNet 2D 256 × 256 130 W8A8",
+     "UNet 2D 256 × 256 130 W8A8",
+     "YOLOv8s 2D 640 × 640 30.5 W8A16",
+     "YOLOv8n 2D 640 × 640 4.4 W8A8",
+     "X3D-M 3D 16×256×256 6.97 W16A16",
+     "X3D-M 3D 16×256×256 6.97 W8A8",
+     "UNet3D 3D 155×240×240 918.6 W8A8"
+    ],
+    [
+     "Device Reconfigurations∓",
+     "VCU1525 -",
+     "ZC7045 -",
+     "Arria 10 -",
+     "ZCU102 -",
+     "VCU1525",
+     "U200 ZCU102 - 6",
+     "VCU118 -",
+     "VCU118 5",
+     "ZCU102 -",
+     "ZCU102 9",
+     "U200 5"
+    ],
+    [
+     "LUT",
+     "567K",
+     "85K",
+     "170K (ALM)",
+     "52K",
+     "- 993K",
+     "1040K 213K",
+     "1023K",
+     "543K",
+     "-",
+     "235K",
+     "289K"
+    ],
+    [
+     "DSP",
+     "3078",
+     "640",
+     "1665",
+     "710",
+     "6019",
+     "6062 1461",
+     "6815",
+     "5061",
+     "2116",
+     "932",
+     "5677"
+    ],
+    [
+     "BRAM (18K) URAM",
+     "1598",
+     "545",
+     "21894 (M20K) -",
+     "510 -",
+     "3715 864",
+     "3654 1368 864 -",
+     "1322 713",
+     "1813 431",
+     "948 -",
+     "857 -",
+     "2980 528"
+    ],
+    [
+     "Freq.",
+     "422",
+     "-",
+     "",
+     "",
+     "",
+     "200",
+     "240",
+     "",
+     "",
+     "200",
+     ""
+    ],
+    [
+     "(MHz)",
+     "234",
+     "200",
+     "200",
+     "281",
+     "200",
+     "250",
+     "",
+     "250",
+     "160",
+     "",
+     "250"
+    ],
+    [
+     "Througput (fps)‡",
+     "17.18",
+     "17.12",
+     "57.47",
+     "156.7",
+     "16.96",
+     "21.21 1.28±",
+     "8.33",
+     "184.27±",
+     "13.44±",
+     "27.08±",
+     "1.75±"
+    ],
+    [
+     "GOP/s",
+     "207",
+     "107",
+     "1578",
+     "832",
+     "2206",
+     "2758 166",
+     "1244",
+     "808",
+     "86",
+     "171",
+     "1595"
+    ],
+    [
+     "GOP/s/DSP",
+     "0.06",
+     "0.16",
+     "0.94",
+     "0.22",
+     "0.36",
+     "0.45 0.11",
+     "0.18",
+     "0.16",
+     "0.03",
+     "0.18",
+     "0.28"
+    ]
+   ]
+  }
+ ]
+}

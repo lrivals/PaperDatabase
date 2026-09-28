@@ -66,13 +66,12 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : TABLE II",
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE II",
       "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "done"
-  },
-  "warnings": []
+  }
 }

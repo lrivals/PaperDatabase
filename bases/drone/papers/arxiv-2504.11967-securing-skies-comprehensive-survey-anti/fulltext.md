@@ -137,11 +137,75 @@ This survey examined the evolving anti-UAV landscape, focusing on detection, tra
 
 **Figure 2.** Taxonomy for emerging methods and technologies in UAV research.
 
-**Table 1** 
+**Table 1** [corps du tableau reconstruit par Docling : à vérifier]
 
-**Table 3.** Representative UAV Detection Approaches by Modality. Disclaimer: All entries summarize our own interpretation of each paper's methodology and reported outcomes. Since authors use distinct datasets, labels, and metrics, no direct numerical comparison is valid.
+    Dataset | Task | Modality | Seq. | Frame | Annotation | Resolution | Rate (Hz) | T-Type | S-Type | Venue(Year)
+    FL-Drones [107] | D, T | RGB | 14 | 39K | Bbox | 640×480 / 752×480 | - | 1 | 2 | TPAMI (2016)
+    NPS-Drones [72] | D, T | RGB | 50 | 70K | Bbox | 1920×1280 / 1280×760 | - | 1 | - | IROS (2016)
+    USC Drone [24] | D, T | RGB | 60 | 20K | Bbox | 1920×1080 | 15 | 1 | - | APSIPAASC(2017)
+    DroneRF [8] | C, D | RF | 454 | 10M | Class | 14-bit (RF) | Less than 1K (RF) | 3 | - | DatainBrief(2019)
+    DroneAudio [2] | C, D | A | - | 1332clips | Class | - | 16K (A) | 2 | - | IWCMC (2019)
+    MAV-VID [104] | D, T | RGB | - | 40K | Bbox | - | - | 1 | - | IEEE Access (2020)
+    Hui [58] | D, T | IR | 22 | 16K | Centroid | 256×256 | 100 | 1 | 22 | CSD (2020)
+    Acoustic-UAV [21] | C, D | A | - | 91K sec | Class | - | 22.05K (A) | 9 | 6 | Drones (2021)
+    mDrone [169] | C, D | RA | 100 | 60K | 3Dcoords | - | 10 (RA) | 1 | - | ICRA (2021)
+    Det-Fly [170] | D | RGB | - | 13K | Bbox | 3840×2160 | 5 | 1 | 4 | RA-L (2021)
+    MOT-Fly [29] | C, D | RGB | 16 | 11K | Bbox | 1920×1080 | - | 3 | - | ICUS (2021)
+    HalmstadDrone[126] | D,T | RGB,IR,A | 650 | 203K | Bbox | 640×512 (RGB), 320×256 (IR) | 60 (IR), 30 (RGB) | 4 | 3 | ICPR (2021)
+    Drone-vs-Bird [30] | C, D | RGB | 77 | 105K | Bbox | 720×576 - 3840×2160 | - | 8 | - | AVSS (2021)
+    Anti-UAV [61] | D, T | RGB, IR | 318 | 297K | Bbox | 1920×1080 (RGB), 640×512 (IR) | 25 | - | 7 | TMM (2021)
+    UAVSwarm [137] | D, T | RGB | 72 | 12K | Bbox | 446×276 - 1919×1079 | - | 19 | 13 | RemoteSens.(2022)
+    SyntheticDrone[144] | C | RGB | - | 2K | Class | 256×256 | - | 4 | 10 | CORD (2022)
+    DUTAnti-UAV[167] | D,T | RGB | 20 | 35K | Bbox | 160×240 - 3744×5616 | - | 1 | 7 | T-ITS (2022)
+    AOT [10] | D, T | IR | 4943 | 5.9M+ | Bbox | 2448×2048 | 10 | - | - | AWS (2023)
+    Anti-UAV600 [175] | D, T | IR | 600 | 723K | Bbox | 640×512 | 25 | 1 | - | Preprint (2023)
+    Anti-UAV410 [54] | D, T | IR | 410 | 438K | Bbox | 640×512 | 25 | 1 | 7 | TPAMI (2024)
+    MMAUD [160] | C,D,T | RGB,A,RA,L | 50 | 45K | Trajectory | 2560×960 (RGB) | 30 (RGB), 41.8 (A), 15 (RA), 10 (L) | 6 | - | ICRA (2024)
+    RGBT-Tiny [157] | D, T | RGB, IR | 115 | 93K | Bbox | 640×512 | 15 | 7 | 8 | TPAMI (2025)
 
-**Table 4.** Representative UAV Tracking Approaches. Disclaimer: All entries summarize our own interpretation of each paper's methodology and reported outcomes. Since authors use distinct datasets, labels, and metrics, no direct numerical comparison is valid.
+**Table 3.** Representative UAV Detection Approaches by Modality. Disclaimer: All entries summarize our own interpretation of each paper's methodology and reported outcomes. Since authors use distinct datasets, labels, and metrics, no direct numerical comparison is valid. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Ref. (Yr.) | Mod. | Method | Dataset | Key Observations (Our Reading)
+    Radar-Based |  |  |  | 
+    Zhaoetal.(2022)[169] | RA | CNN+LSTM | mDrone [169] | Exploits Doppler signals from propellers for real-time detection and 3D track- ing at 10Hz. Achieves ≈9cm localization error, outperforming five classic radar baselines (e.g., 3D MUSIC) by ≈66% in accuracy.
+    Vision-Based |  |  |  | 
+    Seidaliyevaetal. (2020) [114] | RGB | Background subtraction + MobileNetV2 | Drone-vs-Bird [30], BirdDetection [158] | Combines Drone-vs-Bird with a bird dataset to enhance UAV-vs-bird discrim- ination. Reached 0.56 F1 at IoU=0.5 (9FPS). Performance is improved upon by works using more advanced YOLO variants (e.g., [32]).
+    Dadboudetal.(2021)[32] | RGB | YOLOv5x (PANet neck, mosaic augment) | Det-Fly [170], Drone- vs-Bird [30] | Combined Drone-vs-Bird + Det-Fly, achieving 0.98mAP@0.5 with 0.96 re- call. Improves upon [114] on Drone-vs-Bird, though different training splits limit exact comparison.
+    Sangametal.(2023)[112] | RGB | CSPDarkNet-53 + VideoSwin | FL-Drones [107], NPS-Drones [72], AOT [10] | On FL-Drones: 0.89 precision, 0.85 recall, 0.87 F1, 0.84 AP@0.5. On NPS- Drones: 0.94 precision, 0.92 recall, 0.93 F1, 0.93 AP@0.5. On AOT: 0.85 precision, 0.76 recall, 0.80 F1, 0.82 AP@0.5. Comparable to Rebbapragada et al. [102] under similar setups.
+    Tu et al. (2024) [132] | RGB | YOLOv8+FCM+FMM | DUTAnti-UAV[167] | AP@0.5=0.913,AP@0.5:0.95=0.612,belowthebestYOLO-basedmethods on this dataset (e.g., [56]) but highlights a lightweight, efficient design. mAP@0.5=0.943. Improvestherecallrateof2.96%andtheprecisionof
+    Chengetal.(2024)[26] | RGB | YOLOv5s+LGFFM | DUT Anti-UAV [167] | 1.41% compared with YOLOv5s. Slightly outperforms [132] on the same benchmark. Low-complexity approach with 4.4ms/frame inference.
+    Bo et al. (2024) [16] | RGB | YOLOv7-tiny + Inception- NeXt + SPPFCSPC-SR + 'Get-and-Send' | DUTAnti-UAV[167] | mAP@0.5=0.932 at 104FPS. Balances fast inference and high accuracy, though slightly lower mAP@0.5 than [26] and [56].
+    Elsayedetal.(2024)[41] | RGB | YOLOv6 + LERFNet + large-kernel LAM | DUTAnti-UAV[167] | mAP@0.5=0.936,with0.953precision.Surpasses[16]inaccuracy,albeitat presumably higher resource use than the YOLOv7-tiny approach.
+    Huangetal.(2024)[56] | RGB | YOLOv8+ghostconv+ EMA + DCNv2 | Det-Fly [170], DUT Anti-UAV [167] | On DUT Anti-UAV, yields 0.971 mAP@0.5, highest among YOLO-based re- ports here ([16, 26, 41, 132]). On Det-Fly, obtains 0.934 mAP@0.5.
+    Sun et al. (2024) [122] | IR | YOLOv8w/ triple-input, BiFormer attention, small- object layer | Hui [58], Anti-UAV [61], Anti-UAV410 [54] | On Hui dataset: 0.943 mAP@0.5 at 72FPS. Generalizes well to Anti-UAV (0.948 mAP@0.5) and Anti-UAV410 (0.927 mAP@0.5). Demonstrates strong IR-based detection across multiple IR benchmarks.
+    Wisniewskietal. (2024) [145] | RGB | FasterR-CNN | MAV-VID [104], Anti- UAV [61], Drone-vs- Bird [30] | AP@0.5=0.970 on MAV-VID, AP@0.5=0.498 on Drone-vs-Bird, AP@0.5=0.678 on Anti-UAV.
+    Zhouetal.(2024)[173] | RGB | YOLOv8+multi-scalespa- tial attention + HDC | Det-Fly [170] | Achieved 0.815 precision, 0.849 recall. Gains of +0.05 precision/+0.06 recall relative to YOLOv8 baseline. Lags behind [56] and [49] in absolute mAP on Det-Fly, but emphasizes robust small-object detection.
+    Rebbapragada et al. (2024) [102] | RGB | SWIN+DETR+OEN | FL-Drones [107], NPS-Drones [72], AOT [10] | Matches Sangam et al. [112] in precision/recall/AP@0.5 = 0.89/0.85/0.84 on FL-Drones and 0.94/0.92/0.93 on NPS-Drones with a transformer-based pipeline. On AOT dataset, obtains 0.85 precision, 0.76 recall, AP@0.5=0.82 comparable to [112].
+    Hao et al. (2025) [49] | RGB | YOLOv8 w/ CSDE, CSP- PMSA, OmniKernel, DERS head | Det-Fly [170], MOT- Fly [29] | On MOT-Fly, hits mAP@0.5=0.949 with only 1.13M parameters. On Det- Fly, achieves 0.964 mAP@0.5-slightly exceeding [56] at 0.934, though using different training splits.
+    Multi-Modal |  |  |  | 
+    Svanstr¨om et al. (2021) [126] | RGB, IR, Aud. | YOLOv2 (visible) + MFCC (audio) + LSTM | Halmstad Drone [126] | Achieved F1≈0.61-0.88 across different distance with thermal IR sensor, F1≈0.69-0.86 with visible camera, F1≈0.93 with audio detector . Fusion cut false alarms vs. single-sensor methods, illustrating multi-modal benefits. Achieved 93.0% precision, 83.7% recall, 88.7% mAP in occluded scenes at
+    Wu et al. (2024) [147] | RGB, RA | Attention-based Spatiotem- poral Fusion Net | None public | 20FPS. Outperforms vision-only detectors by fusing radar signals, though dataset not publicly released.
+
+**Table 4.** Representative UAV Tracking Approaches. Disclaimer: All entries summarize our own interpretation of each paper's methodology and reported outcomes. Since authors use distinct datasets, labels, and metrics, no direct numerical comparison is valid. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Ref. (Yr.) | Mod. | Method | Dataset | Key Observations (Our Reading)
+    Detection-Based Trackers | Detection-Based Trackers | Detection-Based Trackers | Detection-Based Trackers | Detection-Based Trackers
+    Jiang et al. (2023) [61] | RGB, IR | GlobalTrack + DFSC | Anti-UAV [61] | Released 318-sequence RGB-T UAV tracking benchmark. Achieved the best state accuracy score of 74.33% on the validation set and 65.41% on the test set
+    Wu et al. (2024) [148] | RGB | DCF+dual-fovea+contrast + opponent-color (EECF) | Anti-UAV [61], USC- Drone [24] | Real-time EECF tracker (86 FPS) via dual-fovea design. Achieved the state accuracy score of 66.42% on Anti-UAV, 70.45% on USC-Drone.
+    Wangetal.(2024)[138] | RGB | YOLOX+Swin-T+α-IoU + BYTE | UAVSwarm [137] | Detection-driven approach with α-IoU + ByteTrack. Achieved 78.2% tracking accuracy on UAVSwarm test split.
+    Deng et al.(2024) [33] | RGB, RA, L | YOLOv9 + EfficientNet-B7 + LSTM | MMAUD [160] | Intergrated YOLOv9 + EfficientNet-B7 + LSTM/Kalman for classification and tracking. Achieved 2.21 Pose MSE Loss on 3D tracking of MMAUD and ranked 1st in UG2+ Challenge.
+    Siamese (Contrastive) Trackers | Siamese (Contrastive) Trackers | Siamese (Contrastive) Trackers | Siamese (Contrastive) Trackers | Siamese (Contrastive) Trackers
+    Huang et al. (2021) [52] | IR | SiamSTA | 1st / 2nd Anti-UAV Challenges [61] [166] | Achieved 74.46 and 67.30 scores on 1st / 2nd Anti-UAV test-dev sets, ranking 1st. Extended SiamSTA with spatio-temporal attention + motion estimation.
+    Li et al. (2022) [75] | IR | SuperDiMP (ResNet50) | 2nd Anti-UAV Chal- lenge [166] | Used SuperDiMP with dual-branch IR fusion. Achieved +5.84% SR and +4.52% PR over baseline. Focused on contrast inversion robustness.
+    Chen et al. (2022) [22] | IR | SiamSTA + CDCF | 1st Anti-UAV Chal- lenge [61] | SiamSTA with CDCF and 3-stage redetection. Achieved top precision in 2nd Anti-UAV Challenge. Achieved 68.26 and 76.11 scores on Anti-UAV test and validation sets. Robust on fast/small UAVs.
+    Zhangetal.(2023)[165] | RGB, IR | SiamFusion | Anti-UAV [61] | Achieved overall 63.37 score on Anti-UAV with 14 FPS. Developed a dual- fusion tracker with modality + decision-level fusion. Used Swin backbone + Local-Global Converter.
+    Xie et al. (2023) [153] | IR | FPN-based Siamese + STG- RPN + ID-RCNN (STF- Track) | Anti-UAV [61] | STFTrack using STG-RPN and ID-RCNN. Achieved 91.2% precision, 66.6% success @ 12.4 FPS. Addressed distractors and thermal crossover.
+    Zhang et al. (2024) [162] | IR | OSTrack + MCJT (RMCM + FSRM + ATUS ) | 1st / 2nd / 3rd Anti- UAV Challenges [61] [166] [168] | Achieved 69.65% Acc, 80.45% Acc, 65.88% Acc and 50.28% Acc on the 1st Anti-UAV test set, 1st Anti-UAV test-dev, 2nd Anti-UAV test-dev, and 3rd Anti-UAV validation set. Proposed MCJT (RMCM + FSRM + ATUS) with adaptive template and multi-consistency. Ran at 44 FPS.
+    Huang et al. (2024) [53] | IR | SiamSRT + C-C RPN + S-L RCNN+TMB+SCFD | Anti-UAV[61] | Achieved 71.64 and 80.04 scores on Anti-UAV testing and validation sets. Global Siamese tracker using Swin-T + consistency modules (TMB + SCFD). Avoided template degradation; outperformed multiple SOTA trackers.
+    Huang et al. (2024) [54] | IR | SiamDT (Swin Transformer + Dual-Semantic RPN + Versatile R-CNN) | Anti-UAV410 [54] | Introduced Anti-UAV410 dataset. Proposed SiamDT with dual semantic rea- soning + background suppression. Achieved 68.19 and 71.65 scores on its testing and validation sets.
+    Hybrid (Detection + Siamese) Trackers | Hybrid (Detection + Siamese) Trackers | Hybrid (Detection + Siamese) Trackers | Hybrid (Detection + Siamese) Trackers | Hybrid (Detection + Siamese) Trackers
+    Cheng et al. (2022) [25] | IR | Multi-Hybrid Atten- tion + SiamRPN++ + YOLOv5 (SiamAD) | Anti-UAV [61] | SiamAD with CSAM/CAM + hierarchical discriminator + YOLOv5. 88.4% DP @ 37.1 FPS. Improved long-term IR tracking.
+    Yu et al. (2023) [159] | IR | Transformer + YOLOv5 + LoFTR + GMM + OSTrack | 1st / 2nd Anti-UAV Challenges [61] [166] | Achieved 2nd place in Anti-UAV Challenge (3rd) with 68.8 score. And 75.13% and 80.38% accuracy on the 1st and 2nd test dev, individually. Integrated OS- Track, YOLOv5, LoFTR, GMM for multi-stage IR tracking.
 
 [figure sans légende identifiée] SiamSTA with CDCF and 3-stage redetection. Achieved top precision in 2nd Anti-UAV Challenge. Achieved 68.26 and 76.11 scores on Anti-UAV test and validation sets. Robust on fast/small UAVs.
 

@@ -76,12 +76,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : Table 9"
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 9"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "done"
-  },
-  "warnings": []
+  }
 }

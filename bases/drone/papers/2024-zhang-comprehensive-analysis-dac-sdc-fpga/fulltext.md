@@ -215,7 +215,20 @@ LPODC serves as an initial stepping stone within the realm of TinyML, a field de
      |  |  |  | SelectMax
      |  | ConvClass 1×1 | ConvObj 1×1
 
-**Table 2** , the accelerator used 33.4k LUT, 190 DSP, 4.6 MB BRAM, and 23.3k FF resources. It obtained 0.573 IoU, achieved 7.3 FPS, and consumed 18502.5 J energy.
+**Table 2** , the accelerator used 33.4k LUT, 190 DSP, 4.6 MB BRAM, and 23.3k FF resources. It obtained 0.573 IoU, achieved 7.3 FPS, and consumed 18502.5 J energy. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Entries | TGIIF | SystemsETHZ | iSmart2
+    Network | SSD | HalfSqueezeNet | MobileNet+YOLO
+    Quantization | A8/W8 | A5/W1 | A16/W8
+    IoU | 0.624 | 0.492 | 0.573
+    FPS | 12.0 | 26.0 | 7.3
+    GOPS | 56.5 | 11.2 | 2.9
+    Energy (J) | 18444.2 | 4953.2 | 18502.5
+    Power (mW) | 4200 | 2450 | 2590
+    LUT | 44.5k (84.0%) | 46.6k (87.9%) | 33.4k (63.0%)
+    DSP | 220 (100%) | 172 (78.1%) | 190 (86.4%)
+    BRAM (MB) | 3.9 (79.6%) | 3.8 (77.6%) | 4.6 (93.9%)
+    FF | 57.5k (54.2%) | 65.7k (62.0%) | 23.3k (22.0%)
 
 **Table 3** Comparison of Top-3 FPGA designs in 2019
 

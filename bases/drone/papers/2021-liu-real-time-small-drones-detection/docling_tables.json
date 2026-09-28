@@ -1,0 +1,268 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 7,
+   "bbox": [
+    56.2,
+    437.8,
+    570.1,
+    694.0
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Algorithm 1. Approach of pruning channel and layer in YOLOv4 Input: N layers and M shortcut layers of YOLOv4, channel pruning rate a and layer pruning t Output: The remaining layers after pruning",
+     "Algorithm 1. Approach of pruning channel and layer in YOLOv4 Input: N layers and M shortcut layers of YOLOv4, channel pruning rate a and layer pruning t Output: The remaining layers after pruning"
+    ],
+    [
+     "Input: 𝑁 layers and",
+     "𝑀 shortcut layers of YOLOv4, channel pruning rate 𝛼 and layer pruning 𝑡 Sparsity training N layers and M shortcut layers and get gi k of the k-th channel of i-th layer Sort gi k of N layers and M shortcut layers from small to large and then get array W"
+    ],
+    [
+     "Output: The remaining layers after pruning Threshold t = W[int(a·len(W))] for i = 1 to N do",
+     "Output: The remaining layers after pruning Threshold t = W[int(a·len(W))] for i = 1 to N do"
+    ],
+    [
+     "Sparsity training 𝑁 Sort 𝛾௞௜ of 𝑁 layers Threshold",
+     "layers and 𝑀 shortcut layers and get 𝛾௞௜ of the 𝑘-𝑡ℎ channel of 𝑖-𝑡ℎ layer and 𝑀 shortcut layers from small to large and then get array 𝑊 𝑡=𝑊[𝑖𝑛𝑡(𝛼∙𝑙𝑒𝑛(𝑊))] if gi k={1,2,...} < t Remove these channels k = {1, 2, . . .} of i-th layer end for A ∼ F is shown as Figure 3. A i is the A layer of i-th shortcut layer structure. for i = 1 to M do"
+    ],
+    [
+     "for 𝑖=1 to 𝑁 do",
+     "if gi k={1,2,...} < t"
+    ],
+    [
+     "if 𝛾௞ୀ{ଵ,ଶ,…} ௜ <𝑡",
+     "Mark k = {1, 2, . . .} which is the index of channels of A i layer for j=A i to[A i ,C i , F i ]do"
+    ],
+    [
+     "Remove these channels 𝑘={1,2,…} of 𝑖-𝑡ℎ layer Remove k = {1, 2, . . .} channels of j layer",
+     "Remove these channels 𝑘={1,2,…} of 𝑖-𝑡ℎ layer Remove k = {1, 2, . . .} channels of j layer"
+    ],
+    [
+     "end for",
+     "end for"
+    ],
+    [
+     "𝐴~𝐹 is shown as Figure 3. 𝐴௜ is the 𝐴 layer of 𝑖-𝑡ℎ shortcut layer structure. end for",
+     "𝐴~𝐹 is shown as Figure 3. 𝐴௜ is the 𝐴 layer of 𝑖-𝑡ℎ shortcut layer structure. end for"
+    ],
+    [
+     "for 𝑖=1 to 𝑀 do",
+     "Evalute the mean value ms={1,2,...,23} of gi k={1,2,...} for each M shortcut layers, then sort m from small to large"
+    ],
+    [
+     "if 𝛾௞ୀ{ଵ,ଶ,…} ௜ <𝑡",
+     "for i = 1 to t do"
+    ],
+    [
+     "",
+     "Get the index of shortcut layer s = ms[i] Remove C s , D s and E s layers end for"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    166.5,
+    151.3,
+    559.7,
+    206.6
+   ],
+   "caption": "Table 1. Definitions of the small, medium, and large object in MS COCO.",
+   "rows": [
+    [
+     "Object",
+     "Min Rectangle Area",
+     "Max Rectangle Area"
+    ],
+    [
+     "Small Object",
+     "0 × 0",
+     "32 × 32"
+    ],
+    [
+     "Medium Object",
+     "32 × 32",
+     "96 × 96"
+    ],
+    [
+     "Large Object",
+     "96 × 96",
+     "¥ × ¥"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    166.5,
+    594.7,
+    559.6,
+    671.7
+   ],
+   "caption": "Table 2. Performance of FCOS detector based on ResNet-50 and ResNet-101, Retinanet, YOLOv3 and YOLOv4.",
+   "rows": [
+    [
+     "Model",
+     "Precision",
+     "Recall",
+     "F1-Score",
+     "mAP"
+    ],
+    [
+     "ResNet-50",
+     "12.9",
+     "94.9",
+     "22.7",
+     "85.5"
+    ],
+    [
+     "ResNet-101",
+     "26.7",
+     "78.6",
+     "39.9",
+     "90.3"
+    ],
+    [
+     "RetinaNet",
+     "68.5",
+     "91.7",
+     "78.4",
+     "90.5"
+    ],
+    [
+     "YOLOv3",
+     "61.7",
+     "91.5",
+     "73.7",
+     "89.1"
+    ],
+    [
+     "YOLOv4",
+     "74.2",
+     "93.1",
+     "82.6",
+     "93.6"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    165.2,
+    665.4,
+    559.4,
+    748.1
+   ],
+   "caption": "Table 3. Performance of pruning without sparse training. Table 3. Performance of pruning without sparse training.",
+   "rows": [
+    [
+     "Pruned Ratio Pruned Ratio",
+     "mAP mAP",
+     "Parameters(M) Parameters(M)",
+     "FPS FPS"
+    ],
+    [
+     "0 0.10 0 0.10",
+     "93.6 91.2 93.6 91.2",
+     "63.9 52.1 63.9 52.1",
+     "43 46 43 46"
+    ],
+    [
+     "0.15 0.15",
+     "69.3 69.3",
+     "47.6 47.6",
+     "55 55"
+    ],
+    [
+     "0.20 0.20",
+     "12.9 12.9",
+     "43.4 43.4",
+     "60 60"
+    ],
+    [
+     "0.85 0.85",
+     "0.0 0.0",
+     "8.3 8.3",
+     "79 79"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    146.6,
+    771.3,
+    539.0,
+    836.1
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0 if it does not significantly",
+     "12 12",
+     "1 0.1 reduce the",
+     "90.3 90.8 volume of models.",
+     "199.1",
+     "51"
+    ],
+    [
+     "0.5 0.8",
+     "8",
+     "0.1",
+     "90.5",
+     "52.9 15.1",
+     "64 69"
+    ],
+    [
+     "0.8",
+     "8",
+     "0.01",
+     "83.6",
+     "10.9",
+     "71"
+    ],
+    [
+     "0.8",
+     "12",
+     "0.1",
+     "78.4",
+     "9.9",
+     "75"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    52.7,
+    113.2,
+    559.9,
+    160.5
+   ],
+   "caption": "Table 4. Evaluation results of pruned models.",
+   "rows": [
+    [
+     "",
+     "Channel Prune 0.9 0.9",
+     "Layer Prune 8 8",
+     "Keep Channel 0.01 0.1",
+     "mAP 66.5 68.3",
+     "Volume(MB) 7.4 7.9",
+     "FPS 77 76"
+    ],
+    [
+     "Sensors 2021, 21, x FOR PEER REVIEW",
+     "0",
+     "0",
+     "1",
+     "93.6",
+     "245.8",
+     "43 13 of 18"
+    ]
+   ]
+  }
+ ]
+}

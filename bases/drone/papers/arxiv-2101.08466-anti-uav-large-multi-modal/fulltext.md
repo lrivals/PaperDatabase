@@ -220,7 +220,16 @@ In the community, there is no high-quality Anti-UAV benchmark for capturing real
      | RGBT234 [42] | 234 | 233.8k | - | - | 234 |  | 233.8k | 12
      | Anti-UAV (Ours) | 318 | 585.9k | 160 | 294.4k | 91 |  | 168.4k | 7
 
-**TABLE II:** Illustration of attribute annotation in Anti-UAV. As shown in the Fig.3a, the positions of the boxes are mostly concentrated in the central area of the picture, and the larger transverse variance means that the horizontal movements of UAV are in the majority. Besides, the range of motion of the target in the test set is more diverse. The test set's fluctuation is larger than that of the training set in the corresponding directions.
+**TABLE II:** Illustration of attribute annotation in Anti-UAV. As shown in the Fig.3a, the positions of the boxes are mostly concentrated in the central area of the picture, and the larger transverse variance means that the horizontal movements of UAV are in the majority. Besides, the range of motion of the target in the test set is more diverse. The test set's fluctuation is larger than that of the training set in the corresponding directions. [corps du tableau reconstruit par Docling : à vérifier]
+
+    Attribute | Description
+    OV | Out-of-View:thetargetleavestheview.
+    OC | Occlusion:thetargetispartiallyoccludedorheavilyoccluded.
+    FM | Fast Motion: the ground-truth's motion between two adjacent frames is larger than 60 pixels.
+    SV | ScaleVariation:theratiooftheboundingboxesofthefirstframe and the current frame is out of the range [0.66, 1.5].
+    LI | LowIllumination:theilluminationinthetargetregionislow.
+    TC | Thermal Crossover: the target has a similar temperature with other objects or background surroundings.
+    LR | LowResolution:thenumberofpixelsinsidetheground-truth bounding box is less than 400 pixels.
 
 [figure sans légende identifiée] 78% precision score and a 41.54% success score on the infrared test set. The best deep tracker with online learning is Super-Dimp with 78.48% precision score and 55.44% success score.
 

@@ -379,13 +379,13 @@ REVIEW 5 of 17 Figure 3. Figure 3. Comparison of Conv and Conv_Ours layer (Left 
     FOR PEER REVIEW | Recall/% F1-Score/% | 84.3 90.2 | 94.6 90.9 | 83.1 85.3 | 87.4 88.8 14 of 17
      | mAP (0.5)/% | 97.3 | 96.2 | 93.0 | 95.5
 
-**Table 4.** Comparison of performance by previous YOLO models and YOLOv5_Ours.
+**Table 4.** Comparison of performance by previous YOLO models and YOLOv5_Ours. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Model | Backbone | mAP (0.5)
-    YOLOv3 | Darknet53 | 93.9
-    YOLOv4 | CSPdarknet | 91.0
-    YOLOv5 | CSPdarknet | 94.6
-    YOLOv5_Ours | CSPdarknet | 95.5
+    Model Model | Backbone Backbone | mAP (0.5) mAP (0.5)
+    YOLOv3 YOLOv3 | Darknet53 Darknet53 | 93.9 93.9
+    YOLOv4 YOLOv4 | CSPdarknet CSPdarknet | 91.0 91.0
+    YOLOv5 YOLOv5 | CSPdarknet CSPdarknet | 94.6 94.6
+    YOLOv5_Ours YOLOv5_Ours | CSPdarknet CSPdarknet | 95.5 95.5
 
 **Table 4.** Comparison of performance by previous YOLO models and YOLOv5_Ours.Figure 15. Comparison graph of result values for Previous YOLO models and YOLOv5_Ours. model.
 

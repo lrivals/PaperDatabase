@@ -490,9 +490,14 @@ Future work might investigate two aspects: The first involves further optimizing
     thop | 0.1.1.post2209072238
     3.1.4. Training Parameters | 
 
-**Table 3** 
+**Table 3** [corps du tableau reconstruit par Docling : à vérifier]
 
-    summarizes the key
+    Parameter | Value
+    Number of Epochs | 300
+    Batch Size | 64
+    Image Size | 416 × 416
+    Optimizer | SGD
+    Patience | 30
 
 **Table 3.** Training configuration parameters.
 
@@ -587,9 +592,23 @@ Future work might investigate two aspects: The first involves further optimizing
     Box Process | 11.373 ± 2.778 | 11.211 ± 3.170 | 10.749 ± 2.950
     Total Postprocess † 27.980 ± 5.046 | 26.362 ± 3.643 | 25.819 ± 8.754
 
-**Table 11.** Vivado power estimation for top-level modules.
+**Table 11.** Vivado power estimation for top-level modules. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Name
+    Name | Power (W)
+    top_wrapper | 3.129
+    top_i | 3.129
+    StreamingDataflowPartition_1 | 1.554
+    inst | 1.554
+    axi_interconnect_0 | 0.004
+    s00_couplers | 0.003
+    idma0 | 0.019
+    inst | 0.019
+    odma0 | 0.012
+    inst | 0.012
+    smartconnect_0 | 0.042
+    inst | 0.042
+    zynq_ps | 1.497
+    inst | 1.497
 
 **Table 12.** Breakdown of Vivado on-chip power consumption.
 
@@ -617,9 +636,13 @@ Future work might investigate two aspects: The first involves further optimizing
     Power consumption was measured at three frequency points under continuous in-
     ference load. |  |  |  | 
 
-**Table 13.** Measured board power consumption.
+**Table 13.** Measured board power consumption. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Configuration
+    Configuration | Power (W)
+    Idle (no bitstream) | 1.9
+    50 MHz | 2.12
+    100 MHz | 2.38
+    200 MHz | 2.55
 
 **Table 14.** Inference performance efficiency (FPS/W) at different clock frequencies and batch sizes.
 
@@ -628,9 +651,13 @@ Future work might investigate two aspects: The first involves further optimizing
     100 | 1 100 | 86.47 104.39 | 2.38 2.38 | 36.32 43.86
     200 | 1 100 | 164.79 208.69 | 2.55 2.55 | 64.63 81.88
 
-**Table 15.** Comparison of inference performance and efficiency between Coral TPU and FINN on a Z-Turn board.
+**Table 15.** Comparison of inference performance and efficiency between Coral TPU and FINN on a Z-Turn board. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Coral Edge TPU | FINN on Z
+    Metric | Coral Edge TPU.250MHz | Coral Edge TPU.500MHz | FINN on Z-Turn Board.50MHz | FINN on Z-Turn Board.100MHz | FINN on Z-Turn Board.200MHz
+    Latency (ms) | 9.69 | 6.73 | 22.77 ‡ | 11.56 ‡ | 6.07 ‡
+    Throughput (FPS) | 103.2 | 148.7 | 43.91 | 86.47 | 164.8
+    Power (W) | 1.2 † | 2.4 † | 2.12 | 2.38 | 2.55
+    Efficiency (FPS/W) | 86.0 | 62.0 | 20.7 | 36.3 | 64.5
 
 -Turn Board Metric 250 MHz 500 MHz 50 MHz 100 MHz 200 MHz The power consumption values for the Coral TPU are estimated from the manufacturer's datasheet; ‡ the results
 

@@ -47,7 +47,7 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : Table 7, Table 8",
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 7, Table 8",
       "sections numérotées non détectées : 4 — leur texte est rattaché à la section précédente"
     ]
   },

@@ -29,12 +29,13 @@
   "tags": [],
   "added": "2026-09-28",
   "extraction": {
-    "backend": "pymupdf",
-    "ok": false,
+    "backend": "grobid",
+    "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
       "aucun axe détecté : à classer dans /paper-fiche",
-      "aucune section détectée"
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 2, Table 8",
+      "tableaux sans corps extrait (légende seule) : • Low memory access efficiency, [figure sans légende identifié, [figure sans légende identifié, [figure sans légende identifié"
     ]
   },
   "status": {

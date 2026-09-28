@@ -58,15 +58,15 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "ligatures perdues à l'extraction : 27 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues à l'extraction : 29 mot(s) réparé(s) (lib/ligatures.py)",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : .11 s 2.94 s 5.91 s 2.99 s [co, TABLE 11",
-      "tableaux sans corps extrait (légende seule) : Semi-Automatic Target Annotati, TABLE 4, TABLE 5, Table 6, TABLE A: Descriptions of the 1",
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE 4, TABLE 5, Table 6, TABLE A: Descriptions of the 1",
+      "tableaux sans corps extrait (légende seule) : Semi-Automatic Target Annotati",
       "sections numérotées non détectées : 7, 10, 11, 13, 14, 15 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
     "fiche": "done"
-  },
-  "warnings": []
+  }
 }

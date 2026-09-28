@@ -123,9 +123,15 @@ Moreover, Figure 8 ( a) on the left displays the Precision-Recall curves for eac
 
 **Figure 8.** Final Results of the YOLO-Drone Model Experiment: (a) The left figure represents the Precision-Recall curve; (b) The right figure shows changes in key indicators across training epochs
 
-**Table 1.** Hardware and Software Parameters of the Training System
+**Table 1.** Hardware and Software Parameters of the Training System [corps du tableau reconstruit par Docling : à vérifier]
 
-    Name
+    Name | Parameters
+    Development environment | Google Colab
+    Graphics | Nvidia, Tesla T4
+    Installed RAM | 25GB
+    CUDA Version | 12.2
+    Programming language | Python 3.10.12
+    Deep learning framework | PyTorch 2.3.0
 
 **Table 2.** Comparison of Experimental Results Between YOLOv11 and YOLO-Drone
 

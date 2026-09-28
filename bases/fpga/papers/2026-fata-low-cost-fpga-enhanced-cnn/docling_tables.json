@@ -1,0 +1,856 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 6,
+   "bbox": [
+    35.4,
+    79.0,
+    538.5,
+    299.6
+   ],
+   "caption": "TABLE 1. Summary of key performance metrics for each low-cost design.",
+   "rows": [
+    [
+     "System",
+     "FPGA & Chip Type",
+     "Model Type",
+     "Throughput (GOPs)",
+     "Throughput (FPS)",
+     "Accuracy (%)",
+     "Power Consumption (W)",
+     "Latency (ms)",
+     "Efficiency (GOPs/W)",
+     "Efficiency (FPS/W)"
+    ],
+    [
+     "[7]",
+     "KV260/ XCK26",
+     "Custom CNN",
+     "26.2",
+     "N/A",
+     "N/A",
+     "2.92",
+     "0.142",
+     "8.97",
+     "N/A"
+    ],
+    [
+     "[8]",
+     "KV260/ XCK26",
+     "YoloV2- Tiny",
+     "75.1929",
+     "10.893",
+     "N/A",
+     "5.52",
+     "91.8",
+     "13.6219",
+     "1.974"
+    ],
+    [
+     "[15]",
+     "KV260/ XCK26",
+     "YoloV3- Tiny",
+     "N/A",
+     "15",
+     "99",
+     "3.5",
+     "66.5",
+     "N/A",
+     "4.2"
+    ],
+    [
+     "[16]",
+     "ZYNQ/ xc7z035",
+     "YoloV2",
+     "111.5",
+     "N/A",
+     "69.32",
+     "5.96",
+     "N/A",
+     "18.71",
+     "N/A"
+    ],
+    [
+     "[20]",
+     "ZYNQ/ 7020",
+     "Custom CNN + SNN",
+     "40.71",
+     "N/A",
+     "99.3",
+     "2.039",
+     "0.06219",
+     "19.96",
+     "N/A"
+    ],
+    [
+     "[21]",
+     "Xilinx Ultra96- v2",
+     "U-Net",
+     "N/A",
+     "15.77- 33.63",
+     "91.5",
+     "5",
+     "29.7",
+     "N/A",
+     "3.15-6.73"
+    ],
+    [
+     "[24]",
+     "PYNQ- Z1",
+     "ResNet- 20",
+     "63.3",
+     "9.17",
+     "N/A",
+     "1.44",
+     "109",
+     "43.9",
+     "6.37"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    135.5,
+    79.3,
+    438.5,
+    220.8
+   ],
+   "caption": "TABLE 2. Memory allocation overview.",
+   "rows": [
+    [
+     "Layer ID",
+     "Layer Type(s)",
+     "Target Allocation",
+     "Justification"
+    ],
+    [
+     "1-10",
+     "-Convolutional -Maxpool",
+     "BRAM",
+     "-Small/Medium Input Size -Low Latency Required"
+    ],
+    [
+     "11-21",
+     "-Convolutional -MaxPool -Route -Upsample -YOLO Output 1, 2",
+     "URAM",
+     "- Larger Feature Maps -More Storage Needed -Larger Number of Filters"
+    ]
+   ]
+  },
+  {
+   "page": 11,
+   "bbox": [
+    35.6,
+    85.8,
+    538.4,
+    313.0
+   ],
+   "caption": "TABLE 3. Components & functionality of custommemory controller.",
+   "rows": [
+    [
+     "Component",
+     "Description"
+    ],
+    [
+     "State Machine",
+     "Controls overall operation Data Fetch Processing Output"
+    ],
+    [
+     "Address Generator",
+     "Generates AXI-compatible addresses, depending on layer ID & data size"
+    ],
+    [
+     "Data Mux/Demux",
+     "Routes data between DPU & On/Off-Chip memory based on memory availability"
+    ],
+    [
+     "Buffer Registers",
+     "Temporary storage during processing"
+    ],
+    [
+     "AXI-MM (Dedicated Buses for BRAM + URAM)",
+     "Loads/Stores data for BRAM/URAM"
+    ],
+    [
+     "AXI-Lite (Control AXI)",
+     "Controller configuration, handles controls"
+    ],
+    [
+     "AXI-Stream (Output AXI)",
+     "Handles streaming data output from memory controller to DPU"
+    ],
+    [
+     "Memory Allocator",
+     "Allocates memory resources based on layer ID & operation type"
+    ],
+    [
+     "Burst Controller",
+     "Controls burst transfer size and frequency for high-throughput access"
+    ],
+    [
+     "Overflow Handler",
+     "Detects overflow, redirects data to DDR as fallback"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    98.0,
+    79.1,
+    475.9,
+    597.6
+   ],
+   "caption": "TABLE4. CustomYOLOv3-Tinyarchitecture.",
+   "rows": [
+    [
+     "Layer",
+     "Type",
+     "Activation Function",
+     "# of Filters",
+     "Size/Stride",
+     "Output"
+    ],
+    [
+     "1",
+     "Convolutional",
+     "Leaky ReLU",
+     "16",
+     "3×3/1",
+     "416×416×16"
+    ],
+    [
+     "2",
+     "Maxpooling",
+     "",
+     "",
+     "2×2/2",
+     "208×208×16"
+    ],
+    [
+     "3",
+     "Convolutional",
+     "Leaky ReLU",
+     "32",
+     "3×3/1",
+     "208×208×32"
+    ],
+    [
+     "4",
+     "Maxpooling",
+     "",
+     "",
+     "2×2/2",
+     "104×104×32"
+    ],
+    [
+     "5",
+     "Convolutional",
+     "Leaky ReLU",
+     "64",
+     "3×3/1",
+     "104×104×64"
+    ],
+    [
+     "6",
+     "Maxpooling",
+     "",
+     "",
+     "2×2/2",
+     "52×52×64"
+    ],
+    [
+     "7",
+     "Convolutional",
+     "Leaky ReLU",
+     "128",
+     "3×3/1",
+     "52×52×128"
+    ],
+    [
+     "8",
+     "Maxpooling",
+     "",
+     "",
+     "2×2/2",
+     "26×26×128"
+    ],
+    [
+     "9",
+     "Convolutional",
+     "Leaky ReLU",
+     "256",
+     "3×3/1",
+     "26×26×256"
+    ],
+    [
+     "10",
+     "Maxpooling",
+     "",
+     "",
+     "2×2/2",
+     "13×13×256"
+    ],
+    [
+     "11",
+     "Convolutional",
+     "Leaky ReLU",
+     "512",
+     "3×3/1",
+     "13×13×512"
+    ],
+    [
+     "12",
+     "Convolutional",
+     "Leaky ReLU",
+     "256",
+     "1×1/1",
+     "13×13×256"
+    ],
+    [
+     "13",
+     "Route",
+     "",
+     "",
+     "",
+     "13×13×256"
+    ],
+    [
+     "14",
+     "Convolutional",
+     "Leaky ReLU",
+     "128",
+     "1×1/1",
+     "13×13×128"
+    ],
+    [
+     "15",
+     "Convolutional",
+     "Leaky ReLU",
+     "75",
+     "1×1/1",
+     "13×13×75"
+    ],
+    [
+     "16",
+     "YOLO Head",
+     "Linear",
+     "75",
+     "1×1/1",
+     "13×13×75"
+    ],
+    [
+     "17",
+     "Route",
+     "",
+     "",
+     "",
+     "13×13×256"
+    ],
+    [
+     "18",
+     "Convolutional",
+     "Leaky ReLU",
+     "128",
+     "1×1/1",
+     "13×13×128"
+    ],
+    [
+     "19",
+     "Upsample",
+     "",
+     "",
+     "2",
+     "26×26×128"
+    ],
+    [
+     "20",
+     "Convolutional",
+     "Leaky ReLU",
+     "256",
+     "3×3/1",
+     "26×26×256"
+    ],
+    [
+     "21",
+     "YOLO Head",
+     "Linear",
+     "75",
+     "1×1/1",
+     "26×26×75"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    34.7,
+    56.2,
+    539.4,
+    198.6
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Algorithm 1 TensorFlow Conversion"
+    ],
+    [
+     "Input: weights_file, config_file"
+    ],
+    [
+     "Output: tensorflow_model"
+    ],
+    [
+     "procedure CONVERT_DARKNET_TO_TENSORFLOW(weights_file, config_file, output_file) model = CREATE_TENSORFLOW_MODEL(config_file) weights =LOAD_WEIGHTS(weights_file) for each layer in model do assign weights and biases from Darknet to TensorFlow layer end for SAVE_MODEL(model, output_file) end procedure"
+    ]
+   ]
+  },
+  {
+   "page": 16,
+   "bbox": [
+    52.6,
+    522.6,
+    521.7,
+    617.4
+   ],
+   "caption": "TABLE 5. Model size before & after pruning + quantization.",
+   "rows": [
+    [
+     "Stage of Implementation",
+     "Model Size"
+    ],
+    [
+     "Initially Trained",
+     "33.9 MB"
+    ],
+    [
+     "After Hardware Pruning",
+     "10.17 MB"
+    ],
+    [
+     "After Quantization + Pruning",
+     "2.54 MB"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    34.3,
+    59.4,
+    539.6,
+    364.6
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Algorithm 3 Layer Mapping Logic axi_address = DDR_BASE end if"
+    ],
+    [
+     "Input: layer_id, data_size, BRAM_available_space, URAM_available_space Output: axi_address"
+    ],
+    [
+     "if (layer_id >=1 && layer_id <= 10) then // Preferred: BRAM if (data_size <= BRAM_available_space) then axi_address = BRAM_BASE BRAM_available_space - = data_size else if (data_size <= URAM_available_space) then axi_address = URAM_BASE // Fallback to URAM URAM_available_space - = data_size else axi_address = DDR_BASE // Final fallback to DDR end if else if (layer_id>=11 layer_id<=21) then // Preferred: URAM if (data_size <= URAM_available_space) then axi_address = URAM_BASE URAM_available_space - = data_size else if (data_size <= BRAM_available_space) then axi_address = BRAM_BASE // Fallback to BRAM BRAM_available_space -= data_size else"
+    ]
+   ]
+  },
+  {
+   "page": 20,
+   "bbox": [
+    35.6,
+    84.7,
+    538.4,
+    279.6
+   ],
+   "caption": "TABLE 6. Hardware, software, and host environment overview.",
+   "rows": [
+    [
+     "Category",
+     "Specification"
+    ],
+    [
+     "FPGA Board",
+     "Xilinx Kria KV260"
+    ],
+    [
+     "MPSoC",
+     "Zynq UltraScale+ MPSoC XCK26"
+    ],
+    [
+     "DPU Architecture",
+     "DPUCZDX8G"
+    ],
+    [
+     "On-Chip Memory",
+     "144 BRAM Blocks, 64 URAM Blocks"
+    ],
+    [
+     "Off-Chip Memory",
+     "4 GB DDR4"
+    ],
+    [
+     "Boot Components",
+     "Boot.bin (bitstream), image.ub (Linux OS)"
+    ],
+    [
+     "Board OS",
+     "Petalinux 2022.1-Based Ubuntu 20.04 Linux Image"
+    ],
+    [
+     "Vitis AI Version",
+     "Vitis AI 2.5"
+    ],
+    [
+     "Runtime Framework",
+     "Vitis AI Runtime (VART)"
+    ],
+    [
+     "Model Compiler",
+     "vai c xir"
+    ],
+    [
+     "Host CPU",
+     "Intel Core i7-11700k (8 core, 4.5Ghz)"
+    ],
+    [
+     "Host GPU",
+     "NVIDIA GeForce RTX 2070 (8GB)"
+    ],
+    [
+     "Host RAM",
+     "16 GB DDR4"
+    ],
+    [
+     "Host OS",
+     "Ubuntu 22.04 LTS"
+    ],
+    [
+     "Host-FPGA Communication",
+     "Ethernet SSH + SCP Transfer"
+    ]
+   ]
+  },
+  {
+   "page": 22,
+   "bbox": [
+    299.8,
+    316.9,
+    534.8,
+    384.4
+   ],
+   "caption": "TABLE7. Performancemetricsof thecompressedYOLOmodel.",
+   "rows": [
+    [
+     "Performance Metric",
+     "Value"
+    ],
+    [
+     "Accuracy",
+     "93.8%"
+    ],
+    [
+     "Precision",
+     "95.3%"
+    ],
+    [
+     "Recall",
+     "92.4%"
+    ],
+    [
+     "F1 Score",
+     "93.8%"
+    ]
+   ]
+  },
+  {
+   "page": 23,
+   "bbox": [
+    304.6,
+    310.8,
+    530.6,
+    383.6
+   ],
+   "caption": "TABLE8. Averagehardwareevaluationmetrics.",
+   "rows": [
+    [
+     "Evaluation Metric",
+     "Average Value"
+    ],
+    [
+     "FPS",
+     "24.3"
+    ],
+    [
+     "Latency",
+     "41.59 ms"
+    ],
+    [
+     "GOPS",
+     "60.18 GOPS"
+    ],
+    [
+     "Power",
+     "2.13W"
+    ],
+    [
+     "Efficiency",
+     "28.216 GOPS/W"
+    ]
+   ]
+  },
+  {
+   "page": 24,
+   "bbox": [
+    56.7,
+    371.7,
+    255.8,
+    444.5
+   ],
+   "caption": "TABLE9. Resourceutilizationsummary.",
+   "rows": [
+    [
+     "Resource Type",
+     "Utilization"
+    ],
+    [
+     "LUT",
+     "82.5%"
+    ],
+    [
+     "FF",
+     "44.5%"
+    ],
+    [
+     "DSP",
+     "96.4%"
+    ],
+    [
+     "BRAM",
+     "100%"
+    ],
+    [
+     "URAM",
+     "100%"
+    ]
+   ]
+  },
+  {
+   "page": 25,
+   "bbox": [
+    37.2,
+    79.2,
+    275.8,
+    208.3
+   ],
+   "caption": "TABLE10. Hardwareperformancecomparison.",
+   "rows": [
+    [
+     "Metric",
+     "CPU",
+     "GPU",
+     "DPU (FPGA)"
+    ],
+    [
+     "Operating Frequency",
+     "4.5 GHz",
+     "1750 MHz",
+     "250 MHz"
+    ],
+    [
+     "Throughput (FPS)",
+     "6.08",
+     "44.64",
+     "24.3"
+    ],
+    [
+     "Power Consumption",
+     "79W",
+     "150W",
+     "2.13W"
+    ],
+    [
+     "Efficiency",
+     "0.077 FPS/W",
+     "0.29 FPS/W",
+     "11.41 FPS/W"
+    ],
+    [
+     "Cost",
+     "~$300",
+     "~$380",
+     "$250"
+    ]
+   ]
+  },
+  {
+   "page": 26,
+   "bbox": [
+    35.6,
+    79.0,
+    538.4,
+    730.9
+   ],
+   "caption": "TABLE 11. Performance of proposed design vs. similar works.",
+   "rows": [
+    [
+     "Category",
+     "Ref. [7] (2024)",
+     "Ref. [8] (2023)",
+     "Ref. [15] (2024)",
+     "Ref. [16] (2021)",
+     "Ref. [20] (2021)",
+     "Ref. [21] (2023)",
+     "Ref. [24] (2023)",
+     "This Work (2025)"
+    ],
+    [
+     "Model Type",
+     "YoloV2- CNN Tiny",
+     "YoloV3- Tiny",
+     "",
+     "YoloV2",
+     "CNN + SNN",
+     "U-Net",
+     "ResNet- 20",
+     "YoloV3- Tiny"
+    ],
+    [
+     "FPGA/Chip Type",
+     "KV260/ XCK26",
+     "KV260/ XCK26",
+     "KV260/ XCK26",
+     "ZYNQ7035/ xc7z035",
+     "ZYNQ7020/ XC7Z020",
+     "Xilinx Ultra96-v2",
+     "PYNQ- Z1",
+     "KV260/ XCK26"
+    ],
+    [
+     "Model Compression Methods",
+     "16-bit FP Quantization",
+     "",
+     "8-bit FP Quantization",
+     "Network Quantization, Layer fusion",
+     "6-bit FP Quantization",
+     "8-bit FP Quantization, Pruning",
+     "",
+     "Iterative Pruning, QAT"
+    ],
+    [
+     "Dataset",
+     "MNIST",
+     "PASCAL VOC2012",
+     "BSTLD",
+     "DOTA-v1.0",
+     "MNIST & CIFAR10",
+     "Corsican Fire",
+     "CIFAR10",
+     "PASCAL VOC2012"
+    ],
+    [
+     "Resource Availability",
+     "Logic Cells: 256k BRAM: 0.63MB URAM: 2.25MB DSP Slices: 1.2k",
+     "Logic Cells: 256k BRAM: 0.63MB URAM: 2.25MB DSP Slices: 1.2k",
+     "Logic Cells: 256k BRAM: 0.63MB URAM: 2.25MB DSP Slices: 1.2k",
+     "Logic Cells: 275k BRAM: 17.6MB DSP Slices: 900",
+     "Logic Cells: 85k BRAM: 4.9MB DSP Slices: 220",
+     "Logic Cells: 154k BRAM: 9.4MB DSP Slices: 360",
+     "Logic Cells: 85k BRAM: 4.9MB DSP Slices: 220",
+     "Logic Cells: 256k BRAM: 0.63MB URAM: 2.25MB DSP Slices: 1.2k"
+    ],
+    [
+     "Resource Utilization",
+     "FF: 9.32% LUT: 27.21% BRAM: 79.86% DSP: 8.17%",
+     "FF: 100% LUT: 99.4% BRAM: 100% URAM: 100% DSP: 100%",
+     "",
+     "FF: 31.7% LUT: 48.4% BRAM: 74% DSP: 21.3%",
+     "FF: 35% LUT: 58% BRAM: 51% DSP: 67%",
+     "",
+     "FF: 10% LUT: 29% BRAM: 31% DSP: 33%",
+     "FF: 44.5% LUT: 82.5% BRAM: 100% URAM: 100% DSP: 96.4%"
+    ],
+    [
+     "Accuracy (%)",
+     "",
+     "",
+     "99",
+     "69.32",
+     "99.3",
+     "91.5",
+     "",
+     "93.8"
+    ],
+    [
+     "Throughput (GOPS)",
+     "26.2",
+     "75.1928",
+     "",
+     "111.5",
+     "40.71",
+     "",
+     "63.22",
+     "60.18"
+    ],
+    [
+     "Throughput (FPS)",
+     "",
+     "10.893",
+     "15",
+     "",
+     "",
+     "33.63",
+     "9.17",
+     "24.3"
+    ]
+   ]
+  },
+  {
+   "page": 27,
+   "bbox": [
+    35.7,
+    85.7,
+    538.4,
+    229.5
+   ],
+   "caption": "TABLE11. (Continued.)Performanceofproposeddesignvs.similarworks.",
+   "rows": [
+    [
+     "Power Consumption (W)",
+     "2.92",
+     "5.520",
+     "3.5",
+     "5.96",
+     "2.04",
+     "5",
+     "1.44",
+     "2.13"
+    ],
+    [
+     "Efficiency (GOPS/W)",
+     "8.97",
+     "13.6219",
+     "",
+     "18.71",
+     "19.39",
+     "",
+     "43.9",
+     "28.216"
+    ],
+    [
+     "Efficiency (FPS/W)",
+     "",
+     "1.97",
+     "4.3",
+     "",
+     "",
+     "6.7",
+     "6.37",
+     "11.41"
+    ]
+   ]
+  }
+ ]
+}

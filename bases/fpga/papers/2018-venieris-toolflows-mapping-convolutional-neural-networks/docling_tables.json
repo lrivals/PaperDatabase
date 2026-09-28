@@ -1,0 +1,894 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    93.5,
+    98.1,
+    391.9,
+    268.2
+   ],
+   "caption": "Table1. CNN-to-FPGAToolflows",
+   "rows": [
+    [
+     "Toolflow Name",
+     "Interface",
+     "Year"
+    ],
+    [
+     "fpgaConvNet [85-88]",
+     "Caffe & Torch",
+     "May 2016"
+    ],
+    [
+     "DeepBurning [90]",
+     "Caffe",
+     "June 2016"
+    ],
+    [
+     "Angel-Eye [23, 24, 68]",
+     "Caffe",
+     "July 2016"
+    ],
+    [
+     "ALAMO [55-59]",
+     "Caffe",
+     "August 2016"
+    ],
+    [
+     "Haddoc2 [1, 2]",
+     "Caffe",
+     "September 2016"
+    ],
+    [
+     "DnnWeaver [75, 76]",
+     "Caffe",
+     "October 2016"
+    ],
+    [
+     "Caffeine [98]",
+     "Caffe",
+     "November 2016"
+    ],
+    [
+     "AutoCodeGen [54]",
+     "ProprietaryInputFormat",
+     "December2016"
+    ],
+    [
+     "Finn [19, 84]",
+     "Theano",
+     "February 2017"
+    ],
+    [
+     "FP-DNN [22]",
+     "TensorFlow",
+     "May 2017"
+    ],
+    [
+     "Snowflake [10, 21]",
+     "Torch",
+     "May 2017"
+    ],
+    [
+     "SysArrayAccel [91]",
+     "C Program",
+     "June 2017"
+    ],
+    [
+     "FFTCodeGen[95-97,100]",
+     "ProprietaryInputFormat",
+     "December2017"
+    ]
+   ]
+  },
+  {
+   "page": 17,
+   "bbox": [
+    166.2,
+    102.9,
+    329.0,
+    633.3
+   ],
+   "caption": "Table2. PerformanceComparisonofAlexNetonZynqandUltraScalePlatforms",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10",
+     "11",
+     "12",
+     "13",
+     "14",
+     "15",
+     "16"
+    ],
+    [
+     "Caffeine**",
+     "UltraScale KU060",
+     "200 MHz",
+     "331.68 kLUTs",
+     "2760",
+     "4.7 MB",
+     "Q8.816-bitfixed-point",
+     "163.00 (CONV)",
+     "165.00 (OVRL)",
+     "0.81 (CONV)",
+     "0.83 (OVRL)",
+     "0.0983 (CONV)",
+     "0.0996 (OVRL)",
+     "-",
+     "",
+     "-",
+     ""
+    ],
+    [
+     "Snowflake",
+     "Zynq XC7Z045",
+     "250 MHz",
+     "218.60 kLUTs",
+     "900",
+     "2.4 MB",
+     "Q8.816-bitfixed-point",
+     "120.30 (CONV)",
+     "-",
+     "0.55 (CONV)",
+     "",
+     "-",
+     "0.1336 (CONV)",
+     "-",
+     "9.95 ms (CONV)",
+     "-",
+     "resource-normalized metrics."
+    ],
+    [
+     "DnnWeaver",
+     "ZynqXC7Z020",
+     "150 MHz",
+     "53.20 kLUTs",
+     "220",
+     "0.6 MB",
+     "Q3.1316-bitfixed-point",
+     "20.16 (CONV)",
+     "20.51 (OVRL)",
+     "0.38 (CONV)",
+     "0.38 (OVRL)",
+     "",
+     "0.0916 (CONV)",
+     "0.0932 (OVRL)",
+     "-",
+     "-",
+     "is used for the"
+    ],
+    [
+     "DeepBurning",
+     "ZynqXC7Z020 ZynqXC7Z045",
+     "MHz 100 MHz",
+     "kLUTs 218.60 kLUTs",
+     "900",
+     "MB 2.4 MB",
+     "16-bitfixed-point 16-bitfixed-point",
+     "(CONV) 108.25 (CONV)",
+     "57.31 (OVRL)",
+     "(CONV) 0.49 (CONV)",
+     "(OVRL)",
+     "0.26 (OVRL)",
+     "(CONV) 0.1203 (CONV)",
+     "(OVRL) 0.0637 (OVRL)",
+     "ms (CONV) 12.30 ms (CONV)",
+     "ms (OVRL) 25.47 ms (OVRL)",
+     "available resources. Therefore, the 60%"
+    ],
+    [
+     "fpgaConvNet",
+     "Zynq XC7Z045",
+     "125 MHz 100",
+     "218.60 kLUTs 53.20",
+     "900 220",
+     "2.4 MB 0.6",
+     "Q8.816-bitfixed-point",
+     "197.40 (CONV) 18.53",
+     "- 15.29 (OVRL)",
+     "0.90 (CONV) 0.35",
+     "-",
+     "0.29 0.0842",
+     "0.2193 (CONV)",
+     "- 0.0695",
+     "8.22 ms (CONV) 71.75",
+     "- 95.48",
+     "have an up-limit of 60% of the"
+    ],
+    [
+     "",
+     "Zynq XC7Z020",
+     "125 MHz",
+     "53.20 kLUTs",
+     "220",
+     "0.6 MB",
+     "Q8.816-bitfixed-point",
+     "38.30 (CONV)",
+     "-",
+     "Density 0.72",
+     "(CONV)",
+     "-",
+     "0.1709 (CONV)",
+     "-",
+     "12.70ms(CONV)",
+     "-",
+     "use of SDAccel is reported to"
+    ],
+    [
+     "",
+     "FPGA Platform",
+     "Frequency",
+     "Logic Capacity",
+     "DSPs*",
+     "On-chip Memory",
+     "ArithmeticPrecision",
+     "Performance",
+     "(GOp/s)",
+     "Performance",
+     "(GOp/s/kLUT)",
+     "",
+     "Performance Density",
+     "(GOp/s/DSP)",
+     "Latency(batchsize=1)",
+     "* 25×18 DSP configurations.",
+     "** Caffeine's"
+    ]
+   ]
+  },
+  {
+   "page": 18,
+   "bbox": [
+    166.0,
+    143.1,
+    311.7,
+    592.5
+   ],
+   "caption": "Table3. PerformanceComparisonofVGG16onZynqandUltraScalePlatforms",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10",
+     "11",
+     "12",
+     "13",
+     "14"
+    ],
+    [
+     "Caffeine**",
+     "UltraScale KU060",
+     "200 MHz",
+     "331.68 kLUTs",
+     "2760",
+     "4.7 MB",
+     "Q8.816-bitfixed-pointQ8.816-bitfixed-pointQ3.1316-bitfixed-pointQ8.816-bitfixed-pointQ8.816-bitfixed-point",
+     "310.00 (CONV)",
+     "266.00 (OVRL)",
+     "1.55 (CONV)",
+     "1.33 (OVRL)",
+     "0.1871 (CONV)",
+     "0.1606 (OVRL)",
+     "-",
+     "-"
+    ],
+    [
+     "Angel-Eye",
+     "Zynq XC7Z045",
+     "150 MHz",
+     "218.60 kLUTs",
+     "900",
+     "2.4 MB",
+     "",
+     "187.80 (CONV)",
+     "136.97 (OVRL)",
+     "0.86 (CONV)",
+     "0.62 (OVRL)",
+     "0.2086 (CONV)",
+     "0.1522 (OVRL)",
+     "163.42 ms (CONV)",
+     "224.60 ms (OVRL)"
+    ],
+    [
+     "DnnWeaver",
+     "Zynq XC7Z020",
+     "150 MHz",
+     "53.20 kLUTs",
+     "220",
+     "0.6 MB",
+     "",
+     "31.35 (CONV)",
+     "31.38 (OVRL)",
+     "0.59 (CONV)",
+     "0.59 (OVRL)",
+     "0.1425 (CONV)",
+     "0.1426 (OVRL)",
+     "-",
+     "-"
+    ],
+    [
+     "fpgaConvNet",
+     "Zynq XC7Z045",
+     "125 MHz",
+     "218.60 kLUTs",
+     "900",
+     "2.4 MB",
+     "",
+     "155.81 (CONV)",
+     "-",
+     "0.71 (CONV)",
+     "-",
+     "0.1731 (CONV)",
+     "-",
+     "249.50 ms (CONV)",
+     "-"
+    ],
+    [
+     "",
+     "Zynq XC7Z020",
+     "125 MHz",
+     "53.20 kLUTs",
+     "220",
+     "0.6 MB",
+     "",
+     "48.53 (CONV)",
+     "-",
+     "0.91 (CONV)",
+     "-",
+     "0.2206 (CONV)",
+     "-",
+     "633.01ms(CONV)",
+     "-"
+    ],
+    [
+     "",
+     "FPGA Platform",
+     "Frequency",
+     "Logic Capacity",
+     "DSPs*",
+     "On-chip Memory",
+     "ArithmeticPrecision",
+     "Performance",
+     "(GOp/s)",
+     "Performance Density",
+     "(GOp/s/kLUT)",
+     "Performance Density",
+     "(GOp/s/DSP)",
+     "Latency(batchsize=1)",
+     ""
+    ]
+   ]
+  },
+  {
+   "page": 19,
+   "bbox": [
+    43.6,
+    98.3,
+    440.5,
+    252.9
+   ],
+   "caption": "Table4. PerformanceComparisonofAlexNetonStratixVandArria10",
+   "rows": [
+    [
+     "",
+     "DnnWeaver",
+     "DnnWeaver",
+     "ALAMO",
+     "SysArrayAccel",
+     "FFTCodeGen"
+    ],
+    [
+     "FPGA Platform",
+     "Stratix V SGSD5",
+     "Arria 10 GX115",
+     "Stratix V GXA7",
+     "Arria 10 GT115",
+     "Stratix V GXA7"
+    ],
+    [
+     "Frequency",
+     "200MHz",
+     "200MHz",
+     "100MHz",
+     "239.62MHz",
+     "200MHz"
+    ],
+    [
+     "Logic Capacity",
+     "172.60 kALMs",
+     "427.20 kALMs",
+     "234.72 kALMs",
+     "427.20 kALMs",
+     "234.72 kALMs"
+    ],
+    [
+     "DSPs*",
+     "3180",
+     "3036",
+     "512",
+     "3036",
+     "512"
+    ],
+    [
+     "On-chip Memory",
+     "4.9MB",
+     "6.6MB",
+     "6.25MB",
+     "6.6MB",
+     "6.25MB"
+    ],
+    [
+     "ArithmeticPrecision",
+     "",
+     "Q3.1316-bitfixed-pointQ3.1316-bitfixed-pointQ8.816-bitfixed-point32-bitfloating-point16-bitfixed-point",
+     "",
+     "",
+     ""
+    ],
+    [
+     "Performance",
+     "97.10 (CONV)",
+     "265.36 (CONV)",
+     "134.10 (CONV)",
+     "406.1 (CONV)",
+     "-"
+    ],
+    [
+     "(GOp/s)",
+     "97.56 (OVRL)",
+     "184.33 (OVRL)",
+     "114.50 (OVRL)",
+     "360.4 (OVRL)",
+     "780.60 (OVRL)"
+    ],
+    [
+     "Performance Density",
+     "0.56 (CONV)",
+     "0.62 (CONV)",
+     "0.57 (CONV)",
+     "0.95 (CONV)",
+     "-"
+    ],
+    [
+     "(GOp/s/kALM)",
+     "0.56 (OVRL)",
+     "0.43 (OVRL)",
+     "0.49 (OVRL)",
+     "0.84 (OVRL)",
+     "3.32 (OVRL)"
+    ],
+    [
+     "Performance Density",
+     "0.0305 (CONV)",
+     "0.0874 (CONV)",
+     "0.2619 (CONV)",
+     "0.1337 (CONV)",
+     "-"
+    ],
+    [
+     "(GOp/s/DSP)",
+     "0.0307 (OVRL)",
+     "0.0607 (OVRL)",
+     "0.2236 (OVRL)",
+     "0.1187 (OVRL)",
+     "1.5246 (OVRL)"
+    ],
+    [
+     "Latency(batchsize=1)",
+     "-",
+     "-",
+     "9.92 ms (CONV)",
+     "-",
+     "-"
+    ],
+    [
+     "- - 12.75 ms (OVRL) 4.05 ms (OVRL) - * 18×18 DSP configurations.",
+     "- - 12.75 ms (OVRL) 4.05 ms (OVRL) - * 18×18 DSP configurations.",
+     "- - 12.75 ms (OVRL) 4.05 ms (OVRL) - * 18×18 DSP configurations.",
+     "- - 12.75 ms (OVRL) 4.05 ms (OVRL) - * 18×18 DSP configurations.",
+     "- - 12.75 ms (OVRL) 4.05 ms (OVRL) - * 18×18 DSP configurations.",
+     "- - 12.75 ms (OVRL) 4.05 ms (OVRL) - * 18×18 DSP configurations."
+    ]
+   ]
+  },
+  {
+   "page": 20,
+   "bbox": [
+    166.2,
+    106.5,
+    330.9,
+    629.0
+   ],
+   "caption": "Table5. PerformanceComparisonofVGG16onStratixVandArria10",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10",
+     "11",
+     "12",
+     "13"
+    ],
+    [
+     "FFTCodeGen",
+     "StratixVGXA7",
+     "200MHz",
+     "234.72 kALMs",
+     "512",
+     "6.25MB",
+     "16-bitfixed-point",
+     "- 669.10 (OVRL)",
+     "-",
+     "2.85 (OVRL)",
+     "-",
+     "1.3068 (OVRL)",
+     "-",
+     "-"
+    ],
+    [
+     "SysArrayAccel",
+     "",
+     "231.85MHz",
+     "427.20 kALMs",
+     "3036",
+     "6.6MB",
+     "16-bitfixed-point",
+     "- 1171.30 (OVRL)",
+     "-",
+     "2.74 (OVRL)",
+     "-",
+     "0.3858 (OVRL)",
+     "",
+     "26.85 ms (OVRL)"
+    ],
+    [
+     "FP-DNN**",
+     "StratixVSGSMD5Arria10GT115",
+     "150MHz",
+     "172.60 kALMs",
+     "3180",
+     "4.9MB",
+     "16-bitfixed-point",
+     "- 364.36 (OVRL)",
+     "-",
+     "2.11 (OVRL)",
+     "-",
+     "0.1145 (OVRL)",
+     "- -",
+     "-"
+    ],
+    [
+     "ALAMO",
+     "Arria 10 GX115",
+     "200MHz",
+     "427.20 kALMs",
+     "3036",
+     "6.6MB",
+     "Q8.816-bitfixed-point",
+     "- 720.15 (OVRL)",
+     "-",
+     "2.74 (OVRL)",
+     "-",
+     "0.2372 (OVRL)",
+     "-",
+     "42.98 ms (OVRL)"
+    ],
+    [
+     "",
+     "Stratix V GXA7",
+     "150MHz",
+     "234.72 kALMs",
+     "512",
+     "6.25MB",
+     "Q8.816-bitfixed-point",
+     "- 352.24 (OVRL)",
+     "-",
+     "1.50 (OVRL)",
+     "-",
+     "0.6879 (OVRL)",
+     "-",
+     "87.87 ms"
+    ],
+    [
+     "DnnWeaver",
+     "Arria 10 GX115",
+     "200MHz",
+     "427.20 kALMs",
+     "3036",
+     "6.6MB",
+     "Q3.1316-bitfixed-point",
+     "390.02 (CONV) 361.55 (OVRL)",
+     "0.91 (CONV)",
+     "0.84 (OVRL)",
+     "0.1284 (CONV)",
+     "0.1191 (OVRL)",
+     "-",
+     "-"
+    ],
+    [
+     "",
+     "Stratix V SGSD5",
+     "200MHz",
+     "172.60 kALMs",
+     "3180",
+     "4.9MB",
+     "Q3.1316-bitfixed-point",
+     "157.39 (CONV) 157.51 (OVRL)",
+     "0.91 (CONV)",
+     "0.91 (OVRL)",
+     "0.0495 (CONV)",
+     "0.0495 (OVRL)",
+     "-",
+     "- configurations. on Stratix V."
+    ],
+    [
+     "",
+     "FPGA Platform",
+     "Frequency",
+     "Logic Capacity",
+     "DSPs*",
+     "On-chip Memory",
+     "ArithmeticPrecision",
+     "Performance (GOp/s)",
+     "Performance Density",
+     "(GOp/s/kALM)",
+     "Performance Density",
+     "(GOp/s/DSP)",
+     "Latency(batchsize=1)",
+     "* 18×18 DSP ** FP-DNN maps VGG19"
+    ]
+   ]
+  },
+  {
+   "page": 26,
+   "bbox": [
+    44.6,
+    98.2,
+    440.4,
+    390.8
+   ],
+   "caption": "Table6. SummaryofToolflowCharacteristics",
+   "rows": [
+    [
+     "Framework Name",
+     "Interface",
+     "NN models",
+     "Devices",
+     "Architecture",
+     "Precision ∗",
+     "DSE"
+    ],
+    [
+     "fpgaConvNet [85-88]",
+     "Caffe&Torch",
+     "CNN,Res,Incep,Dense",
+     "XilinxSoC",
+     "Streaming",
+     "FXP (Uniform) & FP",
+     "Global Optimizer (Simulated Annealing)"
+    ],
+    [
+     "DeepBurning[90]",
+     "Caffe",
+     "CNN,RNN,DNN",
+     "XilinxSoC",
+     "Streaming",
+     "FXP(Dynamic)",
+     "Heuristic"
+    ],
+    [
+     "Angel-Eye [23, 24, 68]",
+     "Caffe",
+     "CNN,DNN",
+     "XilinxSoC",
+     "Single-Engine",
+     "FXP(Dynamic)",
+     "Heuristicwith Analytical Model"
+    ],
+    [
+     "ALAMO[55-59]",
+     "Caffe",
+     "CNN,DNN",
+     "Intel SoC & Standalone",
+     "Single-Engine",
+     "FXP(Dynamic)",
+     "Heuristic"
+    ],
+    [
+     "Haddoc2 [1, 2]",
+     "Caffe",
+     "CNN,DNN",
+     "Xilinx & Intel Standalone",
+     "Streaming",
+     "FXP(Uniform)",
+     "Deterministic"
+    ],
+    [
+     "DnnWeaver [75, 76]",
+     "Caffe",
+     "CNN,DNN",
+     "Xilinx & Intel",
+     "Single-Engine",
+     "FXP(Dynamic)",
+     "CustomSearch Algorithm"
+    ],
+    [
+     "Caffeine [98]",
+     "Caffe",
+     "CNN,DNN",
+     "Xilinx Standalone",
+     "Single-Engine",
+     "FXP(Uniform) & FP",
+     "Exhaustive over Roofline Model"
+    ],
+    [
+     "AutoCodeGen[54]",
+     "Proprietary Input",
+     "CNN,DNN",
+     "Xilinx Standalone",
+     "Streaming",
+     "FXP(Dynamic)",
+     "Heuristicwith Analytical Model"
+    ],
+    [
+     "Finn [19, 84]",
+     "Theano",
+     "BNN",
+     "Xilinx SoC & Standalone",
+     "Streaming",
+     "Binary",
+     "Heuristic"
+    ],
+    [
+     "FP-DNN [22]",
+     "TensorFlow",
+     "CNN,RNN,DNN,Res",
+     "Intel Standalone",
+     "Single-Engine",
+     "FXP(Uniform) & FP",
+     "Algorithmic"
+    ],
+    [
+     "Snowflake[10,21]",
+     "Torch",
+     "CNN,Res,Incep",
+     "XilinxSoC",
+     "Single-Engine",
+     "16-bitFXP (Uniform)",
+     "Heuristic"
+    ],
+    [
+     "SysArrayAccel[91]",
+     "CProgram",
+     "CNN,DNN",
+     "Intel Standalone",
+     "Single-Engine",
+     "FXP(Uniform) & FP",
+     "Exhaustive over Analytical Model"
+    ],
+    [
+     "FFTCodeGen [95-97, 100]",
+     "Proprietary Input",
+     "CNN,DNN",
+     "IntelHARP",
+     "Single-Engine",
+     "FXP(Uniform) & FP",
+     "Roofline and Analytical Models"
+    ],
+    [
+     "* FXP: Fixed-Point, FP: Floating-Point.",
+     "* FXP: Fixed-Point, FP: Floating-Point.",
+     "* FXP: Fixed-Point, FP: Floating-Point.",
+     "* FXP: Fixed-Point, FP: Floating-Point.",
+     "* FXP: Fixed-Point, FP: Floating-Point.",
+     "* FXP: Fixed-Point, FP: Floating-Point.",
+     "* FXP: Fixed-Point, FP: Floating-Point."
+    ]
+   ]
+  },
+  {
+   "page": 28,
+   "bbox": [
+    48.6,
+    98.4,
+    436.4,
+    258.8
+   ],
+   "caption": "Table7. BenchmarkSuite:CNNModelsandTheirComputationalChallenges",
+   "rows": [
+    [
+     "Model Name",
+     "",
+     "Year",
+     "Depth",
+     "Design Principles",
+     "Challenges"
+    ],
+    [
+     "AlexNet",
+     "[46]",
+     "2012",
+     "8",
+     "(1) Increased depth (2) Increased layer width",
+     "(1) Non-uniform filter sizes (2) Grouped convolutions"
+    ],
+    [
+     "ZFNet",
+     "[94]",
+     "2013",
+     "8",
+     "(1) Wider layers",
+     "(1) Computational load (2) Memory footprint"
+    ],
+    [
+     "VGG16",
+     "[78]",
+     "2014",
+     "16",
+     "(1) Increased layer depth (2) Uniform filter size",
+     "(1) Computational load (2) Memory footprint"
+    ],
+    [
+     "GoogLeNet",
+     "[83]",
+     "2014",
+     "22",
+     "(1) Inceptionmodule",
+     "(1) Irregular computations (2) Irregular layer connectivity"
+    ],
+    [
+     "ResNet-152",
+     "[33]",
+     "2015",
+     "152",
+     "(1) Residual block",
+     "(1) Irregular computations (2) Irregular layer connectivity"
+    ],
+    [
+     "Inception-v4",
+     "[82]",
+     "2016",
+     "72",
+     "(1) Residual Inception block",
+     "(1) Irregular computations (2) Irregular layer connectivity"
+    ],
+    [
+     "DenseNet-161",
+     "[36]",
+     "2017",
+     "161",
+     "(1) Dense block",
+     "(1) Irregular computations (2) Irregular layer connectivity"
+    ]
+   ]
+  }
+ ]
+}

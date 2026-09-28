@@ -1,0 +1,560 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 1,
+   "bbox": [
+    54.1,
+    548.0,
+    284.5,
+    605.4
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "0",
+     "1"
+    ],
+    [
+     "F",
+     "Input featuremap."
+    ],
+    [
+     "C, H, W",
+     "Number of channels, height, and width of F."
+    ],
+    [
+     "Mc",
+     "Channel attention weights from LCAM."
+    ],
+    [
+     "Ms",
+     "Spatial attention weights."
+    ],
+    [
+     "⊗",
+     "Elementwise multiplication."
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    362.5,
+    92.8,
+    512.4,
+    192.7
+   ],
+   "caption": "TABLE I TRAINING CONFIGURATION PARAMETERS FOR OUR PROPOSED MODEL, LCAM YOLOX",
+   "rows": [
+    [
+     "Parameter",
+     "Value"
+    ],
+    [
+     "Model",
+     "LCAM YOLOX"
+    ],
+    [
+     "Batch Size",
+     "8"
+    ],
+    [
+     "Optimizer",
+     "SGD"
+    ],
+    [
+     "Learning Rate",
+     "0.02"
+    ],
+    [
+     "Momentum",
+     "0.937"
+    ],
+    [
+     "Weight Decay",
+     "0.0005"
+    ],
+    [
+     "Epochs",
+     "300"
+    ]
+   ]
+  },
+  {
+   "page": 8,
+   "bbox": [
+    54.7,
+    407.6,
+    294.0,
+    674.2
+   ],
+   "caption": "TABLE II DPU CONFIGURATION PARAMETERS",
+   "rows": [
+    [
+     "Parameter",
+     "Configuration"
+    ],
+    [
+     "Core Architecture",
+     ""
+    ],
+    [
+     "Component Name Number of DPU Cores Architecture RAM Usage Channel Augmentation",
+     "DPUCZDX8G 3 B4096 Low Enabled"
+    ],
+    [
+     "Computational Units Conv ReLU Type ALU Parallel ALU ReLU Type ElementWise Multiply AveragePool Number of SFM cores Implementation Details",
+     "ReLU6 4 ReLU + ReLU6 Enabled Enabled 1"
+    ],
+    [
+     "",
+     "ReLU + LeakyReLU +"
+    ],
+    [
+     "S-AXI Clock Mode",
+     "Independent Enabled High 4"
+    ],
+    [
+     "DPU 2x Clock Gating DSP48 Usage DSP48 Max Cascade Length Ultra-RAM Use per DPU Timestamp auto-update",
+     "0 Enabled"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    88.9,
+    83.7,
+    522.7,
+    220.2
+   ],
+   "caption": "TABLE III COMPARISON OF DIFFERENT MODELS",
+   "rows": [
+    [
+     "Network Model",
+     "Input Size",
+     "Model Parameters (M)",
+     "FP32 Accuracy (mAP)",
+     "Quantized Accuracy (mAP)",
+     "RMSE",
+     "FPS"
+    ],
+    [
+     "YOLOv3",
+     "416",
+     "65.2",
+     "0.62306",
+     "0.6076",
+     "0.0842",
+     "145"
+    ],
+    [
+     "YOLOv5",
+     "640",
+     "7.2",
+     "0.7406",
+     "0.7277",
+     "0.0651",
+     "182"
+    ],
+    [
+     "YOLOX-m",
+     "640",
+     "25.3",
+     "0.7845",
+     "0.7694",
+     "0.0573",
+     "185"
+    ],
+    [
+     "MobileNetV2",
+     "640",
+     "4.3",
+     "0.6823",
+     "0.6645",
+     "0.0912",
+     "13"
+    ],
+    [
+     "EfficientDet",
+     "640",
+     "3.9",
+     "0.7342",
+     "0.7156",
+     "0.0784",
+     "98"
+    ],
+    [
+     "Faster R-CNN",
+     "800",
+     "42.1",
+     "0.7912",
+     "0.7734",
+     "0.0635",
+     "12"
+    ],
+    [
+     "RetinaNet",
+     "800",
+     "37.8",
+     "0.7821",
+     "0.7645",
+     "0.0678",
+     "16"
+    ],
+    [
+     "LCAM YOLOX",
+     "640",
+     "9.6",
+     "0.7989",
+     "0.7811",
+     "0.0489",
+     "195"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    123.9,
+    83.6,
+    487.6,
+    170.9
+   ],
+   "caption": "TABLE IV EFFECT OF PREPROCESSING, QUANTIZATION, AND PRUNING ON LCAM YOLOX",
+   "rows": [
+    [
+     "LCAM-YOLOX.LCAM-YOLOX",
+     "Quantization(FP32 to INT8) and Pruning (30%).Before",
+     "Quantization(FP32 to INT8) and Pruning (30%).Preprocessing",
+     "Quantization(FP32 to INT8) and Pruning (30%).After",
+     "Reduction.Reduction"
+    ],
+    [
+     "Weights [M]",
+     "9.60",
+     "9.60",
+     "6.72",
+     "X1.43"
+    ],
+    [
+     "FLOPS [G]",
+     "8.45",
+     "8.45",
+     "6.31",
+     "X1.34"
+    ],
+    [
+     "RMSE",
+     "0.0489",
+     "0.0472",
+     "0.0495",
+     ""
+    ],
+    [
+     "mAP",
+     "0.7989",
+     "0.8163",
+     "0.7811",
+     ""
+    ],
+    [
+     "FPS",
+     "76",
+     "76",
+     "195",
+     "X2.56"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    112.6,
+    212.9,
+    499.0,
+    299.8
+   ],
+   "caption": "TABLE V ABLATION STUDY OF LCAM YOLOX",
+   "rows": [
+    [
+     "Model Configuration",
+     "LCAM Module",
+     "Spatial Attention",
+     "Channel Attention",
+     "mAP",
+     "Parameters (M)"
+    ],
+    [
+     "Baseline YOLOX",
+     "",
+     "",
+     "",
+     "0.7645",
+     "9.0"
+    ],
+    [
+     "YOLOX + Spatial Attention",
+     "",
+     "人",
+     "",
+     "0.7723",
+     "9.2"
+    ],
+    [
+     "YOLOX + Channel Attention",
+     "",
+     "",
+     "人",
+     "0.7798",
+     "9.3"
+    ],
+    [
+     "YOLOX + Both Attentions",
+     "",
+     "人",
+     "人",
+     "0.7856",
+     "9.4"
+    ],
+    [
+     "LCAM YOLOX (Full)",
+     "人",
+     "人",
+     "√",
+     "0.7989",
+     "9.6"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    48.3,
+    341.1,
+    563.0,
+    564.8
+   ],
+   "caption": "TABLE VI FPGA RESOURCE UTILIZATION ACROSS DIFFERENT BOARDS AND CORE CONFIGURATIONS",
+   "rows": [
+    [
+     "Boards",
+     "LUT (Used/Available)",
+     "FF (Used/Available)",
+     "BRAM (Used/Available)",
+     "URAM (Used/Available)",
+     "DSP (Used/Available)",
+     "LUTRAM (Used/Available)"
+    ],
+    [
+     "ZCU102",
+     "ZCU102",
+     "ZCU102",
+     "ZCU102",
+     "ZCU102",
+     "ZCU102",
+     "ZCU102"
+    ],
+    [
+     "1-core",
+     "52,161/274,080 (19.03%)",
+     "98,249/548,160 (17.92%)",
+     "255/912 (27.96%)",
+     "",
+     "710/2,520 (28.17%)",
+     "5,647/144,000 (3.92%)"
+    ],
+    [
+     "2-core",
+     "107,237/274,080 (39.12%)",
+     "187,663/548,160 (34.24%)",
+     "512/912 (56.14%)",
+     "",
+     "1,451/2,520 (57.58%)",
+     "12,344/144,000 (8.57%)"
+    ],
+    [
+     "3-core",
+     "165,111/274,080 (60.24%)",
+     "302,294/548,160 (55.15%)",
+     "769/912 (84.32%)",
+     "",
+     "2,138/2,520 (84.84%)",
+     "21,662/144,000 (15.04%)"
+    ],
+    [
+     "ZCU104",
+     "ZCU104",
+     "ZCU104",
+     "ZCU104",
+     "ZCU104",
+     "ZCU104",
+     "ZCU104"
+    ],
+    [
+     "1-core",
+     "63,003/230,400 (27.35%)",
+     "107,833/460,800 (23.40%)",
+     "259/312 (83.01%)",
+     "",
+     "718/1,728 (41.55%)",
+     ""
+    ],
+    [
+     "2-core",
+     "95,724/230,400 (41.55%)",
+     "188,110/460,800 (40.82%)",
+     "154/312 (49.36%)",
+     "96/96 (100%)",
+     "718/1,728 (41.55%)",
+     ""
+    ],
+    [
+     "KV260",
+     "KV260",
+     "KV260",
+     "KV260",
+     "KV260",
+     "KV260",
+     "KV260"
+    ],
+    [
+     "1-core",
+     "65,139/117,120 (55.62%)",
+     "108,532/234,240 (46.33%)",
+     "19/144 (13.19%)",
+     "42/64 (65.62%)",
+     "546/1,248 (43.75%)",
+     ""
+    ],
+    [
+     "2-core",
+     "84,511/117,120 (72.15%)",
+     "167,544/234,240 (71.52%)",
+     "57/144 (39.58%)",
+     "64/64 (100%)",
+     "918/1,248 (73.56%)",
+     ""
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    48.6,
+    84.0,
+    563.0,
+    224.8
+   ],
+   "caption": "TABLE VII PERFORMANCE AND COST ANALYSIS OF LCAM-YOLOX MODEL ON DIFFERENT BOARDS WITH VARIOUS DPU CONFIGURATIONS",
+   "rows": [
+    [
+     "Board.Board",
+     "Device.Device",
+     "DPU Cores.DPU Cores",
+     "Performance (FPS).1C",
+     "Performance (FPS).2C",
+     "Performance (FPS).3C",
+     "Performance (FPS).4C",
+     "Single Core Power (W).Single Core Power (W)",
+     "Peak Performance (TOPS).Peak Performance (TOPS)",
+     "Cost ($).Cost ($)"
+    ],
+    [
+     "KV260",
+     "XCK26 Ultrascale+",
+     "Up to 2",
+     "195",
+     "387",
+     "N/A",
+     "N/A",
+     "9.72",
+     "1.23",
+     "400"
+    ],
+    [
+     "ZCU104",
+     "ZU7EV Ultrascale+",
+     "Up to 2",
+     "193",
+     "337",
+     "N/A",
+     "N/A",
+     "12.82",
+     "2.46",
+     "1,200"
+    ],
+    [
+     "ZCU102",
+     "ZU9 Ultrascale+",
+     "Up to 3",
+     "185",
+     "319",
+     "481",
+     "N/A",
+     "20.53",
+     "3.45",
+     "3,000"
+    ],
+    [
+     "NVIDIA Jetson Nano",
+     "MaxwellTM architecture",
+     "128 cores",
+     "65 FPS",
+     "65 FPS",
+     "65 FPS",
+     "65 FPS",
+     "8.61",
+     "0.56",
+     "200"
+    ],
+    [
+     "STM32H7A3",
+     "Arm Cortex-M7 Processor",
+     "1 core",
+     "15 FPS",
+     "15 FPS",
+     "15 FPS",
+     "15 FPS",
+     "0.7",
+     "0.28",
+     "45"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    319.1,
+    283.6,
+    555.4,
+    396.0
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "FPGA Board Configuration",
+     "Vivado Simulation (W)",
+     "Onboard Measurement (W)"
+    ],
+    [
+     "ZCU102 (4 DPU Cores, 300 MHz)",
+     "21.64",
+     "22.13"
+    ],
+    [
+     "ZCU104 (2 DPU Cores, 300 MHz)",
+     "13.17",
+     "13.20"
+    ],
+    [
+     "KV260 (2 DPU Cores, 300 MHz)",
+     "10.24",
+     "10.45"
+    ]
+   ]
+  }
+ ]
+}

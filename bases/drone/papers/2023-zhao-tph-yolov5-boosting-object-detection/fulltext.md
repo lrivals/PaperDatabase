@@ -328,9 +328,15 @@ Object detection on drone-captured images has three main challenges: size variat
     TPH-YOLOv5 | 26.9 | 41.3 | 32.7 | 3631 M | 556.6 | 25.12
     TPH-YOLOv5++ | 30.1 | 43.5 | 34.3 | 3361 M | 293.2 | 42.19
 
-**Table 7.** Ablation study for each category on the VisDrone2021 test-dev set. The AP of each category is used as the result.
+**Table 7.** Ablation study for each category on the VisDrone2021 test-dev set. The AP of each category is used as the result. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Methods | All Pedestrian People
+    Methods | All | Pedestrian | People | Bicycle | Car | Van | Truck | Tricycle | Awning-Tricycle | Bus | Motor
+    YOLOv5x | 28.9 | 23.5 | 14.3 | 13.5 | 51.8 | 35.4 | 38.0 | 20.2 | 19.9 | 48.6 | 23.8
+    YOLOv5x+p2 | 31.0 | 25.6 | 14.9 | 14.3 | 56.2 | 37.4 | 40.1 | 22.0 | 21.5 | 52.5 | 25.3
+    YOLOv5x+p2+ViT | 32.8 | 26.7 | 16.0 | 15.5 | 59.1 | 40.0 | 42.7 | 23.4 | 22.2 | 55.4 | 27.1
+    TPH-YOLOv5(previous+CBAM) | 33.6 | 27.4 | 16.3 | 15.9 | 61.4 | 41.9 | 43.3 | 23.9 | 21.5 | 56.9 | 27.8
+    TPH-YOLOv5(SwinTrans+CBAM) | 34.0 | 27.5 | 16.1 | 15.9 | 61.7 | 41.9 | 43.9 | 24.2 | 24.0 | 56.4 | 28.5
+    TPH-YOLOv5+ms-testing | 34.9 | 28.8 | 16.3 | 15.0 | 65.9 | 44.3 | 43.8 | 25.7 | 22.8 | 59.0 | 27.1
 
 Bicycle Car Van Truck Tricycle Awning-Tricycle Bus Motor
 
@@ -342,4 +348,12 @@ Bicycle Car Van Truck Tricycle Awning-Tricycle Bus Motor
     TPH-YOLOv5+ms-testing | 34.9 | 28.8 | 16.3 | 15.0 | 65.9 44.3 | 43.8 | 25.7 | 22.8 | 59.0 | 27.1
      | 4.3.4. Ablation Study of Neighborhood Size |  |  |  |  | 
 
-**Table 8.** Ablation study for neighborhood size
+**Table 8.** Ablation study for neighborhood size [corps du tableau reconstruit par Docling : à vérifier]
+
+     | Neighborhood Size (a, b).a=0,b=0 | Neighborhood Size (a, b).a=2,b=2 | Neighborhood Size (a, b).a=4,b=4 | Neighborhood Size (a, b).a = 6, b = 6
+    AP [%] | 31.9 | 33.1 | 33.5 | 33.6
+    AP50 [%] | 51.7 | 52.1 | 52.5 | 52.6
+    AP75 [%] | 33.5 | 35.1 | 34.9 | 35.0
+    GPU Memory | 4299M | 4715M | 7475M | 12,185 M
+    GFLOPs | 204.5 | 207 | 214.9 | 228.1
+    FPS | 12.01 | 11.86 | 10.14 | 7.67

@@ -13,7 +13,9 @@
   "arxiv_id": null,
   "url": "https://hdl.handle.net/10356/153778",
   "type": "thesis",
-  "axes": [],
+  "axes": [
+    "continual-learning"
+  ],
   "tags": [],
   "added": "2026-09-28",
   "extraction": {
@@ -21,11 +23,11 @@
     "ok": true,
     "warnings": [
       "aucun axe détecté : à classer dans /paper-fiche",
-      "ligatures perdues à l'extraction : 7 mot(s) réparé(s) (lib/ligatures.py)",
-      "ligatures perdues : 27 fragment(s) non réparé(s) (« classi cation »…)",
-      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 4, Table 5, Table 4",
-      "sections numérotées non détectées : 1, 2 — leur texte est rattaché à la section précédente",
-      "métadonnées corrigées à la main (citation.bib) ; « Abstract » de fulltext.md = remerciements"
+      "métadonnées corrigées à la main (citation.bib) ; « Abstract » de fulltext.md = remerciements",
+      "ligatures perdues à l'extraction : 38 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 4, Table 5",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 4",
+      "sections numérotées non détectées : 1, 2 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {

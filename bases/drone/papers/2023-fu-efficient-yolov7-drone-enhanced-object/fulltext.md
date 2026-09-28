@@ -307,9 +307,11 @@ Our approach is distinguished by its attention to the low foreground proportion 
     Average | 33.3 | 56.7 | 33.8
     4.4.2. Visualization between Baseline and the Efficient YOLOv7-Drone | 
 
-**Table 9.** Comparison of Detection Accuracy between Baseline and the Introduction of the P2 Detection Head (A).
+**Table 9.** Comparison of Detection Accuracy between Baseline and the Introduction of the P2 Detection Head (A). [corps du tableau reconstruit par Docling : à vérifier]
 
-    Method | mAP[%] | AP50[%] | AP75[%
+    Method | mAP[%] | AP50[%] | AP75[%] | mAPs[%] | mAPm[%] | mAPl[%]
+    Baseline | 28.6 | 49.5 | 28.4 | 19.4 | 40.3 | 59.2
+    +A | 29.3 | 50.3 | 29.6 | 20.3 | 40.5 | 58.0
 
 ] mAP s [%] mAP m [%] mAP l [%]
 
@@ -332,16 +334,18 @@ Our approach is distinguished by its attention to the low foreground proportion 
     P4 Detection Head | 20.9 | 32.2 | 22.8 | 10.9 | 35.3 | 42.3
     After P5 Removal (P4 Detection Head) | 24.7 | 38.4 | 26.4 | 13.8 | 38.7 | 52.5
 
-**Table 12.** Ablation on the Impact of CBS Module Channel Optimization. The components are labeled as: A-Introduction of the P2 detection head, B-Removal of the P5 detection head, C-CBS module channel optimization.
+**Table 12.** Ablation on the Impact of CBS Module Channel Optimization. The components are labeled as: A-Introduction of the P2 detection head, B-Removal of the P5 detection head, C-CBS module channel optimization. [corps du tableau reconstruit par Docling : à vérifier]
 
-    Method | mAP[%
+    Method | mAP[%] | AP50[%] | AP75[%] | mAPs[%] | mAPm[%] | mAPl[%]
+    Baseline + A + B | 30.0 | 51.5 | 30.1 | 21.1 | 41.2 | 52.2
+    Baseline+A+B+C | 31.0 | 52.2 | 31.6 | 22.0 | 42.2 | 54.1
 
 ] AP50[%] AP75[%] mAP s [%] mAP m [%] mAP l [%]
 
     Baseline + A + B | 30.0 | 51.5 | 30.1 | 21.1 | 41.2 | 52.2
     Baseline + A + B + C 31.0 | 52.2 | 31.6 | 22.0 | 42.2 | 54.1
 
-**Table 14.** Comparative Analysis on Constraint Methods for Sparse Convolutional Mask Generation.
+**Table 14.** Comparative Analysis on Constraint Methods for Sparse Convolutional Mask Generation. [corps du tableau reconstruit par Docling : à vérifier]
 
     Method | mAP[%] | AP50[%] | AP75[%] | AR[%]
     Mask Ratio = 0 | 23.3 | 41.1 | 22.8 | 41.9

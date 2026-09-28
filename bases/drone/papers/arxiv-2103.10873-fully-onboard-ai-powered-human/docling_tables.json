@@ -1,0 +1,219 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 2,
+   "bbox": [
+    48.3,
+    84.0,
+    300.1,
+    141.7
+   ],
+   "caption": "TABLE I UAVS TAXONOMY BY VEHICLE CLASS-SIZE [6].",
+   "rows": [
+    [
+     "Vehicleclass",
+     "⊘:Weight[cm:kg]",
+     "Power[W]",
+     "Onboarddevice"
+    ],
+    [
+     "standard-size[7] micro-size [8] nano-size [12] pico-size [11]",
+     "∼50:≥1",
+     "≥ 100 ∼ 50",
+     "Desktop Embedded MCU"
+    ],
+    [
+     "",
+     "∼ 25 : ∼ 0.5",
+     "",
+     ""
+    ],
+    [
+     "",
+     "∼ 10 : ∼ 0.01",
+     "∼ 5",
+     ""
+    ],
+    [
+     "",
+     "∼ 2 : ≤ 0.001",
+     "∼ 0.1",
+     "ULP"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    48.3,
+    355.3,
+    301.7,
+    403.6
+   ],
+   "caption": "TABLE II MAC OPERATIONS AND MEMORY FOOTPRINT FOR ONE FRAME INFERENCE OF THE PULP-FRONTNET MODELS AND THE PROXIMITY NN [4].",
+   "rows": [
+    [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    [
+     "PULP-Frontnet",
+     "160×32",
+     "160×16",
+     "80×32",
+     "NN[4]"
+    ],
+    [
+     "Operations [MMAC]",
+     "14.1",
+     "4.3",
+     "4.0",
+     "96.5"
+    ],
+    [
+     "Memory [kB]",
+     "499",
+     "184",
+     "348",
+     "6116"
+    ],
+    [
+     "# Parameters",
+     "3.03×105",
+     "7.80×104",
+     "2.99×105",
+     "1,26×106"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    310.5,
+    444.7,
+    563.6,
+    516.1
+   ],
+   "caption": "TABLE III REGRESSION PERFORMANCE FOR OUR NETWORKS (QUANTIZED) AND PROXIMITY NN [4] (FULL PRECISION).",
+   "rows": [
+    [
+     "Network.Network",
+     "MAE [·10-3 ].x",
+     "MAE [·10-3 ].y",
+     "MAE [·10-3 ].z",
+     "MAE [·10-3 ].θ",
+     "MSE [·10-3 ].x",
+     "MSE [·10-3 ].y",
+     "MSE [·10-3 ].z",
+     "MSE [·10-3 ].θ"
+    ],
+    [
+     "160×32",
+     "195",
+     "192",
+     "101",
+     "482",
+     "66",
+     "78",
+     "20",
+     "386"
+    ],
+    [
+     "160×16",
+     "203",
+     "191",
+     "110",
+     "492",
+     "74",
+     "83",
+     "25",
+     "412"
+    ],
+    [
+     "80×32",
+     "226",
+     "178",
+     "106",
+     "556",
+     "88",
+     "84",
+     "29",
+     "504"
+    ],
+    [
+     "NN [4]",
+     "210",
+     "219",
+     "96",
+     "473",
+     "79",
+     "91",
+     "21",
+     "385"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    48.5,
+    290.9,
+    300.3,
+    361.9
+   ],
+   "caption": "TABLE IV IN-FIELD EXPERIMENT RESULTS.",
+   "rows": [
+    [
+     "Network",
+     "Rate[Hz]",
+     "Regression R2.x",
+     "Regression R2.y",
+     "Regression R2.θ",
+     "Median pose error.exy[m]",
+     "Median pose error.eθ[°]"
+    ],
+    [
+     "160×32",
+     "48",
+     "0.87",
+     "0.87",
+     "0.71",
+     "0.41",
+     "3.7"
+    ],
+    [
+     "160×16",
+     "111",
+     "0.93",
+     "0.82",
+     "0.56",
+     "0.61",
+     "4.7"
+    ],
+    [
+     "80×32",
+     "135",
+     "0.88",
+     "0.75",
+     "0.54",
+     "0.63",
+     "4.0"
+    ],
+    [
+     "mocap",
+     "30",
+     "1.00",
+     "1.00",
+     "1.00",
+     "0.26",
+     "4.1"
+    ]
+   ]
+  }
+ ]
+}

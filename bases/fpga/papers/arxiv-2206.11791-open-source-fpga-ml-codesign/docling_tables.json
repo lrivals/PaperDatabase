@@ -1,0 +1,411 @@
+{
+ "docling": "2.130.0",
+ "ocr": false,
+ "tables": [
+  {
+   "page": 3,
+   "bbox": [
+    308.3,
+    598.3,
+    540.3,
+    653.5
+   ],
+   "caption": "Table 1. Summary of models submitted for the v0.7 benchmark including benchmark task, tool flow used, precision of model, number of parameters, and performance-by default this is accuracy unless denoted as AUC",
+   "rows": [
+    [
+     "Benchmark",
+     "Flow",
+     "Prec.[bits]",
+     "Params.",
+     "Accuracy"
+    ],
+    [
+     "IC",
+     "hls4ml",
+     "8-12",
+     "58 115",
+     "83.5%"
+    ],
+    [
+     "IC",
+     "FINN",
+     "1",
+     "1542848",
+     "84.5%"
+    ],
+    [
+     "AD",
+     "hls4ml",
+     "6-12",
+     "22285",
+     "0.83AUC"
+    ],
+    [
+     "KWS",
+     "FINN",
+     "3",
+     "259584",
+     "82.5%"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    57.3,
+    309.4,
+    288.2,
+    369.9
+   ],
+   "caption": "Table 2. Summary of FIFO buffer sizes for models submitted for the v0.7 benchmark. For the hls4ml FIFO optimization the FIFO buffer sizes can take an arbitrary integer values, while for FINN they can only be powers of two. No FIFO optimization was performed for the AD model.",
+   "rows": [
+    [
+     "Benchmark",
+     "Flow",
+     "FIFOoptimization",
+     "FIFOsize"
+    ],
+    [
+     "IC",
+     "hls4ml",
+     "enabled",
+     "1-1066"
+    ],
+    [
+     "IC",
+     "FINN",
+     "enabled",
+     "2-512"
+    ],
+    [
+     "AD",
+     "hls4ml",
+     "disabled",
+     "1"
+    ],
+    [
+     "KWS",
+     "FINN",
+     "enabled",
+     "32-64"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    56.4,
+    618.4,
+    290.6,
+    674.8
+   ],
+   "caption": "Table 3. Resource estimates from Vivado HLS for the IC model with hls4ml for the v0.7 MLPerf Tiny submission",
+   "rows": [
+    [
+     "Available",
+     "BRAM [18 kb] 280",
+     "BRAM [18 kb] 280",
+     "FF 106 400",
+     "FF 106 400",
+     "LUT 53 200",
+     "LUT 53 200"
+    ],
+    [
+     "Without opt.",
+     "477",
+     "170.4%",
+     "79177",
+     "74.4%",
+     "66838",
+     "125.6%"
+    ],
+    [
+     "WithFIFOopt.",
+     "278",
+     "99.3%",
+     "72686",
+     "68.3%",
+     "58515",
+     "110.0%"
+    ],
+    [
+     "WithReLUopt.",
+     "345",
+     "123.2%",
+     "72921",
+     "68.5%",
+     "55292",
+     "103.9%"
+    ],
+    [
+     "With all opt.",
+     "146",
+     "52.1%",
+     "66430",
+     "62.4%",
+     "46969",
+     "88.3%"
+    ]
+   ]
+  },
+  {
+   "page": 7,
+   "bbox": [
+    56.4,
+    101.0,
+    290.5,
+    157.2
+   ],
+   "caption": "Table 4. Resource utilization from Vivado HLS logic synthesis on the Pynq-Z2 for the hls4ml AD model with various optimizations at 144 reuse factor.",
+   "rows": [
+    [
+     "Available",
+     "AUC -",
+     "FF 106 400",
+     "FF 106 400",
+     "LUT 53 200",
+     "LUT 53 200"
+    ],
+    [
+     "Reference",
+     "87.1%",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    [
+     "With folding",
+     "68.1%",
+     "161228",
+     "151.5%",
+     "221063",
+     "451.5%"
+    ],
+    [
+     "Withdownsampling",
+     "81.4%",
+     "55341",
+     "52.0%",
+     "35366",
+     "66.5%"
+    ],
+    [
+     "With all opt.",
+     "83.3%",
+     "44300",
+     "41.6%",
+     "31094",
+     "58.5%"
+    ]
+   ]
+  },
+  {
+   "page": 10,
+   "bbox": [
+    55.7,
+    58.3,
+    541.3,
+    202.1
+   ],
+   "caption": "Table 5. Resource usage, latency, and energy per inference for the submitted models implemented on the Pynq-Z2 and Arty A7-100T platforms.",
+   "rows": [
+    [
+     "Model",
+     "LUT",
+     "LUT",
+     "LUTRAM",
+     "LUTRAM",
+     "FF",
+     "FF",
+     "BRAM [36 kb]",
+     "BRAM [36 kb]",
+     "DSP",
+     "DSP",
+     "Latency[ms]",
+     "Energy/inf.[µJ]"
+    ],
+    [
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2",
+     "Pynq-Z2"
+    ],
+    [
+     "Available",
+     "53 200",
+     "53 200",
+     "17 400",
+     "17 400",
+     "106 400",
+     "106 400",
+     "140",
+     "140",
+     "220",
+     "220",
+     "-",
+     "-"
+    ],
+    [
+     "IC(hls4ml)",
+     "28544",
+     "53.7%",
+     "3756",
+     "21.6%",
+     "49215",
+     "46.3%",
+     "42",
+     "30.0%",
+     "4",
+     "1.8%",
+     "27.3",
+     "44 330"
+    ],
+    [
+     "IC(FINN)",
+     "24502",
+     "46.1%",
+     "2086",
+     "12.0%",
+     "34354",
+     "32.3%",
+     "100",
+     "71.4%",
+     "0",
+     "0.0%",
+     "1.5",
+     "2 535"
+    ],
+    [
+     "AD",
+     "40658",
+     "76.4%",
+     "3659",
+     "21.0%",
+     "51879",
+     "48.8%",
+     "14.5",
+     "10.4%",
+     "205",
+     "93.2%",
+     "0.019",
+     "30.1"
+    ],
+    [
+     "KWS",
+     "33732",
+     "63.4%",
+     "1033",
+     "5.9%",
+     "34405",
+     "32.3%",
+     "37",
+     "26.4%",
+     "1",
+     "0.5%",
+     "0.017",
+     "30.9"
+    ],
+    [
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T",
+     "Arty A7-100T"
+    ],
+    [
+     "Available",
+     "63400",
+     "63400",
+     "19 000",
+     "19 000",
+     "126 800",
+     "126 800",
+     "135",
+     "135",
+     "240",
+     "240",
+     "-",
+     "-"
+    ],
+    [
+     "IC(hls4ml)",
+     "39126",
+     "61.7%",
+     "5877",
+     "30.9%",
+     "59184",
+     "46.7%",
+     "50",
+     "37.0%",
+     "6",
+     "2.5%",
+     "33.1",
+     "73 166"
+    ],
+    [
+     "IC(FINN)",
+     "32096",
+     "50.6%",
+     "3154",
+     "16.6%",
+     "39962",
+     "31.5%",
+     "113.5",
+     "84.1%",
+     "2",
+     "0.8%",
+     "1.5",
+     "3 419"
+    ],
+    [
+     "AD",
+     "51429",
+     "81.1%",
+     "5780",
+     "30.4%",
+     "61639",
+     "48.6%",
+     "22.5",
+     "16.7%",
+     "207",
+     "86.3%",
+     "0.045",
+     "98.4"
+    ],
+    [
+     "KWS",
+     "42518",
+     "67.1%",
+     "1634",
+     "8.6%",
+     "43157",
+     "34.0%",
+     "59.5",
+     "44.1%",
+     "2",
+     "0.8%",
+     "0.033",
+     "53.7"
+    ]
+   ]
+  }
+ ]
+}

@@ -244,4 +244,10 @@ In this work, we presented PULP-Frontnet, a novel CNN that visually estimates th
     80 × 32 | 135 | 0.88 | 0.75 | 0.54 | 0.63 | 4.0
     mocap | 30 | 1.00 | 1.00 | 1.00 | 0.26 | 4.1
 
-**Table IV** reports the rate of the high-level controller on the STM32 (see Section IV-D) and summarizes the metrics over all runs. The R 2 scores indicate good regression performance; in comparison with scores obtained on the testing set (Figure
+**Table IV** reports the rate of the high-level controller on the STM32 (see Section IV-D) and summarizes the metrics over all runs. The R 2 scores indicate good regression performance; in comparison with scores obtained on the testing set (Figure [corps du tableau reconstruit par Docling : à vérifier]
+
+    Network | Rate[Hz] | Regression R2.x | Regression R2.y | Regression R2.θ | Median pose error.exy[m] | Median pose error.eθ[°]
+    160×32 | 48 | 0.87 | 0.87 | 0.71 | 0.41 | 3.7
+    160×16 | 111 | 0.93 | 0.82 | 0.56 | 0.61 | 4.7
+    80×32 | 135 | 0.88 | 0.75 | 0.54 | 0.63 | 4.0
+    mocap | 30 | 1.00 | 1.00 | 1.00 | 0.26 | 4.1

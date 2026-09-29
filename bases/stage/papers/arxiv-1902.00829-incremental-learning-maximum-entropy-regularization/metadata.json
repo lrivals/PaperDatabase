@@ -28,19 +28,25 @@
   "axes": [
     "cl-methods"
   ],
-  "tags": [],
+  "tags": [
+    "class-incremental",
+    "knowledge distillation",
+    "maximum entropy",
+    "forgetting metrics",
+    "intransigence",
+    "exemplar memory"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 4",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

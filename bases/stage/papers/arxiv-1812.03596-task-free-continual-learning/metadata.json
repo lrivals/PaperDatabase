@@ -22,23 +22,27 @@
   "url": "https://arxiv.org/abs/1812.03596",
   "type": "preprint",
   "axes": [
-    "cl-methods"
+    "cl-methods",
+    "drift-detection"
   ],
   "tags": [
-    "mas",
-    "task-free"
+    "MAS",
+    "task-free",
+    "online continual learning",
+    "loss plateau detection",
+    "hard buffer",
+    "replay"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 8 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

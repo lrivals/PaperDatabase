@@ -26,20 +26,28 @@
   "url": "https://arxiv.org/abs/2312.10549",
   "type": "preprint",
   "axes": [
+    "surveys",
     "cl-methods"
   ],
-  "tags": [],
+  "tags": [
+    "survey",
+    "taxonomy",
+    "catastrophic forgetting",
+    "rehearsal",
+    "EWC",
+    "sub-networks",
+    "dynamic networks"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

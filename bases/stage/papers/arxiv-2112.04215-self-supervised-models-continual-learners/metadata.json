@@ -37,21 +37,25 @@
     "cl-methods"
   ],
   "tags": [
-    "distillation",
-    "unsupervised"
+    "self-supervised learning",
+    "knowledge distillation",
+    "predictor",
+    "EWC",
+    "SimCLR",
+    "BYOL",
+    "Barlow Twins"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 6, Table A. Linear evaluation top, Table D. Linear evaluation top",
       "tableaux sans corps extrait (légende seule) : Table F. Combinations of SSL m"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

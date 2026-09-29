@@ -4,7 +4,7 @@
 
 \subsection{Suivi mono-objet sur Jetson}
 
-Le groupe Vision4Robotics (Tongji) publie trois trackers siamois à backbone AlexNet,
+Le groupe Vision4Robotics (Tongji) publie trois trackers \gl{siamois}{siamois} à \gl{backbone}{backbone} AlexNet,
 testés à bord d'un drone sur Jetson AGX Xavier, tous sans TensorRT et sans mesure de
 puissance.
 
@@ -15,12 +15,12 @@ puissance n'est rapporté.}
 \label{tab:trackers}
 \begin{tabularx}{\textwidth}{@{}P{3.4cm}LrP{2.8cm}@{}}
 \toprule
-Tracker & Précision sur benchmark (bureau) & FPS à bord & FPS bureau \\
+Tracker & Précision sur benchmark (bureau) & \gl{FPS}{FPS} à bord & FPS bureau \\
 \midrule
 SiamAPN++ \citep{arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network}\pp &
-  UAV20L : précision 0,736, AUC 0,560 \src{Fig.~4a}\med & 34,9 \src{§V}\med & \nr \\
+  UAV20L : précision 0,736, \gl{AUC}{AUC} 0,560 \src{Fig.~4a}\med & 34,9 \src{§V}\med & \nr \\
 HiFT \citep{arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial}\pp &
-  UAV20L : précision 0,763 \src{Table~2} & 31,2 \src{§5}\med & 127 (GPU non précisé) \\
+  UAV20L : précision 0,763 \src{Table~2} & 31,2 \src{§5}\med & 127 (\gl{GPU}{GPU} non précisé) \\
 TCTrack \citep{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}\pp &
   UAVTrack112\_L : succès 0,582 \src{§4.2}\med & > 27 \src{§5}\med & 125,6 (« PC ») \\
 \bottomrule
@@ -31,25 +31,25 @@ Le passage du bureau à la Xavier divise le débit par quatre environ, sans anal
 goulot \deduit. TCTrack apporte une observation utile au choix d'un backbone : sur Xavier,
 AlexNet prend 3,4\,ms contre 13,7\,ms pour MobileNetV2, attribués au coût d'accès mémoire
 des réseaux « mobiles » \citep[Table~1]{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}.
-Aucun tracker siamois ou à Transformer n'est porté sur FPGA ou MCU dans le corpus, et
-aucun n'étudie la quantification. Du côté multi-objets, les trackers par association de
-positions sont quasi gratuits : SORT tourne à 245\,FPS sur CPU dans UAVDT
+Aucun tracker siamois ou à \gl{transformer}{Transformer} n'est porté sur \gl{FPGA}{FPGA} ou \gl{MCU}{MCU} dans le corpus, et
+aucun n'étudie la \gl{quantif}{quantification}. Du côté multi-objets, les trackers par association de
+positions sont quasi gratuits : SORT tourne à 245\,FPS sur \gl{CPU}{CPU} dans UAVDT
 \citep[Table~3]{arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object}\med. Le coût
 embarqué du suivi est donc dans le détecteur \deduit.
 
 \subsection{Vol agile : la référence Jetson de Zurich}
 
-Deux travaux de l'université de Zurich fixent les ordres de grandeur de la gamme Jetson
+Deux travaux de l'université de Zurich fixent les ordres de grandeur de la \gl{gamme}{gamme Jetson}
 pour un drone agile de moins d'un kilogramme.
 \begin{itemize}
   \item \citet{arxiv-2110.05113-learning-high-speed-flight-wild} (Science Robotics)
-    apprennent une politique de bout en bout à partir d'images de profondeur. Sur Jetson
+    apprennent une politique de \gl{bout}{bout en bout} à partir d'images de profondeur. Sur Jetson
     TX2, la latence est de 41,6\,ms, dont 38,9 d'inférence \src{Table~1}. En forêt, le
     drone réussit 100\,\% des vols à 5\,m/s et 60\,\% à 10\,m/s \src{§2-A}. Le papier
-    relie explicitement latence et vitesse sûre maximale \src{§S5}.
+    relie explicitement latence et \gl{vitesse}{vitesse sûre} maximale \src{§S5}.
   \item \citet{2023-kaufmann-champion-level-drone-racing-deep} (Nature) battent des
     champions humains de course FPV avec des capteurs et un calcul embarqués. Le détecteur
-    de portes (un petit U-Net) prend 40\,ms en TensorRT FP16 sur le GPU du TX2, la
+    de portes (un petit U-Net) prend 40\,ms en TensorRT \gl{FP32}{FP16} sur le GPU du TX2, la
     politique 8\,ms sur son CPU (Methods)\med. La vision est le goulot, et la caméra à
     30\,Hz est un facteur limitant face aux 120\,Hz des pilotes (Discussion).
 \end{itemize}
@@ -58,14 +58,14 @@ Aucun des deux ne mesure la puissance du calculateur. Le survey de
 le plus petit matériel suffisant pour des réseaux complexes, ce qui fixe des châssis de
 6 pouces \src{§VII-C} : il ignore les nano-drones et ne discute pas le FPGA. Il cite comme
 question ouverte la détection d'un adversaire depuis la caméra embarquée (\emph{multiplayer
-racing}, §VIII-C), c'est-à-dire un cas air $\rightarrow$ air.
+racing}, §VIII-C), c'est-à-dire un cas \gl{airair}{air $\rightarrow$ air}.
 
 \subsection{Localisation et plateformes hétérogènes}
 
 \citet{2021-guo-fpga-uav-heterogeneous-computing-platform} proposent de réunir contrôle
-de vol (PID) et prétraitement sur un Zynq-7020, avec une Jetson AGX Xavier pour
+de vol (\gl{PID}{PID}) et prétraitement sur un Zynq-7020, avec une Jetson AGX Xavier pour
 l'inférence. C'est une proposition sans aucune mesure de latence, de masse ou de puissance,
 à citer avec prudence \src{§III--IV}. \citet{arxiv-2307.10255-land-localize-infrastructure-free-scalable}\pp{}
-localisent un essaim de nano-drones par UWB, sans vision ; le module radio seul consomme
+localisent un essaim de nano-drones par \gl{UWB}{UWB}, sans vision ; le module radio seul consomme
 environ 350\,mW par drone \src{§V-C}, un ordre de grandeur à garder face au budget de
 calcul d'un nano-drone.

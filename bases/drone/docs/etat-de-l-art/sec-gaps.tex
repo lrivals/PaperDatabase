@@ -16,36 +16,36 @@ dans la base.
 \toprule
 Gap & Statut & Piste \\
 \midrule
-Décalage algorithme / matériel : YOLO drone (P2, attention) jamais portés sur FPGA & étayé &
-  YOLOv8n-P2 ou Drone-YOLO nano en INT8 sur KV260 (Vitis~AI), contre FINN ou hls4ml ; mAP
+Décalage algorithme / matériel : \gl{YOLO}{YOLO} drone (P2, \gl{attention}{attention}) jamais portés sur \gl{FPGA}{FPGA} & étayé &
+  YOLOv8n-P2 ou Drone-YOLO nano en \gl{INT8}{INT8} sur KV260 (Vitis~AI), contre \gl{FINN}{FINN} ou hls4ml ; \gl{mAP}{mAP}
   VisDrone avant et après \\
-Quantification et petits objets : 0 ligne avec AP$_S$ sur 324 & étayé & balayage PTQ / QAT
-  (FP32, INT8, INT4) d'un YOLO drone sur VisDrone, AP$_S$ mesurée sur la carte \\
+Quantification et petits objets : 0 ligne avec \gl{APS}{AP$_S$} sur 324 & étayé & balayage \gl{PTQ}{PTQ} / \gl{QAT}{QAT}
+  (\gl{FP32}{FP32}, INT8, INT4) d'un YOLO drone sur VisDrone, \gl{AP}{AP}$_S$ mesurée sur la carte \\
 Tête P2 et haute résolution : coût mémoire on-chip non mesuré & étayé (coût) ; hypothèse
   (absence FPGA) & tailles d'activation par couche de YOLOv8n et YOLOv8n-P2 face au budget
-  BRAM d'un ZU3EG ou d'une KV260 \\
-Paramètres et FLOPs $\neq$ latence sur cible & étayé & trois variantes légères d'un même
+  \gl{BRAM}{BRAM} d'un ZU3EG ou d'une KV260 \\
+Paramètres et \gl{FLOPs}{FLOPs} $\neq$ latence sur cible & étayé & trois variantes légères d'un même
   YOLO profilées sur KV260 et Orin, à précision égale \\
-Post-traitement sur le PS : goulot de bout en bout & étayé & NMS matériel ou tête sans NMS ;
+Post-traitement sur le \gl{PS}{PS} : goulot de \gl{bout}{bout en bout} & étayé & \gl{NMS}{NMS} matériel ou tête sans NMS ;
   latence caméra $\rightarrow$ sortie instrumentée \\
 Calcul adaptatif ou épars jamais évalué à bord & étayé & SAHI à tuiles fixes contre saut de
   tuiles vides sur KV260, latence au pire cas \\
 Métriques non comparables ; benchmarks sans métrique d'efficacité & étayé & protocole
-  commun : métrique, résolution, portée de la puissance \\
+  commun : métrique, résolution, \gl{portee}{portée} de la puissance \\
 Métrique système absente des papiers YOLO/FPGA & étayé & designs FPGA publiés placés sur le
-  modèle F-1 avec masse de carte mesurée \\
+  \gl{roofline}{modèle F-1} avec masse de carte mesurée \\
 Fiabilité des accélérateurs de détection sur drone & étayé (corpus mince) & injection de
   fautes sur un détecteur FPGA avec métrique de mission \\
-Pas de comparaison entre gammes de puissance & étayé & même réseau, même entrée, même
+Pas de comparaison entre \gl{gamme}{gammes de puissance} & étayé & même réseau, même entrée, même
   portée de puissance sur GAP8, FPGA et Jetson \\
-Détection et navigation sur le même budget & étayé & partage d'un SoC par reconfiguration
+Détection et navigation sur le même budget & étayé & partage d'un \gl{SoC}{SoC} par reconfiguration
   partielle, interférence mesurée \\
 Suivi embarqué sans puissance ni FPGA & étayé & HiFT ou SiamAPN++ sur FPGA, énergie par
   image \\
-Contre-drone évalué sur GPU de bureau & étayé & YOLOv8n sur Det-Fly, INT8 sur KV260 contre
+Contre-drone évalué sur \gl{GPU}{GPU} de bureau & étayé & YOLOv8n sur Det-Fly, INT8 sur KV260 contre
   Orin, puissance à la carte \\
-Détecteur air $\rightarrow$ air embarqué sur intercepteur & étayé & détecteur sur SoC avec
-  AP, FPS, W et latence de bout en bout ; Det-Fly et ARD-MAV \\
+Détecteur \gl{airair}{air $\rightarrow$ air} embarqué sur intercepteur & étayé & détecteur sur SoC avec
+  AP, \gl{FPS}{FPS}, W et latence de bout en bout ; Det-Fly et ARD-MAV \\
 Air $\rightarrow$ air : coût du mouvement multi-images & étayé (coût) ; hypothèse (FPGA) &
   profil par étage de GL-YOMO ou GLAD ; tampon on-chip de 8 images \\
 Fusion visible + thermique à bord & hypothèse & recherche ciblée (\texttt{/paper-discover}) \\
@@ -64,19 +64,19 @@ P2 et de l'attention (section~\ref{sec:detection}). Les implantations FPGA reste
 YOLO anciens et, pour tenir, retirent la branche multi-échelle
 \citep{2025-cali-optimized-implementation-yolov3-tiny-real} ou remplacent l'attention
 \citep{arxiv-2607.13106-no-attention-no-problem-dpu}\pp. La seule mesure embarquée d'une
-tête P2 (Jetson TX2) montre un facteur 3 à 4 en latence
+\gl{teteP2}{tête P2} (Jetson TX2) montre un facteur 3 à 4 en latence
 \citep[Table~6]{2023-zhang-drone-yolo-efficient-neural-network}. Deux familles
 d'alternatives à P2 existent, jamais évaluées sur FPGA : transférer l'information de P2
 vers P3 (TPH-YOLOv5++), ou recadrer à pleine résolution autour des régions utiles (SAHI,
 UFPMP-Det, GLAD).
 
 \paragraph{La précision sur petits objets après quantification.} Aucune des 324 lignes ne
-rapporte d'AP$_S$. Les pertes de quantification connues sont globales et souvent fortes
+rapporte d'AP$_S$. Les pertes de \gl{quantif}{quantification} connues sont globales et souvent fortes
 (6 à 30 points de mAP selon le modèle et le jeu). On ne sait donc pas si la
-quantification, indispensable sur FPGA et MCU, détruit précisément ce que les YOLO drone
+quantification, indispensable sur FPGA et \gl{MCU}{MCU}, détruit précisément ce que les YOLO drone
 cherchent à gagner.
 
-\paragraph{La métrique de mission.} Le lien entre latence, masse et vitesse sûre est
+\paragraph{La métrique de mission.} Le lien entre latence, masse et \gl{vitesse}{vitesse sûre} est
 modélisé \citep{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}\pp{} et mesuré
 pour des nano-drones, jamais pour un détecteur sur FPGA. Le modèle lui-même ignore la
 qualité de perception, et la gamme nano montre qu'un réseau plus rapide peut moins bien

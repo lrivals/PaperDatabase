@@ -17,13 +17,13 @@ travaux cités par un survey sont signalés comme tels ; leurs chiffres ne sont 
 \toprule
 Axe & Articles & Axe & Articles \\
 \midrule
-Détection drone, petits objets & 29 & Nano-drones, MCU, ASIC, neuromorphique & 16 \\
-Suivi et navigation & 27 & Accélération FPGA / SoC & 14 \\
+Détection drone, petits objets & 29 & Nano-drones, \gl{MCU}{MCU}, \gl{ASIC}{ASIC}, neuromorphique & 16 \\
+Suivi et navigation & 27 & Accélération \gl{FPGA}{FPGA} / \gl{SoC}{SoC} & 14 \\
 Contre-drone & 17 & Co-design calcul--énergie--vol & 14 \\
 Jeux de données et challenges & 15 & Surveys & 7 \\
  & & Fiabilité du calcul embarqué & 2 \\
 \midrule
-\multicolumn{4}{@{}l}{Types : 30 articles de journal, 7 de conférence, 36 preprints arXiv
+\multicolumn{4}{@{}l}{Types : 30 articles de journal, 7 de conférence, 36 \gl{preprint}{preprints} arXiv
 (dont plusieurs publiés depuis, voir le texte).} \\
 \multicolumn{4}{@{}l}{Années : 2016--2020 : 14 ; 2021--2023 : 38 ; 2024--2026 : 21.} \\
 \bottomrule
@@ -33,15 +33,15 @@ Jeux de données et challenges & 15 & Surveys & 7 \\
 \paragraph{Origine des chiffres.} Chaque valeur est reprise de la fiche ou de
 \texttt{benchmarks.csv}, avec la section ou le tableau de l'article entre crochets, par
 exemple \src{Table~4}. Une valeur que les auteurs ne donnent pas s'écrit \nr{} : elle
-n'est jamais estimée. Un calcul fait à partir des chiffres publiés (par exemple un FPS/W)
+n'est jamais estimée. Un calcul fait à partir des chiffres publiés (par exemple un \gl{FPS}{FPS}/W)
 est marqué \deduit. Sur les 324 lignes, 176 sont en confiance \emph{high} et 148 en
 \emph{medium} : valeurs lues dans le texte qui commente une figure, ou tableaux
 reconstruits automatiquement. Ces dernières sont marquées \med{} dans les tableaux. Aucune
 ligne n'est en confiance \emph{low}.
 
-\paragraph{Portée de la puissance.} Une puissance n'a de sens qu'avec sa portée. La base
+\paragraph{Portée de la puissance.} Une puissance n'a de sens qu'avec sa \gl{portee}{portée}. La base
 distingue \emph{board} (carte entière, au wattmètre), \emph{chip} (rails de la puce ou
-télémétrie embarquée comme \texttt{tegrastats}), \emph{estimated} (outil de conception,
+\gl{telemetrie}{télémétrie} embarquée comme \texttt{tegrastats}), \emph{estimated} (outil de conception,
 par exemple Vivado) et \emph{unspecified} (méthode non décrite). Sur les 324 lignes,
 222 n'ont pas de puissance (69\,\%) ; les autres se répartissent en 51 \emph{board},
 20 \emph{chip}, 29 \emph{unspecified} et 2 \emph{estimated}. Deux puissances de portées
@@ -50,18 +50,18 @@ différentes ne se comparent pas.
 \paragraph{Gamme de puissance.} Tout résultat est situé dans une gamme : \emph{nano}
 (GAP8, MCU, ASIC ; de quelques mW à quelques centaines de mW), \emph{FPGA} (SoC Zynq ou
 Kria, de 1 à 30\,W selon la carte), \emph{Jetson} (autour de 10\,W, de 5 à 30\,W selon le
-module et le mode). Les résultats sur GPU de bureau (RTX, Titan, Tesla) sont signalés
+module et le mode). Les résultats sur \gl{GPU}{GPU} de bureau (RTX, Titan, Tesla) sont signalés
 comme tels : ils ne sont jamais des résultats embarqués, quoi qu'en dise leur titre.
 
-\paragraph{Métriques de précision.} Elles ne se comparent qu'à protocole égal. L'IoU moyen
-mono-objet du DAC-SDC n'est pas une mAP ; la mAP@0.5 de VisDrone n'est pas l'AP COCO
+\paragraph{Métriques de précision.} Elles ne se comparent qu'à protocole égal. L'\gl{IoU}{IoU} moyen
+mono-objet du \gl{DAC-SDC}{DAC-SDC} n'est pas une \gl{mAP}{mAP} ; la mAP@0.5 de VisDrone n'est pas l'\gl{AP}{AP} \gl{COCO}{COCO}
 [.5:.95] du protocole officiel ; l'AP d'UAVDT est calculée à IoU 0,7 dans l'article
 d'origine ; certains travaux de contre-drone évaluent à IoU 0,1 ou 0,25.
 
 \paragraph{Contre-drone : point de vue du capteur.} Chaque article de contre-drone est
 classé \emph{air $\rightarrow$ air} (détecteur à bord d'un drone), \emph{sol
 $\rightarrow$ air} (capteur fixe au sol) ou point de vue non déclaré. Seul le premier
-relève de l'IA embarquée ; les autres sont cités comme jeux de données, métriques ou
+relève de l'\gl{AI}{IA} embarquée ; les autres sont cités comme jeux de données, métriques ou
 contrastes.
 
 \paragraph{Lu contre déduit.} Sauf mention, une affirmation résume ce que disent les

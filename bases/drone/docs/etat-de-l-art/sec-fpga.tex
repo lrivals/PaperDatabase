@@ -4,10 +4,10 @@
 
 \subsection{Le DAC-SDC : cinq ans de co-design sur un petit Zynq}
 
-Le tableau~\ref{tab:dacsdc} reprend les champions FPGA du DAC-SDC compilés par
+Le tableau~\ref{tab:dacsdc} reprend les champions \gl{FPGA}{FPGA} du \gl{DAC-SDC}{DAC-SDC} compilés par
 \citet{2024-zhang-comprehensive-analysis-dac-sdc-fpga}, dont les auteurs sont les
 vainqueurs de 2022. Les mesures viennent de l'organisateur, avec une puissance à la carte
-au wattmètre : c'est la série la plus homogène du corpus pour la gamme FPGA.
+au wattmètre : c'est la série la plus homogène du corpus pour la \gl{gamme}{gamme FPGA}.
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -17,9 +17,9 @@ classe. Puissance \emph{board}. PYNQ-Z1 (XC7Z020) en 2018, Ultra96 (ZU3EG) ensui
 \label{tab:dacsdc}
 \begin{tabularx}{\textwidth}{@{}rP{2.2cm}LrrrR{1.4cm}@{}}
 \toprule
-Année & Équipe & Réseau, précision numérique & IoU & FPS & P (W) & Énergie (J) \\
+Année & Équipe & Réseau, précision numérique & \gl{IoU}{IoU} & \gl{FPS}{FPS} & P (W) & Énergie (J) \\
 \midrule
-2018 & TGIIF & SSD élagué, W8/A8 & 0,624 & 12,0 & 4,2 & 18\,444 \\
+2018 & TGIIF & \gl{SSD}{SSD} élagué, \gl{wa}{W8/A8} & 0,624 & 12,0 & 4,2 & 18\,444 \\
 2019 & iSmart3 & SkyNet, W11/A9 & 0,716 & 25,1 & 7,26 & 15\,216 \\
 2020 & BJUT Runner & UltraNet, W4/A4 & 0,656 & 212,7 & 6,65 & 1\,641 \\
 2021 & Skrskr & SkyNet, W5/A8 & 0,716 & 299,3 & 3,77 & 661 \\
@@ -29,8 +29,8 @@ Année & Équipe & Réseau, précision numérique & IoU & FPS & P (W) & Énergie
 \end{table}
 
 L'énergie sur le jeu de test est divisée par 500 en quatre ans. Les auteurs attribuent ce
-gain à trois choix, devenus la recette gagnante : une architecture streaming (apparue en
-2020), tous les poids sur puce, et une quantification W4/A4 avec DSP packing
+gain à trois choix, devenus la recette gagnante : une architecture \gl{dataflow}{streaming} (apparue en
+2020), tous les poids sur puce, et une \gl{quantif}{quantification} W4/A4 avec \gl{dsppacking}{DSP packing}
 \src{§3.3--3.5, §4.5}. Trois limites en bornent la portée :
 \begin{itemize}
   \item depuis 2020, tous les podiums utilisent UltraNet ou SkyNet, des réseaux de
@@ -43,18 +43,18 @@ gain à trois choix, devenus la recette gagnante : une architecture streaming (a
 \end{itemize}
 
 SkyNet \citep{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp{} (publié à
-MLSys~2020 d'après le texte) est l'un des rares cas où le même réseau est mesuré sur GPU
+MLSys~2020 d'après le texte) est l'un des rares cas où le même réseau est mesuré sur \gl{GPU}{GPU}
 embarqué et sur FPGA : 0,731 d'IoU à 67,33\,FPS et 13,50\,W sur TX2, 0,716 à 25,05\,FPS
-et 7,26\,W sur Ultra96 \src{Tables~5--6}, puissances de portée non décrite. Sa méthode
+et 7,26\,W sur Ultra96 \src{Tables~5--6}, puissances de \gl{portee}{portée} non décrite. Sa méthode
 \emph{bottom-up} choisit des blocs selon leur latence mesurée sur la cible, puis cherche
 l'architecture sous contrainte matérielle \src{§4}. Sa solution aux petits objets
-(bypass et réordonnancement space-to-depth) est légère et portée sur FPGA : c'est un
-contrepoint à la tête P2 \deduit. Ni ressources ni latence par image ne sont rapportées,
-et le débit FPGA est obtenu en lot de quatre images \src{§6.4}.
+(bypass et réordonnancement \gl{spacedepth}{space-to-depth}) est légère et portée sur FPGA : c'est un
+contrepoint à la \gl{teteP2}{tête P2} \deduit. Ni ressources ni latence par image ne sont rapportées,
+et le débit FPGA est obtenu en \gl{lot}{lot de} quatre images \src{§6.4}.
 
 \subsection{YOLO sur SoC : DPU Vitis~AI et dataflow}
 
-Le tableau~\ref{tab:yolo-fpga} rassemble les implantations YOLO sur FPGA du corpus.
+Le tableau~\ref{tab:yolo-fpga} rassemble les implantations \gl{YOLO}{YOLO} sur FPGA du corpus.
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -65,11 +65,11 @@ seuils et classes différents). Débit de l'accélérateur sauf mention.}
 \toprule
 Travail & Carte, flot & Modèle, précision & FPS & Puissance (portée) \\
 \midrule
-\citet{2025-cali-optimized-implementation-yolov3-tiny-real} & Z-turn XC7Z020, FINN &
-  YOLOv3-tiny réduit à une tête, W4/A4 ; 17,68 mAP50 VisDrone \emph{car} seule \src{Table~5} &
+\citet{2025-cali-optimized-implementation-yolov3-tiny-real} & Z-turn XC7Z020, \gl{FINN}{FINN} &
+  YOLOv3-tiny réduit à une tête, W4/A4 ; 17,68 \gl{mAP}{mAP50} VisDrone \emph{car} seule \src{Table~5} &
   164,8 (b.~1) / 208,7 (b.~100) \src{Table~9} & 2,55\,W (board) \\
-\citet{2024-nguyen-fpga-soc-implementation-yolov4-flying} & ZCU104, DPU $\times$2 &
-  YOLOv4-tiny 3L INT8 ; 72,24 mAP@0.25, jeu propre \src{Table~11} & 52,1 / 125,0
+\citet{2024-nguyen-fpga-soc-implementation-yolov4-flying} & ZCU104, \gl{DPU}{DPU} $\times$2 &
+  YOLOv4-tiny 3L \gl{INT8}{INT8} ; 72,24 mAP@0.25, jeu propre \src{Table~11} & 52,1 / 125,0
   \src{Table~13} & 19,4 / 26,4\,W (board, prise) \\
 \citet{2024-nguyen-fpga-soc-implementation-yolov4-flying} & ZCU104, DPU $\times$2 &
   YOLOv4 INT8 ; 83,70 mAP@0.25 & 9,2 / 17,9 & 23,1 / 30,1\,W (board) \\
@@ -77,12 +77,12 @@ Travail & Carte, flot & Modèle, précision & FPS & Puissance (portée) \\
   LCAM-YOLOX élagué INT8 ; 78,11\,\% mAP, feux de forêt \src{§V-A2}\med & 195 / 387 \src{§V-D}\med &
   9,72 / 10,45\,W (board) \\
 \citet{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} & ZCU104, SATAY &
-  YOLOv5n 640, W8/A16 ; 26,7 mAP50 COCO \src{Table~IV}\med & 21,41\,ms & 14,5\,W (non décrite) \\
+  YOLOv5n 640, W8/A16 ; 26,7 mAP50 \gl{COCO}{COCO} \src{Table~IV}\med & 21,41\,ms & 14,5\,W (non décrite) \\
 \citet{arxiv-2607.13106-no-attention-no-problem-dpu}\pp & ZCU104, DPU B4096 &
-  YOLOv26n INT8, attention approximée ; 0,29 mAP COCO \src{Table~II} & 34,05 (bout en bout)\med &
+  YOLOv26n INT8, \gl{attention}{attention} approximée ; 0,29 mAP COCO \src{Table~II} & 34,05 (\gl{bout}{bout en bout})\med &
   8,76\,W (Vivado, estimée) \\
 \citet{arxiv-1809.04570-finn-r-end-end-deep} & Ultra96, FINN-R (MO) & Tincy YOLO W1/A3 ;
-  50,1 mAP VOC \src{§5.1} & \nr{} (288\,GOp/s) & 9,7\,W (board) \\
+  50,1 mAP \gl{VOC}{VOC} \src{§5.1} & \nr{} (288\,GOp/s) & 9,7\,W (board) \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -91,7 +91,7 @@ Travail & Carte, flot & Modèle, précision & FPS & Puissance (portée) \\
 tableau~\ref{tab:yolo-drone} n'est porté sur FPGA dans le corpus. Les implantations
 restent sur YOLOv3-tiny, YOLOv4, YOLOX et YOLOv5n, et deux d'entre elles simplifient le
 réseau dans le sens inverse des YOLO drone. \citet{2025-cali-optimized-implementation-yolov3-tiny-real}
-retirent la branche multi-échelle pour tenir dans FINN et en BRAM : il ne reste qu'une
+retirent la branche multi-échelle pour tenir dans FINN et en \gl{BRAM}{BRAM} : il ne reste qu'une
 tête 13$\times$13, et la mAP50 chute de 41,8 à 17,7\,\%, sans ablation qui sépare
 l'effet de l'architecture de celui du W4/A4 \src{§3.1, Table~5}. Les auteurs citent
 explicitement la limite de FINN sur les topologies branchées \src{§3.1}.
@@ -99,8 +99,8 @@ explicitement la limite de FINN sur les topologies branchées \src{§3.1}.
 supporte ni SiLU ni softmax ni matmul, en remplaçant l'attention de YOLOv11 et YOLOv26
 par un produit terme à terme et une hard-sigmoid \src{§III-B} : ce n'est plus une
 attention au sens matriciel \deduit, et la modification coûte environ 3 points de mAP
-avant quantification \src{Table~I}. SATAY, le seul toolflow streaming du corpus pour
-YOLOv3 à v8, garde tous les poids sur puce (jusqu'à 26\,MB) et ne vise de SoC embarqué
+avant quantification \src{Table~I}. SATAY, le seul \gl{toolflow}{toolflow} streaming du corpus pour
+YOLOv3 à v8, garde tous les poids sur puce (jusqu'à 26\,MB) et ne vise de \gl{SoC}{SoC} embarqué
 qu'avec YOLOv5n sur ZCU104
 \citep[§IV-C, Table~IV]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
 
@@ -109,19 +109,19 @@ passage à l'INT8 coûte 6 à 7 points de mAP pour les YOLOv4 de
 \citet[Tables~10--11]{2024-nguyen-fpga-soc-implementation-yolov4-flying}, la conversion
 Darknet $\rightarrow$ TensorFlow ne coûtant rien. Il coûte jusqu'à 30 points pour YOLOv8n
 sur KITTI (0,64 $\rightarrow$ 0,34) chez \citet[Table~II]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.
-Même hors FPGA, la PTQ INT8 de TensorRT fait perdre 12,3 points de mAP50-95 à YOLOv8n
+Même hors FPGA, la \gl{PTQ}{PTQ} INT8 de TensorRT fait perdre 12,3 points de mAP50-95 à YOLOv8n
 sur Jetson Orin \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.
-Aucun de ces articles ne rapporte l'AP$_S$ : la perte sur les petits objets, qui sont
+Aucun de ces articles ne rapporte l'\gl{APS}{AP$_S$} : la perte sur les petits objets, qui sont
 pourtant la raison d'être de ces détecteurs, n'est pas connue.
 
 \paragraph{Le goulot est souvent sur le processeur.} Quatre articles montrent que
 l'accélérateur n'est pas ce qui limite le système. Chez
 \citet[Table~10]{2025-cali-optimized-implementation-yolov3-tiny-real}, le prétraitement
-(32,2\,ms) et le post-traitement (25,8\,ms, dont NMS 9,2\,ms) en Python sur le Cortex-A9
+(32,2\,ms) et le post-traitement (25,8\,ms, dont \gl{NMS}{NMS} 9,2\,ms) en Python sur le Cortex-A9
 pèsent environ cinq fois l'inférence ; le système réel tombe à 30\,FPS en streaming
 caméra \src{§4.4}, loin des 208\,FPS de l'accélérateur. Chez
 \citet[§V-F]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}, le pré- et
-post-traitement sur le PS ne profite pas des cœurs DPU supplémentaires. Chez
+post-traitement sur le \gl{PS}{PS} ne profite pas des cœurs DPU supplémentaires. Chez
 \citet[§IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp, agrandir le DPU ne
 change pas le débit de bout en bout. Le survey de
 \citet[§VI-C]{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp{} cite un YOLOv8n à
@@ -139,17 +139,17 @@ Elhence et al. décrivent une intégration KV260 + Pixhawk mais évaluent sur im
 
 \paragraph{Comparaisons biaisées.} Les baselines des articles FPGA sont souvent choisies
 à leur avantage. Nguyen et al. comparent leur FPS/W à une RTX 2080 Ti et à une GTX 1650 en
-FP32 sous Darknet, sans Jetson ni TensorRT \src{§5.3}. Calì et al. prennent la puissance du
+\gl{FP32}{FP32} sous Darknet, sans Jetson ni TensorRT \src{§5.3}. Calì et al. prennent la puissance du
 Coral Edge TPU dans sa datasheet, contre une mesure à la carte côté FPGA \src{Table~15}.
 Elhence et al. donnent pour un STM32H7A3 15\,FPS avec un modèle de 6,7\,M de paramètres,
-chiffre invraisemblable pour un Cortex-M7 \deduit{} \src{§V-D}. SATAY compare en GOP/s par
-DSP, ce qui efface les écarts de précision numérique et de carte.
+chiffre invraisemblable pour un Cortex-M7 \deduit{} \src{§V-D}. SATAY compare en \gl{GOPS}{GOP/s} par
+\gl{DSP}{DSP}, ce qui efface les écarts de précision numérique et de carte.
 
 \subsection{Surveys FPGA}
 
 \citet{2025-hozhabr-survey-real-time-object-detection} est la revue la plus proche du
 sujet. Elle distingue temps réel dur et mou, conteste le critère des 30\,FPS et propose
-de normaliser le débit par le nombre de pixels (\emph{pixel throughput}) \src{§II-C2}.
+de normaliser le débit par le nombre de pixels (\emph{\gl{pixthr}{pixel throughput}}) \src{§II-C2}.
 Elle pointe deux travaux absents de la base qui traitent le post-traitement en matériel :
 un NMS pipeliné à 2,13\,ms de bout en bout, et un YOLOv3-tiny entièrement sur FPGA, NMS
 compris \src{§V-A}. Le survey de

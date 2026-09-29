@@ -30,9 +30,11 @@
 \DeclareUnicodeCharacter{2009}{\,}
 \DeclareUnicodeCharacter{202F}{\,}
 
-\newcommand{\nr}{\texttt{n/r}}
-\newcommand{\deduit}{\textit{(déduit)}}
-\newcommand{\pp}{\textsuperscript{\textsc{pp}}}   % preprint non relu par les pairs
+\definecolor{glcolor}{RGB}{0,95,115}
+\newcommand{\gl}[2]{\hyperlink{gl:#1}{\textcolor{glcolor}{#2}}}   % lien vers le glossaire / lexique
+\newcommand{\nr}{\gl{nr}{\texttt{n/r}}}
+\newcommand{\deduit}{\textit{(\gl{deduit}{déduit})}}
+\newcommand{\pp}{\textsuperscript{\gl{preprint}{\textsc{pp}}}}   % preprint non relu par les pairs
 \newcommand{\src}[1]{{\footnotesize[#1]}}          % section source d'un chiffre
 \newcommand{\gap}[1]{\paragraph{Gap : #1.}}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}

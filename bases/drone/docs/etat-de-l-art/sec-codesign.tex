@@ -5,8 +5,8 @@
 \subsection{Le calcul agit sur la mission par le temps et la masse}
 
 \paragraph{MAVBench.} \citet{arxiv-1905.06388-mavbench-micro-aerial-vehicle-benchmarking}
-(MICRO~2018) évaluent le calcul en boucle fermée : simulateur AirSim et Jetson TX2 réelle
-en \emph{hardware-in-the-loop}, modèle d'énergie du drone et cinq applications complètes.
+(MICRO~2018) évaluent le calcul en \gl{boucle}{boucle fermée} : simulateur AirSim et Jetson TX2 réelle
+en \emph{\gl{hil}{hardware-in-the-loop}}, modèle d'énergie du drone et cinq applications complètes.
 Leur constat central : sur un drone de 300 à 400\,W, le calcul consomme moins de 5\,\% de la
 puissance \src{§I}, mais il agit sur l'énergie totale par le temps de mission et la vitesse
 sûre. Monter la fréquence et le nombre de cœurs du TX2 réduit le temps de mission de 84\,\%
@@ -16,28 +16,28 @@ détection n'est rapportée.
 
 \paragraph{Le modèle F-1.} \citet{2020-krishnan-sky-not-limit-visual-performance} puis
 \citet{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}\pp{} formalisent un
-\enquote{roofline pour drone}. La vitesse sûre maximale dépend du débit de décision
+\enquote{\gl{roofline}{roofline} pour drone}. La \gl{vitesse}{vitesse sûre} maximale dépend du débit de décision
 $f = \min(1/T_\text{capteur}, 1/T_\text{calcul}, 1/T_\text{contrôle})$, de la portée du
 capteur et de l'accélération maximale, elle-même réduite par la masse du calculateur et de
-son dissipateur. Un point de genou sépare trois régimes : limité par le capteur, par le
+son dissipateur. Un \gl{genou}{point de genou} sépare trois régimes : limité par le capteur, par le
 calcul ou par la physique. Le modèle est validé en vol sur quatre drones S500, avec une
 erreur de 5 à 10\,\% sur la vitesse sûre \citep[Fig.~7b]{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}.
 Ses études de cas donnent des arguments directement utiles :
 \begin{itemize}
-  \item une AGX Xavier à 230\,FPS donne un plafond plus bas qu'un Intel NCS à 150\,FPS sur
+  \item une AGX Xavier à 230\,\gl{FPS}{FPS} donne un plafond plus bas qu'un Intel NCS à 150\,FPS sur
     un DJI Spark, à cause de sa masse et de son dissipateur (280 + 162\,g contre 47\,g)
     \src{§VI-A} ;
   \item une redondance double (2 $\times$ TX2) coûte 33\,\% de vitesse sûre \src{§VI-C} ;
   \item PULP-Dronet, à 6\,FPS, est limité par le calcul et devrait gagner un facteur 4,3
     \src{§VII}.
 \end{itemize}
-Les limites sont connues : pas de traînée, masse réduite au dissipateur estimé par le TDP,
+Les limites sont connues : pas de traînée, masse réduite au dissipateur estimé par le \gl{TDP}{TDP},
 consommation électrique du calcul hors modèle, et qualité de détection absente (une
-détection ratée ne réduit pas la portée du capteur dans le modèle) \deduit. Aucun FPGA
+détection ratée ne réduit pas la portée du capteur dans le modèle) \deduit. Aucun \gl{FPGA}{FPGA}
 n'y figure.
 
 \paragraph{Mesures en vol.} Les mesures réelles du lien calcul--vol viennent surtout de la
-gamme nano (section~\ref{sec:nano}) : coût en autonomie décomposé en masse et calcul, bilan
+\gl{gamme}{gamme nano} (section~\ref{sec:nano}) : coût en autonomie décomposé en masse et calcul, bilan
 de puissance du drone entier, taux de détection qui baisse avec la vitesse. Dans la gamme
 Jetson, \citet{arxiv-2110.05113-learning-high-speed-flight-wild} relient latence et vitesse
 sûre, et \citet{2023-kaufmann-champion-level-drone-racing-deep} donnent une latence
@@ -45,11 +45,11 @@ sensorimotrice de 40\,ms. Côté neuromorphique,
 \citet{arxiv-2108.03694-event-driven-vision-control-uavs}\pp{} montrent qu'une perception
 à 20\,kHz reste sous-exploitée quand la mécanique a 100 à 150\,ms de retard \src{§III-A}.
 
-\paragraph{Le chaînon manquant.} Les papiers YOLO/FPGA du corpus donnent des FPS et
+\paragraph{Le chaînon manquant.} Les papiers \gl{YOLO}{YOLO}/FPGA du corpus donnent des FPS et
 parfois des watts, jamais l'effet sur l'autonomie ou la vitesse de vol sûre : ni
 \citet{2025-cali-optimized-implementation-yolov3-tiny-real}, ni
 \citet{2025-elhence-fpga-accelerated-yolox-enhanced-attention}, ni
-\citet{2024-nguyen-fpga-soc-implementation-yolov4-flying}, ni les analyses du DAC-SDC. Le
+\citet{2024-nguyen-fpga-soc-implementation-yolov4-flying}, ni les analyses du \gl{DAC-SDC}{DAC-SDC}. Le
 cadre existe (F-1, MAVBench), les données partielles aussi (FPS, puissance à la carte) ; il
 manque la masse des cartes et l'application du modèle. Le défi « hardware-in-the-loop »
 de \citet[§IV]{arxiv-2205.07149-robotic-computing-fpgas-current-progress}\pp{} (co-simulation
@@ -59,9 +59,9 @@ FPGA + AirSim) va dans ce sens, sans réalisation.
 
 L'axe ne compte que deux articles. \citet{2022-ahmed-survey-uav-computing-platforms-hardware}
 passent en revue les fautes des plateformes de calcul de drone (soft errors, fautes
-permanentes, vieillissement) et les techniques de tolérance. Ils constatent que les SoC
+permanentes, vieillissement) et les techniques de tolérance. Ils constatent que les \gl{SoC}{SoC}
 FPGA dominent les études de fautes et que la reconfiguration partielle dynamique est la
-technique dominante pour les accélérateurs CNN \src{§5.1}. Le survey ne donne presque
+technique dominante pour les accélérateurs \gl{CNN}{CNN} \src{§5.1}. Le survey ne donne presque
 aucune donnée quantitative (une couche CNN quantifiée 39\,\% moins sensible aux radiations,
 citée d'un tiers, §5), ne décrit pas sa méthode de sélection, et ne recense aucune étude
 d'injection de fautes sur un détecteur de type YOLO en contexte drone \src{§5.2, §6}. Son
@@ -70,5 +70,5 @@ extension non réalisée \citep[§VI-C]{arxiv-1905.06388-mavbench-micro-aerial-v
 Le seul chiffre sur le coût de la tolérance aux fautes est modélisé : $-$33\,\% de vitesse
 sûre pour une redondance double
 \citep[§VI-C]{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}. La mémoire de
-configuration SRAM d'un FPGA est sensible aux SEU, point absent de tous les papiers
+configuration \gl{SRAM}{SRAM} d'un FPGA est sensible aux \gl{SEU}{SEU}, point absent de tous les papiers
 YOLO/FPGA du corpus \deduit.

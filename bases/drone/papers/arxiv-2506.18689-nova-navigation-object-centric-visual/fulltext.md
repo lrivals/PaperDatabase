@@ -1,0 +1,886 @@
+---
+id: arxiv-2506.18689-nova-navigation-object-centric-visual
+title: "NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments"
+year: 2025
+backend: pymupdf
+---
+
+NOVA: Navigation via Object-Centric
+
+Visual Autonomy for High-Speed
+
+Target Tracking in Unstructured
+
+GPS-Denied Environments
+
+Alessandro Saviolo and Giuseppe Loianno
+
+1New York University, New York, NY 11201 USA
+
+Corresponding author: Alessandro Saviolo (email: alessandro.saviolo@nyu.edu).
+
+“This work was supported by the NSF CAREER Award 2145277, DARPA YFA Grant D22AP00156-00, Qualcomm Research, Nokia, and
+
+NYU Wireless.”
+
+## Abstract
+
+Autonomous aerial target tracking in unstructured and GPS-denied environments remains a fundamental challenge in robotics. Many existing methods rely on motion capture systems, pre-mapped scenes, or feature-based localization to ensure safety and control, limiting their deployment in real-world conditions. We introduce NOVA, a fully onboard, object-centric framework that enables robust target tracking and collision-aware navigation using only a stereo camera and an IMU. Rather than constructing a global map or relying on absolute localization, NOVA formulates perception, estimation, and control entirely in the target’s reference frame. A tightly integrated stack combines a lightweight object detector with stereo depth completion, followed by histogram-based filtering to infer robust target distances under occlusion and noise. These measurements feed a visual-inertial state estimator that recovers the full 6-DoF pose of the robot relative to the target. A nonlinear model predictive controller (NMPC) plans dynamically feasible trajectories in the target frame. To ensure safety, high-order control barrier functions (CBFs) are constructed online from a compact set of high-risk collision points extracted from depth, enabling realtime obstacle avoidance without maps or dense representations. We validate NOVA across challenging real-world scenarios, including urban mazes, forest trails, and repeated transitions through buildings with intermittent GPS loss and severe lighting changes that disrupt feature-based localization. Each experiment is repeated multiple times under similar conditions to assess resilience, showing consistent and reliable performance. NOVA achieves agile target following at speeds exceeding 50 km/h. These results show that high-speed, vision-based tracking is possible in the wild using only onboard sensing, with no reliance on external localization or assumptions on the environment structure. Video: https://youtu.be/UpbcSKQrHfk
+
+INDEX TERMS Target tracking, Aerial robotics, Vision-based navigation, Model predictive control, Control barrier functions, Visual-inertial odometry, Depth completion, Object detection, GPS-denied environments.
+
+## I. INTRODUCTION
+
+ARGET tracking is the ability of an autonomous system to detect, follow, and predict the motion of an object of interest over time. For Unmanned Aerial Vehicles (UAVs), this capability is critical in dynamic and unstructured environments where pre-mapped routes or fixed waypoints are insufficient. In such scenarios, robust tracking allows the UAV to remain persistently coupled to targets such as people, vehicles, or infrastructure, despite challenges like scene changes, occlusions, or unpredictable target motion.
+
+This capability is key to diverse applications. In search and rescue, tracking allows UAVs to follow moving individuals through unstructured terrain, maintaining proximity without relying on maps or GPS [1]. In human–robot interaction, it enables drones to interpret and respond to human motion in real time, facilitating adaptive behavior [2], [3]. In inspection and surveillance, tracking ensures continuous observation of mobile assets, even under occlusion or changing viewpoints [4]–[6]. Moreover, tracking is foundational in multirobot systems, where relative positioning between agents
+
+Saviolo et al.: NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments
+
+**Figure 1:** Satellite imagery of representative NOVA flight missions in real-world environments. Each overlaid UAV trajectory illustrates a distinct experimental scenario designed to test specific failure modes in visual-inertial target tracking and control. Red: High-speed tracking in a forest trail over 1 km, with target speeds exceeding 50 km/h and motion blur. Blue: Indoor–outdoor transition with complete GPS loss, exposure collapse, and perceptual ambiguity due to structural occlusions and distractors. Orange: Elevated tracking from a 10 m offset, challenging stereo depth perception, feature consistency, and planning geometry. Green: Urban container maze with narrow corridors, cluttered turns, and minimal texture. Insets show raw onboard RGB frames during each flight. NOVA maintains real-time target lock, depth estimation, obstacle avoidance, and closed-loop control using only a stereo camera and IMU. GPS is not used by NOVA and appears here only for visualization of flight paths.
+
+is essential. UAVs in leader–follower formations or aerial swarms must track teammates to maintain coordinated motion [7]–[9]. In autonomous landing, a UAV must descend onto a moving platform, requiring precise tracking [10]–[12].
+
+Visual tracking methods for UAVs traditionally fall into two categories: Image-Based Visual Servoing (IBVS) and Position-Based Visual Servoing (PBVS) [13]–[17]. IBVS operates directly on image-plane measurements, allowing lowlatency control and robustness to calibration errors. However, its effectiveness is limited by the camera’s field of view and sensitivity to target occlusion or rapid motion. PBVS instead reconstructs the target’s 3D position, typically in a globally referenced frame, and uses it to guide control. While PBVS mitigates many of IBVS’s limitations, it introduces a new dependency: accurate consistent global localization.
+
+In GPS-denied settings such as forests, urban mazes, indoor spaces, or extraterrestrial terrain, global localization typically relies on Visual-Inertial Odometry (VIO) [18]–[20] or Simultaneous Localization and Mapping (SLAM) [21]– [23], which estimate the robot’s pose by tracking visual features across image sequences. These methods assume sufficient texture, consistent lighting, and a relatively static environment to maintain reliable feature correspondences. However, unstructured environments often violate these assumptions due to cluttered geometry, dynamic elements,
+
+ambiguous semantics, and degraded visibility. As a result, feature-based localization quickly becomes unreliable [24].
+
+A notable example of this failure was NASA’s Ingenuity Mars Helicopter [25]–[27], which suffered a navigation failure while flying over smooth, featureless sand ripples [28]. Without distinctive landmarks, its visual-inertial system produced erroneous velocity estimates, leading to a crash 20 seconds after takeoff. Had Ingenuity been able to localize relative to a known object in the scene, such as the Perseverance rover, it might have maintained stable flight and avoided the crash. This example highlights a broader insight: when a known and observable target is available, it can serve as a reliable frame of reference than the surrounding terrain.
+
+This paper introduces NOVA, a unified framework for Navigation via Object-centric Visual Autonomy. NOVA enables real-time aerial target tracking and obstacle-aware navigation using only onboard sensing, with no dependence on GPS, external maps, or motion capture. Unlike traditional VIO or SLAM-based methods that require globally consistent localization, NOVA formulates perception, estimation, and control directly in the target’s frame of reference. This object-centric approach enables tracking in environments where localization is unreliable or unavailable.
+
+At the core of NOVA is a tightly integrated perceptionto-control stack that couples a custom object detector, depth completion module, and visual-inertial state estimator. The
+
+object detector operates in real time on low-resolution inputs using an adaptive zoom strategy to maintain tracking at long ranges. Depth estimates are computed using a fusion of stereo and monocular cues, then processed via histogrambased filtering to produce robust target distance estimates, even under occlusion or noise. From this, a full 6-DoF state of the robot relative to the target is inferred in real time. Crucially, this perception system is designed to operate under realistic sensing conditions, such as degraded lighting, partial occlusions, and unstructured terrain.
+
+These target-centric estimates are passed to a Nonlinear Model Predictive Controller (NMPC) that optimizes dynamically feasible trajectories directly in the target’s reference frame. To ensure safe operation in cluttered environments, obstacle avoidance is enforced online using high-order Control Barrier Functions (CBFs), derived from a compact set of high-risk collision points identified in the depth map. This eliminates the need for dense mapping or environmental priors, enabling real-time, map-free collision avoidance.
+
+We validate NOVA across a suite of challenging real-world experiments, illustrated in Figure 1. Each scenario targets a specific failure mode common to traditional visual tracking pipelines. In the forest trail mission, the UAV follows a moving target at speeds exceeding 50 km/h over more than 1 km, inducing severe motion blur and visual degradation from airborne dust. The building transition scenario involves abrupt lighting changes and full GPS loss as the target moves from an open parking lot into an enclosed space and back outdoors. In the height-offset trial, the UAV maintains a vertical height of 10 m, challenging feature matching due to reduced parallax and resolution.
+
+Across all experiments, NOVA maintains stable target lock, plans feasible trajectories, and avoids obstacles in real time. To evaluate repeatability, each mission is conducted multiple times under similar conditions, with consistent performance observed throughout. All sensing and computation are performed fully onboard using only a stereo camera and an IMU. Unlike prior methods that rely on motion capture, artificial landmarks, or pre-built maps, NOVA operates autonomously in unstructured environments with no external infrastructure. To the best of our knowledge, this is the first demonstration of real-time, high-speed objectcentric navigation that operates fully onboard and in-thewild, without external infrastructure, explicit mapping, or dependency on structured priors.
+
+II. RELATED WORKS A. Traditional Visual Servoing for Target Tracking Visual servoing provides a well-established framework for controlling robotic motion with respect to a target, typically categorized into IBVS and PBVS [13]–[17]. In IBVS, control commands are computed by minimizing the error between observed and desired image-space features. These features are extracted from the camera view and mapped to robot motion using an interaction matrix that links image variation
+
+to movement. This method is efficient and effective for tasks where the target remains in view and image-space motion corresponds smoothly to inputs.
+
+PBVS, on the other hand, estimates the full 3D pose of the target using stereo vision, depth sensors, or geometric priors, and computes control actions in Euclidean space. It aims to minimize the spatial error between the current and desired poses of the robot relative to the target. This spatial reasoning improves robustness when the target leaves the field of view. However, PBVS depends on accurate global pose estimates of both the robot and the target, requiring consistent global localization across frames. In GPS-denied or visually degraded environments, this dependency often becomes a critical point of failure.
+
+While both paradigms are effective in structured, static environments [29]–[33], their assumptions often break down in aerial target tracking. UAVs operate under rapid motion and wide viewpoint changes, which distort target appearance and invalidate interaction models. During aggressive maneuvers, UAVs experience frequent occlusions, motion blur, and target scale variation, causing visual features to become unreliable. IBVS fails when the target exits the frame, undergoes large appearance shifts, or when image-space motion no longer correlates predictably with control. PBVS struggles in GPSdenied environments or texture-sparse scenes where global pose estimation is not available or stable.
+
+These challenges are further exacerbated by the limited computational resources available onboard UAVs and the stringent real-time requirements for flight control. In practice, neither classical IBVS nor PBVS alone can reliably handle the demands of high-speed, long-range target tracking in unstructured, dynamic environments.
+
+B. Data-driven Aerial Target Tracking Recent approaches in aerial target tracking have leveraged the power of deep learning to enhance perception and decision-making under challenging conditions. One prominent direction is the use of end-to-end learning, where a neural network directly maps raw sensory inputs to lowlevel control actions. These models, often trained via reinforcement learning or imitation learning, have demonstrated fast reaction times and adaptability to perceptual noise [34]– [37]. However, this tight coupling of perception and control sacrifices interpretability, and poses significant challenges in generalization to unseen environments. Moreover, training such models requires extensive data collected in diverse, unstructured settings, an effort that is not only costly but also difficult to scale. Unstructured outdoor environments, in particular, exhibit extreme variability in appearance, geometry, and semantics, making it impractical to fully cover their distribution during training [38].
+
+To address these limitations, a more modular paradigm has emerged where perception and control are treated as distinct but tightly integrated subsystems. In this setting, the perception module is responsible for detecting and localizing
+
+Saviolo et al.: NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments
+
+the target, while the control module translates this information into safe and efficient motion commands. Extensive research has been devoted to each side of the pipeline. On the perception front, the computer vision community has produced a range of approaches for object detection and tracking, from compact architectures optimized for real-time inference on embedded platforms [39]–[42], to large-scale foundation models capable of open-set recognition and zeroshot generalization [43]–[46]. Techniques including temporal attention, depth prediction, and visual transformers have improved robustness to occlusion and visual degradation.
+
+Alongside advances in perception, control design has emerged as a key focus in enabling robust aerial target following. While model-free approaches such as reinforcement learning have demonstrated flexibility and generalization [47]–[50], they often struggle to provide consistent safety or performance guarantees, particularly under distribution shifts or in dynamic settings. In contrast, modelbased methods, especially those based on NMPC [51]–[54], offer a structured way to embed physical constraints, safety margins, and task-specific objectives directly into the control policy. By explicitly optimizing trajectories over a finite horizon, NMPC enables predictive and context-aware behaviors, which are critical for maintaining target visibility and avoiding obstacles during high-speed, reactive flight [55].
+
+This separation of perception and control not only improves system modularity and interpretability, but also allows for leveraging the complementary strengths of data-driven learning and analytical planning. However, the efficacy of such hybrid systems depends critically on how well the two modules are coupled.
+
+C. Object-Centric Visual Autonomy Traditional navigation frameworks rely on global localization through GPS, VIO, or SLAM, followed by waypoint-based trajectory generation [56]–[58]. While effective in structured environments, these methods often fail in GPS-denied or visually degraded settings, where feature tracking and map consistency degrade. Object-centric navigation offers a promising alternative: instead of referencing a global frame, control objectives are defined relative to specific scene objects, such as people or vehicles. This allows robots to maintain situational awareness and track targets even when global localization is unreliable or unavailable.
+
+Several recent works have pursued this idea, though typically under restrictive assumptions that limit applicability in high-speed or unstructured environments.
+
+An early example is [59], which formulates control directly in the target’s frame of reference. While conceptually aligned with object-centric reasoning, the system relies entirely on motion capture to provide perfect state estimates for both robot and obstacle. No onboard sensing is used, and full target velocity is assumed known. This removes perception from the equation, making the setup impractical outside controlled environments.
+
+More onboard-focused designs have emerged, such as [60], which uses a monocular camera and a blob detector to track a single spherical obstacle. The framework integrates perception and control onboard, but the simplicity of the sensing pipeline imposes its own constraints. Obstacle avoidance is implemented as a soft cost, tuned manually against the tracking objective, and the system assumes only one obstacle is visible at a time. The drone must be launched manually, and no mechanism is provided for adapting to clutter or dynamic changes. While a step forward, the system is difficult to generalize to real-world scenarios involving dense geometry or multiple obstacles.
+
+Multi-agent frameworks like CoNi-MPC [61] take a different approach, where a UAV follows a ground robot by optimizing a relative objective. This eliminates the need for global SLAM, but again depends on full-state telemetry from the target and is tested under motion capture. The absence of onboard perception and low operational speeds (under 0.4 m/s) further limit real-world relevance. Later extensions add LiDAR-based obstacle sensing [62], improving situational awareness. However, core limitations persist. The system still relies on external tracking for the target and operates in structured, static environments at low speeds (below 1.5 m/s). Visual perception remains absent, and the setup assumes favorable sensing conditions.
+
+Together, these efforts reflect growing interest in objectrelative control, but also reveal a gap: current systems are not designed for fast, reactive tracking in complex environments using only onboard sensing. Our framework is built to address exactly that gap. By combining real-time object detection, depth-completed state estimation, and constraintaware planning in a fully onboard pipeline, we enable agile, target-relative control in GPS-denied, cluttered environment, without reliance on external infrastructure or prior maps.
+
+III. METHODOLOGY A. System Overview NOVA is a fully onboard framework for vision-based aerial target tracking and collision avoidance in GPS-denied and visually degraded environments. It requires no maps, infrastructure, or prior tuning, enabling deployment in unknown and cluttered settings. The system is structured around two tightly integrated modules: perception and control (Figure 2).
+
+The perception stack processes visual and inertial input to estimate the target’s relative state and detect potential collision risks in real time. These estimates feed into a NMPC that dynamically tracks the target while enforcing safety through system dynamics and real-time obstacle constraints. The entire pipeline runs onboard, supporting reactive agile flight with no external dependency.
+
+B. Perception The perception pipeline estimates the target’s position and surrounding obstacles in real time using only onboard visual and inertial sensors. At each frame, the system detects the
+
+**Figure 2:** System architecture overview. The framework consists of two tightly integrated modules: perception and control. The perception stack detects the target using a lightweight object detector, estimates its depth via stereo-monocular disparity alignment, and processes obstacle information for collision avoidance. These outputs are fused with inertial data (omitted from figure for simplicity) to produce a smooth, high-frequency target-centric odometry. The control module uses NMPC, augmented with high-order CBFs, to generate safe and agile thrust and angular rate commands for tracking the target.
+
+target, estimates its depth, and fuses this information with IMU data to maintain a full relative state. Simultaneously, it identifies potential collision points using completed depth maps. These estimates form the basis for downstream targetcentric planning and control.
+
+1) Target Detection A central challenge in target tracking lies in balancing detection range with computational efficiency. High-resolution inputs, such as 640 × 480 pixels, support target detection at distances beyond 40 m but exceed the processing limits of embedded platforms. In contrast, lower-resolution inputs like 320 × 240 pixels are more computationally efficient but constrain detection to shorter ranges, often under 10 m. To resolve this trade-off, we introduce an adaptive zooming mechanism that dynamically crops and rescales the input image around a region of interest (Figure 3).
+
+The zoom module takes the full-resolution RGB frame It ∈RH×W ×3 and a bounding box bt−1 = [x, y, w, h], where (x, y) denotes the center coordinate and (w, h) the width and height, from the previous detection. This box is enlarged by a factor α > 1 to introduce a margin that accounts for motion and detection uncertainty. A crop window is then centered on the enlarged box and shaped to match the detector’s aspect ratio. The zoomed-in region is extracted from It and resized to the detector’s input resolution, yielding It
+
+crop. If detection fails at time t, the crop size is progressively increased to widen the search region. Once the target is reacquired, the zoom readjusts to tightly frame the detection. This mechanism preserves long-range detection capabilities at lower resolutions while improving robustness. By narrowing the detector’s receptive field to a localized region, the system avoids distractions from background clutter and allows the network to focus on the target, increasing confidence and accuracy under occlusion and motion.
+
+**Figure 3:** Adaptive zoom strategy. The system dynamically crops and rescales the input image to center the target while suppressing irrelevant context. This targeted zoom improves detection confidence and robustness, particularly at long range or in the presence of visually similar objects, by reducing ambiguity and limiting false positives.
+
+We employ a lightweight, custom-trained object detector based on the YOLOv11-small architecture to enable onboard real-time detection with limited computational resources. The input to the detector is the zoomed-in crop It
+
+crop, and the output is a 2D bounding box bt in crop coordinates, which is then projected back into the full-resolution frame.
+
+The object detector is trained from scratch on the COCO dataset [63] with domain-specific augmentations designed to mirror the visual effects introduced by our zooming strategy. In particular, randomized zooming and resizing simulate the pixelation and scale variations that occur during aggressive cropping, ensuring the detector remains effective even when targets appear coarse or low-resolution. Additional augmentations include pitch and roll rotations and lighting variations to improve robustness under aerial tracking conditions.
+
+2) Depth Estimation Accurate depth perception is essential for estimating the target distance as well as ensuring safe navigation. While
+
+Saviolo et al.: NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments
+
+**Figure 4:** Depth completion pipeline. Monocular (top) and stereo (bottom) disparity maps are fused to produce a dense, absolute-depth estimate. Monocular predictions capture relative structure, while stereo provides scale in textured regions. A polynomial alignment module merges the two in disparity space for accurate, absolute depth.
+
+stereo cameras provide absolute depth maps Dt
+
+abs ∈RH×W , these measurements are often sparse or noisy in areas with low texture, specular surfaces, or insufficient baseline [55]. To overcome these limitations, we employ a learning-based depth completion approach that fuses monocular and stereo cues via a disparity-domain alignment (Figure 4).
+
+We compute the absolute disparity from stereo depth as:
+
+∆t
+
+abs = f · B Dt
+
+abs + ϵ,
+
+where f represents the camera’s focal length, B the stereo baseline, and ϵ a small constant used for numerical stability. In parallel, a monocular depth estimation neural network Nmde(It) [64] predicts a relative disparity map ∆t
+
+rel. To align scales, we fit a second-order polynomial between the two disparity maps using valid stereo pixels defined by a binary mask Mt ∈{0, 1}H×W . Let n be the number of valid pixels in Mt. We construct a vector y ∈Rn
+
+containing the absolute disparities ∆t
+
+abs(i, j) at valid pixel locations. We also construct a design matrix X ∈Rn×3, where each row Xk = [∆t
+
+rel(ik, jk)2, ∆t
+
+rel(ik, jk), 1]. The vector of polynomial coefficients is denoted θ = [a, b, c]⊤.
+
+The polynomial fit is defined as a least squares problem
+
+θ∈R3 |Xθ −y|2,
+
+with the closed-form solution
+
+θ∗= (X⊤X)−1X⊤y.
+
+The resulting polynomial parameters are applied across the full relative disparity map to generate a completed disparity estimate:
+
+∆t
+
+com = a · (∆t
+
+rel)2 + b · ∆t
+
+rel + c,
+
+and converted back into a dense completed depth map:
+
+Dt
+
+com = f · B ∆tcom + ϵ.
+
+To estimate the target’s depth, a naive approach might extract a single value from the center of the detected bounding box bt. However, this is prone to failure under
+
+**Figure 5:** Histogram-based mode filtering for target depth estimation. Depth values inside the detected bounding box are collected and binned. The most frequent bin is selected to estimate the target distance, improving robustness to noise, occlusion, and background clutter.
+
+partial occlusions. For instance, the target may remain visible and correctly detected, while the center pixel falls on a background object or an occluding surface, yielding an incorrect depth estimate.
+
+To address this, we apply histogram-based mode filtering. We extract all valid depth values within bt from Dt
+
+com, bin them into fixed-width depth intervals, and select the most frequent bin as the representative estimate, denoted z. This approach leverages the observation that the dominant mode in the depth distribution corresponds to the visible target. If this was not the case, the detector would likely fail to localize the target reliably. As illustrated in Figure 5, this mode-based filtering improves robustness to noise, clutter, and occlusion without requiring pixel-level semantic segmentation.
+
+3) Object-Centric State Estimation To enable smooth and reactive control, we estimate the full 6- DoF relative state of the quadrotor with respect to the target by fusing low-rate visual detections with high-rate inertial measurements. Each visual update provides the 2D center coordinate (x, y) of the detected bounding box and the target depth z computed via histogram-based filtering.
+
+As illustrated in Figure 6, the detected 2D center coordinate is back-projected into a 3D point in the camera frame C using the known camera intrinsics (fx, fy, cx, cy) obtained through camera calibration [65]:
+
+pC =
+
+
+
+
+
+(x −cx)z/fx (y −cy)z/fy
+
+z
+
+
+
+.
+
+The resulting 3D point is transformed into the body frame B using the static extrinsics between the camera and IMU:
+
+pB = qBC ⊙pC + tBC,
+
+**Figure 6:** Coordinate frame convention. The object-centric frame T is defined at the target location, with its orientation fixed and aligned with gravity using the IMU. A 2D detection (x, y) in the camera frame C is back-projected into 3D and transformed into the body frame B using known extrinsics (qBC, tBC). The resulting position is then rotated into the target frame T using the IMU-derived attitude qT B. This defines the relative pose pT , which serves as the reference for target-centric perception and control.
+
+where qBC is the camera-to-body rotation (as a quaternion), tBC the translation, and ⊙the quaternion-vector product.
+
+We define a moving target-centric frame T , centered on the target and aligned with the ground plane. Although this frame may translate over time, we assume it remains parallel to the ground, and we model its orientation using the IMUderived attitude of the robot qT B. The relative position of the robot in this target frame is given by:
+
+pT = −(qT B ⊙pB).
+
+The resulting vector pT expresses the quadrotor’s position relative to the target. This signal is tracked over time using an Unscented Kalman Filter (UKF) [66]. The UKF incorporates IMU’s angular velocity as process input, while visual measurements provide asynchronous updates. The full targetcentric state consists of position pT , velocity vT , orientation qT B, and angular velocity ωB.
+
+This approach eliminates the need for any environmentspecific information, such as visual texture or persistent features, for state estimation. Unlike traditional VIO or SLAM systems, our method relies solely on the detection and tracking of the target to estimate the full relative state of the quadrotor. This enables robust performance even in textureless, dynamic, and unknown environments, making it especially well-suited for agile target tracking.
+
+4) High-Risk Collision Points Selection To support safe target tracking in cluttered environments, we extract a sparse set of high-risk obstacle points from the completed depth map Dt
+
+com for use in downstream model predictive control. These points are selected based on a Time-To-Collision (TTC) criterion computed with respect to the robot’s instantaneous velocity vT .
+
+We first generate a TTC map Tt ∈RH×W by projecting robot’s velocity vector vt
+
+C, expressed in the camera frame, along the viewing ray direction of each pixel. These ray directions Rt(i, j) are unit-length vectors pointing from the camera center through each pixel (i, j), and are computed from the intrinsic calibration parameters. The TTC map is then computed as:
+
+Tt(i, j) = Dt
+
+com(i, j) ∥vt
+
+C · Rt(i, j)∥.
+
+To reduce the dimensionality of Tt, we divide it into nonoverlapping grid cells Pu,v of size P ×P, and select the pixel in each cell with the minimum TTC:
+
+St
+
+ttc =
+
+(
+
+(i, j) ∈Tt | (i, j) = arg min
+
+(i,j)∈Pu,v
+
+Tt(i, j), ∀u, v
+
+)
+
+We then apply a filtering step to retain only those points likely to intersect the quadrotor’s projected dimensions at their corresponding depths:
+
+St
+
+filt =
+
+(
+
+(i, j) ∈St
+
+ttc
+
+|i −cx| ≤Qxfx/[2Dt
+
+com(i, j)],
+
+|j −cy| ≤Qyfy/[2Dt
+
+com(i, j)]
+
+)
+
+,
+
+where Qx, Qy represent the robot’s width and height.
+
+From this filtered set, we extract the top-K most critical collision points:
+
+St
+
+top-K = arg min S′t
+
+filt⊆St
+
+filt,|S′t
+
+filt|=K
+
+(i,j)∈S′t
+
+filt
+
+Tt(i, j),
+
+The selected pixel coordinates are back-projected into 3D points in the camera frame C:
+
+St
+
+C =
+
+((i −cx)z
+
+fx
+
+, (j −cy)z
+
+fy
+
+, z
+
+
+
+z = Dt
+
+com(i, j),
+
+(i, j) ∈St
+
+top-K
+
+)
+
+Finally, these 3D points are transformed into the body frame B and then to the target-centric frame T using the known extrinsics:
+
+St
+
+T =
+
+
+
+qT B · (qBC ⊙sC + tBC)
+
+sC ∈St
+
+C
+
+,
+
+These target-centric obstacle points St
+
+are published at each planning cycle and used to construct hard safety constraints within our NMPC formulation.
+
+C. Planning and Control We adopt an NMPC framework to compute optimal control commands that enable fast, smooth, and reactive flight while tracking the target and avoiding obstacles. At each time step, the NMPC solves an optimal control problem over a finite horizon, minimizing deviations from a dynamically updated target reference while ensuring dynamic feasibility and safety.
+
+Saviolo et al.: NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments
+
+1) Object-Centric Modeling We define the object-centric state of the quadrotor relative to the moving target as
+
+x =
+
+
+
+
+
+pT
+
+vT
+
+qT B
+
+ωB
+
+
+
+
+
+∈R13,
+
+and the control input u ∈R4 as the vector of motor thrusts. Thus, the quadrotor’s continuous-time dynamics evolve as
+
+˙x =
+
+
+
+
+
+˙pT ˙vT ˙qT B
+
+˙ωB
+
+
+
+
+
+=
+
+
+
+
+
+vT
+
+(qT B ⊙τ)/m + gT
+
+(qT B ⊙ωB)/2
+
+J−1(µ −ωB × JωB)
+
+
+
+
+
+,
+
+where m is the quadrotor mass, gT =
+
+
+
+0 0 −9.81 ⊤is gravity in the target frame, J = diag(Jxx, Jyy, Jzz) is the diagonal moment of inertia matrix, and the collective thrust τ and torque µ of the quadrotor are defined as
+
+τ = kτ
+
+i=0
+
+u2
+
+i , µ =
+
+
+
+
+
+kτl(u2
+
+0 + u2 1 −u2 2 −u2 3)
+
+kτl(−u2
+
+0 + u2 1 + u2 2 −u2 3)
+
+kµ(u2
+
+0 −u2 1 + u2 2 −u2 3)
+
+
+
+. (17)
+
+where kτ is the rotor thrust constant, kµ the rotor torque constant, and l the length of the quadrotor arm.
+
+To obtain a discrete-time model, we define the dynamics function f(x, u, δt) as the result of forward integration of the continuous-time dynamics over a fixed time step δt. Specifically, the next state is computed as
+
+xt+1 = f(xt, ut, δt),
+
+where, in practice, this integration can be approximated using numerical methods such as Euler or Runge-Kutta [67].
+
+This state-action-dynamics formulation is commonly used for quadrotors and provides a flexible foundation that supports sophisticated dynamic models, including aerodynamics, vibrations, motor interactions, and drag forces [68]–[71]. By adopting this formulation for visual target tracking, we can leverage the extensive prior work on dynamics modeling developed for traditional trajectory tracking tasks [72].
+
+2) Reference Generation Directly commanding the quadrotor to reach the target’s estimated position can lead to unsafe behavior, particularly under noisy observations or occlusion. To mitigate this, we implement a goal-shifting strategy that maintains a minimum horizontal safety margin, denoted dsafe, in the xy-plane. This creates a cylindrical exclusion zone around the target, allowing for vertical flexibility (e.g., during takeoff or hovering) while maintaining lateral separation.
+
+The shifted reference is computed along the horizontal line-of-sight vector from the target to the current quadrotor
+
+position:
+
+¯pt
+
+T = dsafe · [pT ,x, pT ,y, 0]⊤
+
+q
+
+p2
+
+T ,x + p2
+
+T ,y
+
+,
+
+ensuring that the reference remains directionally aligned in the plane while enforcing a safe lateral offset.
+
+To avoid discontinuities during tracking and to facilitate safe takeoff behavior, this shifted goal is blended with the robot’s current position using a time-varying ramp function:
+
+¯pt
+
+T = α(t) · pT + (1 −α(t)) · ¯pt
+
+T ,
+
+where α(t) is a monotonically decreasing ramp function with quadratic decay in the horizontal plane and linear decay in altitude. Initially, α(0) = 1, anchoring the reference to the current position. As α(t) →0, the reference converges to the shifted goal, ensuring smooth takeoff and tracking.
+
+The reference trajectory passed to the NMPC is generated by replicating the same desired state over the prediction horizon of length N:
+
+¯xt
+
+k =
+
+
+
+
+
+¯pt
+
+¯qt
+
+yaw
+
+
+
+
+
+∀k ∈[0, N),
+
+where ¯qt
+
+yaw is the desired yaw quaternion. The desired yaw angle ¯ψt is obtained by correcting the current vehicle yaw ψt, extracted from the onboard quaternion qt
+
+T B, with the yaw offset that would center the target in the image:
+
+¯ψt = ψt −tan−1
+
+x −cx
+
+fx
+
+
+
+This yaw angle is then converted to a quaternion, assuming zero roll and pitch:
+
+¯qt
+
+yaw =
+
+
+
+cos
+
+  ¯ψt/2
+
+
+
+sin
+
+  ¯ψt/2
+
+⊤
+
+The reference control inputs are simply set to zero for regularizing the control effort, ¯uk = 0 ∀k ∈[0, N).
+
+3) Cost Function The NMPC cost is designed to promote accurate target tracking, smooth control, and stable forward-facing flight. At each time step k, the stage cost is defined as:
+
+J(x, u) = ∥x −¯xk∥2
+
+Qx | {z } State cost
+
++ ∥u −¯uk∥2
+
+Qu | {z } Input cost
+
++
+
+vB
+
+y
+
+Qo | {z } Orbiting cost
+
+,
+
+where Qx and Qu are positive-definite weighting matrices, and Qo is a scalar that penalizes lateral motion in the body frame. The term vB
+
+y is the lateral component of the quadrotor’s velocity in its own body frame.
+
+The first two terms are standard quadratic costs that drive the system toward the reference state while regularizing actuation effort. The third term addresses a fundamental observability limitation inherent to visual target tracking.
+
+Specifically, when only a single target is detected, the quadrotor’s position relative to the target is observable, but its yaw orientation remains underconstrained. This creates ambiguity in the rotation about the vertical axis, allowing orbiting behaviors that preserve the perceived target location but degrade stability and control.
+
+While previous methods [60] resolve this by tracking multiple targets, we argue that this assumption is overly restrictive in real-world aerial scenarios. Maintaining visibility of multiple targets while tracking one is extremely challenging in cluttered, dynamic, or degraded visual environments.
+
+Instead, we introduce a soft regularization on vB
+
+y , exploiting the fact that orbiting motion correlates with lateral body velocity. By penalizing this component, the NMPC naturally favors forward-facing, stable flight without additional perceptual burden. This approach is lightweight, assumptionfree, and effective across diverse tracking tasks.
+
+4) Control Barrier Functions for Obstacle Avoidance To ensure safety during target tracking, we incorporate second-order CBFs into the NMPC to enforce minimum distance constraints with respect to perceived obstacles. Each obstacle point st
+
+T ∈St
+
+T is derived from depth perception and expressed in the target frame T , consistent with objectcentric control formulations proposed in recent works [55].
+
+For each high-risk point, we define a safety function:
+
+hk(xt) = ∥st
+
+T −pt
+
+T ∥2 −Q2
+
+max,
+
+where Qmax = max(Qx, Qy) is the minimum allowable distance that accounts for the robot’s physical dimensions.
+
+Safety is enforced by requiring the CBF condition:
+
+¨hk(xt, ut) + 2λ˙hk(xt) + λ2hk(xt) ≥0,
+
+which guarantees forward invariance of the safe set defined by hk(x) ≥0. Here, λ > 0 controls the rate of enforcement.
+
+The first derivative of the safety function is:
+
+˙hk(xt) = 2(st
+
+T −pt
+
+T )⊤vt
+
+T ,
+
+and the second derivative, capturing the effect of control inputs, is given by:
+
+¨hk(xt, ut) = 2∥vt
+
+T ∥2 + 2(st
+
+T −pt
+
+T )⊤˙vT (u),
+
+where ˙vT (u) is the acceleration of the robot in the target frame, obtained from the dynamics model f(xt, ut, δt).
+
+Each of these constraints is imposed at runtime for every selected obstacle point st
+
+T , ensuring that the NMPC respects proximity constraints while pursuing the tracking objective. This formulation allows us to encode collision avoidance in a computationally efficient and differentiable form compatible with real-time optimization.
+
+5) Optimization Problem At each planning step, the NMPC solves a constrained optimal control problem to compute a dynamically feasible
+
+**Figure 7:** Aerial robot platform. Custom quadrotor used in experiments, equipped with an onboard computer, a stereo RGB-D camera, and a PX4 flight controller.
+
+and safe control sequence over a finite horizon N. The objective is to minimize a cumulative cost that promotes accurate tracking, smooth control, and orbit-free motion:
+
+xt,...,xt+N
+
+ut,...,ut+N−1
+
+N−1
+
+j=0
+
+J(xt+j, ut+j) + J(xt+N, 0),
+
+where the terminal cost is evaluated with zero control input.
+
+The optimization is subject to the following constraints for all predictions j ∈[0, N] and safety constraints k ∈[0, K):
+
+xt = ˆxt, (30a)
+
+xt+1+j = f(xt+j, ut+j), (30b)
+
+xmin ≤xt+j ≤xmax, (30c)
+
+umin ≤ut+j ≤umax, (30d) ¨hk(xt+j, ut+j) + 2λ˙hk(xt+j) + λ2hk(xt+j) ≥0. (30e)
+
+This formulation allows the NMPC to reason over future trajectories while embedding safety constraints, actuation limits, and regularization strategies into a unified and reactive control framework.
+
+IV. EXPERIMENTAL SETUP A. Aerial System Our quadrotor platform, shown in Figure 7, weighs 1.3 kg and has a motor span of 25 cm, with a thrust-to-weight ratio of approximately 4 to 1. It is powered by a 6S LiPo battery and uses 1850KV motors paired with a NewBeeDrone Infinity200 V2 4IN1 ESC 55A to enable agile flight.
+
+The system integrates an Intel RealSense D455 stereo camera for visual and depth sensing and an onboard IMU. The camera is mounted front-facing, and its intrinsics are (fx, fy, cx, cy) = (325.2, 430.9, 323.1, 246.9), obtained from standard calibration [65]. The camera-tobody transformation is defined by the static quaternion qBC = [−0.5, 0.5, −0.5, 0.5]⊤and translation tBC = [0.061, 0.047, −0.065]⊤m. RGB-D frames are captured at 60 Hz with a resolution of 640 × 480. Onboard processing is handled by an NVIDIA Jetson Orin NX 16GB, and low-level stabilization is managed by a PixRacer Pro flight controller.
+
+Saviolo et al.: NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments
+
+B. Target Detector We employ a YOLOv11-small model for object detection, trained from scratch on the COCO dataset with heavy augmentation. Images are randomly zoomed within a scale range of [0.6, 1.4], rotated within ±15◦in pitch and roll, and augmented with synthetic motion blur (30% probability) and brightness shifts of ±20%. Crops are resized to 320×256 for inference. The model is trained using Adam with a learning rate of 2 × 10−4, batch size 32, weight decay 10−5, and for 300 epochs. The inference runs at 92 Hz using TensorRT on the Orin NX with floating 16 precision.
+
+To initialize tracking, we use a one-time prompting stage that leverages a large, high-capacity object detector. Specifically, a YOLOv11x model [73] is run once on the fullresolution RGB image to acquire an initial bounding box for the target. This model is not trained or fine-tuned within our system. It is used solely for inference. Among all detections returned, the bounding box with the highest confidence score is selected. This bounding box seeds the zooming module for subsequent frames. After this initialization, the large YOLOv11x model is terminated to eliminate unnecessary computational overhead. From that point onward, tracking continues using only the lightweight onboard detector. Importantly, this prompting mechanism is modular. Any object detector capable of producing a coarse bounding box on the initial frame can be substituted without modifying the downstream pipeline. The sole requirement is that it provides an early spatial prior for focusing the zoomed window.
+
+C. Depth Completion Depth maps from the RealSense D455 (in HighAccuracy mode [74]) are completed using DepthAnythingV2 [64] with a ViT-S backbone, producing per-frame estimates in 31.6 ms. A histogram bin width of 0.15 m is used for mode filtering.
+
+D. Obstacle Selection We divide the image into 17 × 17 non-overlapping cells and select K = 10 obstacle points with the lowest TTC. The drone’s projected dimensions are Qx = 0.4 m and Qy = 0.2 m. These are used in pixel-space filtering to reject low-risk points. The TTC map uses a forward-projected velocity in the camera frame and ray directions computed from calibrated intrinsics.
+
+E. State Estimation Target-relative state is tracked using an UKF that fuses asynchronous visual detections with high-rate inertial measurements. The filter estimates the full 6-DoF state along with accelerometer and gyroscope biases.
+
+The UKF process noise standard deviations are defined as follows: linear acceleration noise is (0.1, 0.1, 1.0) m/s2, angular velocity noise is (0.2, 0.2, 0.2) rad/s, accelerometer bias noise is (0.1, 0.1, 0.1) m/s2, and gyroscope bias noise is (0.1, 0.1, 0.1) rad/s. Measurement noise standard deviations for the visual update are 0.01 m in (x, y) and 0.001 m in z
+
+**Figure 8:** Targets used for tracking. All experiments use one of two object-mounted targets: a mannequin positioned upright on an ATV, or a stop sign mounted at the rear. The mannequin is approximately 1.8 m tall and wears typical clothing to simulate a human presence. The stop sign has a diameter of 0.8 m, is red and reflective, and presents challenges due to glare and light reflections. The ATV is used to transport the targets dynamically during experiments and can reach speeds of up to 50 km/h across various terrains.
+
+for the position estimate, and 0.0001 for all four quaternion components in the orientation update.
+
+The IMU provides linear acceleration and angular velocity at 200 Hz. The UKF is also executed at this rate and handles bias estimation online without requiring separate pre-calibration. All position and orientation estimates are computed in the target-centric frame described in Section 3.
+
+For outdoor flights, a u-Blox Neo-M9N GPS module was fused with IMU data using an Extended Kalman Filter (EKF), yielding position updates at 100 Hz. This global localization information was purely used for benchmarking. The proposed system operates independently of this information during all the flight experiments.
+
+F. Planning and Control We formulate an NMPC problem with a prediction horizon of N = 10 steps over 2 s and a discrete time step of δt = 0.2 s. The dynamics are integrated using a Runge–Kutta 4 method. The goal reference is shifted using a lateral safety margin of dsafe chosen based on the experiment, and blended with a ramp function α(t) with quadratic horizontal decay over 1 s. The desired yaw angle is computed to center the target in the image, and converted to a quaternion assuming zero roll and pitch.
+
+The NMPC cost function includes a state deviation penalty Qx = diag(150, 100, 150, 15, 15, 15, 50, 15, 15, 50, 5, 5, 5), input cost Qu = diag(1, 1, 1, 1), and an orbiting penalty Qo = 20 on lateral body velocity. State constraints are enforced with element-wise bounds x ∈[−999, 999]3 × [−25, 25]3 × [−10, 10]4 × [−40, 40]3, and control inputs are constrained to u ∈[0.05, 8.0]4.
+
+Safety constraints are enforced using second-order control barrier functions with a safety radius Qmax = 0.3 m and gain λ = 2. Up to 10 constraints are active per solve.
+
+The optimization problem is solved with acados [75], using SQP with Gauss–Newton Hessian approximation and Levenberg–Marquardt regularization equal to 10−2, with a max iteration limit of 20 and a feasibility tolerance of 10−4.
+
+**Figure 9:** Tracking performance in a structured urban maze. NOVA follows the target through narrow corridors and around occlusions, maintaining stable depth estimation and obstacle awareness despite minimal texture. Bottom plots show consistent velocity regulation and relative distance control, confirming safe and responsive tracking throughout the mission.
+
+V. EXPERIMENTAL RESULTS We evaluate NOVA in a series of real-world field experiments designed to test the system’s performance under fast motion, degraded perception, and minimal prior knowledge. These tests are not isolated benchmarks, but full flight missions where the system must plan, perceive, and control entirely onboard and in real time. Our goal is to understand not only if NOVA can track a moving target, but how it behaves when the environment challenges each component of the stack.
+
+Specifically, we focus on three central questions: (i) Can the system remain visually coupled to fast-moving targets across large distances and terrain types? (ii) Does the system generalize across distinct environments, including urban, forested, and indoor–outdoor transitions, without parameter retuning or prior knowledge? (iii) Is its behavior robust and consistent across repeated trials and changes in geometry, such as altered target trajectories or forced viewpoint offsets?
+
+To explore these questions, we deploy NOVA in environments that progressively increase in complexity. Each scenario stresses different components of the perception–control stack: visual tracking under occlusion and blur, depth estimation under lighting collapse, and planning under geometric constraint. The system runs with a fixed configuration
+
+throughout. No parameter tuning, no map registration, and no external localization is used. All flight decisions are made from raw onboard observations in real-time onboard.
+
+A. Container Maze Navigation We begin by evaluating NOVA in a structured yet highly constrained setting: a container maze assembled from stacked shipping units. The layout resembles an urban canyon, with tight corridors, sharp-angle turns, and minimal escape paths. Poles, fencing, and a wrecked vehicle introduce fixed obstacles, while blind corners disrupt line of sight. The walls of the containers are flat and grey, offering little to no texture.
+
+**Figure 9** shows representative sequences from one flight. The RGB images capture moments when the target is partially occluded or exiting a turn. The depth maps highlight the system’s ability to extract consistent geometric information despite the lack of strong visual cues. As the UAV advances, it modulates its velocity continuously, slowing in tighter sections and accelerating when visibility improves.
+
+The bottom plots quantify this behavior. Relative distance remains within a safe range, and the UAV’s speed adjusts tightly to match that of the ATV, even as it encounters sudden turns and obstacles.
+
+Saviolo et al.: NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments
+
+**Figure 10:** High-speed pursuit in a rugged forest trail. NOVA tracks the target over a 1 km unstructured path with potholes, dust, and vegetation. Despite motion blur and strong lighting variation, detection and depth estimation remain stable. Bottom plots confirm that the UAV sustains target speed while maintaining safe distance and minimal relative drift.
+
+B. Forest Trail Pursuit We now move into unstructured natural terrain, where sensing and control are stressed by long-range motion, fast speeds, and an unpredictable environment. The forest trail is a rugged 1 km path cutting through alternating segments of dense canopy and open clearings. This terrain exposes the system to rapid lighting transitions. The ground is broken and uneven, filled with potholes that jolt the ATV and introduce constant motion disturbances. Dust kicked up during traversal adds noise to the image stream, while overhanging branches and narrow passageways demand fast reactive obstacle avoidance.
+
+The ATV reaches speeds of up to 50 km/h, forcing the UAV to maintain high-speed flight while keeping visual lock, estimating depth, and planning safe paths through dynamic obstacles. There are no structured boundaries or predictable layouts here. NOVA must rely entirely on its onboard sensors to adapt in real time, safely plan and track the dynamic target.
+
+As illustrated in Figure 10, the UAV holds tight formation throughout the run. Despite motion blur and exposure shifts, the system consistently detects the target and completes dense depth maps that preserve usable geometry. Velocity plots show near-zero relative speed, indicating that NOVA
+
+not only keeps up but tracks with high temporal fidelity. The system maintains a safe following distance with smooth speed regulation, navigating cluttered vegetation without hesitation or instability.
+
+C. Hangar Transition with Visual Ambiguity We take a step further by designing a scenario where perception is pushed to its breaking point. The mission begins in an open gravel lot under direct sunlight, transitions into a tall metallic hangar, and then returns to outdoor terrain. This path introduces a cascade of perceptual challenges: complete GPS dropout inside the hangar, abrupt lighting shifts that drive the camera from overexposure to near-total underexposure, and a cluttered interior filled with reflective surfaces, structural obstacles, and narrow doorways.
+
+To amplify the difficulty, we place two additional mannequin targets near one of the hangar exits. These decoys are visually similar to the mannequin mounted on the ATV, requiring the system to maintain target identity precisely during a moment when visibility is degraded and the lighting is unstable. This setup explicitly tests NOVA’s robustness to visual ambiguity, occlusion, and target switching.
+
+**Figure 11:** Robust tracking across indoor–outdoor transitions. The UAV follows the target from a gravel lot through a tall metallic hangar and back outside, navigating abrupt lighting changes, GPS dropout, and visual sparsity. Despite exposure shifts and structural occlusions, NOVA maintains safe distance and continuous target lock throughout the entire mission.
+
+Such environments typically break conventional tracking pipelines. Feature-based methods struggle with low texture, stereo matching fails under reflections, and bright-to-dark transitions overwhelm standard exposure control. GPS-based localization is unavailable inside the structure, and visual odometry is easily corrupted.
+
+Despite these conditions, NOVA maintains continuous tracking. As illustrated in Figure 11, RGB and completed depth frames remain functional even under poor lighting and low-feature geometry. When stereo cues degrade, NOVA falls back on inertial integration and histogram-filtered depth estimates to maintain a consistent relative pose. It does not require artificial markers, global maps, or external references.
+
+The trajectory plots confirm smooth flight. Relative distance remains stable, with no abrupt control shifts or recovery maneuvers. The UAV transitions through the building without reinitialization, rejects the decoy mannequins, and maintains accurate lock on the moving target throughout the most perceptually challenging phase of the mission.
+
+D. Elevated Tracking Across Mixed Terrain We take an even further step to complicate the mission by deliberately altering the spatial configuration between the
+
+UAV and the target. In this experiment, NOVA is tasked with maintaining a constant 6 m vertical offset from the estimated target position, resulting in a sustained flight altitude of nearly 10 m above ground. This constraint is evaluated end to end across a single continuous mission: from the open parking lot, through the metallic hangar, across the gravel yard, and into the corridors of the simulated container maze.
+
+This setup introduces a compounded set of perception and control challenges. At elevated altitudes, stereo parallax is significantly reduced, degrading the quality and density of depth estimates. The target appears smaller in the frame, limiting the number of visible features and reducing detector robustness. The UAV’s field of view becomes more constrained with respect to lateral motion, making it harder to anticipate turns or sudden accelerations. Precise obstacle avoidance becomes critical, especially around overhanging structures, hangar entrances, and confined turns in the maze.
+
+The environments themselves amplify these difficulties. The hangar imposes complete GPS dropout and rapid lighting changes. The container maze presents frequent occlusions, low-texture surfaces, and sharp-angle geometry. From a top-down viewpoint, NOVA must maintain tight target coupling while flying above clutter.
+
+Saviolo et al.: NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments
+
+**Figure 12:** Tracking from elevated viewpoints with forced height offset. The UAV follows the target through a combined indoor–outdoor and urban maze mission while maintaining a 6 m vertical offset. This configuration introduces degraded stereo geometry, reduced field-of-view, and tight spatial constraints. NOVA preserves visual lock, avoids obstacles, and regulates target distance despite elevated flight and complex terrain.
+
+As shown in Figure 12, NOVA completes the full mission without loss of lock or deviation from safe bounds. Despite increased vertical separation and degraded sensing geometry, it maintains coherent relative state estimates and reconstructs high-fidelity depth maps. Relative distance and velocity remain tightly regulated, and the UAV maneuvers with smooth, responsive control throughout.
+
+This experiment confirms that NOVA generalizes not only across different environments, but also across spatial configurations that significantly alter perception and planning dynamics. No changes are made to the underlying system; all modules run as configured in prior tests, reinforcing the adaptability of the stack under shifted tracking regimes.
+
+E. Measured Performance across Tested Environments To complement the qualitative results, we report quantitative metrics for the previous four representative experiments. Table 1 summarizes performance across these trials, covering GPS-based velocity, control effort, pitch dynamics, target distance regulation, and object detection consistency.
+
+In the Urban Maze, the UAV operates within narrow corridors and sharp turns, demanding precise obstacle avoidance
+
+and frequent reacceleration. NOVA sustains high detection reliability (98.6%) while maintaining an average separation of 8.2 m from the target, with a minimum of 6.2 m, just above the dsafe = 6.0 m threshold. The high peak acceleration of 32.4 m/s2 and max pitch of 15.0◦reflect sharp control inputs required to navigate tight geometry while maintaining visual lock.
+
+The Forest Trail scenario emphasizes sustained highspeed tracking over unstructured terrain. The target exceeds 53 km/h, and the UAV maintains a mean relative distance of 10.0 m, dipping to 8.4 m at its closest—well within the dsafe = 8.0 m constraint. Control demands are moderate, with limited acceleration spikes and a max pitch of 19.6◦, indicating smooth flight despite blur, shadows, and environmental noise. NOVA’s object detector remains effective under these fast, noisy conditions, with 94.5% detection accuracy.
+
+In the Building Transition trial, the system experiences full GPS dropout and sharp illumination shifts when passing through a metallic hangar. NOVA responds with increased control activity, reaching 22.6 m/s2 peak acceleration and maintaining an average pitch of 5.3◦. The UAV holds an average target distance of 9.9 m, with a minimum of 8.9 m,
+
+**Table 1:** Quantitative performance across the four outdoor tracking missions. We report results from representative trials in diverse environments, each introducing unique challenges in geometry, speed, sensing, and elevation. NOVA consistently maintains safe separation, stable flight, and high detection rates without environment-specific tuning. Reported metrics include UAV velocity (mean and peak), linear acceleration, pitch angle, mean and minimum distance to the target compared to the safety threshold dsafe, and overall detection rate.
+
+Scenario GPS Velocity (km/h) Control Effort (m/s²) Pitch (°) Rel. Distance (m) Detections (%) Mean Max Mean Max Mean Max Mean
+
+Urban Maze Forest Trail
+
+Building Transition Elevated Tracking
+
+**Table 2:** Tracking performance consistency across multiple indoor–outdoor trials. Metrics include mean and minimum relative distance, user-defined safety threshold, and relative velocity statistics. NOVA maintains stable performance across all trials without tuning or adaptation.
+
+Trial Direction Relative Distance (m) Rel. Velocity (m/s)
+
+Mean Mean Max
+
+Forward Forward Reverse
+
+Reverse
+
+both within the dsafe = 8.0 m threshold, while sustaining visual target lock at 96.2%.
+
+The Elevated Tracking experiment introduces an artificial vertical offset, forcing the UAV to maintain a higher flight altitude. At these distances, stereo depth estimation becomes less reliable and target scale diminishes in the image. NOVA compensates with stronger dynamic control, producing a maximum pitch of 28.8◦and acceleration up to 22.8 m/s2. The UAV sustains a mean distance of 9.4 m and minimum of 8.8 m, again within the dsafe = 8.0 m limit, and maintains 93.1% detection despite reduced resolution and more cluttered backgrounds.
+
+In all cases, NOVA avoids collisions, keeps the target visibility, and respects user-defined separation thresholds. These results highlight the system’s robustness across varied real-world conditions.
+
+F. Repeatability and Robustness Robust operation in the real world requires more than handling isolated challenges. A tracking system must perform consistently across repeated trials, despite minor variations in conditions. To evaluate this, we repeat the full indoor–outdoor transition experiment four times under nominally identical setups. Two trials proceed in the forward
+
+**Figure 13:** Robust target tracking across repeated trials. Sample RGB frames from four separate indoor–outdoor transition experiments. NOVA maintains consistent target lock despite variations in lighting, entry angle, and background.
+
+direction, while two others are conducted in reverse, introducing mirrored geometry, altered lighting transitions, and different entry angles.
+
+Despite these differences, NOVA maintains stable and consistent behavior. Figure 13 presents sample onboard images from each run, illustrating reliable visual tracking under changes in viewpoint, shadowing, and background. No manual intervention is required between trials.
+
+Quantitative results in Table 2 confirm this consistency. Across all runs, the UAV maintains safe separation well below the user-defined threshold of dsafe = 8.0 m, while keeping relative velocity and average spacing tightly bounded. Importantly, the reversed-direction flights perform on par with the forward cases, indicating that NOVA does not depend on environment-specific priors.
+
+Saviolo et al.: NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments
+
+pos x (m)
+
+Urban Maze
+
+Forest Trail
+
+Building Transition
+
+Elevated Tracking
+
+pos y (m)
+
+pos z (m)
+
+satellites
+
+eph noise (m)
+
+**Figure 14:** GPS signal degradation across outdoor tracking scenarios. The top rows show fused GPS+IMU global position traces for each of the four outdoor missions, color-coded by estimated horizontal positional error (eph). Lighter colors indicate higher uncertainty. The bottom plot shows the number of GPS satellites tracked over time. In the Urban Maze and Forest Trail scenarios, signal quality remains high, with low positional error and stable satellite lock. In contrast, the Building Transition and Elevated Tracking missions exhibit significant degradation, including extended satellite dropout and increased eph. This effect is especially pronounced during indoor segments and when the UAV flies near structural ceilings, highlighting the limitations of GPS-based localization in partially enclosed or cluttered environments.
+
+G. GPS Signal Quality and Its Limitations Although NOVA operates without GPS during flight, we use fused GPS+IMU estimates post hoc to visualize global trajectories and assess how environmental geometry affects localization quality. This provides a comparative baseline for understanding where GPS-based methods remain reliable and where they degrade.
+
+**Figure 14** summarizes GPS performance across all four representative scenarios. The top rows show the global position trace, color-coded by estimated horizontal error (eph). The bottom plot reports the number of visible satellites over time. Together, these metrics reflect how surrounding structures influence satellite visibility and positioning accuracy.
+
+In the Urban Maze and Forest Trail scenarios, satellite visibility remains high, typically above 20 satellites, and the estimated horizontal error stays below 1.0 m. These environments, although partially obstructed, allow for relatively consistent signal reception. The GPS data in these trials remains smooth and usable throughout the mission.
+
+In contrast, the Building Transition and Elevated Offset experiments exhibit significant signal degradation. During the Building Transition mission, satellite count drops sharply as the UAV enters the hangar, with corresponding increases in estimated error, often exceeding 3.5 m. These effects are due to occlusion, multipath reflections, and direct signal loss.
+
+The Elevated Tracking scenario presents even more severe GPS degradation. Although the trajectory includes both indoor and outdoor segments, the required vertical offset places the UAV closer to the ceiling during the hangar phase. This reduces the already limited visibility to the sky and exacerbates signal dropout. In several segments, the number of visible satellites falls to near zero, and position estimates become highly uncertain.
+
+These observations highlight the limits of GPS-based localization in built environments. Even in outdoor settings, partial occlusion or reflective surfaces can compromise satellite visibility and introduce substantial pose uncertainty. NOVA’s design avoids these failure modes by relying exclusively on onboard visual and inertial sensing, which remains operational across all tested scenarios regardless of external infrastructure availability.
+
+H. Ablation Studies To evaluate the contribution of individual components within the NOVA framework, we conduct a series of ablation studies. Each study isolates one module and examines its effect on overall system performance, while keeping the remainder of the stack fixed. The goal is to assess how specific design elements contribute to robustness, accuracy, and safety during target tracking in unstructured environments.
+
+**Figure 15:** Impact of Adaptive Zoom in Multi-Target Scenes. In cluttered scenes with multiple visually similar targets (black bounding boxes), tracking can become unstable when relying on full-frame detection, often resulting in identity switches or drift. The adaptive zoom module addresses this by cropping tightly around the prompted target, suppressing distractors and maintaining detection focus. Shown here are drone trajectories (blue) for three separate trials, each prompted to track a different mannequin. NOVA successfully adheres to the correct target in all cases.
+
+confidence
+
+Human
+
+W/ Zoom W/out Zoom
+
+confidence
+
+Stop Sign
+
+**Figure 16:** Effect of Adaptive Zooming on Detection Confidence vs. Distance. Detection confidence for a human and a stop sign is compared with and without the adaptive zoom module. The robot was handheld toward and away from fixed targets in an open indoor space, and the perception pipeline was run in both modes. Without zooming, detection confidence degrades sharply beyond 10–12 m due to visual clutter and scale compression. The zooming strategy, by focusing the input on the target and cropping out irrelevant context, maintains high confidence and extends detection range to the camera’s depth limit (> 20 m).
+
+1) Adaptive Zoom Strategy The adaptive zoom module improves detection robustness by dynamically cropping the image around the expected target location before passing it to the detector. This strategy is designed to address two key challenges: (i) suppressing visually similar distractors that can trigger identity switches, and (ii) preserving the detector’s ability to recognize small, distant targets by maintaining spatial resolution over the region of interest.
+
+Multi-Target Robustness. We first assess the role of adaptive zoom in scenes with multiple visually similar ob-
+
+jects. The setup includes three mannequins placed at different positions, all resembling each other in size and appearance. The UAV is instructed to track one specific mannequin while the others remain in view.
+
+**Figure 15** shows representative trials. Without zoom, the detector occasionally confuses the target with a nearby distractor, leading to identity switches or temporary tracking failure. With adaptive zooming enabled, the system consistently maintains the correct target across all runs. This supports the hypothesis that reducing visual clutter at the detector input helps identify the target in ambiguous scenes.
+
+Long-Range Detection. We further evaluate the zoom module’s impact on detection reliability at extended distances. Two static targets, a human and a stop sign, are placed in an open indoor space. The robot is handheld and moved toward and away from each target, while the onboard perception stack is run twice: once with zooming enabled and once with full-resolution images passed directly to the detector. Detection confidence is recorded for each case.
+
+**Figure 16** summarizes the results. Without zoom, the detector’s confidence drops rapidly beyond 10–12 m, often failing to register the target altogether. In contrast, the zoom module enables consistent detections up to the camera’s maximum effective range of 20–25 m. By cropping out irrelevant regions and rescaling the image around the target, zooming mitigates scale compression and distractor interference, boosting confidence and range.
+
+Together, these findings highlight that adaptive zoom contributes to robust tracking in two key regimes: it improves resilience to distractors in multi-object environments and extends detection range under scale-constrained conditions.
+
+2) Depth Completion The raw stereo depth output from the robot’s onboard sensor is often sparse and unreliable, particularly in low-texture regions, near thin structures, or under degraded lighting. These limitations reduce the effectiveness of downstream obstacle avoidance and planning components, especially in fast or cluttered environments.
+
+Saviolo et al.: NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments
+
+**Figure 17:** Qualitative Results of Depth Completion. Top: RGB inputs. Middle: Raw stereo depth from the onboard sensor, which suffers from missing or noisy regions, especially around thin structures, glass, and foliage. Bottom: Completed depth maps produced by our fusion module. The system recovers fine details, such as railings and branches, that are critical for collision avoidance but often missed by stereo matching alone. This enables safe navigation in visually complex environments.
+
+To address this challenge, NOVA incorporates a disparitybased depth completion module. It leverages monocular priors and disparity cues to fill in missing or noisy depth regions, producing denser and smoother maps. Figure 17 presents qualitative comparisons between the raw stereo maps and the completed depth output across several representative scenarios. The completed maps better preserve obstacle geometry, enable earlier obstacle detection, and improve motion planning and control safety.
+
+3) Histogram-Based Mode Filtering Accurate target localization requires reliable estimation of depth within the predicted bounding box. However, raw depth values are often noisy and may include background clutter, particularly in dynamic scenes with partial occlusion. To address this, we introduce a histogram-based mode filtering approach that selects the most frequent depth bin within the bounding box, offering a robust estimate that is resilient to outliers and background interference.
+
+To evaluate this method, we conduct an experiment where the robot hovers in front of a stationary target. A cart carrying a vertical pole is then moved horizontally between the robot and the target, creating a temporary occlusion. During the sequence, we compare three depth estimation strategies: reading the depth value at the center pixel of the bounding box, averaging all valid depth pixels within the box, and applying our proposed histogram-mode filtering.
+
+**Figure 18:** Robustness of Depth Estimation Methods During Occlusion. A cart with an obstacle occludes the target mid-experiment, inducing background intrusion in the bounding box. The plot shows depth estimates over time using three strategies: center-pixel, mean-pixel, and our histogram-based mode filtering. Ground truth is manually measured. The mean estimator exhibits large spikes during occlusion, and the center-pixel fails intermittently. The histogram-based method remains stable and close to ground truth throughout.
+
+The ground truth distance to the target is measured manually for reference. As shown in Figure 18, the centerpixel approach produces unstable estimates during occlusion, while the mean-pixel method exhibits a consistent bias toward the background. In contrast, the histogram-based strategy maintains a stable and accurate estimate throughout the occlusion event, closely matching the ground truth.
+
+This improved robustness in depth estimation directly enhances control performance, enabling more stable tracking under visual uncertainty and in cluttered environments.
+
+VI. LIMITATIONS AND FUTURE WORKS NOVA operates under two key assumptions that currently define its functional scope and deployment regime.
+
+First, the system assumes that the target is initially visible within the field of view of the onboard camera and belongs to a known object category supported by the detector. This assumption is valid in prompted missions or pre-configured tracking scenarios, but limits applicability in open-world settings where targets may enter the scene later, from arbitrary directions, or lack a pre-defined semantic label. Addressing this constraint would require extending the system to handle open-set detection and tracking, where targets are not assumed to belong to a fixed category and may be specified through visual prompts, user feedback, or learned embeddings [76], [77]. Recent approaches in category-agnostic tracking and self-supervised object discovery offer promising directions for relaxing this assumption and enabling more flexible engagement with previously unseen targets [47].
+
+Second, the system relies on the ability to estimate the target’s depth using stereo-based depth completion. While this approach is sufficient at close to mid-range (typically up to 30–40 m), it breaks down when the target is detected at longer distances and stereo cues become unreliable. In these conditions, detection may still succeed due to the zoom module, but the depth estimates become noisy or flat, making the x-axis velocity (change in relative depth) unobservable. As a result, the UAV may accelerate rapidly toward the target with limited feedback. In flight experiments, the robot eventually stabilizes once the depth becomes consistent, but the initial approach is often jerky and fast, reflecting the lack of velocity feedback in the unobservable regime.
+
+To relax the reliance on stereo depth, several alternative strategies could be explored. One approach is to augment the sensing stack with additional depth-aware sensors, such as radar or lightweight range finders, which are less sensitive to texture and lighting and can extend the operational range [78]–[80] . Another is to infer short-term relative motion using optical flow, either from dense image features or from bounding box displacements of detected objects, including in open-set configurations [81]. A third direction involves registering successive point clouds generated from depth completion, even if sparse or noisy, to recover frameto-frame translation [82]. These approaches would allow for estimation of instantaneous robot velocity without relying on world-frame position or persistent maps, and could remain robust under partial feature disruption due to their minimal or stateless memory requirements.
+
+These assumptions are not intrinsic limitations of the overall framework, but they define the boundaries of the current implementation. Future work targeting open-set object understanding and depth-agnostic motion estimation could expand NOVA’s applicability to more uncertain, long-range, or semantically unconstrained tracking scenarios.
+
+VII. CONCLUSION We presented NOVA, an onboard visual-inertial framework for agile target tracking in unstructured and GPS-denied environments. The system avoids reliance on external localization, global maps, or precomputed scene priors. Instead, it formulates perception, estimation, and control directly in the target’s reference frame, using only stereo vision and inertial sensing. The approach combines a lightweight detector with adaptive zooming, depth completion, and visual-inertial state estimation, followed by a NMPC that operates under collision-aware constraints derived from onboard sensing.
+
+We validated NOVA across a series of real-world trials that stress the system across different terrain types, motion regimes, and sensory conditions. The system demonstrated consistent performance in forested, urban, and mixed indoor–outdoor environments, maintaining visual lock, respecting safety distances, and operating without manual tuning. Additional experiments evaluated generalization across
+
+viewpoint offsets, repeatability over multiple trials, and robustness under degraded GPS and perceptual ambiguity.
+
+Ablation studies confirmed the contribution of individual components, such as adaptive zooming for long-range detection and identity preservation. The system’s limitations were also analyzed, including assumptions about initial visibility, semantic category constraints, and the reliance on stereobased depth at range.
+
+Together, these results support the conclusion that robust, real-time target tracking can be achieved using only onboard sensing, even in the absence of external infrastructure or structured environments. Future works will focus on relaxing current assumptions, extending to open-set target representations, and enabling perception-driven control under longrange uncertainty.

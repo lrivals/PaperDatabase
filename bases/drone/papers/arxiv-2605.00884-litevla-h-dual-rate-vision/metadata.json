@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-2605.00884-litevla-h-dual-rate-vision",
+  "title": "LiteVLA-H: Dual-Rate Vision-Language-Action Inference for Onboard Aerial Guidance and Semantic Perception",
+  "authors": [
+    {
+      "given": "Justin",
+      "family": "williams"
+    },
+    {
+      "given": "Kishor Datta",
+      "family": "Gupta"
+    },
+    {
+      "given": "Roy",
+      "family": "George"
+    },
+    {
+      "given": "Mrinmoy",
+      "family": "Sarkar"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2605.00884",
+  "url": "https://arxiv.org/abs/2605.00884",
+  "type": "preprint",
+  "axes": [
+    "system-codesign"
+  ],
+  "tags": [
+    "jetson",
+    "vlm"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

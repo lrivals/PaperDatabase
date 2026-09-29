@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2508.04564-drone-detection-event-cameras",
+  "title": "Drone Detection with Event Cameras",
+  "authors": [
+    {
+      "given": "Gabriele",
+      "family": "Magrini"
+    },
+    {
+      "given": "Lorenzo",
+      "family": "Berlincioni"
+    },
+    {
+      "given": "Luca",
+      "family": "Cultrera"
+    },
+    {
+      "given": "Federico",
+      "family": "Becattini"
+    },
+    {
+      "given": "Pietro",
+      "family": "Pala"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2508.04564",
+  "url": "https://arxiv.org/abs/2508.04564",
+  "type": "preprint",
+  "axes": [
+    "tracking-navigation",
+    "counter-uav"
+  ],
+  "tags": [
+    "event-camera"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

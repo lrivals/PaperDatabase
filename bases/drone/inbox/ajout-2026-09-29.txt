@@ -1,0 +1,14 @@
+2609.21005   # Project SCOUT — interceptor drone, air-to-air, Orin NX
+2607.12801   # Tracking & terminal guidance, fixed-wing UAV
+2607.18936   # NGPS — GNSS-denied satellite matching, Orin NX
+2506.18689   # NOVA — high-speed target tracking
+2505.06923   # YOPOv2-Tracker
+2604.12916   # E2E-Fly
+2501.14377   # Dream to Fly
+2509.18610   # SINGER — onboard VLN policy
+2605.00884   # LiteVLA-H — onboard VLA, AGX Orin
+2609.25415   # Cloud, Edge, or Split? — VLM drone deployment
+2407.13706   # GAP9Shield
+2603.01850   # Tiny-DroNeRF — GAP9
+2603.02936   # Nano-drone racing gate pose — GAP9
+2508.04564   # Drone Detection with Event Cameras (survey)

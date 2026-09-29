@@ -19,23 +19,25 @@
   "type": "conference",
   "axes": [
     "surveys",
-    "cl-methods",
-    "drift-detection"
+    "cl-methods"
   ],
   "tags": [
-    "time-series"
+    "survey",
+    "time series forecasting",
+    "regression",
+    "task-free",
+    "forgetting ratio"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 1, Table 2"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

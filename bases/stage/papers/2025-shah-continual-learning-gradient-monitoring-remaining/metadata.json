@@ -19,25 +19,28 @@
   "type": "journal",
   "axes": [
     "cl-methods",
-    "pdm-rul",
-    "datasets"
+    "pdm-rul"
   ],
   "tags": [
-    "distillation",
-    "binary",
-    "cmapss"
+    "gradient masking",
+    "LwF",
+    "EWC",
+    "OGD",
+    "Transformer",
+    "C-MAPSS",
+    "NASA battery",
+    "RUL"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 3, Table 7, Table 27"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

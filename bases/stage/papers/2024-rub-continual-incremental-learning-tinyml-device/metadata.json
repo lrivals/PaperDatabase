@@ -27,25 +27,28 @@
   "type": "conference",
   "axes": [
     "cl-methods",
-    "tinyml-odl",
-    "pdm-rul",
-    "anomaly-detection"
+    "tinyml-odl"
   ],
   "tags": [
-    "distillation",
-    "energy"
+    "dataset distillation",
+    "distribution matching",
+    "model growth",
+    "replay",
+    "CORe50",
+    "CIFAR10",
+    "Speech Commands",
+    "HAR"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE II, TABLE IV"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -26,19 +26,22 @@
     "pdm-rul"
   ],
   "tags": [
-    "ewc",
-    "si"
+    "EWC",
+    "Online EWC",
+    "SI",
+    "LSTM",
+    "Li-ion battery",
+    "RUL",
+    "state of health"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

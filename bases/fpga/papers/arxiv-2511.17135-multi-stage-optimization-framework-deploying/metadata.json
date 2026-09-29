@@ -17,10 +17,15 @@
   "arxiv_id": "2511.17135",
   "url": "https://arxiv.org/abs/2511.17135",
   "type": "preprint",
-  "axes": [],
+  "axes": [
+    "autoencoder-fpga"
+  ],
   "tags": [
     "quantization",
-    "pruning"
+    "pruning",
+    "vae",
+    "mixed-precision",
+    "image-compression"
   ],
   "added": "2026-09-28",
   "extraction": {
@@ -28,12 +33,12 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "aucun axe détecté : à classer dans /paper-fiche",
-      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE IV"
+      "tableaux reconstruits par Docling, chiffres à vérifier : TABLE IV",
+      "texte extrait tronqué après la section VI-E (Tables VIII-IX, conclusion absentes)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -35,23 +35,25 @@
     "platforms"
   ],
   "tags": [
-    "yolov3-tiny",
     "finn",
+    "brevitas",
+    "qat",
     "pynq",
     "zynq",
-    "quantization"
+    "quantization",
+    "vehicle-detection",
+    "lp-yolo"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

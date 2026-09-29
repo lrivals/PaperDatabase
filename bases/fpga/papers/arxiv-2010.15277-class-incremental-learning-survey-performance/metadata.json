@@ -37,19 +37,23 @@
     "surveys",
     "continual-learning"
   ],
-  "tags": [],
+  "tags": [
+    "class-incremental",
+    "catastrophic-forgetting",
+    "exemplar-replay",
+    "survey"
+  ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par Docling, chiffres à vérifier : TABLE S5, TABLE S7",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

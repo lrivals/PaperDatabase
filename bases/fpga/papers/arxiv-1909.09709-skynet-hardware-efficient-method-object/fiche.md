@@ -1,10 +1,8 @@
 ---
 id: arxiv-1909.09709-skynet-hardware-efficient-method-object
-fiche: todo
-date: 2026-09-28
+fiche: done
+date: 2026-09-29
 ---
-
-> **Importée de la base `drone` le 2026-09-28.** Cette fiche a été écrite pour une autre base (autre thème) : pertinence à réévaluer ici, puis `fiche: done` via `/paper-fiche`. Statut d'origine : done.
 
 # SkyNet: a Hardware-Efficient Method for Object Detection and Tracking on Embedded Systems
 
@@ -68,15 +66,18 @@ DAC-SDC'19, jeu de test caché de 50 k images (Tables 5-6, §6.5) :
 - Face aux autres équipes FPGA 2019 : XJTU Tripler 0,615 IoU à 50,91 FPS et 9,25 W ;
   SystemsETHZ 0,553 à 55,13 FPS et 6,69 W (Table 6). SkyNet gagne par la précision, pas
   par le débit.
-- Validation (Table 4) : SkyNet C-ReLU6 0,741 d'IoU (1,82 Mo de paramètres) ; ReLU6 vaut
-  +0,02 à +0,03 d'IoU face à ReLU pour chaque modèle.
+- Validation (Table 4) : SkyNet C-ReLU6 0,741 d'IoU (1,82 Mo de paramètres) ; ReLU6 apporte
+  +0,018 à +0,028 d'IoU face à ReLU selon le modèle (calculé à partir de la Table 4).
 - Quantification (Table 7) : FP32 0,741 → FM9/W11 0,727 → FM8/W10 0,680.
 - Suivi sur 1080Ti (Tables 8-9) : SiamRPN++ SkyNet AO 0,364 à 41,22 FPS contre ResNet-50
   0,365 à 25,90 FPS ; SiamMask SkyNet AO 0,390 à 30,15 FPS contre ResNet-50 0,380 à
   17,44 FPS ; paramètres ÷37,20 (Abstract).
 
-→ reportés dans `benchmarks.csv` : 4 lignes — TX2 (Table 5), Ultra96 (Table 6), et les
-deux trackers SiamRPN++ / SiamMask avec backbone SkyNet sur 1080Ti (Tables 8, 9).
+→ `benchmarks.csv` : 4 lignes déjà présentes (reprises de la base `drone` à l'import) — TX2
+(Table 5), Ultra96 (Table 6, Table 7), SiamRPN++ / SiamMask avec backbone SkyNet sur 1080Ti
+(Tables 8, 9). Aucune ligne nouvelle ajoutée. La ligne SiamMask (Table 9, corps reconstruit par
+Docling) est marquée `confidence: high` : `medium` serait plus prudent, mais les valeurs sont
+recoupées par le texte (1,73× plus rapide, §7.2).
 
 ## Limites et critique
 
@@ -98,28 +99,37 @@ deux trackers SiamRPN++ / SiamMask avec backbone SkyNet sur 1080Ti (Tables 8, 9)
 
 ## Pertinence pour la thèse
 
-- **Référence historique de l'axe `drone-fpga`** : gagnant DAC-SDC'19 dans les deux
-  pistes, avec la même architecture sur GPU et FPGA — rare comparaison à modèle égal
-  TX2 contre Ultra96 (FPS/W : 4,99 contre 3,45, calculé à partir des Tables 5-6, déduit).
-- Le **co-design bottom-up** (Bundle = IP, recherche avec latence mesurée) est une
-  méthode directement réutilisable pour concevoir un détecteur drone pour FPGA.
-- Montre concrètement l'effet de la quantification sur l'IoU (Table 7) — mais sur un
-  objet unique, pas sur un mAP_small.
-- Le bypass + réordonnancement (space-to-depth) est une solution petits objets **légère
-  et portée sur FPGA**, contrepoint à la tête P2 des YOLO drone SOTA.
+- **Axes** `yolo-fpga` (tête YOLO, détection mono-classe) et `platforms` (Ultra96, TX2) ; le
+  papier n'aborde ni sûreté ni certification. Il sert de **point de comparaison GPU / FPGA à
+  modèle égal** : SkyNet sur TX2 (67,33 FPS, 13,50 W) contre Ultra96 (25,05 FPS, 7,26 W) (Tables
+  5-6) ; FPS/W 4,99 contre 3,45 (calculé, déduit). Puissances de portée non dite.
+- Utile pour le cas YOLO en vidéosurveillance : un backbone très léger (0,44 M de paramètres,
+  Table 2) atteint 0,73 d'IoU sur objets petits ; le bypass + réordonnancement (space-to-depth)
+  est une solution peu coûteuse pour les petits objets (déduit : personnes éloignées d'une
+  caméra fixe). Réserve : tâche mono-objet, une seule classe de type, prise de vue drone.
+- Côté **certification** (déduit) : le flux « Bundle = IP partagée, une IP pour toutes les
+  couches » et la quantification FM9/W11 (Table 7, baisse d'IoU 0,741 vers 0,727) posent la
+  question de la traçabilité entre modèle flottant et implémentation virgule fixe ; le papier ne
+  chiffre ni le déterminisme, ni la latence par image (batch de 4 assemblées), ni la robustesse.
+- Le co-design bottom-up avec latence estimée par l'outil HLS est réutilisable pour concevoir
+  un détecteur de personnes contraint par un budget de ressources borné et connu, propice à un
+  argument d'assurance (déduit).
 
 ## Gaps identifiés
 
-- **Quantification → petits objets** : Table 7 mesure la chute d'IoU globale, pas par
-  taille d'objet ; l'effet sur les objets < 1 % de l'image (31 % du jeu) reste inconnu.
-- **Latence par image sur FPGA** en mode batch = 1 : non rapportée.
-- **Multi-classe / multi-objets** : SkyNet ne traite qu'un objet par image ; son passage
-  à VisDrone n'est pas étudié ici.
+- **Détection de personnes** : aucun résultat sur la classe « personne » ni sur milieu
+  industriel ; DAC-SDC est un jeu d'objets vus d'un drone.
+- **Latence par image** en batch = 1 sur FPGA : non rapportée.
+- **Quantification et petits objets** : Table 7 donne une chute d'IoU globale, pas par taille
+  d'objet (31 % des boîtes font moins de 1 % de l'image, §5.2).
+- **Ressources FPGA** (LUT, DSP, BRAM, fréquence) non rapportées : accélérateur non
+  reproductible ; aucun lien avec la fiabilité (SEU, TMR) ni avec la vérification.
+- **Multi-objets / multi-classes** non étudiés.
 
 ## Statut de lecture
 
 Papier complet (`fulltext.md` lu en entier, extraction GROBID `ok`). L'avertissement
-signale la Table 9 « sans corps extrait », mais son corps est présent et lu. Une partie
+signale la Table 9 comme reconstruite par Docling ; son corps est présent, lu et recoupé avec le texte (§7.2). Une partie
 de §4.1-4.2 est mélangée à la légende de la Fig. 3, et §6.4.2 est tronqué (« the inter-
 tween adjacent… »). La Figure 8 et les détails de mémoire hiérarchique manquent.
 

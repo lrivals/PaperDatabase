@@ -32,18 +32,23 @@
   "axes": [
     "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "runtime-monitor",
+    "ood",
+    "distribution-shift",
+    "statistical-distance",
+    "safeml"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 5 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

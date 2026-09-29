@@ -21,7 +21,10 @@
     "safety-certification"
   ],
   "tags": [
-    "ood"
+    "ood",
+    "anomaly-detection",
+    "runtime-monitoring",
+    "softmax"
   ],
   "added": "2026-09-29",
   "extraction": {
@@ -29,12 +32,11 @@
     "ok": true,
     "warnings": [
       "publié ailleurs selon arXiv (journal_ref : International Conference on Learning Representations 2017) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 2, Table 4, Table 7, Table 11"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

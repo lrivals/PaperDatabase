@@ -42,19 +42,17 @@
   ],
   "tags": [
     "quantization",
-    "pruning"
+    "fault-injection",
+    "finn"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "publié ailleurs selon arXiv (journal_ref : 2019 IEEE International Symposium on Defect and Fault Tolerance in VLSI and Nanotechnology Systems (DFT)) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -32,19 +32,20 @@
   "axes": [
     "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "formal-verification"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
       "tableaux sans corps extrait (légende seule) : Table 1"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

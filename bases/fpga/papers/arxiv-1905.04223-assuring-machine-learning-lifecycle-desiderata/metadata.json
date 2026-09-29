@@ -22,20 +22,27 @@
   "url": "https://arxiv.org/abs/1905.04223",
   "type": "preprint",
   "axes": [
-    "safety-certification"
+    "safety-certification",
+    "surveys"
   ],
-  "tags": [],
+  "tags": [
+    "assurance",
+    "ml-lifecycle",
+    "survey",
+    "formal-verification",
+    "ood",
+    "seu"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

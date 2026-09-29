@@ -34,12 +34,19 @@
   "url": "https://arxiv.org/abs/2503.04832",
   "type": "preprint",
   "axes": [
-    "autoencoder-fpga"
+    "autoencoder-fpga",
+    "platforms"
   ],
   "tags": [
+    "autoencoder",
+    "learned-image-compression",
+    "knowledge-distillation",
     "quantization",
     "pruning",
-    "autoencoder"
+    "zcu102",
+    "vitis-ai",
+    "dpu",
+    "gdn"
   ],
   "added": "2026-09-28",
   "extraction": {
@@ -47,12 +54,11 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "aucun axe détecté : à classer dans /paper-fiche",
       "tableaux reconstruits par Docling, chiffres à vérifier : TABLE III"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -20,14 +20,19 @@
   "doi": "10.1088/2632-2153/adf0c0",
   "arxiv_id": "2411.01118",
   "url": "https://arxiv.org/abs/2411.01118",
-  "type": null,
+  "type": "journal",
   "axes": [
-    "autoencoder-fpga"
+    "autoencoder-fpga",
+    "toolflows"
   ],
   "tags": [
-    "autoencoder",
     "vae",
-    "anomaly-detection"
+    "autoencoder",
+    "hls4ml",
+    "anomaly-detection",
+    "quantization",
+    "pruning",
+    "particle-physics"
   ],
   "added": "2026-09-28",
   "extraction": {
@@ -36,12 +41,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon arXiv (journal_ref : 2025 Mach. Learn.: Sci. Technol. 6 035017) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 2"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

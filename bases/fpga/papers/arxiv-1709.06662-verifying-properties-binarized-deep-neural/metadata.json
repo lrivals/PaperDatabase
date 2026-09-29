@@ -32,19 +32,21 @@
   "axes": [
     "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "formal-verification",
+    "quantization"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "aucun axe détecté : à classer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 1",
       "sections numérotées non détectées : 3, 6 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

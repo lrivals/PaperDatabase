@@ -23,26 +23,24 @@
   "type": "journal",
   "axes": [
     "yolo-fpga",
-    "toolflows",
     "platforms"
   ],
   "tags": [
     "yolov5",
-    "yolov4",
-    "vitis-ai",
+    "quantization",
     "zcu102",
-    "quantization"
+    "int4",
+    "dsp-packing",
+    "industrial-inspection"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

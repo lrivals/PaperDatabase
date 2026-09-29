@@ -20,14 +20,23 @@
   "axes": [
     "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "easa",
+    "learning-assurance",
+    "w-shaped-process",
+    "quantization",
+    "pruning",
+    "ood",
+    "runtime-monitor",
+    "fpga-vs-gpu",
+    "avionics"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
       "type de publication à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
       "tableaux sans corps extrait (légende seule) : Table 2, [figure sans légende identifié, Table 4, Table 4, Table 4, Table 4, [figure sans légende identifié, [figure sans légende identifié, Table 6, [figure sans légende identifié",
       "métadonnées corrigées à la main (rapport EASA, citation non appariée à l’ingestion)"
@@ -35,6 +44,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

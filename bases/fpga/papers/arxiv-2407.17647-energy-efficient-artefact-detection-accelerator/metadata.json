@@ -24,7 +24,7 @@
   "doi": null,
   "arxiv_id": "2407.17647",
   "url": "https://arxiv.org/abs/2407.17647",
-  "type": null,
+  "type": "conference",
   "axes": [
     "autoencoder-fpga",
     "platforms"
@@ -32,7 +32,12 @@
   "tags": [
     "zynq",
     "int8",
-    "autoencoder"
+    "autoencoder",
+    "vitis-ai",
+    "dpu",
+    "anomaly-detection",
+    "hyperspectral",
+    "satellite"
   ],
   "added": "2026-09-28",
   "extraction": {
@@ -41,12 +46,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon arXiv (journal_ref : 27th Euromicro Conference on Digital System Design (DSD), 2024) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par Docling, chiffres à vérifier : TABLE I"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

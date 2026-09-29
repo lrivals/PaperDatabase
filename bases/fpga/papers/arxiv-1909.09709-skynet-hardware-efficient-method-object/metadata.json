@@ -57,26 +57,30 @@
   "arxiv_id": "1909.09709",
   "url": "https://arxiv.org/abs/1909.09709",
   "type": "preprint",
-  "axes": [],
+  "axes": [
+    "yolo-fpga",
+    "platforms"
+  ],
   "tags": [
+    "co-design",
     "dac-sdc",
-    "ultra96",
-    "jetson",
     "hardware-aware-nas",
+    "jetson",
     "quantization",
-    "small-objects"
+    "small-objects",
+    "tx2",
+    "ultra96"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par Docling, chiffres à vérifier : Table 9"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

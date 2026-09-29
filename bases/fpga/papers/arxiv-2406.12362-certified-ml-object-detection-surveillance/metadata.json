@@ -34,21 +34,27 @@
   "url": "https://arxiv.org/abs/2406.12362",
   "type": "conference",
   "axes": [
-    "safety-certification"
+    "safety-certification",
+    "platforms"
   ],
-  "tags": [],
+  "tags": [
+    "yolo",
+    "jetson",
+    "arp6983",
+    "tiling",
+    "odd"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
       "publié ailleurs selon arXiv (journal_ref : 12th European Congress on Embedded Real Time Software and Systems, Jun 2024, Toulouse, France) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table I, Table II, Table III"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

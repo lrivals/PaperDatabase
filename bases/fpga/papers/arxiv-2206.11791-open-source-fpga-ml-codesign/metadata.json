@@ -90,7 +90,10 @@
     "finn",
     "pynq",
     "quantization",
-    "anomaly-detection"
+    "mlperf-tiny",
+    "qonnx",
+    "anomaly-detection",
+    "autoencoder"
   ],
   "added": "2026-09-28",
   "extraction": {
@@ -98,12 +101,11 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par Docling, chiffres à vérifier : Table 3"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

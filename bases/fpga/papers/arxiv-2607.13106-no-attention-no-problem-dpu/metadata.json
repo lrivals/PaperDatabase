@@ -23,34 +23,34 @@
   "type": "preprint",
   "axes": [
     "yolo-fpga",
-    "platforms"
+    "platforms",
+    "person-detection",
+    "toolflows"
   ],
   "tags": [
-    "yolov26",
-    "yolov11",
     "yolov8",
+    "yolov11",
+    "yolov26",
     "obb",
-    "attention",
-    "zcu104",
     "dpu",
     "vitis-ai",
-    "int8",
+    "zcu104",
     "quantization",
-    "dota",
-    "dior-r"
+    "ptq",
+    "attention",
+    "person-detection"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "sections numérotées non détectées : IV — leur texte est rattaché à la section précédente",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "sections numérotées non détectées : IV — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": [],
   "imported_from": {

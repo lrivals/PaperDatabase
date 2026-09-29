@@ -124,13 +124,23 @@
   "axes": [
     "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "certification",
+    "safety-assurance",
+    "ood",
+    "formal-verification",
+    "runtime-monitoring",
+    "conformal-prediction",
+    "robustness",
+    "sotif",
+    "do-178c",
+    "position-paper"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, [figure sans légende identifié, [figure sans légende identifié",
@@ -139,6 +149,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

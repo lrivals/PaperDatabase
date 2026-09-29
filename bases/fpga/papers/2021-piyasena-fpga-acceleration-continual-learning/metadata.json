@@ -14,15 +14,25 @@
   "url": "https://hdl.handle.net/10356/153778",
   "type": "thesis",
   "axes": [
-    "continual-learning"
+    "continual-learning",
+    "platforms"
   ],
-  "tags": [],
+  "tags": [
+    "slda",
+    "sonn",
+    "zynq",
+    "zcu102",
+    "dpu",
+    "vitis-ai",
+    "fixed-point",
+    "class-incremental",
+    "core50"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "aucun axe détecté : à classer dans /paper-fiche",
       "métadonnées corrigées à la main (citation.bib) ; « Abstract » de fulltext.md = remerciements",
       "ligatures perdues à l'extraction : 38 mot(s) réparé(s) (lib/ligatures.py)",
       "tableaux reconstruits par Docling, chiffres à vérifier : Table 4, Table 5",
@@ -32,6 +42,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -14,20 +14,27 @@
   "url": "https://doi.org/10.1109/TNS.2024.3349956",
   "type": "journal",
   "axes": [
-    "safety-certification"
+    "safety-certification",
+    "surveys"
   ],
-  "tags": [],
+  "tags": [
+    "seu",
+    "fault-injection",
+    "radiation",
+    "fault-tolerance",
+    "silent-data-corruption",
+    "survey"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE III"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

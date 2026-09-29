@@ -27,22 +27,29 @@
   "type": "preprint",
   "axes": [
     "yolo-fpga",
-    "toolflows"
+    "toolflows",
+    "platforms"
   ],
-  "tags": [],
+  "tags": [
+    "quantization",
+    "fpgaconvnet",
+    "streaming",
+    "off-chip-eviction",
+    "unet",
+    "yolov8"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par Docling, chiffres à vérifier : TABLE V",
       "tableaux sans corps extrait (légende seule) : Pipeline Depth Initiation Rate"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -28,29 +28,31 @@
     }
   ],
   "year": 2022,
-  "venue": "arXiv preprint",
+  "venue": "36th Conference on Neural Information Processing Systems (NeurIPS 2022)",
   "doi": null,
   "arxiv_id": "2206.15472",
   "url": "https://arxiv.org/abs/2206.15472",
-  "type": "preprint",
+  "type": "conference",
   "axes": [
     "continual-learning"
   ],
   "tags": [
     "quantization",
-    "pruning"
+    "on-device-training",
+    "mcu",
+    "tinyml",
+    "sparse-update"
   ],
   "added": "2026-09-24",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par Docling, chiffres à vérifier : Table 5"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

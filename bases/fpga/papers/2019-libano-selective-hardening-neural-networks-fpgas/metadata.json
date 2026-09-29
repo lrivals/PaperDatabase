@@ -41,20 +41,21 @@
     "safety-certification"
   ],
   "tags": [
-    "fault-injection"
+    "seu",
+    "fault-injection",
+    "zynq"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE I",
       "sections numérotées non détectées : I, IV — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

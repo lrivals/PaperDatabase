@@ -19,26 +19,31 @@
   "type": "journal",
   "axes": [
     "yolo-fpga",
-    "platforms"
+    "platforms",
+    "toolflows"
   ],
   "tags": [
     "yolov3-tiny",
     "kv260",
     "quantization",
-    "pruning"
+    "pruning",
+    "int8",
+    "vitis-ai",
+    "qat",
+    "dpu",
+    "on-chip-memory"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par Docling, chiffres à vérifier : TABLE 1, TABLE 2, TABLE 3, TABLE 5, TABLE 6, TABLE 7, TABLE 8, TABLE 9, TABLE 10, TABLE 11",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Algorithm 2 Quantization Aware, Table 11, TABLE 11"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

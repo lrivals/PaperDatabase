@@ -35,20 +35,26 @@
   "type": "journal",
   "axes": [
     "surveys",
-    "person-detection"
+    "person-detection",
+    "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "human-robot-collaboration",
+    "iso-10218",
+    "iso-ts-15066",
+    "safety-zones",
+    "rgbd"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

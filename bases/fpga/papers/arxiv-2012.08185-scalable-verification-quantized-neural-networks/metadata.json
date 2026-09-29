@@ -16,29 +16,31 @@
     }
   ],
   "year": 2020,
-  "venue": "arXiv preprint",
+  "venue": "AAAI 2021",
   "doi": null,
   "arxiv_id": "2012.08185",
   "url": "https://arxiv.org/abs/2012.08185",
-  "type": "preprint",
+  "type": "conference",
   "axes": [
     "safety-certification"
   ],
   "tags": [
     "quantization",
-    "formal-verification"
+    "formal-verification",
+    "smt",
+    "adversarial-robustness",
+    "bit-exact"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 2, Table 4, Table 5"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

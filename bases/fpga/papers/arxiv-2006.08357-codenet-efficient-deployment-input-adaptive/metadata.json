@@ -44,12 +44,18 @@
   "doi": "10.5281/zenodo.4341394",
   "arxiv_id": "2006.08357",
   "url": "https://arxiv.org/abs/2006.08357",
-  "type": null,
+  "type": "conference",
   "axes": [
-    "yolo-fpga"
+    "yolo-fpga",
+    "platforms"
   ],
   "tags": [
-    "quantization"
+    "quantization",
+    "deformable-convolution",
+    "centernet",
+    "ultra96",
+    "vivado-hls",
+    "co-design"
   ],
   "added": "2026-09-28",
   "extraction": {
@@ -57,13 +63,11 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "publié ailleurs selon arXiv (journal_ref : FPGA 2021) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 6"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

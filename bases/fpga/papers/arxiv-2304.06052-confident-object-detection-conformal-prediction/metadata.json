@@ -28,18 +28,25 @@
   "axes": [
     "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "conformal-prediction",
+    "uncertainty-quantification",
+    "runtime-monitor",
+    "yolov5",
+    "detr",
+    "railway",
+    "object-detection"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 2, Table 3"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

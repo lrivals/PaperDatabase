@@ -12,11 +12,11 @@
     }
   ],
   "year": 2025,
-  "venue": null,
+  "venue": "Sensors",
   "doi": "10.3390/s25206359",
   "arxiv_id": null,
   "url": "https://doi.org/10.3390/s25206359",
-  "type": null,
+  "type": "journal",
   "axes": [
     "yolo-fpga",
     "platforms"
@@ -24,21 +24,22 @@
   "tags": [
     "yolov2",
     "zynq",
-    "quantization"
+    "zybo-z7-20",
+    "quantization",
+    "int16",
+    "custom-rtl"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "type de publication à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par Docling, chiffres à vérifier : Table 2, Table 3, Table 4, Table 6, Table 9",
       "tableaux sans corps extrait (légende seule) : PU Data Source Reuse BRAM_0 b, ACs tile FF tile M ACs tile FF"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

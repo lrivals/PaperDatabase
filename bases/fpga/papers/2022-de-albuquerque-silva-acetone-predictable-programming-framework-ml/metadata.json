@@ -28,19 +28,23 @@
   "axes": [
     "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "dnn-code-generation",
+    "wcet",
+    "do-178c",
+    "avionics"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
       "sections numérotées non détectées : 6 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

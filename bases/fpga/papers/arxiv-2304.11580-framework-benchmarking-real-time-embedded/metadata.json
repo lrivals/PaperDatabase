@@ -20,9 +20,22 @@
   "doi": "10.1007/978-3-031-16788-1_33",
   "arxiv_id": "2304.11580",
   "url": "https://arxiv.org/abs/2304.11580",
-  "type": null,
-  "axes": [],
-  "tags": [],
+  "type": "conference",
+  "axes": [
+    "yolo-fpga",
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "yolov4",
+    "vitis-ai",
+    "tensorrt",
+    "jetson",
+    "zcu104",
+    "quantization",
+    "pruning",
+    "benchmarking"
+  ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
@@ -36,6 +49,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

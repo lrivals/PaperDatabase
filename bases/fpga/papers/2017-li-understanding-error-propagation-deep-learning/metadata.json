@@ -41,14 +41,21 @@
     "safety-certification"
   ],
   "tags": [
-    "seu"
+    "seu",
+    "fault-injection",
+    "silent-data-corruption",
+    "eyeriss",
+    "symptom-based-detector",
+    "selective-latch-hardening",
+    "iso-26262",
+    "iec-61508",
+    "tmr"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1, Table 5",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
@@ -56,6 +63,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

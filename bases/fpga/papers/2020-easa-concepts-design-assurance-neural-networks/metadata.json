@@ -20,20 +20,24 @@
   "axes": [
     "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "learning-assurance",
+    "easa",
+    "ood",
+    "runtime-monitoring"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
       "type de publication à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, [figure sans légende identifié",
       "sections numérotées non détectées : 1 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

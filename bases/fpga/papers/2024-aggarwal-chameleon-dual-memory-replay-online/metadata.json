@@ -19,27 +19,34 @@
   "venue": "IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems 43(6)",
   "doi": null,
   "arxiv_id": null,
-  "url": null,
+  "url": "https://ieeexplore.ieee.org/document/10375748/",
   "type": "journal",
   "axes": [
     "continual-learning",
     "platforms"
   ],
   "tags": [
-    "zcu102"
+    "zcu102",
+    "jetson-nano",
+    "edgetpu",
+    "latent-replay",
+    "slda",
+    "core50",
+    "mobilenet",
+    "domain-incremental",
+    "hls"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
       "sections numérotées non détectées : I, II — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

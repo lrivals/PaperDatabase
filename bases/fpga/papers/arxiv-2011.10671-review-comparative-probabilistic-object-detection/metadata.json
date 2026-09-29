@@ -20,27 +20,35 @@
     }
   ],
   "year": 2020,
-  "venue": "arXiv preprint",
+  "venue": "IEEE Transactions on Intelligent Transportation Systems",
   "doi": "10.1109/TITS.2021.3096854",
   "arxiv_id": "2011.10671",
   "url": "https://arxiv.org/abs/2011.10671",
-  "type": "preprint",
+  "type": "journal",
   "axes": [
-    "surveys"
+    "surveys",
+    "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "uncertainty",
+    "ood",
+    "probabilistic-detection",
+    "retinanet",
+    "mc-dropout",
+    "deep-ensembles",
+    "calibration"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : III shows mAP to be correlated, the other hand, Tab. III shows, the magnitude of increase in P, Estimating spatial uncertainty, TABLE V, autonomous driving dataset [20, autonomous driving dataset [21",
       "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

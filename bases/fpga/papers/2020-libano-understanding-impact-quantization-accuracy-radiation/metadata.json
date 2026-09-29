@@ -30,24 +30,30 @@
   "url": "https://doi.org/10.1109/TNS.2020.2983662",
   "type": "journal",
   "axes": [
-    "safety-certification"
+    "safety-certification",
+    "platforms"
   ],
   "tags": [
+    "seu",
+    "fault-injection",
+    "radiation",
+    "reliability",
     "quantization",
-    "fault-injection"
+    "binary-neural-network",
+    "zynq",
+    "mnist"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE I",
       "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

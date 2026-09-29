@@ -24,20 +24,21 @@
   "axes": [
     "safety-certification"
   ],
-  "tags": [],
+  "tags": [
+    "ood",
+    "anomaly-detection"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "publié ailleurs selon arXiv (journal_ref : ECAI 2020) : type journal/conference à préciser",
-      "aucun axe détecté : à classer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
       "sections numérotées non détectées : 5 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

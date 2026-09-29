@@ -31,19 +31,28 @@
   "type": "journal",
   "axes": [
     "surveys",
-    "tinyml-odl"
+    "tinyml-odl",
+    "quantization"
   ],
-  "tags": [],
+  "tags": [
+    "survey",
+    "PRISMA",
+    "TinyML",
+    "quantization",
+    "pruning",
+    "knowledge distillation",
+    "NAS",
+    "continual learning",
+    "TFLite Micro"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

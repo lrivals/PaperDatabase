@@ -24,7 +24,13 @@
   "axes": [
     "tinyml-odl"
   ],
-  "tags": [],
+  "tags": [
+    "energy measurement",
+    "instruction-level power model",
+    "embedded software",
+    "Intel 486DX2",
+    "SPARClite"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
@@ -37,6 +43,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

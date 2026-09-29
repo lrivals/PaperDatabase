@@ -43,6 +43,8 @@ Apprentissage continu embarqué sur microcontrôleur pour la maintenance prédic
 ## Suggestions en attente
 
 <!-- Une ligne par suggestion : - AAAA-MM-JJ (source : paper_id ou /base-profile) — proposition — raison -->
+- 2026-09-29 (1994-tiwari-power-analysis-embedded-software-first) — ajouter aux « Précisions » que les références de méthode de mesure d'énergie logicielle (Tiwari) sont, comme les articles de statistique, des références de méthode sans ligne de benchmark, rangées en `tinyml-odl` — aucun axe ne couvre la mesure d'énergie, et la fiche n'a pas de chiffre d'IA à reporter.
+- 2026-09-29 (arxiv-2007.05432-reactive-soft-prototype-computing-concept) — exclure « vector quantization » / « LVQ » de la règle de l'axe `quantization` dans `base.json` — la règle a classé en quantification un article sur les classifieurs à prototypes LVQ.
 
 ## Historique
 

@@ -22,21 +22,27 @@
   "url": "https://arxiv.org/abs/2007.05432",
   "type": "journal",
   "axes": [
-    "quantization",
     "drift-detection"
   ],
-  "tags": [],
+  "tags": [
+    "KSWIN",
+    "Kolmogorov-Smirnov",
+    "concept drift",
+    "learning vector quantization",
+    "RSLVQ",
+    "prototypes",
+    "data streams"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 3"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

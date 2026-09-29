@@ -30,20 +30,30 @@
   "url": "https://arxiv.org/abs/2403.19076",
   "type": "journal",
   "axes": [
-    "tinyml-odl"
+    "surveys",
+    "tinyml-odl",
+    "quantization"
   ],
-  "tags": [],
+  "tags": [
+    "MCUNet",
+    "TinyNAS",
+    "TinyEngine",
+    "Tiny Training Engine",
+    "quantization-aware scaling",
+    "sparse update",
+    "STM32",
+    "on-device training"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE V"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

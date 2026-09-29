@@ -37,8 +37,13 @@
     "tinyml-odl"
   ],
   "tags": [
-    "hdc",
-    "pulp",
+    "hyperdimensional computing",
+    "PULP",
+    "Mr. Wolf",
+    "RISC-V",
+    "online learning",
+    "EMG",
+    "STM32F407",
     "energy"
   ],
   "added": "2026-09-29",
@@ -46,13 +51,12 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE I, [figure sans légende identifié, TABLE II",
       "sections numérotées non détectées : I, IV — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -30,20 +30,25 @@
     "datasets"
   ],
   "tags": [
-    "cmapss",
-    "time-series"
+    "C-MAPSS",
+    "turbofan",
+    "PHM08",
+    "run-to-failure",
+    "simulation",
+    "RUL",
+    "health index",
+    "scoring function"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 1"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -24,18 +24,25 @@
   "axes": [
     "pdm-rul"
   ],
-  "tags": [],
+  "tags": [
+    "RUL",
+    "C-MAPSS",
+    "MLP",
+    "PCA",
+    "health index",
+    "interpolation",
+    "grid search"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 2, Table 3, Table 5"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

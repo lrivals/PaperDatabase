@@ -30,20 +30,25 @@
     "datasets"
   ],
   "tags": [
-    "bearings"
+    "Paderborn bearing dataset",
+    "KAt",
+    "motor current signal",
+    "vibration",
+    "bearing damage",
+    "artificial vs real damage",
+    "6203"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1, Table 3, Training with Data of Bearings",
       "tableaux sans corps extrait (légende seule) : Table 11"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

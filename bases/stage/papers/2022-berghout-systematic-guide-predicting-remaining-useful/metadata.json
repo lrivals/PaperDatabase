@@ -18,20 +18,29 @@
   "url": "https://doi.org/10.3390/electronics11071125",
   "type": "journal",
   "axes": [
+    "surveys",
     "pdm-rul"
   ],
-  "tags": [],
+  "tags": [
+    "survey",
+    "RUL",
+    "model selection",
+    "data drift",
+    "C-MAPSS",
+    "PRONOSTIA",
+    "scoring function",
+    "health index"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 1, Table 2"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -25,19 +25,26 @@
     "pdm-rul",
     "datasets"
   ],
-  "tags": [],
+  "tags": [
+    "hydraulic test rig",
+    "condition monitoring",
+    "LDA",
+    "Mahalanobis distance",
+    "feature selection",
+    "fault severity",
+    "process sensors"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE III",
       "sections numérotées non détectées : IV — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

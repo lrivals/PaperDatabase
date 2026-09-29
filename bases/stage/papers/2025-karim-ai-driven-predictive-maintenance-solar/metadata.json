@@ -18,18 +18,22 @@
     "anomaly-detection"
   ],
   "tags": [
-    "energy"
+    "solar inverter",
+    "photovoltaic",
+    "MATLAB/Simulink",
+    "LSTM",
+    "GRU",
+    "autoencoder",
+    "fault detection"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -1,0 +1,78 @@
+% Méthode et conventions de lecture
+\section{Méthode et conventions}
+\label{sec:methode}
+
+\paragraph{Corpus.} Ce document ne s'appuie que sur la base \texttt{drone} de
+PaperDatabase telle qu'elle était le 29 septembre 2026 : 73 articles, tous dotés d'une
+fiche de lecture complète, et 324 lignes de mesures dans \texttt{benchmarks.csv}, issues
+de 58 articles. Aucune référence extérieure à la base n'est citée comme source. Les
+travaux cités par un survey sont signalés comme tels ; leurs chiffres ne sont pas vérifiés
+à la source et servent à orienter la lecture, pas à comparer.
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Composition du corpus. Un article peut relever de plusieurs axes.}
+\label{tab:corpus}
+\begin{tabularx}{\textwidth}{@{}LrL r@{}}
+\toprule
+Axe & Articles & Axe & Articles \\
+\midrule
+Détection drone, petits objets & 29 & Nano-drones, MCU, ASIC, neuromorphique & 16 \\
+Suivi et navigation & 27 & Accélération FPGA / SoC & 14 \\
+Contre-drone & 17 & Co-design calcul--énergie--vol & 14 \\
+Jeux de données et challenges & 15 & Surveys & 7 \\
+ & & Fiabilité du calcul embarqué & 2 \\
+\midrule
+\multicolumn{4}{@{}l}{Types : 30 articles de journal, 7 de conférence, 36 preprints arXiv
+(dont plusieurs publiés depuis, voir le texte).} \\
+\multicolumn{4}{@{}l}{Années : 2016--2020 : 14 ; 2021--2023 : 38 ; 2024--2026 : 21.} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Origine des chiffres.} Chaque valeur est reprise de la fiche ou de
+\texttt{benchmarks.csv}, avec la section ou le tableau de l'article entre crochets, par
+exemple \src{Table~4}. Une valeur que les auteurs ne donnent pas s'écrit \nr{} : elle
+n'est jamais estimée. Un calcul fait à partir des chiffres publiés (par exemple un FPS/W)
+est marqué \deduit. Sur les 324 lignes, 176 sont en confiance \emph{high} et 148 en
+\emph{medium} : valeurs lues dans le texte qui commente une figure, ou tableaux
+reconstruits automatiquement. Ces dernières sont marquées \med{} dans les tableaux. Aucune
+ligne n'est en confiance \emph{low}.
+
+\paragraph{Portée de la puissance.} Une puissance n'a de sens qu'avec sa portée. La base
+distingue \emph{board} (carte entière, au wattmètre), \emph{chip} (rails de la puce ou
+télémétrie embarquée comme \texttt{tegrastats}), \emph{estimated} (outil de conception,
+par exemple Vivado) et \emph{unspecified} (méthode non décrite). Sur les 324 lignes,
+222 n'ont pas de puissance (69\,\%) ; les autres se répartissent en 51 \emph{board},
+20 \emph{chip}, 29 \emph{unspecified} et 2 \emph{estimated}. Deux puissances de portées
+différentes ne se comparent pas.
+
+\paragraph{Gamme de puissance.} Tout résultat est situé dans une gamme : \emph{nano}
+(GAP8, MCU, ASIC ; de quelques mW à quelques centaines de mW), \emph{FPGA} (SoC Zynq ou
+Kria, de 1 à 30\,W selon la carte), \emph{Jetson} (autour de 10\,W, de 5 à 30\,W selon le
+module et le mode). Les résultats sur GPU de bureau (RTX, Titan, Tesla) sont signalés
+comme tels : ils ne sont jamais des résultats embarqués, quoi qu'en dise leur titre.
+
+\paragraph{Métriques de précision.} Elles ne se comparent qu'à protocole égal. L'IoU moyen
+mono-objet du DAC-SDC n'est pas une mAP ; la mAP@0.5 de VisDrone n'est pas l'AP COCO
+[.5:.95] du protocole officiel ; l'AP d'UAVDT est calculée à IoU 0,7 dans l'article
+d'origine ; certains travaux de contre-drone évaluent à IoU 0,1 ou 0,25.
+
+\paragraph{Contre-drone : point de vue du capteur.} Chaque article de contre-drone est
+classé \emph{air $\rightarrow$ air} (détecteur à bord d'un drone), \emph{sol
+$\rightarrow$ air} (capteur fixe au sol) ou point de vue non déclaré. Seul le premier
+relève de l'IA embarquée ; les autres sont cités comme jeux de données, métriques ou
+contrastes.
+
+\paragraph{Lu contre déduit.} Sauf mention, une affirmation résume ce que disent les
+auteurs. Une inférence de la fiche ou de ce document est marquée \deduit. Un article
+marqué \pp{} est un preprint non relu par les pairs dans la version ingérée ; quand une
+version publiée existe probablement, le texte le dit.
+
+\paragraph{Limites de la méthode.} Le corpus est petit et vient d'une bibliographie de
+départ constituée à partir de résumés. Il compte peu d'articles FPGA propres au drone
+(10 papiers mesurés sur FPGA) et seulement deux sur la fiabilité. Un \enquote{gap}
+signifie qu'un sujet est absent \emph{de ce corpus} ; son absence de la littérature reste
+une hypothèse tant qu'une recherche ciblée ne l'a pas confirmée. Les fiches ont été
+rédigées à partir du texte extrait des PDF : les valeurs données seulement dans des
+figures sont souvent \nr.

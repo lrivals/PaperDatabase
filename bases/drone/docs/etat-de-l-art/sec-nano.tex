@@ -1,0 +1,119 @@
+% Nano-drones, MCU, ASIC, neuromorphique
+\section{Gamme nano : MCU, ASIC et neuromorphique}
+\label{sec:nano}
+
+\subsection{Le GAP8 et la lignée PULP}
+
+Le GAP8 \citep{2018-flamand-gap-8-risc-v-soc} est la puce de l'AI-deck du Crazyflie,
+utilisée par la plupart des travaux nano du corpus. C'est un SoC RISC-V de 55\,nm : un
+contrôleur et un cluster de 8 cœurs, 512\,kB de L2, 64\,kB de L1, un accélérateur de
+convolution, environ 10\,GMAC/s en crête et au plus 75\,mW au pire cas \src{§II,
+Table~II}. Le papier, court et écrit par le concepteur, ne rapporte aucune détection :
+seulement CIFAR-10 en 650\,µs pour 15\,mW, méthode de mesure non décrite \src{§IV}. Son
+enseignement durable est que la gestion explicite de la mémoire (tuilage L3/L2/L1 par
+DMA) est le cœur de l'effort de portage \deduit, comme sur un accélérateur FPGA dataflow.
+
+Le tableau~\ref{tab:nano} rassemble les réseaux déployés sur GAP8 et sur MCU.
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Réseaux déployés en gamme nano. Tâches très différentes : les chiffres donnent
+des ordres de grandeur.}
+\label{tab:nano}
+\begin{tabularx}{\textwidth}{@{}P{3.0cm}LP{2.0cm}rP{2.4cm}@{}}
+\toprule
+Travail & Tâche, réseau & Puce & Débit & Puissance (portée), source \\
+\midrule
+PULP-Dronet \citep{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}\pp & navigation, DroNet
+  Fixed16, 41\,MMAC & GAP8 & 6 / 18\,FPS & 64 / 284\,mW (shield), §VI\med \\
+Tiny-PULP-Dronet \citep{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp & navigation,
+  1,5\,MMAC, 6,4\,kB & GAP8 & 89 / 160\,FPS & 34\,mW (chip), 0,38\,mJ/image, §III-B\med \\
+PULP-Frontnet \citep{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp & pose humaine, INT8,
+  4\,MMAC & GAP8 & 134,7\,FPS & 86,6\,mW (chip), §V-B\med \\
+NanoFlowNet \citep{arxiv-2209.06918-nanoflownet-real-time-dense-optical}\pp & flot optique dense,
+  INT8 & GAP8 & 5,57\,FPS & \nr, Table~IV\med \\
+\citet{arxiv-2301.12175-bio-inspired-autonomous-exploration-policies}\pp & détection SSD-MbV2 1,0$\times$,
+  2 classes, 534\,MMAC ; 50\,\% mAP & GAP8 & 1,6\,FPS & 134,5\,mW (AI-deck), Table~II \\
+BlankSkip \citep{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp & même détecteur +
+  sortie anticipée ; 0,540 mAP & GAP8 & 1,86\,FPS moyen & \nr, Table~2 \\
+TinyissimoYOLO \citep{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint} & détection
+  88$\times$88, 3 classes VOC ; 58,5\,\% mAP & MAX78000 & 5,5\,ms & 196\,µJ/inférence (MCU), §III\med \\
+TinyissimoYOLO & idem & STM32H7A3 & 359\,ms & \nr, §III\med \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Navigation.} PULP-Dronet \citep{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}\pp{}
+(publié dans IEEE IoT Journal d'après le DOI) est le premier CNN de navigation en boucle
+fermée entièrement à bord d'un nano-drone de 27\,g. À 64\,mW, le calcul représente 0,8\,\%
+de la puissance du drone, estimée à 7,6\,W \src{Fig.~12}. Son apport le plus utile ici est
+système : l'autonomie en vol stationnaire passe de 440\,s pour le Crazyflie seul à 340\,s
+avec le shield qui calcule, et la masse du module en coûte l'essentiel (90\,s contre 10\,s
+pour le calcul) \src{Table~IV}. Tiny-PULP-Dronet
+\citep{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp{} réduit le réseau d'un
+facteur 50 en taille et 27 en MAC, pour un gain de latence de 8,5 seulement : la première
+couche et le format mémoire deviennent le goulot \src{§III-B}. Aucun vol n'est rapporté,
+et le multitâche qui motive le travail n'est pas démontré.
+
+\paragraph{Pose et flot optique.} PULP-Frontnet
+\citep{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp{} ferme la boucle de contrôle
+sur une estimation de pose humaine. Son résultat le plus instructif : le réseau le plus
+rapide (135\,Hz) suit moins bien la personne que le plus lent (48\,Hz), avec une erreur de
+position médiane de 0,63 contre 0,41\,m \src{Table~IV}. Le débit maximal n'est pas la
+bonne cible \deduit. NanoFlowNet
+\citep{arxiv-2209.06918-nanoflownet-real-time-dense-optical}\pp{} calcule un flot optique
+dense à 5,57\,FPS sur GAP8 et sert l'évitement d'obstacles, sans mesure de puissance ni
+précision après quantification \src{Table~IV}.
+
+\paragraph{Détection.} Deux articles seulement font de la détection sur GAP8, sur la même
+tâche jouet : deux classes d'objets posés au sol dans une pièce.
+\citet{arxiv-2301.12175-bio-inspired-autonomous-exploration-policies}\pp{} obtiennent
+1,6\,FPS pour 134,5\,mW à l'AI-deck \src{Table~II} et un taux de détection de 90\,\% en
+mission à 0,5\,m/s, qui tombe à 83\,\% à 1\,m/s \src{Table~III}. Le bilan de puissance du
+drone entier est un chiffre clé : moteurs 7,32\,W (91\,\%), AI-deck 0,134\,W (1,67\,\%)
+\src{Table~IV}. BlankSkip
+\citep{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp{} ajoute une branche qui
+détecte les images vides et arrête l'inférence : +24\,\% de débit moyen pour $-$0,015 de
+mAP \src{Table~2}. Le gain dépend de la proportion d'images vides, fabriquée par les
+auteurs sur le jeu de test, et la latence au pire cas reste celle du modèle complet
+\deduit.
+
+\paragraph{MCU à accélérateur.} TinyissimoYOLO
+\citep{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint} montre que
+l'accélérateur CNN intégré au MCU fait la différence : 5,5\,ms sur MAX78000 contre 359\,ms
+sur STM32H7A3, pour le même réseau \src{§III}. Sa mAP (3 classes, au plus 3 objets par
+image, entrée 88$\times$88) ne se compare à aucune autre du corpus, et varie de 57 à
+59\,\% selon la section du papier.
+
+\subsection{ASIC et neuromorphique}
+
+\paragraph{Navion.} \citet{2019-suleiman-navion-2-mw-fully-integrated} intègrent une
+odométrie visuelle-inertielle complète sur un ASIC de 65\,nm, sans DRAM externe : 24\,mW en
+configuration maximale et 2\,mW à 20\,FPS quand les paramètres sont adaptés à chaque
+séquence (puissance de la puce) \src{§V-A, §V-D}\med. La méthode de co-design est
+transposable à un détecteur : tout sur puce, tampons d'image compressés, parcimonie
+exploitée \deduit. Les 2\,mW supposent un réglage fait a posteriori, et aucun vol n'est
+rapporté : les données sont rejouées depuis un ZC706 \src{§V-B}.
+
+\paragraph{Loihi.} Deux travaux de contrôle de drone utilisent la puce neuromorphique Loihi
+d'Intel. \citet{arxiv-2108.03694-event-driven-vision-control-uavs}\pp{} calculent une
+transformée de Hough sur les événements d'une caméra DVS en 250\,µs, soit une estimation à
+20\,kHz contre 1\,kHz sur CPU, sur un banc à un degré de liberté \src{Fig.~2, §III-A}\med ;
+aucune puissance n'est mesurée. \citet{arxiv-2303.08778-fully-neuromorphic-vision-control-autonomous}\pp{}
+ferment la boucle vision $\rightarrow$ contrôle sur un quadrirotor de 1\,kg, avec un SNN de
+flot optique à 27\,µJ par inférence à 200\,Hz \src{Abstract}. Deux réserves : l'énergie
+est mesurée sans entrées-sorties, alors que l'USB est le vrai goulot selon les auteurs, et
+la comparaison à trois ou quatre ordres de grandeur oppose Loihi à une émulation du SNN en
+PyTorch sur Jetson Nano, ce que les auteurs reconnaissent \src{Discussion}. Aucun des deux
+ne fait de détection d'objets.
+
+\subsection{Ce que la gamme nano apprend au reste}
+
+La gamme nano est la seule du corpus où la part du calcul dans le budget du drone est
+mesurée : 1,67\,\% de la puissance pour la vision
+\citep[Table~IV]{arxiv-2301.12175-bio-inspired-autonomous-exploration-policies}, et un
+coût en autonomie dominé par la masse
+\citep[Table~IV]{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}. Elle montre aussi que
+le débit limite la vitesse de mission (taux de détection qui baisse à 1\,m/s) et que la
+qualité de contrôle ne croît pas avec le débit (PULP-Frontnet). Ces trois constats n'ont
+pas d'équivalent mesuré pour un FPGA ou une Jetson sur un drone de taille moyenne.

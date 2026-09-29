@@ -1,0 +1,106 @@
+% Gaps (repris de gaps.md, 2e passe du 28/09/2026) et questions de thèse
+\section{Zones non couvertes et pistes de recherche}
+\label{sec:gaps}
+
+Les gaps ci-dessous viennent de \texttt{gaps.md} (2\textsuperscript{e} passe, 28/09/2026,
+73 fiches et 324 lignes). Un gap \emph{étayé} est constaté dans plusieurs fiches (mesure
+absente, limite reconnue par les auteurs) ; cela ne prouve pas qu'il est absent de la
+littérature. Un gap à l'état d'\emph{hypothèse} ne repose que sur l'absence de papiers
+dans la base.
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Gaps du corpus drone : statut et piste principale.}
+\label{tab:gaps}
+\begin{tabularx}{\textwidth}{@{}P{4.3cm}P{1.8cm}L@{}}
+\toprule
+Gap & Statut & Piste \\
+\midrule
+Décalage algorithme / matériel : YOLO drone (P2, attention) jamais portés sur FPGA & étayé &
+  YOLOv8n-P2 ou Drone-YOLO nano en INT8 sur KV260 (Vitis~AI), contre FINN ou hls4ml ; mAP
+  VisDrone avant et après \\
+Quantification et petits objets : 0 ligne avec AP$_S$ sur 324 & étayé & balayage PTQ / QAT
+  (FP32, INT8, INT4) d'un YOLO drone sur VisDrone, AP$_S$ mesurée sur la carte \\
+Tête P2 et haute résolution : coût mémoire on-chip non mesuré & étayé (coût) ; hypothèse
+  (absence FPGA) & tailles d'activation par couche de YOLOv8n et YOLOv8n-P2 face au budget
+  BRAM d'un ZU3EG ou d'une KV260 \\
+Paramètres et FLOPs $\neq$ latence sur cible & étayé & trois variantes légères d'un même
+  YOLO profilées sur KV260 et Orin, à précision égale \\
+Post-traitement sur le PS : goulot de bout en bout & étayé & NMS matériel ou tête sans NMS ;
+  latence caméra $\rightarrow$ sortie instrumentée \\
+Calcul adaptatif ou épars jamais évalué à bord & étayé & SAHI à tuiles fixes contre saut de
+  tuiles vides sur KV260, latence au pire cas \\
+Métriques non comparables ; benchmarks sans métrique d'efficacité & étayé & protocole
+  commun : métrique, résolution, portée de la puissance \\
+Métrique système absente des papiers YOLO/FPGA & étayé & designs FPGA publiés placés sur le
+  modèle F-1 avec masse de carte mesurée \\
+Fiabilité des accélérateurs de détection sur drone & étayé (corpus mince) & injection de
+  fautes sur un détecteur FPGA avec métrique de mission \\
+Pas de comparaison entre gammes de puissance & étayé & même réseau, même entrée, même
+  portée de puissance sur GAP8, FPGA et Jetson \\
+Détection et navigation sur le même budget & étayé & partage d'un SoC par reconfiguration
+  partielle, interférence mesurée \\
+Suivi embarqué sans puissance ni FPGA & étayé & HiFT ou SiamAPN++ sur FPGA, énergie par
+  image \\
+Contre-drone évalué sur GPU de bureau & étayé & YOLOv8n sur Det-Fly, INT8 sur KV260 contre
+  Orin, puissance à la carte \\
+Détecteur air $\rightarrow$ air embarqué sur intercepteur & étayé & détecteur sur SoC avec
+  AP, FPS, W et latence de bout en bout ; Det-Fly et ARD-MAV \\
+Air $\rightarrow$ air : coût du mouvement multi-images & étayé (coût) ; hypothèse (FPGA) &
+  profil par étage de GL-YOMO ou GLAD ; tampon on-chip de 8 images \\
+Fusion visible + thermique à bord & hypothèse & recherche ciblée (\texttt{/paper-discover}) \\
+Apprentissage continu à bord du drone & hypothèse & base \texttt{fpga} ; recherche ciblée \\
+Code et bitstreams rarement publiés & étayé (relevé approximatif) & distinguer code
+  d'entraînement et design matériel \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Trois gaps structurants}
+
+\paragraph{Le décalage algorithme / matériel.} C'est l'hypothèse de départ de la base, et
+le corpus l'étaye. Les détecteurs qui font l'état de l'art sur VisDrone ajoutent une tête
+P2 et de l'attention (section~\ref{sec:detection}). Les implantations FPGA restent sur des
+YOLO anciens et, pour tenir, retirent la branche multi-échelle
+\citep{2025-cali-optimized-implementation-yolov3-tiny-real} ou remplacent l'attention
+\citep{arxiv-2607.13106-no-attention-no-problem-dpu}\pp. La seule mesure embarquée d'une
+tête P2 (Jetson TX2) montre un facteur 3 à 4 en latence
+\citep[Table~6]{2023-zhang-drone-yolo-efficient-neural-network}. Deux familles
+d'alternatives à P2 existent, jamais évaluées sur FPGA : transférer l'information de P2
+vers P3 (TPH-YOLOv5++), ou recadrer à pleine résolution autour des régions utiles (SAHI,
+UFPMP-Det, GLAD).
+
+\paragraph{La précision sur petits objets après quantification.} Aucune des 324 lignes ne
+rapporte d'AP$_S$. Les pertes de quantification connues sont globales et souvent fortes
+(6 à 30 points de mAP selon le modèle et le jeu). On ne sait donc pas si la
+quantification, indispensable sur FPGA et MCU, détruit précisément ce que les YOLO drone
+cherchent à gagner.
+
+\paragraph{La métrique de mission.} Le lien entre latence, masse et vitesse sûre est
+modélisé \citep{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}\pp{} et mesuré
+pour des nano-drones, jamais pour un détecteur sur FPGA. Le modèle lui-même ignore la
+qualité de perception, et la gamme nano montre qu'un réseau plus rapide peut moins bien
+servir la mission \citep[Table~IV]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp.
+
+\subsection{Questions de thèse candidates}
+
+Les trois questions ci-dessous sont des déductions à partir des gaps, pas des
+conclusions du corpus.
+\begin{enumerate}
+  \item \textbf{Détecteur air $\rightarrow$ air sur SoC embarquable.} Peut-on détecter un
+    drone de quelques pixels à bord d'un intercepteur, sur KV260 ou Zynq UltraScale+, avec
+    une AP, une latence de bout en bout et une puissance à la carte mesurées, et comment
+    se compare-t-on à une Jetson Orin à protocole égal ? Données : Det-Fly, ARD-MAV,
+    NPS-Drones. Point de départ : l'architecture globale/locale de GLAD, dont la partie
+    non neuronale est à accélérer.
+  \item \textbf{Petits objets et précision numérique.} Quelle est la perte d'AP$_S$ d'un
+    YOLO drone (avec et sans tête P2) quand on passe de FP32 à INT8 puis INT4, en PTQ et en
+    QAT, mesurée sur la carte ? Quelle alternative à P2 (recadrage, transfert vers P3) tient
+    dans la mémoire on-chip d'une petite FPGA à précision égale ?
+  \item \textbf{Du FPS à la vitesse sûre.} Comment traduire le débit, la puissance et la
+    masse d'un accélérateur de détection en vitesse de vol sûre et en autonomie, en
+    intégrant la qualité de détection au modèle F-1 ? À quelle gamme de puissance
+    (nano, FPGA, Jetson) correspond l'optimum pour un drone donné ?
+\end{enumerate}
+Laboratoires français à approcher : \texttt{labs.md} ne recense encore que le LIRMM (test
+et fiabilité), sans papier du corpus à l'appui ; la liste reste à construire.

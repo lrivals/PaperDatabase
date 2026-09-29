@@ -1,0 +1,56 @@
+{
+  "id": "2023-ruospo-survey-deep-learning-resilience-assessment",
+  "title": "A Survey on Deep Learning Resilience Assessment Methodologies",
+  "authors": [
+    {
+      "given": "Annachiara",
+      "family": "Ruospo"
+    },
+    {
+      "given": "Ernesto",
+      "family": "Sanchez"
+    },
+    {
+      "given": "Lucas Matana",
+      "family": "Luza"
+    },
+    {
+      "given": "Luigi",
+      "family": "Dilillo"
+    },
+    {
+      "given": "Marcello",
+      "family": "Traiola"
+    },
+    {
+      "given": "Alberto",
+      "family": "Bosio"
+    }
+  ],
+  "year": 2023,
+  "venue": "Computer 56(2), 57-66",
+  "doi": "10.1109/MC.2022.3217841",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/MC.2022.3217841",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "safety-certification"
+  ],
+  "tags": [
+    "fault-injection"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

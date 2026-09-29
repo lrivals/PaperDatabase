@@ -1,0 +1,61 @@
+{
+  "id": "2017-li-understanding-error-propagation-deep-learning",
+  "title": "Understanding error propagation in deep learning neural network (DNN) accelerators and applications",
+  "authors": [
+    {
+      "given": "Guanpeng",
+      "family": "Li"
+    },
+    {
+      "given": "Siva Kumar Sastry",
+      "family": "Hari"
+    },
+    {
+      "given": "Michael",
+      "family": "Sullivan"
+    },
+    {
+      "given": "Timothy",
+      "family": "Tsai"
+    },
+    {
+      "given": "Karthik",
+      "family": "Pattabiraman"
+    },
+    {
+      "given": "Joel",
+      "family": "Emer"
+    },
+    {
+      "given": "Stephen W.",
+      "family": "Keckler"
+    }
+  ],
+  "year": 2017,
+  "venue": "Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis 8",
+  "doi": "10.1145/3126908.3126964",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1145/3126908.3126964",
+  "type": "conference",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [
+    "seu"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1, Table 5",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

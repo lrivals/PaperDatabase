@@ -1,0 +1,33 @@
+{
+  "id": "2024-rech-artificial-neural-networks-space-safety",
+  "title": "Artificial Neural Networks for Space and Safety-Critical Applications: Reliability Issues and Potential Solutions",
+  "authors": [
+    {
+      "given": "Paolo",
+      "family": "Rech"
+    }
+  ],
+  "year": 2024,
+  "venue": "IEEE Transactions on Nuclear Science 71(4), 377-404",
+  "doi": "10.1109/TNS.2024.3349956",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TNS.2024.3349956",
+  "type": "journal",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE III"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

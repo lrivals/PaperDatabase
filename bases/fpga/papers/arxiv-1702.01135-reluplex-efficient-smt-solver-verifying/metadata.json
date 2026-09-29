@@ -1,0 +1,50 @@
+{
+  "id": "arxiv-1702.01135-reluplex-efficient-smt-solver-verifying",
+  "title": "Reluplex: An Efficient SMT Solver for Verifying Deep Neural Networks",
+  "authors": [
+    {
+      "given": "Guy",
+      "family": "Katz"
+    },
+    {
+      "given": "Clark",
+      "family": "Barrett"
+    },
+    {
+      "given": "David",
+      "family": "Dill"
+    },
+    {
+      "given": "Kyle",
+      "family": "Julian"
+    },
+    {
+      "given": "Mykel",
+      "family": "Kochenderfer"
+    }
+  ],
+  "year": 2017,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1702.01135",
+  "url": "https://arxiv.org/abs/1702.01135",
+  "type": "preprint",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

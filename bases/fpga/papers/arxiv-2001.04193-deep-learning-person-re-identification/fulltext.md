@@ -1,0 +1,491 @@
+---
+id: arxiv-2001.04193-deep-learning-person-re-identification
+title: "Deep Learning for Person Re-identification: A Survey and Outlook"
+year: 2020
+backend: grobid
+---
+
+## Abstract
+
+Person re-identification (Re-ID) aims at retrieving a person of interest across multiple non-overlapping cameras. With the advancement of deep neural networks and increasing demand of intelligent video surveillance, it has gained significantly increased interest in the computer vision community. By dissecting the involved components in developing a person Re-ID system, we categorize it into the closed-world and open-world settings. The widely studied closed-world setting is usually applied under various research-oriented assumptions, and has achieved inspiring success using deep learning techniques on a number of datasets. We first conduct a comprehensive overview with in-depth analysis for closed-world person Re-ID from three different perspectives, including deep feature representation learning, deep metric learning and ranking optimization. With the performance saturation under closed-world setting, the research focus for person Re-ID has recently shifted to the open-world setting, facing more challenging issues. This setting is closer to practical applications under specific scenarios. We summarize the open-world Re-ID in terms of five different aspects. By analyzing the advantages of existing methods, we design a powerful AGW baseline, achieving state-of-the-art or at least comparable performance on twelve datasets for FOUR different Re-ID tasks. Meanwhile, we introduce a new evaluation metric (mINP) for person Re-ID, indicating the cost for finding all the correct matches, which provides an additional criteria to evaluate the Re-ID system for real applications. Finally, some important yet under-investigated open issues are discussed.
+
+## 1. INTRODUCTION
+
+P ERSON re-identification (Re-ID) has been widely studied as a specific person retrieval problem across non-overlapping cameras [1], [2]. Given a query person-of-interest, the goal of Re-ID is to determine whether this person has appeared in another place at a distinct time captured by a different camera, or even the same camera at a different time instant [3]. The query person can be represented by an image [4], [5], [6], a video sequence [7], [8], and even a text description [9], [10]. Due to the urgent demand of public safety and increasing number of surveillance cameras, person Re-ID is imperative in intelligent surveillance systems with significant research impact and practical importance.
+
+Re-ID is a challenging task due to the presence of different viewpoints [11], [12], varying low-image resolutions [13], [14], illumination changes [15], unconstrained poses [16], [17], [18], occlusions [19], [20], heterogeneous modalities [10], [21], complex camera environments, background clutter [22], unreliable bounding box generations, etc. These result in varying variations and uncertainty. In addition, for practical model deployment, the dynamic updated camera network [23], [24], large scale gallery with efficient retrieval [25], group uncertainty [26], significant domain shift [27], unseen testing scenarios [28], incremental model updating [29] and changing cloths [30] also greatly increase the difficulties. These challenges lead that Re-ID is still unsolved problem. Early research efforts mainly focus on the handcrafted feature construction with body structures [31], [32], [33], [34], [35] or distance metric learning [36], [37], [38], [39], [40], [41]. With the advancement of deep learning, person Re-ID has achieved inspiring performance on the widely used benchmarks [5], [42], [43], [44]. However, there is still a large gap between the research-oriented scenarios and practical applications [45]. This motivates us to conduct a comprehensive survey, develop a powerful baseline for different Re-ID tasks and discuss several future directions.
+
+Though some surveys have also summarized the deep learning techniques [2], [46], [47], our survey makes three major differences: 1) We provide an in-depth and comprehensive analysis of existing deep learning methods by discussing their advantages and limitations, analyzing the state-of-the-arts. This provides insights for future algorithm design and new topic exploration. 2) We design a new powerful baseline (AGW: Attention Generalized mean pooling with Weighted triplet loss) and a new evaluation metric (mINP: mean Inverse Negative Penalty) for future developments. AGW achieves state-of-the-art performance on twelve datasets for four different Re-ID tasks. mINP provides a supplement metric to existing CMC/mAP, indicating the cost to find all the correct matches. 3) We make an attempt to discuss several important research directions with under-investigated open issues to narrow the gap between the closed-world and open-world applications, taking a step towards real-world Re-ID system design. Unless otherwise specified, person Re-ID in this survey refers to the pedestrian retrieval problem across multiple surveillance cameras, from a computer vision perspective. Generally, building a person Re-ID system for a specific scenario requires five main steps (as shown in Fig. 1):
+
+1)
+
+Step 1: Raw Data Collection: Obtaining raw video data from surveillance cameras is the primary requirement of practical video investigation. These cameras are usually located in different places under varying environments [48]. Most likely, this raw data contains a large amount of complex and noisy background clutter. 2) Step 2: Bounding Box Generation: Extracting the bounding boxes which contain the person images from the raw video data. Generally, it is impossible to manually crop all the person images in large-scale applications.
+
+The bounding boxes are usually obtained by the person detection [49], [50] or tracking algorithms [51], [52]. 3) Step 3: Training Data Annotation: Annotating the crosscamera labels. Training data annotation is usually indispensable for discriminative Re-ID model learning due to the large cross-camera variations. In the existence of large domain shift [53], we often need to annotate the training data in every new scenario. 4) Step 4: Model Training: Training a discriminative and robust Re-ID model with the previous annotated person images/videos. This step is the core for developing a Re-ID system and it is also the most widely studied paradigm in the literature. Extensive models have been developed to handle the various challenges, concentrating on feature representation learning [54], [55], distance metric learning [56], [57] or their combinations. 5) Step 5: Pedestrian Retrieval: The testing phase conducts the pedestrian retrieval. Given a person-of-interest (query) and a gallery set, we extract the feature representations using the Re-ID model learned in previous stage. A retrieved ranking list is obtained by sorting the calculated query-to-gallery similarity. Some methods have also investigated the ranking optimization to improve the retrieval performance [58], [59].
+
+According to the five steps mentioned above, we categorize existing Re-ID methods into two main trends: closedworld and open-world settings, as summarized in Table 1. A step-by-step comparison is in the following five aspects: 1) Single-modality vs. Heterogeneous Data: For the raw data collection in Step 1, all the persons are represented by images/videos captured by single-modality visible cameras in the closed-world setting [5], [8], [31], [42], [43], [44]. However, in practical open-world applications, we might also need to process heterogeneous data, which are infrared images [21], [60], sketches [61], depth images [62], or even text descriptions [63]. This motivates the heterogeneous Re-ID in § 3.1. 2) Bounding Box Generation vs. Raw Images/Videos : For the bounding box generation in Step 2, the closed-world person Re-ID usually performs the training and testing based on the generated bounding boxes, where the bounding boxes mainly contain the person appearance information. In contrast, some practical open-world applications require end-to-end person search from the raw images or videos [55], [64]. This leads to another open-world topic, i.e., end-to-end person search in § 3.2. 3) Sufficient Annotated Data vs. Unavailable/Limited Labels:
+
+For the training data annotation in Step 3, the closedworld person Re-ID usually assumes that we have enough annotated training data for supervised Re-ID model training. However, label annotation for each camera pair in every new environment is time consuming and labor intensive, incurring high costs. In openworld scenarios, we might not have enough annotated data (i.e., limited labels) [65] or even without any label information [66]. This inspires the discussion of the unsupervised and semi-supervised Re-ID in § 3.3. 4) Correct Annotation vs. Noisy Annotation: For Step 4, existing closed-world person Re-ID systems usually assume that all the annotations are correct, with clean labels. However, annotation noise is usually unavoidable due to annotation error (i.e., label noise) or imperfect detection/tracking results (i.e., sample noise, partial Re-ID [67]). This leads to the analysis of noise-robust person Re-ID under different noise types in § 3.4. 5) Query Exists in Gallery vs. Open-set: In the pedestrian retrieval stage (Step 5), most existing closed-world person Re-ID works assume that the query must occur in the gallery set by calculating the CMC [68] and mAP [5]. However, in many scenarios, the query person may not appear in the gallery set [69], [70], or we need to perform the verification rather than retrieval [26]. This brings us to the open-set person Re-ID in § 3.5.
+
+This survey first introduces the widely studied person Re-ID under closed-world settings in § 2. A detailed review on the datasets and the state-of-the-arts are conducted in § 2.4. We then introduce the open-world person Re-ID in § 3. An outlook for future Re-ID is presented in § 4, including a new evaluation metric ( § 4.1), a new powerful AGW baseline ( § 4.2). We discuss several under-investigated open issues for future study ( § 4.3). Conclusions will be drawn in § 5. A structure overview is shown in the supplementary.
+
+## 2. CLOSED-WORLD PERSON RE-IDENTIFICATION
+
+This section provides an overview for closed-world person Re-ID. As discussed in § 1, this setting usually has the following assumptions: 1) person appearances are captured by single-modality visible cameras, either by image or video; 2) The persons are represented by bounding boxes, where most of the bounding box area belongs the same identity; 3) The training has enough annotated training data for supervised discriminative Re-ID model learning; 4) The annotations are generally correct; 5) The query person must appear in the gallery set. Typically, a standard closed-world Re-ID system contains three main components: Feature Representation Learning ( § 2.1), which focuses on developing the feature construction strategies; Deep Metric Learning ( § 2.2), which aims at designing the training objectives with different loss functions or sampling strategies; and Ranking Optimization ( § 2.3), which concentrates on optimizing the retrieved ranking list. An overview of the datasets and state-of-thearts with in-depth analysis is provided in § 2.4.2.
+
+### 2.1. Feature Representation Learning
+
+We firstly discuss the feature learning strategies in closedworld person Re-ID. There are four main categories (as shown in Fig. 2): a) Global Feature ( § 2.1.1), it extracts a global feature representation vector for each person image without additional annotation cues [55]; b) Local Feature ( § 2.1.2), it aggregates part-level local features to formulate a combined representation for each person image [75], [76], [77]; c) Auxiliary Feature ( § 2.1.3), it improves the feature representation learning using auxiliary information, e.g., attributes [71], [72], [78], GAN generated images [42], etc. d) Video Feature ( § 2.1.4), it learns video representation for video-based Re-ID [7] using multiple image frames and temporal information [73], [74]. We also review several specific architecture designs for person Re-ID in § 2.1.5.
+
+#### 2.1.1. Global Feature Representation Learning
+
+Global feature representation learning extracts a global feature vector for each person image, as shown in Fig. 2(a). Since deep neural networks are originally applied in image classification [79], [80], global feature learning is the primary choice when integrating advanced deep learning techniques into the person Re-ID field in early years.
+
+To capture the fine-grained cues in global feature learning, A joint learning framework consisting of a singleimage representation (SIR) and cross-image representation (CIR) is developed in [81], trained with triplet loss using specific sub-networks. The widely-used ID-discriminative Embedding (IDE) model [55] constructs the training process as a multi-class classification problem by treating each identity as a distinct class. It is now widely used in Re-ID community [42], [58], [77], [82], [83]. Qian et al. [84] develop a multi-scale deep representation learning model to capture discriminative cues at different scales.
+
+Attention Information. Attention schemes have been widely studied in literature to enhance representation learning [85]. 1) Group 1: Attention within the person image. Typical strategies include the pixel level attention [86] and the channel-wise feature response re-weighting [86], [87], [88], [89], or background suppressing [22]. The spatial information is integrated in [90]. 2) Group 2: attention across multiple person images. A context-aware attentive feature learning method is proposed in [91], incorporating both an intra-sequence and inter-sequence attention for pair-wise feature alignment and refinement. The attention consistency property is added in [92], [93]. Group similarity [94], [95] is another popular approach to leverage the cross-image attention, which involves multiple images for local and global similarity modeling. The first group mainly enhances the robustness against misalignment/imperfect detection, and the second improves the feature learning by mining the relations across multiple images.
+
+#### 2.1.2. Local Feature Representation Learning
+
+It learns part/region aggregated features, making it robust against misalignment [77], [96]. The body parts are either automatically generated by human parsing/pose estimation (Group 1) or roughly horizontal division (Group 2).
+
+With automatic body part detection, the popular solution is to combine the full body representation and local part features [97], [98]. Specifically, the multi-channel aggregation [99], multi-scale context-aware convolutions [100], multistage feature decomposition [17] and bilinear-pooling [97] are designed to improve the local feature learning. Rather than feature level fusion, the part-level similarity combination is also studied in [98]. Another popular solution is to enhance the robustness against background clutter, using the pose-driven matching [101], pose-guided part attention module [102], semantically part alignment [103], [104].
+
+For horizontal-divided region features, multiple partlevel classifiers are learned in Part-based Convolutional Baseline (PCB) [77], which now serves as a strong part feature learning baseline in the current state-of-the-art [28], [105], [106]. To capture the relations across multiple body parts, the Siamese Long Short-Term Memory (LSTM) architecture [96], second-order non-local attention [107], Interaction-and-Aggregation (IA) [108] are designed to reinforce the feature learning.
+
+The first group uses human parsing techniques to obtain semantically meaningful body parts, which provides wellalign part features. However, they require an additional pose detector and are prone to noisy pose detections [77]. The second group uses a uniform partition to obtain the horizontal stripe parts, which is more flexible, but it is sensitive to heavy occlusions and large background clutter.
+
+#### 2.1.3. Auxiliary Feature Representation Learning
+
+Auxiliary feature representation learning usually requires additional annotated information (e.g., semantic attributes [71]) or generated/augmented training samples to reinforce the feature representation [19], [42].
+
+Semantic Attributes. A joint identity and attribute learning baseline is introduced in [72]. Su et al. [71] propose a deep attribute learning framework by incorporating the predicted semantic attribute information, enhancing the 1.2; c) Auxiliary Feature, learning the feature representation using auxiliary information, e.g., attributes [71], [72] in § 2.1.3 and d) Video Feature , learning the video representation using multiple image frames and temporal information [73], [74] in § 2.1.4. generalizability and robustness of the feature representation in a semi-supervised learning manner. Both the semantic attributes and the attention scheme are incorporated to improve part feature learning [109]. Semantic attributes are also adopted in [110] for video Re-ID feature representation learning. They are also leveraged as the auxiliary supervision information in unsupervised learning [111].
+
+Viewpoint Information. The viewpoint information is also leveraged to enhance the feature representation learning [112], [113]. Multi-Level Factorisation Net (MLFN) [112] also tries to learn the identity-discriminative and viewinvariant feature representations at multiple semantic levels. Liu et al. [113] extract a combination of view-generic and view-specific learning. An angular regularization is incorporated in [114] in the viewpoint-aware feature learning. Domain Information. A Domain Guided Dropout (DGD) algorithm [54] is designed to adaptively mine the domain-sharable and domain-specific neurons for multidomain deep feature representation learning. Treating each camera as a distinct domain, Lin et al. [115] propose a multicamera consistent matching constraint to obtain a globally optimal representation in a deep learning framework. Similarly, the camera view information or the detected camera location is also applied in [18] to improve the feature representation with camera-specific information modeling.
+
+GAN Generation. This section discusses the use of GAN generated images as the auxiliary information. Zheng et al. [42] start the first attempt to apply the GAN technique for person Re-ID. It improves the supervised feature representation learning with the generated person images. Pose constraints are incorporated in [116] to improve the quality of the generated person images, generating the person images with new pose variants. A pose-normalized image generation approach is designed in [117], which enhances the robustness against pose variations. Camera style information [118] is also integrated in the image generation process to address the cross camera variations. A joint discriminative and generative learning model [119] separately learns the appearance and structure codes to improve the image generation quality. Using the GAN generated images is also a widely used approach in unsupervised domain adaptation Re-ID [120], [121], approximating the target distribution.
+
+Data Augmentation. For Re-ID, custom operations are random resize, cropping and horizontal flip [122]. Besides, adversarially occluded samples [19] are generated to augment the variation of training data. A similar random erasing strategy is proposed in [123], adding random noise to the input images. A batch DropBlock [124] randomly drops a region block in the feature map to reinforce the attentive feature learning. Bak et al. [125] generate the virtual humans rendered under different illumination conditions. These methods enrich the supervision with the augmented samples, improving the generalizability on the testing set.
+
+#### 2.1.4. Video Feature Representation Learning
+
+Video-based Re-ID is another popular topic [126], where each person is represented by a video sequence with multiple frames. Due to the rich appearance and temporal information, it has gained increasing interest in the Re-ID community. This also brings in additional challenges in video feature representation learning with multiple images.
+
+The primary challenge is to accurately capture the temporal information. A recurrent neural network architecture is designed for video-based person Re-ID [127], which jointly optimizes the final recurrent layer for temporal information propagation and the temporal pooling layer. A weighted scheme for spatial and temporal streams is developed in [128]. Yan et al. [129] present a progressive/sequential fusion framework to aggregate the framelevel human region representations. Semantic attributes are also adopted in [110] for video Re-ID with feature disentangling and frame re-weighting. Jointly aggregating the framelevel feature and spatio-temporal appearance information is crucial for video representation learning [130], [131], [132].
+
+Another major challenge is the unavoidable outlier tracking frames within the videos. Informative frames are selected in a joint Spatial and Temporal Attention Pooling Network (ASTPN) [131], and the contextual information is integrated in [130]. A co-segmentation inspired attention model [132] detects salient features across multiple video frames with mutual consensus estimation. A diversity regularization [133] is employed to mine multiple discriminative body parts in each video sequence. An affine hull is adopted to handle the outlier frames within the video sequence [83]. An interesting work [20] utilizes the multiple video frames to auto-complete occluded regions. These works demonstrate that handling the noisy frames can greatly improve the video representation learning.
+
+It is also challenging to handle the varying lengths of video sequences, Chen et al. [134] divide the long video sequences into multiple short snippets, aggregating the topranked snippets to learn a compact embedding. A clip-level learning strategy [135] exploits both spatial and temporal dimensional attention cues to produce a robust clip-level representation. Both the short-and long-term relations [136] are integrated in a self-attention scheme.
+
+#### 2.1.5. Architecture Design
+
+Framing person Re-ID as a specific pedestrian retrieval problem, most existing works adopt the network architectures [79], [80] designed for image classification as the backbone. Some works have tried to modify the backbone architecture to achieve better Re-ID features. For the widely used ResNet50 backbone [80], the important modifications include changing the last convolutional stripe/size to 1 [77], employing adaptive average pooling in the last pooling layer [77], and adding bottleneck layer with batch normalization after the pooling layer [82].
+
+Accuracy is the major concern for specific Re-ID network architecture design to improve the accuracy, Li et al. [43] start the first attempt by designing a filter pairing neural network (FPNN), which jointly handles misalignment and occlusions with part discriminative information mining. Wang et al. [89] propose a BraidNet with a specially designed WConv layer and Channel Scaling layer. The WConv layer extracts the difference information of two images to enhance the robustness against misalignments and Channel Scaling layer optimizes the scaling factor of each input channel. A Multi-Level Factorisation Net (MLFN) [112] contains multiple stacked blocks to model various latent factors at a specific level, and the factors are dynamically selected to formulate the final representation. An efficient fully convolutional Siamese network [137] with convolution similarity module is developed to optimize multi-level similarity measurement. The similarity is efficiently captured and optimized by using the depth-wise convolution.
+
+Efficiency is another important factor for Re-ID architecture design. An efficient small scale network, namely Omni-Scale Network (OSNet) [138], is designed by incorporating the point-wise and depth-wise convolutions. To achieve multi-scale feature learning, a residual block composed of multiple convolutional streams is introduced.
+
+With the increasing interest in auto-machine learning, an Auto-ReID [139] model is proposed. Auto-ReID provides an efficient and effective automated neural architecture design based on a set of basic architecture components, using a part-aware module to capture the discriminative local Re-ID features. This provides a potential research direction in exploring powerful domain-specific architectures.
+
+### 2.2. Deep Metric Learning
+
+Metric learning has been extensively studied before the deep learning era by learning a Mahalanobis distance function [36], [37] or projection matrix [40]. The role of metric learning has been replaced by the loss function designs to guide the feature representation learning. We will first review the widely used loss functions in § 2.2.1 and then summarize the training strategies with specific sampling designs § 2.2.2.
+
+#### 2.2.1. Loss Function Design
+
+This survey only focuses on the loss functions designed for deep learning [56]. An overview of the distance metric learning designed for hand-crafted systems can be found in [2], [143]. There are three widely studied loss functions with their variants in the literature for person Re-ID, including the identity loss, verification loss and triplet loss. An illustration of three loss functions is shown in Fig. 3. [42], [82], [118], [140] ; (b) Verification Loss [94], [141] and (c) Triplet Loss [14], [22], [57]. Many works employ their combinations [87], [137], [141], [142].
+
+### Identity Loss. It treats the training process of person
+
+Re-ID as an image classification problem [55], i.e., each identity is a distinct class. In the testing phase, the output of the pooling layer or embedding layer is adopted as the feature extractor. Given an input image x i with label y i , the predicted probability of x i being recognized as class y i is encoded with a softmax function, represented by p(y i |x i ). The identity loss is then computed by the cross-entropy
+
+L id = - 1 n n i=1 log(p(y i |x i )),(1)
+
+where n represents the number of training samples within each batch. The identity loss has been widely used in existing methods [19], [42], [82], [92], [95], [106], [118], [120], [140], [144]. Generally, it is easy to train and automatically mine the hard samples during the training process, as demonstrated in [145]. Several works have also investigated the softmax variants [146], such as the sphere loss in [147] and AM softmax in [95]. Another simple yet effective strategy, i.e., label smoothing [42], [122], is generally integrated into the standard softmax cross-entropy loss. Its basic idea is to avoid the model fitting to over-confident annotated labels, improving the generalizability [148]. Verification Loss. It optimizes the pairwise relationship, either with a contrastive loss [96], [120] or binary verification loss [43], [141]. The contrastive loss improves the relative pairwise distance comparison, formulated by
+
+L con = (1 -δ ij ){max(0, ρ -d ij )} 2 + δ ij d 2 ij ,(2)
+
+where d ij represents the Euclidean distance between the embedding features of two input samples x i and x j . δ ij is a binary label indicator (δ ij = 1 when x i and x j belong to the same identity, and δ ij = 0, otherwise). ρ is a margin parameter. There are several variants, e.g., the pairwise comparison with ranking SVM in [81].
+
+Binary verification [43], [141] discriminates the positive and negative of a input image pair. Generally, a differential feature f ij is obtained by f ij = (f j -f j ) 2 [141], where f i and f j are the embedding features of two samples x i and x j . The verification network classifies the differential feature into positive or negative. We use p(δ ij |f ij ) to represent the probability of an input pair (x i and x j ) being recognized as δ ij (0 or 1). The verification loss with cross-entropy is
+
+L veri (i, j) = -δ ij log(p(δ ij |f ij ))-(1-δ ij ) log(1-p(δ ij |f ij )).
+
+(3) The verification is often combined with the identity loss to improve the performance [94], [96], [120], [141].
+
+Triplet loss. It treats the Re-ID model training process as a retrieval ranking problem. The basic idea is that the distance between the positive pair should be smaller than the negative pair by a pre-defined margin [57]. Typically, a triplet contains one anchor sample x i , one positive sample x j with the same identity, and one negative sample x k from a different identity. The triplet loss with a margin parameter is represented by
+
+L tri (i, j, k) = max(ρ + d ij -d ik , 0),(4)
+
+where d(•) measures the Euclidean distance between two samples. The large proportion of easy triplets will dominate the training process if we directly optimize above loss function, resulting in limited discriminability. To alleviate this issue, various informative triplet mining methods have been designed [14], [22], [57], [97]. The basic idea is to select the informative triplets [57], [149]. Specifically, a moderate positive mining with a weight constraint is introduced in [149], which directly optimizes the feature difference. Hermans et al. [57] demonstrate that the online hardest positive and negative mining within each training batch is beneficial for discriminative Re-ID model learning. Some methods also studied the point to set similarity strategy for informative triplet mining [150], [151]. This enhances robustness against the outlier samples with a soft hard-mining scheme.
+
+To further enrich the triplet supervision, a quadruplet deep network is developed in [152], where each quadruplet contains one anchor sample, one positive sample and two mined negative samples. The quadruplets are formulated with a margin-based online hard negative mining. Optimizing the quadruplet relationship results in smaller intra-class variation and larger inter-class variation.
+
+The combination of triplet loss and identity loss is one of the most popular solutions for deep Re-ID model learning [28], [87], [90], [93], [103], [104], [116], [137], [142], [153], [154]. These two components are mutually beneficial for discriminative feature representation learning.
+
+OIM loss. In addition to the above three kinds of loss functions, an Online Instance Matching (OIM) loss [64] is designed with a memory bank scheme. A memory bank {v k , k = 1, 2, • • • , c} contains the stored instance features, where c denotes the class number. The OIM loss is then formulated by
+
+L oim = - 1 n n i=1 log exp(v T i f i /τ ) c k=1 exp(v T k f i /τ ) ,(5)
+
+where v i represents the corresponding stored memory feature for class y i , and τ is a temperature parameter that controls the similarity space [145]. v T i f i measures the online instance matching score. The comparison with a memorized feature set of unlabelled identities is further included to calculate the denominator [64], handling the large instance number of non-targeted identities. This memory scheme is also adopted in unsupervised domain adaptive Re-ID [106]. 2) and ( 3) with similarity propagation in the gallery set.
+
+#### 2.2.2. Training strategy
+
+The batch sampling strategy plays an important role in discriminative Re-ID model learning. It is challenging since the number of annotated training images for each identity varies significantly [5]. Meanwhile, the severely imbalanced positive and negative sample pairs increases additional difficulty for the training strategy design [40].
+
+The most commonly used training strategy for handling the imbalanced issue is identity sampling [57], [122]. For each training batch, a certain number of identities are randomly selected, and then several images are sampled from each selected identity. This batch sampling strategy guarantees the informative positive and negative mining.
+
+To handle the imbalance issue between the positive and negative, adaptive sampling is the popular approach to adjust the contribution of positive and negative samples, such as Sample Rate Learning (SRL) [89], curriculum sampling [87]. Another approach is sample re-weighting, using the sample distribution [87] or similarity difference [52] to adjust the sample weight. An efficient reference constraint is designed in [155] to transform the pairwise/triplet similarity to a sample-to-reference similarity, addressing the imbalance issue and enhancing the discriminability, which is also robust to outliers.
+
+To adaptively combine multiple loss functions, a multiloss dynamic training strategy [156] adaptively reweights the identity loss and triplet loss, extracting appropriate component shared between them. This multi-loss training strategy leads to consistent performance gain.
+
+### 2.3. Ranking Optimization
+
+Ranking optimization plays a crucial role in improving the retrieval performance in the testing stage. Given an initial ranking list, it optimizes the ranking order, either by automatic gallery-to-gallery similarity mining [58], [157] or human interaction [158], [159]. Rank/Metric fusion [160], [161] is another popular approach for improving the ranking performance with multiple ranking list inputs.
+
+#### 2.3.1. Re-ranking
+
+The basic idea of re-ranking is to utilize the gallery-togallery similarity to optimize the initial ranking list, as shown in Fig. 4. The top-ranked similarity pulling and bottom-ranked dissimilarity pushing is proposed in [157]. The widely-used k-reciprocal reranking [58] mines the contextual information. Similar idea for contextual information modeling is applied in [25]. Bai et al. [162] utilize the geometric structure of the underlying manifold. An expanded cross neighborhood re-ranking method [18] is introduced by integrating the cross neighborhood distance. A local blurring re-ranking [95] employs the clustering structure to improve neighborhood similarity measurement.
+
+Query Adaptive. Considering the query difference, some methods have designed the query adaptive retrieval strategy to replace the uniform searching engine to improve the performance [163], [164]. Andy et al. [163] propose a query adaptive re-ranking method using locality preserving projections. An efficient online local metric adaptation method is presented in [164], which learns a strictly local metric with mined negative samples for each probe.
+
+Human Interaction. It involves using human feedback to optimize the ranking list [158]. This provides reliable supervision during the re-ranking process. A hybrid humancomputer incremental learning model is presented in [159], which cumulatively learns from human feedback, improving the Re-ID ranking performance on-the-fly.
+
+#### 2.3.2. Rank Fusion
+
+Rank fusion exploits multiple ranking lists obtained with different methods to improve the retrieval performance [59]. Zheng et al. [165] propose a query adaptive late fusion method on top of a "L" shaped observation to fuse methods. A rank aggregation method by employing the similarity and dissimilarity is developed in [59]. The rank fusion process in person Re-ID is formulated as a consensus-based decision problem with graph theory [166], mapping the similarity scores obtained by multiple algorithms into a graph with path searching. An Unified Ensemble Diffusion (UED) [161] is recently designed for metric fusion. UED maintains the advantages of three existing fusion algorithms, optimized by a new objective function and derivation. The metric ensemble learning is also studied in [160].
+
+### 2.4. Datasets and Evaluation
+
+#### 2.4.1. Datasets and Evaluation Metrics
+
+Datasets. We first review the widely used datasets for the closed-world setting, including 11 image datasets (VIPeR [31], iLIDS [167], GRID [168], PRID2011 [126], CUHK01-03 [43], Market-1501 [5], DukeMTMC [42], Airport [169] and MSMT17 [44]) and 7 video datasets (PRID-2011 [126], iLIDS-VID [7], MARS [8], Duke-Video [144], Duke-Tracklet [170], LPW [171] and LS-VID [136]). The statistics of these datasets are shown in Table 2. This survey only focuses on the general large-scale datsets for deep learning methods. A comprehensive summarization of the Re-ID datasets can be found in [169] and their website 1 . Several observations can be made in terms of the dataset collection over recent years: 1) The dataset scale (both #image and #ID) has increased rapidly. Generally, the deep learning approach can benefit from more training samples. This also increases the annotation difficulty needed in closed-world person Re-ID. 2) The camera number is also greatly increased to approximate the large-scale camera network in practical scenarios. This also introduces additional challenges for model generalizability in a dynamically updated network. 3) The bounding boxes generation is usually performed automatically detected/tracked, rather than mannually cropped. This simulates the real-world scenario with tracking/detection errors.
+
+Evaluation Metrics. To evaluate a Re-ID system, Cumulative Matching Characteristics (CMC) [68] and mean Average Precision (mAP) [5] are two widely used measurements.
+
+CMC-k (a.k.a, Rank-k matching accuracy) [68] represents the probability that a correct match appears in the top-k ranked retrieved results. CMC is accurate when only one ground truth exists for each query, since it only considers the first match in evaluation process. However, the gallery set usually contains multiple groundtruths in a large camera network, and CMC cannot completely reflect the discriminability of a model across multiple cameras.
+
+Another metric, i.e., mean Average Precision (mAP) [5], measures the average retrieval performance with multiple grountruths. It is originally widely used in image retrieval. For Re-ID evaluation, it can address the issue of two systems performing equally well in searching the first ground truth (might be easy match as in Fig. 4), but having different retrieval abilities for other hard matches.
+
+Considering the efficiency and complexity of training a Re-ID model, some recent works [138], [139] also report the FLoating-point Operations Per second (FLOPs) and the network parameter size as the evaluation metrics. These two metrics are crucial when the training/testing device has limited computational resources.
+
+#### 2.4.2. In-depth Analysis on State-of-The-Arts
+
+We review the state-of-the-arts from both image-based and video-based perspectives. We include methods published in top CV venues over the past three years. reported. For CUHK03 [43], the detected data under the setting [58] is reported. For Market-1501, the single query setting is used.
+
+The best result is highlighted with a red star. All the listed results do not use re-ranking or additional annotated information.
+
+### Image-based Re-ID.
+
+There are a large number of published papers for image-based Re-ID 2 . We mainly review the works published in 2019 as well as some representative works in 2018. Specifically, we include PCB [77], MGN [172], PyrNet [6], Auto-ReID [139], ABD-Net [173], BagTricks [122], OSNet [138], DGNet [119], SCAL [90], MHN [174], P2Net [104], BDB [124], SONA [107], SFT [95], ConsAtt [93], DenseS [103], Pyramid [156], IANet [108], VAL [114]. We summarize the results on four datasets (Fig. 5). This overview motivates five major insights, as discussed below.
+
+First, with the advancement of deep learning, most of the image-based Re-ID methods have achieved higher rank-1 accuracy than humans (93.5% [175]) on the widely used Market-1501 dataset. In particular, VAL [114] obtains the best mAP of 91.6% and Rank-1 accuracy of 96.2% on Market-1501 dataset. The major advantage of VAL is the usage of viewpoint information. The performance can be further improved when using re-ranking or metric fusion. The success of deep learning on these closed-world datasets also motivates the shift focus to more challenging scenarios, i.e., large data size [136] or unsupervised learning [176].
+
+Second, part-level feature learning is beneficial for discriminative Re-ID model learning. Global feature learning directly learns the representation on the whole image without the part constraints [122]. It is discriminative when the person detection/ tracking can accurately locate the human body. When the person images suffer from large background clutter or heavy occlusions, part-level feature learning usually achieves better performance by mining discriminative body regions [67]. Due to its advantage in handling misalignment/occlusions, we observe that most of the state-of-the-art methods developed recently adopt the features aggregation paradigm, combining the part-level and full human body features [139], [156].
+
+Third, attention is beneficial for discriminative Re-ID model learning. We observe that all the methods (ConsAtt [93], SCAL [90], SONA [107], ABD-Net [173]) achieving the best performance on each dataset adopt an attention scheme. The attention captures the relationship between different convolutional channels, multiple feature maps, hierarchical layers, different body parts/regions, and even multiple images. Meanwhile, discriminative [173], diverse [133], consistent [93] and high-order [107] properties are 2. https://paperswithcode.com/task/person-re-identification incorporated to enhance the attentive feature learning. Considering the powerful attention schemes and the specificity of the Re-ID problem, it is highly possible that attentive deeply learned systems will continue dominating the Re-ID community, with more domain specific properties.
+
+Fourth, multi-loss training can improve the Re-ID model learning. Different loss functions optimize the network from a multi-view perspective. Combining multiple loss functions can improve the performance, evidenced by the multi-loss training strategy in the state-of-the-art methods, including ConsAtt [93], ABD-Net [173] and SONA [107]. In addition, a dynamic multi-loss training strategy is designed in [156] to adaptively integrated two loss functions. The combination of identity loss and triplet loss with hard mining is the primary choice. Moreover, due to the imbalanced issue, sample weighting strategy generally improves the performance by mining informative triplets [52], [89].
+
+Finally, there is still much room for further improvement due to the increasing size of datasets, complex environment, limited training samples. For example, the Rank-1 accuracy (82.3%) and mAP (60.8%) on the newly released MSMT17 dataset [44] are much lower than that on Market-1501 (Rank-1: 96.2% and mAP 91.7%) and DukeMTMC (Rank-1: 91.6% and mAP 84.5%). On some other challenging datasets with limited training samples (e.g., GRID [168] and VIPeR [31]), the performance is still very low. In addition, Re-ID models usually suffers significantly on cross-dataset evaluation [28], [54], and the performance drops dramatically under adversarial attack [177]. We are optimistic that there would be important breakthroughs in person Re-ID, with increasing discriminability, robustness, and generalizability.
+
+Video-based Re-ID. Video-based Re-ID has received less interest, compared to image-based Re-ID. We review the deeply learned Re-ID models, including CoSeg [132], GLTR [136], STA [135], ADFD [110], STC [20], DRSA [133], Snippet [134], ETAP [144], DuATM [91], SDM [178], TwoS [128], ASTPN [131], RQEN [171], Forest [130], RNN [127] and IDEX [8]. We also summarize the results on four video Re-ID datasets, as shown in Fig. 6. From these results, the following observations can be drawn.
+
+First, a clear trend of increasing performance can be seen over the years with the development of deep learning techniques. Specifically, the Rank-1 accuracy increases from 70% (RNN [127] in 2016) to 95.5% (GLTR [136] in 2019) on PRID-2011 dataset, and from 58% (RNN [127]) to 86.3% reported. mAP values (%) on MARS [8] and Duke-Video [144] are reported. For Duke-Video, we refer to the settings in [144]. The best result is highlighted with a red star. All the listed results do not use re-ranking or additional annotated information.
+
+(ADFD [110]) on iLIDS-VID dataset. On the large-scale MARS dataset, the Rank-1 accuracy/mAP increase from 68.3%/49.3% (IDEX [8]) to 88.5%/82.3% (STC [20]). On the Duke-Video dataset [144], STA [135] also achieves a Rank-1 accuracy of 96.2%, and the mAP is 94.9%. Second, spatial and temporal modeling is crucial for discriminative video representation learning. We observe that all the methods (STA [135], STC [20], GLTR [136]) design spatial-temporal aggregation strategies to improve the video Re-ID performance. Similar to image-based Re-ID, the attention scheme across multiple frames [110], [135] also greatly enhances the discriminability. Another interesting observation in [20] demonstrates that utilizing multiple frames within the video sequence can fill in the occluded regions, which provides a possible solution for handling the challenging occlusion problem in the future.
+
+Finally, the performance on these datases has reached a saturation state, usually about less than 1% accuracy gain on these four video datasets. However, there is still large room for improvements on the challenging cases. For example, on the newly collected video dataset, LS-VID [136], the Rank-1 accuracy/mAP of GLTR [136] are only 63.1%/44.43%, while GLTR [136] can achieve state-of-the-art or at least comparable performance on the other four daatsets. LS-VID [136] contains significantly more identities and video sequences. This provides a challenging benchmark for future breakthroughs in video based Re-ID.
+
+## 3. OPEN-WORLD PERSON RE-IDENTIFICATION
+
+This section reviews open-world person Re-ID as discussed in § 1, including heterogeneous Re-ID by matching person images across heterogeneous modalities ( § 3.1), endto-end Re-ID from the raw images/videos ( § 3.2), semi-/unsupervised learning with limited/unavailable annotated labels ( § 3.3), robust Re-ID model learning with noisy annotations ( § 3.4) and open-set person Re-ID when the correct match does not occur in the gallery ( § 3.5).
+
+### 3.1. Heterogeneous Re-ID
+
+This subsection summarizes four main kinds of heterogeneous Re-ID, including Re-ID between depth and RGB images ( § 3.1.1), text-to-image Re-ID ( § 3.1.2), visible-toinfrared Re-ID ( § 3.1.3) and cross resolution Re-ID ( § 3.1.4).
+
+#### 3.1.1. Depth-based Re-ID
+
+Depth images capture the body shape and skeleton information. This provides the possibility for Re-ID under illumination/clothes changing environments, which is also important for personalized human interaction applications.
+
+A recurrent attention-based model is proposed in [179] to address the depth-based person identification. In a reinforcement learning framework, they combine the convolutional and recurrent neural networks to identify small, discriminative local regions of the human body.
+
+Karianakis et al. [180] leverage the large RGB datasets to design a split-rate RGB-to-Depth transfer method, which bridges the gap between the depth images and the RGB images. Their model further incorporates a temporal attention to enhance video representation for depth Re-ID.
+
+Some methods [62], [181] have also studied the combination of RGB and depth information to improve the Re-ID performance, addressing the clothes-changing challenge.
+
+#### 3.1.2. Text-to-Image Re-ID
+
+Text-to-image Re-ID addresses the matching between a text description and RGB images [63]. It is imperative when the visual image of query person cannot be obtained, and only a text description can be alternatively provided.
+
+A gated neural attention model [63] with recurrent neural network learns the shared features between the text description and the person images. This enables the endto-end training for text to image pedestrian retrieval. Cheng et al. [182] propose a global discriminative image-language association learning method, capturing the identity discriminative information and local reconstructive image-language association under a reconstruction process. A cross projection learning method [183] also learns a shared space with image-to-text matching. A deep adversarial graph attention convolution network is designed in [184] with graph relation mining. However, the large semantic gap between the text descriptions and the visual images is still challenging. Meanwhile, how to combine the texts and hand-painting sketch image is also worth studying in the future.
+
+#### 3.1.3. Visible-Infrared Re-ID
+
+Visible-Infrared Re-ID handles the cross-modality matching between the daytime visible and night-time infrared images. It is important in low-lighting conditions, where the images can only be captured by infrared cameras [21], [60], [185].
+
+Wu et al. [21] start the first attempt to address this issue, by proposing a deep zero-padding framework [21] to adaptively learn the modality sharable features. A two stream network is introduced in [142], [186] to model the modalitysharable and -specific information, addressing the intra-and cross-modality variations simultaneously. Besides the crossmodality shared embedding learning [187], the classifierlevel discrepancy is also investigated in [188]. Recent methods [189], [190] adopt the GAN technique to generate crossmodality person images to reduce the cross-modality discrepancy at both image and feature level. Hierarchical cross-Modality disentanglement factors are modeled in [191]. A dual-attentive aggregation learning method is presented in [192] to capture multi-level relations.
+
+#### 3.1.4. Cross-Resolution Re-ID
+
+Cross-Resolution Re-ID conducts the matching between low-resolution and high-resolution images, addressing the large resolution variations [13], [14]. A cascaded SR-GAN [193] generates the high-resolution person images in a cascaded manner, incorporating the identity information. Li et al. [194] adopt the adversarial learning technique to obtain resolution-invariant image representations.
+
+### 3.2. End-to-End Re-ID
+
+End-to-end Re-ID alleviates the reliance on additional step for bounding boxes generation. It involves the person Re-ID from raw images or videos, and multi-camera tracking.
+
+Re-ID in Raw Images/Videos This task requires that the model jointly performs the person detection and reidentification in a single framework [55], [64]. It is challenging due to the different focuses of two major components.
+
+Zheng et al. [55] present a two-stage framework, and systematically evaluate the benefits and limitations of person detection for the later stage person Re-ID. Xiao et al. [64] design an end-to-end person search system using a single convolutional neural network for joint person detection and re-identification. A Neural Person Search Machine (NPSM) [195] is developed to recursively refine the searching area and locate the target person by fully exploiting the contextual information between the query and the detected candidate region. Similarly, a contextual instance expansion module [196] is learned in a graph learning framework to improve the end-to-end person search. A query-guided end-to-end person search system [197] is developed using the Siamese squeeze-and-excitation network to capture the global context information with query-guided region proposal generation. A localization refinement scheme with discriminative Re-ID feature learning is introduced in [198] to generate more reliable bounding boxes. An Identity DiscriminativE Attention reinforcement Learning (IDEAL) method [199] selects informative regions for auto-generated bounding boxes, improving the Re-ID performance.
+
+Yamaguchi et al. [200] investigate a more challenging problem, i.e., searching for the person from raw videos with text description. A multi-stage method with spatio-temporal person detection and multi-modal retrieval is proposed. Further exploration along this direction is expected.
+
+Multi-camera Tracking End-to-end person Re-ID is also closely related to multi-person, multi-camera tracking [52].
+
+A graph-based formulation to link person hypotheses is proposed for multi-person tracking [201], where the holistic features of the full human body and body pose layout are combined as the representation for each person. Ristani et al. [52] learn the correlation between the multi-target multicamera tracking and person Re-ID by hard-identity mining and adaptive weighted triplet learning. Recently, a locality aware appearance metric (LAAM) [202] with both intra-and inter-camera relation modeling is proposed.
+
+### 3.3. Semi-supervised and Unsupervised Re-ID
+
+#### 3.3.1. Unsupervised Re-ID
+
+Early unsupervised Re-ID mainly learns invariant components, i.e., dictionary [203], metric [204] or saliency [66], which leads to limited discriminability or scalability.
+
+For deeply unsupervised methods, cross-camera label estimation is one the popular approaches [176], [205]. Dynamic graph matching (DGM) [206] formulates the label estimation as a bipartite graph matching problem. To further improve the performance, global camera network constraints [207] are exploited for consistent matching. Liu et al. progressively mine the labels with step-wise metric promotion [204]. A robust anchor embedding method [83] iteratively assigns labels to the unlabelled tracklets to enlarge the anchor video sequences set. With the estimated labels, deep learning can be applied to learn Re-ID models.
+
+For end-to-end unsupervised Re-ID, an iterative clustering and Re-ID model learning is presented in [205]. Similarly, the relations among samples are utilized in a hierarchical clustering framework [208]. Soft multi-label learning [209] mines the soft label information from a reference set for unsupervised learning. A Tracklet Association Unsupervised Deep Learning (TAUDL) framework [170] jointly conducts the within-camera tracklet association and model the cross-camera tracklet correlation. Similarly, an unsupervised camera-aware similarity consistency mining method [210] is also presented in a coarse-to-fine consistency learning scheme. The intra-camera mining and inter-camera association is applied in a graph association framework [211]. The semantic attributes are also adopted in Transferable Joint Attribute-Identity Deep Learning (TJ-AIDL) framework [111]. However, it is still challenging for model updating with newly arriving unlabelled data.
+
+Besides, several methods have also tried to learn a partlevel representation based on the observation that it is easier to mine the label information in local parts than that of a whole image. A PatchNet [153] is designed to learn discriminative patch features by mining patch level similarity. A Self-similarity Grouping (SSG) approach [212] iteratively conducts grouping (exploits both the global body and local parts similarity for pseudo labeling) and Re-ID model training in a self-paced manner.
+
+Semi-/Weakly supervised Re-ID. With limited label information, a one-shot metric learning method is proposed in [213], which incorporates a deep texture representation and a color metric. A stepwise one-shot learning method (EUG) is proposed in [144] for video-based Re-ID, gradually selecting a few candidates from unlabeled tracklets to enrich the labeled tracklet set. A multiple instance attention learning framework [214] uses the video-level labels for representation learning, alleviating the reliance on full annotation.
+
+#### 3.3.2. Unsupervised Domain Adaptation
+
+Unsupervised domain adaptation (UDA) transfers the knowledge on a labeled source dataset to the unlabeled target dataset [53]. Due to the large domain shift and powerful supervision in source dataset, it is another popular approach for unsupervised Re-ID without target dataset labels.
+
+Target Image Generation. Using GAN generation to transfer the source domain images to target-domain style is a popular approach for UDA Re-ID. With the generated images, this enables supervised Re-ID model learning in the unlabeled target domain. Wei et al. [44] propose a Person Transfer Generative Adversarial Network (PTGAN), transferring the knowledge from one labeled source dataset to the unlabeled target dataset. Preserved self-similarity and domain-dissimilarity [120] is trained with a similarity preserving generative adversarial network (SPGAN). A Hetero-Homogeneous Learning (HHL) method [215] simultaneously considers the camera invariance with homogeneous learning and domain connectedness with heterogeneous learning. An adaptive transfer network [216] decomposes the adaptation process into certain imaging factors, including illumination, resolution, camera view, etc. This strategy improves the cross-dataset performance. Huang et al. [217] try to suppress the background shift to minimize the domain shift problem. Chen et al. [218] design an instance-guided context rendering scheme to transfer the person identities from source domain into diverse contexts in the target domain. Besides, a pose disentanglement scheme is added to improve the image generation [121]. A mutual mean-teacher learning scheme is also developed in [219]. However, the scalability and stability of the image generation for practical large-scale changing environment are still challenging.
+
+Bak et al. [125] generate a synthetic dataset with different illumination conditions to model realistic indoor and outdoor lighting. The synthesized dataset increases generalizability of the learned model and can be easily adapted to a new dataset without additional supervision [220].
+
+Target Domain Supervision Mining. Some methods directly mine the supervision on the unlabeled target dataset with a well trained model from source dataset. An exemplar memory learning scheme [106] considers three invariant cues as the supervision, including exemplar-invariance, camera invariance and neighborhood-invariance. The Domain-Invariant Mapping Network (DIMN) [28] formulates a meta-learning pipeline for the domain transfer task, and a subset of source domain is sampled at each training episode to update the memory bank, enhancing the scalability and discriminability. The camera view information is also applied in [221] as the supervision signal to reduce the domain gap. A self-training method with progressive augmentation [222] jointly captures the local structure and global data distribution on the target dataset. Recently, a self-paced contrastive learning framework with hybrid memory [223] is developed with great success, which dynamically generates multi-level supervision signals.
+
+The spatio-temporal information is also utilized as the supervision in TFusion [224]. TFusion transfers the spatiotemporal patterns learned in the source domain to the target domain with a Bayesian fusion model. Similarly, Query-Adaptive Convolution (QAConv) [225] is developed to improve cross-dataset accuracy. • † TJ-AIDL [111] requires additional attribute annotation.
+
+• § DAS [125] generates synthesized virtual humans under vairous lightings.
+
+• ‡ PAUL [153], MAR [209] and CASC [210] use MSMT17 as source dataset.
+
+#### 3.3.3. State-of-The-Arts for Unsupervised Re-ID
+
+Unsupervised Re-ID has achieved increasing attention in recent years, evidenced by the increasing number of publications in top venues. We review the SOTA for unsupervised deeply learned methods on two widely-used image-based Re-ID datasets. The results are summarized in Table 3. From these results, the following insights can be drawn. First, the unsupervised Re-ID performance has increased significantly over the years. The Rank-1 accuracy/mAP increases from 54.5%/26.3% (CAMEL [226]) to 90.3%/76.7% (SpCL [223]) on the Market-1501 dataset within three years. The performance for DukeMTMC dataset increases from 30.0%/16.4% to 82.9%/68.8%. The gap between the supervised upper bound and the unsupervised learning is narrowed significantly. This demonstrates the success of unsupervised Re-ID with deep learning.
+
+Second, current unsupervised Re-ID is still underdeveloped and it can be further improved in the following aspects: 1) The powerful attention scheme in supervised Re-ID methods has rarely been applied in unsupervised Re-ID. 2) Target domain image generation has been proved effective in some methods, but they are not applied in two best methods (PAST [222], SSG [212]). 3) Using the annotated source data in the training process of the target domain is beneficial for cross-dataset learning, but it is also not included in above two methods. These observations provide the potential basis for further improvements.
+
+Third, there is still a large gap between the unsupervised and supervised Re-ID. For example, the rank-1 accuracy of supervised ConsAtt [93] has achieved 96.1% on the Market-1501 dataset, while the highest accuracy of unsupervised SpCL [223] is about 90.3%. Recently, He et al. [229] have demonstrated that unsupervised learning with large-scale unlabeled training data has the ability to outperform the supervised learning on various tasks [230]. We expect that several breakthroughs in future unsupervised Re-ID.
+
+### 3.4. Noise-Robust Re-ID
+
+Re-ID usually suffers from unavoidable noise due to data collection and annotation difficulty. We review noise-robust Re-ID from three aspects: Partial Re-ID with heavy occlusion, Re-ID with sample noise caused by detection or tracking errors, and Re-ID with label noise caused by annotation error.
+
+Partial Re-ID. This addresses the Re-ID problem with heavy occlusions, i.e., only part of the human body is visible [231]. A fully convolutional network [232] is adopted to generate fix-sized spatial feature maps for the incomplete person images. Deep Spatial feature Reconstruction (DSR) is further incorporated to avoid explicit alignment by exploiting the reconstructing error. Sun et al. [67] design a Visibility-aware Part Model (VPM) to extract sharable region-level features, thus suppressing the spatial misalignment in the incomplete images. A foreground-aware pyramid reconstruction scheme [233] also tries to learn from the unoccluded regions. The Pose-Guided Feature Alignment (PGFA) [234] exploits the pose landmarks to mine discriminative part information from occlusion noise. However, it is still challenging due to the severe partial misalignment, unpredictable visible regions and distracting unshared body regions. Meanwhile, how to adaptively adjust the matching model for different queries still needs further investigation.
+
+Re-ID with Sample Noise. This refers to the problem of the person images or the video sequence containing outlying regions/frames, either caused by poor detection/inaccurate tracking results. To handle the outlying regions or background clutter within the person image, pose estimation cues [17], [18] or attention cues [22], [66], [199] are exploited. The basic idea is to suppress the contribution of the noisy regions in the final holistic representation. For video sequences, set-level feature learning [83] or frame level re-weighting [134] are the commonly used approaches to reduce the impact of noisy frames. Hou et al. [20] also utilize multiple video frames to auto-complete occluded regions. It is expected that more domain-specific sample noise handling designs in the future.
+
+Re-ID with Label Noise. Label noise is usually unavoidable due to annotation error. Zheng et al. adopt a label smoothing technique to avoid label overfiting issues [42]. A Distribution Net (DNet) that models the feature uncertainty is proposed in [235] for robust Re-ID model learning against label noise, reducing the impact of samples with high feature uncertainty. Different from the general classification problem, robust Re-ID model learning suffers from limited training samples for each identity [236]. In addition, the unknown new identities increase additional difficulty for the robust Re-ID model learning.
+
+### 3.5. Open-set Re-ID and Beyond
+
+Open-set Re-ID is usually formulated as a person verification problem, i.e., discriminating whether or not two person images belong to the same identity [69], [70]. The verification usually requires a learned condition τ , i.e., sim(query, gallery) > τ . Early researches design handcrafted systems [26], [69], [70]. For deep learning methods, an Adversarial PersonNet (APN) is proposed in [237], which jointly learns a GAN module and the Re-ID feature extractor. The basic idea of this GAN is to generate realistic target- ... ... like images (imposters) and enforce the feature extractor is robust to the generated image attack. Modeling feature uncertainty is also investigated in [235]. However, it remains quite challenging to achieve a high true target recognition and maintain low false target recognition rate [238].
+
+Group Re-ID. It aims at associating the persons in groups rather than individuals [167]. Early researches mainly focus on group representation extraction with sparse dictionary learning [239] or covariance descriptor aggregation [240]. The multi-grain information is integrated in [241] to fully capture the characteristics of a group. Recently, the graph convoltuional network is applied in [242], representing the group as a graph. The group similarity is also applied in the end-to-end person search [196] and the individual re-identification [197], [243] to improve the accuracy. However, group Re-ID is still challenging since the group variation is more complicated than the individuals.
+
+Dynamic Multi-Camera Network. Dynamic updated multi-camera network is another challenging issue [23], [24], [27], [29], which needs model adaptation for new cameras or probes. A human in-the-loop incremental learning method is introduced in [24] to update the Re-ID model, adapting the representation for different probe galleries. Early research also applies the active learning [27] for continuous Re-ID in multi-camera network. A continuous adaptation method based on sparse non-redundant representative selection is introduced in [23]. A transitive inference algorithm [244] is designed to exploit the best source camera model based on a geodesic flow kernel. Multiple environmental constraints (e.g., Camera Topology) in dense crowds and social relationships are integrated for an open-world person Re-ID system [245]. The model adaptation and environmental factors of cameras are crucial in practical dynamic multicamera network. Moreover, how to apply the deep learning technique for the dynamic multi-camera network is still less investigated.
+
+## 4. AN OUTLOOK: RE-ID IN NEXT ERA
+
+### 4.1. mINP: A New Evaluation Metric for Re-ID
+
+For a good Re-ID system, the target person should be retrieved as accurately as possible, i.e., all the correct matches should have low rank values. Considering that the target person should not be neglected in the top-ranked retrieved list, especially for multi-camera network, so as to accurately track the target. When the target person appears in the gallery set at multiple time stamps, the rank position of the hardest correct match determines the workload of the inspectors for further investigation. However, the currently widely used CMC and mAP metrics cannot evaluate this property, as shown in Fig. 7. With the same CMC, rank list 1 achieves a better AP than rank list 2, but it requires more efforts to find all the correct matches. To address this issue, we design a computationally efficient metric, namely a negative penalty (NP), which measures the penalty to find the hardest correct match
+
+NP i = R hard i -|G i | R hard i ,(6)
+
+where R hard i indicates the rank position of the hardest match, and |G i | represents the total number of correct matches for query i. Naturally, a smaller NP represents better performance. For consistency with CMC and mAP, we prefer to use the inverse negative penalty (INP), an inverse operation of NP. Overall, the mean INP of all the queries is represented by
+
+mINP = 1 n i (1 -NP i ) = 1 n i |G i | R hard i .(7)
+
+The calculation of mINP is quite efficient and can be seamlessly integrated in the CMC/mAP calculating process. mINP avoids the domination of easy matches in the mAP/CMC evaluation. One limitation is that mINP value difference for large gallery size would be much smaller compared to small galleries. But it still can reflect the relative performance of a Re-ID model, providing a supplement to the widely-used CMC and mAP metrics.
+
+### 4.2. A New Baseline for Single-/Cross-Modality Re-ID
+
+According to the discussion in § 2.4.2, we design a new AGW 3 baseline for person Re-ID, which achieves competitive performance on both single-modality (image and video) and cross-modality Re-ID tasks. Specifically, our new baseline is designed on top of BagTricks [122], and AGW contains the following three major improved components:
+
+3. Details are in https://github.com/mangye16/ReID-Survey and comprehensive comparison is shown in the supplementary material. (1) Non-local Attention (Att) Block. As discussed in § 2.4.2, the attention scheme plays a crucial role in discriminative Re-ID model learning. We adopt the powerful nonlocal attention block [246] to obtain the weighted sum of the features at all positions, represented by
+
+z i = W z * φ(x i ) + x i ,(8)
+
+where W z is a weight matrix to be learned, φ(•) represents a non-local operation, and +x i formulates a residual learning strategy. Details can be found in [246]. We adopt the default setting from [246] to insert the non-local attention block.
+
+(2) Generalized-mean (GeM) Pooling. As a fine-grained instance retrieval, the widely-used max-pooling or average pooling cannot capture the domain-specific discriminative features. We adopt a learnable pooling layer, named generalized-mean (GeM) pooling [247], formulated by
+
+f = [f 1 • • • f k • • • f K ] T , f k = ( 1 |X k | xi∈X k x p k i ) 1 p k ,(9)
+
+where f k represents the feature map, and K is number of feature maps in the last layer. X k is the set of W × H activations for feature map k ∈ {1, 2, • • • , K}. p k is a pooling hyper-parameter, which is learned in the back-propagation process [247]. The above operation approximates max pooling when p k → ∞ and average pooling when p k = 1.
+
+(3) Weighted Regularization Triplet (WRT) loss. In addition to the baseline identity loss with softmax crossentropy, we integrate with another weighted regularized triplet loss, L wrt (i) = log(1 + exp(
+
+j w p ij d p ij - k w n ik d n ik )). (10
+
+)
+
+w p ij = exp (d p ij ) d p ij ∈Pi exp(d p ij ) , w n ik = exp (-d n ik ) d n ik ∈Ni exp(-d n ik ) ,(11)
+
+where (i, j, k) represents a hard triplet within each training batch. For anchor i, P i is the corresponding positive set, and N i is the negative set. d p ij /d n ik represents the pairwise distance of a positive/negative sample pair. The above weighted regularization inherits the advantage of relative distance optimization between positive and negative pairs, but it avoids introducing any additional margin parameters. Our weighting strategy is similar to [248], but our solution does not introduce additional hyper-parameters.
+
+The overall framework of AGW is shown in Fig 8 . Other components are exactly the same as [122]. In the testing phase, the output of BN layer is adopted as the feature representation for Re-ID. The implementation details and more experimental results are in the supplementary material. 4. We also list two stateof-the-art methods, BagTricks [122] and ABD-Net [173]. We report the results on CUHK03 and MSMT17 datasets in Table 5. We obtain the following two observations:
+
+1) All the components consistently contribute the accuracy gain, and AGW performs much better than the original BagTricks under various metrics. AGW provides a strong baseline for future improvements. We have also tried to incorporate part-level feature learning [77], but extensive experiments show that it does not improve the performance. How to aggregate part-level feature learning with AGW needs further study in the future. 2) Compared to the current state-of-the-art, ABD-Net [173], AGW performs favorably in most cases. In particular, we achieve much higher mINP on DukeMTMC dataset, 45.7% vs. 42.1%. This demonstrates that AGW requires less effort to find all the correct matches, verifying the ability of mINP.
+
+Results on Single-modality Video Re-ID. We also evaluate the proposed AGW on four widely used single modality video-based datasets ( MARS [8], DukeVideo [144], PRID2011 [126] and iLIDS-VID [7], as shown in Table 6. We also compare two state-of-the-art methods, BagTricks [122] and Co-Seg [132]. For video data, we develop a variant (AGW + ) to capture the temporal information with framelevel average pooling for sequence representation. Meanwhile, constraint random sampling strategy [133] is applied for training. Compared to Co-Seg [132], our AGW + obtains better Rank-1, mAP and mINP in most cases.
+
+Results on Partial Re-ID. We also test the performance of AGW on two partial Re-ID datasets, as shown in Table 7. The experimental setting are from DSR [232]. We also achieve comparable performance with the state-of-the-art VPM method [67]. This experiment further demonstrates the superiority of AGW for the open-world partial Re-ID task. Meanwhile, the mINP also shows the applicability for this open-world Re-ID problem.
+
+Results on Cross-modality Re-ID. We also test the performance of AGW using a two-stream architecture on the cross-modality visible-infrared Re-ID task. The comparison with the current state-of-the-arts on two datasets is shown in Table 8. We follow the settings in AlignG [190] to perform the experiments. Results show that AGW achieves much higher accuracy than existing cross-modality Re-ID models, verifying the effectiveness for the open-world Re-ID task.
+
+### 4.3. Under-Investigated Open Issues
+
+We discuss the open-issues from five different aspects according to the five steps in §1, including uncontrollable data collection, human annotation minimization, domainspecific/generalizable architecture design, dynamic model updating and efficient model deployment.
+
+#### 4.3.1. Uncontrollable Data Collection
+
+Most existing Re-ID works evaluate their method on a welldefined data collection environment. However, the data collection in real complex environment is uncontrollable. The data might be captured from unpredictable modality, modality combinations, or even cloth changing data [30].
+
+Multi-Heterogeneous Data. In real applications, the Re-ID data might be captured from multiple heterogeneous modalities, i.e., the resolutions of person images vary a lot [193], both the query and gallery sets may contain different modalities (visible, thermal [21], depth [62] or text description [10]). This results in a challenging multiple heterogeneous person Re-ID. A good person Re-ID system would be able to automatically handle the changing resolutions, different modalities, various environments and multiple domains. Future work with broad generalizability is expected, evaluating their method for different Re-ID tasks.
+
+Cloth-Changing Data. In practical surveillance system, it is very likely to contain a large number of target persons with changing clothes. A cloth-Clothing Change Aware Network (CCAN) [250] addresses this issue by separately extracting the face and body context representation, and similar idea is applied in [251]. Yang et al. [30] present a spatial polar transformation (SPT) to learn cross-cloth invariant representation. However, they still rely heavily on the face and body appearance, which might be unavailable and unstable in real scenarios. It would be interesting to further explore the possibility of other discriminative cues (e.g., gait, shape) to address the cloth-changing issue.
+
+#### 4.3.2. Human Annotation Minimization
+
+Besides the unsupervised learning, active learning or human interaction [24], [27], [154], [159] provides another possible solution to alleviate the reliance on human annotation.
+
+Active Learning. Incorporating human interaction, labels are easily provided for newly arriving data and the model can be subsequently updated [24], [27]. A pairwise subset selection framework [252] minimizes human labeling effort by firstly constructing an edge-weighted complete kpartite graph and then solving it as a triangle free subgraph maximization problem. Along this line, a deep reinforcement active learning method [154] iteratively refines the learning policy and trains a Re-ID network with human-inthe-loop supervision. For video data, an interpretable reinforcement learning method with sequential decision making [178] is designed. The active learning is crucial in practical Re-ID system design, but it has received less attention in the research community. Additionally, the newly arriving identities is extremely challenging, even for human. Efficient human in-the-loop active learning is expected in the future.
+
+Learning for Virtual Data. This provides an alternative for minimizing the human annotation. A synthetic dataset is collected [220] for training, and they achieve competitive performance on real-world datasets when trained on this synthesized dataset. Bak et al. [125] generate a new synthetic dataset with different illumination conditions to model realistic indoor and outdoor lighting. A large-scale synthetic PersonX dataset is collected in [105] to systematically study the effect of viewpoint for a person Re-ID system. Recently, the 3D person images are also studied in [253], generating the 3D body structure from 2D images. However, how to bridge the gap between synthesized images and real-world datasets remains challenging.
+
+#### 4.3.3. Domain-Specific/Generalizable Architecture Design
+
+Re-ID Specific Architecture. Existing Re-ID methods usually adopt architectures designed for image classification as the backbone. Some methods modify the architecture to achieve better Re-ID features [82], [122]. Very recently, researchers have started to design domain specific architectures, e.g., OSNet with omni-scale feature learning [138]. It detects the small-scale discriminative features at a certain scale. OSNet is extremely lightweight and achieves competitive performance. With the advancement of automatic neural architecture search (e.g., Auto-ReID [139]), more domainspecific powerful architectures are expected to address the task-specific Re-ID challenges. Limited training samples in Re-ID also increase the difficulty in architecture design.
+
+Domain Generalizable Re-ID. It is well recognized that there is a large domain gap between different datsets [56], [225]. Most existing methods adopt domain adaptation for cross-dataset training. A more practical solution would be learning a domain generalized model with a number of source datasets, such that the learned model can be generalized to new unseen datasets for discriminative Re-ID without additional training [28]. Hu et al. [254] studied the cross-dataset person Re-ID by introducing a part-level CNN framework. The Domain-Invariant Mapping Network (DIMN) [28] designs a meta-learning pipeline for domain generalizable Re-ID, learning a mapping between a person image and its identity classifier. The domain generalizability is crucial to deploy the learned Re-ID model under an unknown scenario.
+
+#### 4.3.4. Dynamic Model Updating
+
+Fixed model is inappropriate for practical dynamically updated surveillance system. To alleviate this issue, dynamic model updating is imperative, either to a new domain/camera or adaptation with newly collected data.
+
+Model Adaptation to New Domain/Camera. Model adaptation to a new domain has been widely studied in the literature as a domain adaptation problem [125], [216]. In practical dynamic camera network, a new camera may be temporarily inserted into an existing surveillance system. Model adaptation is crucial for continuous identification in a multi-camera network [23], [29]. To adapt a learned model to a new camera, a transitive inference algorithm [244] is designed to exploit the best source camera model based on a geodesic flow kernel. However, it is still challenging when the newly collected data by the new camera has totally different distributions. In addition, the privacy and efficiency issue [255] also need further consideration.
+
+Model Updating with Newly Arriving Data. With the newly collected data, it is impractical to training the previously learned model from the scratch [24]. An incremental learning approach together with human interaction is designed in [24]. For deeply learned model, an addition using covariance loss [256] is integrated in the overall learning function. However, this problem is not well studied since the deep model training require large amount of training data. Besides, the unknown new identities in the newly arriving data is hard to be identified for the model updating.
+
+#### 4.3.5. Efficient Model Deployment
+
+It is important to design efficient and adaptive models to address scalability issue for practical model deployment.
+
+Fast Re-ID. For fast retrieval, hashing has been extensively studied to boost the searching speed, approximating the nearest neighbor search [257]. Cross-camera Semantic Binary Transformation (CSBT) [258] transforms the original high-dimensional feature representations into compact lowdimensional identity-preserving binary codes. A Coarse-to-Fine (CtF) hashing code search strategy is developed in [259], complementarily using short and long codes. However, the domain-specific hashing still needs further study.
+
+Lightweight Model. Another direction for addressing the scalability issue is to design a lightweight Re-ID model. Modifying the network architecture to achieve a lightweight model is investigated in [86], [138], [139]. Model distillation is another approach, e.g., a multi-teacher adaptive similarity distillation framework is proposed in [260], which learns a user-specified lightweight student model from multiple teacher models, without access to source domain data.
+
+Resource Aware Re-ID. Adaptively adjusting the model according to the hardware configurations also provides a solution to handle the scalability issue. Deep Anytime Re-ID (DaRe) [14] employs a simple distance based routing strategy to adaptively adjust the model, fitting to hardware devices with different computational resources.
+
+## 5. CONCLUDING REMARKS
+
+This paper presents a comprehensive survey with in-depth analysis from a both closed-world and open-world perspectives. We first introduce the widely studied person Re-ID under the closed-world setting from three aspects: feature representation learning, deep metric learning and ranking optimization. With powerful deep learning, the closedworld person Re-ID has achieved performance saturation on several datasets. Correspondingly, the open-world setting has recently gained increasing attention, with efforts to address various practical challenges. We also design a new AGW baseline, which achieves competitive performance on four Re-ID tasks under various metrics. It provides a strong baseline for future improvements. This survey also introduces a new evaluation metric to measure the cost of finding all the correct matches. We believe this survey will provide important guidance for future Re-ID research.
+
+## Figures et tableaux
+
+**Fig. 1:** The flow of designing a practical person Re-ID system, including five main steps: 1) Raw Data Collection, (2) Bounding Box Generation, 3) Training Data Annotation, 4) Model Training and 5) Pedestrian Retrieval.TABLE 1: Closed-world vs. Open-world Person Re-ID. Closed-world (Section 2) Open-world (Section 3) Single-modality Data Heterogeneous Data ( § 3.1) Bounding Boxes Generation Raw Images/Videos ( § 3.2) Sufficient Annotated Data Unavailable/Limited Labels ( § 3.3) Correct Annotation Noisy Annotation ( § 3.4) Query Exists in Gallery Open-set ( § 3.5)
+
+**Fig. 2:** Four different feature learning strategies. a) Global Feature, learning a global representation for each person image in § 2.1.1; b) Local Feature, learning part-aggregated local features in § 2.
+
+**Fig. 3:** Fig.3: Three kinds of widely used loss functions in the literature. (a) Identity Loss[42],[82],[118],[140] ; (b) Verification Loss[94],[141] and (c) Triplet Loss[14],[22],[57]. Many works employ their combinations[87],[137],[141],[142].
+
+**Fig. 4:** An illustration of re-ranking in person Re-ID. Given a query example, an initial rank list is retrieved, where the hard matches are ranked in the bottom. Using the topranked easy positive match (1) as query to search in the gallery, we can get the hard match (2) and (3) with similarity propagation in the gallery set.
+
+**Fig. 5:** State-of-the-arts (SOTA) on four image-based person Re-ID datasets. Both the Rank-1 accuracy (%) and mAP value (%) are
+
+**Fig. 6:** State-of-the-arts (SOTA) on four widely used video-based person Re-ID datasets. The Rank-1 accuracies (%) over years are
+
+**Fig. 7:** Fig.7: Difference between the widely used CMC, AP and the negative penalty (NP) measurements. True matching and false matching are bounded in green and red boxes, respectively. Assume that only three correct matches exist in the gallery, rank list 1 gets better AP, but gets much worse NP than rank list 2. The main reason is that rank list 1 contains too many false matchings before finding the hardest true matching. For consistency with CMC and mAP, we compute the inverse negative penalty (INP), e.g., INP = 1-NP. Larger INP means better performance.
+
+**Fig. 8:** The framework of the proposed AGW baseline using the widely used ResNet50 [80] as the backbone network.
+
+**TABLE 2:** Statistics of some commonly used datasets for closed-world person Re-ID. "both" means that it contains both hand-cropped and detected bounding boxes. "C&M" means both CMC and mAP are evaluated.
+
+    Image datasets
+
+**TABLE 3:** Statistics of SOTA unsupervised person Re-ID on two image-based datasets. "Source" represents if it utilizes the source annotated data in training the target Re-ID model. "Gen." indicates if it contains an image generation process. Rank-1 accuracy (%) and mAP (%) are reported.
+
+    Market-1501 | DukeMTMC
+
+**TABLE 4:** This section firstly presents a new evaluation metric in § 4.1, a strong baseline (in § 4.2) for person Re-ID. It provides an important guidance for future Re-ID research. Finally, we discuss some under-investigated open issues in § 4.3. Comparison with the state-of-the-arts on singlemodality image-based Re-ID. Rank-1 accuracy (%), mAP (%) and mINP (%) are reported on two public datasets.
+
+     | Market-1501 [5] | DukeMTMC [42]
+    Method | R1 | mAP mINP | R1 | mAP mINP
+    BagTricks [122] CVPR19W 94.5 | 85.9 | 59.4 | 86.4 | 76.4 | 40.7
+    ABD-Net [173] ICCV19 | 95.6 | 88.3 | 66.2 | 89.0 | 78.6 | 42.1
+    B (ours) | 94.2 | 85.4 | 58.3 | 86.1 | 76.1 | 40.3
+    B + Att [246] | 94.9 | 86.9 | 62.2 | 87.5 | 77.6 | 41.9
+    B + WRT | 94.6 | 86.8 | 61.9 | 87.1 | 77.0 | 41.4
+    B + GeM [247] | 94.4 | 86.3 | 60.1 | 87.3 | 77.3 | 41.9
+    B + WRT + GeM | 94.9 | 87.1 | 62.5 | 88.2 | 78.1 | 43.4
+    AGW (Full) | 95.1 | 87.8 | 65.0 | 89.0 | 79.6 | 45.7
+
+**TABLE 5:** Comparison with the state-of-the-arts on two image Re-ID datasets, including CUHK03 and MSMT17. Rank-1 accuracy (%), mAP (%) and mINP (%) are reported.
+
+     | CUHK03 [43] | MSMT17 [44]
+    Method | R1 | mAP mINP | R1 | mAP mINP
+    BagTricks [122] CVPR19W 58.0 | 56.6 | 43.8 | 63.4 | 45.1 | 12.4
+    AGW (Full) | 63.6 | 62.0 | 50.3 | 68.3 | 49.3 | 14.7
+
+**TABLE 6:** Comparison with the state-of-the-arts on four video-based Re-ID datasets, including MARS[8], Duke-
+
+    Video [144], PRID2011 [126] and iLIDS-VID [7]. Rank-1
+    accuracy (%), mAP (%) and mINP (%) are reported.
+     |  | MARS [8] | DukeVideo [144]
+    Method | R1 | mAP mINP | R1 | mAP mINP
+    BagTricks [122] CVPR19W 85.8 | 81.6 | 62.0 | 92.6 | 92.4 | 88.3
+    CoSeg [132] ICCV19 | 84.9 | 79.9 | 57.8 | 95.4 | 94.1 | 89.8
+    AGW (Ours) | 87.0 | 82.2 | 62.8 | 94.6 | 93.4 | 89.2
+    AGW+ (Ours) | 87.6 | 83.0 | 63.9 | 95.4 | 94.9 | 91.9
+     | PRID2011 [126] | iLIDS-VID [7]
+    Method | R1 | R5 | mINP | R1 | R5 | mINP
+    BagTricks [122] CVPR19W 84.3 | 93.3 | 88.5 | 74.0 | 93.3 | 82.2
+    AGW (Ours) | 87.8 | 96.6 | 91.7 | 78.0 | 97.0 | 85.5
+    AGW+ (Ours) | 94.4 | 98.4 | 95.4 | 83.2 | 98.3 | 89.0
+    Results on Single-modality Image Re-ID. We first eval-
+    uate each component on two image-based datasets (Market-
+    1501 and DukeMTMC) in Table |  |  |  | 
+
+**TABLE 7:** Comparison with the state-of-the-arts on two partial Re-ID datasets, including Partial-REID and Partial-iLIDS. Rank-1, -3 accuracy (%) and mINP (%) are reported.
+
+    Method | R1 | Partial-REID R3 mINP | R1 | Partial-iLIDS R3 mINP
+    DSR [232] CVPR18 | 50.7 | 70.0 | - | 58.8 | 67.2 | -
+    SFR [249] ArXiv18 | 56.9 | 78.5 | - | 63.9 | 74.8 | -
+    VPM [67] CVPR19 | 67.7 | 81.9 | - | 67.2 | 76.5 | -
+    BagTricks [122] CVPR19W | 62.0 | 74.0 | 45.4 | 58.8 | 73.9 | 68.7
+    AGW | 69.7 | 80.0 | 56.7 | 64.7 | 79.8 | 73.3
+
+**TABLE 8:** Comparison
+
+     | with the state-of-the-arts on cross-
+    modality visible-infrared Re-ID. Rank-1 accuracy (%), mAP
+    (%) and mINP (%) are reported on two public datasets.
+     | RegDB [60] |  | SYSU-MM01 [21] | 
+     | Visible-Thermal | All Search | Indoor Search
+    Method | R1 | mAP | R1 | mAP | R1 | mAP
+    Zero-Pad [21] ICCV17 | 17.75 | 18.90 | 14.8 | 15.95 20.58 26.92
+    HCML [186] AAAI18 | 24.44 | 20.08 | 14.32 16.16 24.52 30.08
+    eBDTR [142] TIFS19 | 34.62 | 33.46 | 27.82 28.42 32.46 42.46
+    HSME [187] AAAI19 | 50.85 | 47.00 | 20.68 23.12 | - | -
+    D 2 RL [189] CVPR19 | 43.4 | 44.1 | 28.9 | 29.2 | - | -
+    AlignG [190] ICCV19 | 57.9 | 53.6 | 42.4 | 40.7 | 45.9 | 54.3
+    Hi-CMD [191] CVPR20 70.93 | 66.04 | 34.9 | 35.9 |  | 
+    AGW (Ours) | 70.05 mINP = 50.19 66.37 | 47.50 47.65 54.17 62.97 mINP =35.30 mINP = 59.23

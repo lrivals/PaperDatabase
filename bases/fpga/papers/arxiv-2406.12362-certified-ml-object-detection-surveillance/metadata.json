@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-2406.12362-certified-ml-object-detection-surveillance",
+  "title": "Certified ML Object Detection for Surveillance Missions",
+  "authors": [
+    {
+      "given": "Mohammed",
+      "family": "Belcaid"
+    },
+    {
+      "given": "Eric",
+      "family": "Bonnafous"
+    },
+    {
+      "given": "Louis",
+      "family": "Crison"
+    },
+    {
+      "given": "Christophe",
+      "family": "Faure"
+    },
+    {
+      "given": "Eric",
+      "family": "Jenn"
+    },
+    {
+      "given": "Claire",
+      "family": "Pagetti"
+    }
+  ],
+  "year": 2024,
+  "venue": "ERTS 2024 (12th European Congress on Embedded Real Time Software and Systems), Toulouse",
+  "doi": null,
+  "arxiv_id": "2406.12362",
+  "url": "https://arxiv.org/abs/2406.12362",
+  "type": "conference",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "publié ailleurs selon arXiv (journal_ref : 12th European Congress on Embedded Real Time Software and Systems, Jun 2024, Toulouse, France) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table I, Table II, Table III"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "2018-halme-review-vision-safety-systems-human",
+  "title": "Review of vision-based safety systems for human-robot collaboration",
+  "authors": [
+    {
+      "given": "Roni-Jussi",
+      "family": "Halme"
+    },
+    {
+      "given": "Minna",
+      "family": "Lanz"
+    },
+    {
+      "given": "Joni",
+      "family": "Kämäräinen"
+    },
+    {
+      "given": "Roel",
+      "family": "Pieters"
+    },
+    {
+      "given": "Jyrki",
+      "family": "Latokartano"
+    },
+    {
+      "given": "Antti",
+      "family": "Hietanen"
+    }
+  ],
+  "year": 2018,
+  "venue": "Procedia CIRP 72, 111-116",
+  "doi": "10.1016/j.procir.2018.03.043",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1016/j.procir.2018.03.043",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "person-detection"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

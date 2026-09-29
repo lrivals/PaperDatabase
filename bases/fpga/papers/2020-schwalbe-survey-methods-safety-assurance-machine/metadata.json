@@ -1,0 +1,37 @@
+{
+  "id": "2020-schwalbe-survey-methods-safety-assurance-machine",
+  "title": "A Survey on Methods for the Safety Assurance of Machine Learning Based Systems",
+  "authors": [
+    {
+      "given": "Gesina",
+      "family": "Schwalbe"
+    },
+    {
+      "given": "Martin",
+      "family": "Schels"
+    }
+  ],
+  "year": 2020,
+  "venue": "10th European Congress on Embedded Real Time Software and Systems (ERTS 2020)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "conference",
+  "axes": [
+    "surveys",
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

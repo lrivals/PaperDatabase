@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2011.10671-review-comparative-probabilistic-object-detection",
+  "title": "A Review and Comparative Study on Probabilistic Object Detection in Autonomous Driving",
+  "authors": [
+    {
+      "given": "Di",
+      "family": "Feng"
+    },
+    {
+      "given": "Ali",
+      "family": "Harakeh"
+    },
+    {
+      "given": "Steven",
+      "family": "Waslander"
+    },
+    {
+      "given": "Klaus",
+      "family": "Dietmayer"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": "10.1109/TITS.2021.3096854",
+  "arxiv_id": "2011.10671",
+  "url": "https://arxiv.org/abs/2011.10671",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : III shows mAP to be correlated, the other hand, Tab. III shows, the magnitude of increase in P, Estimating spatial uncertainty, TABLE V, autonomous driving dataset [20, autonomous driving dataset [21",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

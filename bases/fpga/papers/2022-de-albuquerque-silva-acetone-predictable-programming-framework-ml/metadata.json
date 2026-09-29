@@ -1,0 +1,46 @@
+{
+  "id": "2022-de-albuquerque-silva-acetone-predictable-programming-framework-ml",
+  "title": "ACETONE: Predictable Programming Framework for ML Applications in Safety-Critical Systems",
+  "authors": [
+    {
+      "given": "Iryna",
+      "family": "De Albuquerque Silva"
+    },
+    {
+      "given": "Thomas",
+      "family": "Carle"
+    },
+    {
+      "given": "Adrien",
+      "family": "Gauffriau"
+    },
+    {
+      "given": "Claire",
+      "family": "Pagetti"
+    }
+  ],
+  "year": 2022,
+  "venue": "34th Euromicro Conference on Real-Time Systems (ECRTS 2022), LIPIcs 231",
+  "doi": "10.4230/LIPIcs.ECRTS.2022.3",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.4230/LIPIcs.ECRTS.2022.3",
+  "type": "conference",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
+      "sections numérotées non détectées : 6 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

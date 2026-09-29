@@ -1,0 +1,62 @@
+{
+  "id": "arxiv-1812.08342-survey-safety-trustworthiness-deep-neural",
+  "title": "A Survey of Safety and Trustworthiness of Deep Neural Networks: Verification, Testing, Adversarial Attack and Defence, and Interpretability",
+  "authors": [
+    {
+      "given": "Xiaowei",
+      "family": "Huang"
+    },
+    {
+      "given": "Daniel",
+      "family": "Kroening"
+    },
+    {
+      "given": "Wenjie",
+      "family": "Ruan"
+    },
+    {
+      "given": "James",
+      "family": "Sharp"
+    },
+    {
+      "given": "Youcheng",
+      "family": "Sun"
+    },
+    {
+      "given": "Emese",
+      "family": "Thamo"
+    },
+    {
+      "given": "Min",
+      "family": "Wu"
+    },
+    {
+      "given": "Xinping",
+      "family": "Yi"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1812.08342",
+  "url": "https://arxiv.org/abs/1812.08342",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
+      "sections numérotées non détectées : 2, 6 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-2005.13166-safeml-safety-monitoring-machine-learning",
+  "title": "SafeML: Safety Monitoring of Machine Learning Classifiers through Statistical Difference Measure",
+  "authors": [
+    {
+      "given": "Koorosh",
+      "family": "Aslansefat"
+    },
+    {
+      "given": "Ioannis",
+      "family": "Sorokos"
+    },
+    {
+      "given": "Declan",
+      "family": "Whiting"
+    },
+    {
+      "given": "Ramin Tavakoli",
+      "family": "Kolagari"
+    },
+    {
+      "given": "Yiannis",
+      "family": "Papadopoulos"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2005.13166",
+  "url": "https://arxiv.org/abs/2005.13166",
+  "type": "preprint",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 5 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

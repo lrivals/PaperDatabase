@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-1911.09032-outside-box-abstraction-monitoring-neural",
+  "title": "Outside the Box: Abstraction-Based Monitoring of Neural Networks",
+  "authors": [
+    {
+      "given": "Thomas A",
+      "family": "Henzinger"
+    },
+    {
+      "given": "Anna",
+      "family": "Lukina"
+    },
+    {
+      "given": "Christian",
+      "family": "Schilling"
+    }
+  ],
+  "year": 2019,
+  "venue": "ECAI 2020",
+  "doi": "10.3233/FAIA200375",
+  "arxiv_id": "1911.09032",
+  "url": "https://arxiv.org/abs/1911.09032",
+  "type": "conference",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "publié ailleurs selon arXiv (journal_ref : ECAI 2020) : type journal/conference à préciser",
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
+      "sections numérotées non détectées : 5 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

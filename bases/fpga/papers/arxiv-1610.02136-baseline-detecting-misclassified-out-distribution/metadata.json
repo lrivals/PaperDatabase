@@ -1,0 +1,40 @@
+{
+  "id": "arxiv-1610.02136-baseline-detecting-misclassified-out-distribution",
+  "title": "A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks",
+  "authors": [
+    {
+      "given": "Dan",
+      "family": "Hendrycks"
+    },
+    {
+      "given": "Kevin",
+      "family": "Gimpel"
+    }
+  ],
+  "year": 2017,
+  "venue": "International Conference on Learning Representations 2017",
+  "doi": null,
+  "arxiv_id": "1610.02136",
+  "url": "https://arxiv.org/abs/1610.02136",
+  "type": "conference",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [
+    "ood"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "publié ailleurs selon arXiv (journal_ref : International Conference on Learning Representations 2017) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 4, Table 7, Table 11"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

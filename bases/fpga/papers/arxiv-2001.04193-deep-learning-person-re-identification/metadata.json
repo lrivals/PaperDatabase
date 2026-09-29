@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-2001.04193-deep-learning-person-re-identification",
+  "title": "Deep Learning for Person Re-identification: A Survey and Outlook",
+  "authors": [
+    {
+      "given": "Mang",
+      "family": "Ye"
+    },
+    {
+      "given": "Jianbing",
+      "family": "Shen"
+    },
+    {
+      "given": "Gaojie",
+      "family": "Lin"
+    },
+    {
+      "given": "Tao",
+      "family": "Xiang"
+    },
+    {
+      "given": "Ling",
+      "family": "Shao"
+    },
+    {
+      "given": "Steven C H",
+      "family": "Hoi"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2001.04193",
+  "url": "https://arxiv.org/abs/2001.04193",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "person-detection"
+  ],
+  "tags": [
+    "re-id"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE 2, TABLE 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

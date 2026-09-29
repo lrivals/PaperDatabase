@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2012.08185-scalable-verification-quantized-neural-networks",
+  "title": "Scalable Verification of Quantized Neural Networks (Technical Report)",
+  "authors": [
+    {
+      "given": "Thomas A",
+      "family": "Henzinger"
+    },
+    {
+      "given": "Mathias",
+      "family": "Lechner"
+    },
+    {
+      "given": "Đorđe",
+      "family": "Žikelić"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2012.08185",
+  "url": "https://arxiv.org/abs/2012.08185",
+  "type": "preprint",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [
+    "quantization",
+    "formal-verification"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 4, Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

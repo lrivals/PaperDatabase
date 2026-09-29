@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-1904.08653-fooling-automated-surveillance-cameras-adversarial",
+  "title": "Fooling automated surveillance cameras: adversarial patches to attack person detection",
+  "authors": [
+    {
+      "given": "Simen",
+      "family": "Thys"
+    },
+    {
+      "given": "Wiebe",
+      "family": "Van Ranst"
+    },
+    {
+      "given": "Toon",
+      "family": "Goedemé"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1904.08653",
+  "url": "https://arxiv.org/abs/1904.08653",
+  "type": "preprint",
+  "axes": [
+    "person-detection"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

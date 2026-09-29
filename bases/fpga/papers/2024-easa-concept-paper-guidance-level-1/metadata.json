@@ -1,0 +1,37 @@
+{
+  "id": "2024-easa-concept-paper-guidance-level-1",
+  "title": "Concept Paper: Guidance for Level 1 & 2 Machine Learning Applications",
+  "authors": [
+    {
+      "given": "",
+      "family": "EASA"
+    }
+  ],
+  "year": 2024,
+  "venue": "European Union Aviation Safety Agency (EASA), Concept Paper, Issue 02",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": null,
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "type de publication à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 4",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 2, Table 3, ML constituent performance 11, 12, DM-02-UL 3.1.8.3 and Section C, Table 5, Table 6, Table 7, [figure sans légende identifié, [figure sans légende identifié, Table 10, [figure sans légende identifié, Table 12, Table 13, Table 14, Table 15, Table 17, to attack and security in avia",
+      "métadonnées corrigées à la main (rapport EASA, citation non appariée à l’ingestion)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,7 +1,10 @@
 # Vision embarquée sur FPGA (base `fpga`) — mode d'emploi
 
 Base de connaissance d'articles scientifiques sur la vision embarquée sur FPGA (YOLO,
-autoencodeurs, apprentissage continu), destinée à préparer une thèse. Nom court : `fpga`
+autoencodeurs, apprentissage continu), destinée à préparer une thèse, dont l'intitulé
+temporaire est « IA embarquée sécuritaire certifiable sur base de technologie FPGA » (cas
+d'application potentiel : YOLO embarqué en vidéosurveillance, détection et identification de
+personnes dans un secteur industriel dangereux). Nom court : `fpga`
 (base par défaut du registre) ; thème et périmètre : [profile.md](profile.md).
 
 **Plusieurs bases.** Cette base vit dans `bases/fpga/` du dépôt PaperDatabase, dont elle

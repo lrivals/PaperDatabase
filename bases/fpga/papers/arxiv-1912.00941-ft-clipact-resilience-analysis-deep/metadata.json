@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-1912.00941-ft-clipact-resilience-analysis-deep",
+  "title": "FT-ClipAct: Resilience Analysis of Deep Neural Networks and Improving their Fault Tolerance using Clipped Activation",
+  "authors": [
+    {
+      "given": "Le-Ha",
+      "family": "Hoang"
+    },
+    {
+      "given": "Muhammad Abdullah",
+      "family": "Hanif"
+    },
+    {
+      "given": "Muhammad",
+      "family": "Shafique"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1912.00941",
+  "url": "https://arxiv.org/abs/1912.00941",
+  "type": "preprint",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : IV, V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

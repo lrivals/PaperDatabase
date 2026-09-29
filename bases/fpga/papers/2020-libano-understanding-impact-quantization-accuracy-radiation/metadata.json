@@ -1,0 +1,53 @@
+{
+  "id": "2020-libano-understanding-impact-quantization-accuracy-radiation",
+  "title": "Understanding the Impact of Quantization, Accuracy, and Radiation on the Reliability of Convolutional Neural Networks on FPGAs",
+  "authors": [
+    {
+      "given": "F.",
+      "family": "Libano"
+    },
+    {
+      "given": "B.",
+      "family": "Wilson"
+    },
+    {
+      "given": "M.",
+      "family": "Wirthlin"
+    },
+    {
+      "given": "P.",
+      "family": "Rech"
+    },
+    {
+      "given": "J.",
+      "family": "Brunhaver"
+    }
+  ],
+  "year": 2020,
+  "venue": "IEEE Transactions on Nuclear Science 67(7), 1478-1484",
+  "doi": "10.1109/TNS.2020.2983662",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TNS.2020.2983662",
+  "type": "journal",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [
+    "quantization",
+    "fault-injection"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE I",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

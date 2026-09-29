@@ -1,0 +1,297 @@
+---
+id: arxiv-2012.08185-scalable-verification-quantized-neural-networks
+title: "Scalable Verification of Quantized Neural Networks (Technical Report)"
+year: 2020
+backend: grobid
+---
+
+## Abstract
+
+Formal verification of neural networks is an active topic of research, and recent advances have significantly increased the size of the networks that verification tools can handle. However, most methods are designed for verification of an idealized model of the actual network which works over real arithmetic and ignores rounding imprecisions. This idealization is in stark contrast to network quantization, which is a technique that trades numerical precision for computational efficiency and is, therefore, often applied in practice. Neglecting rounding errors of such low-bit quantized neural networks has been shown to lead to wrong conclusions about the network's correctness. Thus, the desired approach for verifying quantized neural networks would be one that takes these rounding errors into account. In this paper, we show that verifying the bitexact implementation of quantized neural networks with bitvector specifications is PSPACE-hard, even though verifying idealized real-valued networks and satisfiability of bit-vector specifications alone are each in NP. Furthermore, we explore several practical heuristics toward closing the complexity gap between idealized and bit-exact verification. In particular, we propose three techniques for making SMT-based verification of quantized neural networks more scalable. Our experiments demonstrate that our proposed methods allow a speedup of up to three orders of magnitude over existing approaches.
+
+## Introduction
+
+Deep neural networks for image classification typically consist of a large number of sequentially composed layers. Computing the output of such a network for a single input sample may require more than a billion floating-point operations (Tan and Le 2019). Consequently, deploying a trained deep neural network imposes demanding requirements on the computational resources available at the computing device that runs the network. Quantization of neural networks is a technique that reduces the computational cost of running a neural network by reducing the arithmetic precision of computations inside the network (Jacob et al. 2018). As a result, quantization has been widely adapted in industry for deploying neural networks in a resource-friendly way. For instance, Tesla's Autopilot Hardware 3.0 is designed for running 8-bit quantized neural networks (wikichip.org (accessed December 14, 2020)).
+
+The verification problem for neural networks consists of checking validity of some input-output relation. More precisely, given two conditions over inputs and outputs of the network, the goal is to check if for every input sample which satisfies the input condition, the corresponding output of the neural network satisfies the output condition. Verification of neural networks has many important practical applications such as checking robustness to adversarial attacks (Szegedy et al. 2013;Tjeng, Xiao, and Tedrake 2019), proving safety in safety-critical applications (Huang et al. 2017;Lechner et al. 2021a,b) or output range analysis (Dutta, Chen, and Sankaranarayanan 2019), to name a few. There are many efficient methods for verification of neural networks (e.g. (Katz et al. 2017;Tjeng, Xiao, and Tedrake 2019;Bunel et al. 2018)), however most of them ignore rounding errors in computations. The few approaches that can handle the semantics of rounding operations are overapproximation-based methods, i.e., incomplete verification (Singh et al. 2018(Singh et al. , 2019)). The imprecision introduced by quantization stands in stark contrast with the idealization made by verification methods for standard neural networks, which disregards rounding errors that appear due to the network's semantics. Consequently, verification methods developed for standard networks are not sound for and cannot be applied to quantized neural networks. Indeed, recently it has been shown that specifications that hold for a floating-point representation of a network need not necessarily hold after quantizing the network (Giacobbe, Henzinger, and Lechner 2020). As a result, specialized verification methods that take quantization into account need to be developed, due to more complex semantics of quantized neural networks. Groundwork on such methods demonstrated that special encodings of networks in terms of Satisfiability Modulo Theories (SMT) (Clark and Cesare 2018) with bitvector (Giacobbe, Henzinger, and Lechner 2020) or fixedpoint (Baranowski et al. 2020) theories present a promising approach towards the verification of quantized networks. However, the size of networks that these tools can handle and runtimes of these approaches do not match the efficiency of advanced verification methods developed for standard networks like Reluplex (Katz et al. 2017) and Neurify (Wang et al. 2018a).
+
+In this paper, we provide first evidence that the verifica-tion problem for quantized neural networks is harder compared to verification of their idealized counterparts, thus explaining the scalability-gap between existing methods for standard and quantized network verification. In particular, we show that verifying quantized neural networks with bitvector specifications is PSPACE-hard, despite the satisfiability problem of formulas in the given specification logic being in NP. As verification of neural networks without quantization is known to be NP-complete (Katz et al. 2017), this implies that the verification of quantized neural networks is a harder problem.
+
+We then address the scalability limitation of SMT-based methods for verification of quantized neural networks, and propose three techniques for their more efficient SMT encoding. First, we introduce a technique for identifying those variables and constraints whose value can be determined in advance, thus decreasing the size of SMT-encodings of networks. Second, we show how to encode variables as bit-vectors of minimal necessary bit-width. This significantly reduces the size of bit-vector encoding of networks in (Giacobbe, Henzinger, and Lechner 2020). Third, we propose a redundancy elimination heuristic which exploits bitlevel redundancies occurring in the semantics of the network.
+
+Finally, we propose a new method for the analysis of the quantized network's reachable value range, which is based on abstract interpretation and assists our new techniques for SMT-encoding of quantized networks. We evaluate our approach on two well-studied adversarial robustness verification benchmarks. Our evaluation demonstrates that the combined effect of our techniques is a speed-up of over three orders of magnitude compared to the existing tools.
+
+The rest of this work is organized as follows: First, we provide background and discuss related works on the verification of neural networks and quantized neural networks. We then start with our contribution by showing that the verification problem for quantized neural networks with bitvector specifications is PSPACE-hard. In the following section, we propose several improvements to the existing SMTencodings of quantized neural networks. Finally, we present our experimental evaluation to assess the performance impacts of our techniques.
+
+## Background and Related work
+
+A neural network is a function f : R n → R m that consists of several layers f = l 1 • l 2 • • • • • l k that
+
+are sequentially composed, with each layer parameterized by learned weight values. Commonly found types of layers are linear
+
+l(x) = W x + b, W ∈ R no×ni , b ∈ R no ,(1)
+
+ReLU l(x) = max{x, 0}, and convolutional layers (LeCun et al. 1998).
+
+In practice, the function f is implemented by floatingpoint arithmetic instead of real-valued computations. To distinguish a neural network from its approximation, we define an interpretation f as a map which assigns a new function to each network, i.e.
+
+: (R n → R m ) → (D → R m ),(2)
+
+where D ⊂ R n is the admissible input domain. For instance, we denote by f R : f → f the idealized real-valued abstraction of a network f , whereas f float32 denotes its floating-point implementation, i.e. the realization of f using 32-bit IEEE floating-point (Kahan 1996) instead of real arithmetic. Evaluating f , even under floating-point interpretation, can be costly in terms of computations and memory resources. In order to reduce these resource requirements, networks are usually quantized before being deployed to end devices (Jacob et al. 2018). Formally, quantization is an interpretation f int-k that evaluates a network f which uses k-bit fixed-point arithmetic (Smith et al. 1997), e.g. 4 to 8 bits. Let [Z] k = {0, 1} k denote the set of all bit-vectors of bit-width k. For each layer l :
+
+[Z] ni k → [Z] n0 k in f int-k ,
+
+we define its semantics by defining l(x 1 , . . . , x ni ) = (y 1 , . . . , y n0 ) as follows:
+
+x ′ i = ni j=1 w ij x j + b i ,(3)
+
+x ′′ i = round(x ′ i , k i ) = ⌊x ′ i • 2 -ki ⌋, and(4)
+
+y i = max{0, min{2 Ni -1, x ′′ i }},(5)
+
+Here, w i,j and b i for each 1 ≤ j ≤ n i and 1 ≤ i ≤ n 0 denote the learned weights and biases of f , and k i and N i denote the bit-shift and the cut-off value associated to each variable y i , respectively. Eq. ( 3) multiplies the inputs x j with the weight values w ij and adds the bias b i , eq. ( 4) rounds the result to the nearest valid k-bit fixed-point value, and eq. ( 5) is a non-linear ReLU-N activation functionfoot_0 . An illustration of how the computations inside a network differ based on the used interpretation is shown in Fig. 1.
+
+## Verification of neural networks
+
+The verification problem for a neural network and its given interpretation consists of verifying some input-output relation. More formally, given a neural network f , its interpretation f and two predicates ϕ and ψ over the input domain D and output domain R m of f , we want to check validity of the following formula (i.e. whether it holds for each
+
+x ∈ D) ϕ(x) ∧ f (x) = y =⇒ ψ(y).(6)
+
+We refer to the formula in eq. ( 6) as the formal specification that needs to be proved. In order to formally verify a neural network, it is insufficient to just specify the network without also providing a particular interpretation. A property that holds with respect to one interpretation need not necessarily remain true if we consider a different interpretation. For example, robustness of the real-valued abstraction does not imply robustness of the floating-point implementation of a network (Giacobbe, Henzinger, and Lechner 2020;Jia and Rinard 2020).
+
+Ideally, we would like to verify neural networks under the exact semantics that are used for running networks on 1: Illustration of how different interpretations of the same network run with different numerical precision. A) f R assumes infinite precision. B) f float32 rounds the mantissa according on the IEEE 754 standard. C) f int-8 rounds to a fixed number of digits before and after the comma. (Note that this figure serves as a hypothetical example in decimal format, the actual computations run with the base-2 representation.) the end device, i.e., f float32 most of the time. However, as verification methods for IEEE floating-point arithmetic are extremely inefficient, research has focused on verifying the idealized real-valued abstraction f R of f . In particular, efficient methods have been developed for a popular type or networks that only consist of linear and ReLU operations (Figure 2 a) (Katz et al. 2017;Ehlers 2017;Tjeng, Xiao, and Tedrake 2019;Bunel et al. 2018). The piecewise linearity of such ReLU networks allows the use of Linear Programming (LP) techniques, which make the verification methods more efficient. The underlying verification problem of ReLU networks with linear inequality specifications was shown to be NP-complete in the number of ReLU operations (Katz et al. 2017), however advanced tools scale beyond toy networks.
+
+Although these methods can handle networks of large size, they are building on the assumption that
+
+f float32 ≈ f R ,(7)
+
+i.e. that the rounding errors introduced by the IEEE floatingpoint arithmetic of both the network and the verification algorithm can be neglected. It has been recently shown that this need not always be true. For example, Jia and Rinard (Jia and Rinard 2020) crafted adversarial counterexamples to the floating-point implementation of a neural network whose idealized interpretation was verified to be robust against such attacks, by exploiting subtle numerical differences between f float32 and f R .
+
+## Verification of quantized neural networks
+
+The low numerical precision of few-bit fixed-point arithmetic implies that f int-k = f R . Indeed, (Giacobbe, Henzinger, and Lechner 2020) constructed a prototypical network that either satisfies or violates a formal specification, depending on the numerical precision used to evaluate the network. Moreover, they observed such discrepancy in networks found in practice. Thus, no formal guarantee on f int-k can be obtained by verifying f R or f float32 . In order to verify fixed-point implementations of (i.e. quantized) neural networks, new approaches are required.
+
+Fig. 2 depicts the ReLU activation function for idealized real-valued ReLU networks and for quantized ReLU networks, respectively. The activation function under fixedpoint semantics consists of an exponential number of piecewise constant intervals thus making the LP-based techniques, which otherwise work well for real-valued networks, extremely inefficient. So the approaches developed for idealized real-valued ReLU networks cannot be efficiently applied to quantized networks. Existing verification methods for quantized neural networks are based on bit-exact Boolean Satisfiability (SAT) and SMT encodings. For 1-bit networks, i.e., binarized neural networks, Narodytska et al. (Narodytska et al.) and (Cheng et al. 2018) proposed to encode the network semantics and the formal specification into an SAT formula, which is then checked by an off-the-shelf SAT solver. While their approach could handle networks of decent size, the use of SAT-solving is limited to binarized networks, which are not very common in practice. (Giacobbe, Henzinger, and Lechner 2020) proposed to verify many-bit quantized neural network by encoding their semantics and specifications into quantifier-free bit-vector SMT (QF_BV) formulas. The authors showed that, by reordering linear summations inside the network, such monolithic bit-vector SMT encodings could scale to the verification of small but interestingly sized networks. (Baranowski et al. 2020) introduced an SMT theory for fixed-point arithmetic and showed that the semantics of quantized neural networks could be encoded in this theory very naturally. However, as the authors only proposed prototype solvers for reference purposes, the size of the verified networks was limited.
+
+## Limitations of neural network verification
+
+The existing techniques for verification of idealized real-valued abstractions of neural networks have significantly increased the size of networks that can be verified (Ehlers 2017;Katz et al. 2017;Bunel et al. 2018;Tjeng, Xiao, and Tedrake 2019). However, scalability remains the key challenge hindering formal verification of neural networks in practice. For instance, even the largest networks verified by the existing methods (Ruan, Huang, and Kwiatkowska 2018) are tiny compared to the network architectures used for object detection and image classification (He et al. 2016).
+
+Regarding the verification of quantized neural networks, no advanced techniques aiming at performance improvements have been studied so far. In this paper, we address the scalability of quantized neural network verification methods that rely on SMT-solving.
+
+## Hardness of Verification of Quantized Neural Networks
+
+The size of quantized neural networks that existing verification methods can handle is significantly smaller compared to the real arithmetic networks that can be verified by the state-of-the-art tools like (Katz et al. 2017;Tjeng, Xiao, and Tedrake 2019;Bunel et al. 2018). Thus, a natural question is whether this gap in scalability is only because existing methods for quantized neural networks are less efficient, or if the verification problem for quantized neural networks is computationally harder.
+
+In this section, we study the computational complexity of the verification problem for quantized neural networks. For idealized real arithmetic interpretation of neural networks, it was shown in (Katz et al. 2017) that, if predicates on inputs and outputs are given as conjunctions of linear inequalities, then the problem is NP-complete. The fact that the problem is NP-hard is established by reduction from 3-SAT, and the same argument can be used to show that the verification problem for quantized neural networks is also NP-hard. In this work, we argue that the verification problem for quantized neural networks with bit-vector specifications is in fact PSPACE-hard, and thus harder then verifying real arithmetic neural networks. Moreover, we show that this holds even for the special case when there are no constraints on the inputs of the network, i.e. when the predicate on inputs is assumed to be a tautology. The verification problem for a quantized neural network f that we consider consists of checking validity of a given input-output relation formula
+
+f int-k (x) = y =⇒ ψ(y).
+
+Here, f int-k is the k-bit fixed point arithmetic interpretation of f , and ψ is a predicate in some specification logic over the outputs of f int-k . Equivalently, we may also check satisfiability of the dual formula
+
+f int-k (x) = y ∧ ¬ψ(y).(8)
+
+In order to study complexity of the verification problem, we also need to specify the specification logic to which formula ψ belongs. In this work, we study hardness with respect to the fragment QF_BV2 bw of the fixed-size bit-vector logic QF_BV2 (Kovásznai, Fröhlich, and Biere 2016). The fragment QF_BV2 bw allows bit-wise logical operations (such as bit-wise conjunction, disjunction and negation) and the equality operator. The index 2 in QF_BV2 bw is used to denote that the constants and bitwidths are given in binary representation. It was shown in (Kovásznai, Fröhlich, and Biere 2016) that the satisfiability problem for formulas in QF_BV2 bw is NP-complete.
+
+Even though QF_BV2 bw itself allows only bit-vector operations and not linear integer arithmetic, we show that by introducing dummy output variables in f int-k we may still encode formal specifications on outputs that are boolean combinations of linear inequalities over network's outputs. Thus, this specification logic is sufficiently expressive to encode formal specifications most often seen in practice. Let y 1 , . . . , y m denote output variables of f int-k . In order to encode an inequality of the form a 1 y 1 + • • •+ a m y m + b ≥ 0 into the output specification, we do the following:
+
+• Introduce an additional output neuron ỹ and a directed edge from each output neuron y i to ỹ. Let a i be the weight of an edge from y i to ỹ, b be the bias term of ỹ, k -1 be the bit-shift value of ỹ, and N = k be the number of bits defining the cut-off value of ỹ. Then
+
+ỹ = ReLU-N(round(2 -(k-1) (a 1 y 1 + • • • + a m y m + b))).
+
+Thus, as we work with bit-vectors of bit-width k, ỹ is just the sign bit of
+
+a 1 y 1 + • • • + a s y s + b preceded by zeros. • As a 1 y 1 + • • • + a s y s + b ≥ 0 holds if and only if the sign bit of a 1 y 1 + • • • + a s y s + b is 0
+
+, in order to encode the inequality into the output specification it suffices to encode that ỹ = 0, which is a formula expressible in QF_BV2 bw . By doing this for each linear inequality in the specification and since the logical operations are allowed by QF_BV2 bw , it follows that we may use QF_BV2 bw to encode boolean combinations of linear inequalities over outputs as formal specifications that are to be verified.
+
+Our main result in this section is that, if ψ in eq. ( 8) is assumed to be a formula in QF_BV2 bw , then the verification problem for quantized neural networks is PSPACEhard. Since checking satisfiability of ψ can be done in nondeterministic polynomial time, this means that the additional hardness really comes from the quantized neural networks. Theorem 1 (Complexity of verification of QNNs). If the predicate on outputs is assumed to be a formula in QF_BV2 bw , the verification problem for quantized neural networks is PSPACE-hard.
+
+Proof sketch. Here we summarize the key ideas of our proof. For the complete proof, see the appendix.
+
+To prove PSPACE-hardness, we exhibit a reduction from TQBF which is known to be PSPACEcomplete (Arora and Barak 2009). TQBF is the problem of deciding whether a quantified boolean formula (QBF) of the form Q
+
+1 x 1 . Q 2 x 2 . . . . Q n x n . φ(x 1 , x 2 , . . . , x n ) is true,
+
+where each Q i ∈ {∃, ∀} and φ is a quantifier-free formula in propositional logic over the variables x 1 , . . . , x n . A QBF formula is true if it admits a truth table for each existentially quantified variable x i , where the truth table for x i specifies a value in {0, 1} for each valuation of those universally quantified variables x j on which x i depends (i.e. x j with j < i). Thus, the size of each truth table is at most 2 k , where k is the total number of universally quantified variables in the formula.
+
+In our reduction, given an instance of the TQBF problem Q 1 x 1 . Q 2 x 2 . . . . Q n x n . φ(x 1 , x 2 , . . . , x n ) we map it to the corresponding verification problem as follows. The interpretation f int-k of the neural network f consists of n + 1 disjoint gadgets f 1 , . . . , f n , g, each having a single input and a single output neuron of bit-width 2 k . Note that bit-widths are given in binary representation, thus this is still polynomial in the size of the problem. We use these gadgets to encode all possible inputs to the QBF formula, whereas the postcondition in the verification problem encodes the quantifier-free formula itself. For a universally quantified variable x i , the output of f i is always a constant vector encoding the values of x i in each of the 2 k valuations of universally quantified variables (for a fixed ordering of the valuations). For existentially quantified x i , we use f i and its input neuron to encode 2 k possible choices for the value of x i , one for each valuation of universally quantified variables, and thus to encode the truth table for x i . Finally, the gadget g is used to return a constant bit-vector 1 of bit-width 2 k on any possible input. The predicate ψ on the outputs is then defined as ψ := (φ bw (y 1 , . . . , y n ) = 1), where φ bw is the quantifier-free formula in QF_BV2 bw identical to φ, with only difference being that the inputs of φ bw are bit-vectors of bit-width 2 k instead of boolean variables, and logical operations are also defined over bitvectors (again, since bit-widths are encoded in binary representation, this is of polynomial size). The output of φ bw is thus tested if it equals 1 for each valuation of universally quantified variables and the corresponding values of existentially quantified variables defined by the truth tables. Our construction ensures that any satisfying input for the neural networks induces satisfying truth tables for the TQBF instance and vice-versa, which completes the reduction.
+
+Theorem 1 is to our best knowledge the first theoretical result which indicates that the verification problem for quantized neural networks is harder than verifying their idealized real arithmetic counterparts. It sheds some light on the scalability gap of existing SMT-based methods for their verification, and shows that this gap is not solely due to practical inefficiency of existing methods for quantized neural networks, but also due to the fact that the problem is computationally harder. While Theorem 1 gives a lower bound on the hardness of verifying quantized neural networks, it is easy to see that an upper bound on the complexity of this problem is NEXP since the inputs to the verification problem are of size that is exponential in the size of the problem. Closing the gap and identifying tight complexity bounds is an interesting direction of future work.
+
+Note though that the specification logic QF_BV2 bw used to encode predicates over outputs is strictly more expressive than what we need to express boolean combinations of linear integer inequalities, which is the most common form of formal specifications seen in practice. This is because QF_BV2 bw also allows logical operations over bit vectors, and not just over single bits. Nevertheless, our result presents the first step towards understanding computational hardness of the quantized neural network verification problem.
+
+## Improvements to bit-vector SMT-encodings
+
+In this section, we study efficient SMT-encodings of quantized neural networks that would improve scalability of verification methods for them. In particular, we propose three simplifications to the monolithic SMT encoding of eq. ( 3), (4), and (5) introduced in (Giacobbe, Henzinger, and Lechner 2020), which encodes quantized neural networks and formal specifications as formulas in the QF_BV2 logic : I) Remove dead branches of the If-Then-Else encoding of the activation function in eq. ( 5), i.e., branches that are guaranteed to never be taken; II) Allocate only the minimal number of bits for each bit-vector variable in the formula; and III) Eliminate sub-expressions from the summation in eq. ( 3). To obtain the information needed by the techniques I and II we further propose an abstract interpretation framework for quantized neural networks.
+
+## Abstract interpretation analysis
+
+Abstract interpretation (Cousot and Cousot 1977) is a technique for constructing over-approximations to the behavior of a system. Initially developed for software verification, the method has recently been adapted to robustness verification of neural networks and is used to over-approximate the output range of variables in the network. Instead of considering all possible subsets of real numbers, it only considers an abstract domain which consists of subsets of suitable form (e.g. intervals, boxes or polyhedra). This allows modeling each operation in the network in terms of operations over the elements of the abstract domain, thus over-approximating the semantics of the network. While it leads to some impreision, abstract interpretation allows more efficient output range analysis for variables. Due to its over-approximating nature, it remains sound for verifying neural networks.
+
+Interval (Wang et al. 2018b; Tjeng, Xiao, and Tedrake 2019), zonotope (Mirman, Gehr, and Vechev 2018;Singh et al. 2018), and convex polytope (Katz et al. 2017;Ehlers 2017;Bunel et al. 2018;Wang et al. 2018a) abstractions have emerged in literature as efficient and yet precise choices for the abstract domains of real-valued neural networks. The obtained abstract domains have been used for output range analysis (Wang et al. 2018b), as well as removing decision points from the search process of complete verification algorithms (Tjeng, Xiao, and Tedrake 2019;Katz et al. 2017). One important difference between standard and quantized networks is the use of double-sided bounded activation functions in quantized neural networks, i.e., ReLU-N instead of ReLU (Jacob et al. 2018). This additional non-linear transition, on one hand, renders linear abstractions less effective, while on the other hand it provides hard upper bounds to each neuron, which bounds the over-approximation error. Consequently, we adopt interval abstractions (IA) on the quantized interpretation of a network to obtain reachability sets for each neuron in the network. As discussed in (Tjeng, Xiao, and Tedrake 2019), using a tighter abstract interpretation poses a tradeoff between verification and pre-processing complexity.
+
+## Dead branch removal
+
+Suppose that through our abstract interpretation we obtained an interval [lb, ub] for the input x of a ReLU-N operation y = ReLU-N(x). Then, we can substitute the formulation of the ReLU-N by
+
+                 0, if ub ≤ 0 2 N -1, if lb ≥ 2 N -1 x, if ub ≥ 0 and lb ≤ 2 N -1 max{0, x}, if 0 < ub ≤ 2 N -1. min{2 N -1, x}, if 0 ≤ lb < 2 N -1. max{0, min{2 N -1, x}}, otherwise,
+
+which reduces the number of decision points in the SMT formula.
+
+## Minimum bit allocation
+
+A k-bit quantized neural network represents each neuron and weight variable by a k-bit integer. However, when computing the values of certain types of layers, such as the linear layer in eq. ( 1), a wider register is necessary. The binary multiplication of a k-bit weight and a k-bit neuron value results in a number that is represented by 2k-bits. Furthermore, summing up n such 2k-bit integer requires
+
+b naive = 2k + log 2 (n) + 1 (9)
+
+bits to be safely represented without resulting in an overflow. Thus, linear combinations are in practice usually computed on 32-bit integer registers. Application of fixed-point rounding and the activation function then reduces the neuron values back to a k-bit representation (Jacob et al. 2018).
+
+QF_BV2 reasons over fixed-size bit-vectors, i.e. the bit width of each variable must be fixed in the formula regardless of the variable's value. (Giacobbe, Henzinger, and Lechner 2020) showed that the number of bits used for all weight and neuron variables in the formal affects the runtime of the SMT-solver significantly. For example, omitting the least significant bit of each variable cuts the runtime on average by half. However, the SMT encoding of (Giacobbe, Henzinger, and Lechner 2020) allocates b naive bits according to eq. ( 9) for each accumulation variable of a linear layer.
+
+Our approach uses the interval [lb, ub] obtained for each variable by abstract interpretation to compute the minimal number of bits necessary to express any value in the interval. As the signed bit-vector variables are represented in the two's complement format, we can compute the bit width b of variable x with computed interval [lb, ub] by b minimal = 1 + log 2 (max{|lb|, |ub|} + 1).
+
+(10)
+
+Trivially, one can show that b minimal < b naive , as |ub|≤ 2 2k n and |lb|≤ 2 2k n.
+
+## Redundant multiplication elimination
+
+Another difference between quantized and standard neural networks is the rounding of the weight values to the nearest representable value of the employed fixed-point format.
+
+Consequently, there is a considerable chance that two connections outgoing from the same source neuron will have the same weight value. For instance, assuming an 8-bit network and a uniform weight distribution, the chance of two connections having the same weight value is around 0.4% compared to the much lower 4 • 10 -8 % of the same scenario happening in a floating-point network. Moreover, many weight values express some subtle form of redundancy on a bit-level. For instance, both multiplication by 2 and multiplication by 6 contain a shift operations by 1 digit in their binary representation. Thus, computations
+
+y 1 = 3 • x 1 y 2 = 6 • x 1 (11)
+
+can be rewritten as
+
+y 1 = 3 • x 1 y 2 = y 1 << 1, (12
+
+)
+
+where << is a binary shift to the left by 1 digit. As a result, a multiplication by 6 is replaced by a much simpler shift operation. Based on this motivation, we propose a redundancy elimination heuristic to remove redundant and partially redundant multiplications from the SMT formula. Our heuristic first orders all outgoing weights of a neuron in ascending order and then sequentially applies a rule-matching for each weight value. The rules try to find a simpler way to compute the multiplication of the weight and the neuron value by using already performed multiplications. The algorithm and the rules in full are provided in the appendix. Note that a similar idea was introduced by (Cheng et al. 2018) in the form of a neuron factoring algorithm for the encoding of binarized (1-bit) neural networks into SAT formulas. However, the heuristic of (Cheng et al. 2018) removes redundant additions, whereas we consider bit-level redundancies in multiplications. For many-bit quantization, the probability of two neurons sharing more than one incoming weight is negligible, thus making such neuron factoring proposed in (Cheng et al. 2018) less effective.
+
+## Experimental Evaluation
+
+We create an experimental setup to evaluate how much the proposed techniques affect the runtime and efficiency of the SMT-solver. Our reference baseline is the approach of (Giacobbe, Henzinger, and Lechner 2020), which consists of a monolithic and "balanced" bit-vector formulation for the Boolector SMT-solver. We implement our techniques on top of this baseline. We limited our evaluation to Boolector, as other SMT-solvers supporting bit-vector theories, such as Z3 (De Moura and Bjørner 2008), CVC4 (Barrett et al. 2011), and Yices (Dutertre 2014), performed much worse in the evaluation of (Giacobbe, Henzinger, and Lechner 2020).
+
+Our evaluation comprises of two benchmarks. Our first evaluation considers the adversarial robustness verification of image classifier trained on the MNIST dataset (LeCun et al. 1998). In particular, we check the l ∞ robustness of networks against adversarial attacks (Szegedy et 2013). Other norms, such as l 1 and l 2 , can be expressed in bit-vector SMT constraints as well, although with potentially negative effects on the solver runtime. In the second evaluation, we repeat the experiment on the slightly more complex Fashion-MNIST dataset (Xiao, Rasul, and Vollgraf 2017) .
+
+All experiments are run on a 14-core Intel W-2175 CPU with 64GB of memory. We used the boolector (Niemetz, Preiner, and Biere 2015) with the SAT-solvers Lingeling(Biere 2017) (only baseline) and CaDiCal (Biere 2019) (baseline + our improvements) as SAT-backend.
+
+Adversarial robustness specification can be expressed as
+
+|x -x i | ∞ ≤ ε ∧ y = f int-k (x) =⇒ y = y i ,(13)
+
+where (x i , y i ) is a human labeled test sample and ε is a fixed attack radius. As shown in eq. ( 13), the space of possible attacks increases with ε. Consequently, we evaluate with different attack radii ε and study the runtimes individually. In particular, for MNIST we check the first 100 test samples with an attack radius of ε = 1, the next 100 test samples with ε = 2, and the next 200 test samples with ε = 3 and ε = 4 respectively. For our Fashion-MNIST evaluation, we reduce the number of samples to 50 per attack radius value for ε > 2 due to time and compute limitations. The network studied in our benchmark consists of four fully-connected layers (784,64,32,10), resulting in 52,650 parameters in total. It was trained using a quantization-aware training scheme with a 6-bit quantization.
+
+The results for the MNIST evaluation in terms of solved instances and median solver runtime are shown in Table 1 and Table 2 respectively. Table 3 andTable 2 show the results for the Fashion-MNIST benchmark.
+
+## Ablation analysis
+
+We perform an ablation analysis where we re-run our robustness evaluation with one of our proposed techniques disabled. The objective of our ablation analysis is to understand how the individual techniques affect the observed efficiency
+
+## Attack
+
+Baseline Baseline Ours radius (+ Lingeling) (+ CaDiCal) ε = 1 2 (2.3%) 44 (50.6%) 76 (87.4%) ε = 2 0 (0.0%) 7 (7.8%) 73 (81.1%) ε = 3 0 (0.0%) 1 (2.3%) 27 (62.8%) ε = 4 0 (0.0%) 0 (0.0%) 18 (40.9%) gains. Due to time and computational limitations we focus our ablation experiments to MNIST exclusively. The results in Table 4 show the highest number of solved instances were achieved when all our techniques were enabled. Nonetheless, Table 4 demonstrate these gains are not equally distributed across the three techniques. In particular, the ReLU simplification has a much higher contribution for explaining the gains compared to the redundancy elimination and minimum bitwidth methods. The limited benefits observed for these two techniques may be explain by the inner workings of the Boolector SMT-solver.
+
+The Boolector SMT-solver (Niemetz, Preiner, and Biere 2015) is based on a portfolio approach which sequentially applies several different heuristics to find a satisfying assignment of the input formula (Wintersteiger, Hamadi, and De Moura 2009). In particular, Boolector starts with fast but incomplete local search heuristics and falls back to slower but complete bit-blasting (Clark and Cesare 2018) in case the incomplete search is unsuccessful (Niemetz, Preiner, and Biere 2019). Although our redundancy elimination and minimum bitwidth techniques simplify the bit-blasted representation of the encoding, it introduces additional dependencies between different bit-vector variables. As a result, we believe these extra dependencies make the local search heuristics of Boolector less effective and thus enabling only limited performance improvements.
+
+## Conclusion
+
+We show that the problem of verifying quantized neural networks with bit-vector specifications on the inputs and outputs of the network is PSPACE-hard. We tackle this challenging problem by proposing three techniques to make the SMT-based verification of quantized networks more efficient. Our experiments show that our method outperforms existing tools by several orders of magnitude on adversarial robustness verification instances. Future work is necessary to explore quantized neural network verification's complexity with respect to different specification logics. On the practical side, our methods point to limitations of monolithic SMT-encodings for quantized neural network verification and suggest that future improvements may be obtained by integrating the encoding and the solver steps more tightly.
+
+## Proof of Theorem 1
+
+In order to prove that the verification problem for quantized neural networks is PSPACE-hard, we exhibit a reduction from TQBF which is known to be PSPACEcomplete (Arora and Barak 2009) to the QNN verification problem. TQBF is the problem of deciding whether a quantified boolean formula (QBF) in propositional logic of the form Q 1 x 1 . Q 2 x 2 . . . . Q n x n . φ(x 1 , x 2 , . . . , x n ) is true, where each Q i ∈ {∃, ∀} and φ is a quantifier-free formula in propositional logic over the variables x 1 , . . . , x n .
+
+## TQBF. Given
+
+Φ = Q 1 x 1 . Q 2 x 2 . . . . Q n x n . φ(x 1 , x 2 , . . . , x n )
+
+a QBF formula, for each variable x i let u(i) be the number of universally quantified variables x j with j < i. Then, Φ is true if it admits a truth table for each existentially quantified variable x i , where the truth table for x i specifies a value in {0, 1} for each valuation of u(i) universally quantified variables that x i depends on. Hence, the size of the truth table for x i is 2 u(i) . In particular, if k is the total number of universally quantified variables, then to show that Φ is true it suffices to find nk truth tables with each of size at most 2 k .
+
+## Condition
+
+Action w i = 0 y i = 0 w i = 1 y i = x ∃w j : w i = w j y i = y j ∃w j : w i = -w j y i = -y j ∃w j : Ordering of variable valuations. Let U denote the ordered set of all universally quantified variables in the QBF formula, where variables are ordered according to their indices. A valuation of U is an assignment in {0, 1} k of each variable in U . As a truth table for each existentially quantified variable x i is defined with respect to all variable valuations of universally quantified variables on which x i depends, it will be convenient to fix an ordering ⊑ of all 2 k valuations of U . For two valuations (y 1 , . . . , y k ) and (y ′ 1 , . . . , y ′ k ) in {0, 1} k , we say that (y 1 , . . . , y k ) ⊑ (y ′ 1 , . . . , y ′ k ) if either they are equal or there exists an index 1 ≤ i ≤ k such that y i < y ′ i and y j = y ′ j for j > i. Equivalently, (y 1 , . . . , y k ) ⊑ (y ′ 1 , . . . , y ′ k ) if and only if
+
+w i = w j • 2 k y i = y j << k
+
+k i=1 y i • 2 i ≤ k i=1 y ′ i • 2 i
+
+Thus this is the lexicographic ordering on "reflected" valuations, i.e. the largest index having the highest priority. For brevity, we will still refer to it as the lexicographic ordering.
+
+For an existentially quantified variable x i , its truth table can therefore also be defined by specifying a value in {0, 1} for each of the first 2 u(i) valuations of U in the lexicographic ordering, since these are the orderings in which we consider all possible valuations of the first u(i) universally quantified variables in U with setting the remaining universally quantified variables to equal 0.
+
+Reduction. We now proceed to the construction of our reduction.
+
+Given Φ = Q 1 x 1 . Q 2 x 2 . . . . Q n x n . φ(x 1 , x 2 , . . . , x n )
+
+a QBF formula, we need to construct 1. a quantized neural network f Φ , and 2. a predicate ψ Φ over the outputs of the neural network, each of polynomial size in the size of Φ, such that Φ is true if and only if the neural networks admits inputs that satisfy the verification problem. 1. Construction of the quantized neural network. We construct f Φ to consist of n+1 gadgets f Φ 1 , . . . , f Φ n , g Φ . Each gadget can be viewed as a sub-neural network, and all nodes in gadgets are of the bit-width 2 k each. Since bitwidths in quantized neural networks are given in binary representation, specifying bit-width is still of polynomial size. Each gadget f Φ i is associated to the variable x i in the QBF formula. The purpose of each gadget is to produce the output of the following form: • If x i is universally quantified in Φ, then f Φ i will return the single output neuron whose value is the constant bit-vector c i ∈ {0, 1} 2 k whenever the predicate ψ Φ is satisfied. For each 1 ≤ j ≤ 2 k , the component c i [j] will be equal to 1 if and only if the value of x i in the j-th valuation of U (w.r.t. the lexicographic ordering) is equal to 1. Thus, c i will encode values of x i in each valuation of U when ordered lexicographically.
+
+• If x i is existentially quantified in Φ, then f Φ i will return a single output neuron which will encode a truth table for x i . Recall, x i depends only on the first u(i) universally quantified variables in Φ, thus its truth table is of size 2 u(i) . As the values of x i should remain invariant if the values remaining universally quantified variables are changed, we will encode the truth table for x i by first extracting the first 2 u(i) bits from the input neuron to encode the truth table itself, and then copying this block of bits 2 k-u(i) times in order to obtain an output bit-vector of bit-width 2 k . • The gadget g Φ will return the constant bit-vector 1 consisting of all 1's (thus written in bold) whenever the predicate ψ Φ is satisfied. Note, the constant bit-vector whose each bit is 1 is exponential in k and thus exponential in the size of the TQBF problem. Hence, as we will later need to encode 1 into the predicate ψ Φ over outputs of the quantized neural network, we cannot do it directly but use the quantized neural network to construct 1.
+
+We now describe the architecture of the gadgets that can perform the tasks described above:
+
+• The gadget g Φ consists only of the input and the output layer. The input layer consists of the single neuron x g , and three output neurons y g , y ′ g and y ′′ g . Each edge between the layers has weight 1, bias 0 and the cut-off value 2 k . The bit-shifts of the edges from x g to y g , y ′ sists of two neurons h i and h g . The weights of edges from z i to h i and from x g to h g are set to 1, and weights of edges from z i to h g and from x g to h i are set to 0. Biases and cut-off values of all edges between the layers are set to 0 and 2 k , respectively. All bit-shifts are also set to 0, with the exception of the edge from x g to h g whose bit-shift is set to 2 u(i) . These choices ensure that h i = z i and that h g is a bit-vector that starts with 2 u(i) 0-bits followed by 2 k -2 u(i) 1-bits. The gadget f Φ i,1 is accompanied by the predicate ψ Φ i defined via ψ Φ i := (h i = (h i ∧ ¬(h g )). This choice of ψ Φ i together with the design of f Φ i,1 enforce that ψ Φ i ∧ ψ Φ g is satisfied if and only if x i = z i and the last 2 k -2 u(i) bits of x i = z i are equal to 0. Since the goal of the second part is to just copy 2 k-u(i) times the block of the first 2 u(i) bits of the output h i of f Φ i,1 , the second part f Φ i,2 is constructed analogously as in the case of neural networks corresponding to universally quantified variables above. Recall, constant bit-vectors, bit-widths of bit-vectors as well as the number of bits used for rounding (i.e. bitshifts) are encoded in binary representation. Thus, each of the values used in the construction of gadgets f Φ i and g Φ is encoded using at most k bits, and is polynomial in the size of Φ. On the other hand, from our construction one can check that each gadget consists of at most 2k + 4 neurons. Therefore, as there are n + 1 gadgets the size of all networks combined is O
+
+(k•(2k+4)•(n+1)) = O(n 3 ).
+
+2. Construction of the output predicate ψ Φ . Denote by y 1 , . . . , y n , y g the outputs of f Φ 1 , . . . , f Φ n , g Φ , respectively. We define ψ Φ as
+
+ψ Φ := (φ bw (y 1 , . . . , y n ) = y g ) ∧ ψ Φ auxiliary ,(14)
+
+where φ bw is the quantifier-free formula in QF_BV2 bw identical to φ, with only difference being that the inputs of φ bw are bit-vectors of bit-width 2 k instead of boolean variables and logical operations are also defined over bitvectors. The formula ψ Φ auxiliary collects the auxiliary logical predicates that were introduced by our construction of each gadget above, i.e.
+
+ψ Φ auxiliary := n i=1 ψ Φ i ∧ ψ Φ g .
+
+As y g = 1 if and only if Ψ Φ g is satisfied, the formula ψ Φ is true if and only if the equality φ bw (y 1 , . . . , y n ) = y g holds for each component. Intuitively, ψ Φ performs bitwise evaluation of the formula φ on each component of bit-vector inputs, and then checks if each output is equal to 1. The size of ψ Φ is thus O(|φ bw |) = O(|φ|•k + 3 • n + 3) = O(|φ|•n), where the additional factor k comes from the fact that inputs of φ bw are bit-vectors of bit-width 2 k , and bit-widths are encoded in binary representation. Note that the above expression for ψ Φ differs from that in the sketch proof of Theorem 1, where we omitted the formula ψ Φ auxiliary to simplify the presentation.
+
+Hence, the size of the instance of the quantized neural network verification problem to which we reduced Φ is O(n 3 + n • |φ|), which is polynomial in the size of Φ.
+
+Correctness of reduction. It remains to prove correctness of our reduction, i.e. that Φ is true if and only if the corresponding quantized neural network verification problem is satisfiable. Suppose first that Φ is true, i.e. that for each existentially quantified variable x i in Φ there exists a truth table t i of size 2 u(i) , such that any valuation of universally quantified variables U together with the corresponding values of existentially quantified variables defined by truth tables form a satisfying assignment for the quantifier-free formula φ in Φ. Consider the following set of inputs z 1 , . . . , z n , x g to gadgets f Φ 1 , . . . , f Φ n , g Φ : • If x i is universally quantified, then z i = 0.
+
+• If x i is existentially quantified, consider t i as a bit-vector of bit-width 2 u(i) with elements ordered in such a way that corresponding valuations of universally quantified variables on which x i depends in Φ are ordered lexicographically. Then z i starts with a block of bits identical to t i , followed by zeros. • z g = 0.
+
+From our construction of neural networks and the predicate ψ Φ we know that: • g Φ (z g ) = 1.
+
+• If x i is universally quantified, then f Φ i (z i ) is equal to the bit-vector c i whose j-th component is equal to 1 if and only if the value of x i in the j-th valuation of U in the lexicographic ordering is equal to 1, where 1 ≤ j ≤ 2 k . • If x i is existentially quantified, then f Φ i (z i ) is the bitvector obtained by copying the block t i 2 k-u(i) times. Thus, the j-th component of f Φ i (z i ) is equal to the value in the truth table t i corresponding to the j-th valuation of U in the lexicographic ordering, where 1 ≤ j ≤ 2 k . Finally, as ψ Φ is obtained by considering a bit-vector version of formula φ and then checking if each component of the output is equal to 1, it follows that the output of ψ Φ on inputs f Φ 1 (z 1 ), . . . , f Φ n (z n ) is equal to 1, thus showing that the quantized neural network verification problem is satisfiable.
+
+Conversely, suppose that z 1 , . . . , z n , z g is a set of satisfying inputs to the quantized neural network verification problems. Then for each existentially quantified variable x i , we construct a truth table t i as follows. Again, consider t i as a bit-vector of bit-width 2 u(i) , where elements are ordered in such a way that the corresponding valuations of universally quantified variables on which x i depends are ordered lexicographically. Then we set t i to be equal to the block of first 2 u(i) bits in z i . From our construction of the quantized neural network and ψ Φ , and the fact that z 1 , . . . , z n , z g is a satisfying inputs to the quantized neural network verification problem, it follows that for any valuation of U the corresponding values of existentially quantified variables defined by these turth tables yield a satisfying assignment for φ. Hence, the QBF formula Φ is true, as desired.
+
+## Figures et tableaux
+
+**Figure 2:** Illustration of a) the ReLU activation function under real-valued semantics, and b) ReLU-N activation under fixed-point semantics (right).
+
+**Table 1:** al. Number of solved instances of adversarial robustness verification on the MNIST dataset. Absolute numbers and in percentages of checked instances in parenthesis.
+
+    Attack radius (+ Lingeling) (+ CaDiCal) Baseline Baseline | Ours
+    ε = 1 ε = 2 ε = 3 ε = 4 | 63 (63.6%) 0 (0.0%) 0 (0.0%) 0 (0.0%) | 92 (92.9%) 99 (100.0%) 20 (20.2%) 94 (94.9%) 2 (2.1%) 71 (74.0%) 1 (1.0%) 54 (55.7%)
+    Dataset | Baseline | Baseline | Ours
+     |  | (+ Lingeling) (+ CaDiCal)
+    MNIST | 8803 |8789 | 2798 |3931 5 |90
+    Fashion-MNIST | 6927 |6927 | 3105 |3474 4 |49
+
+**Table 2:** Median |mean runtime of adversarial robustness verification process per sample. The reported values only account for non-timed-out samples.
+
+**Table 3:** Number of solved instances of adversarial robustness verification on the Fashion-MNIST dataset. Absolute numbers and in percentages of checked instances in parenthesis. Best method in bold.
+
+    Method | Total solved Cumulative instances runtime
+    No redundancy eliminiation 316 (80.8%) No minimum bitwidth 315 (80.6%) No ReLU simplify 88 (22.5%) | 7.7 h 5.1 h 83.2 h
+    No Abstract interpretation | 107 (27.4%) | 126.0 h
+    All enabled | 318 (81.3%) | 7.9 h
+
+**Table 4:** Results of our ablation analysis on the MNIST dataset. The cumulative runtime only accounts for nontimed-out samples.
+
+[figure sans légende identifiée] Outgoing weights W = {w i |i = 1, . . . n} of neuron x, with n neurons in the next layers Output: Outgoing values w i • x of neuron x Sort W in ascending order by absolute value; V ← {}, Y ← {}; foreach w i ∈ W do Find rule for w i according to Table 1 given V ;
+
+    Algorithm 1: Multiplication redundancy elimina-
+    tion
+    Input: if rule found then
+    Y ← Y ∪ {rule(w i , V )}; else
+    y ← w i • x;
+    V ← V ∪ {w i }, Y ← Y ∪ {y};
+    end
+    end return Y ;
+
+**Table 5:** Rules used for the multiplication redundancy elimination heuristic

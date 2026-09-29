@@ -1,0 +1,60 @@
+{
+  "id": "arxiv-1912.07394-efficient-error-tolerant-quantized-neural",
+  "title": "Efficient Error-Tolerant Quantized Neural Network Accelerators",
+  "authors": [
+    {
+      "given": "Giulio",
+      "family": "Gambardella"
+    },
+    {
+      "given": "Johannes",
+      "family": "Kappauf"
+    },
+    {
+      "given": "Michaela",
+      "family": "Blott"
+    },
+    {
+      "given": "Christoph",
+      "family": "Doehring"
+    },
+    {
+      "given": "Martin",
+      "family": "Kumm"
+    },
+    {
+      "given": "Peter",
+      "family": "Zipf"
+    },
+    {
+      "given": "Kees",
+      "family": "Vissers"
+    }
+  ],
+  "year": 2019,
+  "venue": "2019 IEEE International Symposium on Defect and Fault Tolerance in VLSI and Nanotechnology Systems (DFT)",
+  "doi": "10.1109/DFT.2019.8875314",
+  "arxiv_id": "1912.07394",
+  "url": "https://arxiv.org/abs/1912.07394",
+  "type": "conference",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [
+    "quantization",
+    "pruning"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "publié ailleurs selon arXiv (journal_ref : 2019 IEEE International Symposium on Defect and Fault Tolerance in VLSI and Nanotechnology Systems (DFT)) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

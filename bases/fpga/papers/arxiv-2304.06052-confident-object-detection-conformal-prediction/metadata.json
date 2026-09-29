@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2304.06052-confident-object-detection-conformal-prediction",
+  "title": "Confident Object Detection via Conformal Prediction and Conformal Risk Control: an Application to Railway Signaling",
+  "authors": [
+    {
+      "given": "Léo",
+      "family": "Andéol"
+    },
+    {
+      "given": "Thomas",
+      "family": "Fel"
+    },
+    {
+      "given": "Florence De",
+      "family": "Grancey"
+    },
+    {
+      "given": "Luca",
+      "family": "Mossina"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2304.06052",
+  "url": "https://arxiv.org/abs/2304.06052",
+  "type": "preprint",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

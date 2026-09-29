@@ -1,0 +1,47 @@
+{
+  "id": "arxiv-1904.04620-gaussian-yolov3-accurate-fast-object",
+  "title": "Gaussian YOLOv3: An Accurate and Fast Object Detector Using Localization Uncertainty for Autonomous Driving",
+  "authors": [
+    {
+      "given": "Jiwoong",
+      "family": "Choi"
+    },
+    {
+      "given": "Dayoung",
+      "family": "Chun"
+    },
+    {
+      "given": "Hyun",
+      "family": "Kim"
+    },
+    {
+      "given": "Hyuk-Jae",
+      "family": "Lee"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1904.04620",
+  "url": "https://arxiv.org/abs/1904.04620",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov3"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

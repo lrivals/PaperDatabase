@@ -7,7 +7,7 @@ documentation du logiciel. Les données vivent dans des bases, une par dossier :
 
 | Base | Dossier | Thème |
 |---|---|---|
-| `fpga` (défaut du registre) | [bases/fpga/](bases/fpga/) | vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) |
+| `fpga` (défaut du registre) | [bases/fpga/](bases/fpga/) | vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) ; thèse « IA embarquée sécuritaire certifiable sur FPGA » |
 | `drone` | [bases/drone/](bases/drone/) | vision embarquée sur drone (détection, accélérateurs, co-design système) |
 | `stage` | [bases/stage/](bases/stage/) | apprentissage continu embarqué sur MCU pour la maintenance prédictive (références du stage ISAE) |
 
@@ -27,5 +27,21 @@ conventions : [DATA_MODEL.md](DATA_MODEL.md) ; guide d'utilisation : [docs/GUIDE
 Tests : `bin/pdb test`. Avant/après tout changement du pipeline : `bin/pdb eval --compare`
 ([docs/EVAL.md](docs/EVAL.md)). Une base neuve : `bin/pdb base new <nom> --theme "…"`
 (créée sous `bases/<nom>/`).
+
+**Déléguer à des agents.** Quand c'est possible et pertinent, confier les tâches à des
+sous-agents (outil Agent), en parallèle si elles sont indépendantes, et choisir le modèle
+selon la tâche :
+
+| Tâche | Modèle |
+|---|---|
+| Mécanique : `/paper-add`, ingestion, réindexation, contrôle des métadonnées, recherche de DOI / arXiv, tri de `candidates.csv` | `haiku` |
+| Lecture et extraction : `/paper-fiche` (une fiche par agent), lignes de `benchmarks.csv`, `/paper-ask` factuel, exploration du code (`Explore`) | `sonnet` |
+| Synthèse et jugement : `/paper-gaps`, `/base-profile`, problématique de thèse, comparaison critique d'articles, conception d'un changement du pipeline (`Plan`) | `opus` |
+
+Garder en direct ce qui est court (une commande, un fichier) : un agent démarre sans contexte.
+Donner à chaque agent la base visée (`bases/<nom>/`) et ses règles (son `CLAUDE.md`), un
+périmètre sans recoupement (deux agents n'écrivent jamais le même fichier ; `benchmarks.csv`,
+`INDEX.md` et la réindexation restent à l'agent principal, après les autres), et vérifier
+ce qu'ils rapportent avant de le présenter.
 
 **Langue.** Français par défaut. Termes techniques et titres d'articles en anglais.

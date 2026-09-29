@@ -1,0 +1,182 @@
+---
+id: 2023-ruospo-survey-deep-learning-resilience-assessment
+title: "A Survey on Deep Learning Resilience Assessment Methodologies"
+year: 2023
+backend: grobid
+---
+
+## Abstract
+
+Deep learning (DL) reliability is becoming a growing concern, and efficient reliability assessment approaches are required to meet safety constraints. This article presents a survey of the main DL reliability assessment methodologies, focusing mainly on fault injection techniques used to evaluate DL resilience.
+
+I
+
+n the last few decades, deep learning (DL) has drastically enhanced the state of the art of applications such as computer vision, object detection, and language translation. For their outstanding computational capabilities, DL architectures, such as deep neural networks (DNNs), have become attractive solutions in safety-critical areas such as avionics, robotics, medical image analysis, and automotive. For this reason, the research community has shown increasing attention to understanding the resilience of DL models, which is defined as the capability to tolerate the presence of hardware faults.
+
+It is commonly argued that DL models have inherent fault-tolerant properties due to their distributed and parallel structure and their redundancy due to overprovisioning. Indeed, they can withstand the failure of a limited number of neurons and continue to function properly. 1 Unfortunately, the choice of hardware on which DL applications run has also been shown to have an impact on resilience. 2 In other words, DL resilience must be assessed by examining the entire system stack (hardware and software), making the overall process more complex and costly.
+
+Furthermore, DL models are not 100% accurate, which raises an important issue that needs to be considered when addressing the resilience of these systems. As an example, assume a classifier that, due to a fault, decreases its accuracy to 88% instead of the original 90%. Then, can the results be accepted (considering the device slightly degraded) or not? In other words, the metrics used to assess resilience need to be thoughtfully evaluated. Metrics generally vary depending on the specific DL model and the task it performs (for example, image classification or segmentation), but they all have in common the goal of measuring the degradation introduced by software or hardware faults.
+
+This article presents a systematic survey of existing methodologies developed for the assessment of DL resilience. Some of the most representative state-of-the-art academic and industrial works are analyzed and discussed. The article proposes a classification of evaluation techniques according to the level of abstraction and the models being evaluated. Moreover, a further contribution of the article is a comparative table indicating the costs and implementation efforts required to use any of the methodologies presented as well as the main advantages and disadvantages. This latter analysis is intended to highlight their strengths and weaknesses and to guide future research directions.
+
+## BACKGROUND
+
+DNN resilience assessment is intended to evaluate the impact of hardware faults on DNN inference. This is done by artificially injecting faults into the system; performing the inference; and comparing the results with a golden reference. This process is called fault injection (FI).
+
+First, it is important to clarify where faults can be injected and at what level of abstraction. In a DNN-based system, two levels can be identified: the hardware level and the application level. The former comprises the hardware device that runs the DNN, while the latter includes only the DNN application. In this light, the resilience assessment can target:
+
+1. The application level: the DNN model as a technology-independent software application 2. The entire system: the DNN model and the hardware architecture.
+
+In the first case (the application level), a designer might be interested in evaluating the resilience of the DNN, regardless of the target device on which it will be deployed. Therefore, an FI process can target only the units belonging to the DNN model, that is, neurons and synaptic weights. According to El Mhamdi and Guerraoui, 1 each neuron must be regarded as a single entity that can fail independently of the failure of any other. This also applies to synaptic weights. Errors in artificial neurons may occur in the following elements:
+
+› Communication channels:
+
+The communication link between two neuronal cells can be disrupted due to faulty interconnections or disturbances.
+
+› Synaptic weights:
+
+The weights represent the strength of the connection between two neuronal cells.
+
+› Neuron body:
+
+This constitutes the nucleus of the neuronal cell. An error affecting the neuron body can be distinguished into two categories: crash and byzantine. In the first case, the neuron completely stops its activity and saturates with positive or negative values. In the second, it transmits arbitrary values.
+
+An FI campaign can mimic the occurrence of these types of errors. Regarding the second case (the entire system), a designer might be interested in evaluating the resilience of the entire system before deploying a given DNN on a final device. In this case, in addition to the types of errors that compromise the DNN model, it is necessary to also consider the physical faults that may affect the hardware. As previously stated, the hardware selection impacts the resilience of DNN-based systems.
+
+In state-of-the-art architectures, a single processing element (PE) elaborates on many neuronal computations due to the size of current DNNs. This implies that a single fault affecting one PE corresponds to multiple faulty neurons. As a consequence, a comprehensive assessment of system resilience can be obtained by also considering the hardware platform running the DNN.
+
+Faults affecting electronic devices can be classified, based on their temporal characteristics, as permanent or transient. is active only for a short period of time and occurs as a result of external disturbance or abnormal conditions. Based on this classification, the following fault models have been proposed over the years as an abstraction of physical defects in electronic devices:
+
+1. Stuck-at faults: Individual elements of the electronic device are tied to a logical state. In a memory array, for instance, one bit may be stuck at a logical state of "1" or "0," and regardless of the operation, the result of the read will be always the same. 2. Bit-Flips: Individual memory elements of the electronic device have undergone a change in their logical state. This unintentional change can be recovered by writing a new value in the affected memory element.
+
+It is fair to state that today, these two fault models are unable to cover the newer fault mechanisms of deep-submicrometer technologies. New fault models are needed to handle delays, open lines, bridging, and transient pulses.
+
+Nevertheless, it has been demonstrated that stuck-at and bit-flip fault models enable good fault tolerance investigation even at the application level, and because of this, they have been widely employed for DL reliability studies. An error affecting the communication channels of a DNN, for example, can be modeled as a single stuck-at fault or multiple stuck-at faults affecting one or more bits of the channel. Similarly, an error in a DNN synaptic weight can be represented by a stuck-at (or bit-flip) fault impacting one or more bits of the synaptic weight. The same reasoning can be applied to represent a crash or byzantine neuron.
+
+A neuron can be considered dead if it no longer transmits values; this error can be modeled as a stuck-at-0 at its output. In contrast, a byzantine neuron can be modeled as a stuck-at value.
+
+## FI METHODOLOGIES
+
+Resilience evaluation of DNN models and DNN-based systems can be pursued for various purposes and at different levels: from the application level to silicon measurements on physical devices, such as application-specific integrated circuits, field-programmable gate arrays (FPGAs), and GPUs.
+
+Significant efforts have been devoted in recent years to propose methodologies that facilitate this task. Most of them rely on specific frameworks that promote the execution of FI campaigns.
+
+In line with a preliminary classification provided by Ruospo et al., 3 the state-of-the-art FI methodologies fall into one of the following categories:
+
+› Simulation based: The injection process is conducted without relying on the physical device executing the DNN. Moreover, depending on the level of abstraction, they can be further classified.
+
+• Software level: Injections are performed on a high-level model of the DNN, without considering any details of the actual hardware architecture.
+
+• Hardware level: Injections are performed on a more accurate model of the DNN that simulates the target hardware architecture. For example, the target can be expressed at the register transfer level (RTL) or at the gate level.
+
+› Platform based: Measurements and analyses are performed directly on a physical device that emulates the final implementation of a design using FPGAs or on physical platforms that run DNNs, for example, CPUs and GPUs.
+
+› Radiation based: Reliability assessment is carried out through accelerated radiation test campaigns mimicking external electromagnetic interference, such as the occurrence of ionizing particles, on the actual platform running the DNN.
+
+An illustration of the proposed classification is shown in Figure 1. Specifically, for each category, a lightning bolt symbol indicates the level of abstraction and the entities on which FI campaigns can be held. For example, FIs based on hardware-level simulation offer the possibility of injecting faults on both the DNN and hardware description language (HDL) hardware models.
+
+## Software-level simulationbased FIs
+
+Nowadays, simulation-based FIs represent the most widely used techniques. Specifically, software-level approaches are the most frequently adopted as they are cost-effective, faster, more controllable, and easier to implement. A highlevel model of the DNN is created that is independent of any potential hardware architecture. This model is then simulated using an FI framework for injecting faults. This allows a general characterization, unrelated to the ultimate hardware platform. A software-level FI is meant to identify weaknesses in the DNN and to determine the most vulnerable layers or choose the most reliable data representation. It is worth saying that DNNs are not all equal; they have different architectures but also different pruning and quantization algorithms, 4 which lead to different properties that can impact the reliability assessment. Several works have been advanced in the literature so far. 5,6,7 They differ mainly in the software platforms used (for example, PyTorch or TensorFlow), the type of injected faults (for example, permanent or transient), and the fault locations (for example, weights, activation, and operators).
+
+Unfortunately, software methodologies might not be complete to represent real behavior when implemented on a physical device. It is evident that software-level simulations and theoretical analyses may lack information about the underlying hardware platform and are relatively less accurate. 8
+
+## Hardware-level simulation-based FIs
+
+Hardware-level simulations allow the injection of more realistic fault models (that is, faults that can affect the hardware). The lower the level of abstraction, the higher the injection accuracy. Therefore, for a comprehensive assessment, it might be beneficial to run FIs on an HDL model of the target hardware architecture running the DNN.
+
+Salami et al. 8 present a simulation-based hardware-level FI framework to perform in-depth vulnerability analyses of a hardware accelerator described at the RTL. The assessment is performed by considering both application-level specifications (the weights, inputs, and intermediate DNN values) and architectural-level specifications (the specific data representation and the number of computational resources, that is, the PEs). Permanent and transient faults are injected during inference cycles on the subset of registers containing the DNN parameters. Ruospo et al. 3 exploit the pipeline mechanism to reduce the fault simulation time when executing DNN inferences at the RTL level. Indeed, since DNN layers work independently of each other in a sequence of steps, their parallelism can be exploited to maximize performance. This leads to reducing fault simulation time by more than 60% by mimicking the flow of a pipeline in which layers perform many inferences in parallel.
+
+To further reduce simulation time, many techniques take advantage of hardware knowledge to derive realistic fault models to be injected later at the software level to take the benefits of both techniques. He et al. 9 the high-level design information obtained from architectural descriptions. Another approach consists of modeling the hardware architecture at the software level to expedite the process. Li et al. 10 modified an open source DNN simulator, that is, Tiny-CNN, to map each line of code to the corresponding hardware component of the DNN accelerators.
+
+It is important to mention that the currently available commercial tools for FI, such as Z01X (https://www.syn-opsys.com/verification/simulation/ z01x-functional-safety.html); Xcelium (https://www.cadence.com/en_US/ home/training/all-courses/86246. html); and others, can be exploited at the hardware level of the simulation-based approaches. Unfortunately, these tools are mainly oriented to assess the quality of the end-of-production testing procedures, usually performed at the structural level of the devices. On the other hand, functional FI campaigns, such as the ones devoted to assessing DNN reliability, are extremely time consuming and require huge efforts to configure the system, making it very difficult to resort to these tools when assessing the reliability of DNN accelerators.
+
+## Platform-based FIs
+
+In this category, the resilience assessment is measured directly on a physical platform that emulates the final implementation using, for example, FPGAs, or executes the targeted DNN in GPUs and embedded CPUs. In Reagen et al., 11 the DNN workload is executed on a GPU. Injected faults are permanent faults that occur in DNN parameters. At the application level, faults are injected into the weights, activations, and hidden states through bit-flips.
+
+Lotfi et al. 12 evaluate the vulnerability of DNNs to permanent and transient faults, exploiting an FI framework and accelerated neutron beam testing. The DNN is a 54-layer model used for the object detection task. The experiments were performed on a Volta GPU using TensorRT, a framework developed by NVIDIA to optimize inferences on GPU architectures. Concerning the emulation on FPGAs, several approaches have been proposed. As an example, FireNN 13 exploits the reconfigurability of FPGAs to mimic faults affecting the hardware running DNNs.
+
+It is important to underline that the effectiveness of simulation-based and platform-based approaches also depends on the designer's configuration choices. For instance, selecting the appropriate number of faults to be injected may affect the success of the experiment. Validating the safety properties by exhaustively fault-simulating a DNN is typically prohibitive as the complexity and the size of newer DNN models grow. To address this problem, statistical FI approaches have been proposed over the last decades with the intent of reducing the cost of the fault simulation procedure while still achieving statistically significant results. 14 Clearly, this concern affects simulation-based and platform-based techniques, where the source of errors is not external but stems from the designer's decisions.
+
+## Radiation-based FIs
+
+The actual implementation of the system is exposed to the same external conditions as the in-field application (for example, a flux of atmospheric-like neutrons, which can induce single-event effects on electronic devices). This methodology guarantees a highly accurate reliability assessment. However, measuring the effects of radiation-induced faults is costly in terms of hardware resources and facility access.
+
+In Lotfi et al., 12 irradiation tests were performed on GPUs based on the Volta architecture. The entire GPU was irradiated for the entire duration of the experiment. A second example of a radiation-based method is provided in Fernandes dos Santos, 15 in which the resilience of a convolutional NN (CNN) on three different NVIDIA GPU architectures exposed to controlled neutron beams is evaluated. The objective of these works was to understand the propagation of injected errors not only in memory elements but also in computational and control resources.
+
+Furthermore, Matana Luza et al. 16 studied the impact of neutron irradiation on the HyperRAM memory, which stored the weights of the CNNbased application. In this way, the source of the error was isolated, and the focus was on the CNN weights. A
+
+## HARDWARE-LEVEL SIMULATIONS ALLOW THE INJECTION OF MORE REALISTIC FAULT MODELS (THAT IS, FAULTS THAT CAN AFFECT THE HARDWARE).
+
+variety of error types were identified: single-bit upsets, stuck-at faults, and block errors. A similar approach is proposed in Hasan et al., 17 in which the authors evaluate the use of 2D a nd 3D f la sh memor ies to store DNN weights.
+
+## DISCUSSION
+
+The previous sections highlighted the main characteristics of FI methodologies. This section is intended to provide a qualitative comparison between them and discuss their main advantages and disadvantages.
+
+In Table 1, for each FI methodology, the following parameters are discussed and graded either as low, medium, or high: › Cost: the total costs required to perform the reliability assessment, including time and resources › Development effort: the effort required to develop and set up the FI methodology at that specific level of abstraction › Exactness: how close the FI procedure is to reality, that is, whether the results are accurate › Controllability: the ability to control where and when a fault is injected › Observability: the ability to identify internal events within the system circuit (not only primary outputs) › Repeatability: how many times the FI process can be repeated using the same framework › Early availability: if reliability assessment is performed early in the design cycle › FI time: the time required to perform a single cycle of injection.
+
+In terms of costs, simulation-based methodologies are the least expensive because they do not require the development and purchase of specific electronic devices to run the tests. Hence, the cost level is low for both FIs based on hardware-level simulation and those based on software-level simulation.
+
+Contrarily, platform-based techniques have a medium cost, requiring the use of validation or emulation devices such as GPUs, CPUs, and FPGAs. Once purchased, the advantage is that they can be reused after FI campaigns. Moreover, they can be parallelized to increase performance. T h e m o s t e x p e n s iv e techniques are undoubtedly radiation-based techniques for two main reasons: first, the access to the irradiation facility, and second, the setup development.
+
+Moreover, in some cases, the electronics exposed to radiation can be irremediably degraded, inhibiting their reuse. The cost level is high.
+
+Radiation-based techniques do not involve the creation of a specific FI environment. However, the identification/ creation of observation means may not be trivial. The highest development effort is required for platform-based FI methodologies, where the developer must both build an FI environment and configure the platform on which experiments will run (for example, reconfigure for FPGA emulations). For software-level simulation-based techniques, a medium-to-high development effort is required to build the FI framework. The same is true for those at the hardware level, where the HDL model of the device to be tested is required.
+
+The exactness of the results varies and depends on how closely these FI techniques mimic the occurrence of realistic defects in the system and how close they are to reality. In other words, realistic fault models with failure rates according to the environment and systems characteristics will have a direct impact on the exactness of the FI procedure. The highest level of exactness is achieved with radiation-based FIs, where radiation-induced faults directly affect the silicon implementation of the device. This allows for a really accurate characterization of the DNN model. Right after this category, simulation-based hardware-level FIs are characterized by a good level of precision, which can be close to the final silicon implementation. Indeed, by adopting the HDL model of the hardware device (RTL or gate level), they can be credited with a medium-to-high level of exactness.
+
+In contrast, a different reasoning must be made for simulation-based software-level FIs and platform-based FIs; they present a low and a lowmedium level of exactness, respectively. The lower the level of programming language adopted for DNN applications, the higher the exactness. When injecting errors at the software or algorithmic level, the occurrence of realistic hardware faults is reproduced with specific software fault models. An FI framework and a DNN model developed in C/C++ can be compiled and executed directly on a physical hardware device. Therefore, the injected software errors can be close to the faults they seek to reproduce. Examples are the FI frameworks described in Ruospo et al. 5 and Li et al. 10 However, this is not true for FI frameworks that inject algorithmic-level errors into high-level programming languages or tools, such as Python, PyTorch, and TensorFlow. Indeed, they are subject to a more complex compilation chain. A great number of works exploit such tools in their deployment; examples of FI frameworks that inject errors at this level are described in Chen et al., 6 Mahmoud et al., 7 He et al., 9 Reagen et al., 11 and Lotfi et al. 12 It is worth underlining that although the FI frameworks in Ruospo et al. 3 and De Sio et al. 13 make use of high-level programming languages, they do not inject errors into the high-level DNN model. Rather, they corrupt the RTL register/ signals or bits in the FPGAs' configuration memory bitstream, respectively. As discussed previously, this leads to a higher level of exactness.
+
+Notably, one of the advantages of conducting resilience assessments based on software-level simulations is the ability to characterize the vulnerability of the DNN independently of the target hardware device and, in particular, to conduct analyses on layers, data types, and network parameters. Nevertheless, when a more comprehensive resilience assessment is needed, injection campaigns should also address the target hardware running the DNN. This is possible when the device's HDL model is available, 3,8 either at the RTL or at the gate level. In this case, hardware-level FIs can achieve better accuracy of results, closer to the implementation on silicon. The main drawback is simulation time. RTL (or gate-level) simulations are known to be time consuming due to the complexity of the HDL and DNN models. For example, a small CNN with only seven layers simulated at RTL can take about 25 min to perform a single inference. 3 Furthermore, existing commercial simulation tools are neither tuned nor optimized to deal with the complexity of state-of-the-art DNN applications performing billions of neuronal computations. This means that a hardware-level FI is accurate but very expensive in terms of simulation time. Indeed, hardware-level resilience assessments typically consider only DNNs of limited size: a six-layer fully connected classifier in Salami et al. 8 or a seven-layer CNN in Ruospo et al. 3 Conversely, software-level simulation-based methodologies are not concerned with this nonnegligible limitation. Finally, when the device's HDL model is not available, the FI framework can extract architectural details and inject software errors that closely mimic realistic physical hardware faults, as shown in He et al. 9 and Li et al. 10 In terms of controllabilit y and observability parameters, the FI methodologies described exhibit different degrees. The highest controllability is obtained in simulation (at the software or hardware level), where the developer can create an accurate FI framework for this purpose. Conversely, the level of observability in simulation is not always high; while at the software level, it is possible to observe the internal events of the system, at the hardware level, this task may prove more challenging. Depending on the complexity of the HDL model of the hardware, observing all internal states can be very difficult. For platform-based FI methodologies, it may be straightforward to control where and when to inject errors, but as outlined before, the FI frameworks can be subject to a specific compilation chain, which could lead to less controllability and visibility.
+
+Observability is also reduced for this category. Observing changes in the internal states of the hardware can be very complicated and also depends on its complexity. Usually, in these cases, the output signals are observed. The same reasoning applies to the observability parameter of radiation-based FI approaches. However, the level of controllability is drastically reduced. Indeed, since the source of errors is external, the developer is unable to control when and where faults are introduced.
+
+Software-level simulation-based, hardware-level simulation-based, and platform-based FI methodologies are characterized by a high level of repeatability; indeed, the FI procedure can be repeated several times using the same injection framework (probably just by adjusting a few configuration parameters). For radiation-based techniques, this is unrealizable. After the irradiation test, the devices, most of the time, cannot be reused.
+
+Another important metric to consider is early availability. Simulation-based software-level FIs can be run early in the design cycle, without relying on the availability of an HDL model. Platform-based FIs can also be performed by emulating or running the DNN on an FPGA, CPU, or GPU, which may or (in most cases) may not represent the final platform on which the DNN is to be deployed. Finally, if the radiation test targets the complete DNN-based system, the FI procedure should be executed at the end of the full design cycle on the final silicon implementation.
+
+To conclude, it is worth noting that it was difficult to precisely compare the time required to run a single FI among all existing FI methodologies. Indeed, there are many variables that determine the FI execution time, such as the parallelization of experiments, the instruments adopted, and the specific radiation source.
+
+Another influential factor is the number of FIs performed; as mentioned before, the exhaustive simulation of DNN faults is typically beyond computational possibilities. Therefore, statistical inferences are commonly performed to reduce complexity by injecting a reduced number of faults while still obtaining statistically significant results.
+
+## Open challenges and future directions
+
+This article discusses some of the most representative works proposing FI methodologies, highlighting advantages and disadvantages. In this section, the main open issues that need research and innovation are underlined.
+
+In a recent publication, 18 the authors demonstrated that systematic FIs in the configuration memory of static RAMbased FPGAs could not be generalized to all devices of that type. Experimental analyses conducted on 16 Xilinx Artix-7 and 10 Lattice iCE40 devices showed that results vary from device to device and that temperature influences the FI results. This means that parallelization of the FI procedure may yield inaccurate results.
+
+Moreover, the study of different fault models (for example, delays, bridging, and open lines) covering the new fault mechanisms of deep-submicrometer technologies is an open challenge. Indeed, only the effects of transient and permanent faults have been investigated in this topic.
+
+Finally, because all FI methodologies have advantages and disadvantages, the research community is pushing for hybrid solutions that can get the best out of each approach. For
+
+## BECAUSE ALL FI METHODOLOGIES HAVE ADVANTAGES AND DISADVANTAGES, THE RESEARCH COMMUNITY IS PUSHING FOR HYBRID SOLUTIONS THAT CAN GET THE BEST OUT OF EACH APPROACH.
+
+example, a very recent approach 19 proposes a simulation-based crosslayer framework for the reliability analysis of CNN-based applications against soft errors in GPUs. It combines the high exactness of hardware-level FIs with the low FI time of software-level FIs. Hy br id F I s h ave a l r e a dy b e e n used for the resilience assessment of generic applications, such as the FI tool based on simulation and emulation cooperation presented in Ejlali et al. 20 We believe that for future works, Table 1 could serve as a basis for researchers to select the best hybrid strategy that considers all the metrics examined.
+
+I
+
+is a postdoctoral researcher at the Politecnico di Torino, 10129 Turin, Italy. Her research interests include the test and verification of embedded devices and the reliability assessment of neural networks and artificial intelligence-oriented systems-on-chip. Ruospo received a Ph.D. (cum laude) in computer engineering from the Politecnico di Torino. She is a Member of IEEE. Contact her at annachiara. ruospo@polito.it. ERNESTO SANCHEZ is an associate professor at the Politecnico di Torino, 10129 Turin, Italy. His research interests include digital circuits and systems reliability; evolutionary computation; and artificial intelligence. Sanchez received a Ph.D. in computer engineering from the Politecnico di Torino. He is a Senior Member of IEEE. Contact him at ernesto.sanchez@polito.it. LUCAS MATANA LUZA is a research engineer at the LIRMM, CNRS, University of Montpellier, 34090 Montpellier, France. His research interests include radiation effects, reliability, and testing of electronics and systems. Matana Luza received a Ph.D. in automatic systems and microelectronics from the University of Montpellier. Contact him at lucas.matana-luza@ lirmm.fr. LUIGI DILILLO is a CNRS researcher at the LIRMM, University of Montpellier, 34090 Montpellier, France. His research interests include memory test and reliability; power-aware tests; radiation impact on electronics; radiation monitoring; and space and radiation-hardened systems design. Dilillo received a Ph.D. in microelectronics at the University of Montpellier. Contact him at https://www. lirmm.fr/dilillo/. MARCELLO TRAIOLA is a researcher at Inria centre at Rennes University, IRISA, 35000 Rennes, France. His research interests include hardware architecture design, test, and reliability with a focus on emerging computing paradigms. Traiola received a Ph.D. in computer engineering from the University of Montpellier. He is a Member of IEEE. Contact him at https://people.rennes.inria.fr/Marcello.Traiola/. ALBERTO BOSIO is a full professor at the Ecole Centrale de Lyon, Institute of Nanotechnology, 69134 Lyon, France. His research interests include computing architectures and the reliability and testing of digital circuits and systems. Bosio received a Ph.D. in computer engineering from the Politecnico di Torino. He is a Member of IEEE. Contact him at http://perso.ec-lyon.fr/alberto.bosio.
+
+n recent years, there has been a growing interest in studying the resilience of DNN-based systems. This article presents a review of the main methodologies used for this purpose. The reviewed works have been classified into four main categories, namely software-level simulation-based, hardware-level simulation-based, platform-based, and radiation-based FI methodologies, depending on the level of abstraction; the source of errors (internal or external); and the overall injection procedure. Their main characteristics are highlighted and qualitatively compared with the aim of providing a guideline for all those who want to examine the resilience of their DNN-based systems. The literature study highlights challenges and open research issues. For instance, in our long-term view, there is a need for more accurate FI metrics, tools, and statistic-based methodologies able to handle the nonnegligible complexity of modern DNNs. The proposed discussion is meant to serve as a basis for advanced research in this area.
+
+## Figures et tableaux
+
+**TABLE 1.** A comparison among the different FI methodologies.
+
+    Metric
+
+Simulation-Based Software Level Simulation-Based Hard- ware Level Platform Based Radiation Based
+
+    Cost | Low | Low | Medium-high | High
+    Development effort | Medium-high | Medium-high | High | Low-medium
+    Exactness* | Low | Medium-high | Low-medium | Very high
+    Controllability | High | High | Medium | Low
+    Observability | High | Medium** | Low** | Low**
+    Repeatability | High | High | High | Medium-low
+    Early availability | High | Medium | High | Medium-low
+    FI time | Low | High | Medium-low | Low
+    Principal advantages | Cheap and fast | Good FI exactness | Portability | Best FI exactness; realistic
+    Principal drawbacks | Low FI exactness | Time consuming; the HDL | Limited FI exactness | Expensive
+     |  | must be available |  |

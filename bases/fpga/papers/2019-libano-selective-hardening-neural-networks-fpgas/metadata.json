@@ -1,0 +1,60 @@
+{
+  "id": "2019-libano-selective-hardening-neural-networks-fpgas",
+  "title": "Selective Hardening for Neural Networks in FPGAs",
+  "authors": [
+    {
+      "given": "F.",
+      "family": "Libano"
+    },
+    {
+      "given": "B.",
+      "family": "Wilson"
+    },
+    {
+      "given": "J.",
+      "family": "Anderson"
+    },
+    {
+      "given": "M. J.",
+      "family": "Wirthlin"
+    },
+    {
+      "given": "C.",
+      "family": "Cazzaniga"
+    },
+    {
+      "given": "C.",
+      "family": "Frost"
+    },
+    {
+      "given": "P.",
+      "family": "Rech"
+    }
+  ],
+  "year": 2019,
+  "venue": "IEEE Transactions on Nuclear Science 66(1), 216-222",
+  "doi": "10.1109/TNS.2018.2884460",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TNS.2018.2884460",
+  "type": "journal",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [
+    "fault-injection"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE I",
+      "sections numérotées non détectées : I, IV — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

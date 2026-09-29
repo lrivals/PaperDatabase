@@ -1,0 +1,50 @@
+{
+  "id": "arxiv-1709.06662-verifying-properties-binarized-deep-neural",
+  "title": "Verifying Properties of Binarized Deep Neural Networks",
+  "authors": [
+    {
+      "given": "Nina",
+      "family": "Narodytska"
+    },
+    {
+      "given": "Shiva Prasad",
+      "family": "Kasiviswanathan"
+    },
+    {
+      "given": "Leonid",
+      "family": "Ryzhyk"
+    },
+    {
+      "given": "Mooly",
+      "family": "Sagiv"
+    },
+    {
+      "given": "Toby",
+      "family": "Walsh"
+    }
+  ],
+  "year": 2017,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1709.06662",
+  "url": "https://arxiv.org/abs/1709.06662",
+  "type": "preprint",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1",
+      "sections numérotées non détectées : 3, 6 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

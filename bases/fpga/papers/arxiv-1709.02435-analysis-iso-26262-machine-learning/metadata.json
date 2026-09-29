@@ -1,0 +1,40 @@
+{
+  "id": "arxiv-1709.02435-analysis-iso-26262-machine-learning",
+  "title": "An Analysis of ISO 26262: Using Machine Learning Safely in Automotive Software",
+  "authors": [
+    {
+      "given": "Rick",
+      "family": "Salay"
+    },
+    {
+      "given": "Rodrigo",
+      "family": "Queiroz"
+    },
+    {
+      "given": "Krzysztof",
+      "family": "Czarnecki"
+    }
+  ],
+  "year": 2017,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1709.02435",
+  "url": "https://arxiv.org/abs/1709.02435",
+  "type": "preprint",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

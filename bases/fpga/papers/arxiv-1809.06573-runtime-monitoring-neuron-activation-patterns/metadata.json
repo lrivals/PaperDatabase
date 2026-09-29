@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-1809.06573-runtime-monitoring-neuron-activation-patterns",
+  "title": "Runtime Monitoring Neuron Activation Patterns",
+  "authors": [
+    {
+      "given": "Chih-Hong",
+      "family": "Cheng"
+    },
+    {
+      "given": "Georg",
+      "family": "Nührenberg"
+    },
+    {
+      "given": "Hirotoshi",
+      "family": "Yasuoka"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1809.06573",
+  "url": "https://arxiv.org/abs/1809.06573",
+  "type": "preprint",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : III — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

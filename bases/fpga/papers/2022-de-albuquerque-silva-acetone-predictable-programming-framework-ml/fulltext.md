@@ -1,0 +1,282 @@
+---
+id: 2022-de-albuquerque-silva-acetone-predictable-programming-framework-ml
+title: "ACETONE: Predictable Programming Framework for ML Applications in Safety-Critical Systems"
+year: 2022
+backend: grobid
+---
+
+## Abstract
+
+Machine learning applications have been gaining considerable attention in the field of safety-critical systems. Nonetheless, there is up to now no accepted development process that reaches classical safety confidence levels. This is the reason why we have developed a generic programming framework called ACETONE that is compliant with safety objectives (including traceability and WCET computation) for machine learning. More practically, the framework generates C code from a detailed description of off-line trained feed-forward deep neural networks that preserves the semantics of the original trained model and for which the WCET can be assessed with OTAWA. We have compared our results with Keras2c and uTVM with static runtime on a realistic set of benchmarks.
+
+Computer systems organization → Real-time systems; Software and its engineering → Software notations and tools Keywords and phrases Real-time safety-critical systems, Worst Case Execution Time analysis, Artificial Neural Networks implementation
+
+## 1. Introduction
+
+The use of artificial intelligence approaches is already of vital importance in many research areas. In particular, when embedded in aircraft systems, intelligent algorithms could help in tasks such as navigation, predictive maintenance and air traffic control, improving safety and saving environmental resources. Nonetheless, not much progress has been made in embedding machine learning solutions in safety-critical systems as most of those applications do not reach classical safety confidence levels and are not implemented with accepted development process [2,5]. The scope of this work is the safe real-time implementation of neural networks on embedded platforms.
+
+Context. We focus on safety-critical domains and in particular on aeronautics that is subject to certification. The question of how to safely and reliably implement a neural network on an adequate hardware is of vital importance. Indeed, certification requirements, in particular those of the DO 178-C [14] 1 , impose strong guarantees on the quality of the code and expect the designer to:
+
+1 Classical guidance for the implementation process of the software items ensure traceability between the requirements and the (source) code; compute the WCET (Worst Case Execution Time) [39] for each piece of code; run intensive testing to verify the compliance of the implementation to the requirements. This includes unit tests to verify both that the executable provides the intended function and there is no hidden unintended function (by activating all the branches of the code). The purpose is thus to provide a programming framework compliant with these objectives for machine learning. This work is restricted to off-line trained feed-forward deep neural networks (referred to simply as neural networks or DNN subsequently). The off-line design of such neural networks is done by defining the structure (that is the number and the type of layers), choosing the training data set and using a learning framework such as Tensorflow [1] or PyTorch [28]. The result of the design is called the inference model: it comprises a neural network with its parameters (e.g. weights, biases, activation functions or kernels). The implementation -the part we focus on -consists in coding the inference model in an adequate programming language and porting the code on the target hardware.
+
+Contributions. The first challenge brought by the implementation is the semantic preservation: the reproducibility of the behavior observed when executing the inference model within the training tool on the target hardware. Thus our first contribution (see section 2) is to formally define the semantics of DNN (by extending and formalizing existing works of the literature) and explaining the challenges brought by the current frameworks. Indeed, the training tools such as Tensorflow/Keras or PyTorch do not encode the basic operations, such as convolutions (and thus matrices operations) in the same manner.
+
+The second challenge is predictability: the capacity to assess the worst-case execution time (WCET) of a sequential code. In the ML literature, most of the implementations are done on GPUs or TPUs with a runtime engine such as Tensorflow that interprets the computation graph, i.e., a graph describing the mathematical structure of the neural network. Such an interpreter uses dynamic memory and scheduling allocation and as we focus on safety-critical domain -and more specifically avionics -, such an approach is not practical for two reasons. First, the hardware targets that are compatible with certification are not those mentioned earlier. We thus focus on general purpose multi-core commercial off-the-shelf (COTS) hardware such as the T1042 from NXP, the Coolidge from Kalray [18] or the keystone from Texas Instrument [37] (used in the experiments). Second, the programs, including the application, the RTOS and the runtime, must be predictable. There are some initiatives to make such runtime predictable such as eIQ and KaNN. However, there is still a large amount of work and proof to show the capability to compute a WCET for these tools. This is the reason why we target a more classical static approach which consists in generating an equivalent C code to execute the model (no interpretation) such as proposed in [8]. Our second contribution is the development of ACETONE (Avionics C code generator for Neural NEtworks), a framework that generates a real-time C code semantically equivalent to the inference model (see section 3) and that fits the aeronautic requirements. We made a particular effort on the software architecture to make the framework: modular: it is very simple to add new DNN structures, new types of layers or new refinement of the existing ones. very easy to use: a person non familiar with our framework can very quickly generate their C code and port them on their target; extremely traceable: looking at the generated C code, it is humanly possible to trace back to the original exported DNN model, which is an expected property from the DO-178C;
+
+3:3
+
+predictable: we used a static WCET analyzer of the literature, OTAWA [4] developed at the University of Toulouse, to assess the WCET of the code. This means that the C code is expected to run sequentially on a single core (no parallelization targeted in this paper), all the memory allocations are static and the schedule (here the sequence of executions) is also static. The compilation of the C code to a binary must also use the flag -O0 (no compiler optimization). These restrictions are important to keep in mind to understand the philosophy of the code generation.
+
+The last contribution is a thorough evaluation of our framework together with a comparison with state of the art C code generator frameworks, namely Keras2c [10] and uTVM with static C runtime [35]. Section 4 details the methodology: we have selected a set of representative benchmarks and identified a set of criteria to assess the quality of a code (in accordance with the DO-178C objectives listed above). Section 5 gives the results of the experiments. We were able to assess most of our criteria for all the benchmarks and frameworks. In particular, we have ported the binary on an arm Cortex-A15 of the keystone [37] to compare the measured and worst-case execution times. Overall, in terms of performance, we are comparable to and even slightly better than the other frameworks. This stems, for uTVM, from the restrictions needed for predictability and the compilation with -O0. In that sense, our implementations are optimal with respect to our criteria.
+
+## 2. Reminder on Deep Neural Networks
+
+We focus on the inference of off-line trained feed-forward Deep Neural Networks (DNN). More precisely, we consider convolutional neural networks (CNN) and multi-perceptron (or fully-connected) neural networks.
+
+### 2.1. Functions performed by DNN
+
+There are multiple ways to define DNNs: directed graphs, computational graphs or simply the mathematical functions transforming the input into the output. The latter is the way we propose to explain the computations needed to be done by the C code. The input of those functions can be seen as a multi-dimensional vector also called tensor. Subsequently, we will only consider 1D-, 2D-and 3D-tensors but to save space, we only provide definitions for 3D. We only consider inference with one input (no batch).
+
+▶ Definition 1 (Tensor
+
+= f ln • . . . • f l1 .
+
+The semantics of each function is given in [38]. We give the definition, with mathematical equations, of the main layers used in the use cases depicted in section 4.1.
+
+### E C R T S
+
+of size (o h , o w , o c ) with o h = n h -f h s h + 1 , o w = nw-fw sw + 1 and o c = nb_kernel. We have O x,y,z = f h i=1 fw j=1 fc m=1 K z i,j,m •I s h •(x-1)+i,sw•(y-1)+j,m for all x ≤ o h , y ≤ o w and z ≤ o c .
+
+Note that also we must have f c = n c thus, convolutions are often applied on 3D-tensors on which padding has been applied first to fit the sizes. See definition 14.
+
+▶ Definition 8 (Pooling layer associated function). Let s = (s h , s w ) be the stride parameters, let k = (k h , k w ) be the height and width of the window and let f : R k h .kw -→ R be a function (e.g. max or average). The pooling applied on a 3D-tensor I of size (n h , n w , n c ) outputs a 3D-
+
+tensor O = Pool k,s,f (I) of size (o h , o w , o c ) with o h = n h -k h s h + 1 , o w = nw-kw sw + 1 and o c = n c with O x,y,z = f (I[s h •(x-1)+1 : s h •(x-1)+k h +1][s w •(y-1)+1 : s w •(y-1)+k w +1][z]).
+
+▶ Definition 9 (Batch norm layer associated function). Let γ be 1D-tensor of size n c be the scale, let β be 1D-tensor of size n c be the offset, let µ be 1D-tensor of size n c be the mean (on the batch fixed during the training), let V be 1D-tensor of size n c be the variance (on the batch fixed during the training), let ϵ be a float used to ensure no division per 0. The batch norm applied on a 3D-tensor I of size (n h , n w , n c ) outputs a 3D-tensor O = BN γ,β,µ,σ,ϵ (I) of size
+
+(n h , n w , n c ) with O x,y,z = γz √ Vz+ϵ • I x,y,z + β z -µz √ Vz+ϵ . We often denote by α z = γz √ Vz+ϵ and B z = β z -µz•γz √ Vz+ϵ , so that O x,y,z = α z • I x,y,z + B z .
+
+▶ Definition 10 (Flattening layer). The flattening layer applied to a 3D-tensor I of size
+
+(n h , n w , n c ) outputs the 1D-tensor O = Flat(I) of size n o = n h × n w × n c such that O x = I x mod nw, x mod (n h •nw ) nw , x n h •nw .
+
+▶ Definition 11 (Dense layer). Let W be a 2D-tensor of size (n o , n i ) (for the weights) and B be a 1D-tensor of size n o (for the biases). The dense layer applied to a 1D-tensor I of size n i outputs the 1D-tensor of size
+
+n o O = Dense(I) = W • I + B, i.e. O x = ni k=1 W x,k • I k + B x .
+
+Then, we can define easily the function associated to a DNN from those basic functions.
+
+▶ Example 12 (Multi-perceptron / fully-connected neural network). A fully-connected neural network is a succession of dense and activation layers. The function associated to the DNN of figure 1
+
+is N = f l3 • f l2 • f l1 = A 3 (W 3 • (A 2 (W 2 • (A 1 (W 1 • I + B 1 )) + B 2 )) + B 3
+
+). Its structure corresponds to 2 hidden layers with 3 neurons each, 2 inputs and 1 output. Short notation: (2,3,3). ▶ Example 13 (LeNet-5). The LeNet-5 [23] model is the basic CNN developed for handwritten digits images recognition. We used the pre-trained LeNet-5 from Keras which is shown in figure 2. Such a graphical representation is classical to highlight the layers and the number of feature maps.
+
+The size of the input / output tensors are shown on the figure. The first 2D-convolution conv1 takes inputs of size 28 × 28 × 1, is composed of 6 kernels K i of size 5 × 5 × 1 and of a stride s = (1, 1). The activation function tanh is applied to the outputs. The first pooling layer pool1 is an average pooling with stride s = (2, 2) and window k = (2, 2). The second 2D-convolution conv2 is composed of 16 kernels K i of size 5 × 5 × 6 and of a stride s = (1, 1). The activation function tanh is applied to the outputs. The second pooling layer pool2 is an average pooling with stride s = (2, 2) and window k = (2, 2). The 3D-tensor of size 6 × 6 × 4 is flattened in a 1D-tensor of size 96. There are three dense layers with respectively (n i , n o ) = (96, 120), (n i , n o ) = (120, 84) and (n i , n o ) = (84, 10). The two first dense layers apply the activation function tanh and the last one a softmax. Thus the function associated to this LeNet-5 is:
+
+N = A softmax • f dense3 • A tanh • f dense2 • A tanh • f dense1 • f flat • f pool2 • A tanh • f conv2 • f pool1 • A tanh • f conv1 .
+
+### 2.2. Semantics-preserving model transformation
+
+At this stage, it is acceptable to transform the DNN model as long as the semantics is preserved. This can be interesting when it yields an improvement of the implementation. We list here some transformations worth to be made before coding.
+
+▶ Definition 14 (Extended 2D-convolution layers). In the literature, convolutions usually integrate other parameters than those listed in definition 7. Indeed, a convolution is often defined together with the padding, the activation function and even in some cases with a bias. We thus denote by
+
+C p,K,s,B,f = A f • B B • C K,s • P p (
+
+### all combinations by removing a function work). Note that this is common to consider bias B in convolution where
+
+B x1,y1,z = B x2,y2,z with x 1 ̸ = x 2 and y 1 ̸ = y 2 .
+
+▶ Property 1 (Well-balanced 2D-convolution layers). It is usual to have the output height and width equal to the input height and width, i.e. o h = n h and o w = n w . In that case, we must have
+
+n h = ⌊ n h +pt+p b -f h s h + 1⌋ and n w = ⌊ nw+p l +pr-fw sw + 1⌋. The padding should also satisfy p t + p b -f h = -1 and p l + p r -f w = -1. E C R T S 2 0 2 2
+
+### 3:6 Predictable Code for Machine Learning Applications
+
+▶ Property 2 (Portability issue between training frameworks). We remark that for a given kernel size, several solutions may exist to the equations of property 1. For instance, with a kernel size of (5, 5) and stride of 1, 4 different paddings for each dimension satisfy the equations. Thus classical frameworks like Tensorflow or PyTorch have different strategies (thus imply different semantics) when implementing a convolution that preserves the input size for height and width.
+
+▶ Property 3 (Max pooling and ReLu activation layers). Applying a ReLu activation layer before a max pooling layer is semantically equivalent to applying the ReLu activation layer after the max pooling layer. However, the number of operations is reduced when applying the ReLu activation after if the stride s = (s h , s w ) of the pooling satisfies s h > 1 or s w > 1.
+
+Proof. Let us assume that the input tensor I is of size (n h , n w , n c ) and that we do the ReLu before the pooling. Then we will do
+
+O x,y,z = max(ReLu(I[s h .(x -1) + 1 : s h .(x -1) + k h + 1][s w .(y-1)+1 : s w .(y-1)+k w +1][z]))
+
+) thus ReLu will be applied n h ×n w ×n c times. On the contrary, if the ReLu is done after the pooling, we will do O x,y,z = ReLu(max(I[s h .(x-1)+1 :
+
+s h .(x -1) + k h + 1][s w .(y -1) + 1 : s w .(y -1) + k w + 1][z]))) thus the ReLu will be applied o h × o w × o c times. Note also that max(max(x i ), 0) = max(max((x i , 0)),
+
+O = BN α,B (C p,K,s,B,f (I)). O x,y,z = f α z . f h i=1 fw j=1 fc m=1 K z i,j,m .I s h •(x-1)+i,s h •(y-1)+j,m + B x,y,z + B z = f f h i=1 fw j=1 fc m=1 α z .K z i,j,m .I s h •(x-1)+i,s h •(y-1)+j,m + α.B x,y,z + B z This is the equation of a convolution C ′ p,α.K,s,α.B+B,f ◀
+
+### 2.3. Model description for the code generation
+
+Once a model has been trained, validated and possibly optimized with semantics-preserving transformations, its detailed description can be exported from the learning framework. As we want to generate the inference associated code, we assume the DNN representation to be cleaned from any irrelevant training-related feature (e.g. loss). A first challenge brought by the implementation is the semantic preservation: the reproducibility of the behavior observed at the end of the design when executing the inference model within the training tool and on the hardware target. Even though the semantics is clear in the literature, the training tools do not encode the (default) operationsfoot_1 in the same manner. This is particularly true for convolutions, where some implementations start from the top left and some from the bottom right of the matrix, or compute the padding in a different way. This has been observed in [24] and could be reproduced by experimenting with the frameworks. There are lots of works tackling the interoperability among frameworks, by proposing conversion tools [24] or defining open source formats such as protobuf [15], onnx [3] or nnef [38] (Neural Network Exchange Format). A description must contain all the necessary information to encode the same behaviour: this includes the number of layers, the type of every layer, the parameters of each layer including the activation function specification and anything required to reproduce the behaviour. So far, nnef is the most adequate format as it contains the necessary elements to reconstruct most of the semantics of a model. We currently use a degraded version of nnef in json to allow full text description (and not binary) to help the debugging but as future work we will comply with the nnef.
+
+## 3. C back-end
+
+We have developed a Python prototype to generate C code. We do not detail the front-end which first imports the json description file, focusing instead on the back-end. We reuse the semantics of definition 3 considering every layer as an independent programming function for the code generation. The forward-pass for inference then consists in calling each layer function in the correct order with the accurate parameters and inputs.
+
+### 3.1. Software architecture
+
+The C back-end is composed of a library of functions and other model-dependent files. This library is, to a certain extent, hard-coded as the bodies of functions needed for inference are defined in the Python prototype and the corresponding C files will be generated whenever needed. The model-dependent files refer to the weights, biases and auxiliary parameters that are also written as C files. Figure 4 shows the Layers class which is inherited by several sub-classes, one per type of layer. The main class stores the idx of the layer and basically defines two abstract methods. The first is generate_inference_code, that implements the semantics of the layer in C language, and the second is compute_layer, that actually executes the functions of the layer, mainly for debugging and evaluation.
+
+For each type of layer, we define the parameters (e.g. the weights and biases for dense) as variables and the methods (generate_inference_code and compute_layer) are refined. We did not detail all the layers (others grouping the missing ones).
+
+The prototype supports all the layers defined in section 2.1 and the ReLu, Hyperbolic Tangent, Sigmoid and Linear activation functions.
+
+### 3.2. Version 1 -generic inference function
+
+A layer is defined as a data type, a struct statement, whose fields encode the parameters (e.g., type or input size). Every layer has the same definition and their particular parameters will be defined as constants in a header file. The first hidden layer of the fully-connected neural network of example 12 is a Dense layer depicted in listing 1. layer_type and actv_function are function pointers to the aforementioned functions of the C library. The other fields are pointers, mostly to arrays which are also written to C source files. In the example, the biases field points to a static double array of size 3 shown in the listing. Unnecessary fields point to null. The whole network is treated as an array, an indexed linear sequence, of these structures.
+
+Afterwards, an inference function is defined (see listing 2). It is a generic function, i.e. identical for every DNN (whether fully-connected or not), responsible for connecting the layers. It simply consists in 2 nested for loops (one ranging over the number of layers and the second ranging over the number of operations to be done for the current layer). This logic of having generic definitions for the layers functions leads to a helpful simplicity in terms of execution and code size. However, using function pointers leads the WCET analysis tool to consider that each call made in the loop is a call to the most expensive function (or to the same function in worst context), which can be very pessimistic.
+
+### 3.3. Version 2 -inlined inference function
+
+The second version keeps the definition and declaration of layers as was done for Version 1. What changed is the inference function which is optimized by in-lining the programming functions for layers and activations, i.e., directly writing their body to the C file. The only parameters stored in a header C file are the weights and biases, since loops bounds are now hard-coded, meaning that the inference function is no longer generic. The Listing 3 gives part of the inference function for the first dense layer of example 12. The straightforward effect of this optimization is improving time performance since we eliminate the function-call and struct parsing overheads, however it comes at the cost of using more instruction space, as we duplicate code, producing larger source files, which can be prohibitive in an embedded environment. Nonetheless, OTAWA produces more precise estimation for the WCET since we are able to provide the correct context in which layers are executed with no overestimation for loop bounds.
+
+### 3.4. Version 3 -unrolled inference function
+
+The third version is completely different and we reuse a philosophy of full in-lining (with loop unrolling) that can be seen à la Scade [9]. In particular, there is no declaration of layers and parameters as was done in listing 1. Listing 4 presents the beginning of the instructions to deal with the first dense layer of example 12.
+
+Listing 4 Dense layer code with in-lining and loop-unrolling. The main advantages of this optimization are the elimination of computational overhead due to branching on the termination condition and the delay of reading data from memory, since everything needed for the layers operations is self contained in a C source file. Similarly to Version 2, we have the capacity of doing a better instruction pipelining. Additionally, we remove incertitude about the execution path, which is advantageous for the WCET analysis. However, it worsens the drawback already identified in the V2: the instruction space becomes huge and for large DNNs, the approach is not sustainable.
+
+## 4. Comparative approach for C code generation frameworks
+
+In order to test in practice the advantages and limitations of our framework, as well as its behavior compared to the other frameworks in the literature, we have defined the following methodology. We have selected a set of representative benchmarks (section 4.1) of the literature compliant with our restrictions (e.g. feed-forward DNN with restricted types of layers). The idea was to consider a large test campaign by varying several parameters (number E C R T S 2 0 2 2
+
+d o t p r o d u c t = 0 ; / / D e n s e _ 1 d o t p r o d u c t += nn_input [ 0 ] * -1 . 0 p u t _ c u r [ 0 ] = d o t p r o d u c t > 0 ? d o t p r o d u c t : 0 ; d o t p r o d u c t = 0 ; d o t p r o d u c t += nn_input [ 0 ] * -0 . 1 8 2 2 0 1 2 3 6 4 8 6 4 3 4 9 4 ; d o t p r o d u c t += nn_input [ 1 ] * 0 . 7 0 3 6 4 9 6 9 9 6 8 7 9 5 7 8 ; d o t p r o d u c t += 0 . 0 2 5 2 0 0 5 7 9 3 1 5 4 2 3 9 6 5 ; o u t p u t _ c u r [ 1 ] = d o t p r o d u c t > 0 ? d o t p r o d u c t : 0 ;
+
+3:10
+
+Predictable Code for Machine Learning Applications and type of layers, data type of parameters, type of activation). We then define three criteria to assess the quality of implementation in accordance with the DO-178C requirements (see section 4.2). In particular, not all criteria require the same level of test campaign: computing the WCET needs to be done once whereas the measurements need to be repeated several times. Finally, we introduce the two code generation frameworks selected for comparison (see section 4.3).
+
+### 4.1. Benchmark description
+
+Fully-connected networks -ACAS-Xu experience. The first models correspond to the classical fully-connected networks as shown in the example 12. We rely in particular on the airborne collision avoidance system for unmanned aircraft (ACAS-Xu) [27]. The ACAS-Xu system takes five input variables, i.e., information from sensors measurements, and computes five action advisories, represented by scores. The original design relies on a set of off-line computed lookup tables (LUT) to make avoidance decisions. Some work [19,12] proposed to replace those LUT with some surrogate neural networks in order to reduce the memory footprint and thus to improve the execution time. We consider several DNN models with various structures, all with a ReLU activation function in hidden layers, linear activation for output layer and floating-point single precision (FP32) data type: regular structures with the same number of neurons per layer. We consider 7 hidden layers with reg50 (50 neurons per layer), reg100 (100 neurons per layer) and reg200 (200 neurons per layer); decreasing structures with decr128 (5 hidden layers of size (128, 128, 64, 32, 16)) and decr256 (6 hidden layers of size (256, 256, 128, 64, 32, 16));
+
+LeNet-5. The LeNet-5 model [23] refers to the feed-forward convolutional neural network introduced in the example 13. It is one of the earliest models of this type and is known for promoting the development of deep learning with the introduction of the back-propagation algorithm. Although this model is simple, it contains the main basic layers: convolution, pooling and dense layers. All the layers have the same tangent hyperbolic activation function, except for the last one, where a softmax is performed. Thus, it has 44,426 trainable parameters to stock and an inference pass executes 572,504 floating-point operations (FLOPs).
+
+CifarNet. CifarNet was first introduced in [20] and was for a long time the state-of-the-art model used to solve the object classification problem on the Cifar-10 dataset, which consists of 32 x 32 RGB images of 10 classes. CifarNet is composed of three convolutional layers, and its pooling layers, followed by two dense layers (see figure 5). The ReLu activation function is applied to all the layers. The main difference with LeNet-5 is that it has a three-dimensional input and the convolutional layers have additional parameters such as padding and a non equal to 1 stride, which adds some complexity in terms of computation. With this configuration the number of trainable parameters increases to 122,570 alongside with 9,18 million FLOPs for inference. AlexNet. The AlexNet architecture was first defined in [21] and is considered as one of the most influential works in computer vision. Indeed, thanks to the use of convolution layers and GPUs to accelerate deep learning, it achieved a considerably improved performance over other methods in the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) of 2012. The ImageNet dataset [13] is composed of 256 x 256 RGB images categorized under 1000 object class categories. AlexNet has five convolution layers, three pooling layers and three dense layers (see figure 6 4 ) with approximately 61 million tunable parameters and 1,64 billion FLOPs. Additionally, this model uses the ReLU activation function, which was presented as novelty and proved to be more efficient in learning phase than the, at the time, standard hyperbolic tangent [21].
+
+### 4.2. of comparison
+
+We have identified three criteria of comparison that correspond to the most important avionics constraints to be respected.
+
+### Semantic preservation.
+
+To validate the correctness of the code generation, we need to prove the semantic preservation, that is the capacity to reproduce the inference observed in the training tool on the target. To do so, we could have used formal methods (such as Coq [36] as was done for Velus [6]) but instead, we chose to review the code generated and run a large campaign of tests. This technique may be less sound but is indeed an acknowledged way in the certification standard DO178C [14]. The semantic preservation is assessed by comparing the predictions of the C code with those provided by the training framework.
+
+▶ Definition 15 (Semantic preservation). Let x = (x 1 , x 2 , ..., x n ) be a vector representing the training framework outputs for a given set of inputs and x = (x 1 , x2 , ..., xn ) be the vector of outputs of the C code execution. We define the absolute error as
+
+∥x -x∥ ∞ = max 0≤i≤n |(x -x) i |
+
+This norm asserts a maximum bound on the error observed for a given testing sample.
+
+Measured and Worst Case Execution Time. For each C code, we want to assess both its performance and its predictability. The performance is evaluated by executing the code an arm Cortex-A15 of the keystone [37] and measuring the execution time.
+
+▶ Definition 16 (Measured execution time). To obtain the measured execution time, we run a sample (i.e. an input) 50 times and store the average observed time.
+
+In order to assess the predictability, we compile each C code for a lpc2138 arm-based target, and compute its WCET with OTAWA [4]. The choice of the hardware (lpc2138 arm-based target) was dictated by the libraries available in the OTAWA framework. Even though it is not representative of the arm Cortex-A15 of the keystone, the comparison between the WCETs of the various versions still provides valuable insights on how the shape of the generated code impacts the level of precision that can be achieved during the analysis. Despite its limitations OTAWA is open-source and presently maintained, thus up to date with current WCET calculation techniques. We did not experiment with other static timing analysis tools that may or may not have the same limitations.
+
+### Memory layout of executable.
+
+Because it is important to efficiently use the resources in order to be predictable and efficient, we also analyze the memory layout of the C executable. The memory space is segmented into discrete blocks with specific purposes. We mainly focus on the stack, data, BSS and text segments. The stack segment contains all the data needed by a function call, including the arguments passed to the routine and its local variables. The data segment contains the explicitly initialized global variables and static local variables, its size does not change at runtime. Uninitialized variable data are stored in the BSS segment. Lastly, the text segment contains the executable instructions and constant variable that can not be modified.
+
+### 4.3. Others C back-end frameworks
+
+We chose two open-source frameworks from the TinyML [31] domain that were developed with nearly the same objectives as ACETONE.
+
+Keras2C. As explained in [10], the Keras2c back-end was developed to address real-time applications and not to optimize the code for speed. Indeed, the generated C code layout is very similar to Version 1 presented in Section 3.2, where the programming functions describing the layers are generic and all the mutable data are passed into and out of each function during the inference execution. Thus, in terms of timing analysis, Keras2c presents the same downside as our first version, which is an overestimated WCET due to the inability of passing the context in which a function is called when there are multiple occurrences of it.
+
+Another drawback observed in this framework is the declaration of the weights of layers as local variables initialized in the core of the function. Thus weight arrays are always allocated on the stack. In case of large networks, heavy arrays are then stored within the stack and such an approach is not at all recommended. Moreover, these arrays shall be initialized in each function with a memcopy from the reference one declared by the compiler in the text segment. This is not ideal for the computation time that is waste to copy weights for each layer and each inference. We preferred a zero copy strategy using static variable declaration for the weights, this saves space in the stack and computation time.
+
+To avoid declaring to heavy array on the stack, Keras2c chooses to use dynamic memory allocation when working with large neural networks, which implies additional certification challenges in terms of verification and is not at all suited for WCET analysis.
+
+MicroTVM with static C runtime. The TVM compiler [7] outputs a model execution graph -encoded as json-and simplified parameters. In order to execute the model, the TVM runtime has to rebuild this graph in memory, load the parameters, and then call the operator implementations in the correct order by parsing the computation graph. This is the principle of a graph interpreter / executor that we also found in Tensorflow.
+
+uTVM [11] is a runtime developed to execute graphs produced by TVM on bare-metal targets. The code generation flow remains mostly the same, specific changes are needed in the runtime in order to avoid the usage of traditional operating-systems abstractions and support standalone model inference. The main parts of uTVM process are: 1. the production of a relay module depending of the training framework; 2. compilation, where TVM implements each operator into tensor intermediate representation followed by code generation; 3. integration of the generated code along with TVM C runtime library, into a user-supplied binary project; 4. and deployment, when a binary is built and inference can be run. A drawback of this graph executor logic in an avionics context is the amount of memory overhead required in parsing the json, a dynamic scheduling and a dynamic memory allocation, which we are not able to analyze.
+
+To bypass these limitations, [35] provided a patch to uTVM that relies on a static scheduling and memory allocation. We call that framework uTVM with static C runtime or static uTVM subsequently. It uses the relay module produced by TVM and generates a dedicated C source code that calls the generated operator implementations directly, eliminating the need of a graph json parsing, and which is able to execute the model statically. By doing minor changes in this static uTVM, we were able to proceed to a timing analysis of the inference model and could observe that the generated code when analyzed with OTAWA is very similar to our Version 2 (Section 3.3).
+
+## 5. Experiments
+
+This section summarizes the results when assessing the criteria for the different frameworks and the different benchmarks. We have in addition to the benchmarks identified before, considered VGG-16 [34]. Unfortunately, we only manage to generate the C code for V1 and V2 and analyze the semantic preservation. Other frameworks and analyses were not able to handle such a large network (138.36 million parameters).
+
+Semantic preservation. We use the formula of definition 15 to compute the maximal observed error over 1000 tests when the generated code were executed on a x86 target. The three versions (V1, V2, V3) encode the same semantics, so no need to make them all appear.
+
+For our tool and for Keras2c, the reference was Keras and for static uTVM it was Tensorflow Lite. The results using single-precision FP are shown in table 1. We can note that all the frameworks produce very similar results with errors in the order of 10 -6 , which is considered acceptable. For the ACAS-Xu regular models, using the learnt parameters (weights and biases) present in the lookup tables led to values larger than 1 (around 10 5 ) in outputs. This had an influence in the floating point precision which in turn affected our semantic preservation assessment, so we proceeded to use random initialized parameters and have normalized outputs instead.
+
+Measured and Worst Case Execution Time. We measured the inference time on the arm Cortex-A15 (implementing the ARMv7 architecture) of the keystone. For all experiments, caches were activated and we put data and code sections in the DDR. We used the flag mfloat-abi=hard in order to use the neon floating point unit of the processor. C codes were compiled without any optimization level (-O0). Table 2 shows the results where the measured execution times (MET) are computed following definition 16.
+
+easy (and making this process automatic is part of future work). For Keras2c and uTVM, we had to first modify the generated code to analyze only the inference code (as we did for our code), and to leave the initialization functions out of the WCET. OTAWA was not able to provide a WCET bound for V3 nor for AlexNet and VGG-16 architectures, because those binaries are too large and it runs out of memory during the analysis.
+
+Looking at Table 4, we observe that shape of the C code has a significant impact on the WCET bound. This is not simply a question of performance optimizations, but also of the capacity to provide precise flow-fact information to the analyzer. C codes that employ function pointers (V1 and Keras2c) overall get larger WCETs than the others, because we were unable to provide contextual information about the layers function calls. When all layers perform an equivalent number of operations (the ACAS-Xu regular structures), this impact is reduced. For the other cases, the pessimism appears clearly such as for decr256. Indeed, although decr256 performs less computations than reg200, as attested by the WCET of V2 and static uTVM, the WCETs for V1 and Keras2c are significantly higher than the ones of the reg200.
+
+OTAWA assumes that each call to a layer function is a call to the worst layer. In V2, the layers are implemented as a sequence of separate loops, and in static uTVM as a sequence of separate instructions calling the layer functions. Consequently, OTAWA is able to benefit from the detailed flow-fact information for these versions.
+
+Memory layout of executable. We analyzed the memory layout of the generated codes when compiled to ARM Cortex-A15. For the sake of simplicity, we only present the results obtained for the ACAS-Xu reg50 model as the same trend is observed for the other models. From Table 5 it is possible to understand how different the memory usage of the different frameworks is. In our work, we privileged writing all parameters as constants to statically allocate all memory at compile time and better use the stack, which is also translated in the data segment size. The non-initialized data basically corresponds to the outputs. Additionally, in V3 we observe that the text segment is bigger since all constants are directly written in the C source code. We notice that, V1 and V2 are very efficient in terms of .text and stack size compared to Keras 2c or static uTVM. Because Keras2c allocates all the weights tensors on the stack, the stack size is higher than other versions. Moreover, weights shall also be present in the .text segment. We notice, that the stack size is much higher than the size required for storing weights. In addition Keras 2c allocates work arrays that are not used for computing dense layer. Our stack measurement is coherent with stack information given by gcc compiler. For uTVM, we explain the size of the .text by all tensor operations functions embedded in the TVM library. In our version, we only embedded necessary tensor operations function.
+
+## Related Work
+
+We found plenty of frameworks that provide the possibility to run neural networks. Most of them rely on an inference engine that dynamically explores a computation graph. Without ignoring them, we decided to focus the related work on tools that are more adapted to avionics constraints.
+
+Generic C code generator frameworks. The first work [8] is guided by avionics constraints as well and, in order to provide an efficient implementation of DNN inference models, the authors developed an automatic code generator that allows preserving semantics of the trained machine learning model. However, the code generation tool is not extensively described nor made available.
+
+The second is Keras2c [10]. This method consists in a library to convert Keras models into real-time compatible C code, supporting a wide range of layers and relying only on C standard library functions. In the section 5, we have extensively compared our results with Keras2c. The study of [29] also investigates a predictable implementation of neural networks for safety-critical cyber-physical systems. They embed the Keras2c code on Patmos, a time-predictable processor, which is part of the larger T-CREST [32] project. The software tool-chain of the latter includes a LLVM-based compiler and the Platin tool for WCET analysis.
+
+uTVM [11] is an extension of TVM that provides an implementation of TVM for microcontrollers already presented in section 4.3. The adaptation of uTVM with static C runtime [35] has extensively been compared with our results in the section 5.
+
+N2D2 [33] is an end to end framework from the creation of the model to its implementation including the training. On the code generation, the authors explore how approximation techniques can improve the performance and energy efficiency of hardware accelerators in machine learning applications. We will assess these tools as future work.
+
+Proprietary code generator frameworks. New massively parallel hardware adapted to neural networks need specific programming pattern in order to obtain the best possible computation performance. Hardware manufacturers provide tools that enable clients to generate optimized code for their target. We can cite eIQ [26] from NXP, TensorRT [25] from NVIDIA, KaNN [17] from Kalray or OpenVINO [16] from Intel. eIQn, TensorRT and OpenVino rely on a dynamic graph explorer runtime while KaNN proposes a static scheduling and memory allocation. These tools only generate optimized code for specific targets and do not implement a generic approach. Xilinx Vitis AI is a tool that generates application code for Xilinx targets. Such targets are composed of a host CPU (from the x86 or ARM families) and a hardware accelerator that is composed of programmable logic (FPGA). The tool generates C code for the host, and so-called "kernels" that are called by the host (using an API such as OpenCL) and executed by the accelerator. The data transfers between the host and the accelerator are handled using Xilinx runtime.
+
+CoreAVIfoot_3 claims to develop code generation toolchains for AI models compatible with DO-178C and ISO-26262 requirements. They mainly target GPUs with Intel Tiger Lake or AMD E9171. We were not able to assess their solution and we believe that they are only supporting CUDA or Vulkan code generation (no C generation).
+
+The Matlab Coder toolbox allows the generation of the C code for the inference of an already trained network. The generated code requires no external library, which makes it portable. Ansysfoot_4 proposes to use the Scade toolchain to generate C code compatible with DO178C requirements. To our knowledge, this targets at this time traditional processors and relies on the conversion of neural networks models into Lustre nodes. Then, they use the qualified C code generator. The converter AI models into Scade will have to guarantee the semantic preservation.
+
+LLVM front-end frameworks. TVM [7] is a tool capable of compiling machine learning models from different popular frameworks and generating specific low-level optimized code for a diverse set of hardware back-ends.
+
+MLIR (Multi-Level Intermediate Representation Overview) [22] is a LLVM intermediate representation which was developed with the idea to use the same IR for all compiler optimizations (hence the "Multi-Level"). It contains particular features that target machine learning applications, in particular it is possible to represent computation graphs in MLIR. MLIR can be instantiated into dialects that allow to put the focus on particular aspects of the code, to specify constraints or apply specific optimizations. An example of MLIR dialect that is particularly relevant to critical embedded applications such as the ones we target is described in [30]: it enables the semantics of synchronous reactive applications inside an MLIR description.
+
+## 7. Conclusions
+
+Machine learning applications are proven to be useful and are largely used in many domains, however, most of them are not built with avionics constraints in mind. In this work, we presented our approach to automatically reproduce the inference model of feed-forward neural networks in C code, respecting semantic preservation, predictability and aeronautic requirements. We proposed a framework that is modular and straightforward, capable of generating readable and traceable code. We also compared the present work with the state of the art and proved our approach to be competitive in the evaluated criteria.
+
+As future work, we have already identified along the paper many improvements to be made (e.g. compliance with nnef, automatic flow-fact generation). We will continue exploring other frameworks to get the best practices. We also plan to target parallel C code execution. The current versions are suitable for pipelining or parallelizing computations.
+
+## Figures et tableaux
+
+**Figure 1** Fully-connected NN.
+
+**Figure 2** LeNet-5 CNN.
+
+**Figure 4** Software architecture of layers.
+
+**Figure 3** 2 3: 8 Predictable Figure3shows the software architecture as an uml diagram. There are several compilation strategies named V1, V2 and V3. We decided to proceed like that in order to allow a design space exploration (DSE): our goal was to understand what is the most suited approach for a given model and hardware. The main class NeuralNetworks contains two variables: layers that contains the list of Layers (another class defined hereafter) and user_option that captures the options chosen by the user for the generation, such as applying semantics-preserving transformations or selecting the version. That class defines three methods (in addition to the classical init): load_model which imports the json DNN description; forward_pass
+
+Listing 1 A Dense layer -see Definition 11. double b i a s e s _ D e n s e _ 0 1 [ 3 ] = { 0 . 0 u c t L a y e r n e t [ n b _ l a y e r s ] { [ 1 ] = { . l a y e r _ t y p e = Dense , . l a y e r _ s i z e = l 1 _ s i z e , / / o u t p u t _ s i z e . w e i g h t s = weights_Dense_01 , . b i a s e s = b i a s e s _ D e n s e _ 0 1 , . a c t v _ f u n c t i o n = r e l u , . pad = 0 x0 , . . . } , . . . } ;
+
+Listing 2 Inference -see Definition 3. f o r ( i n t i =1; i < n b _ l a y e r s ; ++i ) { n e t [ i ] . l a y e r _ t y p e ( i , o u t p u t _ p r e , o u t p u t _ c u r ) ; f o r ( i n t j = 0 ; j < n e t [ i ] . l a y e r _ s i z e ; ++j ) { o u t p u t _ p r e [ j ] = o u t p u t _ c u r [ j ] ; }}
+
+Listing 3 Dense layer in-lined code of the inference function. f o r ( i n t i = 0 ; i < 3 ; ++i ) { / / D e n s e _ 1 d o t p r o d u c t = 0 ; f o r ( i n t j = 0 ; j < 2 ; ++j ) { d o t p r o d u c t += o u t p u t _ p r e [ j ] * w e i g h t s _ D e n s e _ 0 1 [ ( i + 3 * j ) ] ; } d o t p r o d u c t += b i a s e s _ D e n s e _ 0 1 [ i ] ; o u t p u t _ c u r [ i ] = d o t p r o d u c t > 0 ? d o t p r o d u c t : 0 ; } . . .
+
+10 Figure 5 Figure 5 CifarNet CNN.
+
+2 0 2 2 3:4 Predictable Code for Machine Learning Applications ▶ Definition 4 (Activation function). Let f : R -→ R be a function (e.g. ReLu, sigmoid). The activation function A f applied on a 3D-tensor I of size (n h , n w , n c ) outputs a 3D-tensor O = A f (I) of size (n h , n w , n c ) defined by O x,y,z = f (I x,y,z ) for all x ≤ n h , y ≤ n w and z ≤ n c . We could also write O x,y,z = map(I, f ). (Bias layer associated function). Let B be a 3D-tensor of size (n h , n w , n c ). The bias function B B applied on a 3D-tensor I of size (n h , n w , n c ) outputs a 3D-tensor O = B B (I) of size (n h , n w , n c ) defined by O x,y,z = I x,y,z + B x,y,z for all x ≤ n h , y ≤ n w and z ≤ n c .▶ Definition 6 (Padding layer associated function). Let p = (p t , p b , p l , p r ) be a 4-tuple of integers representing the padding to be applied on each border of a 3D-tensor. The padding function P p applied on a 3D-tensorI of size (n h , n w , n c ) outputs a 3D-tensor O = P p (I) of size (o h , o w , o c ) with o h = n h + p t + p b , o w = n w + p l + p r and o c = n c such that , K 2 , . . ., K nb_kernel ]representing the kernels of the convolution. Each kernel K i is of size (f h , f w , f c ). Let s = (s h , s w ) be the stride parameter with s h and s w two integers. The 2Dconvolution 2 C K,s applied to a 3D-tensor I of size (n h , n w , n c ) outputs a 3D-tensor O = C K,s (I)
+
+    0 ▶ Definition 5 O x,y,z = I x-pt,y-p l ,z otherwise if x ≤ p t or x > n h + p t or y ≤ p l or y > n w + p l
+    ▶ Definition 7 (2D-convolution associated function). Let K be a vector of 3D-tensors
+    [K 1
+
+[figure sans légende identifiée] thus the semantics is preserved.
+
+**Table 5** Memory layout of the executable generated for ACAS-Xu reg50.
+
+     | Size of memory segments [bytes]
+    Benchmark | stack | .data | .bss | .text
+    Ours (V1) | 240 | 66 548 | 708 | 17 004
+    Ours (V2) | 158 | 65 860 | 708 | 18 556
+    Ours (V3) | 140 | 2 444 | 708 | 1 603 980
+    Keras2c | 129 280 | - | 2 840 | 12 744 060
+    static uTVM | 210 | - | 2 808 | 12 688 208

@@ -1,0 +1,144 @@
+{
+  "id": "arxiv-2103.10529-white-paper-machine-learning-certified",
+  "title": "White Paper Machine Learning in Certified Systems",
+  "authors": [
+    {
+      "given": "Hervé",
+      "family": "Delseny"
+    },
+    {
+      "given": "Christophe",
+      "family": "Gabreau"
+    },
+    {
+      "given": "Adrien",
+      "family": "Gauffriau"
+    },
+    {
+      "given": "Bernard",
+      "family": "Beaudouin"
+    },
+    {
+      "given": "Ludovic",
+      "family": "Ponsolle"
+    },
+    {
+      "given": "Lucian",
+      "family": "Alecu"
+    },
+    {
+      "given": "Hugues",
+      "family": "Bonnin"
+    },
+    {
+      "given": "Brice",
+      "family": "Beltran"
+    },
+    {
+      "given": "Didier",
+      "family": "Duchel"
+    },
+    {
+      "given": "Jean-Brice",
+      "family": "Ginestet"
+    },
+    {
+      "given": "Alexandre",
+      "family": "Hervieu"
+    },
+    {
+      "given": "Ghilaine",
+      "family": "Martinez"
+    },
+    {
+      "given": "Sylvain",
+      "family": "Pasquet"
+    },
+    {
+      "given": "Kevin",
+      "family": "Delmas"
+    },
+    {
+      "given": "Claire",
+      "family": "Pagetti"
+    },
+    {
+      "given": "Jean-Marc",
+      "family": "Gabriel"
+    },
+    {
+      "given": "Camille",
+      "family": "Chapdelaine"
+    },
+    {
+      "given": "Sylvaine",
+      "family": "Picard"
+    },
+    {
+      "given": "Mathieu",
+      "family": "Damour"
+    },
+    {
+      "given": "Cyril",
+      "family": "Cappi"
+    },
+    {
+      "given": "Laurent",
+      "family": "Gardès"
+    },
+    {
+      "given": "Florence",
+      "family": "De Grancey"
+    },
+    {
+      "given": "Eric",
+      "family": "Jenn"
+    },
+    {
+      "given": "Baptiste",
+      "family": "Lefevre"
+    },
+    {
+      "given": "Gregory",
+      "family": "Flandin"
+    },
+    {
+      "given": "Sébastien",
+      "family": "Gerchinovitz"
+    },
+    {
+      "given": "Franck",
+      "family": "Mamalet"
+    },
+    {
+      "given": "Alexandre",
+      "family": "Albore"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2103.10529",
+  "url": "https://arxiv.org/abs/2103.10529",
+  "type": "preprint",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, [figure sans légende identifié, [figure sans légende identifié",
+      "sections numérotées non détectées : 2, 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

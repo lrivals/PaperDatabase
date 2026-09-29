@@ -1,19 +1,23 @@
 {
-  "name": "Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu)",
+  "name": "Vision embarquée sur FPGA — IA sûre et certifiable (YOLO, autoencodeurs, apprentissage continu)",
   "axes": {
     "surveys": "Surveys et toolflows généraux",
     "yolo-fpga": "YOLO sur FPGA",
     "autoencoder-fpga": "Autoencodeurs sur FPGA",
     "continual-learning": "Apprentissage continu / incrémental embarqué",
     "toolflows": "Toolflows",
-    "platforms": "Plateformes"
+    "platforms": "Plateformes",
+    "safety-certification": "Sûreté, fiabilité et certification",
+    "person-detection": "Détection de personnes en milieu industriel"
   },
   "axis_rules": {
     "yolo-fpga": "\\byolo",
     "autoencoder-fpga": "auto-?encoder|\\bVAEs?\\b|\\bCAEs?\\b",
     "continual-learning": "continual|incremental|lifelong|\\breplay\\b|few-shot",
     "toolflows": "hls4ml|\\bFINN\\b|vitis ai|fpga ai suite|\\bSATAY\\b|tool ?flow|codesign workflow",
-    "platforms": "zynq|kria|kv260|zcu ?10[24]|pynq|versal|ultrascale|jetson"
+    "platforms": "zynq|kria|kv260|zcu ?10[24]|pynq|versal|ultrascale|jetson",
+    "safety-certification": "safety[- ]critical|functional safety|safety assurance|certif(?:ication|iable|ied)|\\bSEUs?\\b|single[- ]event|soft errors?|fault[- ](?:injection|toleran)|radiation|\\bTMR\\b|ISO 26262|IEC 61508|DO-178|DO-254|out-of-distribution|\\bOOD\\b|runtime monitor|formal verification|verif(?:y|ying|ication) (?:of )?(?:quantized|binarized|neural)",
+    "person-detection": "pedestrian|person (?:detection|re-?identification)|human detection|\\bworkers?\\b|\\bPPE\\b|hard ?hat|construction site|hazardous|human-robot"
   },
   "axis_queries": {
     "surveys": "survey FPGA deep learning accelerator",
@@ -21,11 +25,14 @@
     "autoencoder-fpga": "autoencoder FPGA",
     "continual-learning": "continual learning on-device FPGA",
     "toolflows": "FPGA neural network toolflow hls4ml FINN",
-    "platforms": "Zynq UltraScale Kria neural network inference"
+    "platforms": "Zynq UltraScale Kria neural network inference",
+    "safety-certification": "safety assurance certification neural network FPGA",
+    "person-detection": "worker person detection industrial safety surveillance"
   },
   "hardware_axes": [
     "toolflows",
-    "platforms"
+    "platforms",
+    "safety-certification"
   ],
   "topic_re": "\\bFPGAs?\\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\\bHLS\\b|high-level synthesis|\\bSoC\\b|edge (?:ai|devices?|inference)|embedded",
   "title_topic_re": "\\bFPGAs?\\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\\bHLS\\b|high-level synthesis|\\bSoC\\b|edge (?:ai|devices?|inference)|embedded|accelerators?\\b|\\bhardware\\b|tinyml|micro-?controllers?|\\bMCUs?\\b|on-device|(?:extreme|the|at) edge\\b|edge (?:computing|intelligence|artificial)",
@@ -114,6 +121,30 @@
     [
       "mobilenet",
       "mobilenet"
+    ],
+    [
+      "\\bSEUs?\\b|single[- ]event|soft errors?",
+      "seu"
+    ],
+    [
+      "fault[- ]injection",
+      "fault-injection"
+    ],
+    [
+      "out-of-distribution|\\bOOD\\b",
+      "ood"
+    ],
+    [
+      "formal verification|verif(?:y|ying|ication) (?:of )?(?:quantized|binarized|neural)",
+      "formal-verification"
+    ],
+    [
+      "re-?identification|\\bre-?ID\\b",
+      "re-id"
+    ],
+    [
+      "\\bPPE\\b|personal protective|hard ?hat",
+      "ppe"
     ]
   ]
 }

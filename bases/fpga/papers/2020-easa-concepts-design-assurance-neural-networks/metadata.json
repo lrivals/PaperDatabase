@@ -1,0 +1,39 @@
+{
+  "id": "2020-easa-concepts-design-assurance-neural-networks",
+  "title": "Concepts of Design Assurance for Neural Networks (CoDANN)",
+  "authors": [
+    {
+      "given": null,
+      "family": "EASA"
+    },
+    {
+      "given": null,
+      "family": "Daedalean"
+    }
+  ],
+  "year": 2020,
+  "venue": "EASA AI Task Force and Daedalean AG, public report extract, version 1.0",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": null,
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "type de publication à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, [figure sans légende identifié",
+      "sections numérotées non détectées : 1 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

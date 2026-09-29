@@ -1,0 +1,45 @@
+{
+  "id": "2004-gama-learning-drift-detection",
+  "title": "Learning with Drift Detection",
+  "authors": [
+    {
+      "given": "João",
+      "family": "Gama"
+    },
+    {
+      "given": "Pedro",
+      "family": "Medas"
+    },
+    {
+      "given": "Gladys",
+      "family": "Castillo"
+    },
+    {
+      "given": "Pedro",
+      "family": "Rodrigues"
+    }
+  ],
+  "year": 2004,
+  "venue": "Advances in Artificial Intelligence - SBIA 2004 (LNAI 3171), 286-295",
+  "doi": "10.1007/978-3-540-28645-5_29",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1007/978-3-540-28645-5_29",
+  "type": "conference",
+  "axes": [
+    "drift-detection"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

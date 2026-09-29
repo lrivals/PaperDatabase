@@ -1,0 +1,131 @@
+---
+id: 2006-baena-garcia-early-drift-detection-method
+title: "Early Drift Detection Method"
+year: 2006
+backend: grobid
+---
+
+## Abstract
+
+An emerging problem in Data Streams is the detection of concept drift. This problem is aggravated when the drift is gradual over time. In this work we define a method for detecting concept drift, even in the case of slow gradual change. It is based on the estimated distribution of the distances between classification errors. The proposed method can be used with any learning algorithm in two ways: using it as a wrapper of a batch learning algorithm or implementing it inside an incremental and online algorithm. The experimentation results compare our method (EDDM) with a similar one (DDM). Latter uses the error-rate instead of distance-error-rate.
+
+## 1. Introduction
+
+Many approaches in machine learning assume that training data has been generated from a stationary source. This assumption is likely to be false if the data has been collected over a long period of time, as it is often the case: it is likely that the distribution that generates the examples changes over time. In this case, change detection becomes a necessity. Real applications examples are user modelling, monitoring in biomedicine and industrial processes, fault detection and diagnosis, safety of complex systems, etc.
+
+We are interested in drift detection over data streams. Data streams are unbounded sequence of examples received at so high a rate that each one can be read at most once [1]. So, we can not store all the examples in memory, only partially at maximum, and we can not spend so much time processing data, due to the high rate that it arrives.
+
+In this work we present Early Drift Detection Method, a method to detect concept drift, that gets good results with slow gradual changes. Abrupt changes are easier to detect by current methods, but difficulties arise with the slow gradual changes. Our method uses the distance between classification errors (number of examples between two classification errors) to detect change, instead of using errors classifications (as it is done in previous work [2]). It detects change faster, without increasing the rate of false positives, and it is able to detect slow gradual changes.
+
+The paper is organised as follows. The next section presents related work in detecting concept drifting. In section 3 we present our method, Early Drift Detection Method. In Section 4 we evaluate the method and Section 5 concludes the paper and present future work.
+
+## 2. Related Work
+
+To deal with change over time, most previous work has been classified observing if they use full, partial or not examples memory.
+
+The partial memory methods used variations of the sliding-window idea: at every moment, one window (or more) containing the most recently read examples is kept, and only those are considered relevant for learning. A critical point in any such strategy is the choice of a window size. The easiest strategy is deciding (or asking the user for) a window size W and keeping it fixed through the execution of the algorithm (see e.g. [3][4][5]). In order to detect change, one can keep a reference window with data from the past, also of some fixed size, and decide that change has occurred if some statistical test indicates that the distributions in the reference and current windows differ.
+
+Another approach, using no examples memory, only aggregates, applies a "decay function" to examples so that they become less important over time [6].
+
+Other approach to detect concept drift monitors the values of three performance indicators [7]: accuracy, recall and precision over time. Then they are compared with a confidence interval of standard sample errors for a moving average value (using the last M batches) of each particular indicator. The key idea is to select the window size so that the estimated generalisation error on new examples is minimised. This approach uses unlabelled data to reduce the need for labelled data, it doesn't require complicated parameterization and it works effectively and efficiently in practise.
+
+A new method to detect changes in the distribution of the training examples monitors the online error-rate of the algorithm [2]. In this method learning takes place in a sequence of trials. When a new training example is available, it is classified using the current model. The method controls the trace of the online error of the algorithm. For the actual context they define a warning level, and a drift level. A new context is declared, if in a sequence of examples, the error increases reaching the warning level at example k w , and the drift level at example k d . They take this is as an indication of a change in the distribution of the examples. It uses 6σ ideas, well known in quality theory.
+
+Our method it is based on the latter, but taking into account distances between classification errors as it is presented in the next section.
+
+We consider that the examples arrive one at a time, but it would be easy to assume that the examples arrive in bundles. In online learning approach, the decision model must make a prediction when an example becomes available. Once the prediction has been made, the system can learn from the example (using the attributes and the class) and incorporate it to the learning model. Examples can be represented using pairs ( -→ x , y) where -→ x is the vector of values for different attributes and y is the class label. Thus, i-th example will be represented by ( -→ x i , y i ). When the current model makes a prediction (y i ), it can be correct (y i = y i ) or not (y i = y i ).
+
+### 3.1. DDM: Drift Detection Method [2]
+
+There are approaches that pay attention to the number of errors produced by the learning model during prediction. The drift detection method (DDM) proposed by Gama et al. [2] uses a binomial distribution. That distribution gives the general form of the probability for the random variable that represents the number of errors in a sample of n examples. For each point i in the sequence that is being sampled, the error rate is the probability of missclassifying (p i ), with standard deviation given by s i = p i (1 -p i )/i. They assume (as states the PAC learning model [8]) that the error rate of the learning algorithm (p i ) will decrease while the number of examples increases if the distribution of the examples is stationary. A significant increase in the error of the algorithm, suggests that the class distribution is changing and, hence, the actual decision model is supposed to be inappropriate. Thus, they store the values of p i and s i when p i + s i reaches its minimum value during the process (obtaining p min and s min ). And it checks when the following conditions triggers:
+
+-p i +s i ≥ p min +2•s min for the warning level. Beyond this level, the examples are stored in anticipation of a possible change of context. -p i + s i ≥ p min + 3 • s min for the drift level. Beyond this level the concept drift is supposed to be true, the model induced by the learning method is reset and a new model is learnt using the examples stored since the warning level triggered. The values for p min and s min are reset too.
+
+This approach has a good behaviour detecting abrupt changes and gradual changes when the gradual change is not very slow, but it has difficulties when the change is slowly gradual. In that case, the examples will be stored for long time, the drift level can take too much time to trigger and the examples memory can be exceeded.
+
+### 3.2. EDDM: Early Drift Detection Method
+
+The method that we propose in this paper, called Early Drift Detection Method (EDDM), has been developed to improve the detection in presence of gradual concept drift. At the same time, it keeps a good performance with abrupt concept drift. The basic idea is to consider the distance between two errors classification instead of considering only the number of errors. While the learning method is learning, it will improve the predictions and the distance between two errors will increase. We can calculate the average distance between two errors (p i ) and its standard deviation (s i ). What we store are the values of p i and s i when p i + 2 • s i reaches its maximum value (obtaining p max and s max ). Thus, the value of p max + 2 • s max corresponds with the point where the distribution of distances between errors is maximum. This point is reached when the model that it is being induced best approximates the current concepts in the dataset.
+
+Our method defines two thresholds too:
+
+- The method considers the thresholds and searches for a concept drift when a minimum of 30 errors have happened (note that it could appear a large amount of examples between 30 classification errors). After occurring 30 classification errors, the method uses the thresholds to detect when a concept drift happens. We have selected 30 classification errors because we want to estimate the distribution of the distances between two consecutive errors and compare it with future distributions in order to find differences. Thus, p max + 2 • s max represents the 95% of the distribution. For the experimental section, the values used for α and β have been set to 0.95 and 0.90. These values have been determined after some experimentation.
+
+(p i + 2 • s i )/(p max + 2 • s max ) < α
+
+If the similarity between the actual value of p i +2•s i and the maximum value (p max + 2 • s max ) increase over the warning threshold, the stored examples are removed and the method returns to normality.
+
+## 4. Experiments And Results
+
+In this section we describe the evaluation of the proposed method: EDDM. The evaluation is similar to the one proposed in [2]. We have used three distinct learning algorithms with the drift detection methods: a decision tree and two nearest-neighbourhood learning algorithms. These learning algorithms use different representations to generalise examples. The decision tree uses DNF to represent generalisation of the examples. The nearest-neighbourhood learning algorithms uses examples to describe the induced knowledge. We use the weka implementation [9] of these learning algorithms: J48[10] (C4.5, decision tree), IB1 [11] (nearest-neighbourhood, it is not able to deal with noise) and NNge [12] (nearest-neighbourhood with generalisation). We have used four artificial datasets previously used in concept drift detection [13], a new data set with very slow gradual change and a real-world problem [14]. As we want to know how our algorithms work in different conditions, we have chosen those artificial datasets that have several different characteristics -abrupt and gradual drift, presence and absence of noise, presence of irrelevant and symbolic attributes, numerical and mixed data descriptions.
+
+### 4.1. Artificial Datasets
+
+The five artificial datasets used later (Subsections 4.
+
+### 4.2. Results On Artificial Domains: Abrupt And Gradual Drifts
+
+The purpose of these experiments is to analyse how the proposed drift detection method works with different learning algorithms, and compare it to the one proposed by Gama et al. [2] (we refer to it as DDM, Drift Detection Method) in terms of prequential [15] error (prequential error is the mean of the classification errors obtained with the examples to be learnt). It is not the aim of this article to compare the results of the different learning algorithms used. Figure 1 shows the prequential error results when Circles and Sine1 datasets are faced with two learning algorithms with the proposed drift detection method (EDDM) and with DDM. Note that changes occur every 1000 examples. We can observe that prequential error curves obtained by EDDM and DDM on Sine1 dataset (an abrupt changing dataset) are almost the same. When they deal with a gradual dataset (Circles) the results of both methods are very similar, independently of the learning method used.
+
+Table 1 presents the prequential error results and the total number of changes detected by the learning algorithms with both drift detection methods at the end of each dataset. On datasets with abrupt concept change, both algorithms react quickly and reach low error rates. When noise is present, EDDM is more sensitive than DDM, detecting changes and improving the performance when the base algorithm does not support noise (i.e. IB1). This is so because after some time (some number of examples) the base algorithms overfit and the frequency of classification errors increases.
+
+### 4.3. Results On Artificial Domains: Slow Gradual Drift
+
+There are many real-world problems that have slow gradual drift. In this section we use the Sine1g dataset to illustrate how EDDM works with this kind of change. Figure 2 shows the prequential error curves obtained when EDDM and DDM deal with this dataset. The plots on the left are prequential error calculated with the whole dataset, and the plots on the right are prequential error calculated from scratch after every concept change detected by both methods.
+
+Although the global curves are similar, the local prequential curves show that EDDM reacts before and more times than DDM when a slow concept drift is present. During the transition from the previous concept to the next, EDDM detects repeatedly concept drifts. This is so because the frequency of classification errors continuously increase until the next concept is stable. Meanwhile, DDM shows less sensitivity to this kind of problems, reacting later and less than EDDM. Table 2 presents the final prequential errors and number of drifts obtained by these two methods on Sine1g dataset.
+
+### 4.4. The Electricity Market Dataset
+
+The data used in this experiment was first described by M. Harries [14]. The data was collected from the Australian New South Wales Electricity Market. In this market, the prices are not fixed and they are affected by demand and supply of the market. A factor for the price evolution is the time evolution of the electricity market. During the time period described in the data the electricity market was expanded with the inclusion of adjacent areas. This produced a more elaborated management of the supply. The production surplus of one region could be sold in the adjacent region. A consequence of this expansion was a dampener of the extreme prices. The ELEC2 dataset contains 45312 instances dated from May 1996 to December 1998. Each example of the dataset refers to a period of 30 minutes. Each example on the dataset has 5 fields, the day of week, the time stamp, the NSW electricity demand, the Vic electricity demand, the scheduled electricity transfer between states and the class label. The class label identifies the change of the price related to a moving average of the last 24 hours. The class level only reflect deviations of the price on a one day average and removes the impact of longer term price trends. The interest of this dataset is that it is a real-world dataset. We do not know when drift occurs or if there is drift. We have considered this problem as a short term prediction: predict the changes in the prices relative to the next 30 minutes.
+
+In Figure 3 we present the traces of the prequential error rate of EDDM and DDM, with the base learning algorithms, through the full ELEC2 dataset. As can be seen, EDDM outperforms DDM, detecting concept changes earlier and with a better sensitivity. Table 3 shows the final prequential errors and number of drifts obtained by these two methods on the electricity market dataset.
+
+## 5. Conclusion
+
+This paper introduces a new method for detecting concept drifts based on the distances between classification errors. This method achieves an early detection in presence of gradual changes, even when that change is very slow. The results that are presented have been obtained after using the method as a wrapper for different learning algorithms, but it would be easy to implement it in a local way inside those algorithms. The experimental evaluation of EDDM illustrates the advantages of using this detection method. As well as obtaining good results detecting concept drifts, this method shows itself as a way to deal with noisy datasets even when the base algorithm is not designed with that aim. When the base algorithm begins to overfit, the frequency of classification errors begins to increase and that is detected by the proposed method.
+
+Out aim of improving EDDM involves some issues where the most important is finding a way to determine the values for the parameters of the method (α and β) in an automatic way.
+
+## Figures et tableaux
+
+3 -Fig. 1. Fig. 1. Prequential error of J48 (up) and IB1 (down) on Circles (left) and Sine1 (right) datasets
+
+**Fig. 2.** Prequential global error (left) and local error (right) for EDDM and DDM in Sine1g dataset
+
+**Fig. 3.** Prequential error for EDDM and DDM in ELEC2 dataset
+
+[figure sans légende identifiée] for the warning level. Beyond this level, the examples are stored in advance of a possible change of context. -(p i + 2 • s i )/(p max + 2 • s max ) < β for the drift level. Beyond this level the concept drift is supposed to be true, the model induced by the learning method is reset and a new model is learnt using the examples stored since the warning level triggered. The values for p max and s max are reset too.
+
+**Table 1.** Prequential error and total number of changes detected by methods
+
+     | EDDM |  | DDM | 
+     | Prequential Drifts Prequential Drifts
+    IB1 | 0.0340 | 3 | 0.0343 | 3
+    Circle J48 | 0.0421 | 3 | 0.0449 | 3
+    NNge | 0.0504 | 4 | 0.0431 | 4
+    IB1 | 0.1927 | 32 | 0.1888 | 9
+    Gauss J48 | 0.1736 | 22 | 0.1530 | 9
+    NNge | 0.1763 | 31 | 0.1685 | 12
+    IB1 | 0.0322 | 9 | 0.0330 | 10
+    Mixed J48 | 0.0425 | 9 | 0.0449 | 11
+    NNge | 0.0639 | 10 | 0.0562 | 9
+    IB1 | 0.0376 | 9 | 0.0377 | 9
+    Sine1 J48 | 0.0847 | 11 | 0.0637 | 10
+    NNge | 0.0819 | 14 | 0.0767 | 11
+
+**Table 2.** Prequential error and total number of changes detected by methods in Sine1g dataset
+
+     | EDDM |  | DDM | 
+     | Prequential Drifts Prequential Drifts
+    IB1 | 0.1462 | 50 | 0.2107 | 12
+    Sine1g J48 | 0.1350 | 34 | 0.1516 | 12
+    NNge | 0.2104 | 28 | 0.2327 | 12
+
+**Table 3.** Prequential error and total number of changes detected by methods in ELEC2 dataset
+
+     | EDDM | DDM | 
+     | Prequential Drifts Prequential Drifts
+    IB1 | 0.1426 171 | 0.2764 | 44
+    Elect2 J48 | 0.1564 187 | 0.2123 | 10
+    NNge | 0.1594 193 | 0.2110 130

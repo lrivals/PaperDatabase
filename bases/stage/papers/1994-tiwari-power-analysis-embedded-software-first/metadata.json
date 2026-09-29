@@ -1,0 +1,42 @@
+{
+  "id": "1994-tiwari-power-analysis-embedded-software-first",
+  "title": "Power analysis of embedded software: a first step towards software power minimization",
+  "authors": [
+    {
+      "given": "V.",
+      "family": "Tiwari"
+    },
+    {
+      "given": "S.",
+      "family": "Malik"
+    },
+    {
+      "given": "A.",
+      "family": "Wolfe"
+    }
+  ],
+  "year": 1994,
+  "venue": "IEEE Transactions on Very Large Scale Integration (VLSI) Systems 2(4), 437-445",
+  "doi": "10.1109/92.335012",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/92.335012",
+  "type": "journal",
+  "axes": [
+    "tinyml-odl"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE I, TABLE I1, TABLE 111",
+      "sections numérotées non détectées : I, II, III — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

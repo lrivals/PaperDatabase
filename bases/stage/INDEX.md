@@ -2,7 +2,7 @@
 
 <!-- GÉNÉRÉ par bin/reindex.py — ne pas éditer à la main -->
 
-**50 papiers, 29 fiches à faire.**
+**56 papiers, 35 fiches à faire.**
 
 Un papier peut apparaître sous plusieurs axes.
 
@@ -63,6 +63,7 @@ Un papier peut apparaître sous plusieurs axes.
 | [arxiv-2110.10486-tinyml-platform-device-continual-learning](papers/arxiv-2110.10486-tinyml-platform-device-continual-learning/fiche.md) | A TinyML Platform for On-Device Continual Learning with Quantized Latent Replays | Ravaglia et al. | 2021 | IEEE Journal on Emerging and Selected Topics in Circuits and Systems 11.4 (2021), 789-802 | journal | done |
 | [2019-benatti-online-learning-classification-emg-gestures](papers/2019-benatti-online-learning-classification-emg-gestures/fiche.md) | Online Learning and Classification of EMG-Based Gestures on a Parallel Ultra-Low Power Platform Using Hyperdimensional Computing | Benatti et al. | 2019 | IEEE Transactions on Biomedical Circuits and Systems | journal | todo |
 | [arxiv-1801.06601-cmsis-nn-efficient-neural-network](papers/arxiv-1801.06601-cmsis-nn-efficient-neural-network/fiche.md) | CMSIS-NN: Efficient Neural Network Kernels for Arm Cortex-M CPUs | Liangzhen Lai, Naveen Suda, Vikas Chandra | 2018 | arXiv preprint | preprint | done |
+| [1994-tiwari-power-analysis-embedded-software-first](papers/1994-tiwari-power-analysis-embedded-software-first/fiche.md) | Power analysis of embedded software: a first step towards software power minimization | V. Tiwari, S. Malik, A. Wolfe | 1994 | IEEE Transactions on Very Large Scale Integration (VLSI) Systems 2(4), 437-445 | journal | todo |
 
 ## Quantification et réseaux binaires / ternaires (`quantization`)
 
@@ -90,6 +91,7 @@ Un papier peut apparaître sous plusieurs axes.
 | [2022-maschler-regularization-continual-learning-fault-prediction](papers/2022-maschler-regularization-continual-learning-fault-prediction/fiche.md) | Regularization-based Continual Learning for Fault Prediction in Lithium-Ion Batteries | Benjamin Maschler, Sophia Tatiyosyan, Michael Weyrich | 2022 | Procedia CIRP 112, 513–518 | journal | todo |
 | [2021-kang-remaining-useful-life-rul-prediction](papers/2021-kang-remaining-useful-life-rul-prediction/fiche.md) | Remaining Useful Life (RUL) Prediction of Equipment in Production Lines Using Artificial Neural Networks | Ziqiu Kang, Cagatay Catal, Bedir Tekinerdogan | 2021 | Sensors | journal | todo |
 | [2016-lessmeier-condition-monitoring-bearing-damage-electromechanical](papers/2016-lessmeier-condition-monitoring-bearing-damage-electromechanical/fiche.md) | Condition Monitoring of Bearing Damage in Electromechanical Drive Systems by Using Motor Current Signals of Electric Motors: A Benchmark Data Set for Data-Driven Classification | Lessmeier et al. | 2016 | Proceedings of the European Conference of the PHM Society | conference | todo |
+| [2015-helwig-condition-monitoring-complex-hydraulic-system](papers/2015-helwig-condition-monitoring-complex-hydraulic-system/fiche.md) | Condition monitoring of a complex hydraulic system using multivariate statistics | Nikolai Helwig, Eliseo Pignanelli, Andreas Schütze | 2015 | 2015 IEEE International Instrumentation and Measurement Technology Conference (I2MTC) Proceedings 210-215 | conference | todo |
 | [2012-nectoux-pronostia-experimental-platform-bearings-accelerated](papers/2012-nectoux-pronostia-experimental-platform-bearings-accelerated/fiche.md) | PRONOSTIA: An Experimental Platform for Bearings Accelerated Degradation Tests | Nectoux et al. | 2012 | IEEE International Conference on Prognostics and Health Management (PHM) | conference | todo |
 | [2008-saxena-damage-propagation-modeling-aircraft-engine](papers/2008-saxena-damage-propagation-modeling-aircraft-engine/fiche.md) | Damage Propagation Modeling for Aircraft Engine Run-to-Failure Simulation | Saxena et al. | 2008 | International Conference on Prognostics and Health Management (PHM) | conference | todo |
 
@@ -104,6 +106,8 @@ Un papier peut apparaître sous plusieurs axes.
 | [arxiv-2103.08295-tinyol-tinyml-online-learning-microcontrollers](papers/arxiv-2103.08295-tinyol-tinyml-online-learning-microcontrollers/fiche.md) | TinyOL: TinyML with Online-Learning on Microcontrollers | Haoyu Ren, Darko Anicic, Thomas A. Runkler | 2021 | arXiv preprint | preprint | done |
 | [2019-su-robust-anomaly-detection-multivariate-time](papers/2019-su-robust-anomaly-detection-multivariate-time/fiche.md) | Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network | Su et al. | 2019 | Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining 2828–2837 | conference | todo |
 | [arxiv-1711.00614-multimodal-anomaly-detector-robot-assisted](papers/arxiv-1711.00614-multimodal-anomaly-detector-robot-assisted/fiche.md) | A Multimodal Anomaly Detector for Robot-Assisted Feeding Using an LSTM-based Variational Autoencoder | Daehyung Park, Yuuna Hoshi, Charles C Kemp | 2017 | arXiv preprint | preprint | todo |
+| [2008-liu-isolation-forest](papers/2008-liu-isolation-forest/fiche.md) | Isolation Forest | Fei Tony Liu, Kai Ming Ting, Zhi-Hua Zhou | 2008 | 2008 Eighth IEEE International Conference on Data Mining 413-422 | conference | todo |
+| [1936-mahalanobis-generalised-distance-statistics](papers/1936-mahalanobis-generalised-distance-statistics/fiche.md) | On the Generalised Distance in Statistics | P. C. Mahalanobis | 1936 | Proceedings of the National Institute of Sciences of India 2(1), 49-55 | journal | todo |
 
 ## Détection de dérive (concept drift, change-point) (`drift-detection`)
 
@@ -112,6 +116,8 @@ Un papier peut apparaître sous plusieurs axes.
 | [2024-besnard-continual-learning-time-series-forecasting](papers/2024-besnard-continual-learning-time-series-forecasting/fiche.md) | Continual Learning for Time Series Forecasting: A First Survey | Quentin Besnard, Nicolas Ragot | 2024 | Engineering Proceedings (ITISE 2024) | conference | todo |
 | [arxiv-2007.05432-reactive-soft-prototype-computing-concept](papers/arxiv-2007.05432-reactive-soft-prototype-computing-concept/fiche.md) | Reactive Soft Prototype Computing for Concept Drift Streams | Christoph Raab, Moritz Heusinger, Frank-Michael Schleif | 2020 | Neurocomputing 416 | journal | todo |
 | [2012-gretton-kernel-two-sample-test](papers/2012-gretton-kernel-two-sample-test/fiche.md) | A Kernel Two-Sample Test | Gretton et al. | 2012 | Journal of Machine Learning Research | journal | todo |
+| [2006-baena-garcia-early-drift-detection-method](papers/2006-baena-garcia-early-drift-detection-method/fiche.md) | Early Drift Detection Method | Baena-García et al. | 2006 | Fourth International Workshop on Knowledge Discovery from Data Streams (IWKDDS), ECML PKDD 2006 | conference | todo |
+| [2004-gama-learning-drift-detection](papers/2004-gama-learning-drift-detection/fiche.md) | Learning with Drift Detection | Gama et al. | 2004 | Advances in Artificial Intelligence - SBIA 2004 (LNAI 3171), 286-295 | conference | todo |
 
 ## Jeux de données et bancs d'essai (roulements, turbines, capteurs) (`datasets`)
 
@@ -120,6 +126,7 @@ Un papier peut apparaître sous plusieurs axes.
 | [2025-shah-continual-learning-gradient-monitoring-remaining](papers/2025-shah-continual-learning-gradient-monitoring-remaining/fiche.md) | Continual learning by gradient monitoring for remaining useful lifetime estimation | Sayed Rafay Bin Shah, Andreas Schwung | 2025 | Knowledge-Based Systems 323, 113721 | journal | todo |
 | [2019-su-robust-anomaly-detection-multivariate-time](papers/2019-su-robust-anomaly-detection-multivariate-time/fiche.md) | Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network | Su et al. | 2019 | Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining 2828–2837 | conference | todo |
 | [2016-lessmeier-condition-monitoring-bearing-damage-electromechanical](papers/2016-lessmeier-condition-monitoring-bearing-damage-electromechanical/fiche.md) | Condition Monitoring of Bearing Damage in Electromechanical Drive Systems by Using Motor Current Signals of Electric Motors: A Benchmark Data Set for Data-Driven Classification | Lessmeier et al. | 2016 | Proceedings of the European Conference of the PHM Society | conference | todo |
+| [2015-helwig-condition-monitoring-complex-hydraulic-system](papers/2015-helwig-condition-monitoring-complex-hydraulic-system/fiche.md) | Condition monitoring of a complex hydraulic system using multivariate statistics | Nikolai Helwig, Eliseo Pignanelli, Andreas Schütze | 2015 | 2015 IEEE International Instrumentation and Measurement Technology Conference (I2MTC) Proceedings 210-215 | conference | todo |
 | [2012-nectoux-pronostia-experimental-platform-bearings-accelerated](papers/2012-nectoux-pronostia-experimental-platform-bearings-accelerated/fiche.md) | PRONOSTIA: An Experimental Platform for Bearings Accelerated Degradation Tests | Nectoux et al. | 2012 | IEEE International Conference on Prognostics and Health Management (PHM) | conference | todo |
 | [2008-saxena-damage-propagation-modeling-aircraft-engine](papers/2008-saxena-damage-propagation-modeling-aircraft-engine/fiche.md) | Damage Propagation Modeling for Aircraft Engine Run-to-Failure Simulation | Saxena et al. | 2008 | International Conference on Prognostics and Health Management (PHM) | conference | todo |
 

@@ -1,0 +1,54 @@
+{
+  "id": "2006-baena-garcia-early-drift-detection-method",
+  "title": "Early Drift Detection Method",
+  "authors": [
+    {
+      "given": "Manuel",
+      "family": "Baena-García"
+    },
+    {
+      "given": "José",
+      "family": "del Campo-Ávila"
+    },
+    {
+      "given": "Raúl",
+      "family": "Fidalgo-Merino"
+    },
+    {
+      "given": "Albert",
+      "family": "Bifet"
+    },
+    {
+      "given": "Ricard",
+      "family": "Gavaldà"
+    },
+    {
+      "given": "Rafael",
+      "family": "Morales-Bueno"
+    }
+  ],
+  "year": 2006,
+  "venue": "Fourth International Workshop on Knowledge Discovery from Data Streams (IWKDDS), ECML PKDD 2006",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "conference",
+  "axes": [
+    "drift-detection"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
+      "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

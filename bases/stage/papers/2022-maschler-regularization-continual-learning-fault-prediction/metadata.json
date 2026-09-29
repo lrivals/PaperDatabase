@@ -1,0 +1,44 @@
+{
+  "id": "2022-maschler-regularization-continual-learning-fault-prediction",
+  "title": "Regularization-based Continual Learning for Fault Prediction in Lithium-Ion Batteries",
+  "authors": [
+    {
+      "given": "Benjamin",
+      "family": "Maschler"
+    },
+    {
+      "given": "Sophia",
+      "family": "Tatiyosyan"
+    },
+    {
+      "given": "Michael",
+      "family": "Weyrich"
+    }
+  ],
+  "year": 2022,
+  "venue": "Procedia CIRP 112, 513–518",
+  "doi": "10.1016/j.procir.2022.09.091",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1016/j.procir.2022.09.091",
+  "type": "journal",
+  "axes": [
+    "cl-methods",
+    "pdm-rul"
+  ],
+  "tags": [
+    "ewc",
+    "si"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "arxiv-1806.08342-quantizing-deep-convolutional-networks-efficient",
+  "title": "Quantizing Deep Convolutional Networks for Efficient Inference: A Whitepaper",
+  "authors": [
+    {
+      "given": "Raghuraman",
+      "family": "Krishnamoorthi"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1806.08342",
+  "url": "https://arxiv.org/abs/1806.08342",
+  "type": "preprint",
+  "axes": [
+    "quantization"
+  ],
+  "tags": [
+    "int8"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1, Table 3, Table 6, Table 7"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

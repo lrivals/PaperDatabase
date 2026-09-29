@@ -1,0 +1,707 @@
+---
+id: 2025-shah-continual-learning-gradient-monitoring-remaining
+title: "Continual learning by gradient monitoring for remaining useful lifetime estimation"
+year: 2025
+backend: grobid
+---
+
+## Abstract
+
+Sequential addition of tasks in a learning regime leads to catastrophic forgetting of previous knowledge when learning is focused solely on new tasks. This complication can be alleviated by preserving the old data and retraining the network or introducing new networks for corresponding tasks. However, this leads to computation and storage overhead, rendering these solutions impractical in real industrial applications. We introduce a novel Gradient Monitoring (GM) approach to learning incoming tasks and simultaneously preserving old knowledge for predicting the remaining useful life (RUL) of industrial systems. A criterion matrix is formulated to evaluate the relationship between the weights of a network with their corresponding gradients generated during backpropagation. The mean of the criterion, multiplied by a learning factor, generates the threshold for creating a binary masking matrix. We propose two sub-methods of GM namely, Vanilla (VGM) and Momentum (MGM). The binary mask is utilized in VGM whereas, MGM uses the masking memory from previous training iterations along with the binary masks. We perform joint training of task-specific heads using a distillation loss and eliminate the dependency on old datasets. Using theoretical proofs, we demonstrate that GM can greatly reduce backward forgetting of old tasks. We focus our experiments on the RUL estimation of industrial systems and compare our methods with existing frameworks in continual learning (CL). For our CL experiments in RUL estimation, we select the CMAPSS Dataset and the NASA Li-ion Battery dataset, as these datasets offer subsets with varying operational features and diversity in data distribution.
+
+## 1. Introduction
+
+Industrial machine learning applications often deal with datasets originating from processes with varying operating conditions, domain drifts, and data inconsistency. Training fresh networks consecutively with the inclusion of new subsets of the same domain requires additional computational and storage costs and does not allow the sharing of previously obtained knowledge into new tasks. This also has an adverse effect on the training of a new network with smaller datasets. This problem can be solved by training a model consecutively with the addition of a new task. However, this hinders the concept of replicating human-level intelligence in deep learning algorithms of retaining information from previous tasks while incrementally learning new ones, i.e., learning in a lifelong manner [1]. Although the human cognitive system gradually forgets old information with the addition of new ones over a long period of time, in multi-task learning, this occurs catastrophically or, in simpler terms, immediately [2]. This phenomenon, defined as ''catastrophic forgetting'' [3], can be avoided by continual learning (CL) algorithms, which aim to minimize the loss of old information while training the model on a new task. CL deals simultaneously with the contradicting paradigms of forgetting and intransigence, where a network either tends to forget the old information or fails to learn new ones [4]. This is similar to the stability-plasticity dilemma in distributed and parallel systems. The ability of a model to retain past knowledge over subsequent tasks is defined as its stability whereas, plasticity is the ability of the model to efficiently learn oncoming tasks. A highly stable model may fail to adapt to new tasks while a highly plastic model may easily forget old task knowledge. In other words, the stability-plasticity dilemma defines a trade-off between the network's stability to retain previous knowledge and the plasticity to learn information from oncoming tasks [5,6].
+
+The existence of domain drift and inconsistency between subdatasets in the multivariate time series domain make it complicated to achieve incremental learning in industrial applications. A newly added task from the same process may contain more or fewer features in comparison to its preceding task, thus increasing the chance of forgetting, intransigence, or both [7]. Previous studies of continual learning focus mostly on image datasets, and not much work has been done with regard to industrial applications. Our work extends on the LWF method from [8] due to its use of multi-task learning with distillation losses, thus eliminating the need for old task data. This provides a practical approach for real-world industrial applications where preserving the old data and retraining a model increases storage cost with reduced computational efficiency [9].
+
+This paper proposes a novel, lightweight continual learning algorithm by implementing Gradient Monitoring (GM) on the feature extraction layer. GM performs a continuous evaluation of gradients during the course of training and selectively deactivates certain gradients based on a threshold [10,11]. We evaluate our proposed method with existing CL frameworks based on forward and backward knowledge transfer. A positive forward transfer signifies that the old task knowledge enhances the network's capability to learn oncoming tasks more efficiently. A positive backward transfer indicates improved performance of the model on old tasks while learning a new task and a negative backward transfer simply indicates catastrophic forgetting [12]. With the proposed GM method, we therefore aim to achieve two important benefits. Firstly, we intend to force the feature extractor to concentrate on the most influencing learning directions for a certain task and switch off noisy parameter updates at the same time to enforce positive forward transfer. Secondly, we intend to reduce the negative backward transfer of old tasks by selectively masking gradients and controlling the magnitude of the parameter shift between old and new tasks. We define the different criteria for determining the threshold based on the gradients and the corresponding network parameters and analyze their impact. Although GM has been previously evaluated in reinforcement learning [11], this methodology has not yet been tested in the domain of supervised learning, particularly in the field of continual learning with an emphasis on RUL estimation. In addition, we provide theoretical analysis and proofs to demonstrate the impact of GM in preventing interference on old knowledge while learning new tasks in an incremental manner. Finally, we support our theoretical findings with empirical results. Our proposed methodology is tested on the RUL prediction of two different datasets, the CMAPSS Turbofan engine dataset [13] and the Li-ion Battery Aging dataset [14] in a continual learning setting. The results underline the proposed approach's efficacy compared to the baseline method and other existing CL methodologies.
+
+The contributions of this paper can be summarized as follows:
+
+• We propose a novel regularization-based continual learning approach where gradients are actively monitored, activated, and deactivated using a masking matrix in order to reduce backward forgetting of old tasks while learning a new task. • We provide theoretical proof to demonstrate that selectively masking gradients based on a predefined criterion and the use of masking memory from previous training steps while learning new tasks alleviates forgetting of old tasks. • We evaluate different GM strategies for threshold determination and compare the response of the network upon selectively turning off gradients based on this threshold. • We provide an empirical study on the CMAPSS benchmark dataset and demonstrate a performance comparison between the proposed novel approach and existing CL methodologies.
+
+## 2. Related work
+
+### Supervised learning
+
+Modeling of multivariate time-series datasets via supervised learning using CNN and LSTMs has been evaluated in [15][16][17][18]. Attention mechanism in LSTM and CNN-based encoder-decoder models are demonstrated in [19,20]. The transformer architecture originally proposed for machine translation [21] is further modified in [22], where the transformer encoder coupled with an MLP decoder is trained in a supervised manner before performing domain adaptation using the CMAPSS dataset. Architectural change in the transformer network can be seen in [23], where a shared multi-head attention layer is used to reduce the computational and memory cost and achieve benchmark results with the CMAPSS dataset. A transformer network with a denoising autoencoder for prior feature extraction to predict RUL of Li-ion batteries can be seen in [24]. Although these methods explore fault diagnosis in time-series datasets, these are often computationally expensive in an industrial scenario as they involve re-training of model architectures for sequentially introduced datasets. We focus our work on incremental learning of RUL prediction tasks, using techniques that are both computationally efficient and independent of old task datasets.
+
+### Continual learning
+
+Continual learning approaches can be classified into replay-based, parameter isolation-based, and regularization-based methods, depending on the storing and usage of the task-specific data. The concept of replay methods lies in the storage of previous task samples, which can be included as additional inputs with the data of subsequent tasks [25,26]. An alternative to sample storage is presented in [27], where previous task samples are generated using generative networks. Constraining the optimization with the stored samples is performed in GEM [12] to avoid interference between old and new tasks, while further relaxation for the interference approximation is provided in [28]. A novel replay-based method is proposed in [29] that deploys dual distillation of dataset and features while also introducing an equiangular basis vector classifier to reduce storage costs. The generalized analytical CL method proposed in [30] mitigates the need for exemplars in generalized class incremental learning and adopts a gradient-free training technique. A novel generative replay-based technique for NLP is proposed in [31] where Dirichlet distribution is deployed to learn the latent variables and forgetting is reduced via the Jensen-Shannon knowledge distillation. Another replay method based on low-rank parameter interpolations using dual memory is presented in [32] for incrementally learning domain-specific downstream tasks using large language models. The adaptive replay technique in [33] specifically replays memory that are significant in mitigating backward forgetting, and maximizes information entropy to enhance the memory buffer performance. Aligning the correlations between data representations of different tasks is proposed by learning the task-specific pre-trained token representations shared throughout all tasks in [34].
+
+Parameter isolation refers to the assignment of model parameters to one task, either by freezing previous task parameters [35] or by copying the model [36]. This potentially reduces forgetting but results in a sharp increase of parameters due to the growing network. Alternatively, a large network where different parts are assigned to different tasks can be subsequently masked for training as shown in [37,38]. This requires a pre-estimation of oncoming tasks prior to the start of training, as the network can potentially run out of capacity. The use of Bayesian compression is seen in [39] to learn task-specific and task-invariant latent feature representations with fewer network parameters.
+
+Regularization-based CL methods prevent catastrophic forgetting by identifying and preserving the network parameters that are significant for the retention of old task knowledge [40]. These methods avoid the need for old task data, thus preventing a storage overhead in realworld scenarios. Parameter regularization based on task importance is explored in elastic weight consolidation (EWC) [41], variational CL [42] and unsupervised importance estimation [43]. In EWC, the network parameters are regularized in a way such that, a low error region for both the old and new tasks can be reached. However, to prevent over-prioritization of the new task, a Fisher Information Matrix (FIM) is deployed to determine the sensitive weights for preserving the old task. The drawbacks of this method are the over-prioritization of the first task and the storage cost as the number of parameters increases with increasing tasks [44]. Moreover, EWC relies heavily on the FIM for optimally approximating the parameters for specific tasks. A memoryenabled EWC method is proposed in [45] to eliminate the forgetting of fundamental driving abilities by an autonomous vehicle during continual learning. Task-specific projections are proposed to enhance adaptability in vision-language models along with a fusion module to handle cross-modality knowledge in [46]. The use of distillation losses can be seen in LWF [8], where fine-tuning is performed on the shared feature extractor and the new task head and the predictions are recorded as soft labels. Then joint training of all the network components is performed where the soft labels are used to calculate the knowledge distillation loss. Although LWF achieves better stability in retaining old information for tasks with lesser data drifts, the accumulation of errors and performance drop in the opposite scenarios are severe. LWF relies significantly on the convergence of the old task network, as joint training of a shared encoder that generated inaccurate feature representations in any of the initial tasks carries the risk of overall performance degradation in all new and old tasks [25,44]. This is more significant with MTS datasets where multiple subsets of the same process or system can possess high domain drift due to varying operating conditions, among other factors [13,14]. Our proposed gradient monitoring approach seeks to address the limitations inherent in LWF and EWC by masking gradients on the iteration level based on network parameter importance, thereby reducing previously mentioned dependencies and allowing higher scalability with increasing tasks.
+
+### Gradient-based continual learning
+
+The storage of old task subset in episodic memory and the use of this memory to constrain gradients during new task optimization is proposed in [12]. Although such constrained optimization prevents interference with old task knowledge, it comes with additional storage and computational costs. The A-GEM method proposed in [28] improves this strategy by calculating average gradients over the episodic memory samples, thereby reducing computational overhead. However, the dependency on old tasks subsets is not completely alleviated. The replay-based method in [47] adopts a gradient-based sample selection process by leveraging task-relevant gradients to store high-impact samples that are crucial for preserving past knowledge. The projection of new task gradients onto the orthogonal subspace of old task gradients is presented in [48]. The gradients are stored as episodic memory during the training of old tasks, thus increasing storage overhead. Another gradient projection algorithm is proposed in [49] where a low-rank gradient subspace is formulated using old task gradients and dynamically updated as new tasks are introduced. This method is similar to ours as it constrains gradients during instantaneous training, without any storage cost. However, with the continuous update of the gradient subspace, the computation cost also increases. To ensure that impactful data subset is stored in the replay buffer, the gradientbased coreset proposed in [50] analyzes the importance of old task samples by evaluating the relationship between their gradients and the overall optimization direction. The limitations of this method are the scalability to larger models and datasets and the overall computational cost of analyzing the gradient alignment. Our proposed GM approach is designed to address these limitations of storage overhead and computational cost in continual learning. Distillation loss is deployed to ensure that past knowledge is retained during joint-training of task-specific heads. During the optimization of a new task, the gradients generated via the backpropagation of the distillation and new task losses are taken into account along with their corresponding weights and old masking memory to generate new masks iteratively. These gradient masks allow the update of network weights with high impact on new task learning and past knowledge retention and constrain the update of the rest.
+
+### Continual learning for RUL prediction
+
+Continual learning methodologies have also been explored for RUL estimation of time series datasets. A hybrid regularizer-replay method with an elastic expansion mechanism for dynamic network expansion and pruning is proposed in [51]. The adaptive synapse technique integrated hybrid convolutional layer is proposed in [52], where the learning of important parameters from previous tasks is slowed to reduce forgetting. The work in [53] introduces an additional generator, penalized by a replay alignment loss, to generate features relevant to old tasks and then fuses them with the new task features. A contrastive generator is proposed in [54] to learn and distinguish task features more efficiently from pseudo data of the old task. A sequence input vector to ensure orthogonality of the input subspace and an orthogonal weight modifier are proposed in [55]. A deep residual reservoir with echo state networks is proposed in [56], where EWC is used as the framework to reduce forgetting in bearing fault prediction and battery health management tasks. EWC is also deployed with a deep LSTM-based RUL predictor, integrated with the compressed latent representation space of a pre-trained sparse autoencoder to perform incremental learning on the CMAPSS dataset [57]. While the work presented in [57] provides experimental RUL prediction results on an already well-known CL framework (EWC), we propose a novel GM approach for reducing catastrophic forgetting with the CMAPSS dataset and the Li-ion Battery dataset with additional theoretical background and proofs.
+
+## 3. Continual learning using gradient monitoring
+
+### 3.1. Problem statement
+
+We consider the continual learning problem for RUL prediction as a task incremental learning setup. We assume that training data ( (𝑖) ;  (𝑖) ), with time-series signals,  (𝑖) and labels,  (𝑖) , for a new task 𝑖 is used to train the network until convergence. Consequently, the continual learning problem can be stated as the minimization of the loss function (⋅) as,
+
+𝐼-1 ∑ 𝑖 (𝑔 𝑖 ( (𝑖) , 𝜃),  (𝑖) ).(1)
+
+Where 𝑔 𝑖 (⋅) is the network function of the 𝑖th task, 𝜃 represents the network parameters, and 𝐼 is the number of tasks known to the network so far. In our methodology, the network is provided no access to the data ( (𝑓 𝑖 ) ;  (𝑓 𝑖 ) ) from previous subsets. Hence, for 𝑖 = 0, 1, 2, … , 𝐼 -1, the condition 𝑖 = 𝐼 -1 always holds true for the current training dataset.
+
+To optimize the current task 𝑖, we can simply resort to empirical loss minimization,
+
+1 𝑁 𝑁 ∑ 𝑗=1 (𝑔 𝑖 (𝑥 (𝑖) 𝑗 , 𝜃), 𝑦 (𝑖) 𝑗 ).(2)
+
+Where 𝑁 represents the total number of mini-batches in a single epoch. Naively optimizing Eq. ( 2) leads to forgetting of previous tasks. This work focuses on minimization of losses for all tasks 𝐼 while having access to data only from the current task, 𝑖.
+
+### 3.2. Joint training with task-specific heads
+
+In this work, we implement task-specific heads for incremental learning of incoming tasks. The process is illustrated in Fig. 1. Similar to LWF [8], the network architecture comprises a shared encoder network that performs feature extraction from the raw time-series input. We use an MLP network as the decoder, which also acts as a task-specific head denoted by 𝐻 𝑖 . At 𝑖 = 0, supervised training is performed to converge the network for the initial task subset 𝑑 0 . For 𝑖 > 0, a new RUL decoder or new task head, identical to the existing old task, is initiated. 𝜃 𝑠 , 𝜃 0 , and 𝜃 𝑛 represent the trainable parameters of the shared encoder, old task decoder, and new task decoder, respectively. With the introduction of a new task, a warmup phase begins where 𝜃 𝑠 and 𝜃 0 are frozen and only 𝜃 𝑛 trains. During warmup, predictions from the frozen networks are collected and later used as soft targets for distillation loss. After the end of the warmup phase, joint training of 𝜃 𝑠 , 𝜃 0 , and 𝜃 𝑛 begins with the new task subset. Thus, the network is trained on each task independently without using any previous data. The old task head attempts to minimize the distillation loss by generating RUL predictions similar to the soft targets from the warmup phase. During inference or testing, the network consisting of the shared encoder and a task-specific head is evaluated using the test dataset corresponding to that task. For example, after learning a new task 𝑁, the network composed of the shared encoder 𝐸 and the task-specific heads 𝐻 𝑁 , 𝐻 𝑁-1 , 𝐻 𝑁-2 , … , 𝐻 0 is tested for new task 𝑁 and old tasks 𝑁 -1, 𝑁 -2, …, 0 with the test datasets 𝑑 (𝑁) 𝑡𝑒𝑠𝑡 , 𝑑 (𝑁-1) 𝑡𝑒𝑠𝑡 , 𝑑 (𝑁-2) 𝑡𝑒𝑠𝑡 , … , 𝑑 (0) 𝑡𝑒𝑠𝑡 of each task respectively. In our experiments, the shared feature extractor is composed of the Transformer encoder and the task-specific head is the multi-layered MLP decoder (Fig. 4). With the introduction of a new task, the feature extractor and old task head are first reinitialized using the optimized parameters from the previous task. Then, a separate MLP decoder with random initialization of weights and biases is initialized as the taskspecific head for the new task. The network structure of a newly added task head is always kept similar to the shape of the task-specific head of the source task. In other words, hyperparameter optimization of the hidden size of task-specific heads is only performed during the learning of the initial source task, and the resulting hidden size is kept constant for all task-specific heads of oncoming tasks during continual learning. In this work, we used root-mean-squared error (RMSE) as the distillation loss for the old task and the loss function for the new task heads. The joint training approach eliminates the dependency on any old data and performs a decent job of preventing an exponential increase of parameters with increasing tasks. However, it suffers from high error accumulation, mostly when domain drift exists within the task subsets. To mitigate this effect, we propose gradient monitoring to selectively activate the necessary gradients and mask the non-useful ones to maintain a stable learning regime with sequentially added tasks.
+
+### 3.3. Gradient monitoring
+
+The mechanism of gradient monitoring (GM) is explained in this section. As shown in Fig. 2, the GM regularization is implemented in our experiments on the shared encoder network in the joint-training phase during the learning of a new task. We first define a set of criteria for gradient selection with the help of a criterion matrix. Then, we calculate a threshold from this criterion matrix and formulate a binary masking matrix, which we use for Vanilla gradient monitoring (VGM). As a further improvement of VGM, we propose Momentum gradient monitoring (MGM), where the masking memory is retained throughout the training phase, and masks are generated per the current state and past behavior of the gradients. These steps are explained in detail in the following subsections. An overview of each of the modules of VGM and MGM frameworks applied on the shared encoder network for continual learning of any task 𝑇 is illustrated in Fig. 2.
+
+#### 3.3.1. Criterion matrix
+
+The first step of GM is the formulation of a criterion matrix, 𝐶 [𝑙] as a function between gradients, 𝐺 [𝑙] of a layer, 𝑙 and its corresponding weights, 𝑊 [𝑙] .
+
+Ratio of Gradient to Weight: The first criterion considered is the one proposed in [10], which is the absolute value of the ratio of the backpropagated gradients to their corresponding weights:
+
+𝐶 [𝑙] 𝑔𝑜𝑤 = | | | | 𝐺 [𝑙] 𝑊 [𝑙] | | | | . (3
+
+)
+
+Where the ratio is computed element-wise.
+
+### Gradient times Weight:
+
+The second method is the absolute value of the product of the backpropagated gradient to the corresponding weights:
+
+𝐶 [𝑙] 𝑔𝑡𝑤 = | | | 𝐺 [𝑙] •𝑊 [𝑙]| | | . (4
+
+)
+
+Where • denotes the Hadamard Product.
+
+Absolute Gradient: The third criterion considered is simply the absolute value of the backpropagated gradient:
+
+𝐶 [𝑙] 𝑔 = | | | 𝐺 [𝑙]| | | . (5
+
+)
+
+We analyze the above criteria in more detail. Most methods for connection importance use magnitudes of weights [58,59]. However, the gradient itself is informative in the sense of how much a particular parameter shall move in the objective function's landscape. If the gradient magnitude is low, the parameter needs not to change much and is potentially close to a possible minimum. If it is high, the parameter is far away from the optimum and needs an update. Hence, the decision about whether to update a parameter can be taken based on the gradient magnitude itself. Nevertheless, this does not take into account the magnitude of the weight itself, i.e., a high gradient on a low weight has to be considered differently than a high gradient on a high weight. Hence, a more informative matrix can be obtained by combining the gradient and weight magnitudes either by forming a multiplicative (𝐶 [𝑙] 𝑔𝑡𝑤 ) or a divisive (𝐶 [𝑙] 𝑔𝑜𝑤 ) relation. A visual representation of this relation is shown in Fig. 3. As seen in the third image, 𝐶 [𝑙] 𝑔 ignores the information derived from the corresponding weights while, 𝐶 [𝑙] 𝑔𝑡𝑤 and 𝐶 [𝑙] 𝑔𝑜𝑤 show a multifaceted behavior. 𝐶 [𝑙] 𝑔𝑜𝑤 is particularly sensitive in the area with lower weight and higher gradient magnitudes. 𝐶 [𝑙] 𝑔𝑡𝑤 puts higher emphasis on regions where the magnitude of gradients and weights values are at their highest. In 𝑉 𝐺𝑀, the criterion matrix is determined using 𝐶 [𝑙] 𝑔𝑜𝑤 whereas, we compare both 𝐶 [𝑙] 𝑔𝑡𝑤 and 𝐶 [𝑙] 𝑔𝑜𝑤 criteria in 𝑀𝐺𝑀.
+
+#### 3.3.2. Binary masks from criterion Matrix & Vanilla gradient monitoring
+
+The criterion matrix, 𝐶 [𝑙] is a continuous-valued matrix that can be thresholded with a statistical summary to determine the parameter 𝑔𝑜𝑤 is particularly sensitive in the area with a higher gradient-to-weight ratio, thus avoiding bias in the masking process towards larger or smaller weights and focusing on the relative gradient magnitude instead. (b) Gradient times Weight: 𝐶 [𝑙] 𝑔𝑡𝑤 focuses on the regions with high weight and high gradient magnitudes. 𝐺𝑇 𝑊 represents how a particular weight influences the learning process, suppressing updates for low-impact weights and allowing weights with higher magnitudes to participate in the optimization process. (c) Absolute Gradients: 𝐶 [𝑙] 𝑔 ignores the information derived from the corresponding weights, while focusing solely on the backpropagated gradients. This can potentially mask gradients with lower magnitudes corresponding to weights that are critical to the optimization of the network. importance. In this paper, we opt for a layer-specific mean-based threshold, as it allows to ground the threshold in the data and the layer of the network specifically, avoiding the need for a completely arbitrary constant or heuristic. We avoid using a global mean since, different layers of a network demonstrate different learning dynamics. In the case of smaller gradient-to-weight ratios in the criterion matrix, the overall mean reduces, thus making the threshold less strict. Conversely, a higher mean value emphasizes the presence of a larger gradient and adjusts the threshold to deactivate gradients with a lower impact. Additionally, the mean provides a good starting point to understand the impact of gradient monitoring if the distribution of the criterion matrix is not heavily skewed. The mean of the matrix, 𝜇 [𝑙] is shown in Eq. ( 6), followed by the formulation of the binary masking matrix 𝑀 [𝑙] 𝑖,𝑗 in Eq. ( 7) as follows.
+
+𝜇 [𝑙] = 𝑚𝑒𝑎𝑛(𝐶 [𝑙] ).
+
+(6)
+
+𝑀 [𝑙] 𝑖,𝑗 = { 1, if(𝐶 [𝑙]
+
+𝑖,𝑗 ≥ 𝑘 * 𝜇 [𝑙] ). 0, if(𝐶 [𝑙] 𝑖,𝑗 < 𝑘 * 𝜇 [𝑙] ).
+
+Where, 𝑘 is a learning factor used to control the threshold and 𝑀 [𝑙] 𝑖,𝑗 ∈ {0, 1} is of the same size as 𝐶 [𝑙] 𝑖,𝑗 . In 𝑉 𝐺𝑀, this binary matrix 𝑀 [𝑙] is used to mask the corresponding gradients 𝐺 [𝑙] of layer 𝑙 while learning a new task. The optimal value of 𝑘 is determined via hyperparameter optimization and it is left constant throughout a training regime and not dynamically adjusted. We are aware that a global learning factor might fail to capture local variations as different layers of the network may have vastly different gradient dynamics. Furthermore, towards the end of training, smaller updates are often required to reach the global minima. Layer-wise learning factor determination can be performed to focus on the local behavior of the network instead of a global setting to create the threshold. Additionally, a learning factor scheduler can be designed for dynamic threshold decay. We are also aware that with highly skewed distributions, a few outliers in the criterion matrix can lead to overly aggressive masking, thus suppressing too many updates. However, in this experiment, we decide to use mean as the statistical measure for threshold determination and evaluate the influence of masking memory in continual learning performance in the following sections. We leave out layer-wise learning factor determination, learning factor scheduling and alternatives to mean-based threshold as future scopes of this work.
+
+#### 3.3.3. Masking memory & momentum gradient monitoring
+
+In 𝑉 𝐺𝑀, the masking matrix is reset and newly generated at every training step. This results in the loss of the masking memory along with the history of gradient importance for a particular weight. To alleviate this phenomenon, we propose two methods to update the masking matrix at the current iteration with memory retained from previous iterations. 1. Discrete Masking: In this method, the binary masking matrix, 𝑀 [𝑙] 𝑖 at training step 𝑖 can be updated using 𝑀 [𝑙] 𝑖-1 from the previous step using the following equation.
+
+𝑀 [𝑙] 𝑖 = max(0, 𝑀 [𝑙] 𝑖-1 + 𝑀 ′ [𝑙] 𝑖 ). (8
+
+)
+
+The existing 1s from the previous mask 𝑀 [𝑙] 𝑖-1 will be forwarded to the mask in the current iteration, irrespective of the value that is in the newly generated masking matrix 𝑀
+
+′ [𝑙]
+
+𝑖 . Thus, previously active parameters will not stop training abruptly due to a random training batch. However, this is also disadvantageous from the perspective that certain gradients with lower importance, which should be masked to stop the parameter update in the current iteration, may continue training because of a 1 in its masking position in the previous step. As a result, the mask will quickly saturate, i.e., it becomes a matrix of ones, making the gradient monitored stochastic gradient descent (SGD) algorithm a normal SGD.
+
+## 2. Momentum based Masking:
+
+In order to solve the problems with discrete masking, we introduce a momentum matrix, 𝑍, instead of directly applying a masking matrix on the gradients. This momentum matrix tracks the running momentum of the mask elements and controls the variance in the active state of the gradients throughout the training phase. The matrix 𝑍 keeps updating over every iteration in a single epoch, thus keeping track of the history of the gradients and creating masks accordingly. At 𝑖th iteration for any layer 𝑙, the momentum matrix, 𝑍 [𝑙] 𝑖 is represented by the exponential weighted moving average technique as shown in the following equation.
+
+𝑍 [𝑙] 𝑖 = 𝛽𝑍 [𝑙] 𝑖-1 + (1 -𝛽)𝑀 [𝑙] 𝑖 . (9
+
+)
+
+Where, 𝛽 ∈ [0.9, 0.99] is the momentum temperature. Our momentum GM approach is inspired by the ADAM optimization technique with momentum, where the gradient update velocity from the previous steps is utilized to accelerate convergence towards the global minimum and smooth out oscillations due to abrupt changes in the learning direction. In our task, the value of 𝛽 is optimized within a range of 0.9 to 0.99 to ensure that the resulting mask 𝑍 [𝑙] 𝑖 is gradually updated, influenced by the masking history 𝑍 [𝑙] 𝑖-1 from the previous steps. The effect caused by the abrupt deactivation of gradients by 𝑀 [𝑙] 𝑖 is hence reduced due to the allocation of a lower weight (1-𝛽). Furthermore, a low 𝛽 will exponentially decay 𝑍 [𝑙] 𝑖-1 over successive iterations and swiftly fade out the masking memory from the previous steps. A similar analysis can be made in the simplified momentum matrix equation in Eq. (26). A high 𝛽 value will dampen heavy oscillations in the instantaneous masking matrix due to a higher weight on the masks from earlier iterations. A lower value will exponentially decay the multiplicative factor 𝛽 𝑁-𝑗 of 𝑀 (𝑡+1) 𝑗 from previous iterations and rapidly diminish the masking history with the increase in training steps 𝑗. In addition, selecting the value of 𝛽 within this range improves empirical performance of MGM over VGM and other literature methods as shown in Sections 5.7.1-5.7.3.
+
+## 4. Theoretical analysis
+
+In this chapter, we mathematically prove how the proposed VGM and MGM methods can reduce backward forgetting of old tasks in a network when training on a new task. To begin with, we first revisit the phenomenon of expected forgetting [28,60] in a network during continual learning in Definition 1.
+
+Definition 1 (Expected Forgetting ). Suppose 𝜃 (𝑡) and 𝜃 (𝑡+1) are the optimum parameters of networks 𝐹 (𝑡) and 𝐹 (𝑡+1) respectively after the sequential training of tasks 𝑡 and 𝑡 + 1. The expected forgetting of task 𝑡 is given by,
+
+𝛿(𝐹 (𝑡+1) |𝐹 (𝑡) ) = (𝜃 (𝑡+1) ) -(𝜃 (𝑡) ). (10
+
+)
+
+Where, (𝜃 (𝑡) ) and (𝜃 (𝑡+1) ) are the losses on task 𝑡 by the networks 𝐹 (𝑡) and 𝐹 (𝑡+1) respectively. By the First Order Taylor expansion of  around 𝜃 (𝑡) we get,
+
+(𝜃 (𝑡+1) ) -(𝜃 (𝑡) ) ≈ ⟨∇(𝜃 (𝑡) ), (𝜃 (𝑡+1) -𝜃 (𝑡) )⟩.(11)
+
+∇(𝜃 (𝑡) ) represents the sensitivity of the loss function  with respect to the change in parameters 𝜃 (𝑡) . (𝜃 (𝑡+1) -𝜃 (𝑡) ) represents the parameter shift after training a network on task 𝑡 + 1 sequentially after task 𝑡. Bounding Eq. ( 11) and applying the Cauchy-Schwarz inequality we get,
+
+| | | (𝜃 (𝑡+1) ) -(𝜃 (𝑡) ) | | | ≤ ‖ ‖ ‖ ∇(𝜃 (𝑡) ) ‖ ‖ ‖ ⋅ ‖ ‖ ‖ (𝜃 (𝑡+1) -𝜃 (𝑡) ) ‖ ‖ ‖ . (12
+
+)
+
+Hence, the expected forgetting in Eq. ( 10) can be bounded as,
+
+𝛿(𝐹 (𝑡+1) |𝐹 (𝑡) ) ≤ ‖ ‖ ‖ ∇(𝜃 (𝑡) ) ‖ ‖ ‖ ⋅ ‖ ‖ ‖ (𝜃 (𝑡+1) -𝜃 (𝑡) ) ‖ ‖ ‖ . (13
+
+)
+
+### 4.1. Theoretical analysis of vanilla gradient monitoring (VGM)
+
+This section provides the necessary theoretical analysis of using VGM in continual learning. We first define the sparsity of the binary masks used in VGM in Definition 2.
+
+### Definition 2 (Masking Sparsity). Let 𝑀 (𝑡+1)
+
+𝑖 be the binary masking matrix used to mask the gradients 𝐺 (𝑡+1) 𝑖 of any layer 𝑙 of a network 𝐹 (𝑡+1) during training step 𝑖 of task 𝑡 + 1. Then, the sparsity of masking of 𝑀 (𝑡+1) 𝑖 is given by,
+
+𝑆 𝑚 = ‖ ‖ ‖ 𝑀 (𝑡+1) 𝑖 ‖ ‖ ‖0 | | | 𝐺 (𝑡+1) 𝑖 | | | . (14
+
+)
+
+Where, ‖ ‖ ‖
+
+𝑀 (𝑡+1) 𝑖 ‖ ‖ ‖0
+
+is the total no. of non-zero elements in 𝑀 (𝑡+1) 𝑖 and,
+
+| | | 𝐺 (𝑡+1) 𝑖 | | |
+
+is the size of 𝐺 (𝑡+1)
+
+𝑖
+
+. In 𝑉 𝐺𝑀, the sparsity is bounded by, 0
+
+< 𝑆 𝑚 < 1.
+
+With the help of Theorem 1, we demonstrate how the structure of the binary masks explicitly aids in reducing backward forgetting of old tasks, subsequently showing the importance of the bounds of the masking sparsity 𝑆 𝑚 .
+
+### Theorem 1. Let G(𝑡+1)
+
+𝑖 be the masked gradients corresponding to the weight matrix 𝑊 (𝑡+1) 𝑖 of a layer 𝑙 within a network
+
+F (𝑡+1) during training step 𝑖 of task 𝑡 + 1 s.t., G(𝑡+1) 𝑖 ← 𝑀 (𝑡+1) 𝑖 • 𝐺 (𝑡+1)
+
+𝑖
+
+. Then the difference in performance for an old task 𝑡, between networks F (𝑡+1) and 𝐹 (𝑡+1) with masked and unmasked gradients respectively, with respect to 𝐹 (𝑡) can be given as,
+
+𝛿 𝑉 𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ) < 𝛿(𝐹 (𝑡+1) |𝐹 (𝑡) ).(15)
+
+Proof. In a continual learning setup, during the training of a neural network 𝐹 on a task 𝑡, consider 𝑊 [𝑙] 𝑖 as the weight matrix at any training step 𝑖, connecting layer 𝑙 -1 to 𝑙. For simplicity, we assume, 𝑊 (𝑡) 𝑖 = 𝑊 [𝑙] 𝑖 . Let, 𝐺 (𝑡) 𝑖 be the gradients corresponding to 𝑊 (𝑡) 𝑖 . Hence, for a total 𝑁 training steps, the final weight matrix for layer 𝑙 can be written as,
+
+𝑊 (𝑡) 𝑁 = 𝑊 (𝑡) 0 -𝜂 𝑁 ∑ 𝑗=1 𝐺 (𝑡) 𝑗 . (16
+
+)
+
+Where 𝜂 is the learning rate. Upon introduction of a new task 𝑡 + 1, Eq. ( 16) can be rewritten as,
+
+𝑊 (𝑡+1) 𝑁 = 𝑊 (𝑡+1) 0 -𝜂 𝑁 ∑ 𝑗=1 𝐺 (𝑡+1) 𝑗 . (17
+
+)
+
+In vanilla gradient monitoring, we introduce a binary masking matrix 𝑀 (𝑡+1) 𝑖 to mask the gradients at every training iteration. Hence, Eq. ( 17) becomes,
+
+W (𝑡+1) 𝑁 = 𝑊 (𝑡+1) 0 -𝜂 𝑁 ∑ 𝑗=1 (𝑀 (𝑡+1) 𝑗 •𝐺 (𝑡+1) 𝑗 ).(18)
+
+Since, for training on the new task 𝑡 + 1, we use the pre-trained network 𝐹 (𝑡) from old task 𝑡, hence, 𝑊 (𝑡+1) 0 = 𝑊 (𝑡) 𝑁 . Ignoring the first term on the R.H.S of Eq. ( 13), the expected forgetting between networks F (𝑡+1) and 𝐹 (𝑡) for task 𝑡 can be given as,
+
+𝛿 𝑉 𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ) ≤ ‖ ‖ ‖ ( W (𝑡+1) 𝑁 -𝑊 (𝑡) 𝑁 ) ‖ ‖ ‖𝐹 = ‖ ‖ ‖ ‖ ‖ ‖ -𝜂 𝑁 ∑ 𝑗=1 (𝑀 (𝑡+1) 𝑗 •𝐺 (𝑡+1) 𝑗 ) ‖ ‖ ‖ ‖ ‖ ‖𝐹 ≤ ‖-𝜂‖ ⋅ ‖ ‖ ‖ ‖ ‖ ‖ 𝑁 ∑ 𝑗=1 (𝑀 (𝑡+1) 𝑗 •𝐺 (𝑡+1) 𝑗 ) ‖ ‖ ‖ ‖ ‖ ‖𝐹 𝛿 𝑉 𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ) ≤ 𝑁 ∑ 𝑗=1 ‖ ‖ ‖ 𝑀 (𝑡+1) 𝑗 •𝐺 (𝑡+1) 𝑗 ‖ ‖ ‖𝐹 . (19
+
+)
+
+Similarly, the expected forgetting between networks 𝐹 (𝑡+1) and 𝐹 (𝑡) for task 𝑡 without gradient monitoring can be given as,
+
+𝛿(𝐹 (𝑡+1) |𝐹 (𝑡) ) ≤ 𝑁 ∑ 𝑗=1 ‖ ‖ ‖ (𝐺 (𝑡+1) 𝑗 ) ‖ ‖ ‖𝐹 . (20
+
+)
+
+Since, the sparsity, 𝑆 𝑚 of the masking matrix is bounded by 0 < 𝑆 𝑚 < 1 (see Definition 2), there are two cases to consider.
+
+### Case 1: 𝑆
+
+𝑚 =1 (No Masking). This implies, ‖ ‖ ‖ 𝑀 (𝑡+1) 𝑖 ‖ ‖ ‖0 = | | | 𝐺 (𝑡+1) 𝑖 | | | . ∴ ‖ ‖ ‖ 𝑀 (𝑡+1) 𝑖 •𝐺 (𝑡+1) 𝑖 ‖ ‖ ‖𝐹 = ‖ ‖ ‖ 𝐺 (𝑡+1) 𝑖 ‖ ‖ ‖𝐹 ⟹ W (𝑡+1) 𝑖 = 𝑊 (𝑡+1) 𝑖 . Case 2: 𝑆 𝑚 =0 (Full Masking). This implies, | | | 𝑀 (𝑡+1) 𝑖 | | | -‖ ‖ ‖ 𝑀 (𝑡+1) 𝑖 ‖ ‖ ‖0 = | | | 𝐺 (𝑡+1) 𝑖 | | | . ∴ ‖ ‖ ‖ 𝑀 (𝑡+1) 𝑖 •𝐺 (𝑡+1) 𝑖 ‖ ‖ ‖𝐹 = 0 ⟹ W (𝑡+1) 𝑖 = 𝟎.
+
+Therefore, the term ‖ ‖ ‖
+
+𝑀 (𝑡+1) 𝑖 •𝐺 (𝑡+1) 𝑖 ‖ ‖ ‖𝐹 is bounded by, 0 < ‖ ‖ ‖ 𝑀 (𝑡+1) 𝑖 •𝐺 (𝑡+1) 𝑖 ‖ ‖ ‖𝐹 < ‖ ‖ ‖ 𝐺 (𝑡+1) 𝑖 ‖ ‖ ‖𝐹 . (21
+
+)
+
+Comparing inequality in Eq. ( 21) over 𝑁 training steps with the R.H.S terms of the inequalities in (19) and (20), we can write,
+
+𝛿 𝑉 𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ) < 𝛿(𝐹 (𝑡+1) |𝐹 (𝑡) ). □(22)
+
+Based on the argumentation presented in Theorem 1, it can be stated that active gradient masking during new task learning can explicitly reduce catastrophic forgetting in a network. The bounds of the masking sparsity are vital in reducing the overall gradient norm in Eq. ( 19), thereby reducing the performance drop of a network on old tasks with the introduction of new ones.
+
+### 4.2. Theoretical analysis of momentum gradient monitoring (MGM)
+
+We begin this subsection by formulating the momentum matrix in Definition 3, followed by a simplification of the matrix equation in Lemma 1.
+
+### Definition 3 (Momentum Matrix).
+
+In momentum gradient monitoring, the momentum matrix 𝑍 (𝑡+1) 𝑖 for a layer 𝑙 at training step 𝑖 of task 𝑡 + 1 is defined as,
+
+𝑍 (𝑡+1) 𝑖 = 𝛽𝑍 (𝑡+1) 𝑖-1 + (1 -𝛽)𝑀 (𝑡+1) 𝑖 . (23
+
+)
+
+Where, 𝛽 ∈ [0.9, 0.99] is the momentum temperature, 𝑍 (𝑡+1)
+
+𝑖-1
+
+is the momentum matrix from the previous step 𝑖 -1 and, 𝑀 (𝑡+1) 𝑖 is the masking matrix of the corresponding step 𝑖. The initial momentum matrix at the start of training is fully initialized with zeros.
+
+Lemma 1. In MGM, the momentum matrix for a layer 𝑙 at the end of training of a new task t+1 with 𝑁 training steps is,
+
+𝑍 (𝑡+1) = (1 -𝛽) 𝑁 ∑ 𝑗=1 𝛽 𝑁-𝑗 𝑀 (𝑡+1) 𝑗 . (24
+
+)
+
+Proof. The momentum matrix 𝑍 (𝑡+1) 𝑖 is defined in Eq. ( 23) as,
+
+𝑍 (𝑡+1) 𝑖 = 𝛽𝑍 (𝑡+1) 𝑖-1 + (1 -𝛽)𝑀 (𝑡+1) 𝑖 = 𝛽(𝛽𝑍 (𝑡+1) 𝑖-2 + (1 -𝛽)𝑀 (𝑡+1) 𝑖-1 ) + (1 -𝛽)𝑀 (𝑡+1) 𝑖 = 𝛽 2 𝑍 (𝑡+1) 𝑖-2 + 𝛽(1 -𝛽)𝑀 (𝑡+1) 𝑖-1 + (1 -𝛽)𝑀 (𝑡+1) 𝑖 = 𝛽 2 𝑍 (𝑡+1) 𝑖-2 + (1 -𝛽)(𝛽𝑀 (𝑡+1) 𝑖-1 + 𝑀 (𝑡+1) 𝑖 ) = 𝛽 2 (𝛽𝑍 (𝑡+1) 𝑖-3 + (1 -𝛽)𝑀 (𝑡+1) 𝑖-2 ) + (1 -𝛽)(𝛽𝑀 (𝑡+1) 𝑖-1 + 𝑀 (𝑡+1) 𝑖 ) = 𝛽 3 𝑍 (𝑡+1) 𝑖-3 + (1 -𝛽)(𝛽 2 𝑀 (𝑡+1) 𝑖-2 + 𝛽𝑀 (𝑡+1) 𝑖-1 + 𝑀 (𝑡+1) 𝑖 ).(25)
+
+The momentum matrix in the first term of Eq. ( 25) is the initial momentum matrix, and it is initialized as a matrix of zeros, i.e., 𝑍 (𝑡+1) 𝑖-3 = 𝑍 (𝑡+1) 0 = 0. Hence, eliminating the first term, the final momentum matrix after 𝑁 training steps can be given as,
+
+𝑍 (𝑡+1) = (1 -𝛽) 𝑁 ∑ 𝑗=1 𝛽 𝑁-𝑗 𝑀 (𝑡+1) 𝑗 . □(26)
+
+In the next step, the further reduction of old task forgetting in MGM compared to VGM is mathematically analyzed in Theorem 2.
+
+### Theorem 2. Let G(𝑡+1)
+
+𝑖,𝑀𝐺𝑀 be the gradients corresponding to the weight matrix 𝑊 (𝑡+1) 𝑖 of layer 𝑙, masked with the momentum matrix 𝑍 (𝑡+1)
+
+### 𝑖 at training step 𝑖 of task t+1 s.t., G(𝑡+1)
+
+𝑖,𝑀𝐺𝑀 ← 𝑍 (𝑡+1)
+
+𝑖
+
+• 𝐺 (𝑡+1)
+
+𝑖
+
+. Then the difference in performance for an old task 𝑡, between networks with gradients masked with momentum matrix and binary masking matrix, with respect to 𝐹 (𝑡) can be given as,
+
+𝛿 𝑀𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ) < 𝛿 𝑉 𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ).(27)
+
+Proof. In momentum gradient monitoring, the masking matrix in the final weight in Eq. ( 18) is replaced by the momentum matrix, ∑ 𝑁 𝑗=1 𝑍 (𝑡+1)
+
+𝑗
+
+. Hence, similar to the inequality in (19), the expected forgetting between networks F (𝑡+1) and 𝐹 (𝑡) for task 𝑡 can be written as,
+
+𝛿 𝑀𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ) ≤ 𝑁 ∑ 𝑗=1 ‖ ‖ ‖ 𝑍 (𝑡+1) 𝑗 •𝐺 (𝑡+1) 𝑗 ‖ ‖ ‖𝐹 ⟹ 𝛿 𝑀𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ) ≤ (1 -𝛽) 𝑁 ∑ 𝑗=1 ‖ ‖ ‖ 𝛽 𝑁-𝑗 𝑀 (𝑡+1) 𝑗 •𝐺 (𝑡+1) 𝑗 ‖ ‖ ‖𝐹 . (28
+
+)
+
+Since, momentum temperature 𝛽 follows the bounds 0.9< 𝛽 <0.99, hence the upper bound of every element in
+
+∑ 𝑁 𝑗=1 ‖ ‖ ‖ 𝛽 𝑁-𝑗 𝑀 (𝑡+1) 𝑗 ‖ ‖ ‖𝐹 is bounded at any y-th training step by, ‖ ‖ ‖ 𝛽 𝑁-𝑦 𝑀 (𝑡+1) 𝑦 ‖ ‖ ‖𝐹 < ‖ ‖ ‖ 𝑀 (𝑡+1) 𝑦 ‖ ‖ ‖𝐹 . (29
+
+)
+
+Therefore the R.H.S terms of the inequalities in ( 19) and ( 28) can also be bounded as,
+
+(1 -𝛽) 𝑁 ∑ 𝑗=1 ‖ ‖ ‖ 𝛽 𝑁-𝑗 𝑀 (𝑡+1) 𝑗 •𝐺 (𝑡+1) 𝑗 ‖ ‖ ‖𝐹 < 𝑁 ∑ 𝑗=1 ‖ ‖ ‖ 𝑀 (𝑡+1) 𝑗 •𝐺 (𝑡+1) 𝑗 ‖ ‖ ‖𝐹 . (30
+
+)
+
+Therefore,
+
+𝛿 𝑀𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ) < 𝛿 𝑉 𝐺𝑀 ( F (𝑡+1) |𝐹 (𝑡) ). □(31)
+
+From the theoretical standpoint of the inequality in Eq. ( 30), it is evident that forgetting in a network is further reduced with momentum masking compared to vanilla masking. The primary difference between the momentum and vanilla masking is the reintroduction of momentum matrices from previous iterations at every training step, which subsequently assists in retaining the history of gradient movement in the objective function's landscape. Upon observing the R.H.S term of the inequality in Eq. ( 28), it is also evident that the momentum temperature 𝛽 plays an important role in significantly reducing the rate of forgetting of old task 𝑡 at every training step.
+
+## 5. Experiments
+
+### 5.1. Architecture
+
+The network architecture used in this work is shown in Fig. 4. The encoder network is made up of a Fully Connected (FC) layer, followed by a Transformer encoder layer from [21]. The FC layer projects the raw input features to 𝑑 𝑚𝑜𝑑𝑒𝑙 size, which is then fed to the transformer encoder. The decoder is a multi-layered feed-forward network with LeakyReLU activation function and dropout. In the continual learning setup, the encoder is used as a shared network between tasks, and the MLP decoder takes the form of task-specific head. With the inclusion of a new task, an identical MLP decoder with newly initialized parameters is introduced to the network as a new task head.
+
+### 5.2. Dataset description
+
+#### 5.2.1. NASA CMAPSS dataset
+
+The first dataset used in this work is the NASA CMAPSS Turbofan engine dataset. It is a multivariate time-series dataset consisting of four subsets, namely, FD001, FD002, FD003, and FD004. The data points for all engines in the train and test set start from a healthy condition, slowly progressing till the end of their life cycle [13]. Each of the four CMAPSS subsets is generated with varying operating conditions, as shown in Table 1. This creates a concept drift in the data among the subsets and provides a scenario for each subset to be used as an individual task in a continual learning setting. In all four subsets, the sensors S1, S5, S6, S10, S16, S18, and S19 were dropped in the preprocessing stage as no useful temporal information can be derived due to their linear nature. A Min-max scaler with a range of -1 to 1 is used to scale the raw data, and a sliding window with a stride of one is applied to create batches of overlapping time-series data. This allows for mini-batch training of the networks instead of creating a computational bottleneck by feeding entire sequences in a single batch. The window length for the four subsets is selected as 30, 20, 32, and 18, respectively, to prevent overlapping of one engine data into the next during the sliding window operation [20].
+
+The RUL labels for each engine are created keeping in mind that, in a real-world setting, degradation of a system occurs at a later stage in its operational cycles and not right from the start [61]. Hence, the RUL signal for each engine is divided into two phases, namely, the healthy phase, cycles healthy and the degradation phase, cycles degrading . These phases are calculated using Eqs. (32) and (33).
+
+𝑐𝑦𝑐𝑙𝑒𝑠 (𝑒,𝑑) ℎ𝑒𝑎𝑙𝑡ℎ𝑦 = 𝑐𝑦𝑐𝑙𝑒𝑠 (𝑒,𝑑) 𝑡𝑜𝑡𝑎𝑙 + 𝑅𝑈 𝐿 (𝑒,𝑑) 𝑓 -𝑅𝑈 𝐿 𝑖 . (32
+
+)
+
+𝑐𝑦𝑐𝑙𝑒𝑠 (𝑒,𝑑) 𝑑𝑒𝑔𝑟𝑎𝑑𝑖𝑛𝑔 = 𝑐𝑦𝑐𝑙𝑒𝑠 (𝑒,𝑑) 𝑡𝑜𝑡𝑎𝑙 -𝑐𝑦𝑐𝑙𝑒𝑠 (𝑒,𝑑) ℎ𝑒𝑎𝑙𝑡ℎ𝑦 . (33
+
+)
+
+Where e and d denote the engine ID and the subset respectively, cycles total is the total engine cycles, RUL i is the maximum RUL limit or the start-of-life RUL for the healthy cycles, which is set at 120. RUL f is the final RUL value for each engine. In the train set, this value is 0; however, in the test set, this value changes as each engine is stopped at an earlier point before reaching functional failure. The inverse scoring function provided in the original CMAPSS literature [13] is used as the performance evaluation metric and the hyperparameter tuning objective. The term s i in Eq. ( 34) is the score for each engine, i in a subset and S in Eq. ( 35) is the sum of scores of all individual engines within a subset.
+
+𝑠 i = { 𝑒𝑥𝑝(-𝑑 i ∕𝑎 1 ) -1, 𝑑 i < 0 𝑒𝑥𝑝(𝑑 i ∕𝑎 2 ) -1, 𝑑 i ≥ 0. (34
+
+) 𝑆 = 𝑁 ∑ 𝑖=1 𝑠 i . (35
+
+)
+
+Where, a 1 = 13, a 2 = 10, d i = Predicted RUL -Target RUL for the ith testing engine, N is the total no. of engines in a test sub-dataset. The scoring function is designed to penalize late predictions to prevent faults early in sensitive systems such as an aircraft turbofan engine.
+
+#### 5.2.2. NASA li-ion battery aging dataset
+
+To further evaluate our proposed GM approaches, we conducted CL experiments on an additional dataset, referred to as the Li-ion Battery Aging dataset from NASA Prognostics Center of Excellence (PCoE). The batteries in this dataset were operated through 3 different operational profiles of charging, discharging and, electrochemical impedance measurement. The impedance measurement was performed for batteries B5, B6, B7 and B8 at room temperature and for batteries B45, B46, B47, B48, B53, B54, B55 and B56 at an ambient temperature of 4 • C. The rated capacity of all batteries was 2Ahr. Charging of the batteries was performed at a constant current of 1.5 A at a cut-off voltage of 4.2 V. The batteries remained at a constant voltage until the charge current reduces to 20 mA. The batteries B5, B6, B7 and B8 were discharged at a constant current (CC) of 2 A until the voltage dropped to 2.7 V, 2.5 V, 2.2 V and 2.2 V respectively. B45, B46, B47 and B48 were discharged at a CC of 1 A at a cut-off voltage of 2 V, 2.2 V, 2.5 V and 2.7 V respectively. Batteries B53, B54, B55 and B56 were discharged at 1 A CC until the voltage fell to 2 V, 2.2 V, 2.5 V and 2.7 V respectively. The aging of the batteries was accelerated by repeated charging and discharging cycles and the experiments were stopped when the rated capacity of the batteries dropped by 30% from 2Ahr to 1.4Ahr [14]. Similar to the CMAPSS dataset, a Min-Max scaler with a -1 to 1 range is used to scale the raw data. A sliding window of size 10 and a stride of one is applied to create overlapping batches for mini-batch training.
+
+For our supervised learning and continual learning experiments, we opt for the leave one out approach, where one battery subset from the predefined group is used for testing, and the remaining three batteries are used to train the model. This is illustrated in Table 3. For evaluating the RUL prediction performance, we use the root mean square error (RMSE) as defined in Eq. (36).
+
+𝑅𝑀𝑆𝐸 = √ 1 𝑁 ∑ (𝑦 𝑖 -ŷ𝑖 ) 2 . (36
+
+)
+
+Where 𝑦 𝑖 is the true battery capacity and ŷ𝑖 is the predicted battery capacity.
+
+### 5.3. Dataset setup for continual learning
+
+In our work, we evaluate our proposed CL algorithms using the CMAPSS dataset and the Battery dataset. We conduct extensive ablation studies with the CMAPSS dataset by considering each subset as an individual source task and the remaining subsets as tasks to learn incrementally using our proposed GM frameworks. The new subsets are introduced based on a randomized order after the pre-training of a source task as shown in Table 2. We maintain this order throughout all experiments and finally test our proposed approaches against existing LWF, EWC and OGD frameworks.
+
+With the Battery dataset, we utilize each battery group from the raw dataset as an individual task as shown in Table 3. We propose these sets of sequences to be used as benchmarks for future CL experiments on the CMAPSS and Battery datasets since no available literature has defined a sequence of tasks for evaluating CL algorithms for RUL prediction.
+
+### 5.4. Experimental setup
+
+The Optuna package was used to perform an extensive hyperparameter sweep for both the baseline network and the continual learning framework. The hyperparameter search space for the baseline studies is presented in Table 4, and for the GM ablation studies is presented in Table 5. The ADAM optimizer was used in both cases. In both the baseline and continual learning training, we implement a new learning rate scheduler that follows Eq. (37).
+
+𝑙𝑟 = 0.125 ⋅ 𝑑 -0.5 𝑚𝑜𝑑𝑒𝑙 ⋅ 𝑚𝑖𝑛(𝑛 𝑠𝑡𝑒𝑝𝑠 ⋅ 𝑛 -1.5 𝑤𝑎𝑟𝑚𝑢𝑝 , 𝑛 𝑤𝑎𝑟𝑚𝑢𝑝 ⋅ 𝑛 -1.5 𝑤𝑎𝑟𝑚𝑢𝑝 ). (37
+
+)
+
+Where 𝑛 𝑠𝑡𝑒𝑝𝑠 and 𝑛 𝑤𝑎𝑟𝑚𝑢𝑝 denote the total number of training steps and the number of warmup steps, respectively. The baseline study is performed for 100 trials with 100 epochs each and median pruning activated. In the GM studies, each study consists of 100 trials, and each trial runs for 75 epochs. Warmup for a new task is performed for the first 25 epochs, and GM is activated at the 26th epoch. Additionally, joint training of old and new tasks with distillation loss is activated at the 26th epoch. The experiments are conducted in a system composed of an NVIDIA Quadro RTX 5000 GPU.
+
+We compare our proposed gradient monitoring approach with two conventional regularization-based techniques: learning without forgetting (LWF) [8] and elastic weight consolidation (EWC) [41] and a gradient-based approach named orthogonal gradient descent (OGD) [48].
+
+To ensure the comparability of the frameworks, all experiments were performed using the same Transformer-MLP architecture as in the GM experiments. In LWF, the Transformer encoder represents the shared feature extractor, while the MLP is used as the task-specific head.
+
+With increasing tasks, the number of task-specific MLP layers increases. RMSE loss is used as the distillation loss and new task loss in LWF. The work in [57] did not clearly provide old task scores or subset sequences for setting up the CL experiments with CMPASS. Hence, we perform our own experiments with EWC for continually learning the CMAPSS subsets. In this case, the entire Transformer-MLP architecture is considered as a single network to compute the Fisher Information Matrix (FIM). In our experiments, the FIM is computed based on the gradients of the RMSE loss function for the RUL prediction task. RMSE loss is also deployed to calculate the prediction loss of the new task. The Fisher multiplier (𝜆) and the sample size for computing the diagonal of the Fisher are tuned with grid-search according to Table 6. Since OGD requires the storing of old task subset to generate previous task gradients for orthogonal projection, we opted to store the training data of 50 random engines from each old subset of the CMAPSS dataset and one random training subset from each old task of the Li-ion battery dataset.
+
+### 5.5. Supervised learning results
+
+#### 5.5.1. CMAPSS turbofan engine dataset
+
+The results obtained after supervised training of the baseline Transformer-MLP network on the CMAPSS dataset are shown in Table 7 and compared with other literature studies. Our previous work in [22] tested this architecture as a baseline network for domain adaptation, demonstrating better transfer learning capabilities than other literature methods. Furthermore, Table 7 shows that the proposed network outperforms the other literature networks in FD001 and FD004 with slight performance deviations in FD002 and FD003. Hence, we optimize this network as a baseline prior to conducting the CL experimentations in this paper.
+
+#### 5.5.2. NASA Li-ion battery dataset
+
+The performance of our Transformer-MLP network after supervised learning of the NASA Li-ion Battery dataset is presented in this section. In Table 8, it is seen that our baseline network generates the least RUL loss for test battery B0018 of task 0 compared to existing literature networks. In order to perform a plasticity-elasticity analysis of newer and older tasks during CL experimentation, we also generate RUL losses of test batteries B0048 and B0056 from tasks 1 and 2 respectively (Table 9). We revisit these results later in Section 5.8, where we evaluate our proposed framework's performance with newer and older tasks by comparing them to the network prediction in a supervised setting.
+
+### 5.6. Comparison of computation and storage overhead
+
+In this section, we present a comparison of the computation and storage costs between existing literature algorithms and our presented GM approach. An overview of this comparison is shown in Table 10 where, n is the number of trainable network parameters and s is the stored sample size from old tasks. The computational costs in this table are presented for the total number of incremental tasks t instead of a single task to represent the trajectory of computation increase. Furthermore, the overhead solely represents the additional computation required to mitigate catastrophic forgetting. The cost for EWC is relatively low and increases linearly with the sample size of the FIM as it only involves the calculation of the FIM to determine parameter importance. The cost of learning a new task increases quadratically with t in GEM due to the use of Quadratic Programming to reduce the interference of old gradients with new ones. A-GEM brings down this overhead by averaging the gradients over multiple episodes. The computation cost in GSS involves the calculation of gradient similarity across old tasks, which is why the cost increases linearly with the sample size and the number of parameters. The computation overhead in OGD is dominated by the orthogonal projection of new gradients onto the stored gradient subspace. The lowest computational requirement is demonstrated by LWF which involves knowledge distillation on the old task heads with the parameter size 𝑛 ℎ𝑒𝑎𝑑 and the joint-training of the shared feature extractor and all task-specific heads. Our proposed GM approach extends this method by introducing gradient masking on the shared feature extractor layer. Since, the shared extractor with trainable parameters 𝑛 𝑠 is not modified structurally with increasing tasks, the cost of mask formulation and application on the feature extractor is independent of t and remains constant throughout the CL training regime. The implementation of knowledge distillation on the old task heads increases the computational cost linearly with t which, however, still remains low due to the deployment of a 3-layered MLP network as the task head.
+
+### 5.7. Results of continual learning with CMAPSS dataset
+
+In this section, the performance of our proposed GM methodology in CL experiments is demonstrated and compared with existing methods from the literature. In the forthcoming tables, the best result in any specific scenario is highlighted in bold, whereas the second-best one is underlined. The column 𝛥% represents the improvement in results in the GM methods compared to the best score among Vanilla, LWF, EWC, and OGD methods. The method referred to as ''Vanilla'' represents incremental learning without any additional regularization to tackle catastrophic forgetting. A positive 𝛥% value signifies an improvement in the GM methods, and a negative value means a performance decline.
+
+We divide the analysis of our results into two critical factors: the performance of CL frameworks in learning new tasks and the performance of the frameworks in remembering old tasks. In an ideal scenario, the best-performing CL methodology should maintain a healthy trade-off between learning and remembering new and old tasks respectively. In Section 5.7.1, we compare the performances between the proposed vanilla and momentum GM methods (VGM and MGM). The results obtained from the ablation experiments are presented in Sections 5.7.2 and 5.7.3 where the proposed GM frameworks are also compared with existing literature methodologies.
+
+#### 5.7.1. Performance comparison between VGM and MGM
+
+An empirical analysis of the proposed VGM and MGM methods in learning new tasks incrementally with the CMAPSS dataset is presented in Table 11. With the exception of new task 2 in ablation 1, MGM outperforms VGM every time a new task is learned in ablations 1, 2 and 3, outlining the impact of momentum matrix with masking memory in controlling new task gradients. The VGM method outperforms MGM by a significant margin in ablation 4, which is performed using FD004 as the initial source dataset. This particular subset is highly diverse in terms of input features and fault modes, thus offering higher knowledge transferability to subsets with lower complexities (Table 1). Hence the result from ablation 4 demonstrates the ability of the networks to learn less complex tasks more efficiently simply by adopting a binary masking matrix instead of a momentum matrix for gradient control.
+
+While learning new tasks incrementally, the performances of the VGM and MGM frameworks in retaining old task knowledge are presented in Figs. 567. MGM slightly underperforms compared to VGM in ablation 2 while learning new task 2 (Fig. 5(b)). In every other case, MGM outperforms VGM in retaining the knowledge of the initial source task in all ablation studies. A similar pattern can be observed in Figs. 6 and7, where MGM demonstrated a higher information retention rate for tasks 1 and 2 respectively with the addition of new tasks. This empirical outcome directly reflects the mathematical analysis provided in Theorem 2, where we successfully proved that with the continual learning of new tasks, MGM has a lower change in network performance for an old task compared to VGM.
+
+#### 5.7.2. Performance on new task
+
+In Tables 12131415, the performance of the networks w.r.t to the new tasks are displayed. For instance, the first row in Table 12 presents the performance of the network on new task 1 (FD004) after it has been previously trained on the old task FD001, the second row presents the performance on new task 2 (FD004) after tasks 0 and 1 (FD001 and FD004) and so on.
+
+As presumed, the vanilla method achieves most of the best results since it has the advantage of training the networks solely on the incoming dataset without compensating for the loss of information from older tasks. Our proposed methods (VGM, GoW, and GtW) achieve the next best results overall. The literature methods perform better than the GM approaches only in Table 13 (Tasks 1 and 2), Table 14 (Tasks 1 and 2), and Table 15 (Task 3) with minor performance deviations. This highlights the improvement offered by our proposed GM methods in learning new tasks, where incremental learning with the GM regularizer outperforms the literature methods in most cases. Additionally, the performance deviates slightly from the vanilla method, which focuses solely on new tasks with no contingency for remembering old tasks. However, high degradation in GM performance can be seen in a few cases such as Table 12 (Tasks 2 and 3), Table 13 (Task 3) and Table 15 (Task 2).
+
+#### 5.7.3. Performance on old tasks
+
+The performance of the GM methods in retaining old information is presented in Tables 161718192021222324252627. To simplify, Table 16 displays the scores for FD001 every time a new task was added sequentially. In this case, the model was first pre-trained on FD001 and then trained sequentially in the order of FD001 (Task 0)→Task 1→Task 2→Task 3. Similarly, Table 17 shows the scores for FD004 each time a new task is added in the likes of FD004 (Task 1)→Task 2→Task 3 and so on. In addition, we present results on different ablation studies where we pre-train networks individually on subsets FD002, FD003, and FD004 and incrementally learn the rest of the subsets in each case, aided by the proposed GM approaches. Finally, we compare and evaluate the obtained results with the existing LWF, EWC and OGD approaches.
+
+FD001 as source task. The scores of old tasks every time the network pre-trained on FD001 is trained on a new task are represented in Tables 161718. The momentum-based GoW and GtW significantly improve retaining old task information with a few exceptions in Fig. 8(a) (Task 2 and Task 3), Table 16 (Tasks 2 and 3) and Table 18. The comparatively smaller size and low feature variance due to fewer fault modes of the Task 0 subset (FD001) can result in poor generalization of the network for this task. Hence, as new tasks are incremented, a negative backward transfer occurs for FD001, with the balance shifting more towards forward transfer (Table 12). EWC minimizes this negative backward transfer with the help of the FIM by identifying the important parameters of the network to retain Task 0 knowledge and minimizing significant deviations as shown in Table 16. The ability to store a subset of the past data and subsequently project new and old task gradients leads to the performance advantage by OGD in Table 16 (Task 3). The performance drop by GM methods compared to LWF in Table 18 can be attributed to the use of mean as the statistical measure for threshold formulation as shown in Eq. ( 6), along with the poor generalization of the source task (FD001). The existence of an outlier in the gradient matrix can essentially cause the mask to zero out gradients that are crucial for positive backward transfer. As LWF does not deploy any gradient masking algorithm in its learning regime, it is immune to such model overfitting scenarios. FD002 as source task. With the continual learning of new task subsets by a network pre-trained on FD002, the scores of the old subsets are shown in Tables 192021. With the exception of Table 20, the proposed approaches generate the best and second-best results in all other cases. The orthogonal projection approach (OGD) slightly outperforms the proposed GM methods in retaining the knowledge of the subset FD004 with new task inclusion. However, this occurs at the expense of the new tasks since OGD demonstrates low performance in learning new information while retaining old knowledge (compare Tables 13 and20). In the remaining cases, the GoW and GtW methods enabled the model to fully retain the knowledge from the source subset FD002 even after the addition of three new tasks (compare Tables 7 and19). The performance improvement is also illustrated in Fig. 8(b).
+
+FD003 as source task. In Tables 222324, the performance of the network pre-trained on FD003 after continually learning new subsets is demonstrated. The GM methods perform very well compared to existing methods, with two exceptions. OGD and EWC outperform the rest of the methods with the addition of the first and the third new tasks respectively, although MGM-GtW generates the second-best score with a marginal difference (see Table 22 and Fig. 9(a), New Task 3). A similar phenomenon occurs in Table 24 between LWF and MGM-GtW for the subset FD004. Every other case shows a marginal difference, especially FD003 after learning the second new task (Fig. 9(a)) and FD001 each time after learning a new task (Table 23).
+
+FD004 as source task. The performance of the network pre-trained on source subset FD004 after continuously learning new tasks is presented in Tables 252627. With the proposed GM methods, the network is able to significantly retain old information on FD004 despite the increment of new tasks on the learning regime. This phenomenon is illustrated in Fig. 9(b) and Table 25. This can also be seen in Table 26, where the CL framework equipped with gradient monitoring manages to largely retain old information of FD002 even after learning two new tasks.
+
+### 5.8. Results of continual learning with Li-ion battery dataset
+
+After completing our initial experimentation on the CMAPSS dataset, we proceed to strengthen our findings by evaluating the GM approaches on the Li-ion Battery Aging dataset. The new task performance of the pre-trained network from task 0 after incrementally learning tasks 1 and 2 is shown in Table 28. As evident, the GoW method generates the best performance on new task 1, with an 5.3% performance improvement than the OGD method for reducing forgetting on old tasks. With the addition of new task 2, GM methods lag behind the OGD approach by 16.9%. A further comparison between Tables 9 and28 shows that the network can capture inherent new task features more efficiently when learning incrementally with GM compared to supervised learning. This is evident for both new tasks 1 and 2 with test batteries B0048 and B0056 respectively.
+
+The performance of the proposed approaches in remembering old task knowledge is displayed in Tables 29 and30. The VGM method significantly retains past knowledge from task 0 as it outperforms the existing approaches by 77.3% and 69.6% with the increment of tasks 1 and 2 respectively. This is followed by the GtW method which is slightly ahead of the GoW approach ( Table 29). The GoW method leads the existing approaches by 10.4% in retaining task 1 information with the addition of task 2. The GtW approach also performs better than the existing frameworks as shown in Table 30. A comparison between Tables 8 and29 shows that VGM with CL performs almost similar to supervised learning w.r.t task 0. Although the results deviate with the addition of task 2, the results from VGM still outperform the rest of the methods.
+
+To summarize, continual learning with gradient monitoring achieves a better trade-off between learning new tasks and reducing catastrophic forgetting of old ones compared to existing literature methods. Regarding old task knowledge retention, the vanilla method with no regularizer does not achieve any mentionable result, whereas LWF, EWC and OGD attain a slight edge in only a few cases. An analysis of sections 5.7 and 5.8 shows that the GM methods possess a better ability to efficiently converge on newer tasks while simultaneously retaining the knowledge of older ones. This outlines the importance of the real-time monitoring of gradients to optimize network parameters more efficiently as per task requirements, thus improving the overall convergence of the network.
+
+## 6. Conclusion
+
+In this paper, we demonstrate that active gradient monitoring of a network can alleviate catastrophic forgetting during incremental learning of RUL prediction tasks. The GM method is applied with a combination of warmup and joint training of all tasks using distillation loss, thus eliminating the need to use previous datasets. We address the shortcomings of computation and storage costs, as well as error accumulation in the other literature methods, and present a framework suitable for real-world industrial application scenarios. We provide theoretical argumentation on how masking gradients based on certain criteria can alleviate the forgetting of old tasks. Moreover, we theoretically demonstrate how retaining the memory of gradient masking in the form of momentum can further reduce forgetting compared to vanilla masking and other conventional techniques. We verify our theoretical findings empirically on two different RUL prediction datasets and show how the proposed gradient monitoring approaches outperform other existing methods by a significant margin. Future work on this methodology will focus on implementing a decaying learning factor to maintain a variable threshold during training, a layer-wise learning factor to focus on the local behavior of the network parameters and gradients, and an adaptive gradient monitoring approach to consider the performance metrics and actively tune the masking threshold at the iteration level. Lastly, we mention that gradient monitoring is not exclusive to the domain of continual learning. Since this method inherently focuses on gradient control for task convergence, it can be deployed alongside other transfer learning applications such as domain adaptation and federated learning or, to stabilize the training of discriminative models. Future work on this method will also focus on implementing robust adversarial-based domain adaptation frameworks optimized by gradient monitoring.
+
+### CRediT authorship contribution statement
+
+Sayed Rafay Bin Shah: Writing -review & editing, Writing -original draft, Validation, Software, Methodology, Investigation, Formal analysis, Conceptualization. Andreas Schwung: Writing -review & editing, Writing -original draft, Validation, Supervision, Resources, Project administration, Methodology, Formal analysis, Conceptualization.
+
+### Declaration of competing interest
+
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+## Figures et tableaux
+
+**Fig. 1.** Task-specific heads for Continual Learning with time-series dataset.
+
+**Fig. 2.** An overview of the proposed Gradient Monitoring methods (VGM and MGM) for Continual Learning.
+
+**Fig. 3.** Visual representation of Criterion Matrices for Gradient Monitoring. (a) Gradient over Weight: 𝐶 [𝑙]𝑔𝑜𝑤 is particularly sensitive in the area with a higher gradient-to-weight ratio, thus avoiding bias in the masking process towards larger or smaller weights and focusing on the relative gradient magnitude instead. (b) Gradient times Weight: 𝐶[𝑙] 𝑔𝑡𝑤 focuses on the regions with high weight and high gradient magnitudes. 𝐺𝑇 𝑊 represents how a particular weight influences the learning process, suppressing updates for low-impact weights and allowing weights with higher magnitudes to participate in the optimization process. (c) Absolute Gradients: 𝐶[𝑙] 𝑔 ignores the information derived from the corresponding weights, while focusing solely on the backpropagated gradients. This can potentially mask gradients with lower magnitudes corresponding to weights that are critical to the optimization of the network.
+
+**Fig. 4.** Baseline Architecture with Transformer Encoder and MLP Decoder.
+
+**Fig. 5.** Performance Comparison of VGM and MGM w.r.t old task 0 with the addition of new tasks 1, 2 and 3 for different ablations. (a) Ablation 1: Score of Task 0 (FD001). (b) Ablation 2: Score of Task 0 (FD002). (c) Ablation 3: Score of Task 0 (FD003). (d) Ablation 4: Score of Task 0 (FD004).
+
+**Fig. 6.** Performance Comparison of VGM and MGM w.r.t old task 1 with the addition of new tasks 2 and 3 for different ablations. (a) Ablation 1: Score of Task 1 (FD004). (b) Ablation 2: Score of Task 1 (FD004). (c) Ablation 3: Score of Task 1 (FD001). (d) Ablation 4: Score of Task 1 (FD002).
+
+**Fig. 7.** Performance Comparison of VGM and MGM w.r.t old task 2 with the addition of new task 3 for different ablations. (a) Ablation 1: Score of Task 2 (FD002). (b) Ablation 2: Score of Task 2 (FD001). (c) Ablation 3: Score of Task 2 (FD004). (d) Ablation 4: Score of Task 2 (FD003).
+
+**Fig. 8.** Performance Comparison of proposed GM frameworks with existing LWF, EWC and OGD methods. (a) Score of FD001 (Task 0) with the increment of new tasks (FD001 → FD004 → FD002 → FD003). (b) Score of FD002 (Task 0) with the increment of new tasks (FD002 → FD004 → FD001 → FD003).
+
+**Fig. 9.** Performance Comparison of proposed GM frameworks with existing LWF, EWC, and OGD methods. (a) Score of FD003 (Task 0) with the increment of new tasks (FD003 → FD001 → FD004 → FD002). (b) Score of FD004 (Task 0) with the increment of new tasks (FD004 → FD002 → FD003 → FD001).
+
+**Table 1** Operational information of CMAPSS Dataset[20].
+
+    Subset | Operational | Operating | Degradation
+     | settings | conditions | fault modes
+    FD001 | Sea Level | 1 | HPC
+    FD002 | Altitude | 6 | HPC
+     | Throttle Resolver Angle |  | 
+     | Mach |  | 
+    FD003 | Sea Level | 1 | HPC
+     |  |  | Fan
+    FD004 | Altitude | 6 | HPC
+     | Throttle Resolver Angle |  | Fan
+     | Mach |  | 
+
+**Table 2** Setup of tasks for ablation studies of continual learning with the CMAPSS dataset.
+
+    Ablation | Source | Task 1 | Task 2 | Task 3
+     | dataset |  |  | 
+    1 | FD001 | FD004 | FD002 | FD003
+    2 | FD002 | FD004 | FD001 | FD003
+    3 | FD003 | FD001 | FD004 | FD002
+    4 | FD004 | FD002 | FD003 | FD001
+
+**Table 3** Setup of tasks for continual learning with the Li-ion battery dataset.
+
+    Task | Training | Testing
+    Num | subsets | subset
+    0 | B0005, B0006, B0007 | B0018
+    1 | B0045, B0046, B0047 | B0048
+    2 | B0053, B0054, B0055 | B0056
+
+**Table 4** Hyperparameter search space for baseline transformer network.
+
+    Stage | Hyperparameter | [Categorical Values]/
+     |  | Range (Low, High, Step)
+    Training | LR Warmup Ratio | (0.1, 0.4, 0.05)
+     | Layers | (1, 3, 1)
+    Encoder | d model Attention Heads | [64, 128, 256] [2, 4, 8, 16]
+     | Dropout | (0.0, 0.4, 0.1)
+    Decoder | Hidden Size | [32, 64, 128]
+
+**Table 5** Hyperparameter search space for gradient monitoring continual learning.
+
+    Hyperparameter | Range (Low, High, Step)
+    Learning Factor | (0.5, 0.95, 0.025)
+    Momentum | (0.9, 0.99, 0.01)
+    LR Warmup Ratio | (0.1, 0.4, 0.05)
+    Table 6 | 
+    Hyperparameter search space for EWC. | 
+    Hyperparameter | [Categorical Values]
+    Fisher Multiplier (𝜆) | [500, 1000, 1500, 2000]
+    Sample Size | [64, 128, 256, 512]
+
+**Table 7** Score comparison for CMAPSS sub-datasets after supervised learning with baseline Transformer-MLP network.
+
+    Knowledge-Based Systems 323 (2025) 113721
+
+**Table 10** Analysis of computation and storage overhead between continual learning algorithms.
+
+    Method | Storage | Computation | Remarks
+     | Cost | Cost | 
+    EWC [41] | Stores Fisher |  (𝑛𝑠𝑡) | Computation of the
+     | Information |  | diagonal of the FIM.
+     | Matrix |  | 
+    GEM [12] | Stores old |  (𝑛𝑠𝑡 2 ) | Uses Quadratic
+     | task subset |  | Programming (QP)
+     |  |  | to solve a constrained
+     |  |  | optimization.
+    A-GEM | Stores old |  (𝑛𝑠𝑡) | Projection of new
+    [28] | task subset |  | gradients onto the
+     |  |  | orthogonal space of
+     |  |  | old gradients.
+    GSS [47] | Stores old |  (𝑛𝑠𝑡) | Calculation of
+     | task samples |  | gradient similarity
+     |  |  | across old tasks.
+    OGD [48] | Stores old |  (𝑛𝑡) | Orthogonal projection
+     | task gradients |  | of new gradients
+     |  |  | onto the stored
+     |  |  | gradient subspace.
+    LWF [8] | None |  (𝑛 ℎ𝑒𝑎𝑑 𝑡) | Knowledge distillation
+     |  |  | of task-specific heads.
+    Gradient | None |  | Gradient masking in
+    Monitoring |  | (𝑛 𝑠 + 𝑛 ℎ𝑒𝑎𝑑 𝑡) | shared extractor and
+     |  |  | knowledge distillation
+     |  |  | of task-specific heads.
+
+**Table 11** Performance comparison of VGM and MGM on new task learning with CMAPSS dataset.
+
+    Task | Ablation 1 | Ablation 2 | Ablation 3 | Ablation 4
+     | VGM | MGM | VGM | MGM | VGM | MGM | VGM | MGM
+    1 | 2812 | 2715 | 1662 | 1575 | 242 | 242 | 1474 | 1642
+    2 | 2063 | 2259 | 826 | 559 | 3925 | 2510 | 1359 | 1743
+    3 | 624 | 500 | 6603 | 3465 | 3303 | 1919 | 501 | 1038
+
+**Table 12** New task scores after incremental learning given source subset FD001 (Task 0).
+
+    Task | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+     |  |  |  |  |  | GoW | GtW | %
+    1 (FD004) | 2539 | 2930 | 13,354 | 4751 | 2812 | 2715 | 2969 | -6.9
+    2 (FD002) | 1547 | 2775 | 11,025 | 2290 | 2063 | 2346 | 2259 | -33.4
+    3 (FD003) | 330 | 1202 | 4474 | 5889 | 624 | 558 | 500 | -51.5
+
+**Table 13** New task scores after incremental learning given source subset FD002 (Task 0).
+
+    Task | Vanilla LWF | EWC | OGD | VGM MGM | MGM | 𝛥
+     |  |  |  |  |  | GoW | GtW | %
+    1 (FD004) 1354 | 1626 14,515 1501 | 1662 1612 | 1575 | -16.3
+    2 (FD001) 457 | 912 | 483 | 2242 | 826 | 559 | 653 | -22.3
+    3 (FD003) 502 | 3809 7765 | 26,928 6603 3465 | 4874 | -590
+
+**Table 14** New task scores after incremental learning given source subset FD003 (Task 0).
+
+    Task |  | Vanilla LWF |  | EWC | OGD | VGM MGM | MGM | 𝛥
+     |  |  |  |  |  |  |  |  | GoW | GtW | %
+    1 (FD001) 230 |  | 227 |  | 311 | 243 | 242 | 254 | 242 | -6.6
+    2 (FD004) 2959 |  | 2358 31,333 3191 3925 2940 | 2510 | -6.4
+    3 (FD002) 1843 |  | 2248 |  | 30,589 2917 3303 2369 | 1919 | -4.1
+    Table 15 |  |  |  |  |  |  |  | 
+    New task scores after incremental learning given source subset FD004 (Task 0).
+    Task |  | Vanilla | LWF |  | EWC | OGD | VGM | MGM | MGM | 𝛥
+     |  |  |  |  |  |  |  |  | GoW | GtW | %
+    1 (FD002) | 1467 |  | 1500 | 3916 | 2241 | 1474 | 1642 | 1681 | -0.5
+    2 (FD003) | 544 |  | 1637 | 1441 | 5563 | 1359 | 1743 | 2090 | -150
+    3 (FD001) | 991 |  | 446 |  | 1522 | 1783 | 501 | 1038 | 1306 | -12.3
+    Table 16 |  |  |  |  |  |  |  | 
+    Score of FD001 (Task 0) with increment of new tasks (FD001 → FD004 → FD002 →
+    FD003). |  |  |  |  |  |  |  | 
+    New | Vanilla |  | LWF |  | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  |  |  |  | GoW | GtW | %
+    1 | 1927 |  | 1304 |  | 1454 | 4734 | 1330 | 1258 | 1114 | 14.6
+    2 | 7610 |  | 2050 |  | 946 | 3363 | 2151 | 1673 | 1454 | -53.7
+    3 | 29,466 |  | 2281 |  | 1367 | 1261 | 2393 | 1907 | 1763 | -39.8
+    Table 17 |  |  |  |  |  |  |  | 
+    Score of FD004 (Task 1) with increment of new tasks (FD001 → FD004 → FD002 →
+    FD003). |  |  |  |  |  |  |  | 
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  |  |  |  | GoW | GtW | %
+    2 | 5920 | 3241 | 8125 | 16,325 | 3267 | 2887 | 3358 | 10.9
+    3 | 67,952 | 4636 | 18,554 | 19,035 | 4628 | 3173 | 4460 | 31.6
+
+**Table 18** Score of FD002 (Task 2) with increment of new tasks (FD001 → FD004 → FD002 → FD003).
+
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    3 | 54,667 | 1988 | 7504 | 8800 | 2224 | 3178 | 2265 | -11.9
+    Table 19 |  |  |  |  |  |  |  | 
+    Score of FD002 (Task 0) with increment of new tasks (FD002 → FD004 → FD001 →
+    FD003). |  |  |  |  |  |  |  | 
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    1 | 6480 | 1350 | 7775 | 1591 | 1209 | 1227 | 1290 | 10.4
+    2 | 139,714 | 1417 | 8458 | 2879 | 1214 | 1284 | 1309 | 14.3
+    3 | 522,380 | 4466 | 10,948 | 6716 | 4895 | 4139 | 2335 | 47.7
+
+**Table 20** Score
+
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    2 | 70,158 | 2189 | 7349 | 1694 | 1856 | 1905 | 1804 | -6.5
+    3 | 235,581 | 9808 | 8578 | 4313 | 7448 | 6604 | 4604 | -6.7
+    Table 21 |  |  |  |  |  |  |  | 
+    Score of FD001 (Task 2) with increment of new tasks (FD002 → FD004 → FD001 →
+    FD003). |  |  |  |  |  |  |  | 
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    3 | 47,005 | 1212 | 1224 | 1656 | 1157 | 787 | 668 | 44.9
+
+**Table 22** Score
+
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    1 | 980 | 955 | 803 | 423 | 808 | 666 | 691 | -57.4
+    2 | 122,164 | 2966 | 2745 | 14,701 | 4356 | 1924 | 1078 | 60.7
+    3 | 134,094 | 3065 | 1311 | 14,657 | 8458 | 1921 | 1383 | -5.5
+    Table 23 |  |  |  |  |  |  |  | 
+    Score of FD001 (Task 1) with increment of new tasks (FD003 → FD001 → FD004 →
+    FD002). |  |  |  |  |  |  |  | 
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    2 | 6215 | 439 | 723 | 1230 | 887 | 337 | 254 | 42.1
+    3 | 1342 | 565 | 3832 | 1184 | 1172 | 365 | 296 | 47.6
+    Table 24 |  |  |  |  |  |  |  | 
+    Score of FD004 (Task 2) with increment of new tasks (FD003 → FD001 → FD004 →
+    FD002). |  |  |  |  |  |  |  | 
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    3 | 7548 | 2627 | 59,476 | 3445 | 3505 | 3197 | 2908 | -10.7
+    Table 25 |  |  |  |  |  |  |  | 
+    Score of FD004 (Task 0) with increment of new tasks (FD004 → FD002 → FD003 →
+    FD001). |  |  |  |  |  |  |  | 
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    1 | 2547 | 2199 | 6072 | 2027 | 2190 | 1989 | 1892 | 6.7
+    2 | 152,800 | 3534 | 5842 | 4156 | 3693 | 2948 | 4295 | 16.6
+    3 | 133,820 | 3604 | 5826 | 4061 | 3313 | 2800 | 3928 | 22.3
+
+**Table 26** Score of FD002 (Task 1) with increment of new tasks (FD004 → FD002 → FD003 → FD001).
+
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    2 | 188,069 | 4006 | 5013 | 2873 | 2456 | 2112 | 3314 | 26.5
+    3 | 142,779 | 3885 | 4149 | 2779 | 2627 | 2049 | 2920 | 26.3
+
+**Table 27** Score of FD003 (Task 2) with increment of new tasks (FD004 → FD002 → FD003 → FD001).
+
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    3 | 9235 | 3524 | 3678 | 8107 | 2020 | 1854 | 2263 | 47.4
+
+**Table 28** New task RUL loss after incremental learning with source task 0.
+
+    Task | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+     |  |  |  |  |  | GoW | GtW | %
+    1 | 0.272 | 0.301 | 0.284 | 0.264 | 0.332 | 0.250 | 0.283 | 5.3
+    2 | 0.079 | 0.146 | 0.139 | 0.077 | 0.114 | 0.090 | 0.096 | -16.9
+
+**Table 29** RUL loss of task 0 with increment of new tasks (Task 0 → Task 1 → Task 2).
+
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    1 | 0.071 | 0.093 | 0.066 | 0.052 | 0.015 | 0.055 | 0.047 | 77.3
+    2 | 0.079 | 0.106 | 0.139 | 0.077 | 0.024 | 0.065 | 0.058 | 69.6
+
+**Table 30** RUL loss of task 1 with increment of new tasks (Task 0 → Task 1 → Task 2).
+
+    New | Vanilla | LWF | EWC | OGD | VGM | MGM | MGM | 𝛥
+    Task |  |  |  |  |  | GoW | GtW | %
+    2 | 0.278 | 0.312 | 0.336 | 0.297 | 0.354 | 0.249 | 0.281 | 10.4

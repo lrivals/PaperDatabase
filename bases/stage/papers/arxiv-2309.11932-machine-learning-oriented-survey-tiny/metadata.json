@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-2309.11932-machine-learning-oriented-survey-tiny",
+  "title": "A Machine Learning-Oriented Survey on Tiny Machine Learning",
+  "authors": [
+    {
+      "given": "Luigi",
+      "family": "Capogrosso"
+    },
+    {
+      "given": "Federico",
+      "family": "Cunico"
+    },
+    {
+      "given": "Dong Seon",
+      "family": "Cheng"
+    },
+    {
+      "given": "Federico",
+      "family": "Fummi"
+    },
+    {
+      "given": "Marco",
+      "family": "Cristani"
+    }
+  ],
+  "year": 2023,
+  "venue": "IEEE Access",
+  "doi": "10.1109/ACCESS.2024.3365349",
+  "arxiv_id": "2309.11932",
+  "url": "https://arxiv.org/abs/2309.11932",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "tinyml-odl"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

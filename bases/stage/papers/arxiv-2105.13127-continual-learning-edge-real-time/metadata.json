@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2105.13127-continual-learning-edge-real-time",
+  "title": "Continual Learning at the Edge: Real-Time Training on Smartphone Devices",
+  "authors": [
+    {
+      "given": "Lorenzo",
+      "family": "Pellegrini"
+    },
+    {
+      "given": "Vincenzo",
+      "family": "Lomonaco"
+    },
+    {
+      "given": "Gabriele",
+      "family": "Graffieti"
+    },
+    {
+      "given": "Davide",
+      "family": "Maltoni"
+    }
+  ],
+  "year": 2021,
+  "venue": "29th European Symposium on Artificial Neural Networks (ESANN)",
+  "doi": null,
+  "arxiv_id": "2105.13127",
+  "url": "https://arxiv.org/abs/2105.13127",
+  "type": "conference",
+  "axes": [
+    "cl-methods",
+    "tinyml-odl"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

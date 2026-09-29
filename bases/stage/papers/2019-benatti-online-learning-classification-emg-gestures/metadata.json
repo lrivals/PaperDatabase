@@ -1,0 +1,58 @@
+{
+  "id": "2019-benatti-online-learning-classification-emg-gestures",
+  "title": "Online Learning and Classification of EMG-Based Gestures on a Parallel Ultra-Low Power Platform Using Hyperdimensional Computing",
+  "authors": [
+    {
+      "given": "Simone",
+      "family": "Benatti"
+    },
+    {
+      "given": "Fabio",
+      "family": "Montagna"
+    },
+    {
+      "given": "Victor",
+      "family": "Kartsch"
+    },
+    {
+      "given": "Abbas",
+      "family": "Rahimi"
+    },
+    {
+      "given": "Davide",
+      "family": "Rossi"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    }
+  ],
+  "year": 2019,
+  "venue": "IEEE Transactions on Biomedical Circuits and Systems",
+  "doi": "10.1109/TBCAS.2019.2914476",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TBCAS.2019.2914476",
+  "type": "journal",
+  "axes": [
+    "tinyml-odl"
+  ],
+  "tags": [
+    "hdc",
+    "pulp",
+    "energy"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE I, [figure sans légende identifié, TABLE II",
+      "sections numérotées non détectées : I, IV — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

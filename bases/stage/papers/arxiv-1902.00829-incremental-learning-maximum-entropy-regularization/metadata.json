@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-1902.00829-incremental-learning-maximum-entropy-regularization",
+  "title": "Incremental Learning with Maximum Entropy Regularization: Rethinking Forgetting and Intransigence",
+  "authors": [
+    {
+      "given": "Dahyun",
+      "family": "Kim"
+    },
+    {
+      "given": "Jihwan",
+      "family": "Bae"
+    },
+    {
+      "given": "Yeonsik",
+      "family": "Jo"
+    },
+    {
+      "given": "Jonghyun",
+      "family": "Choi"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1902.00829",
+  "url": "https://arxiv.org/abs/1902.00829",
+  "type": "preprint",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 4",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

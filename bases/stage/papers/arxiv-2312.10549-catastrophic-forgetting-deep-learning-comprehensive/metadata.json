@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-2312.10549-catastrophic-forgetting-deep-learning-comprehensive",
+  "title": "Catastrophic Forgetting in Deep Learning: A Comprehensive Taxonomy",
+  "authors": [
+    {
+      "given": "Everton L",
+      "family": "Aleixo"
+    },
+    {
+      "given": "Juan G",
+      "family": "Colonna"
+    },
+    {
+      "given": "Marco",
+      "family": "Cristo"
+    },
+    {
+      "given": "Everlandio",
+      "family": "Fernandes"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2312.10549",
+  "url": "https://arxiv.org/abs/2312.10549",
+  "type": "preprint",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "id": "2012-nectoux-pronostia-experimental-platform-bearings-accelerated",
+  "title": "PRONOSTIA: An Experimental Platform for Bearings Accelerated Degradation Tests",
+  "authors": [
+    {
+      "given": "Patrick",
+      "family": "Nectoux"
+    },
+    {
+      "given": "Rafael",
+      "family": "Gouriveau"
+    },
+    {
+      "given": "Kamal",
+      "family": "Medjaher"
+    },
+    {
+      "given": "Emmanuel",
+      "family": "Ramasso"
+    },
+    {
+      "given": "Bechir",
+      "family": "Chebel-Morello"
+    },
+    {
+      "given": "Noureddine",
+      "family": "Zerhouni"
+    },
+    {
+      "given": "Christophe",
+      "family": "Varnier"
+    }
+  ],
+  "year": 2012,
+  "venue": "IEEE International Conference on Prognostics and Health Management (PHM)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "conference",
+  "axes": [
+    "pdm-rul",
+    "datasets"
+  ],
+  "tags": [
+    "pronostia",
+    "bearings"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

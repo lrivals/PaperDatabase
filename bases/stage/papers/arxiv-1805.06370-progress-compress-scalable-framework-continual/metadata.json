@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-1805.06370-progress-compress-scalable-framework-continual",
+  "title": "Progress & Compress: A Scalable Framework for Continual Learning",
+  "authors": [
+    {
+      "given": "Jonathan",
+      "family": "Schwarz"
+    },
+    {
+      "given": "Wojciech",
+      "family": "Czarnecki"
+    },
+    {
+      "given": "Jelena",
+      "family": "Luketina"
+    },
+    {
+      "given": "Agnieszka",
+      "family": "Grabska-Barwinska"
+    },
+    {
+      "given": "Yee Whye",
+      "family": "Teh"
+    },
+    {
+      "given": "Razvan",
+      "family": "Pascanu"
+    },
+    {
+      "given": "Raia",
+      "family": "Hadsell"
+    }
+  ],
+  "year": 2018,
+  "venue": "International Conference on Machine Learning (ICML)",
+  "doi": null,
+  "arxiv_id": "1805.06370",
+  "url": "https://arxiv.org/abs/1805.06370",
+  "type": "conference",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

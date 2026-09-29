@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-2007.05432-reactive-soft-prototype-computing-concept",
+  "title": "Reactive Soft Prototype Computing for Concept Drift Streams",
+  "authors": [
+    {
+      "given": "Christoph",
+      "family": "Raab"
+    },
+    {
+      "given": "Moritz",
+      "family": "Heusinger"
+    },
+    {
+      "given": "Frank-Michael",
+      "family": "Schleif"
+    }
+  ],
+  "year": 2020,
+  "venue": "Neurocomputing 416",
+  "doi": "10.1016/j.neucom.2019.11.111",
+  "arxiv_id": "2007.05432",
+  "url": "https://arxiv.org/abs/2007.05432",
+  "type": "journal",
+  "axes": [
+    "quantization",
+    "drift-detection"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

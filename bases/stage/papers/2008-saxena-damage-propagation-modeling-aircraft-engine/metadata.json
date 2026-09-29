@@ -1,0 +1,49 @@
+{
+  "id": "2008-saxena-damage-propagation-modeling-aircraft-engine",
+  "title": "Damage Propagation Modeling for Aircraft Engine Run-to-Failure Simulation",
+  "authors": [
+    {
+      "given": "Abhinav",
+      "family": "Saxena"
+    },
+    {
+      "given": "Kai",
+      "family": "Goebel"
+    },
+    {
+      "given": "Don",
+      "family": "Simon"
+    },
+    {
+      "given": "Neil",
+      "family": "Eklund"
+    }
+  ],
+  "year": 2008,
+  "venue": "International Conference on Prognostics and Health Management (PHM)",
+  "doi": "10.1109/PHM.2008.4711414",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/PHM.2008.4711414",
+  "type": "conference",
+  "axes": [
+    "pdm-rul",
+    "datasets"
+  ],
+  "tags": [
+    "cmapss",
+    "time-series"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

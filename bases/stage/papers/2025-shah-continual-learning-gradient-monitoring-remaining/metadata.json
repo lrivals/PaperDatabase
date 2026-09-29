@@ -1,0 +1,43 @@
+{
+  "id": "2025-shah-continual-learning-gradient-monitoring-remaining",
+  "title": "Continual learning by gradient monitoring for remaining useful lifetime estimation",
+  "authors": [
+    {
+      "given": "Sayed Rafay Bin",
+      "family": "Shah"
+    },
+    {
+      "given": "Andreas",
+      "family": "Schwung"
+    }
+  ],
+  "year": 2025,
+  "venue": "Knowledge-Based Systems 323, 113721",
+  "doi": "10.1016/j.knosys.2025.113721",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1016/j.knosys.2025.113721",
+  "type": "journal",
+  "axes": [
+    "cl-methods",
+    "pdm-rul",
+    "datasets"
+  ],
+  "tags": [
+    "distillation",
+    "binary",
+    "cmapss"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 3, Table 7, Table 27"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

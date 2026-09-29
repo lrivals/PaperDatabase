@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-2403.19076-tiny-machine-learning-progress-futures",
+  "title": "Tiny Machine Learning: Progress and Futures",
+  "authors": [
+    {
+      "given": "Ji",
+      "family": "Lin"
+    },
+    {
+      "given": "Ligeng",
+      "family": "Zhu"
+    },
+    {
+      "given": "Wei-Ming",
+      "family": "Chen"
+    },
+    {
+      "given": "Wei-Chen",
+      "family": "Wang"
+    },
+    {
+      "given": "Song",
+      "family": "Han"
+    }
+  ],
+  "year": 2023,
+  "venue": "IEEE Circuits and Systems Magazine 23(3), 8-34",
+  "doi": "10.1109/MCAS.2023.3302182",
+  "arxiv_id": "2403.19076",
+  "url": "https://arxiv.org/abs/2403.19076",
+  "type": "journal",
+  "axes": [
+    "tinyml-odl"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE V"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

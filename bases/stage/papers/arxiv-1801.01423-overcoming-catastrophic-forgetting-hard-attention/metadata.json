@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-1801.01423-overcoming-catastrophic-forgetting-hard-attention",
+  "title": "Overcoming Catastrophic Forgetting with Hard Attention to the Task",
+  "authors": [
+    {
+      "given": "Joan",
+      "family": "Serra"
+    },
+    {
+      "given": "Didac",
+      "family": "Suris"
+    },
+    {
+      "given": "Marius",
+      "family": "Miron"
+    },
+    {
+      "given": "Alexandros",
+      "family": "Karatzoglou"
+    }
+  ],
+  "year": 2018,
+  "venue": "International Conference on Machine Learning (ICML)",
+  "doi": null,
+  "arxiv_id": "1801.01423",
+  "url": "https://arxiv.org/abs/1801.01423",
+  "type": "conference",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 8"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

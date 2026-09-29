@@ -1,0 +1,49 @@
+{
+  "id": "2016-lessmeier-condition-monitoring-bearing-damage-electromechanical",
+  "title": "Condition Monitoring of Bearing Damage in Electromechanical Drive Systems by Using Motor Current Signals of Electric Motors: A Benchmark Data Set for Data-Driven Classification",
+  "authors": [
+    {
+      "given": "Christian",
+      "family": "Lessmeier"
+    },
+    {
+      "given": "James Kuria",
+      "family": "Kimotho"
+    },
+    {
+      "given": "Detmar",
+      "family": "Zimmer"
+    },
+    {
+      "given": "Walter",
+      "family": "Sextro"
+    }
+  ],
+  "year": 2016,
+  "venue": "Proceedings of the European Conference of the PHM Society",
+  "doi": "10.36001/phme.2016.v3i1.1577",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.36001/phme.2016.v3i1.1577",
+  "type": "conference",
+  "axes": [
+    "pdm-rul",
+    "datasets"
+  ],
+  "tags": [
+    "bearings"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1, Table 3, Training with Data of Bearings",
+      "tableaux sans corps extrait (légende seule) : Table 11"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

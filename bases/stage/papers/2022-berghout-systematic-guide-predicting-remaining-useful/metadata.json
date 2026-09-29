@@ -1,0 +1,37 @@
+{
+  "id": "2022-berghout-systematic-guide-predicting-remaining-useful",
+  "title": "A Systematic Guide for Predicting Remaining Useful Life with Machine Learning",
+  "authors": [
+    {
+      "given": "Tarek",
+      "family": "Berghout"
+    },
+    {
+      "given": "Mohamed",
+      "family": "Benbouzid"
+    }
+  ],
+  "year": 2022,
+  "venue": "Electronics",
+  "doi": "10.3390/electronics11071125",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/electronics11071125",
+  "type": "journal",
+  "axes": [
+    "pdm-rul"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

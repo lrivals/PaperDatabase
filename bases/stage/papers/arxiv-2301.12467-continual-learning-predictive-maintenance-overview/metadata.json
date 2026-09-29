@@ -1,0 +1,53 @@
+{
+  "id": "arxiv-2301.12467-continual-learning-predictive-maintenance-overview",
+  "title": "Continual Learning for Predictive Maintenance: Overview and Challenges",
+  "authors": [
+    {
+      "given": "Jhair",
+      "family": "Hurtado"
+    },
+    {
+      "given": "Alain",
+      "family": "Salvati"
+    },
+    {
+      "given": "Andrea",
+      "family": "Cossu"
+    },
+    {
+      "given": "Antonio",
+      "family": "Carta"
+    },
+    {
+      "given": "Davide",
+      "family": "Bacciu"
+    }
+  ],
+  "year": 2023,
+  "venue": "Intelligent Systems with Applications",
+  "doi": "10.1016/j.iswa.2023.200251",
+  "arxiv_id": "2301.12467",
+  "url": "https://arxiv.org/abs/2301.12467",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "cl-methods",
+    "pdm-rul"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "titre du PDF ≠ titre arXiv : « Intelligent Systems with Applications »",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 57 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 27 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

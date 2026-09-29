@@ -1,0 +1,35 @@
+{
+  "id": "2025-karim-ai-driven-predictive-maintenance-solar",
+  "title": "AI-Driven Predictive Maintenance for Solar Inverter Systems",
+  "authors": [
+    {
+      "given": "Md Asif",
+      "family": "Karim"
+    }
+  ],
+  "year": 2025,
+  "venue": "TechRxiv preprint",
+  "doi": "10.36227/techrxiv.175977633.34528041/v1",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.36227/techrxiv.175977633.34528041/v1",
+  "type": "preprint",
+  "axes": [
+    "pdm-rul",
+    "anomaly-detection"
+  ],
+  "tags": [
+    "energy"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

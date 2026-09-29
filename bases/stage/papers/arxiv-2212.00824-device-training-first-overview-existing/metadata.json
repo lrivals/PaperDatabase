@@ -1,0 +1,47 @@
+{
+  "id": "arxiv-2212.00824-device-training-first-overview-existing",
+  "title": "On-Device Training: A First Overview on Existing Systems",
+  "authors": [
+    {
+      "given": "Shuai",
+      "family": "Zhu"
+    },
+    {
+      "given": "Thiemo",
+      "family": "Voigt"
+    },
+    {
+      "given": "Fatemeh",
+      "family": "Rahimian"
+    },
+    {
+      "given": "JeongGil",
+      "family": "Ko"
+    }
+  ],
+  "year": 2024,
+  "venue": "ACM Transactions on Sensor Networks",
+  "doi": "10.1145/3696003",
+  "arxiv_id": "2212.00824",
+  "url": "https://doi.org/10.1145/3696003",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "tinyml-odl"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2, [figure sans légende identifié",
+      "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

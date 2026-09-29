@@ -1,0 +1,81 @@
+{
+  "id": "arxiv-2110.10486-tinyml-platform-device-continual-learning",
+  "title": "A TinyML Platform for On-Device Continual Learning with Quantized Latent Replays",
+  "authors": [
+    {
+      "given": "Leonardo",
+      "family": "Ravaglia"
+    },
+    {
+      "given": "Manuele",
+      "family": "Rusci"
+    },
+    {
+      "given": "Davide",
+      "family": "Nadalini"
+    },
+    {
+      "given": "Alessandro",
+      "family": "Capotondi"
+    },
+    {
+      "given": "Francesco",
+      "family": "Conti"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    }
+  ],
+  "year": 2021,
+  "venue": "IEEE Journal on Emerging and Selected Topics in Circuits and Systems 11.4 (2021), 789-802",
+  "doi": "10.1109/JETCAS.2021.3121554",
+  "arxiv_id": "2110.10486",
+  "url": "https://arxiv.org/abs/2110.10486",
+  "type": "journal",
+  "axes": [
+    "cl-methods",
+    "tinyml-odl",
+    "quantization",
+    "pdm-rul"
+  ],
+  "tags": [
+    "continual-learning",
+    "latent-replay",
+    "on-device-training",
+    "tinyml",
+    "pulp",
+    "risc-v",
+    "mcu",
+    "stm32",
+    "quantization",
+    "core50",
+    "mobilenet",
+    "replay",
+    "int8",
+    "energy"
+  ],
+  "added": "2026-09-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "imported_from": {
+    "base": "fpga",
+    "paper_id": "arxiv-2110.10486-tinyml-platform-device-continual-learning",
+    "date": "2026-09-29",
+    "fiche": "done",
+    "axes": [
+      "continual-learning",
+      "platforms"
+    ]
+  }
+}

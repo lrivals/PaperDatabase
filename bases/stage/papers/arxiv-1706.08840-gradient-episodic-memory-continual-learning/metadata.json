@@ -1,0 +1,39 @@
+{
+  "id": "arxiv-1706.08840-gradient-episodic-memory-continual-learning",
+  "title": "Gradient Episodic Memory for Continual Learning",
+  "authors": [
+    {
+      "given": "David",
+      "family": "Lopez-Paz"
+    },
+    {
+      "given": "Marc'Aurelio",
+      "family": "Ranzato"
+    }
+  ],
+  "year": 2017,
+  "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+  "doi": null,
+  "arxiv_id": "1706.08840",
+  "url": "https://arxiv.org/abs/1706.08840",
+  "type": "conference",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [
+    "replay"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

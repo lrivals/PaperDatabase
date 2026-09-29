@@ -1,0 +1,51 @@
+{
+  "id": "2024-rub-continual-incremental-learning-tinyml-device",
+  "title": "A Continual and Incremental Learning Approach for TinyML On-Device Training Using Dataset Distillation and Model Size Adaption",
+  "authors": [
+    {
+      "given": "Marcus",
+      "family": "Rüb"
+    },
+    {
+      "given": "Philipp",
+      "family": "Tuchel"
+    },
+    {
+      "given": "Axel",
+      "family": "Sikora"
+    },
+    {
+      "given": "Daniel",
+      "family": "Mueller-Gritschneder"
+    }
+  ],
+  "year": 2024,
+  "venue": "2024 IEEE 7th International Conference on Industrial Cyber-Physical Systems (ICPS)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "conference",
+  "axes": [
+    "cl-methods",
+    "tinyml-odl",
+    "pdm-rul",
+    "anomaly-detection"
+  ],
+  "tags": [
+    "distillation",
+    "energy"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE II, TABLE IV"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

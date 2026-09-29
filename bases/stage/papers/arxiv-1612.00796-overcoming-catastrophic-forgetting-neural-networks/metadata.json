@@ -1,0 +1,85 @@
+{
+  "id": "arxiv-1612.00796-overcoming-catastrophic-forgetting-neural-networks",
+  "title": "Overcoming Catastrophic Forgetting in Neural Networks",
+  "authors": [
+    {
+      "given": "James",
+      "family": "Kirkpatrick"
+    },
+    {
+      "given": "Razvan",
+      "family": "Pascanu"
+    },
+    {
+      "given": "Neil",
+      "family": "Rabinowitz"
+    },
+    {
+      "given": "Joel",
+      "family": "Veness"
+    },
+    {
+      "given": "Guillaume",
+      "family": "Desjardins"
+    },
+    {
+      "given": "Andrei A.",
+      "family": "Rusu"
+    },
+    {
+      "given": "Kieran",
+      "family": "Milan"
+    },
+    {
+      "given": "John",
+      "family": "Quan"
+    },
+    {
+      "given": "Tiago",
+      "family": "Ramalho"
+    },
+    {
+      "given": "Agnieszka",
+      "family": "Grabska-Barwinska"
+    },
+    {
+      "given": "Demis",
+      "family": "Hassabis"
+    },
+    {
+      "given": "Claudia",
+      "family": "Clopath"
+    },
+    {
+      "given": "Dharshan",
+      "family": "Kumaran"
+    },
+    {
+      "given": "Raia",
+      "family": "Hadsell"
+    }
+  ],
+  "year": 2017,
+  "venue": "Proceedings of the National Academy of Sciences",
+  "doi": "10.1073/pnas.1611835114",
+  "arxiv_id": "1612.00796",
+  "url": "https://arxiv.org/abs/1612.00796",
+  "type": "journal",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,254 @@
+---
+id: 2025-wu-adaptive-continual-learning-method-nonstationary
+title: "An Adaptive Continual Learning Method for Nonstationary Industrial Time Series Prediction"
+year: 2025
+backend: grobid
+---
+
+## Abstract
+
+Deep learning models have gained significant attention and application in recent years to improve the accuracy and efficiency of industrial time series prediction. However, the dynamic changes in industrial processes present a key challenge for data-driven models. Specifically, the performance of deployed models deteriorates over time and fails to adapt to new operating conditions. Currently, two common update methods exist: Retraining the model using historical and new operating data, which incurs high computation and storage costs, or incrementally fine-tuning the model solely using new data, which leads to catastrophic forgetting of learned patterns. To address these issues, this article proposes an adaptive continual learning method for nonstationary industrial time series prediction. Our approach tackles the problems by hintbased network parameter learning to retain the dark knowledge from previous tasks and avoid catastrophic forgetting of accumulated knowledge. In addition, we design a soft buffer to aid memory and learning of key patterns under the current operating condition. Lastly, a time-sensitive activation function is proposed to endow the neural network with time-evolving properties, thereby enhancing the model's generalization ability. Compared with other update methods and different continual learning methods, the superiority of our method is validated on solar power generation data and real data of grinding and grading process.
+
+## I. INTRODUCTION
+
+I NDUSTRIAL time series data, as a kind of structured data that reflects information of production processes, can be analyzed and modeled to better understand the operation of industrial systems or equipment, optimize and guide the production processes, etc. At present, due to the powerful feature extraction and nonlinear fitting capabilities of neural networks, the industrial time series prediction methods based on deep learning have made significant progress in key parameter prediction and soft sensor modeling. Zhou et al. [1] proposed a differential long short-term memory network for predicting key variables in complex industrial processes. Geng et al. [2] introduced a novel Transformer based on a gated convolutional neural network for dynamic soft sensor modeling. While deep learning has achieved high predictive accuracy in some industrial scenarios, a major challenge faced by process industries is the dynamic changes of production and manufacturing processes, leading to data distribution drift [3].
+
+Therefore, traditional static models, which are based on the assumption of independent and identically distributed (i.i.d.) [4], face challenges in effectively adapting to nonstationary industrial settings. When a prediction model performs poorly, conventional methods rely on retraining the model using all available data, which considerably increases data storage and computational time costs [5]. Another efficient and lightweight model update method is to fine-tune the model using only the data from the new operating condition. This incremental update approach faces the issue of catastrophic forgetting of previously learned knowledge from historical data. However, continual learning strategies offer a solution for effectively training and updating neural networks on nonstationary industrial data. Continual learning, also known as lifelong learning, refers to the ability of a learning system (particularly in artificial intelligence and machine learning), to dynamically update a model's knowledge base over time without forgetting important information from the past, effectively overcoming the challenge of catastrophic forgetting [6]. Moreover, the incremental learning approach avoids the high computational cost of modeling from scratch.
+
+However, the current research on continual learning is primarily focused on image classification tasks in computer vision [7], with limited efforts directed towards regression or prediction tasks in industrial manufacturing and production fields. To fill this gap, He et al. [8] introduced a Continual LEArning for Regression tasks (CLEAR) framework, and validated the predictive and self-updating performance of the CLEAR framework on the European wind farm dataset. Schillaci et al. [9] proposed a continual learning method based on prediction error-driven memory consolidation, and applied this adaptive intelligent architecture to the horticultural industry. Tercan et al. [10] presented a continual learning method using memory aware synapses and weight transfer to improve quality prediction, addressing the problem of model failure caused by constantly changing production processes.
+
+Previous studies have primarily focused on either introducing incremental or continual learning frameworks, applying continual learning concepts innovatively to prediction tasks, or providing comparative reviews of continual learning methods for model updates [5], lacking more comprehensive evaluation. In contrast, this article not only compares various continual learning methods and paradigms, but also introduces an adaptive continual learning method specifically tailored for nonstationary industrial time series prediction. Previous work [11] have found that different continual learning models are able to mitigate forgetting in physiological time series datasets, but only the replay model can enable knowledge accumulation over time. However, traditional experience replay methods face challenges due to differing output space attributes when applied to prediction tasks. To retain the dark knowledge from previous tasks, we introduce intermediate representations as "hints" and propose hint-based network parameter learning. The hints in the memory buffer help the network converge to flatter minima, increasing tolerance to local perturbations. Meanwhile, hints from current samples improve generalization to past tasks, enhancing forward transfer capabilities. Our optimization objectives align with the concept of the Strong Experience Replay [12], which combines experience replay with model regularization using backward and forward consistency losses. In addition, to better balance stability and plasticity, we designed a dual-buffer system. The aforementioned hint-based replay buffer is used to constrain the loss optimization of the current task and prevent catastrophic forgetting. We also implement another soft memory buffer to select samples with lower loss in the current batch and combine them with new batch samples for joint training in the next iteration. This approach promotes repeated memory and learning of similar patterns in the current task. Furthermore, we design a time-sensitive activation function to enable the network to evolve based on the temporal characteristics of different tasks, thus enhancing the model's generalization performance in complex domains.
+
+Based on the above analysis, the contributions of the article are as follows.
+
+1) To address the degradation of predictive models in dynamic industrial environments, we propose a novel adaptive continual learning method for training and updating time series prediction models, achieving excellent predictive performance with limited modeling costs. 2) Given that existing continual learning methods cannot be directly applied to prediction tasks due to differing output space attributes, we introduce hint-based network parameter learning. By using intermediate representations as hints, we effectively retain the dark knowledge from previous tasks. In addition, we design a dual-buffer system: A standard buffer to accumulate knowledge from past tasks and a soft sample buffer to store samples with consistent prediction errors, thus enhancing the learning of key patterns in the current task. This design strikes a balance between stability and plasticity.
+
+### 3) We propose a time-sensitive activation function called
+
+TimeRelu that allows network weights and activation thresholds to evolve over time, better adapting to dynamic data distributions and improving the model's generalization to future data.
+
+## II. CONTINUAL LEARNING
+
+### A. Overview of Continual Learning
+
+Continual learning is a machine learning paradigm that enables models to learn and adapt to new data distributions by leveraging existing knowledge and experience, without retraining or discarding old knowledge. A related paradigm is transfer learning [13], which only focuses on one-way transfer requirements, leading to catastrophic forgetting of source domain knowledge. Continual learning methods aim to address this issue, but they encounter the widely acknowledged stabilityplasticity dilemma, which necessitates striking a balance between them [6].
+
+The latest review [6] concludes five continual learning methods. The three most classical categories are regularizationbased methods, architecture-based methods, and replay-based methods. First, regularization strategies [14], [15], [16] aim to reduce catastrophic forgetting by constraining changes to network parameters that are crucial for previous tasks. Various regularization methods differ in their approaches to evaluate the importance of network parameters. For instance, Elastic Weight Consolidation [14] employs the Fisher matrix to assess the importance of each parameter for old tasks, Synaptic Intelligence (SI) [15] measures parameter importance through cumulative gradient changes, and Memory Aware Synapses (MAS) [16] represents importance by the sensitivity of parameter changes to the output function. However, Maschler et al. [17] shows that regularization strategies perform poorly when there are significant differences in operating conditions. Second, dynamic architecture methods [18], [19], also known as parameter isolation methods, avoid conflicts between learning patterns and past knowledge by adding new network branches for new tasks. Therefore, this method is not suitable for continual learning with large amounts of data for the same target in domain incremental scenarios. Lastly, replay methods [12], [20], [21], [22], [23] store samples from previous tasks in a buffer or generate pseudosamples representing prior tasks. During the training of new tasks, these samples are revisited to alleviate catastrophic forgetting. Experience Replay (ER) [20] utilizes episodic memory to store previous samples, randomly incorporating these old task samples when learning new samples. Dark Experience Replay (DER) [21] enhances the standard ER by introducing L2 knowledge distillation loss for previous logits. Maximally Interfered Retrieval (MIR) [22] selects samples from memory that lead to the highest forgetting, replacing the random sampling strategy in ER. Complementary Learning Systemsbased Experience Replay (CLS-ER) [23] uses dual memory replay: short-term memory for rapid adaptation and long-term memory for gradual structured knowledge accumulation. Strong Experience Replay (SER) [12] combines experience replay with model regularization, using forward consistency loss to enhance generalization on current data and backward consistency loss to maintain alignment with past experiences stored in memory. These approaches align with Pham et al.'s view [24] that deep learning methods with memory capabilities can better handle nonstationary time series data in practical applications.
+
+Continual learning is highly effective and valuable for machine learning models in various domains, such as robot systems, predictive maintenance, production and manufacturing, etc. Maschler et al. [25] applied a regularization-based continual learning approach to anomaly detection in real metal forming processes of discrete manufacturing. In the domain of quality monitoring, literature [26] employed dynamic deep transfer learning networks to predict the production quality of cross-specification products. Furthermore, Wang et al. [27] proposed a novel paradigm for continuous knowledge transfer in manufacturing process modeling under nonstationary data streams. Inspired by the aforementioned work on continual learning methods and applications, our study aims to provide valuable insights from both theoretical and practical perspectives regarding the application of continual learning in prediction tasks.
+
+### B. Problem Statement Based on Continual Learning
+
+First, we shall review the issue of time series prediction using deep learning. The dataset is denoted as D = {x i , y i } n i=1 , where
+
+x i = {x 1 i , . . . , x d i } ∈ R d×m , y i = {y 1 i , . . . , y h i } ∈ R h ,
+
+d represents the length of the historical sliding window, m denotes the width of the historical sliding window (i.e., the number of feature variables), and h is the prediction time step. The dataset follows a specific distribution x i ∼p(x). Given a deep neural network with learnable weights, we can employ standard Empirical Risk Minimization to determine the optimal model
+
+θ = argmin θ i L (f θ (x i ), y i )(1)
+
+where L(•) is the mean squared error loss function.
+
+In real-world industrial applications, data distributions frequently exhibit dynamic drift. To indicate this characteristic, we divide the dataset into several subsets, forming a sequence of tasks T t , t = 1, • • , T , where each task is denoted as
+
+D t T = {x t i , y t i } n t i=1 , x t i ∼p t (x).
+
+Due to the time-varying nature of input data, the optimal model parameters obtained from solving the first t -1 tasks are no longer suitable for the tth task.
+
+argmin θ t-1 j=1 (x i ,y i )∈D j L (f θ (x i ), y i ) = argmin θ (x i ,y i )∈D t L (f θ (x i ), y i ) . (2
+
+)
+
+In contrast, continual learning optimizes one task at a time in a sequential training manner. In Fig. 1, we use tasks A, B, and C as examples to illustrate sequential task learning. Its objective is to optimize the current task t c with limited resources and achieve accurate predictions for all learned tasks.
+
+argmin θ t c t=1 L t , L t E (x,y)∼D t [ (f θ (x), y)] .(3)
+
+Traditional experience replay methods introduce a replay buffer M to preserve past experiences, using reservoir sampling to populate the memory buffer. During the loss optimization for the current task, the network is encouraged to mimic its original responses to past samples, by optimizing the following objective: Here, L t c represents the loss of the current task, while α serves as a hyperparameter that balances the impact of past tasks with the current one.
+
+L t c + αE (x,y)∼M [ (f θ (x), y)] .(4)
+
+## III. PROPOSED METHOD
+
+We tailored the continual learning methods for nonstationary time series forecasting tasks in two aspects. First, in terms of network training, we have designed a more rich and reasonable optimization objective based on the hint representation. In addition, considering the stability-plasticity dilemma faced by continual learning, we have adopted a dual-buffer design. In terms of network architecture, a time-sensitive activation function is proposed to better adapt to dynamic data distributions.
+
+### A. Hint-Based Network Parameter Learning
+
+We represent the time series prediction network as f t (x) = g t (h t (x)), where the encoder h is used to map the input sample x to a lower-dimensional vector z, and the linear regressor g maps the representation vector z to the prediction result y, with the superscript t as the task identifier. The training parameters are denoted as θ h , θ g , and the entire parameter set is defined as θ.
+
+To optimize parameters and mitigate catastrophic forgetting, most methods utilize dark knowledge to retain information from previous tasks. This involves storing logit outputs to guide the optimization trajectory of the current model. However, this approach is not suitable for regression prediction problems because the output of regression tasks is a continuous value with properties similar to the ground truth with an unknown error distribution. Inspired by Romero et al. [28], who proposed that the intermediate representation provides "hint" for the current model to mimic the previous one, we have designed a hint-based network parameter learning.
+
+During the network training process, we have a memory buffer M = (X m , Y m , Z m ) and the training set of the current task, denoted as D t = (X t , Y t ). Initially, the model needs to acquire new knowledge from the current training set D t , which represents the general goal of time series prediction. The loss is defined as L cur .
+
+L cur = E (x,y)∼D t (f t (x), y) .
+
+(5) In addition, we minimize the error between the ground truth Y m and the predicted value Ŷm = f t (X m ) of samples in the memory buffer, as well as the error between the memory samples' hints Z m and the intermediate representation Ẑm = h t (X m ). We define this loss as L memory
+
+L memory = α • E (x,y,z)∼M (f t (x), y) + β• E (x,y,z)∼M (h t (x), z) . (6
+
+)
+
+The coefficients α and β serve as weights to adjust the recall importance between the true labels Y m and the optimization trajectory θ t-1 from the previous model. Imposing constraints from past samples' intermediate representations in the buffer benefits the network in converging to flatter and more robust minima, enhancing the network's tolerance to local perturbations. Finally, before training on the current task, we first utilize the encoder network from the previous task h t-1 (x) to generate the intermediate representation of the current sample Z t hint = h t-1 (X t ), which serves as an additional hint. We define the loss L hint as the error between the intermediate output of the current encoder network Ẑt hint = h t (X t ) and Z t hint , formulated as follows:
+
+L hint = E (x,y)∼D t h t-1 (x), h t (x) . (7
+
+)
+
+This loss term can enhance the overlap between the updated model and the old model, improving the model's generalization ability to previous tasks and further preserving the acquired knowledge.
+
+L memory achieves backward consistency by retaining past experiences stored in M , while our hint-based network learning achieves forward consistency by propagating future experiences (mimicking from D t to the new task data D t+1 ).
+
+In summary, we combine the three losses L cur , L memory , and L hint , applying a weighting coefficient γ to L hint to balance recalling prior information and learning new knowledge. Here, the model is not overly sensitive to α, β, and γ. Our final optimization objective is as follows:
+
+L = L cur + L memory + γ • L hint . (8
+
+)
+
+Fig. 2 better illustrates the design of our optimization objectives.
+
+Here, we split L memory into L mem_f and L mem_h .
+
+### B. Dual-Buffer Design
+
+Fig. 3 illustrates our dual-buffer design for the continual learning framework. The aforementioned hint-based network parameter optimization uses samples from the buffer as prior constraints to optimize new tasks. However, this approach might limit the model's ability to learn new tasks, especially when tasks are similar or the sequence is very long. To balance the impact of the above learning process, we introduce a small soft-buffer, which strengthens contextual memory consolidation based on the prediction error of the current batch of samples. We define the learning progress of the current task as LP , calculated as follows:
+
+LP = | t -t-1 |. (9
+
+) Here, t represents the prediction error at the current time step, and t-1 represents the prediction error at the previous time step.
+
+We tend to consolidate samples that show minor changes in prediction error, training them jointly with the next batch of samples from the current task. This prediction error consistencybased sample selection enhances the learning of details that are not well captured, thus allowing for a more accurate estimation of model parameters for the current task. Meanwhile, constraints from old task samples in the regular buffer help accumulate the learned knowledge. Thus, the dual-buffer design balances the plasticity of learning new tasks with the stability of remembering old tasks.
+
+To better describe our proposed adaptive continual learning method based on Dual Memory Buffer, we provide the pseudocode shown in Algorithm 1.
+
+### C. Time-Sensitive Activation Function
+
+For prediction tasks, we utilize the universal time series representation framework of TS2Vec [29]. Our encoder primarily comprises three components: 1) the input projection layer; 2) x all = x + x t 5: y all = y + y t 6:
+
+B M (x , y , z ) K ←-sample(M) 7: reg ← α y -f θ (x ) 2 2 + β z -h θ (x ) 2 2 + γ h θ -(x t ) -h θ (x t ) 2 2 8: θ ← θ + λ∇ θ [l(y all , f θ (x all )) + reg] 9: M ← U pdate_Memory(B n ) 10: S ← sort[loss(B n )] 11: B SM ← {S i } C i=1 12: S_M ← U pdate_Memory(B SM ) 13:
+
+end for 14: end for 15: return M, S_M, θ timestamp mask; and 3) dilated convolution. The timestamp mask is employed to mask the latent vector along the time axis, ensuring each timestamp reconstructs itself in different contexts, thus greatly enhancing the robustness of the learned representations. Fig. 4 illustrates the schematic diagram of our network structure.
+
+Contrasting with classical continual learning methods for computer vision classification tasks, our goal extends beyond merely overcoming catastrophic forgetting problem caused by parameter overwrite during sequential learning of multiple tasks in a neural network. We also emphasize improving generalization performance of the model for unknown tasks. In essence, we aim to utilize the extensive temporal patterns learned by the model to facilitate rapid adaptation to similar patterns in future tasks. Therefore, starting from the network structure, we have made the following improvements to the prediction model.
+
+First, we concatenate data point x with its corresponding time t to obtain an enhanced input feature vector [x, t], which better captures complex patterns in industrial time series data. In addition, we also extract time features τ t (such as, minute of hour, hour of day, day of week, day of month, day of year) from timestamp t that distinguish different tasks and use them as an index for sequential learning of multiple tasks. Furthermore, we selectively activate the corresponding feature representations based on the time features of different tasks, allowing the network weights to evolve dynamically over time. Thus, we propose a novel activation function called TimeRelu, serving as a universal approximator for time-dependent functions.
+
+TimeRelu φ (x, t) = h φ (τ t ) (x -g φ (τ t )) + v φ (τ t ), when x < g φ (τ t ) x, when x ≥ g φ (τ t )(10)
+
+where h φ ∈ R d , v φ and g φ ∈ R d are neural networks with parameters φ, used to control the slope and threshold, respectively. If h φ = 1 and v φ = g φ = 0, TimeRelu simplifies to the traditional ReLU. We have substituted all ReLU units in the temporal convolutional network with these TimeRelu units. Each TimeRelu unit within the network is parameterized by a distinct set of parameters. This design allows the network weights and activation function thresholds to evolve over time, better adapting to dynamic data distributions. TimeRelu provides a more complex timevarying model representation capability, enabling the network to approximate nonlinear decision boundaries that change over time, thereby enhancing the model's generalization ability to future data.
+
+## IV. EXPERIMENTAL VERIFICATION
+
+To verify the effectiveness of our proposed industrial time series prediction method based on adaptive continual learning, we conducted experiments using open-source solar power generation datasets and real grinding and grading process datasets. The results were compared against existing model update methods, fine-tuning method of transfer learning and prediction methods based on other continual learning strategies. We conducted all experiments on a personal laptop with AMD R7-6800H (3.2 GHz), 16 GB RAM, NVIDIA GeForce RTX 3060 6GB, and 64-bit operating system. All neural network models were built based on PyTorch.
+
+### A. Verification on Solar Power Dataset
+
+We first validated the performance of the prediction model based on adaptive continual learning method on NREL's Solar Power Data. We selected data points from a public utility-scale photovoltaic system with a capacity of 70 MW and sampled every 5 minutes (Actual_30.45_-88.25_2006_UPV_70MW_5_Min) [30]. The overall time series spans 105 120 data points. We divided these into chronological task domains, each containing 20 000 data points. Therefore, the first five tasks, totaling 100 000 data points, were used as the metatraining set, while the remaining 5120 data points formed the metatest set to assess the model's generalization capabilities. Within each task, the data was split into training (70% of the data), validation (10%), and testing (20%) sets. The time-evolving changes in the input distribution P (x 1 , x 2 ) in Fig. 5 revealed that dense contour regions gradually shifted from right to left over time, indicating that the statistical properties of different tasks change slowly and exhibit nonstationarity.
+
+In terms of network architecture, we have improved the general time series representation framework TS2Vec [29] for industrial time series prediction. Our sliding window size is set to 20 and the prediction step size is 10. In the learning of each task, an early stopping strategy is employed to avoid overfitting. We set the batch size to 16 and utilize the Adam optimizer for adaptive adjustments of the learning rate.
+
+1) Evaluation Metrics: For time series prediction tasks, common evaluation metrics include MSE, MAE, RM SE, R 2 , etc. However, in this study, we model the prediction task using a continual learning approach, necessitating a comprehensive evaluation of sequential modeling. Fig. 6 is a performance matrix, where R ij represents the performance on task j after training task i. The performance of continual learning can be evaluated from the following three aspects: a) Overall performance: The average error after learning the kth task is defined as
+
+Error k = 1 k k j=1 R k,j .(11)
+
+A smaller value for this metric is better, indicating a better overall performance of the trained model on all learned tasks. b) Memory stability: Memory stability is evaluated using two indicators: 1) forgetting measure; and 2) backward transfer. For the forgetting measure, it is determined by calculating the difference between the current performance and the best performance achieved in the past. In the case of backward transfer, it is calculated by comparing the current performance with the performance achieved during previous learning of the task.
+
+f k,j = min i∈{1,...,k-1} R i,j , ∀k > j (12) Forgetting k = 1 k -1 k-1 j=1 R k,j -f k,j(13)
+
+Backward k = 1 k -1 k-1 j=1 R k,j -R j,j . (14
+
+)
+
+For regression or prediction tasks, smaller values of both metrics indicate less forgetting and better memory stability. c) Learning plasticity: Learning plasticity is assessed through forward transfer, calculated as the difference between the impact of learning the first k -1 tasks on the kth task and the performance of the kth task with random initialization.
+
+Forward k = 1 k -1 k j=2 R j-1,j -R 0,j . (15
+
+)
+
+The calculated value is typically negative, and the greater the absolute value, the stronger the ability for forward transfer.
+
+2) Model Performance Analysis: Utilizing our proposed adaptive continual learning framework, we sequentially trained on five tasks and subsequently tested on the test sets of the remaining tasks. To demonstrate the effectiveness of our method, we conducted ten comparative experiments, including regularization-based continual learning methods (MAS [16], SI [15]), replay-based continual learning methods (ER [20], DER [21], MIR [22], CLS-ER [23], SER [12]), the finetune method in transfer learning (Fine-tune), the single-task training method (Single_task), and the multitask joint training method(Multi_task). The fine-tune method represents the performance upper limit for new tasks, while the single-task training method serves as the performance upper limit for all tasks. On the other hand, the multitask joint training method utilizes all past tasks' data and can be considered as the performance upper limit for previous tasks. The hyperparameters of different continual learning methods are shown in Table I.
+
+The predictive performance of various methods on solar power generation data is presented in Table II. Our method demonstrates favorable performance in terms of mean error and overcoming forgetting due to the effective retention of prior tasks' dark information by hint representation and the reinforcement of old model knowledge through hint-based optimization. However, there is potential for enhancing forward transfer capability, revealing a tradeoff between stability and plasticity. In addition, replay methods generally outperform regularization methods. This observation suggests that for regression prediction tasks, replay methods enable the model to automatically induce and recall similar patterns from the past, reinforcing existing memory patterns. Hence, they prove to be more suitable for continual learning of the prediction model.
+
+To observe the changes in continual learning performance during the training process, we created line charts as shown in Fig. 7. The mean error indicator reveals that as the number of tasks increases, the mean error also rises. This suggests that, given a constrained model capacity, the memory ability tends to diminish as knowledge accumulates. In addition, catastrophic interference between different tasks can also lead to an increase in average error. However, a turning point is observed at task 4, attributed to its notable positive forward transfer capability. Nevertheless, our proposed method consistently maintains the lowest error throughout the entire learning process. Different methods exhibit similar performance and trends in both backward transfer and forgetting measure indicators. Although our method's ability to resist forgetting is not prominently evident in the initial tasks, there is a noticeable enhancement in performance after training on the final task. Regarding forward transfer, the performance differences among various methods are relatively minor, presenting the opposite trend to that observed in backward transfer performance. This further emphasizes the model's achievement of a balanced tradeoff between stability and plasticity.
+
+We conducted ablation experiments on three proposed improvements: 1) hint-based network parameter learning; 2) dualbuffer design; and 3) time-sensitive activation function, as shown in Table III. The results on solar power generation data show that Timerelu contributed the most to overall performance, mitigating forgetting, and promoting forward transfer. This is because timerelu calculates the activation function's threshold and slope based on time embeddings τ t , incorporating time sensitivity not only in the input layer and weight updates, but also in the activation layer. Since solar power prediction is closely related to time factors, timerelu consistently excelled across all performance indicators.
+
+### 3) Generalization Analysis and Prediction Result Visualization:
+
+The numerical results of the prediction errors on unknown tasks, shown in Table IV, demonstrate the strong generalization ability of our proposed method. In addition, the visualization of the prediction results in Fig. 8 shows that our method better tracks turning points and fluctuations in unseen tasks. Therefore, this adaptive continual learning approach enhances adaptability to dynamic data distributions.
+
+### B. Verification on Grinding and Grading Process Dataset 1) Grinding and Grading Process Dataset and Experiment
+
+Setup: Grinding and grading are crucial steps in mineral processing, and accurate prediction of key parameters during the grinding process is essential for optimizing control and reducing energy consumption. However, external conditions such as fluctuations in raw ore properties, irregular addition of consumables, and adjustments to equipment parameters can lead to variations in operating conditions. In addition, unforeseen scenarios not covered by historical modeling data may occur, causing a gradual decrease in the prediction accuracy of deployed models.
+
+In the context of continual learning for predicting grinding process parameters, the input space is nonstationary due to changes in production conditions, and it is essential to maintain relative stability in the output space of key parameters. Thus, we construct a domain-incremental continual learning scenario. By leveraging prior knowledge that the instantaneous feed rate (tons per hour) is the most significant feature affecting the prediction variable (concentration), we partition tasks based on the feed rate. Ultimately, we select operation conditions with ore feed value of 330, 340, and 350 in February 2023 as the metatraining sets, while condition with ore feed value of 320 in March 2023 serves as the metatest set to evaluate the generalization of the trained model. Fig. 9 shows the distributional differences between different tasks on the first two principal components. It can be seen that the position and shape of the kernel density curves vary significantly between different conditions, indicating greater distributional differences in real-world data compared to open-source data. Moreover, the scatter plot of the reduced dimensionality data in Fig. 10 also reveals distributional differences across different tasks, making them suitable for validating continual learning in nonstationary environments.
+
+The grinding and grading process takes approximately 20-30 min from the feed inlet to the formation of overflow slurry, with a data sampling frequency of 1 minute. Therefore, a sliding window of the past 20 time steps is employed to predict the next ten time steps of the ore concentration. The network architecture, batch size, optimizer, and hyperparameters are identical to those used for solar power generation data.
+
+2) Model Performance Analysis: The results of continual learning performance are presented in Table V. It can be observed that the model developed using adaptive continual learning demonstrates strong performance across multiple aspects, including overall performance, learning plasticity for new tasks, and memory stability for old tasks. In terms of the average error for all learned tasks, single-task learning achieves the best results in terms of MSE. This superiority can be attributed to the fact that single-task learning involves training each task individually, without any interference between tasks. Whereas, continual learning or joint methods aim to optimize multiple tasks together, learning shared representations. This can cause task interference or negative transfer, where conflicting gradient updates hinder optimization and finally impact performance on each task. However, single-task learning does not align with the concept of continual learning, which emphasizes lifelong knowledge accumulation and continuous adaptation to changes. Consistent with open-source dataset, the two regularization methods demonstrates unsatisfactory performance, highlighting the advantage of replay methods for prediction tasks.
+
+Regarding the continual learning performance changes during task training, as shown in Fig. 11, the observations and conclusions drawn from the three metrics (mean error, backward transfer, and forgetting measure) are generally consistent with validation on the solar power generation dataset. In addition, our method also achieves optimal performance for forward transfer, indicating the superiority of the proposed continual learning approach in real-world applications.
+
+For the grinding data, the ablation experiments in Table VI revealed: a) the soft buffer module contributed the most to reducing the average error; b) the hints module had the greatest impact on mitigating forgetting; c) The timerelu module most effectively promoted forward transfer. 3) Generalization Analysis and Prediction Result Visualization: Finally, the model's generalization ability on unknown conditions is assessed. As shown in Table IV, our method outperforms other comparison methods. In addition, the visualization in Fig. 12 shows that our method has better ability to fit amplitude and consistently achieves more accurate predictions. This is attributed to the time-sensitive activation function employed during modeling, which endows the model with the ability to evolve over time, and the soft memory buffer in the continual learning method for repeated memorization of crucial patterns. This robust generalization ability can mitigate the degradation speed of the deployed model to a certain extent.
+
+### C. Resource Efficiency Analysis
+
+Continual learning paradigms have significant advantages in resource efficiency (computational time and memory requirements) over static machine learning paradigms. This is the reason for introducing the continual learning paradigm in this article.
+
+Assuming the model is retrained from scratch multiple times, with each retraining considered an update. There are T updates in total, and each update adds a batch of new data of size N . If the computational cost for training the model is the same for each update, the complexity of the ith update will be O(N • i), and the overall complexity for T updates will be T
+
+i=1 O(N • i) = O(N • T 2 ).
+
+In contrast, continual learning has an overall complexity of O(N • T ), increasing linearly with T .
+
+Regarding memory requirements, cumulative training requires storing historical data for each retraining. Assuming that We also compared our approach with other continual learning methods in terms of computational resources.
+
+## V. CONCLUSION
+
+Finally, to address the problem of accuracy degradation of prediction models in nonstationary industrial environments, we propose a novel industrial time series prediction method based on adaptive continual learning. In this study, we innovatively introduce the continual learning paradigm to time series prediction tasks and effectively resolve challenges such as catastrophic forgetting in incremental learning and the substantial resource expenditure in cumulative learning. We have improved the continual learning method from both network training and network structure. Hint-based network learning preserves the dark knowledge of previous tasks, overcoming catastrophic forgetting, while the introduction of a soft memory buffer allows the model to better learn current tasks and reduce average error. In addition, implementing time-evolving characteristics with timerelu enhances the model's generalizability. The effectiveness of our method is validated on an open-source solar power generation dataset as well as a real grinding and grading process dataset.
+
+Despite its effectiveness, our method has certain limitations. For example, our work relies on manually partitioned time series tasks, lacking mechanisms for detecting task transitions and analyzing concept drift types. While we qualitatively described distribution differences between tasks, exploring the transferability between different tasks is also important. Furthermore, this article focuses on the design of optimization objectives for continual learning, but sampling strategy could also enhance performance. Finally, advanced techniques such as metalearning could improve the model's robustness against catastrophic forgetting and its dynamic adaptability. Given these limitations, we plan to continue our research to overcome these challenges in the future.
+
+## Figures et tableaux
+
+**Fig. 1.** Diagram of continuous task learning.
+
+**Fig. 2.** Optimization objectives of hint-based network learning.
+
+**Fig. 3.** Dual-buffer continual learning framework.
+
+**Fig. 4.** Network structure and time sensitive activation function TimeRelu. (a) Backbone. (b) Convolution block. (c) TimeRelu.
+
+Algorithm 1: Adaptive Continual Learning based on Dual Memory Buffer. Input: Dataset D, parameters θ, scalar α, scalar β, Soft Memory Budget C, Number of samples from Memory Buffer K. Output: Memory M, Soft Memory S_M, parameters θ. 1: for t ∈ 1, • • , T do 2: for B n (x t , y t ) in D t do 3: B SM (x , y ) C ←-S_M 4:
+
+**Fig. 5.** Distributions of the inputs change over time.
+
+**Fig. 6.** Performance matrix of continual learning.
+
+[figure sans légende identifiée] This article has been accepted for inclusion in a future issue of this journal. Content is final as presented, with the exception of pagination.Authorized licensed use limited to: Shenyang Institute of Automation. Downloaded on November 10,2024 at 01:43:19 UTC from IEEE Xplore. Restrictions apply.
+
+**Fig. 7.** Continual learning performance changes on MSE during task training. Here, "task n" denotes the model's average performance after training on the first n tasks. Negative values in backward transfer and forgetting measure indicate that, throughout the current learning process, the methods not only avoid interference with previous tasks, but also actively support the learning of prior tasks. (a) Mean error changes during task training. (b) Backward transfer changes during task training. (c) Forward transfer changes during task training. (d) Forgetting measure changes during task training.
+
+**Fig. 8.** Comparison of model predictions on unseen task (local chart for time steps 800-1500). Only the best-performing replay-based method (DER++) and regularization-based method (SI) are presented.
+
+**Fig. 9.** Distributions of the inputs change over time.
+
+**Fig. 10.** Scatter plot of different working conditions.
+
+**Fig. 11.** Continual learning performance changes on MSE during task training. (a) Mean error changes during task training. (b) Backward transfer changes during task training. (c) Forward transfer cha nges during task training. (d) Forgetting measure changes during task training.
+
+**Fig. 12.** Comparison of model predictions on unknown task (a global view with a sampling of one out of every 20 data points).
+
+**Fig. 13.** Computation time for different methods.
+
+**Fig. 13** shows the model training time for different update methods on the last training task. Cumulative learning takes the longest time, reaching 507.6 s on the solarpower dataset, due to the large training dataset that includes all historical data. Incremental learning for fine-tuning requires the least training time but is prone to catastrophic forgetting. Training times for other continual learning methods fall between these two, depending on the applied strategies. Our proposed method has a relatively longer training time due to the introduction of a time-sensitive activation function and the joint training of samples in the soft sample buffer, which increases computational overhead.
+
+Mengqing Wu was born in Shandong, China, in 2000. She received the B.S. degree from the College of Engineering, Qufu Normal University, Rizhao, China, in 2022. She is currently working toward the combined M.S. and Ph.D. degrees in mechanical manufacture and automation from the University of Chinese Academy of Sciences, Beijing, China. Her current research interests include intelligent analysis and mining of industrial big data, transfer learning, and continual learning. Xiaofeng Zhou received the Ph.D. degree in mechatronic engineering from the University of Chinese Academy of Sciences, Beijing, China, in 2012. She is currently an Associate Research Fellow with the Shenyang Institute of Automation, Chinese Academy of Sciences, Shenyang, China. Her current research interests include research and application of intelligent information processing and platform technology, big data analysis and display, fault diagnosis, machine learning, and other related methods. Shuai Li received the Ph.D. degree in mechanical manufacture and automation from the University of Chinese Academy of Sciences, Beijing, China, in 2022. He is currently an Associate Research Fellow with the Shenyang Institute of Automation, Chinese Academy of Sciences, Shenyang, China. His current research interests include monitoring and fault diagnosis for complex industrial processes, and intelligent analysis and mining of industrial big data. Haibo Shi received the Ph.D. degree in mechanical and electrical engineering from the Harbin Institute of Technology, Harbin, China, in 2003. He is currently a Research Fellow with the Shenyang Institute of Automation, Chinese Academy of Sciences, Shenyang, China. His current research interests include data intelligent analysis and mining, intelligent information processing platform software, and industrial process modeling. This article has been accepted for inclusion in a future issue of this journal. Content is final as presented, with the exception of pagination. Authorized licensed use limited to: Shenyang Institute of Automation. Downloaded on November 10,2024 at 01:43:19 UTC from IEEE Xplore. Restrictions apply.
+
+**TABLE III** ABLATION EXPERIMENTS ON SOLAR POWER GENERATION DATA
+
+**TABLE IV** GENERALIZATION PERFORMANCE ON UNSEEN TASKS
+
+**TABLE V** COMPARISON OF CONTINUAL LEARNING PERFORMANCE OF DIFFERENT METHODS ON GRINDING AND GRADING PROCESS DATASET
+
+**TABLE VI** ABLATION EXPERIMENTS ON GRINDING AND GRADING PROCESS DATA

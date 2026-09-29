@@ -1,0 +1,47 @@
+{
+  "id": "2022-gimenez-device-training-machine-learning-models",
+  "title": "On-Device Training of Machine Learning Models on Microcontrollers with Federated Learning",
+  "authors": [
+    {
+      "given": "Nil Llisterri",
+      "family": "Giménez"
+    },
+    {
+      "given": "Marc Monfort",
+      "family": "Grau"
+    },
+    {
+      "given": "Roger Pueyo",
+      "family": "Centelles"
+    },
+    {
+      "given": "Felix",
+      "family": "Freitag"
+    }
+  ],
+  "year": 2022,
+  "venue": "Electronics",
+  "doi": "10.3390/electronics11040573",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/electronics11040573",
+  "type": "journal",
+  "axes": [
+    "tinyml-odl"
+  ],
+  "tags": [
+    "federated"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2106.08295-white-paper-neural-network-quantization",
+  "title": "A White Paper on Neural Network Quantization",
+  "authors": [
+    {
+      "given": "Markus",
+      "family": "Nagel"
+    },
+    {
+      "given": "Marios",
+      "family": "Fournarakis"
+    },
+    {
+      "given": "Rana Ali",
+      "family": "Amjad"
+    },
+    {
+      "given": "Yelysei",
+      "family": "Bondarenko"
+    },
+    {
+      "given": "Mart",
+      "family": "Van Baalen"
+    },
+    {
+      "given": "Tijmen",
+      "family": "Blankevoort"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2106.08295",
+  "url": "https://arxiv.org/abs/2106.08295",
+  "type": "preprint",
+  "axes": [
+    "quantization",
+    "pdm-rul"
+  ],
+  "tags": [
+    "int8"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : Table 7",
+      "sections numérotées non détectées : 4 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

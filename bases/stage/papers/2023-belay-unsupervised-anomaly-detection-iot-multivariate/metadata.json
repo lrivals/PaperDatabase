@@ -1,0 +1,47 @@
+{
+  "id": "2023-belay-unsupervised-anomaly-detection-iot-multivariate",
+  "title": "Unsupervised Anomaly Detection for IoT-Based Multivariate Time Series: Existing Solutions, Performance Analysis and Future Directions",
+  "authors": [
+    {
+      "given": "Mohammed Ayalew",
+      "family": "Belay"
+    },
+    {
+      "given": "Sindre Stenen",
+      "family": "Blakseth"
+    },
+    {
+      "given": "Adil",
+      "family": "Rasheed"
+    },
+    {
+      "given": "Pierluigi Salvo",
+      "family": "Rossi"
+    }
+  ],
+  "year": 2023,
+  "venue": "Sensors",
+  "doi": "10.3390/s23052844",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s23052844",
+  "type": "journal",
+  "axes": [
+    "anomaly-detection"
+  ],
+  "tags": [
+    "unsupervised",
+    "time-series"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

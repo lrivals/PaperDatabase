@@ -1,0 +1,56 @@
+{
+  "id": "2019-su-robust-anomaly-detection-multivariate-time",
+  "title": "Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network",
+  "authors": [
+    {
+      "given": "Ya",
+      "family": "Su"
+    },
+    {
+      "given": "Youjian",
+      "family": "Zhao"
+    },
+    {
+      "given": "Chenhao",
+      "family": "Niu"
+    },
+    {
+      "given": "Rong",
+      "family": "Liu"
+    },
+    {
+      "given": "Wei",
+      "family": "Sun"
+    },
+    {
+      "given": "Dan",
+      "family": "Pei"
+    }
+  ],
+  "year": 2019,
+  "venue": "Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining 2828–2837",
+  "doi": "10.1145/3292500.3330672",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1145/3292500.3330672",
+  "type": "conference",
+  "axes": [
+    "anomaly-detection",
+    "datasets"
+  ],
+  "tags": [
+    "time-series"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

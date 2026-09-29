@@ -4,8 +4,9 @@ PaperDatabase transforme des PDF d'articles scientifiques en une base de connais
 texte que Claude Code sait parcourir : il y retrouve un chiffre, compare des travaux, repère
 les zones non couvertes. Ce guide montre comment s'en servir au quotidien. Le pipeline ne
 dépend pas du domaine, et un même code gère plusieurs bases séparées (§8). Le dépôt en contient
-deux : `fpga` (vision embarquée sur FPGA), qui sert d'exemple dans ce guide, et `drone`
-(vision embarquée sur drone, dans `bases/drone/`).
+trois : `fpga` (vision embarquée sur FPGA), qui sert d'exemple dans ce guide, `drone`
+(vision embarquée sur drone, dans `bases/drone/`) et `stage` (apprentissage continu embarqué
+pour la maintenance prédictive, références d'un stage, dans `bases/stage/`).
 
 Pour le fonctionnement interne, voir [SETUP.md](../SETUP.md) ; pour les formats de
 fichiers, [DATA_MODEL.md](../DATA_MODEL.md).
@@ -31,7 +32,7 @@ fichiers, [DATA_MODEL.md](../DATA_MODEL.md).
 ```
 
 Tout ce schéma vaut pour **une** base : celle du dossier courant (`bases/fpga/` pour `fpga`,
-`bases/drone/` pour `drone` ; à la racine du dépôt, la base par défaut du registre). Les bases
+`bases/drone/` pour `drone`, `bases/stage/` pour `stage` ; à la racine du dépôt, la base par défaut du registre). Les bases
 partagent le code et échangent des articles avec `bin/pdb base scan` et `bin/pdb base import`
 (§8).
 
@@ -333,12 +334,13 @@ Procédure complète : [SETUP.md §8](../SETUP.md#8-vérification).
 ## 8. Plusieurs bases, autres sujets
 
 Le pipeline ne dépend pas du domaine : chaque sujet a sa base, un dossier séparé qui partage
-le code (DATA_MODEL §11). Deux bases existent aujourd'hui :
+le code (DATA_MODEL §11). Trois bases existent aujourd'hui :
 
 | Base | Intitulé | Dossier |
 |---|---|---|
 | `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | `bases/fpga/` |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` |
+| `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` |
 
 Vue d'ensemble et captures de l'interface : [README](../README.md#plusieurs-bases-de-connaissance).
 
@@ -373,7 +375,8 @@ autres bases avec import de la sélection, création d'une base.
 
 Les bases créées sans `--path` vivent dans `bases/<nom>/` et sont versionnées avec le dépôt
 (sans PDF). Dans un clone neuf, le registre est à refaire une fois :
-`bin/pdb base register bases/fpga --name fpga`, `bin/pdb base register bases/drone --name drone`.
+`bin/pdb base register bases/fpga --name fpga`, `bin/pdb base register bases/drone --name drone`,
+`bin/pdb base register bases/stage --name stage`.
 
 Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 

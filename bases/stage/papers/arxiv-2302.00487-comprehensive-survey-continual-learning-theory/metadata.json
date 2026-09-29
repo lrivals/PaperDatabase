@@ -1,0 +1,71 @@
+{
+  "id": "arxiv-2302.00487-comprehensive-survey-continual-learning-theory",
+  "title": "A Comprehensive Survey of Continual Learning: Theory, Method and Application",
+  "authors": [
+    {
+      "given": "Zifeng",
+      "family": "Wang"
+    },
+    {
+      "given": "Zizhao",
+      "family": "Zhang"
+    },
+    {
+      "given": "Sayna",
+      "family": "Ebrahimi"
+    },
+    {
+      "given": "Ruoxi",
+      "family": "Sun"
+    },
+    {
+      "given": "Han",
+      "family": "Zhang"
+    },
+    {
+      "given": "Chen-Yu",
+      "family": "Lee"
+    },
+    {
+      "given": "Xiaoqi",
+      "family": "Yin"
+    },
+    {
+      "given": "Guolong",
+      "family": "Su"
+    },
+    {
+      "given": "Long",
+      "family": "Zhao"
+    },
+    {
+      "given": "Tomas",
+      "family": "Pfister"
+    }
+  ],
+  "year": 2023,
+  "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+  "doi": null,
+  "arxiv_id": "2302.00487",
+  "url": "https://arxiv.org/abs/2302.00487",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "cl-methods",
+    "pdm-rul"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE 1, [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

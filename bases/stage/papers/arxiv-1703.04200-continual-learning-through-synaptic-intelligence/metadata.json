@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-1703.04200-continual-learning-through-synaptic-intelligence",
+  "title": "Continual Learning Through Synaptic Intelligence",
+  "authors": [
+    {
+      "given": "Friedemann",
+      "family": "Zenke"
+    },
+    {
+      "given": "Ben",
+      "family": "Poole"
+    },
+    {
+      "given": "Surya",
+      "family": "Ganguli"
+    }
+  ],
+  "year": 2017,
+  "venue": "International Conference on Machine Learning (ICML)",
+  "doi": null,
+  "arxiv_id": "1703.04200",
+  "url": "https://arxiv.org/abs/1703.04200",
+  "type": "conference",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [
+    "si"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

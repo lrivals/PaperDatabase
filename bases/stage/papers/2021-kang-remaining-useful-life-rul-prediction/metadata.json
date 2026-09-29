@@ -1,0 +1,41 @@
+{
+  "id": "2021-kang-remaining-useful-life-rul-prediction",
+  "title": "Remaining Useful Life (RUL) Prediction of Equipment in Production Lines Using Artificial Neural Networks",
+  "authors": [
+    {
+      "given": "Ziqiu",
+      "family": "Kang"
+    },
+    {
+      "given": "Cagatay",
+      "family": "Catal"
+    },
+    {
+      "given": "Bedir",
+      "family": "Tekinerdogan"
+    }
+  ],
+  "year": 2021,
+  "venue": "Sensors",
+  "doi": "10.3390/s21030932",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s21030932",
+  "type": "journal",
+  "axes": [
+    "pdm-rul"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 3, Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

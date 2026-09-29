@@ -1,0 +1,47 @@
+{
+  "id": "2025-wu-adaptive-continual-learning-method-nonstationary",
+  "title": "An Adaptive Continual Learning Method for Nonstationary Industrial Time Series Prediction",
+  "authors": [
+    {
+      "given": "Mengqing",
+      "family": "Wu"
+    },
+    {
+      "given": "Xiaofeng",
+      "family": "Zhou"
+    },
+    {
+      "given": "Shuai",
+      "family": "Li"
+    },
+    {
+      "given": "Haibo",
+      "family": "Shi"
+    }
+  ],
+  "year": 2025,
+  "venue": "IEEE Transactions on Industrial Informatics",
+  "doi": "10.1109/TII.2024.3468433",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TII.2024.3468433",
+  "type": "journal",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [
+    "time-series"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE III, TABLE IV, TABLE V, TABLE VI"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

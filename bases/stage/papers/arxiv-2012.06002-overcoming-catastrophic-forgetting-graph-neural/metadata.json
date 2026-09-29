@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-2012.06002-overcoming-catastrophic-forgetting-graph-neural",
+  "title": "Overcoming Catastrophic Forgetting in Graph Neural Networks",
+  "authors": [
+    {
+      "given": "Huihui",
+      "family": "Liu"
+    },
+    {
+      "given": "Yiding",
+      "family": "Yang"
+    },
+    {
+      "given": "Xinchao",
+      "family": "Wang"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2012.06002",
+  "url": "https://arxiv.org/abs/2012.06002",
+  "type": "preprint",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

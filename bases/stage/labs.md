@@ -1,0 +1,1 @@
+# Laboratoires et équipes — stage

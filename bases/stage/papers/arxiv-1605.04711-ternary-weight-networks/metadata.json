@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-1605.04711-ternary-weight-networks",
+  "title": "Ternary Weight Networks",
+  "authors": [
+    {
+      "given": "Fengfu",
+      "family": "Li"
+    },
+    {
+      "given": "Bo",
+      "family": "Zhang"
+    },
+    {
+      "given": "Bin",
+      "family": "Liu"
+    }
+  ],
+  "year": 2016,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1605.04711",
+  "url": "https://arxiv.org/abs/1605.04711",
+  "type": "preprint",
+  "axes": [
+    "quantization"
+  ],
+  "tags": [
+    "binary",
+    "ternary"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

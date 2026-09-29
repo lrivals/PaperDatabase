@@ -1,0 +1,36 @@
+{
+  "id": "arxiv-1606.09282-learning-without-forgetting",
+  "title": "Learning Without Forgetting",
+  "authors": [
+    {
+      "given": "Zhizhong",
+      "family": "Li"
+    },
+    {
+      "given": "Derek",
+      "family": "Hoiem"
+    }
+  ],
+  "year": 2018,
+  "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+  "doi": null,
+  "arxiv_id": "1606.09282",
+  "url": "https://arxiv.org/abs/1606.09282",
+  "type": "journal",
+  "axes": [],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

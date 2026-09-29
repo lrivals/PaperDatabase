@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2112.04215-self-supervised-models-continual-learners",
+  "title": "Self-Supervised Models are Continual Learners",
+  "authors": [
+    {
+      "given": "Enrico",
+      "family": "Fini"
+    },
+    {
+      "given": "Victor G",
+      "family": "Turrisi Da Costa"
+    },
+    {
+      "given": "Xavier",
+      "family": "Alameda-Pineda"
+    },
+    {
+      "given": "Elisa",
+      "family": "Ricci"
+    },
+    {
+      "given": "Karteek",
+      "family": "Alahari"
+    },
+    {
+      "given": "Julien",
+      "family": "Mairal"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2112.04215",
+  "url": "https://arxiv.org/abs/2112.04215",
+  "type": "preprint",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [
+    "distillation",
+    "unsupervised"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 6, Table A. Linear evaluation top, Table D. Linear evaluation top",
+      "tableaux sans corps extrait (légende seule) : Table F. Combinations of SSL m"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

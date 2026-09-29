@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-1910.14481-continual-unsupervised-representation-learning",
+  "title": "Continual Unsupervised Representation Learning",
+  "authors": [
+    {
+      "given": "Dushyant",
+      "family": "Rao"
+    },
+    {
+      "given": "Francesco",
+      "family": "Visin"
+    },
+    {
+      "given": "Andrei A",
+      "family": "Rusu"
+    },
+    {
+      "given": "Yee Whye",
+      "family": "Teh"
+    },
+    {
+      "given": "Razvan",
+      "family": "Pascanu"
+    },
+    {
+      "given": "Raia",
+      "family": "Hadsell"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1910.14481",
+  "url": "https://arxiv.org/abs/1910.14481",
+  "type": "preprint",
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [
+    "replay",
+    "unsupervised"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 3, Table4, [figure sans légende identifié, Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

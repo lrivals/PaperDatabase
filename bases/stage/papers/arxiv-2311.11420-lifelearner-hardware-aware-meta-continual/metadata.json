@@ -1,0 +1,55 @@
+{
+  "id": "arxiv-2311.11420-lifelearner-hardware-aware-meta-continual",
+  "title": "LifeLearner: Hardware-Aware Meta Continual Learning System for Embedded Computing Platforms",
+  "authors": [
+    {
+      "given": "Young D.",
+      "family": "Kwon"
+    },
+    {
+      "given": "Jagmohan",
+      "family": "Chauhan"
+    },
+    {
+      "given": "Hong",
+      "family": "Jia"
+    },
+    {
+      "given": "Stylianos I.",
+      "family": "Venieris"
+    },
+    {
+      "given": "Cecilia",
+      "family": "Mascolo"
+    }
+  ],
+  "year": 2023,
+  "venue": "ACM Conference on Embedded Networked Sensor Systems (SenSys)",
+  "doi": "10.1145/3625687.3625804",
+  "arxiv_id": "2311.11420",
+  "url": "https://arxiv.org/abs/2311.11420",
+  "type": "conference",
+  "axes": [
+    "cl-methods",
+    "tinyml-odl",
+    "quantization"
+  ],
+  "tags": [
+    "replay",
+    "latent-replay",
+    "energy"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE)",
+  "axes": {
+    "surveys": "Surveys",
+    "cl-methods": "Apprentissage continu : méthodes (régularisation, rejeu, architecture)",
+    "tinyml-odl": "TinyML et apprentissage sur l'appareil (MCU, ultra-basse consommation)",
+    "quantization": "Quantification et réseaux binaires / ternaires",
+    "pdm-rul": "Maintenance prédictive et durée de vie restante (RUL)",
+    "anomaly-detection": "Détection d'anomalies",
+    "drift-detection": "Détection de dérive (concept drift, change-point)",
+    "datasets": "Jeux de données et bancs d'essai (roulements, turbines, capteurs)"
+  },
+  "axis_rules": {
+    "cl-methods": "catastrophic forgetting|continual learning|lifelong learning|incremental learning|\\bEWC\\b|elastic weight consolidation|synaptic intelligence|replay|rehearsal",
+    "tinyml-odl": "\\bTinyML\\b|micro-?controllers?|\\bMCUs?\\b|on-device (?:training|learning)|ultra-low[- ]power|Cortex-M|\\bSTM32\\b|\\bPULP\\b|\\bGAP ?[89]\\b",
+    "quantization": "quantiz|\\bINT8\\b|binary (?:weights?|networks?)|binari[sz]ed|ternary|fixed-point|integer-arithmetic",
+    "pdm-rul": "predictive maintenance|remaining useful li(?:fe|fetime)|\\bRUL\\b|prognostic|\\bPHM\\b|degradation|fault (?:diagnosis|prediction)|condition monitoring",
+    "anomaly-detection": "anomaly detection|anomalies|outlier|novelty detection|isolation forest|Mahalanobis",
+    "drift-detection": "concept drift|drift detection|change[- ]point|\\bCUSUM\\b|Page-Hinkley|\\bADWIN\\b|\\bDDM\\b|two-sample test|Kolmogorov",
+    "datasets": "(?:new|novel|public|benchmark) (?:dataset|data set)|experimental platform|data center|\\bPRONOSTIA\\b|\\bC-?MAPSS\\b|\\bCWRU\\b|Paderborn"
+  },
+  "axis_queries": {
+    "surveys": "continual learning survey",
+    "cl-methods": "continual learning catastrophic forgetting regularization",
+    "tinyml-odl": "on-device continual learning microcontroller",
+    "quantization": "neural network quantization integer inference",
+    "pdm-rul": "continual learning remaining useful life predictive maintenance",
+    "anomaly-detection": "anomaly detection multivariate time series embedded",
+    "drift-detection": "concept drift detection data stream",
+    "datasets": "bearing degradation dataset prognostics"
+  },
+  "hardware_axes": [
+    "tinyml-odl",
+    "quantization"
+  ],
+  "topic_re": "continual learning|catastrophic forgetting|incremental learning|lifelong|\\bTinyML\\b|micro-?controllers?|\\bMCUs?\\b|on-device|predictive maintenance|remaining useful|\\bRUL\\b|prognostic|concept drift|anomaly detection|quantiz",
+  "title_topic_re": "continual|forgetting|incremental|lifelong|TinyML|micro-?controllers?|on-device|predictive maintenance|remaining useful|\\bRUL\\b|prognostic|drift|anomal|quantiz|binar|ternary",
+  "topic_min_hits": 2,
+  "tag_rules": [
+    ["\\bEWC\\b|elastic weight consolidation", "ewc"],
+    ["synaptic intelligence", "si"],
+    ["memory aware synapses|\\bMAS\\b", "mas"],
+    ["replay|rehearsal|episodic memory", "replay"],
+    ["latent replay", "latent-replay"],
+    ["knowledge distillation|distillation", "distillation"],
+    ["class-incremental", "class-incremental"],
+    ["task-incremental", "task-incremental"],
+    ["domain-incremental", "domain-incremental"],
+    ["task-free|task-agnostic", "task-free"],
+    ["unsupervised|self-supervised", "unsupervised"],
+    ["federated", "federated"],
+    ["hyperdimensional", "hdc"],
+    ["\\bSTM32\\b", "stm32"],
+    ["Cortex-M", "cortex-m"],
+    ["\\bPULP\\b|\\bGAP ?[89]\\b|VEGA", "pulp"],
+    ["Arduino|nRF52", "arduino"],
+    ["\\bINT8\\b|8-bit", "int8"],
+    ["binary|XNOR|BinaryConnect", "binary"],
+    ["ternary", "ternary"],
+    ["\\bPRONOSTIA\\b|FEMTO", "pronostia"],
+    ["\\bC-?MAPSS\\b|turbofan", "cmapss"],
+    ["\\bCWRU\\b|Case Western", "cwru"],
+    ["Paderborn", "paderborn"],
+    ["bearings?", "bearings"],
+    ["time series|time-series", "time-series"],
+    ["\\bLSTM\\b", "lstm"],
+    ["autoencoder", "autoencoder"],
+    ["energy|power consumption", "energy"]
+  ]
+}

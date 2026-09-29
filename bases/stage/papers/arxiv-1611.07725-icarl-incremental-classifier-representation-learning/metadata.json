@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-1611.07725-icarl-incremental-classifier-representation-learning",
+  "title": "iCaRL: Incremental Classifier and Representation Learning",
+  "authors": [
+    {
+      "given": "Sylvestre-Alvise",
+      "family": "Rebuffi"
+    },
+    {
+      "given": "Alexander",
+      "family": "Kolesnikov"
+    },
+    {
+      "given": "Georg",
+      "family": "Sperl"
+    },
+    {
+      "given": "Christoph H.",
+      "family": "Lampert"
+    }
+  ],
+  "year": 2017,
+  "venue": "IEEE Conference on Computer Vision and Pattern Recognition (CVPR)",
+  "doi": null,
+  "arxiv_id": "1611.07725",
+  "url": "https://arxiv.org/abs/1611.07725",
+  "type": "conference",
+  "axes": [],
+  "tags": [
+    "class-incremental"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "2012-gretton-kernel-two-sample-test",
+  "title": "A Kernel Two-Sample Test",
+  "authors": [
+    {
+      "given": "Arthur",
+      "family": "Gretton"
+    },
+    {
+      "given": "Karsten M.",
+      "family": "Borgwardt"
+    },
+    {
+      "given": "Malte J.",
+      "family": "Rasch"
+    },
+    {
+      "given": "Bernhard",
+      "family": "Schölkopf"
+    },
+    {
+      "given": "Alexander",
+      "family": "Smola"
+    }
+  ],
+  "year": 2012,
+  "venue": "Journal of Machine Learning Research",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://jmlr.org/papers/v13/gretton12a.html",
+  "type": "journal",
+  "axes": [
+    "drift-detection"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

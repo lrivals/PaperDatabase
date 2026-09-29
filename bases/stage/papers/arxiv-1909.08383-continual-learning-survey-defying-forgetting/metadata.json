@@ -1,0 +1,62 @@
+{
+  "id": "arxiv-1909.08383-continual-learning-survey-defying-forgetting",
+  "title": "A Continual Learning Survey: Defying Forgetting in Classification Tasks",
+  "authors": [
+    {
+      "given": "Matthias",
+      "family": "De Lange"
+    },
+    {
+      "given": "Rahaf",
+      "family": "Aljundi"
+    },
+    {
+      "given": "Marc",
+      "family": "Masana"
+    },
+    {
+      "given": "Sarah",
+      "family": "Parisot"
+    },
+    {
+      "given": "Xu",
+      "family": "Jia"
+    },
+    {
+      "given": "Ale\\vs",
+      "family": "Leonardis"
+    },
+    {
+      "given": "Gregory",
+      "family": "Slabaugh"
+    },
+    {
+      "given": "Tinne",
+      "family": "Tuytelaars"
+    }
+  ],
+  "year": 2021,
+  "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+  "doi": "10.1109/TPAMI.2021.3057446",
+  "arxiv_id": "1909.08383",
+  "url": "https://arxiv.org/abs/1909.08383",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "cl-methods"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE 6, [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

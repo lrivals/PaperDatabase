@@ -1,0 +1,61 @@
+{
+  "id": "arxiv-1712.05877-quantization-training-neural-networks-efficient",
+  "title": "Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference",
+  "authors": [
+    {
+      "given": "Benoit",
+      "family": "Jacob"
+    },
+    {
+      "given": "Skirmantas",
+      "family": "Kligys"
+    },
+    {
+      "given": "Bo",
+      "family": "Chen"
+    },
+    {
+      "given": "Menglong",
+      "family": "Zhu"
+    },
+    {
+      "given": "Matthew",
+      "family": "Tang"
+    },
+    {
+      "given": "Andrew",
+      "family": "Howard"
+    },
+    {
+      "given": "Hartwig",
+      "family": "Adam"
+    },
+    {
+      "given": "Dmitry",
+      "family": "Kalenichenko"
+    }
+  ],
+  "year": 2018,
+  "venue": "IEEE Conference on Computer Vision and Pattern Recognition (CVPR)",
+  "doi": null,
+  "arxiv_id": "1712.05877",
+  "url": "https://arxiv.org/abs/1712.05877",
+  "type": "conference",
+  "axes": [
+    "quantization"
+  ],
+  "tags": [],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 4, Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

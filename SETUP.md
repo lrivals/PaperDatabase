@@ -738,8 +738,44 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 28/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 29/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 29/09/2026 (base stage).** 3ᵉ base, `bases/stage/` : références du stage ISAE
+(apprentissage continu embarqué sur MCU pour la maintenance prédictive ; dépôt
+`cl-embedded`). `base.json` : 8 axes calqués sur les sections de la bibliographie
+(`cl-methods`, `tinyml-odl`, `quantization`, `pdm-rul`, `anomaly-detection`,
+`drift-detection`, `datasets`, `surveys`) ; `profile.md` (inclus / exclus). 50 articles :
+- 33 par arXiv (`bin/pdb add --from`, identifiants vérifiés sur l'API arXiv) ;
+- 16 PDF locaux (Zotero du stage, `Articles_ES_FS/`, `data/raw/`) ou en accès libre (JMLR
+  pour Gretton 2012, PHM Society pour Lessmeier 2016), déposés dans `inbox/` avec un `.bib`
+  fusionné des quatre bibliographies du stage (46 entrées) et deux exports Crossref ;
+- 1 importé de `fpga` (Ravaglia 2021, `base import`).
+Périmètre : 38 des 46 articles des `.bib` (48 références moins 2 sources web), 2 des 6
+articles de `docs/context/` (Nagel, BinaryConnect), 10 articles lus mais non cités.
+Exclus : sources web (CWRU Data Center, Blue Docker), jeux UCI, deux ebooks commerciaux.
+
+Défaut constaté : `lib/citation.py` apparie par titre avec un seuil de 0,9, et
+« Overcoming Catastrophic Forgetting in *Graph* Neural Networks » (2012.06002) a reçu l'entrée
+de Kirkpatrick 2017. Corrigé à la main (article réajouté sans `.bib`) ; le seuil seul ne
+suffit pas pour des titres qui ne diffèrent que d'un mot.
+
+- [ ] **Base stage : 12 articles à déposer à la main** (sans PDF local ni version arXiv ; DOI
+  vérifiés sur Crossref), PDF + export `.bib` dans `bases/stage/inbox/`, puis `bin/pdb ingest` :
+  - Mahalanobis 1936, *On the Generalised Distance in Statistics* : original sans DOI, réimpression
+    Sankhyā A 2019, doi:10.1007/s13171-019-00164-5
+  - Page 1954, *Continuous Inspection Schemes*, Biometrika : doi:10.1093/biomet/41.1-2.100
+  - Massey 1951, *The Kolmogorov-Smirnov Test for Goodness of Fit*, JASA : doi:10.1080/01621459.1951.10500769
+  - Hinkley 1971, *Inference about the change-point from cumulative sum tests* : doi:10.1093/biomet/58.3.509
+  - Gama et al. 2004, *Learning with Drift Detection* (DDM) : doi:10.1007/978-3-540-28645-5_29
+  - Baena-García et al. 2006, *Early Drift Detection Method* : atelier IWKDDS (ECML PKDD 2006), sans DOI
+  - Bifet & Gavaldà 2007, *ADWIN*, SIAM SDM : doi:10.1137/1.9781611972771.42
+  - Liu et al. 2008, *Isolation Forest*, ICDM : doi:10.1109/ICDM.2008.17
+  - Smith & Randall 2015, *Bearing Diagnostics Using the CWRU Data*, MSSP : doi:10.1016/j.ymssp.2015.04.021
+  - Tiwari et al. 1994, *Power Analysis of Embedded Software*, IEEE TVLSI : doi:10.1109/92.335012
+  - Vergara et al. 2012, *Chemical gas sensor drift compensation…* : doi:10.1016/j.snb.2012.01.074
+  - Helwig et al. 2015, *Condition Monitoring of a Complex Hydraulic System*, I2MTC : doi:10.1109/I2MTC.2015.7151267
+- [ ] Base stage : 50 fiches à rédiger (`/paper-fiche`), puis `/paper-gaps`.
 
 **Bilan du 28/09/2026 (base fpga dans `bases/`).** La base `fpga` quitte la racine pour
 `bases/fpga/` (papers/, benchmarks.csv, INDEX.md, gaps.md, labs.md, figures/, eval/results/,

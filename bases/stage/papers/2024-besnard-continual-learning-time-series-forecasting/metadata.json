@@ -1,0 +1,41 @@
+{
+  "id": "2024-besnard-continual-learning-time-series-forecasting",
+  "title": "Continual Learning for Time Series Forecasting: A First Survey",
+  "authors": [
+    {
+      "given": "Quentin",
+      "family": "Besnard"
+    },
+    {
+      "given": "Nicolas",
+      "family": "Ragot"
+    }
+  ],
+  "year": 2024,
+  "venue": "Engineering Proceedings (ITISE 2024)",
+  "doi": "10.3390/engproc2024068049",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/engproc2024068049",
+  "type": "conference",
+  "axes": [
+    "surveys",
+    "cl-methods",
+    "drift-detection"
+  ],
+  "tags": [
+    "time-series"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

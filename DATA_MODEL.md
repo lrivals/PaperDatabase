@@ -394,7 +394,7 @@ axes, les règles de classement et le profil changent.
 ### 11.1 Registre et base active
 
 `~/.config/pdb/bases.json` (ou `$PDB_REGISTRY`, `lib/registry.py`) associe un nom court à un
-dossier : `{"default": "fpga", "bases": {"fpga": "/…/PaperDatabase/bases/fpga", "drone": "/…/PaperDatabase/bases/drone"}}`.
+dossier : `{"default": "fpga", "bases": {"fpga": "/…/PaperDatabase/bases/fpga", "drone": "/…/PaperDatabase/bases/drone", "stage": "/…/PaperDatabase/bases/stage"}}`.
 Il ne contient que des chemins ; `pdb base forget` n'efface aucun fichier.
 
 Base active (`lib/base.py`), dans l'ordre :
@@ -482,7 +482,8 @@ base seulement. Bases actuelles :
 |---|---|---|
 | `fpga` (défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | `bases/fpga/` |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` |
+| `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` |
 
 Dans un clone neuf,
-enregistrer les bases une fois : `bin/pdb base register bases/fpga --name fpga` et
-`bin/pdb base register bases/drone --name drone`.
+enregistrer les bases une fois : `bin/pdb base register bases/fpga --name fpga`,
+`bin/pdb base register bases/drone --name drone` et `bin/pdb base register bases/stage --name stage`.

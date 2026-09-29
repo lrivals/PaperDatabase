@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-1511.00363-binaryconnect-training-deep-neural-networks",
+  "title": "BinaryConnect: Training Deep Neural Networks with binary weights during propagations",
+  "authors": [
+    {
+      "given": "Matthieu",
+      "family": "Courbariaux"
+    },
+    {
+      "given": "Yoshua",
+      "family": "Bengio"
+    },
+    {
+      "given": "Jean-Pierre",
+      "family": "David"
+    }
+  ],
+  "year": 2015,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1511.00363",
+  "url": "https://arxiv.org/abs/1511.00363",
+  "type": "preprint",
+  "axes": [
+    "quantization"
+  ],
+  "tags": [
+    "binary"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

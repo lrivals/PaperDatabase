@@ -19,8 +19,9 @@ NR = schema.NR
 
 # Ordre = ordre des couleurs dans les figures (la couleur suit l'entité, jamais le rang).
 # Le premier motif qui correspond l'emporte : Hailo / NCS2 avant « Raspberry Pi ».
-FAMILIES = ("FPGA", "GPU embarqué", "NPU / VPU", "MCU", "CPU", "GPU bureau", "ASIC")
-OTHER = "autre"
+FAMILIES = ("FPGA", "GPU embarqué", "NPU / VPU", "MCU", "CPU", "GPU bureau", "ASIC", "SoC mobile")
+OTHER = "autre"                     # plateforme nommée mais non classée
+PLATFORM_NR = "plateforme non rapportée"   # platform n/r : papier algorithmique, simulation…
 _FAMILY_RULES = (
     ("NPU / VPU", r"hailo|myriad|\bncs2?\b|movidius|edge ?tpu|coral"),
     ("GPU embarqué", r"jetson"),
@@ -29,16 +30,18 @@ _FAMILY_RULES = (
              r"\bxc[a-z0-9]|\bxcu\d|ultrascale"),
     ("MCU", r"stm32|cortex-m|\bgap\d|apollo\d|max78000|pulp|\bmcu\b|nrf52|esp32"),
     ("ASIC", r"\basic\b"),
-    ("GPU bureau", r"geforce|\brtx\b|\bgtx\b|tesla|a100|v100|quadro"),
+    ("GPU bureau", r"geforce|\brtx\b|\bgtx\b|tesla|a100|v100|quadro|nvidia t4\b"),
+    ("SoC mobile", r"snapdragon|pixel|android|hexagon|smartphone|exynos|helio"),
     ("CPU", r"core i\d|xeon|epyc|ryzen|raspberry pi|cortex-a"),
 )
 
 
 def platform_family(platform):
-    """Famille matérielle d'une plateforme décrite en texte libre (« autre » sinon)."""
-    s = (platform or "").lower()
-    if not s or s == NR:
-        return OTHER
+    """Famille matérielle d'une plateforme décrite en texte libre (« autre » sinon ;
+    PLATFORM_NR quand la plateforme n'est pas rapportée, même précisée : « n/r (PC) »)."""
+    s = (platform or "").lower().strip()
+    if not s or s.startswith(NR):
+        return PLATFORM_NR
     for family, pattern in _FAMILY_RULES:
         if re.search(pattern, s):
             return family
@@ -80,21 +83,33 @@ def quant_bucket(q):
     return "1–2 bits"
 
 
+# Classes de tâches par défaut ; une base peut donner les siennes (base.json, plot_tasks).
+# Ordre des règles : la première qui correspond l'emporte (« anomaly detection » → anomalie).
+DEFAULT_TASKS = (
+    ("apprentissage continu", r"continual|incremental"),
+    ("anomalie", r"anomaly"),
+    ("compression / AE", r"compression|autoencoder"),
+    ("détection", r"detection"),
+    ("classification", r"classification"),
+)
 TASKS = ("détection", "classification", "anomalie", "compression / AE", "apprentissage continu")
 
 
-def task_bucket(task):
-    s = (task or "").lower()
-    if "continual" in s or "incremental" in s:
-        return "apprentissage continu"
-    if "anomaly" in s:
-        return "anomalie"
-    if "compression" in s or "autoencoder" in s:
-        return "compression / AE"
-    if "detection" in s:
-        return "détection"
-    if "classification" in s:
-        return "classification"
+def task_rules(cfg):
+    """Règles de tâches d'une base : plot_tasks de base.json, sinon DEFAULT_TASKS."""
+    return tuple((label, rx) for label, rx in cfg.get("plot_tasks") or ()) or DEFAULT_TASKS
+
+
+def task_labels(tasks=None):
+    """Libellés des classes de tâches, dans l'ordre d'affichage."""
+    return TASKS if tasks is None or tasks == DEFAULT_TASKS else tuple(label for label, _ in tasks)
+
+
+def task_bucket(task, tasks=None):
+    s = task or ""
+    for label, rx in tasks or DEFAULT_TASKS:
+        if re.search(rx, s, re.IGNORECASE):
+            return label
     return OTHER
 
 
@@ -123,12 +138,13 @@ def count_by(rows, key):
     return Counter(key(r) for r in rows)
 
 
-def accuracy_panels(rows, min_rows=4, max_panels=4):
-    """Métriques de précision assez fréquentes (avec FPS) pour un panneau chacune.
+def accuracy_panels(rows, x="fps", min_rows=4, max_panels=4):
+    """Métriques de précision assez fréquentes (avec la colonne x chiffrée) pour un panneau
+    chacune.
 
     Une métrique = un panneau : on ne compare jamais des métriques différentes sur un même
     axe. Les « métriques » qui n'en sont pas (confiance moyenne) sont écartées."""
-    points, _, _ = numeric(rows, "accuracy_value", "fps")
+    points, _, _ = numeric(rows, "accuracy_value", x)
     by_metric = defaultdict(list)
     for p in points:
         m = p["accuracy_metric"]
@@ -149,34 +165,35 @@ def corpus_by_year(papers):
     return dict(out)
 
 
-def corpus_by_axis(papers):
+def corpus_by_axis(papers, axes=None):
     """{axe: Counter(statut de fiche)} ; un papier compte dans chacun de ses axes."""
-    out = {a: Counter() for a in schema.AXES}
+    out = {a: Counter() for a in (schema.AXES if axes is None else axes)}
     for m in papers:
         for a in m.get("axes") or []:
             out.setdefault(a, Counter())[(m.get("status") or {}).get("fiche", "todo")] += 1
     return out
 
 
-def coverage_matrix(rows, papers, col="axis"):
+def coverage_matrix(rows, papers, col="axis", axes=None, tasks=None):
     """Nombre de papiers distincts ayant des benchmarks, par famille × (axe | tâche).
 
     col="axis" : axes du papier (metadata.json) ; col="task" : classe de tâche de la ligne.
-    Renvoie (lignes, colonnes, matrice) ; une cellule à 0 est un gap candidat."""
+    Renvoie (lignes, colonnes, matrice) ; une cellule à 0 est un gap candidat. Axes et
+    tâches : ceux de la base (schema.AXES, DEFAULT_TASKS par défaut)."""
+    axes = schema.AXES if axes is None else axes
     axes_of = {m["id"]: m.get("axes") or [] for m in papers}
     cells = defaultdict(set)
     for r in rows:
         fam = platform_family(r.get("platform"))
-        keys = axes_of.get(r["paper_id"], []) if col == "axis" else [task_bucket(r.get("task"))]
+        keys = axes_of.get(r["paper_id"], []) if col == "axis" else [task_bucket(r.get("task"), tasks)]
         for k in keys:
             cells[(fam, k)].add(r["paper_id"])
     # surveys : pas de mesures propres, une case à 0 n'y serait pas un gap
-    cols = [a for a in schema.AXES if a != "surveys"] if col == "axis" else list(TASKS)
+    cols = [a for a in axes if a != "surveys"] if col == "axis" else list(task_labels(tasks))
     if col == "task" and any(k == OTHER for _, k in cells):
         cols.append(OTHER)
     fams = [f for f in FAMILIES if any((f, c) in cells for c in cols)]
-    if any((OTHER, c) in cells for c in cols):
-        fams.append(OTHER)
+    fams += [f for f in (OTHER, PLATFORM_NR) if any((f, c) in cells for c in cols)]
     matrix = [[len(cells.get((f, c), ())) for c in cols] for f in fams]
     return fams, cols, matrix
 

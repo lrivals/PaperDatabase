@@ -22,12 +22,13 @@ from matplotlib.colors import LinearSegmentedColormap  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
 
 from lib import plotdata as D  # noqa: E402
-from lib import query, refs, schema  # noqa: E402
+from lib import base, query, refs, schema  # noqa: E402
 
 # Palette de lib/vizfig.py (non importée : vizfig tire Dash). Ordre fixe, jamais cyclé.
 PALETTE = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"]
 MARKERS = ["o", "D", "s", "^", "v", "P", "X", "*"]
 OTHER_COLOR = "#8a8a86"
+NR_COLOR = "#b8b7b1"        # plateforme non rapportée : plus clair que « autre »
 SURFACE = "#fcfcfb"
 INK = "#1f1f1e"
 INK_MUTED = "#6b6a64"
@@ -35,10 +36,13 @@ GRID = "#e4e3de"
 EMPTY = "#f0efec"
 SEQ = ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"]
 
+ALL_FAMILIES = (*D.FAMILIES, D.OTHER, D.PLATFORM_NR)   # ordre des légendes
 FAMILY_COLOR = {f: PALETTE[i] for i, f in enumerate(D.FAMILIES)}
 FAMILY_COLOR[D.OTHER] = OTHER_COLOR
+FAMILY_COLOR[D.PLATFORM_NR] = NR_COLOR
 FAMILY_MARKER = {f: MARKERS[i] for i, f in enumerate(D.FAMILIES)}
 FAMILY_MARKER[D.OTHER] = "."
+FAMILY_MARKER[D.PLATFORM_NR] = "."
 MEASURED = ("chip", "board", "board-dynamic")   # puissance mesurée (marqueur plein)
 
 plt.rcParams.update({
@@ -149,9 +153,15 @@ def _family_handles(families, measured_note=True):
     return handles
 
 
+def _require(n, what):
+    """Pas de figure vide : pdb plot l'ignore (LookupError) en disant pourquoi."""
+    if not n:
+        raise LookupError(f"aucune ligne de benchmarks.csv avec {what}")
+
+
 def _scatter_family(ax, points, x, y, measured_fill=True):
     fams = []
-    for f in list(D.FAMILIES) + [D.OTHER]:
+    for f in ALL_FAMILIES:
         pts = [p for p in points if p["_family"] == f]
         if not pts:
             continue
@@ -176,9 +186,11 @@ def _scatter_family(ax, points, x, y, measured_fill=True):
 def fig_bench_fps_power(ctx):
     rows = ctx.rows
     pts, n, total = D.numeric(rows, "fps", "power_w")
-    groups = [("Détection", [p for p in pts if D.task_bucket(p["task"]) == "détection"]),
+    _require(n, "fps et power_w chiffrés")
+    detection = [p for p in pts if D.task_bucket(p["task"], ctx.tasks) == "détection"]
+    groups = [("Détection", detection),
               ("Autres tâches (classification, AE, apprentissage continu…)",
-               [p for p in pts if D.task_bucket(p["task"]) != "détection"])]
+               [p for p in pts if p not in detection])]
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.8), sharey=False)
     _title(fig, "Débit et puissance rapportés",
            "Lignes iso-efficacité en FPS/W. Échelles log. Une ligne = une configuration "
@@ -205,7 +217,7 @@ def fig_bench_fps_power(ctx):
                     ax.text(xt, eff * xt, f"{eff:g} FPS/W", fontsize=6.5, color=INK_MUTED,
                             ha="right", va="bottom", rotation=0)
             ax.set_ylim(ylo, yhi)
-    _fig_legend(fig, _family_handles([f for f in list(D.FAMILIES) + [D.OTHER] if f in fams]))
+    _fig_legend(fig, _family_handles([f for f in ALL_FAMILIES if f in fams]))
     _footer(fig, f"Source : benchmarks.csv, colonnes fps et power_w ; {n} lignes sur {total} "
                  "(n/r exclus). Portées de puissance hétérogènes (power_scope) : puce, carte et "
                  "estimation ne sont pas comparables. Tâches, modèles et tailles d'entrée différents "
@@ -216,6 +228,7 @@ def fig_bench_fps_power(ctx):
 
 def fig_bench_gops_per_watt(ctx):
     pts, n, total = D.numeric(ctx.rows, "gops", "power_w")
+    _require(n, "gops et power_w chiffrés")
     order = [b for b in D.QUANT_BUCKETS if any(D.quant_bucket(p["quantization"]) == b for p in pts)]
     fig, ax = plt.subplots(figsize=(9, 4.6))
     _title(fig, "Efficacité énergétique par précision de calcul",
@@ -240,7 +253,7 @@ def fig_bench_gops_per_watt(ctx):
     _log(ax, "y")
     ax.set_ylabel("GOPS/W")
     ax.grid(axis="x", visible=False)
-    ax.legend(handles=_family_handles([f for f in D.FAMILIES if f in fams]), loc="upper left")
+    ax.legend(handles=_family_handles([f for f in ALL_FAMILIES if f in fams]), loc="upper left")
     _footer(fig, f"Source : benchmarks.csv ; {n} lignes sur {total} ont gops et power_w (n/r exclus). "
                  "Précision regroupée depuis la colonne quantization (heuristique, lib/plotdata.quant_bucket). "
                  "GOPS comptés différemment selon les papiers (MAC = 1 ou 2 op).")
@@ -252,6 +265,7 @@ def fig_bench_fpga_resources(ctx):
     pts, _, total = D.numeric(ctx.rows, "luts", "dsps")
     pts = [p for p in pts if p["_family"] == "FPGA"]
     n = len(pts)
+    _require(n, "plateforme FPGA, luts et dsps chiffrés")
     counts = Counter(p["toolflow"] for p in pts)
     top = [t for t, _ in counts.most_common() if t != schema.NR][:7]
     fig, ax = plt.subplots(figsize=(8.5, 5))
@@ -276,35 +290,44 @@ def fig_bench_fpga_resources(ctx):
     return fig, {"sources": ["benchmarks.csv"], "n": n, "total": total}
 
 
-def fig_bench_accuracy_fps(ctx):
-    panels = D.accuracy_panels(ctx.rows)
+def _accuracy_vs(ctx, x, what, xlabel, min_rows):
+    """Précision contre une colonne de coût (fps, latency_ms), un panneau par métrique."""
+    panels = D.accuracy_panels(ctx.rows, x=x, min_rows=min_rows)
     total = len(ctx.rows)
     n = sum(len(p) for _, p in panels)
-    k = max(len(panels), 1)
+    _require(n, f"accuracy_value et {x} chiffrés pour une même métrique ({min_rows} lignes au moins)")
+    k = len(panels)
     fig, axes = plt.subplots(1, k, figsize=(3.6 * k + 1, 4.4), squeeze=False)
-    _title(fig, "Précision et débit, une métrique par panneau",
-           "Métriques de précision différentes : jamais sur le même axe. Débit en échelle log.")
+    _title(fig, f"Précision et {what}, une métrique par panneau",
+           f"Métriques de précision différentes : jamais sur le même axe. {what.capitalize()} "
+           "en échelle log.")
     fams = set()
     for ax, (metric, pts) in zip(axes[0], panels):
-        fams |= set(_scatter_family(ax, pts, "fps", "accuracy_value", measured_fill=False))
+        fams |= set(_scatter_family(ax, pts, x, "accuracy_value", measured_fill=False))
         _log(ax, "x")
         ax.set_title(_wrap(metric, 34) + f"\n{len(pts)} lignes", fontsize=8.5)
-        ax.set_xlabel("débit (images/s)")
+        ax.set_xlabel(xlabel)
     axes[0][0].set_ylabel("valeur de la métrique")
-    if fams:
-        _fig_legend(fig, _family_handles([f for f in D.FAMILIES if f in fams], measured_note=False))
-    _footer(fig, f"Source : benchmarks.csv, colonnes accuracy_metric, accuracy_value, fps ; "
-                 f"{n} lignes sur {total}, métriques rapportées par au moins 4 lignes avec débit. "
-                 "Métriques non comparables entre panneaux (jeu, IoU, nombre de classes).")
+    _fig_legend(fig, _family_handles([f for f in ALL_FAMILIES if f in fams], measured_note=False))
+    _footer(fig, f"Source : benchmarks.csv, colonnes accuracy_metric, accuracy_value, {x} ; "
+                 f"{n} lignes sur {total}, métriques rapportées par au moins {min_rows} lignes avec "
+                 f"{x}. Métriques non comparables entre panneaux (jeu, protocole, nombre de classes).")
     _layout(fig)
     return fig, {"sources": ["benchmarks.csv"], "n": n, "total": total,
                  "metrics": [m for m, _ in panels]}
 
 
+def fig_bench_accuracy_fps(ctx):
+    return _accuracy_vs(ctx, "fps", "débit", "débit (images/s)", 4)
+
+
+def fig_bench_accuracy_latency(ctx):
+    return _accuracy_vs(ctx, "latency_ms", "latence", "latence (ms)", 3)
+
+
 def fig_bench_quantization(ctx):
     rows = ctx.rows
-    fams = [f for f in list(D.FAMILIES) + [D.OTHER]
-            if any(D.platform_family(r["platform"]) == f for r in rows)]
+    fams = [f for f in ALL_FAMILIES if any(D.platform_family(r["platform"]) == f for r in rows)]
     table = {f: Counter(D.quant_bucket(r["quantization"]) for r in rows
                         if D.platform_family(r["platform"]) == f) for f in fams}
     fig, ax = plt.subplots(figsize=(9.5, 4.2))
@@ -552,7 +575,7 @@ def fig_corpus_years(ctx):
 
 
 def fig_corpus_axes(ctx):
-    by_axis = D.corpus_by_axis(ctx.papers)
+    by_axis = D.corpus_by_axis(ctx.papers, ctx.axes)
     axes_ = list(by_axis)
     fig, ax = plt.subplots(figsize=(8.5, 3.6))
     _title(fig, "Papiers par axe de veille et état de la fiche de lecture",
@@ -656,7 +679,8 @@ def _heatmap(ax, rows_, cols, matrix, title):
                     color=INK_MUTED if v == 0 else _on(color))
     ax.set_xlim(-0.5, len(cols) - 0.5)
     ax.set_ylim(len(rows_) - 0.5, -0.5)
-    ax.set_xticks(range(len(cols)), [_wrap(c, 12) for c in cols], fontsize=7.5)
+    ax.set_xticks(range(len(cols)), [_wrap(c, 14) for c in cols], fontsize=7.5, rotation=30,
+                  ha="right", rotation_mode="anchor")
     ax.set_yticks(range(len(rows_)), rows_)
     ax.grid(False)
     for s in ax.spines.values():
@@ -666,8 +690,8 @@ def _heatmap(ax, rows_, cols, matrix, title):
 
 
 def fig_corpus_gaps(ctx):
-    r1, c1, m1 = D.coverage_matrix(ctx.rows, ctx.papers, "axis")
-    r2, c2, m2 = D.coverage_matrix(ctx.rows, ctx.papers, "task")
+    r1, c1, m1 = D.coverage_matrix(ctx.rows, ctx.papers, "axis", axes=ctx.axes)
+    r2, c2, m2 = D.coverage_matrix(ctx.rows, ctx.papers, "task", tasks=ctx.tasks)
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(12, 0.45 * max(len(r1), len(r2)) + 2.6))
     _title(fig, "Carte de couverture des benchmarks : où sont les gaps ?",
            "Nombre de papiers distincts ayant au moins une ligne chiffrée par case. "
@@ -675,7 +699,7 @@ def fig_corpus_gaps(ctx):
     _heatmap(a1, r1, c1, m1, "famille × axe du papier")
     _heatmap(a2, r2, c2, m2, "famille × tâche de la ligne")
     _footer(fig, "Sources : benchmarks.csv (platform, task) et papers/*/metadata.json (axes). "
-                 "Familles et tâches regroupées par lib/plotdata ; axe surveys exclu. Un 0 signifie « absent de la base », "
+                 "Familles regroupées par lib/plotdata, tâches par plot_tasks (base.json) ; axe surveys exclu. Un 0 signifie « absent de la base », "
                  "pas « absent de la littérature ».")
     _layout(fig)
     return fig, {"sources": ["benchmarks.csv", "papers/*/metadata.json"],
@@ -691,6 +715,8 @@ FIGURES = {
     "bench_gops_per_watt": ("bench", fig_bench_gops_per_watt, "GOPS/W par précision de calcul"),
     "bench_fpga_resources": ("bench", fig_bench_fpga_resources, "LUT vs DSP des FPGA, par toolflow"),
     "bench_accuracy_fps": ("bench", fig_bench_accuracy_fps, "précision vs débit, un panneau par métrique"),
+    "bench_accuracy_latency": ("bench", fig_bench_accuracy_latency,
+                               "précision vs latence, un panneau par métrique"),
     "bench_quantization": ("bench", fig_bench_quantization, "précision de calcul par famille de plateforme"),
     "eval_retrieval": ("eval", fig_eval_retrieval, "recall@5/@10 et MRR par mode et jeu de questions"),
     "eval_verify": ("eval", fig_eval_verify, "verdicts de pdb verify par perturbation"),
@@ -717,6 +743,9 @@ class Context:
             self._cache[key] = load()
         return self._cache[key]
 
+    cfg = property(lambda s: s._get("cfg", lambda: base.load_config(s.root)))
+    axes = property(lambda s: tuple(s.cfg["axes"]))
+    tasks = property(lambda s: D.task_rules(s.cfg))
     rows = property(lambda s: s._get("rows", lambda: query.load_benchmarks(s.root)[1]))
     papers = property(lambda s: s._get("papers", lambda: query.load_papers(s.root)))
     ref_papers = property(lambda s: s._get("ref_papers", lambda: refs.load_papers(s.root)))

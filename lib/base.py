@@ -28,7 +28,7 @@ REQUIRED = ("name", "axes")
 # Clés facultatives : une base neuve n'a que son nom et ses axes ; /base-profile complète
 # le reste. topic_re et title_topic_re vides : tout candidat est « dans le sujet ».
 DEFAULTS = {"axis_rules": {}, "axis_queries": {}, "hardware_axes": [], "topic_re": "",
-            "title_topic_re": "", "topic_min_hits": 2, "tag_rules": []}
+            "title_topic_re": "", "topic_min_hits": 2, "tag_rules": [], "plot_tasks": []}
 
 
 def data_root(env=None, cwd=None):
@@ -61,7 +61,7 @@ def load_config(root, path=None):
     if unknown:
         raise ValueError(f"{path} : axes non déclarés dans \"axes\" : {sorted(unknown)}")
     rules = [*cfg["axis_rules"].values(), cfg["topic_re"], cfg["title_topic_re"],
-             *(r[0] for r in cfg["tag_rules"])]
+             *(r[0] for r in cfg["tag_rules"]), *(r[1] for r in cfg["plot_tasks"])]
     for rx in rules:
         try:
             re.compile(rx)

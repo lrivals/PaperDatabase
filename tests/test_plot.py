@@ -11,9 +11,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 FPGA = ROOT / "bases" / "fpga"   # base réelle de référence
+STAGE = ROOT / "bases" / "stage"  # base sans mesures matérielles (papiers algorithmiques, MCU)
 
 from lib import plotdata as D  # noqa: E402
-from lib import schema  # noqa: E402
+from lib import base, query, schema  # noqa: E402
 
 try:
     import matplotlib  # noqa: F401
@@ -46,16 +47,44 @@ class TestFamilies(unittest.TestCase):
             "GAP9 MCU (240 MHz, 650 mV)": "MCU",
             "NVIDIA GeForce GTX 1650 (4 GB)": "GPU bureau",
             "ASIC 14 nm FinFET": "ASIC",
-            "n/r": D.OTHER,
-            "": D.OTHER,
+            "Pixel 2 single large core (Snapdragon 835)": "SoC mobile",
+            "Qualcomm Hexagon DSP HVX via NN-API (Pixel 2)": "SoC mobile",
+            "VEGA (PULP, 9 cœurs RISC-V, ASIC 22 nm GF) @ 375 MHz": "MCU",   # avant ASIC
+            "n/r": D.PLATFORM_NR,
+            "n/r (PC)": D.PLATFORM_NR,
+            "": D.PLATFORM_NR,
+            "Loihi": D.OTHER,
         }
         for platform, family in cases.items():
             self.assertEqual(D.platform_family(platform), family, platform)
 
     def test_every_csv_platform_is_classified(self):
-        _, rows = __import__("lib.query", fromlist=["x"]).load_benchmarks(FPGA)
-        unknown = {r["platform"] for r in rows if D.platform_family(r["platform"]) == D.OTHER}
-        self.assertEqual(unknown, set(), "plateformes sans famille : compléter _FAMILY_RULES")
+        for root in (FPGA, STAGE):
+            _, rows = query.load_benchmarks(root)
+            unknown = {r["platform"] for r in rows if D.platform_family(r["platform"]) == D.OTHER}
+            self.assertEqual(unknown, set(), f"{root.name} : plateformes sans famille, "
+                                             "compléter _FAMILY_RULES")
+
+
+class TestTasks(unittest.TestCase):
+    def test_default_rules_unchanged(self):
+        cases = {"continual learning (class-incremental)": "apprentissage continu",
+                 "anomaly detection": "anomalie", "object detection": "détection",
+                 "image classification": "classification", "autoencoder compression": "compression / AE",
+                 "RUL prediction (turbofan)": D.OTHER}
+        for task, bucket in cases.items():
+            self.assertEqual(D.task_bucket(task), bucket, task)
+        self.assertEqual(D.task_labels(D.task_rules({})), D.TASKS)
+
+    def test_base_rules(self):
+        tasks = D.task_rules(base.load_config(STAGE))
+        cases = {"RUL prediction (turbofan)": "RUL / pronostic",
+                 "concept drift detection": "anomalie / dérive",
+                 "keyword spotting (inference)": "classification",
+                 "on-device transfer learning (fine-tuning)": "apprentissage continu"}
+        for task, bucket in cases.items():
+            self.assertEqual(D.task_bucket(task, tasks), bucket, task)
+        self.assertIn("RUL / pronostic", D.task_labels(tasks))
 
 
 class TestQuantization(unittest.TestCase):
@@ -107,6 +136,22 @@ class TestBenchmarks(unittest.TestCase):
         fams, cols, m = D.coverage_matrix(rows, papers, "task")
         self.assertEqual(m[fams.index("FPGA")][cols.index("détection")], 2)
 
+    def test_coverage_matrix_base_axes_and_nr_platform(self):
+        papers = [{"id": "p1", "axes": ["pdm-rul"]}]
+        rows = [_row("p1", platform="n/r", task="RUL prediction")]
+        tasks = (("RUL / pronostic", r"\bRUL\b"),)
+        fams, cols, m = D.coverage_matrix(rows, papers, "axis", axes=("surveys", "pdm-rul", "datasets"))
+        self.assertEqual((fams, cols, m), ([D.PLATFORM_NR], ["pdm-rul", "datasets"], [[1, 0]]))
+        fams, cols, m = D.coverage_matrix(rows, papers, "task", tasks=tasks)
+        self.assertEqual((fams, cols, m), ([D.PLATFORM_NR], ["RUL / pronostic"], [[1]]))
+
+    def test_accuracy_panels_other_column(self):
+        rows = [_row(str(i), metric="top-1", acc="70") for i in range(3)]
+        for r in rows:
+            r["latency_ms"] = "12"
+        self.assertEqual(D.accuracy_panels(rows, x="fps", min_rows=3), [])
+        self.assertEqual([m for m, _ in D.accuracy_panels(rows, x="latency_ms", min_rows=3)], ["top-1"])
+
 
 class TestEval(unittest.TestCase):
     def _runs(self, tmp):
@@ -142,18 +187,26 @@ class TestEval(unittest.TestCase):
 
 @unittest.skipUnless(HAS_MPL, "matplotlib absent (requirements-plot.txt)")
 class TestFigures(unittest.TestCase):
-    def test_all_figures_render_on_the_real_base(self):
+    def test_all_figures_render_on_the_real_bases(self):
         from lib import plotfig
         import matplotlib.pyplot as plt
-        ctx = plotfig.Context(FPGA)
-        for name, (_, fn, _) in plotfig.FIGURES.items():
-            with self.subTest(name):
-                try:
-                    fig, info = fn(ctx)
-                except LookupError:
-                    continue            # pas de run d'éval pour ce volet : figure ignorée
-                self.assertIn("sources", info)
-                plt.close(fig)
+        for root in (FPGA, STAGE):
+            ctx = plotfig.Context(root)
+            for name, (_, fn, _) in plotfig.FIGURES.items():
+                with self.subTest(base=root.name, figure=name):
+                    try:
+                        fig, info = fn(ctx)
+                    except LookupError:
+                        continue        # pas de run d'éval, ou pas de données : figure ignorée
+                    self.assertIn("sources", info)
+                    plt.close(fig)
+
+    def test_empty_figures_are_skipped(self):
+        from lib import plotfig
+        ctx = plotfig.Context(STAGE)     # aucune ligne fps + power_w, aucun FPGA
+        for fn in (plotfig.fig_bench_fps_power, plotfig.fig_bench_fpga_resources):
+            with self.assertRaises(LookupError):
+                fn(ctx)
 
 
 if __name__ == "__main__":

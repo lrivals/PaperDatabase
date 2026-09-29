@@ -326,7 +326,7 @@ une version vectorielle, pour LaTeX). Lecture seule sur la base. Trois groupes, 
 
 | Groupe | Source | Figures |
 |---|---|---|
-| `bench` | `benchmarks.csv` | débit vs puissance (détection / autres tâches, iso-FPS/W), GOPS/W par précision, LUT vs DSP par toolflow, précision vs débit (un panneau par métrique), précision de calcul par famille |
+| `bench` | `benchmarks.csv` | débit vs puissance (détection / autres tâches, iso-FPS/W), GOPS/W par précision, LUT vs DSP par toolflow, précision vs débit et précision vs latence (un panneau par métrique), précision de calcul par famille |
 | `eval` | `eval/results/*.json` (dernier run qui contient chaque volet) | recall@5/@10 et MRR par mode et jeu, verdicts de `verify`, couverture d'extraction et tableaux par papier, temps d'exécution, évolution entre runs |
 | `corpus` | `metadata.json`, `benchmarks.csv`, `refs.jsonl`, `external_refs.csv` | papiers par année et type, par axe (fiches done/todo), part de n/r par colonne, papiers les plus cités (dans et hors base), carte famille × axe / tâche (cases à 0 = gaps candidats) |
 
@@ -336,8 +336,13 @@ jamais un axe ; puissance mesurée (puce, carte) en marqueur plein, estimée ou 
 dite en marqueur creux. `figures/manifest.json` garde, par figure, les sources, les
 effectifs et le run d'évaluation utilisé. Les plateformes (texte libre) sont regroupées en
 familles et les quantifications en classes de précision par des heuristiques
-(`lib/plotdata.platform_family`, `quant_bucket`) ; `tests/test_plot.py` vérifie que chaque
-plateforme de `benchmarks.csv` a une famille. Palette : celle de `viz.py`.
+(`lib/plotdata.platform_family`, `quant_bucket`) ; une plateforme `n/r` forme sa propre famille
+(« plateforme non rapportée », papiers algorithmiques), distincte de « autre » (nommée mais non
+classée) ; `tests/test_plot.py` vérifie que chaque plateforme des bases fpga et stage a une
+famille. Les tâches sont regroupées selon `plot_tasks` de `base.json` (à défaut
+`lib/plotdata.DEFAULT_TASKS`), les axes sont ceux de la base. Une figure sans données (aucune
+ligne chiffrée, aucun run d'évaluation) est ignorée, avec sa raison, au lieu d'être tracée à
+vide. Palette : celle de `viz.py`.
 
 ### `bin/setup.sh`
 
@@ -740,6 +745,14 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 Point au 29/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 29/09/2026 (figures multi-bases).** `pdb plot` adapté aux bases sans mesures
+matérielles (base stage : fps, gops, puissance, LUT/DSP presque tous n/r) : une figure sans
+données est ignorée avec sa raison au lieu d'un PNG vide ; nouvelle figure
+`bench_accuracy_latency` ; familles « SoC mobile » et « plateforme non rapportée » (séparée de
+« autre ») ; classes de tâches par base (`plot_tasks` de `base.json`, DATA_MODEL §11.2) ; axes
+et tâches lus dans le `Context` de la base tracée. Figures de stage dans `bases/stage/figures/`
+(7 figures, bench et eval sans données ignorées). `tests/test_plot.py` : 15 tests, sur fpga et stage.
 
 **Bilan du 29/09/2026 (base stage).** 3ᵉ base, `bases/stage/` : références du stage ISAE
 (apprentissage continu embarqué sur MCU pour la maintenance prédictive ; dépôt

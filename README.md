@@ -406,8 +406,8 @@ Au 29/09/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-
 - **Recherche** : les questions sur tableaux échouent encore, et l'absence de sujet n'est
   pas détectée ([docs/EVAL.md](docs/EVAL.md) §6).
 - **Généricité** : axes et règles de classement sont propres à chaque base (`base.json`),
-  mais les colonnes de `benchmarks.csv` restent communes, et la carte des gaps de
-  `pdb plot` utilise encore des catégories de tâches propres à la base `fpga`.
+  mais les colonnes de `benchmarks.csv` restent communes (pensées pour le matériel : une base
+  algorithmique en laisse beaucoup à n/r, et `pdb plot` ignore alors les figures vides).
 - **Économie de tokens** : `/paper-fiche` lit encore `fulltext.md` en entier ; un digest
   déterministe et une pré-extraction des nombres sont prévus.
 - **Traçabilité automatique** : lier chaque ligne de `benchmarks.csv` à un `chunk_id` et

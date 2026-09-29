@@ -422,6 +422,7 @@ fpga), ses seuils `eval/thresholds.json` et ses runs dans `eval/results/`
 | `axis_queries` | non | `{axe: requête}` : `discover --axis` |
 | `hardware_axes`, `topic_re`, `title_topic_re`, `topic_min_hits` | non | critère « dans le sujet » de `discover` et de `pdb base scan` (`base.in_topic`) ; tous vides : tout est dans le sujet |
 | `tag_rules` | non | `[[regex, tag], …]` : étiquettes ; la version de YOLO est détectée pour toutes les bases |
+| `plot_tasks` | non | `[[libellé, regex], …]` : classes de tâches de `benchmarks.csv` pour `pdb plot` (carte des gaps), la première règle qui correspond l'emporte ; vide : classes par défaut (`lib/plotdata.DEFAULT_TASKS`) |
 
 Les regex sont compilées au chargement : une regex invalide arrête toute commande avec le nom
 de la clé fautive. `pdb base check [--config proposition.json]` montre, sans rien écrire, comment

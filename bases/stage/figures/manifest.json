@@ -1,0 +1,188 @@
+{
+ "bench_accuracy_latency": {
+  "file": "bench_accuracy_latency.png",
+  "group": "bench",
+  "description": "précision vs latence, un panneau par métrique",
+  "generated": "2026-09-29T14:59:51",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 8,
+  "total": 100,
+  "metrics": [
+   "accuracy Core50 NICv2-391 (1500 LR, fin de protocole)",
+   "top-1 accuracy"
+  ]
+ },
+ "bench_quantization": {
+  "file": "bench_quantization.png",
+  "group": "bench",
+  "description": "précision de calcul par famille de plateforme",
+  "generated": "2026-09-29T14:59:51",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 100,
+  "total": 100
+ },
+ "corpus_years": {
+  "file": "corpus_years.png",
+  "group": "corpus",
+  "description": "papiers par année et type",
+  "generated": "2026-09-29T14:59:51",
+  "sources": [
+   "papers/*/metadata.json"
+  ],
+  "n": 56
+ },
+ "corpus_axes": {
+  "file": "corpus_axes.png",
+  "group": "corpus",
+  "description": "papiers par axe, fiches done / todo",
+  "generated": "2026-09-29T14:59:51",
+  "sources": [
+   "papers/*/metadata.json"
+  ],
+  "n": 56
+ },
+ "corpus_bench_coverage": {
+  "file": "corpus_bench_coverage.png",
+  "group": "corpus",
+  "description": "part de n/r, power_scope, confidence",
+  "generated": "2026-09-29T14:59:52",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 100
+ },
+ "corpus_citations": {
+  "file": "corpus_citations.png",
+  "group": "corpus",
+  "description": "papiers les plus cités, dans et hors base",
+  "generated": "2026-09-29T14:59:54",
+  "sources": [
+   "papers/*/refs.jsonl",
+   "external_refs.csv"
+  ],
+  "n_internal": 15,
+  "n_external": 15
+ },
+ "corpus_gaps": {
+  "file": "corpus_gaps.png",
+  "group": "corpus",
+  "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
+  "generated": "2026-09-29T14:59:54",
+  "sources": [
+   "benchmarks.csv",
+   "papers/*/metadata.json"
+  ],
+  "zeros_axis": [
+   [
+    "GPU embarqué",
+    "quantization"
+   ],
+   [
+    "GPU embarqué",
+    "pdm-rul"
+   ],
+   [
+    "GPU embarqué",
+    "anomaly-detection"
+   ],
+   [
+    "GPU embarqué",
+    "drift-detection"
+   ],
+   [
+    "GPU embarqué",
+    "datasets"
+   ],
+   [
+    "MCU",
+    "pdm-rul"
+   ],
+   [
+    "MCU",
+    "drift-detection"
+   ],
+   [
+    "MCU",
+    "datasets"
+   ],
+   [
+    "GPU bureau",
+    "tinyml-odl"
+   ],
+   [
+    "GPU bureau",
+    "quantization"
+   ],
+   [
+    "GPU bureau",
+    "drift-detection"
+   ],
+   [
+    "SoC mobile",
+    "pdm-rul"
+   ],
+   [
+    "SoC mobile",
+    "anomaly-detection"
+   ],
+   [
+    "SoC mobile",
+    "drift-detection"
+   ],
+   [
+    "SoC mobile",
+    "datasets"
+   ],
+   [
+    "plateforme non rapportée",
+    "datasets"
+   ]
+  ],
+  "zeros_task": [
+   [
+    "GPU embarqué",
+    "RUL / pronostic"
+   ],
+   [
+    "GPU embarqué",
+    "anomalie / dérive"
+   ],
+   [
+    "GPU embarqué",
+    "classification"
+   ],
+   [
+    "GPU embarqué",
+    "détection"
+   ],
+   [
+    "MCU",
+    "RUL / pronostic"
+   ],
+   [
+    "MCU",
+    "détection"
+   ],
+   [
+    "GPU bureau",
+    "classification"
+   ],
+   [
+    "GPU bureau",
+    "détection"
+   ],
+   [
+    "SoC mobile",
+    "RUL / pronostic"
+   ],
+   [
+    "SoC mobile",
+    "anomalie / dérive"
+   ]
+  ]
+ }
+}

@@ -22,23 +22,25 @@
   "url": "https://arxiv.org/abs/2103.08295",
   "type": "preprint",
   "axes": [
-    "tinyml-odl"
+    "tinyml-odl",
+    "anomaly-detection"
   ],
   "tags": [
-    "unsupervised",
-    "autoencoder"
+    "arduino",
+    "cortex-m",
+    "autoencoder",
+    "time-series"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE I"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -25,8 +25,12 @@
   "arxiv_id": "1611.07725",
   "url": "https://arxiv.org/abs/1611.07725",
   "type": "conference",
-  "axes": [],
+  "axes": [
+    "cl-methods"
+  ],
   "tags": [
+    "replay",
+    "distillation",
     "class-incremental"
   ],
   "added": "2026-09-29",
@@ -40,6 +44,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

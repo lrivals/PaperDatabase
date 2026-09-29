@@ -34,25 +34,17 @@
   "url": "https://arxiv.org/abs/2110.10486",
   "type": "journal",
   "axes": [
-    "cl-methods",
     "tinyml-odl",
-    "quantization",
-    "pdm-rul"
+    "cl-methods",
+    "quantization"
   ],
   "tags": [
-    "continual-learning",
     "latent-replay",
-    "on-device-training",
-    "tinyml",
     "pulp",
-    "risc-v",
-    "mcu",
     "stm32",
-    "quantization",
-    "core50",
-    "mobilenet",
-    "replay",
+    "cortex-m",
     "int8",
+    "class-incremental",
     "energy"
   ],
   "added": "2026-09-26",
@@ -60,13 +52,12 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "imported_from": {
     "base": "fpga",

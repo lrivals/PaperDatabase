@@ -1,10 +1,8 @@
 ---
 id: arxiv-2110.10486-tinyml-platform-device-continual-learning
-fiche: todo
-date: 2026-09-26
+fiche: done
+date: 2026-09-29
 ---
-
-> **Importée de la base `fpga` le 2026-09-29.** Cette fiche a été écrite pour une autre base (autre thème) : pertinence à réévaluer ici, puis `fiche: done` via `/paper-fiche`. Statut d'origine : done.
 
 # A TinyML Platform for On-Device Continual Learning with Quantized Latent Replays
 
@@ -82,8 +80,8 @@ pour VEGA ; `n/r` pour STM32 (seule l'énergie est donnée).
 
 ## Limites et critique
 
-- **Pas de FPGA** : plateforme ASIC PULP ; utile ici comme référence MCU / ASIC pour l'axe
-  apprentissage continu.
+- Plateforme ASIC de recherche (VEGA, PULP), non disponible commercialement : la comparaison
+  « même code » sur STM32L4 est le point de repère utile pour un MCU du commerce.
 - **Comparaison Snapdragon biaisée** : 4 W d'enveloppe supposée (non mesurée) contre 62 mW
   mesurés sur puce. La comparaison STM32 est plus juste (même code), mais le STM32 ne compte
   pas les accès à la mémoire externe, que les auteurs signalent (§V-E).
@@ -96,22 +94,23 @@ pour VEGA ; `n/r` pour STM32 (seule l'énergie est donnée).
 
 ## Pertinence pour la thèse
 
-Référence centrale de l'axe `continual-learning` embarqué : c'est une recette complète
-(étage figé INT8 + replays latents quantifiés + réentraînement FP32 d'une queue de réseau),
-évaluée en énergie sur puce et comparée à un MCU. Pour une thèse FPGA, la question ouverte
-est directe (déduit) : l'étage figé INT8 est exactement ce que Vitis AI, FINN ou hls4ml
-accélèrent bien sur KV260 ; l'étage adaptatif FP32 pourrait tourner sur l'ARM ou dans un
-petit moteur de rétropropagation en logique programmable. Aucun papier du corpus ne fait
-cette combinaison.
+Référence la plus proche du stage dans la bibliographie : apprentissage continu **sur MCU /
+nœud ultra-basse consommation**, avec **quantification** (étage figé INT8, replays latents
+UINT-8) et mesures d'énergie par événement d'apprentissage, y compris sur un Cortex-M4 du
+commerce (STM32L476RG). Elle montre que seule la mise à jour de la dernière couche est
+vraiment rapide sur MCU (2,07 s sur VEGA, 139 s sur STM32L4 par événement) et que la
+quantification des données rejouées coûte plus que celle des poids figés (Table II). Pour
+une approche par régularisation (EWC en INT8), elle fournit le point de comparaison « rejeu
+latent » : mémoire en Mo de replays contre un Fisher + une ancre par poids (déduit). Elle
+reste sur la classification d'images, pas sur des séries temporelles de capteurs.
 
 ## Gaps identifiés
 
-- **QLR-CL sur FPGA** (étage figé accéléré en PL, rétropropagation de la queue sur PS ou PL) :
-  non traité.
-- Apprentissage continu pour la **détection** (YOLO) plutôt que la classification : non
-  traité.
-- Rétropropagation en précision réduite (INT8 / FP16) pour l'étage adaptatif : non
-  explorée ici (FP32).
+- Régularisation (EWC / SI) quantifiée comme alternative au rejeu latent sur MCU : non
+  comparée ici.
+- Rétropropagation en précision réduite (INT8 / FP16) pour l'étage adaptatif : non explorée
+  (FP32).
+- Apprentissage continu embarqué sur séries temporelles (vibrations, RUL) : hors du papier.
 - Coût énergétique de la mémoire externe des LR : non mesuré.
 
 ## Statut de lecture
@@ -119,5 +118,7 @@ cette combinaison.
 Papier complet (`fulltext.md` lu en entier). Extraction correcte ; un passage de §II-B est
 tronqué (fin de la phrase sur Shin et al.) ; Figures 5-10 non extraites (précisions pour
 375 / 750 / 3 000 LR lues seulement dans le texte).
-Déduit et non affirmé par les auteurs : puissance hors mémoire externe ; transposition sur
-KV260 ; absence de ce couplage dans le corpus.
+Fiche importée de la base `fpga` le 2026-09-29 : chiffres revérifiés contre `fulltext.md`
+(Tables II et IV, §V-B à §V-E), pertinence et gaps réécrits pour cette base.
+Déduit et non affirmé par les auteurs : puissance hors mémoire externe ; comparaison mémoire
+avec EWC.

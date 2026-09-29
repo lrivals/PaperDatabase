@@ -22,24 +22,25 @@
   "url": "https://arxiv.org/abs/1801.06601",
   "type": "preprint",
   "axes": [
-    "tinyml-odl"
+    "tinyml-odl",
+    "quantization"
   ],
   "tags": [
     "cortex-m",
-    "energy"
+    "stm32",
+    "int8"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : table, while the LSB can be us",
       "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

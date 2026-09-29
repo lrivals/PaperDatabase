@@ -51,21 +51,25 @@
   "type": "journal",
   "axes": [
     "surveys",
-    "cl-methods",
-    "pdm-rul"
+    "cl-methods"
   ],
-  "tags": [],
+  "tags": [
+    "ewc",
+    "replay",
+    "class-incremental",
+    "domain-incremental",
+    "task-free"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE 1, [figure sans légende identifié"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -30,13 +30,16 @@
   "url": "https://arxiv.org/abs/2311.11420",
   "type": "conference",
   "axes": [
-    "cl-methods",
     "tinyml-odl",
-    "quantization"
+    "cl-methods"
   ],
   "tags": [
-    "replay",
     "latent-replay",
+    "replay",
+    "stm32",
+    "cortex-m",
+    "int8",
+    "class-incremental",
     "energy"
   ],
   "added": "2026-09-29",
@@ -44,12 +47,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

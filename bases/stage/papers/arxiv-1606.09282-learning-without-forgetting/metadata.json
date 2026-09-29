@@ -17,8 +17,13 @@
   "arxiv_id": "1606.09282",
   "url": "https://arxiv.org/abs/1606.09282",
   "type": "journal",
-  "axes": [],
-  "tags": [],
+  "axes": [
+    "cl-methods"
+  ],
+  "tags": [
+    "distillation",
+    "task-incremental"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
@@ -31,6 +36,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

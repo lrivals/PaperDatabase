@@ -38,19 +38,27 @@
     "datasets"
   ],
   "tags": [
-    "time-series"
+    "OmniAnomaly",
+    "VAE",
+    "GRU",
+    "normalizing flow",
+    "POT",
+    "extreme value theory",
+    "SMAP",
+    "MSL",
+    "SMD",
+    "multivariate time series"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 3"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

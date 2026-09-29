@@ -32,18 +32,24 @@
   "axes": [
     "drift-detection"
   ],
-  "tags": [],
+  "tags": [
+    "MMD",
+    "two-sample test",
+    "kernel methods",
+    "RKHS",
+    "hypothesis testing",
+    "linear-time statistic"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

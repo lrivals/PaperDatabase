@@ -36,19 +36,25 @@
   "axes": [
     "drift-detection"
   ],
-  "tags": [],
+  "tags": [
+    "EDDM",
+    "DDM",
+    "concept drift",
+    "gradual drift",
+    "distance between errors",
+    "ELEC2"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié",
       "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

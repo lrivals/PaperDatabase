@@ -24,13 +24,20 @@
   "axes": [
     "anomaly-detection"
   ],
-  "tags": [],
+  "tags": [
+    "Isolation Forest",
+    "iForest",
+    "unsupervised anomaly detection",
+    "random partitioning",
+    "sub-sampling",
+    "ORCA",
+    "LOF"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 2",
       "tableaux sans corps extrait (légende seule) : Table 1, 1: if e ≥ l or |X| ≤ 1 then, reported with boldfaced are th, do not have the full results f",
       "sections numérotées non détectées : 4, 5 — leur texte est rattaché à la section précédente"
@@ -38,6 +45,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

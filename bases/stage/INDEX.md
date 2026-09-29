@@ -2,7 +2,7 @@
 
 <!-- GÉNÉRÉ par bin/reindex.py — ne pas éditer à la main -->
 
-**56 papiers, 1 fiches à faire.**
+**56 papiers, 0 fiches à faire.**
 
 Un papier peut apparaître sous plusieurs axes.
 
@@ -111,7 +111,7 @@ Un papier peut apparaître sous plusieurs axes.
 | [2019-su-robust-anomaly-detection-multivariate-time](papers/2019-su-robust-anomaly-detection-multivariate-time/fiche.md) | Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network | Su et al. | 2019 | Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining 2828–2837 | conference | done |
 | [arxiv-1711.00614-multimodal-anomaly-detector-robot-assisted](papers/arxiv-1711.00614-multimodal-anomaly-detector-robot-assisted/fiche.md) | A Multimodal Anomaly Detector for Robot-Assisted Feeding Using an LSTM-based Variational Autoencoder | Daehyung Park, Yuuna Hoshi, Charles C Kemp | 2017 | arXiv preprint | preprint | done |
 | [2008-liu-isolation-forest](papers/2008-liu-isolation-forest/fiche.md) | Isolation Forest | Fei Tony Liu, Kai Ming Ting, Zhi-Hua Zhou | 2008 | 2008 Eighth IEEE International Conference on Data Mining 413-422 | conference | done |
-| [1936-mahalanobis-generalised-distance-statistics](papers/1936-mahalanobis-generalised-distance-statistics/fiche.md) | On the Generalised Distance in Statistics | P. C. Mahalanobis | 1936 | Proceedings of the National Institute of Sciences of India 2(1), 49-55 | journal | todo |
+| [1936-mahalanobis-generalised-distance-statistics](papers/1936-mahalanobis-generalised-distance-statistics/fiche.md) | On the Generalised Distance in Statistics | P. C. Mahalanobis | 1936 | Proceedings of the National Institute of Sciences of India 2(1), 49-55 | journal | done |
 
 ## Détection de dérive (concept drift, change-point) (`drift-detection`)
 

@@ -1,0 +1,342 @@
+[
+{
+"label": "text",
+"page": 1,
+"text": "Dedicated to the memory of P. C. Mahalanobis"
+},
+{
+"label": "text",
+"page": 1,
+"text": "Note: The following article by P. C. Mahalanobis is reprinted (without change) from the original source, Proceedings of the National Institute of Sciences of India, Vol.2, No.1, 49-55 [1936]. It is reprinted here with due permission from Indian National Science Academy (INSA) for the special issue in celebration of the 125th birth anniversary of P. C. Mahalanobis. For any uttts ttt re  t  (sutt t tt st unt"
+},
+{
+"label": "section_header",
+"page": 1,
+"text": "ON THEGENERALIZED DISTANCE IN STATISTICS."
+},
+{
+"label": "section_header",
+"page": 1,
+"text": "ByP. C. MAHALANOBIS."
+},
+{
+"label": "text",
+"page": 1,
+"text": "(Rsad January 4, 1936.)"
+},
+{
+"label": "text",
+"page": 1,
+"text": "1. A normal (Gauss-Laplacian) statisticsl population in P-variatesis usually described by a P-dimensional frequeney distribution :—"
+},
+{
+"label": "text",
+"page": 1,
+"text": "where"
+},
+{
+"label": "text",
+"page": 1,
+"text": "α1, αg . . . . αμ=the populstion (mean) values"
+},
+{
+"label": "text",
+"page": 1,
+"text": "αij==σ - αj · Pqwhere Pψ==the coefficient of correlntion between the ithand jth variates (1·3)"
+},
+{
+"label": "text",
+"page": 1,
+"text": "α is the determinsnt αy |defined more fully in (2-2), and Ais the minor of α4 in this determinant."
+},
+{
+"label": "text",
+"page": 1,
+"text": "A P-varisate normal populstion is thus completely specified by the set of P(P+1)/2parameters*—"
+},
+{
+"label": "text",
+"page": 1,
+"text": "A second P-variste normal population ean be specified in the same way by the parameters :…"
+},
+{
+"label": "text",
+"page": 1,
+"text": "It is oonvenient to use the notation (α, αj) and (α'i α'e)to represent respectively the two sets of parameters given by (1·4) and (1·5).The α's or α'/'s arethe mean values, while we may spenk of (zy) or (α'g) as the respective dispersiona."
+},
+{
+"label": "list_item",
+"page": 1,
+"text": "It willbe oonvenient at this stageto introduoe theiden of a statistical field, such thnt at each point in this field there is a specified set of parameters (ααg) which define a particulsr population. In other words, each point in a statistienl field is the centre of a density-cluster belonging to a particular normal populationcompletely specified by the valueof (α αg) at that particular point of the field."
+},
+{
+"label": "footnote",
+"page": 1,
+"text": "* Is may be noted hees that mooh a population oan be oonvemiently reprnsented by a density-eluster in a P-dimensional space in which the position of the eluster is determined bytho paramoter (zμ, ag - - . a . -  α p),thosizo of the oqui-froquential surfocosby (α11- αg · .  αμ ·   αpg), and the orientation of those wurfncesby"
+},
+{
+"label": "text",
+"page": 2,
+"text": "I shall first consider a field in which the dispersion is same at all pointe. That is"
+},
+{
+"label": "text",
+"page": 2,
+"text": "for all values of i, j, and for all points in the field. In this case two populations can only differ in their mean values."
+},
+{
+"label": "text",
+"page": 2,
+"text": "It has been shown elsewhere * that the distance between the two statistical populations can be conveniently measured by a Δ2-statistics defined by"
+},
+{
+"label": "text",
+"page": 2,
+"text": "for P independent variates."
+},
+{
+"label": "text",
+"page": 2,
+"text": "This formula can be easily generalized for P correlated variates. Let us definethefundamentaldispersionmatrix:—"
+},
+{
+"label": "text",
+"page": 2,
+"text": "The generalizedΔ*=statistics for P correlated variates can be now written in the form"
+},
+{
+"label": "text",
+"page": 2,
+"text": "Introducingthe summation convention that a set of duplicated suffixes (say μ)will imply a summation for all values of μ=1, 2, . . . . P, we get"
+},
+{
+"label": "text",
+"page": 2,
+"text": "If we write"
+},
+{
+"label": "text",
+"page": 2,
+"text": "we get"
+},
+{
+"label": "text",
+"page": 2,
+"text": "It is slightly more convenient to change the notation a little, and define"
+},
+{
+"label": "footnote",
+"page": 2,
+"text": "·Journ. Asiat, Soc. Bengol, vol. XXVI, pp. 541–588, (1930)."
+},
+{
+"label": "text",
+"page": 2,
+"text": "and Equation (2·5) can then be written in the form"
+},
+{
+"label": "text",
+"page": 3,
+"text": "Comparing with the formula for dgt"
+},
+{
+"label": "text",
+"page": 3,
+"text": "we notice that P. Δ* in statisties is the exact analogue of ds2 in the restricted theory of relativity."
+},
+{
+"label": "text",
+"page": 3,
+"text": "This morely implies that a consistent geometrical representation is possible in both cases. It is possible, however, to use this formal equivalence to establish an exact correspondence between resultsin thetwosubjeets."
+},
+{
+"label": "list_item",
+"page": 3,
+"text": "We see therefore that a statistical field in which the dispersion is same everywhere (values of αr's same at all points of the field and independent of mean values) corresponds to the physical field in the restricted theory of relstivity (gμ's same everywhere and independent of co-ordinate values). In fact αpu's play the same part in statisties as gμr's in the theory of relativity, andall the results involving ds8 can be formally obtained from the results for a statistical field in which the dispersion is constant by putting P=4; x1, z2, x3 as the three space co-ordinates, and x± =c√/=1, where t is the time co-ordinate, c is the velocity of light, and Pu=-1."
+},
+{
+"label": "text",
+"page": 3,
+"text": "The possibility of transformation to Galilean co-ordinates in physics is now seen to be a special case of a more general transformation from a set of correlated statistical variates to a set of independent statistical variates which isalways possible whenthe dispersion isconstant."
+},
+{
+"label": "list_item",
+"page": 3,
+"text": "The expression for the statistical distanoe"
+},
+{
+"label": "text",
+"page": 3,
+"text": "is given in terms of the population parameters α and (dα)#, and is therefore not subject to sampling fluctuations. In other words equation (2-7) is a functional and not a statistical equation."
+},
+{
+"label": "text",
+"page": 3,
+"text": "In actualpractice we are, however, obliged to work with values caleulated from finite samples. It is therefore necessary to convert the funetional equation (2·7) into a statistical equation by replacing the population parameters αμ and (x)\", (α')\" by sample statistics aμ and (a)\", (α'). Weakening the oquation (2·7)by such substitution we thus get"
+},
+{
+"label": "text",
+"page": 3,
+"text": "where D1ª is the sample value of the Δ2-statistic."
+},
+{
+"label": "text",
+"page": 3,
+"text": "As the values of aμy, or (da)\" will in general fluctuate for samples drawn from the same two populations, the value of D1º will also be subject to sampling fluctuations. We may consider the problem in two stages."
+},
+{
+"label": "text",
+"page": 4,
+"text": "52"
+},
+{
+"label": "text",
+"page": 4,
+"text": "It is often possible to calculate the values of αμ by pooling together the varianoes and coefficients of correlation in a large number of samples on the assumption that the corresponding population values of α areidentical. In such cases it is often possible to neglect the sampling fluctuations in aμ in comparison with the sampling fluctuations in the mean values (a). We may then treat a g's as constants and equal to αp's, and write :—"
+},
+{
+"label": "text",
+"page": 4,
+"text": "in which (da)\" or (a)ª and (a)\" are considered to be subject to sampling fluctuations."
+},
+{
+"label": "text",
+"page": 4,
+"text": "I had shown * that the mathematical expectation of D1º was"
+},
+{
+"label": "text",
+"page": 4,
+"text": "where n1, nz are the respective sizes of the two samples."
+},
+{
+"label": "text",
+"page": 4,
+"text": "We may now define the sample value of the D#-statistics in the following form :—"
+},
+{
+"label": "text",
+"page": 4,
+"text": "that is the mathematical expectation of D# is the population valueΔº."
+},
+{
+"label": "text",
+"page": 4,
+"text": "The moment-coefficients of Dº were also obtained by me † :—"
+},
+{
+"label": "footnote",
+"page": 4,
+"text": "*Journ. Δeiat. 8oc. Bengal, vol. XXVI, p. 567, (1930)."
+},
+{
+"label": "footnote",
+"page": 4,
+"text": "† Journ, Aeiat. 8oc, Bengal, vol. XXVI, p. 569, (1930)."
+},
+{
+"label": "text",
+"page": 4,
+"text": "or"
+},
+{
+"label": "text",
+"page": 4,
+"text": "with The exact distribution ofD1 was found some time ago by Raj.Chandra Bose,* and ean be written in the following form :—"
+},
+{
+"label": "text",
+"page": 5,
+"text": "Then the distribution of L is given by"
+},
+{
+"label": "text",
+"page": 5,
+"text": "where Iis the Bessel function of pure imaginary argument. It was also shown that the moment-coefficientspreviously given by me [equations (4-21) -(4·24)] were exact and remained valid for correlated variates. Five per cent. and one per cent. values of L for various values of λ have also been calculated byRajChandra Bose and Samarendra Nath Ray in conjunction with me and will be shortly published.†"
+},
+{
+"label": "text",
+"page": 5,
+"text": "Going a stage further we may consider both the dispersion (a) as well as the mean values (a) to be subject to sampling fluctuations, and relax the functional equation (2·7)completely into the statistical equation :—"
+},
+{
+"label": "text",
+"page": 5,
+"text": "The exact distribution of D82 is not known, but Raj Chandra Bose has recently sueceededinobtaining theexaet moment-coefficients (for the case ofP independent variatos) which are quoted in ah appendix."
+},
+{
+"label": "text",
+"page": 5,
+"text": "5. We have been considering so far the case of a statisticsl field of populations for which the dispersions (αμv's) are identical and independent of the mean values (α)a's. We may now relax this condition. That is we shall now assume that αμ,'s are functions of (α)\"'s. For our purpose it is, however, not necessary thatαμshould be a mathematical funetion of (α)\". It is clearly sufficient that αμ and (α)\", that is the dispersions and mean values should be statistically connected. This point is one of considerable importance. We assume that given (α)\", that is the mean values, we have knowledge of the distribution of αpv's. This we may call a generalized statistical field in which thevalues of α ,'s will vary from point to point in μv the field. In such a field we may still continue to use"
+},
+{
+"label": "text",
+"page": 5,
+"text": "as the expression for the line element. Here as also in the case where α p are funotionally connected with (x\", α') the expression will be used only as a differential element the integral of which will depend on the path of integration. Equation (5-0) maybe therefore considered to be a perfectly general expression* for the distanoe between two normal statistical populations. Before it can be used in practice it is, however, necessary to determine its exact distribution (or at least its moment-coefficients)whichis now under investigation."
+},
+{
+"label": "footnote",
+"page": 5,
+"text": "*Seience andCulture, vol.I, p. 205, (1935)."
+},
+{
+"label": "footnote",
+"page": 5,
+"text": "†Seienos and Culture, vol. 1, (December, 1935). Proc. Ind. Sc. Congrese, 1936."
+},
+{
+"label": "section_header",
+"page": 6,
+"text": "APPENDIX."
+},
+{
+"label": "text",
+"page": 6,
+"text": "The moment-coefficients of the expression defined in (4·4) in the text are given below. Let"
+},
+{
+"label": "text",
+"page": 6,
+"text": "the summation extending over all tho variates. It is also convenient to put"
+},
+{
+"label": "text",
+"page": 6,
+"text": "Wethen have"
+},
+{
+"label": "text",
+"page": 6,
+"text": "To compensate for the bias introduced by the finite size of the sample we now introduceanow statisticsdefined by"
+},
+{
+"label": "text",
+"page": 6,
+"text": "We then have the mathematical expectation ofDª"
+},
+{
+"label": "footnote",
+"page": 6,
+"text": "I may just mention here that there is snother alternative method of approaching tho problem.A P-variate nortnal population enn borepresented by a density elurter in P-dimonsional spaoo, and can always be transformed toa aet of independent variates. Consider two such eluaters or populations. They may diffor in thoir mnan valuos or the position of the olusters.They may also differ in the size of tho oqui-frequential surfaoes. Finally they may differ in the set of independemt variates in terms of which they ean be apocified.In general two sooh non-identioal normal populations oan be oompletely superpoeed by a tranalation (equalizing the difference inmennvalues),asqueese (oqualizing differmmces in varianoos), and a rotation (oqualizing differenoos in coefficionte of correlation). Various quantitative forms are possible, somne of which are under inveetigation at preeent."
+},
+{
+"label": "section_header",
+"page": 7,
+"text": "DISTANCB IN STATISTIOS."
+},
+{
+"label": "text",
+"page": 7,
+"text": "55"
+},
+{
+"label": "text",
+"page": 7,
+"text": "The moment-coefficiente ofDaare given by the formulao :—"
+},
+{
+"label": "text",
+"page": 7,
+"text": "StatisticalLaboratory, PreaideneyOollege, Ouloutta."
+}
+]

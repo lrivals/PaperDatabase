@@ -16,18 +16,24 @@
   "axes": [
     "anomaly-detection"
   ],
-  "tags": [],
+  "tags": [
+    "Mahalanobis distance",
+    "generalized distance",
+    "multivariate normal",
+    "dispersion matrix",
+    "D2 statistic"
+  ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": false,
     "warnings": [
       "PDF = réimpression dans Sankhyā A 80 (2018), S1-S7, DOI 10.1007/s13171-019-00164-5 ; l'original de 1936 n'a pas de DOI",
-      "pages 2 à 7 scannées sans couche texte : corps vide, OCR nécessaire avant la fiche"
+      "corps obtenu par OCR (Docling + RapidOCR, OCR pleine page) hors pipeline, le 2026-09-29 : fautes de reconnaissance fréquentes, formules non décodées, numéros des §2-4 perdus (sections reconstituées)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

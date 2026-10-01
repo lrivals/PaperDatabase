@@ -1,0 +1,533 @@
+% Glossaire des plateformes (type=plateformes), base drone.
+% Valeurs chiffrées : \citep[§x]{paper_id} si elles viennent du corpus (fiche ou benchmarks.csv),
+% \constr si elles viennent d'une fiche constructeur (hors corpus).
+% Une entrée parente est définie avant ses enfants ; profondeur maximale : 3 niveaux.
+% Gammes de puissance : nano (mW), FPGA (W), Jetson (~10 W), GPU de bureau ou de serveur
+% (dizaines à centaines de W, non embarqué). La portée de la puissance (puce, carte, prise)
+% est précisée chaque fois que le papier la donne.
+
+% ---------------------------------------------------------------- IP d'accélération
+\newglossaryentry{dpu}{type=plateformes, name={DPU (DPUCZDX8G)}, sort={DPU},
+description={IP d'inférence CNN de Xilinx (AMD) livrée avec Vitis~AI : processeur programmable
+en INT8, implanté dans la PL des Zynq UltraScale+, auquel le compilateur envoie un flot
+d'instructions. Configurations B512 à B4096, où le nombre est le parallélisme crête en
+opérations par cycle (B4096 : 4\,096 op./cycle, soit environ 1,2\,TOPS à 300\,MHz \deduit),
+jusqu'à quatre c\oe urs par puce \constr. Sur ZCU104, une B4096 occupe 55,8\,k LUT, 710 DSP,
+142 BRAM et 46 URAM, pour 8,76\,W estimés par Vivado (B512 : 4,79\,W)
+\citep[Table~III]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp. C'est le flot FPGA le plus
+courant du corpus drone : YOLOv26n modifié à 34,05\,FPS sur un c\oe ur B4096
+\citep[§IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp, YOLOv4 sur deux c\oe urs
+\citep{2024-nguyen-fpga-soc-implementation-yolov4-flying}, LCAM-YOLOX à 195\,FPS sur KV260
+\citep[§V-D]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}. Les ressources du DPU
+ne sont pas rapportées par \citet{2024-nguyen-fpga-soc-implementation-yolov4-flying}.}}
+
+% ---------------------------------------------------------------- SoC FPGA Xilinx (AMD)
+\newglossaryentry{zynq}{type=plateformes, name={Zynq}, sort={Zynq},
+description={Famille de SoC FPGA de Xilinx (AMD) : un processeur ARM durci (PS) et une logique
+programmable (PL) sur la même puce, reliés par des bus AXI. Le corpus en utilise deux
+générations, le Zynq-7000 et le Zynq UltraScale+ MPSoC (dont le module Kria K26). Le
+panorama des calculateurs de drone de \citet[Table~2, §3.1.3]{2022-ahmed-survey-uav-computing-platforms-hardware}
+range les SoC FPGA Xilinx parmi les cartes de vol les plus utilisées ; le prototype de
+\citet[§III]{2021-guo-fpga-uav-heterogeneous-computing-platform} associe un Zynq-7020 à une
+Jetson AGX Xavier. Gamme de puissance : FPGA (de 1 à 30\,W de carte selon le kit).}}
+
+\newglossaryentry{zynq7000}{type=plateformes, name={Zynq-7000}, sort={Zynq-7000},
+description={Première génération de Zynq, en 28\,nm
+\citep[Table~1, §2.2]{2024-zhang-comprehensive-analysis-dac-sdc-fpga} ; PS double Cortex-A9,
+à 750\,MHz sur Z-turn \citep[§3]{2025-cali-optimized-implementation-yolov3-tiny-real}. Le
+Cortex-A9 traite 24,2\,Mpixels/s contre 5,68 pour le Cortex-M4 d'un Pixhawk
+\citep[§I]{2021-guo-fpga-uav-heterogeneous-computing-platform}. Petite cible bas coût du
+corpus drone : concours DAC-SDC 2018, FINN, YOLOv3-Tiny réduit à 208\,FPS pour 2,55\,W de
+carte \citep[Tables~9 et~14]{2025-cali-optimized-implementation-yolov3-tiny-real}.}}
+
+\newglossaryentry{xc7z020}{type=plateformes, name={XC7Z020 (Zynq-7020)}, sort={XC7Z020},
+parent=zynq7000,
+description={Puce Zynq-7000 la plus utilisée du corpus : 53\,200 LUT, 220 DSP, DDR3 de
+512\,Mo sur PYNQ-Z1 \citep[§2.2]{2021-xu-dac-sdc-low-power-object}, 280 BRAM18
+\citep[§5.1]{arxiv-1809.04570-finn-r-end-end-deep}. Les BRAM y font 630\,Ko selon
+\citet[§2.2]{2021-xu-dac-sdc-low-power-object}, mais « 4,9\,Mo » selon
+\citet[Table~1]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}, qui confond probablement Mbit et
+Mo \deduit. Cartes du corpus : PYNQ-Z1, Z-turn Board V2. Un design YOLOv3-Tiny réduit en occupe
+41\,605 LUT (78,2\,\%), 204 DSP (92,7\,\%) et 138 BRAM18
+\citep[Table~7]{2025-cali-optimized-implementation-yolov3-tiny-real}.}}
+
+\newglossaryentry{pynq-z1}{type=plateformes, name={PYNQ-Z1}, sort={PYNQ-Z1}, parent=xc7z020,
+description={Carte de développement Digilent \constr{} à XC7Z020-1CLG400C, « environ
+1-4\,W » \citep[§2.2]{2021-xu-dac-sdc-low-power-object}. Carte FPGA imposée de DAC-SDC en 2018,
+où les gagnants mesurés par l'organisateur à la carte atteignent 12,0\,FPS pour 4,2\,W (TGIIF, SSD)
+et 26,0\,FPS pour 2,45\,W (SystemsETHZ)
+\citep[Table~2, §3.1]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. FINN-R y mesure 2,25 à
+2,5\,W de carte (Tincy YOLO : 133\,GOP/s à 100\,MHz)
+\citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep}. Gamme FPGA, quelques W.}}
+
+\newglossaryentry{z-turn}{type=plateformes, name={Z-turn Board V2}, sort={Z-turn}, parent=xc7z020,
+description={Carte MYiR à XC7Z020CLG400-2, 1\,GiB de DDR3, PS à 750\,MHz, environ 150\,euros
+\citep[§3, §5.2]{2025-cali-optimized-implementation-yolov3-tiny-real}. Cible d'un YOLOv3-Tiny
+réduit (une tête, FINN) : 43,9 à 208,7\,FPS pour une PL de 50 à 200\,MHz, et 2,12 à 2,55\,W
+de carte entière (PS et DDR compris) \citep[Tables~9 et~14, §4.3.2]{2025-cali-optimized-implementation-yolov3-tiny-real}.
+Le système réel retombe à environ 30\,FPS en streaming caméra, le goulot étant sur le PS
+\citep[§4.4]{2025-cali-optimized-implementation-yolov3-tiny-real}.}}
+
+\newglossaryentry{zc706}{type=plateformes, name={ZC706 (XC7Z045)}, sort={ZC706}, parent=zynq7000,
+description={Carte d'évaluation Xilinx à Zynq-7000 Z7045 : 2 Cortex-A9, 218\,600 LUT, 545 BRAM
+\citep[§5.1]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}, 900 DSP \constr. Carte du
+premier FINN (200\,MHz) : de 8,1\,W (SFC-fix) à 28,5\,W (MFC-max) mesurés au mur (carte entière), pour
+jusqu'à 12,4\,M images/s sur MNIST \citep[Tables~3 et~4]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}.
+Sert aussi d'hôte de test à l'ASIC Navion
+\citep[§V-B]{2019-suleiman-navion-2-mw-fully-integrated}. Puissance de carte de laboratoire,
+hors gamme drone.}}
+
+% ---------------------------------------------------------------- Zynq UltraScale+
+\newglossaryentry{zynqmp}{type=plateformes, name={Zynq UltraScale+ MPSoC}, sort={Zynq UltraScale+},
+description={Seconde génération de Zynq, en 16\,nm
+\citep[Table~1, §2.2]{2024-zhang-comprehensive-analysis-dac-sdc-fpga} ; PS quadri Cortex-A53
+\citep[§4.3]{2024-nguyen-fpga-soc-implementation-yolov4-flying}, double Cortex-R5F et GPU
+Mali-400 \constr ; PL à DSP48E2, BRAM et, sur les plus grosses puces, URAM \constr. Cible du
+DPU de Vitis~AI. Dans le texte, « UltraScale » seul peut aussi désigner les FPGA Virtex
+UltraScale(+) sans processeur (VCU110, VCU118). Gamme FPGA : 1,4 à 30\,W de carte selon le kit
+(Ultra96 contre ZCU104 mesurée à la prise).}}
+
+\newglossaryentry{xczu3eg}{type=plateformes, name={XCZU3EG}, sort={XCZU3EG}, parent=zynqmp,
+description={Plus petite puce Zynq UltraScale+ du corpus : 71\,k LUT, 360 DSP, DDR4 de 2\,Go
+sur la carte \citep[Table~1, §2.2]{2024-zhang-comprehensive-analysis-dac-sdc-fpga} ; 432 BRAM18
+\citep[§5.1]{arxiv-1809.04570-finn-r-end-end-deep} ; précisément 70\,560 LUT, 141\,120 FF et
+216 BRAM36, sans URAM \constr. Zhang et~al. indiquent « 7,6\,Mo » de BRAM, probablement des
+Mbit \deduit. Puce de l'Ultra96, carte des éditions 2019 à 2022 de DAC-SDC.}}
+
+\newglossaryentry{ultra96}{type=plateformes, name={Ultra96 (V1, V2)}, sort={Ultra96}, parent=xczu3eg,
+description={Carte Avnet à XCZU3EG, 2\,Go de LPDDR4 \constr. Carte FPGA du concours DAC-SDC de 2019
+(V1) puis de 2020 à 2022 (V2), puissance mesurée par l'organisateur à la carte
+\citep[§2.3]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. V1 : SkyNet à 25,1\,FPS pour 7,26\,W
+\citep[Table~3]{2024-zhang-comprehensive-analysis-dac-sdc-fpga} (pic théorique 144\,GOPS à
+200\,MHz, \citealp[§6.4]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp). V2 :
+UltraNet à 212,7\,FPS pour 6,65\,W en 2020 (Table~4), puis jusqu'à 2\,020,6\,FPS pour 1,41\,W
+en 2022 (Table~6) avec DSP packing \citep[§3.3, §3.5]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}.
+FINN-R y atteint 5,1\,TOP/s à 300\,MHz pour 11,8\,W de carte
+\citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep}.}}
+
+\newglossaryentry{xczu7ev}{type=plateformes, name={XCZU7EV}, sort={XCZU7EV}, parent=zynqmp,
+description={Puce Zynq UltraScale+ EV : 230\,400 LUT et 1\,728 DSP
+\citep[Table~V]{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp ; 460\,800 FF, 312 BRAM36 et
+96 URAM \constr. Référence de désignation : XCZU7EV-2FFVC1156E
+\citep[§4.3]{2024-nguyen-fpga-soc-implementation-yolov4-flying}. Puce de la ZCU104.}}
+
+\newglossaryentry{zcu104}{type=plateformes, name={ZCU104}, sort={ZCU104}, parent=xczu7ev,
+description={Carte d'évaluation Xilinx à XCZU7EV, 4 Cortex-A53. Carte FPGA la plus utilisée du
+corpus drone. DPU B512 à B4096 : YOLOv26n modifié à 34,05\,FPS (29,4\,ms) pour 8,76\,W estimés par
+Vivado \citep[§IV-C, Table~III]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp. YOLOv4 sur
+deux c\oe urs DPU : 17,9\,FPS pour 30,1\,W et YOLOv4-tiny 125\,FPS pour 26,4\,W, mesurés à la
+prise (16,1\,W au repos), donc un kit de développement et non un calculateur embarquable
+\citep[Tables~12, 13, 15]{2024-nguyen-fpga-soc-implementation-yolov4-flying}. LCAM-YOLOX à
+337\,FPS (deux c\oe urs) pour 13,2\,W de carte
+\citep[§V-D]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}. SATAY : YOLOv5n 640 en
+21,4\,ms pour 14,5\,W (portée non précisée), 317\,mJ contre 277\,mJ sur TX2
+\citep[Table~IV, §VI-B]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.}}
+
+\newglossaryentry{zcu102}{type=plateformes, name={ZCU102}, sort={ZCU102}, parent=zynqmp,
+description={Carte d'évaluation Xilinx à XCZU9EG (274\,080 LUT, 2\,520 DSP \constr). LCAM-YOLOX
+sur trois c\oe urs DPU : 481\,FPS pour 22,1\,W de carte
+\citep[§V-D]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}. Le survey de
+\citet[§VI-C]{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp{} y range un YOLOv8n 4~bits (FINN)
+à 195,3\,FPS en détection seule et 24\,FPS de bout en bout avec suivi. Aucune puissance de puce
+n'est rapportée ; 22\,W de carte, hors gamme drone légère.}}
+
+\newglossaryentry{kv260}{type=plateformes, name={Kria KV260}, sort={KV260}, parent=zynqmp,
+description={Kit de démarrage AMD Xilinx « Vision AI » à module Kria K26 (puce XCK26, non citée
+par les papiers du corpus ; 117\,120 LUT et 1\,248 DSP \constr). Le survey de
+\citet[Table~V]{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp{} donne 70\,560 LUT, valeur
+du XCZU3EG et non du K26 \deduit. Seule carte FPGA du corpus montée comme ordinateur compagnon
+d'un drone (Pixhawk, caméra USB) : LCAM-YOLOX INT8 à 195\,FPS pour 9,72\,W de carte sur un c\oe ur
+DPU, 387\,FPS pour 10,45\,W sur deux, soit 37,15\,FPS/W
+\citep[§V-A, §V-D, §V-G]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}. Les mêmes
+auteurs placent ce travail sur ZCU102 dans le texte et sur KV260 dans la Table~VII
+\citep[§VI-A]{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp. SiamRPN++ : 6,37\,FPS pour
+1,11\,W \citep[Table~IX]{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp. Environ 10\,W de
+carte : la gamme d'une Jetson, pas celle d'un FPGA nano.}}
+
+% ---------------------------------------------------------------- FPGA sans processeur durci
+\newglossaryentry{virtexus}{type=plateformes, name={Virtex UltraScale(+)}, sort={Virtex UltraScale},
+description={FPGA de grande taille sans processeur durci, en 20\,nm (UltraScale) ou 16\,nm
+(UltraScale+) \constr. Le corpus drone en retient trois cartes de laboratoire ou de cloud
+(VCU110, VCU118, AWS F1) pour la recherche d'outils (SATAY, FINN-R), jamais pour un drone :
+leur puissance mesurée va de 15 à 67\,W
+\citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
+Gamme : bureau ou serveur, non embarquée.}}
+
+\newglossaryentry{vcu110}{type=plateformes, name={VCU110}, sort={VCU110}, parent=virtexus,
+description={Carte d'évaluation Xilinx à Virtex UltraScale (puce exacte non nommée par le papier).
+SATAY : YOLOv3-Tiny 416 en 14,3\,ms pour 15,4\,W (419\,GOP/s), YOLOv5s 640 en 46,4\,ms pour
+24,8\,W, YOLOv8s en 122,8\,ms pour 23,5\,W ; YOLOv5n 640 en 11,7\,ms pour 22,8\,W
+\citep[Tables~III et~IV]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
+Aucune méthode de mesure de la puissance n'est décrite (portée inconnue).}}
+
+\newglossaryentry{vcu118}{type=plateformes, name={VCU118 (XCVU9P)}, sort={VCU118}, parent=virtexus,
+description={Carte d'évaluation Xilinx à Virtex UltraScale+ XCVU9P (16\,nm) : 1\,182\,240 LUT et
+6\,840 DSP \constr. SATAY y atteint 1\,244\,GOP/s sur YOLOv8s en 24,5\,ms mais pour 57,4\,W, et
+YOLOv5s en 14,9\,ms pour 67,0\,W ; la puissance double par rapport à la VCU110 pour une latence
+divisée par 2 à 5
+\citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
+Reprise comme comparaison de FPS/W (3,43) par
+\citet[Table~16]{2025-cali-optimized-implementation-yolov3-tiny-real}. Puissance de portée
+inconnue ; hors gamme drone.}}
+
+\newglossaryentry{awsf1}{type=plateformes, name={AWS F1 (XCVU9P)}, sort={AWS F1}, parent=virtexus,
+description={Instance FPGA de cloud d'Amazon à XCVU9P (16\,nm, 1\,180\,k LUT, 4\,320 BRAM)
+\citep[§5.1]{arxiv-1809.04570-finn-r-end-end-deep}. Cible la plus performante de FINN-R
+(150 à 250\,MHz) : de 5,3\,TOP/s (Tincy YOLO) à 50,8\,TOP/s (MLP-4) sur les réseaux
+dataflow \citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep}. Puissance \texttt{n/r}.
+Hors gamme drone : plateforme de cloud, citée comme borne haute de débit.}}
+
+\newglossaryentry{u250}{type=plateformes, name={Alveo U250}, sort={Alveo U250},
+description={Carte accélératrice PCIe de centre de données d'AMD, jusqu'à 225\,W \constr. SATAY :
+YOLOv5n en 3,7\,ms (320) et 5,2\,ms (640), pour 116 et 106\,W (portée non précisée)
+\citep[Table~IV]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
+La plus gourmande des cartes FPGA du corpus : gamme serveur, sans rapport avec l'embarqué
+drone.}}
+
+% ---------------------------------------------------------------- Jetson
+\newglossaryentry{jetson}{type=plateformes, name={Jetson}, sort={Jetson},
+description={Gamme NVIDIA de modules embarqués (SoC ARM + GPU CUDA, mémoire LPDDR partagée) et
+de kits de développement ; logiciel JetPack et TensorRT (FP32, FP16, INT8), modes de
+puissance réglables \constr. Référence de la gamme « Jetson » (autour de 10\,W) et ordinateur
+de bord de la plupart des drones agiles et de navigation du corpus (TX2, Xavier NX, Orin).
+Les puissances rapportées sont rarement des mesures à l'entrée de la carte : télémétrie
+tegrastats ou jtop de portée mal définie.}}
+
+\newglossaryentry{jetson-nano}{type=plateformes, name={Jetson Nano}, sort={Jetson Nano}, parent=jetson,
+description={GPU Maxwell 128 c\oe urs (0,5\,TFLOPS), 4\,Go de LPDDR4, 5 à 10\,W
+\citep[Table~2]{2022-feng-benchmark-analysis-yolo-performance-edge}. YOLOv3-tiny 416 à
+6,8\,FPS pour 7,2\,W, YOLOv3 à 1,7\,FPS pour 7,9\,W (portée non précisée,
+\citealp[Table~3]{2022-feng-benchmark-analysis-yolo-performance-edge}) ; YOLOv4-tiny à
+15\,FPS (Table~6). LCAM-YOLOX à 65\,FPS contre 195 sur KV260
+\citep[§V-D]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}. Latence de 104 à 509\,ms
+pour YOLOv8 n/s/m \citep[§IV]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.
+Baseline de l'énergie des réseaux à impulsions sur Loihi (modes 5 et 10\,W)
+\citep[§Energy benchmark]{arxiv-2303.08778-fully-neuromorphic-vision-control-autonomous}\pp.}}
+
+\newglossaryentry{tx2}{type=plateformes, name={Jetson TX2}, sort={Jetson TX2}, parent=jetson,
+description={GPU Pascal 256 c\oe urs (1,33\,TFLOPS crête), 8\,Go, JetPack~4.4.1
+\citep[§4.1]{2023-zhang-drone-yolo-efficient-neural-network}. Plateforme GPU imposée de DAC-SDC
+\citep[§2.2]{2021-xu-dac-sdc-low-power-object} : SkyNet à 67,3\,FPS pour 13,5\,W (mesure de
+l'organisateur, portée non précisée)
+\citep[Table~5]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp. Ordinateur de
+bord du drone gagnant de la course Swift : détecteur de portes de 40\,ms (TensorRT FP16) sur
+GPU et politique de 8\,ms sur CPU \citep[Methods]{2023-kaufmann-champion-level-drone-racing-deep} ;
+réseau de vol à 24,3\,FPS (41,6\,ms)
+\citep[Table~1]{arxiv-2110.05113-learning-high-speed-flight-wild}. Drone-YOLO nano et tiny en
+127 et 190\,ms \citep[Table~6]{2023-zhang-drone-yolo-efficient-neural-network}. Baseline de
+SATAY : YOLOv5n 640 en 32,3\,ms pour 8,58\,W
+\citep[Table~IV]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
+VGG-16 de contrôle à 10\,Hz \citep[§4]{2020-krishnan-sky-not-limit-visual-performance}.}}
+
+\newglossaryentry{xavier-nx}{type=plateformes, name={Jetson Xavier NX}, sort={Jetson Xavier NX},
+parent=jetson,
+description={GPU Volta 384 c\oe urs + 48 Tensor Cores (1,3\,TFLOPS), 8\,Go de LPDDR4x, 10 à 15\,W,
+mode 15\,W à 6 c\oe urs \citep[Table~2]{2022-feng-benchmark-analysis-yolo-performance-edge} ;
+21\,TOPS INT8 \constr. YOLOv3-tiny 416 à 41,1\,FPS pour 13,5\,W, YOLOv3 à 6,1\,FPS pour 15,2\,W
+(portée non précisée, \citealp[Table~3]{2022-feng-benchmark-analysis-yolo-performance-edge}).
+Détecteur de MAV GLAD à 23,6\,FPS
+\citep[Table~VIII]{arxiv-2312.11008-global-local-mav-detection-challenging}\pp, GL-YOMO à
+21,6\,FPS en 640\,$\times$\,640 \citep[§IV-E]{arxiv-2411.02582-real-time-detection-small-uavs}\pp.}}
+
+\newglossaryentry{agx-xavier}{type=plateformes, name={Jetson AGX Xavier}, sort={Jetson AGX Xavier},
+parent=jetson,
+description={Module haut de gamme de la génération Volta, 10 à 30\,W et 32\,TOPS INT8 \constr ;
+TDP « de l'ordre de 30\,W » \citep[§4]{2020-krishnan-sky-not-limit-visual-performance}.
+Ordinateur de bord des suiveurs aériens : HiFT à 31,2\,FPS sans TensorRT
+\citep[§5]{arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial}\pp, TCTrack à 27\,FPS
+contre 125,6 sur PC \citep[§5]{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}\pp,
+SiamAPN++ à 34,9\,FPS \citep[§V]{arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network}\pp.
+VGG-16 de contrôle à 28\,Hz \citep[§4]{2020-krishnan-sky-not-limit-visual-performance}.
+Mode de puissance non précisé dans ces papiers.}}
+
+\newglossaryentry{orin}{type=plateformes, name={Jetson Orin}, sort={Jetson Orin}, parent=jetson,
+description={Génération Jetson à GPU Ampere et CPU Cortex-A78AE \constr : Orin Nano, Orin NX,
+AGX Orin. La plus récente du corpus et la plus utilisée par les papiers de 2025-2026 sur la
+navigation et les modèles vision-langage embarqués.}}
+
+\newglossaryentry{orin-nano}{type=plateformes, name={Jetson Orin Nano}, sort={Jetson Orin Nano},
+parent=orin,
+description={6 $\times$ Cortex-A78AE, GPU Ampere 1\,024 c\oe urs + 32 Tensor Cores, 8\,Go, 7 à
+15\,W \citep[Table~2]{arxiv-2502.15737-performance-analysis-you-only-look} ; 40\,TOPS INT8
+annoncés pour la version 8\,Go \constr. YOLOv8n INT8 à 44,9\,FPS pour 7,48\,W, en FP32 à 37,0\,FPS
+pour 8,35\,W, puissance de portée \emph{puce} par télémétrie
+\citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}. Version 4\,Go :
+YOLOv8n en 16\,ms, YOLOv8m en 50\,ms, énergie au repos de 362\,mWh sur 5\,min, la plus haute du
+banc \citep[§IV, Fig.~2a]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.
+Version 8\,Go de SINGER : CLIPSeg de 3 à 12\,Hz avec ONNX CUDA
+\citep[§V, §VI-C]{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp.}}
+
+\newglossaryentry{orin-nx}{type=plateformes, name={Jetson Orin NX}, sort={Jetson Orin NX},
+parent=orin,
+description={8 $\times$ Cortex-A78AE, 16\,Go, 10 à 25\,W
+\citep[Table~2]{arxiv-2502.15737-performance-analysis-you-only-look}. La même table donne un GPU
+Ampere de 2\,048 c\oe urs + 64 Tensor Cores, alors que la fiche constructeur annonce 1\,024 c\oe urs
++ 32 Tensor Cores et 100\,TOPS INT8 pour la version 16\,Go \constr. YOLOv8n INT8 : 65,8\,FPS
+pour 10,3\,W de puce, YOLOv8s INT8 56,3\,FPS pour 11,0\,W
+\citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}. Ordinateur de bord le plus
+fréquent des drones agiles de 2025-2026 : YOLOv11-small à 92\,Hz (TensorRT FP16) et complétion de
+profondeur en 31,6\,ms \citep[§IV-B, §IV-C]{arxiv-2506.18689-nova-navigation-object-centric-visual}\pp,
+YOPOv2-Tracker en 8,2\,ms \citep[§IV-B-3]{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp,
+YOLO26n + ByteTrack à 48\,FPS (20,8\,ms) sur le drone intercepteur de SCOUT
+\citep[Table~IV]{arxiv-2609.21005-project-scout-interceptor-drone-perimeter}\pp,
+géolocalisation NGPS à 2,6\,Hz sur GPU contre 0,5\,Hz sur CPU
+\citep[§IV-D]{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp. Puissance non rapportée dans ces
+quatre derniers papiers.}}
+
+\newglossaryentry{agx-orin}{type=plateformes, name={Jetson AGX Orin}, sort={Jetson AGX Orin},
+parent=orin,
+description={Module haut de gamme Orin : jusqu'à 275\,TOPS INT8 et 15 à 60\,W pour la version
+64\,Go \constr. Cible de LiteVLA-H, un modèle vision-langage-action de 256\,M de paramètres en
+FP16 : 19,7\,Hz (50,7\,ms) en mode action et 6,1 à 6,7\,Hz en mode sémantique
+\citep[Table~2, §6.1]{arxiv-2605.00884-litevla-h-dual-rate-vision}\pp, avec un surcoût de 3,6\,W
+sans méthode de mesure (puissance absolue et mode de puissance \texttt{n/r}). Gamme Jetson haute,
+dizaines de W.}}
+
+\newglossaryentry{n100}{type=plateformes, name={Intel N100 (Radxa X4)}, sort={Intel N100},
+description={Processeur x86 basse consommation d'Intel, 4 c\oe urs et TDP de 6\,W \constr, sur
+la carte Radxa X4. Ordinateur de bord (avec RealSense D435i) du drone VIS-R de 750\,g d'E2E-Fly :
+la boucle perception-contrôle y a une latence inférieure à 30\,ms contre environ 90\,ms avec un
+calcul déporté \citep[§VI-A, §VI-C2]{arxiv-2604.12916-e2e-fly-integrated-training-deployment}\pp.
+Puissance, latence d'inférence et taille de la politique \texttt{n/r} ; gamme intermédiaire entre
+FPGA et Jetson (quelques W à environ 10\,W, ordre de grandeur \deduit, non mesuré).}}
+
+% ---------------------------------------------------------------- GPU de bureau et de serveur
+\newglossaryentry{gpu-bureau}{type=plateformes, name={GPU de bureau ou de serveur}, sort={GPU de bureau},
+description={Cartes graphiques GeForce, Titan, Tesla et A-series de NVIDIA, de 120 à 450\,W
+\constr. Elles servent dans le corpus drone à l'entraînement ou à des mesures de FPS « non
+embarquées » : aucune n'est montée à bord, et aucune puissance mesurée n'accompagne les FPS (sauf
+\citealp[Tables~5 et~14]{2024-nguyen-fpga-soc-implementation-yolov4-flying}). Ces
+chiffres ne sont donc comparables ni aux Jetson ni aux FPGA, et un FPS sur RTX ne prouve pas la
+faisabilité embarquée. Gamme : bureau ou serveur, centaines de W.}}
+
+\newglossaryentry{rtx2060}{type=plateformes, name={GeForce RTX 2060}, sort={RTX 2060},
+parent=gpu-bureau,
+description={GPU Turing de milieu de gamme. Station d'évaluation de SF-YOLOv5 : 11,0 à 12,2\,ms par
+image pour la version légère contre 49,4\,ms pour SF-YOLOv5L
+\citep[Tables~3 et~4]{2022-liu-sf-yolov5-lightweight-small-object}. Aucune puissance rapportée.}}
+
+\newglossaryentry{rtx2080ti}{type=plateformes, name={GeForce RTX 2080 Ti}, sort={RTX 2080 Ti},
+parent=gpu-bureau,
+description={GPU Turing haut de gamme, référence de bureau du détecteur aérien : temps
+d'inférence de 32\,ms (YOLOv3), 84\,ms (SSD512) et 157\,ms (Grid R-CNN) sur Det-Fly
+\citep[§V-A, Table~II]{2021-zheng-air-air-visual-detection-micro}, QueryDet à 14,9\,FPS
+\citep[Table~1]{arxiv-2103.09136-querydet-cascaded-sparse-query-accelerating}\pp. Baseline GPU
+du ZCU104 : YOLOv4 à 66,9\,FPS pour 255,4\,W, soit un FPS/W deux à trois fois plus faible que le
+FPGA \citep[§5.3, Tables~5 et~14]{2024-nguyen-fpga-soc-implementation-yolov4-flying}. La RTX 2080
+non Ti de bureau mesure 2,6\,ms pour un réseau de vol
+\citep[Table~1]{arxiv-2110.05113-learning-high-speed-flight-wild}.}}
+
+\newglossaryentry{rtx30mid}{type=plateformes, name={GeForce RTX 3060, 3070 et 3080 Ti}, sort={RTX 3060},
+parent=gpu-bureau,
+description={GPU Ampere de milieu à haut de gamme. RTX 3060 : entraînement de GCL-YOLO sur deux
+cartes, 42 à 58\,FPS sans plateforme de test précisée
+\citep[Table~3]{2023-cao-gcl-yolo-ghostconv-lightweight-yolo}, simulation d'YOPOv2-Tracker en
+3\,ms \citep[§IV-B-1]{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp. RTX 3070 : GLAD à
+146,5\,FPS \citep[Table~IV]{arxiv-2312.11008-global-local-mav-detection-challenging}\pp contre
+23,6\,FPS sur Xavier NX, et détection de MAV à 9\,FPS (97,8\,ms)
+\citep[§VII-B3]{2023-zheng-detection-localization-tracking-multiple-mavs}. RTX 3080 Ti :
+entraînement de Drone-YOLO \citep[§4.1, Table~4]{2023-zhang-drone-yolo-efficient-neural-network},
+porté ensuite sur TX2.}}
+
+\newglossaryentry{rtx3090}{type=plateformes, name={GeForce RTX 3090 et 3090 Ti}, sort={RTX 3090},
+parent=gpu-bureau,
+description={GPU Ampere haut de gamme, environ 450\,W de TDP pour la 3090 Ti \deduit. Entraînement
+et test de TPH-YOLOv5 \citep[§4.1]{arxiv-2108.11539-tph-yolov5-improved-yolov5-transformer}\pp, puis
+TPH-YOLOv5 de Zhao et~al. sur 3090~Ti : 7,4\,FPS (TPH-YOLOv5) et 11,9\,FPS (TPH-YOLOv5++) en Table~5,
+25,1 et 42,2\,FPS en Tables~4 et~6
+\citep{2023-zhao-tph-yolov5-boosting-object-detection}, Efficient YOLOv7-Drone à
+89,3\,FPS \citep[Tables~2 et~5]{2023-fu-efficient-yolov7-drone-enhanced-object}. Exemple type
+de résultat non embarqué, sans puissance ni transposition à un calculateur de bord.}}
+
+\newglossaryentry{rtx4090}{type=plateformes, name={GeForce RTX 4090}, sort={RTX 4090},
+parent=gpu-bureau,
+description={GPU Ada Lovelace de 24\,Go, le plus puissant du corpus. F-YOLOv7 : 169\,FPS en
+débit sur GPU \citep[Table~2, §5.2]{2025-du-f-yolov7-fast-robust-real} ; entraînement de la
+politique E2E-Fly \citep[§VII-B]{arxiv-2604.12916-e2e-fly-integrated-training-deployment}\pp.
+Les versions portables servent à DroneScan-YOLO (96,7\,FPS sur RTX 4090 Laptop,
+\citealp[Table~4]{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight}\pp) et à
+DotD-YOLOv9 (RTX 4060 Laptop, \citealp[Table~5]{2024-gao-dataset-detection-method-unmanned-aerial}).
+Aucune de ces valeurs n'est une mesure embarquée ni accompagnée d'une puissance.}}
+
+\newglossaryentry{gtx1080ti}{type=plateformes, name={GeForce GTX 1080 Ti}, sort={GTX 1080 Ti},
+parent=gpu-bureau,
+description={GPU Pascal de 2017, plateforme des mesures de vitesse d'avant 2022. ClusDet : 273\,ms
+par image \citep[Table~1]{arxiv-1904.08008-clustered-object-detection-aerial-images}\pp ;
+UFPMP-Det \citep[Table~3]{arxiv-2112.10415-ufpmp-det-accurate-efficient-object}\pp ; SiamRPN++ sur
+backbone SkyNet à 41,2\,FPS \citep[Table~8]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp.
+Entraînement de Dogfight \citep[Table~1]{arxiv-2103.17242-dogfight-detecting-drones-drones-videos}\pp.
+Portable : une GTX 1070 Max-Q sert à NanoFlowNet (141\,FPS, TensorRT 7.2.2, lot de~1,
+\citealp[Table~IV]{arxiv-2209.06918-nanoflownet-real-time-dense-optical}\pp) et une MX150 au
+détecteur multi-capteurs sol~$\to$~air de
+\citet[§III-B]{arxiv-2007.07396-real-time-drone-detection-tracking}.}}
+
+\newglossaryentry{p100}{type=plateformes, name={Tesla P100}, sort={Tesla P100}, parent=gpu-bureau,
+description={GPU de serveur NVIDIA (Pascal). Seule plateforme d'inférence de
+\citet[§4.2, Table~4]{2021-liu-real-time-small-drones-detection} : YOLOv4 de référence à 43\,FPS,
+YOLOv4 élagué (canaux 0,9) à 79\,FPS. Les auteurs n'ont mesuré aucune cible embarquée, et les
+FPS sur P100 ne disent rien de la latence sur Jetson, FPGA ou MCU.}}
+
+\newglossaryentry{gpu-cloud}{type=plateformes, name={GPU de cloud (T4, A10, A6000, Titan RTX)}, sort={GPU de cloud},
+parent=gpu-bureau,
+description={Cartes de serveur ou de service de cloud. Tesla T4 de Google Colab :
+YOLO-Drone en 1,8\,ms \citep[Table~2]{arxiv-2511.10905-yolo-drone-efficient-object-detection}.
+A10 de 24\,Go : évaluation de YOLO-GCOF \citep[§IV-D7]{2025-yu-yolo-gcof-lightweight-low-altitude}.
+RTX A6000 sur serveur Xeon Gold : SmolVLM-256M en 720\,ms entièrement dans le cloud contre
+2\,760\,ms entièrement à bord et 2\,090\,ms en découpage cloud-bord
+\citep[§V-A1]{arxiv-2609.25415-cloud-edge-split-profiling-onboard}\pp. Deux Titan RTX pour
+l'entraînement de SiamAPN++ \citep[Fig.~4a]{arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network}\pp.
+Gamme : serveur.}}
+
+% ---------------------------------------------------------------- Nano-drones : RISC-V ultra-basse consommation
+\newglossaryentry{crazyflie}{type=plateformes, name={Crazyflie}, sort={Crazyflie},
+description={Nano-quadrirotor de Bitcraze, 27\,g et 10\,cm d'envergure
+\citep[§III-A]{arxiv-2301.12175-bio-inspired-autonomous-exploration-policies}\pp ; contrôleur de
+vol STM32F405 à 168\,MHz \citep[§III]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp. Le
+Crazyflie 2.1 Brushless embarque une LiPo de 350\,mAh
+\citep[§III-B]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp. Porteur de l'AI-deck (GAP8)
+et du GAP9Shield (GAP9). Gamme nano : le budget de la plateforme est d'environ 1\,W au total, dont
+quelques centaines de mW de calcul
+\citep[Abstract, §1]{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp.}}
+
+\newglossaryentry{pulp}{type=plateformes, name={PULP}, sort={PULP},
+description={Parallel Ultra-Low Power : plateforme matérielle open source de l'ETH Zürich et de
+l'université de Bologne, à cluster de c\oe urs RISC-V partageant une mémoire L1
+\citep[§I]{2018-flamand-gap-8-risc-v-soc}. Base des puces GAP8 et GAP9, et des réseaux
+Tiny-PULP-Dronets \citep{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp. Gamme nano :
+quelques dizaines de mW.}}
+
+\newglossaryentry{gap8}{type=plateformes, name={GAP8}, sort={GAP8}, parent=pulp,
+description={SoC RISC-V de GreenWaves (TSMC 55\,nm LP), un fabric controller et un cluster de
+8 c\oe urs, 512\,ko de L2 et 64\,ko de L1
+\citep[§III]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp, avec un accélérateur de convolution (HWCE)
+\citep[§IV]{2018-flamand-gap-8-risc-v-soc} : 27\,mW pour le FC seul, 75\,mW au pire cas à 1,2\,V
+(Table~II ; méthode de mesure non décrite). Sur PULP-Shield, DroNet atteint 6\,FPS pour 64\,mW
+de shield (1,0\,V, FC 50\,MHz, cluster 100\,MHz) et 18\,FPS pour 284\,mW (1,2\,V, 250\,MHz)
+\citep[§VI-A, §VII]{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}\pp. PULP-Frontnet :
+134,7\,FPS pour 86,6\,mW de puce, ou 18,5\,FPS pour 8,6\,mW
+\citep[§V-B]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp. Tiny-PULP-Dronet : 89\,FPS pour 34\,mW
+de puce \citep[§III-A]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp.}}
+
+\newglossaryentry{aideck}{type=plateformes, name={AI-deck}, sort={AI-deck}, parent=gap8,
+description={Carte Bitcraze de 4,4\,g à GAP8, caméra monochrome Himax HM01B0 QVGA, HyperRAM de
+64\,Mbit et HyperFlash de 512\,Mbit \citep[§III]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp,
+montée sur Crazyflie. L'AI-deck consomme 134,5\,mW de carte avec SSD-MobileNetV2 1,0$\times$ à
+1,6\,FPS, et 143,5\,mW à 2,3\,FPS avec la version 0,75$\times$
+\citep[Table~II]{arxiv-2301.12175-bio-inspired-autonomous-exploration-policies}\pp ; BlankSkip :
+1,86\,FPS (537\,ms) contre 1,50\,FPS (667\,ms) pour le réseau statique
+\citep[Table~2]{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp ; NanoFlowNet :
+5,6\,FPS \citep[Table~IV]{arxiv-2209.06918-nanoflownet-real-time-dense-optical}\pp, contre
+141\,FPS sur une GPU de portable. Aucun détecteur type YOLO ne tourne à plus de quelques FPS.}}
+
+\newglossaryentry{gap9}{type=plateformes, name={GAP9 (NE16)}, sort={GAP9}, parent=pulp,
+description={MCU RISC-V de GreenWaves, dérivé de PULP, avec accélérateur NE16 : 15,6\,GOPS en DSP,
+32,2\,GMAC/s en apprentissage automatique à 330\,$\mu$W/GOP, jusqu'à 370\,MHz, 1,6\,Mo de L2 et
+2\,Mo de mémoire non volatile \citep[§2.1]{arxiv-2407.13706-gap9shield-150gops-ai-capable-ultra}\pp.
+Les papiers divergent sur le nombre de c\oe urs de cluster (8 selon
+\citealp[§IV-A]{arxiv-2603.02936-self-supervised-domain-adaptation-visual}\pp, 9 selon
+\citealp[§2.1]{arxiv-2407.13706-gap9shield-150gops-ai-capable-ultra}\pp) \deduit : 8 c\oe urs de
+cluster et un fabric controller. NE16 : CNN de 6\,M de paramètres (318\,MMAC) en 30,4\,ms soit
+32,8\,FPS \citep[§V]{arxiv-2603.02936-self-supervised-domain-adaptation-visual}\pp, puissance
+\texttt{n/r} (le « moins de 100\,mW » est un chiffre constructeur cité par les auteurs). Tiny-DroNeRF
+(apprentissage embarqué d'un NeRF) : pas d'entraînement de 73\,ms à 60\,mW, estimé par simulation
+cycle-exact et non mesuré sur le matériel \citep[§III-B, §V-C]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp ;
+NE16 n'y est pas utilisé (propagation arrière en virgule flottante).}}
+
+\newglossaryentry{gap9shield}{type=plateformes, name={GAP9Shield}, sort={GAP9Shield}, parent=gap9,
+description={Carte de 6\,g (4\,050\,mm$^3$) à GAP9 pour Crazyflie, avec PSRAM de 256\,Mbit, flash de
+512\,Mbit, caméra OV5647, module Wi-Fi et télémètre VL53L1
+\citep[§2.1, §3.1]{arxiv-2407.13706-gap9shield-150gops-ai-capable-ultra}\pp. Mesures du shield (sans
+méthode de puissance décrite) : caméra à 80\,mW (QVGA, 15\,fps) et 120\,mW (VGA, 45\,fps), Wi-Fi à
+environ 250\,mW, télémètre jusqu'à 150\,mW ; aucun chiffre de détection mesuré par les auteurs
+(YOLO modifié à 38\,ms et 2,5\,mJ rapporté d'un travail antérieur, §3.2). Plateforme de
+Tiny-DroNeRF et de l'adaptation de domaine auto-supervisée.}}
+
+% ---------------------------------------------------------------- Microcontrôleurs
+\newglossaryentry{stm32h7a3}{type=plateformes, name={STM32H7A3}, sort={STM32H7A3},
+description={MCU STMicroelectronics à Cortex-M7 (3,3\,V, 192\,MHz dans le banc de
+\citealp[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}) : TinyissimoYOLO en
+359\,ms par inférence, soit environ 65 fois le MAX78000 (§III, Fig.~2a ; rapport calculé \deduit). Le tableau de
+\citet[§V-D]{2025-elhence-fpga-accelerated-yolox-enhanced-attention} annonce 15\,FPS pour un
+modèle de 6,7 à 9,6\,M de paramètres, valeur invraisemblable pour un Cortex-M7 \deduit. Le pic
+théorique d'un STM32H7 à 400\,MHz, 276\,MMAC/s pour 346\,mW, est celui de la comparaison de
+\citet[§VI-B]{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}\pp{} avec GAP8 (non mesuré).
+Gamme nano à centaines de mW.}}
+
+\newglossaryentry{apollo4b}{type=plateformes, name={Apollo4b}, sort={Apollo4b},
+description={MCU Ambiq à Cortex-M4F (1,8\,V, 192\,MHz), le plus sobre en puissance du banc de
+TinyissimoYOLO : 59\,$\mu$W/MHz mais 6,1\,mJ par inférence, soit environ 31 fois l'énergie du
+MAX78000 \deduit, \citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}. Puissance du
+MCU seul (portée puce), sans watts absolus. Gamme nano.}}
+
+\newglossaryentry{max78000}{type=plateformes, name={MAX78000}, sort={MAX78000},
+description={MCU de Maxim (Analog Devices) à accélérateur CNN intégré (1,2\,V, 50\,MHz) : entrée
+limitée à 88$\times$88 et 442\,ko de poids. TinyissimoYOLO y tourne en 5,5\,ms (180\,FPS) pour
+196\,$\mu$J par inférence, à 107\,MAC/cycle, soit le meilleur point du banc devant STM32H7A3,
+STM32L4R9 et Apollo4b
+\citep[Abstract, §II-C, §III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}.
+Puissance du MCU seul. Gamme nano, mais sans cible drone testée.}}
+
+% ---------------------------------------------------------------- NPU, VPU, ASIC et neuromorphique
+\newglossaryentry{hailo8}{type=plateformes, name={Hailo-8}, sort={Hailo-8},
+description={NPU dataflow de la société Hailo, 26\,TOPS INT8 pour environ 2,5\,W typiques \constr ;
+utilisée via la carte Raspberry Pi AI HAT+ et HailoRT
+\citep[§III-B2]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp. Seul NPU du
+corpus drone : YOLOv8n, mAP COCO 32 en 76\,ms (jusqu'à 240\,ms), 0,20 à 0,36\,mWh par requête hors
+repos ; SSD MobileNet V1 en 89\,ms \citep[§IV]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.
+Précision numérique \texttt{n/r}.}}
+
+\newglossaryentry{ncs2}{type=plateformes, name={Intel NCS et NCS2 (Myriad)}, sort={NCS2},
+description={Neural Compute Stick : clé USB~3.0 d'Intel à VPU Movidius Myriad, utilisée avec un
+Raspberry Pi. Le NCS2 (Myriad~X, environ 1\,TFLOPS) ajoute 1\,W à la carte, 0,64\,W au repos
+\citep[Tables~2 et~4]{2022-feng-benchmark-analysis-yolo-performance-edge} : YOLOv3-tiny 416 à
+18,8\,FPS pour 6,5\,W (portée non précisée), YOLOv3 à 2,5\,FPS (Table~3), mais confiance moyenne
+nulle sur une des vidéos. Le NCS de première génération exécute le VGG-16 de contrôle à 1,3\,Hz,
+et DroNet y suffit à une vitesse de vol maximale supérieure à celle de Xavier + VGG-16
+\citep[§4]{2020-krishnan-sky-not-limit-visual-performance}.}}
+
+\newglossaryentry{edgetpu}{type=plateformes, name={Google Edge TPU (Coral)}, sort={Edge TPU},
+description={ASIC d'inférence INT8 de Google, 4\,TOPS pour 2\,W \constr, en clé USB ou module.
+Sur Raspberry Pi 5 + Coral USB, YOLOv8 doit passer en 320$\times$320 (mAP COCO 16 à 32) pour 21 à
+97\,ms et 0,47 à 0,62\,mWh par requête
+\citep[§III-B2, §IV]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp. Comparé à
+un FPGA Zynq-7020 : 103 à 149\,FPS pour 1,2 à 2,4\,W, mais puissance tirée de la datasheet puis
+extrapolée, contre une mesure de carte entière côté FPGA
+\citep[Table~15]{2025-cali-optimized-implementation-yolov3-tiny-real}.}}
+
+\newglossaryentry{navion}{type=plateformes, name={Navion}, sort={Navion},
+description={ASIC de VIO stéréo visuelle-inertielle du MIT en CMOS 65\,nm : 2\,M de portes NAND2,
+854\,ko de SRAM, images 752$\times$480, 62,5 et 83,3\,MHz
+\citep[§V-A]{2019-suleiman-navion-2-mw-fully-integrated}. 171\,fps maximum pour 24\,mW moyens
+de puce à 1\,V, 20\,fps pour 2\,mW avec une configuration réglée a posteriori sur la séquence
+(\citealp[§V-A, §V-C, §V-D]{2019-suleiman-navion-2-mw-fully-integrated}). Testé sur ZC706, sans vol réel.
+Plus bas budget de puissance du corpus pour un noyau de navigation : gamme nano.}}
+
+\newglossaryentry{loihi}{type=plateformes, name={Intel Loihi (Kapoho Bay)}, sort={Loihi},
+description={Puce neuromorphique d'Intel à réseaux de neurones impulsionnels. La clé Kapoho Bay
+embarque 2 puces, 256 neuro-cores, 262\,144 neurones, 260\,M de synapses et 3 c\oe urs x86
+\citep[§II-A]{arxiv-2108.03694-event-driven-vision-control-uavs}\pp. Transformée de Hough en 250\,$\mu$s
+(20\,kHz contre 1\,kHz sur CPU) à partir d'une caméra événementielle, hôte Atom x5-Z8350
+\citep[Fig.~2, §II-B]{arxiv-2108.03694-event-driven-vision-control-uavs}\pp. Atterrissage
+entièrement neuromorphique à 200\,Hz, à 27\,$\mu$J par inférence mesurés non pas sur la Kapoho Bay
+mais sur une carte Nahuku, sans entrées-sorties, contre trois à quatre ordres de grandeur de plus
+sur Jetson Nano \citep[Abstract, §Energy benchmark]{arxiv-2303.08778-fully-neuromorphic-vision-control-autonomous}\pp.
+La puissance du système embarqué (UP Squared + USB) n'est pas rapportée.}}
+
+% ---------------------------------------------------------------- Raspberry Pi
+\newglossaryentry{rpi}{type=plateformes, name={Raspberry Pi}, sort={Raspberry Pi},
+description={Ordinateur monocarte ARM, utilisé comme CPU de référence ou comme hôte d'un
+accélérateur (NCS2, Coral, Hailo). Raspberry Pi~4B de 4\,Go de LPDDR4, 3 à 6,25\,W
+\citep[Table~2]{2022-feng-benchmark-analysis-yolo-performance-edge}. Le Raspberry Pi~3B manque de
+mémoire pour le VGG-16 de contrôle et sature sur DroNet
+\citep[§4]{2020-krishnan-sky-not-limit-visual-performance}. Sur RPi~5 en CPU, YOLOv8 coûte de 316 à
+1\,348\,ms et de 1,0 à 3,6\,mWh par requête
+\citep[§IV]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp. Gamme : quelques W.}}
+
+\newglossaryentry{rpi5}{type=plateformes, name={Raspberry Pi 5}, sort={Raspberry Pi 5}, parent=rpi,
+description={4 $\times$ Cortex-A76 à 2,4\,GHz, 8\,Go, 5 à 7\,W
+\citep[Table~2]{arxiv-2502.15737-performance-analysis-you-only-look}. En CPU seul : YOLOv8n FP32
+à 8,5\,FPS (118\,ms) pour 5,44\,W de puce, YOLOv8s à 7,3\,FPS (211\,ms)
+\citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look} ; le pipeline en temps réel n'a
+pas pu être tenu (§5.1). Avec la carte AI HAT+ (Hailo-8), YOLOv8n passe à 76\,ms
+\citep[§IV]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp. Hôte courant des
+accélérateurs USB ou M.2 de comparaison, jamais embarqué sur un drone dans le corpus.}}

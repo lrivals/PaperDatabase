@@ -5,18 +5,18 @@
 \subsection{Le calcul agit sur la mission par le temps et la masse}
 
 \paragraph{MAVBench.} \citet{arxiv-1905.06388-mavbench-micro-aerial-vehicle-benchmarking}
-(MICRO~2018) évaluent le calcul en \gl{boucle}{boucle fermée} : simulateur AirSim et Jetson TX2 réelle
+(MICRO~2018) évaluent le calcul en \gl{boucle}{boucle fermée} : simulateur AirSim et \glslink{tx2}{Jetson TX2} réelle
 en \emph{\gl{hil}{hardware-in-the-loop}}, modèle d'énergie du drone et cinq applications complètes.
-Leur constat central : sur un drone de 300 à 400\,W, le calcul consomme moins de 5\,\% de la
+Leur constat central : sur un drone de 300 à 400\,\glslink{u-w}{W}, le calcul consomme moins de 5\,\% de la
 puissance \src{§I}, mais il agit sur l'énergie totale par le temps de mission et la vitesse
-sûre. Monter la fréquence et le nombre de cœurs du TX2 réduit le temps de mission de 84\,\%
+sûre. Monter la fréquence et le nombre de cœurs du \glslink{tx2}{TX2} réduit le temps de mission de 84\,\%
 et l'énergie de 82\,\% en livraison de colis \src{§V-C}. Tout est en simulation sauf le
-TX2 ; la masse du calculateur ne varie pas avec sa puissance, et aucune précision de
+\glslink{tx2}{TX2} ; la masse du calculateur ne varie pas avec sa puissance, et aucune précision de
 détection n'est rapportée.
 
 \paragraph{Le modèle F-1.} \citet{2020-krishnan-sky-not-limit-visual-performance} puis
 \citet{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}\pp{} formalisent un
-\enquote{\gl{roofline}{roofline} pour drone}. La \gl{vitesse}{vitesse sûre} maximale dépend du débit de décision
+\enquote{\gl{roofline}{roofline} pour drone}. La \glslink{vsure}{vitesse sûre} maximale dépend du débit de décision
 $f = \min(1/T_\text{capteur}, 1/T_\text{calcul}, 1/T_\text{contrôle})$, de la portée du
 capteur et de l'accélération maximale, elle-même réduite par la masse du calculateur et de
 son dissipateur. Un \gl{genou}{point de genou} sépare trois régimes : limité par le capteur, par le
@@ -24,11 +24,11 @@ calcul ou par la physique. Le modèle est validé en vol sur quatre drones S500,
 erreur de 5 à 10\,\% sur la vitesse sûre \citep[Fig.~7b]{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}.
 Ses études de cas donnent des arguments directement utiles :
 \begin{itemize}
-  \item une AGX Xavier à 230\,\gl{FPS}{FPS} donne un plafond plus bas qu'un Intel NCS à 150\,FPS sur
+  \item une \glslink{agx-xavier}{AGX Xavier} à 230\,\glslink{fps}{FPS} donne un plafond plus bas qu'un \glslink{ncs2}{Intel NCS} à 150\,\glslink{fps}{FPS} sur
     un DJI Spark, à cause de sa masse et de son dissipateur (280 + 162\,g contre 47\,g)
     \src{§VI-A} ;
-  \item une redondance double (2 $\times$ TX2) coûte 33\,\% de vitesse sûre \src{§VI-C} ;
-  \item PULP-Dronet, à 6\,FPS, est limité par le calcul et devrait gagner un facteur 4,3
+  \item une redondance double (2 $\times$ \glslink{tx2}{TX2}) coûte 33\,\% de vitesse sûre \src{§VI-C} ;
+  \item \glslink{pulp-dronet}{PULP-Dronet}, à 6\,\glslink{fps}{FPS}, est limité par le calcul et devrait gagner un facteur 4,3
     \src{§VII}.
 \end{itemize}
 Les limites sont connues : pas de traînée, masse réduite au dissipateur estimé par le \gl{TDP}{TDP},
@@ -37,23 +37,76 @@ détection ratée ne réduit pas la portée du capteur dans le modèle) \deduit.
 n'y figure.
 
 \paragraph{Mesures en vol.} Les mesures réelles du lien calcul--vol viennent surtout de la
-\gl{gamme}{gamme nano} (section~\ref{sec:nano}) : coût en autonomie décomposé en masse et calcul, bilan
+\glslink{gamme}{gamme nano} (section~\ref{sec:nano}) : coût en autonomie décomposé en masse et calcul, bilan
 de puissance du drone entier, taux de détection qui baisse avec la vitesse. Dans la gamme
-Jetson, \citet{arxiv-2110.05113-learning-high-speed-flight-wild} relient latence et vitesse
+\glslink{jetson}{Jetson}, \citet{arxiv-2110.05113-learning-high-speed-flight-wild} relient latence et vitesse
 sûre, et \citet{2023-kaufmann-champion-level-drone-racing-deep} donnent une latence
-sensorimotrice de 40\,ms. Côté neuromorphique,
+sensorimotrice de 40\,\glslink{u-ms}{ms}. L'intercepteur SCOUT
+\citep[Table~IV]{arxiv-2609.21005-project-scout-interceptor-drone-perimeter}\pp{} décompose
+la latence de sa chaîne de détection par étage sur \glslink{orin-nx}{Orin NX}, sans puissance
+(section~\ref{sec:contre-drone}). Côté neuromorphique,
 \citet{arxiv-2108.03694-event-driven-vision-control-uavs}\pp{} montrent qu'une perception
 à 20\,kHz reste sous-exploitée quand la mécanique a 100 à 150\,ms de retard \src{§III-A}.
 
-\paragraph{Le chaînon manquant.} Les papiers \gl{YOLO}{YOLO}/FPGA du corpus donnent des FPS et
+\paragraph{Le chaînon manquant.} Les papiers \glslink{yolo}{YOLO}/FPGA du corpus donnent des \glslink{fps}{FPS} et
 parfois des watts, jamais l'effet sur l'autonomie ou la vitesse de vol sûre : ni
 \citet{2025-cali-optimized-implementation-yolov3-tiny-real}, ni
 \citet{2025-elhence-fpga-accelerated-yolox-enhanced-attention}, ni
-\citet{2024-nguyen-fpga-soc-implementation-yolov4-flying}, ni les analyses du \gl{DAC-SDC}{DAC-SDC}. Le
-cadre existe (F-1, MAVBench), les données partielles aussi (FPS, puissance à la carte) ; il
+\citet{2024-nguyen-fpga-soc-implementation-yolov4-flying}, ni les analyses du \glslink{dac-sdc}{DAC-SDC}. Le
+cadre existe (F-1, MAVBench), les données partielles aussi (\glslink{fps}{FPS}, puissance à la carte) ; il
 manque la masse des cartes et l'application du modèle. Le défi « hardware-in-the-loop »
 de \citet[§IV]{arxiv-2205.07149-robotic-computing-fpgas-current-progress}\pp{} (co-simulation
 FPGA + AirSim) va dans ce sens, sans réalisation.
+
+\subsection{Modèles vision-langage embarqués : où placer le calcul}
+
+Trois preprints récents portent à bord d'un drone des modèles vision-langage (VLM) ou
+vision-langage-action (VLA), tous en gamme \glslink{jetson}{Jetson}. Leur intérêt pour le co-design est moins
+la tâche que la répartition du coût entre les étages du modèle et entre le drone et le
+sol.
+
+\paragraph{Le front-end visuel est le goulot.} Dans \glslink{singer}{SINGER}
+\citep{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp{}, une politique
+de navigation légère tourne à 20\,\glslink{u-hz}{Hz}, mais son entrée vient de \glslink{clipseg}{CLIPSeg} (\glslink{clip}{CLIP} ViT-B/16,
+86\,M de paramètres), qui plafonne à 3\,Hz sur \glslink{orin-nano}{Jetson Orin Nano} 8\,Go sans optimisation et
+atteint 12\,Hz une fois exporté en ONNX et exécuté par ONNX Runtime CUDA \src{§V}\med ; la
+chaîne d'image entière tourne à 12--13\,Hz \src{§VI-C}. La perception est donc plus lente
+que la commande, découplée de façon asynchrone sans que la latence résultante soit
+mesurée. Puissance, mémoire et latence sont \nr. Les résultats de navigation sont repris à
+la section~\ref{sec:navigation}. \glslink{litevla-h}{LiteVLA-H}
+\citep{arxiv-2605.00884-litevla-h-dual-rate-vision}\pp{} fait le même constat sur un VLA de
+256\,M de paramètres en FP16 sur \glslink{agx-orin}{Jetson AGX Orin} : un jeton d'action sort en 50,65\,\glslink{u-ms}{ms}
+(19,74\,Hz), une phrase de description en 149,90 à 164,57\,ms \src{§6.1}\med, et le
+pre-fill multimodal (image et prompt) pèse 47,8\,ms, soit 94\,\% de la latence d'action
+\src{§6.2}. Un ordonnanceur à deux cadences intercale une description toutes les trois
+actions, pour un surcoût de 0,1\,Go et de 3,6\,\glslink{u-w}{W} par rapport à l'action seule
+\src{§7.2} ; la puissance absolue, sa méthode et sa \glslink{portee}{portée} sont \nr. La latence ne
+couvre que l'inférence, sans capteur ni actionneur \src{§5.1}, et aucun vol réel n'est
+fait \src{§9.5} ; les écarts de trajectoire de la Table~6 mêlent simulation et matériel
+sans protocole décrit et ne sont pas exploitables.
+
+\paragraph{Embarqué, cloud ou partagé.} \citet{arxiv-2609.25415-cloud-edge-split-profiling-onboard}\pp{}
+profilent \glslink{smolvlm}{SmolVLM-256M} en trois répartitions : tout à bord sur une \glslink{jetson}{Jetson} dont le modèle
+n'est pas nommé (ses spécifications sont celles d'une \glslink{orin-nx}{Orin NX} 16\,Go \deduit), tout dans
+le cloud sur \glslink{gpu-cloud}{RTX A6000}, ou coupé après la projection visuelle, l'encodeur restant à bord et
+le décodeur partant au cloud avec des jetons visuels en \gl{INT8}{INT8} \src{§II, §IV-D, §V-B1}. Hors
+réseau, une requête prend 2,76\,\glslink{u-s}{s} à bord, 0,72\,s au cloud et 2,09\,s en mode partagé
+\src{§V-A1}\med. Le partage réduit l'énergie prélevée sur le drone de 26 à 15\,\glslink{u-j}{J} par requête
+($-$42\,\%) et le pic de mémoire \gl{GPU}{GPU} de 854 à 472\,\glslink{u-mo}{Mo} \src{§V-A2, §V-A3}, mais il ne
+minimise jamais la latence de \gl{bout}{bout en bout} : sur une trace 4G émulée, il prend de 2,17 à
+3,59\,s, contre 2,73 à 2,77\,s à bord et 0,77 à 3,87\,s au cloud selon le débit
+\src{§V-B2, Table~III}. Les énergies viennent de la \gl{telemetrie}{télémétrie} \texttt{tegrastats} au
+niveau du module d'un côté, de RAPL et PyNVML de l'autre : portées différentes, non
+comparables. L'énergie radio n'est pas mesurée \deduit, la qualité des réponses non plus,
+et tout est fait au banc.
+
+\paragraph{Bilan.} Les trois travaux s'accordent sur un point : à petite taille (86 à
+256\,M de paramètres), c'est l'encodeur visuel, et non le décodage ou la politique, qui
+fixe la latence. C'est une cible naturelle pour un accélérateur dédié, \gl{FPGA}{FPGA} ou \gl{NPU}{NPU}, que
+le corpus n'explore pas \deduit. Les latences vont de 50\,\glslink{u-ms}{ms} (un jeton d'action) à près
+de 3\,\glslink{u-s}{s} (une réponse VLM), sans puissance absolue à la carte, sans \gl{quantif}{quantification} des
+poids déclarée (FP16 pour \glslink{litevla-h}{LiteVLA-H}, \nr{} ailleurs), et sans lien entre cadence de perception et \glslink{vsure}{vitesse sûre} : le
+modèle F-1 ne leur a pas été appliqué.
 
 \subsection{Fiabilité du calcul embarqué}
 
@@ -64,11 +117,11 @@ FPGA dominent les études de fautes et que la reconfiguration partielle dynamiqu
 technique dominante pour les accélérateurs \gl{CNN}{CNN} \src{§5.1}. Le survey ne donne presque
 aucune donnée quantitative (une couche CNN quantifiée 39\,\% moins sensible aux radiations,
 citée d'un tiers, §5), ne décrit pas sa méthode de sélection, et ne recense aucune étude
-d'injection de fautes sur un détecteur de type YOLO en contexte drone \src{§5.2, §6}. Son
+d'injection de fautes sur un détecteur de type \glslink{yolo}{YOLO} en contexte drone \src{§5.2, §6}. Son
 modèle de fiabilité multi-couches reste conceptuel. MAVBench cite les soft errors comme
 extension non réalisée \citep[§VI-C]{arxiv-1905.06388-mavbench-micro-aerial-vehicle-benchmarking}.
 Le seul chiffre sur le coût de la tolérance aux fautes est modélisé : $-$33\,\% de vitesse
 sûre pour une redondance double
 \citep[§VI-C]{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}. La mémoire de
 configuration \gl{SRAM}{SRAM} d'un FPGA est sensible aux \gl{SEU}{SEU}, point absent de tous les papiers
-YOLO/FPGA du corpus \deduit.
+\glslink{yolo}{YOLO}/FPGA du corpus \deduit.

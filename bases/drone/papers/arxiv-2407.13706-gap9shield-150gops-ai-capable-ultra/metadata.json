@@ -25,7 +25,16 @@
     "nano-drone"
   ],
   "tags": [
-    "gap9"
+    "gap9",
+    "crazyflie",
+    "nano-drone",
+    "ne16",
+    "risc-v",
+    "ov5647",
+    "vl53l1",
+    "nina-w102",
+    "tinyml",
+    "hardware"
   ],
   "added": "2026-09-29",
   "extraction": {
@@ -33,12 +42,11 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 1 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -13,3 +13,24 @@ xbase_candidates.csv
 
 # lien vers l'environnement Python de PaperDatabase
 /.venv
+
+# fichiers auxiliaires LaTeX de l'état de l'art
+docs/etat-de-l-art/*.aux
+docs/etat-de-l-art/*.bbl
+docs/etat-de-l-art/*.blg
+docs/etat-de-l-art/*.log
+docs/etat-de-l-art/*.out
+docs/etat-de-l-art/*.toc
+docs/etat-de-l-art/*.glg
+docs/etat-de-l-art/*.glo
+docs/etat-de-l-art/*.gls
+docs/etat-de-l-art/*.ist
+docs/etat-de-l-art/*.plg
+docs/etat-de-l-art/*.pls
+docs/etat-de-l-art/*.plo
+docs/etat-de-l-art/*.mog
+docs/etat-de-l-art/*.mos
+docs/etat-de-l-art/*.moo
+docs/etat-de-l-art/*.meg
+docs/etat-de-l-art/*.mes
+docs/etat-de-l-art/*.meo

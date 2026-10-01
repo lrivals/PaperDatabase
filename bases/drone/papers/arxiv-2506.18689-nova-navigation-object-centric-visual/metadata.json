@@ -18,24 +18,31 @@
   "url": "https://arxiv.org/abs/2506.18689",
   "type": "preprint",
   "axes": [
-    "datasets-benchmarks",
     "tracking-navigation"
   ],
   "tags": [
     "jetson",
-    "orin-nx"
+    "orin-nx",
+    "agile-flight",
+    "object-centric",
+    "nmpc",
+    "control-barrier-function",
+    "depth-completion",
+    "yolov11",
+    "tensorrt",
+    "gps-denied",
+    "stereo"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "pymupdf",
     "ok": false,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

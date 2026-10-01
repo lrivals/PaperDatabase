@@ -2,7 +2,7 @@
 \section{Contre-drone : détecter des drones}
 \label{sec:contre-drone}
 
-Sur les 17 articles de contre-drone du corpus, 11 relèvent du \gl{solair}{sol $\rightarrow$ air} ou
+Sur les 19 articles de contre-drone du corpus, 12 relèvent du \gl{solair}{sol $\rightarrow$ air} ou
 ne déclarent pas le capteur. Les deux surveys du domaine
 \citep{arxiv-2504.11967-securing-skies-comprehensive-survey-anti,arxiv-2507.10006-vision-anti-unmanned-aerial-technology}\pp{}
 ne font pas la distinction : ils mêlent Det-Fly et ARD-MAV, pris depuis un drone, aux jeux
@@ -14,27 +14,27 @@ le critère du profil de la base : seul l'\gl{airair}{air $\rightarrow$ air} rel
 Les détecteurs sol $\rightarrow$ air du corpus sont tous mesurés sur \gl{GPU}{GPU} de bureau ou sur
 ordinateur portable :
 \begin{itemize}
-  \item YOLOv4 élagué \citep{2021-liu-real-time-small-drones-detection} : 90,5 \gl{mAP}{mAP50} et
-    69\,\gl{FPS}{FPS} sur Tesla P100, sur un jeu propre de deux drones DJI \src{Table~4} ; l'\gl{elagage}{élagage}
+  \item \glslink{yolov4}{YOLOv4} élagué \citep{2021-liu-real-time-small-drones-detection} : 90,5 \glslink{map}{mAP50} et
+    69\,\glslink{fps}{FPS} sur \glslink{p100}{Tesla P100}, sur un jeu propre de deux drones DJI \src{Table~4} ; l'\gl{elagage}{élagage}
     fait chuter le rappel sur les petits drones à 30,7\,\%, qu'une augmentation ciblée
     remonte à 72,6\,\% \src{§4.3} ;
-  \item F-YOLOv7 \citep{2025-du-f-yolov7-fast-robust-real} : 98,8 d'AP50 de validation sur
-    DUT Anti-UAV avec \gl{soustraction}{soustraction de fond}, sur RTX 4090 \src{Table~2} ;
+  \item \glslink{f-yolov7}{F-YOLOv7} \citep{2025-du-f-yolov7-fast-robust-real} : 98,8 d'\glslink{ap50}{AP50} de validation sur
+    DUT Anti-UAV avec \gl{soustraction}{soustraction de fond}, sur \glslink{rtx4090}{RTX 4090} \src{Table~2} ;
   \item DotD-YOLOv9-C \citep{2024-gao-dataset-detection-method-unmanned-aerial} : 92,6 de
-    mAP@0.5 sur Anti2, sur RTX 4060 portable, sans aucun temps d'inférence \src{Table~5} ;
-  \item YOLO-GCOF \citep{2025-yu-yolo-gcof-lightweight-low-altitude} : 91,5 de mAP@50 sur
-    DUT Anti-UAV\med{}, annoncé pour Raspberry Pi 4B sans aucun chiffre sur la carte ;
-  \item soustraction de fond + MobileNetV2 \citep{2020-seidaliyeva-real-time-accurate-drone-detection} :
-    F1 0,742 sur Drone-vs-Bird, 9\,FPS en 1080p sur un matériel non nommé \src{Table~1, §3.4} ;
+    \glslink{map50}{mAP@0.5} sur Anti2, sur RTX 4060 portable, sans aucun temps d'inférence \src{Table~5} ;
+  \item \glslink{yolo-gcof}{YOLO-GCOF} \citep{2025-yu-yolo-gcof-lightweight-low-altitude} : 91,5 de \glslink{map50}{mAP@50} sur
+    DUT Anti-UAV\med{}, annoncé pour \glslink{rpi}{Raspberry Pi 4B} sans aucun chiffre sur la carte ;
+  \item soustraction de fond + \glslink{mobilenetv2}{MobileNetV2} \citep{2020-seidaliyeva-real-time-accurate-drone-detection} :
+    \glslink{f1}{F1} 0,742 sur Drone-vs-Bird, 9\,\glslink{fps}{FPS} en 1080p sur un matériel non nommé \src{Table~1, §3.4} ;
   \item réseau de caméras stéréo panoramiques
-    \citep{2023-zheng-detection-localization-tracking-multiple-mavs} : 9\,FPS avec une RTX
+    \citep{2023-zheng-detection-localization-tracking-multiple-mavs} : 9\,\glslink{fps}{FPS} avec une RTX
     3070 par groupe de 8 objectifs \src{§VII-B.3}\med ;
   \item fusion IR + visible + audio \citep{arxiv-2007.07396-real-time-drone-detection-tracking}
     sur portable : la fusion à deux capteurs supprime les fausses alarmes relevées en
     10 minutes sans drone \src{§V-D}.
 \end{itemize}
 Le seul portage \gl{FPGA}{FPGA} est celui de \citet{2024-nguyen-fpga-soc-implementation-yolov4-flying}
-sur ZCU104 (section~\ref{sec:fpga}), sur un jeu d'images d'Internet et de caméras au sol.
+sur \glslink{zcu104}{ZCU104} (section~\ref{sec:fpga}), sur un jeu d'images d'Internet et de caméras au sol.
 Trois idées de ces travaux restent utiles pour l'embarqué : l'augmentation « petits
 objets » après élagage, l'appariement DotD sans coût d'inférence, et les jeux
 multi-classes (drone, oiseau, avion) pour mesurer les fausses alarmes. En revanche, la
@@ -42,15 +42,29 @@ soustraction de fond, centrale dans trois d'entre eux, suppose une caméra fixe 
 fonctionne pas depuis un drone en mouvement, ce que reconnaissent
 \citet[§2.1]{2020-seidaliyeva-real-time-accurate-drone-detection}.
 
+\paragraph{Caméras événementielles.} Le survey de
+\citet{arxiv-2508.04564-drone-detection-event-cameras}\pp{} recense la détection de
+drones par caméra événementielle (\gl{DVS}{DVS}) : représentations des événements, détecteurs
+(nuages de points, \glslink{detr}{DETR} multimodal, \gl{SNN}{SNN}), suivi, signature des hélices, et une douzaine
+de jeux (FRED, NeRDD, Ev-UAV, SFERA…) \src{§4--§6, Table~1}. Les systèmes décrits sont
+presque tous à capteur fixe ; la distinction sol $\rightarrow$ air / air $\rightarrow$ air
+n'est pas faite par les auteurs \deduit. Le survey ne donne aucun chiffre propre : les
+avantages annoncés (latence de l'ordre de la microseconde, plage dynamique > 120\,dB,
+faible consommation) sont affirmés \src{§1} sans mesure ni comparaison à un \gl{GPU}{GPU} embarqué, et les
+puces neuromorphiques citées (\glslink{loihi}{Loihi}, Speck) n'ont aucune puissance rapportée.
+Il sert de carte des jeux événementiels, pas de résultat embarqué ; comme la soustraction
+de fond, l'intérêt du capteur (fond statique supprimé) se réduit quand la caméra bouge
+avec le drone \deduit.
+
 \subsection{Air $\rightarrow$ air : le cas embarqué}
 
 \paragraph{Évaluer les détecteurs.} \citet{2021-zheng-air-air-visual-detection-micro}
 posent explicitement la distinction : en air $\rightarrow$ air, le fond peut être urbain
 ou naturel et la cible faire moins de 10$\times$10 pixels \src{§I}. Sur Det-Fly, les huit
-détecteurs évalués vont de 69,5 (RefineDet) à 82,4 d'\gl{AP}{AP} (Grid R-CNN), YOLOv3 étant à
-72,3 d'AP pour 32\,ms sur RTX 2080Ti \src{§V-A, §V-B}\med. L'AP moyenne des huit passe de
+détecteurs évalués vont de 69,5 (RefineDet) à 82,4 d'\glslink{ap}{AP} (Grid R-CNN), \glslink{yolov3}{YOLOv3} étant à
+72,3 d'\glslink{ap}{AP} pour 32\,\glslink{u-ms}{ms} sur \glslink{rtx2080ti}{RTX 2080Ti} \src{§V-A, §V-B}\med. L'\glslink{ap}{AP} moyenne des huit passe de
 88,3\,\% sur fond de ciel à 62,0\,\% sur fond urbain \src{Table~III}. Aucun détecteur n'est
-porté à bord, alors que le choix de ResNet-50 est motivé par l'embarqué \src{§IV}.
+porté à bord, alors que le choix de \glslink{resnet}{ResNet-50} est motivé par l'embarqué \src{§IV}.
 
 \paragraph{Exploiter le mouvement.} En air $\rightarrow$ air, les méthodes les plus
 précises combinent apparence et mouvement :
@@ -58,32 +72,60 @@ précises combinent apparence et mouvement :
   \item Dogfight \citep{arxiv-2103.17242-dogfight-detecting-drones-drones-videos}\pp{}
     (CVPR~2021 probable) segmente les drones image par image, puis retrouve des candidats
     par frontières de mouvement et les valide par un I3D sur des cuboïdes de 8 images. Le
-    F1 passe de 0,90 (apparence) à 0,92 (apparence et mouvement) sur NPS-Drones
+    \glslink{f1}{F1} passe de 0,90 (apparence) à 0,92 (apparence et mouvement) sur NPS-Drones
     \src{Table~3}. Aucun temps de calcul n'est rapporté ; la fenêtre temporelle impose au
     moins 4 images de latence \deduit.
-  \item GLAD \citep{arxiv-2312.11008-global-local-mav-detection-challenging}\pp{} combine
-    un YOLOv5s global, un module de mouvement avec compensation de l'\gl{egomotion}{ego-motion} par
-    homographie, et un YOLOv5s local sur une région de 300$\times$300 suivie par Kalman. Sur
-    ARD-MAV, il obtient 0,80 d'AP50 contre 0,56 pour YOLOv5s à 640 et 0,73 pour TPH-YOLOv5l
-    à 1536 (12,8\,FPS) \src{Table~IV}. Sur Jetson Xavier NX, en TensorRT, il tourne à
-    23,6\,FPS en moyenne, mais à 5,1\,FPS quand le module de mouvement global est appelé
+  \item \glslink{glad}{GLAD} \citep{arxiv-2312.11008-global-local-mav-detection-challenging}\pp{} combine
+    un \glslink{yolov5s}{YOLOv5s} global, un module de mouvement avec compensation de l'\gl{egomotion}{ego-motion} par
+    homographie, et un \glslink{yolov5s}{YOLOv5s} local sur une région de 300$\times$300 suivie par \glslink{kalman}{Kalman}. Sur
+    ARD-MAV, il obtient 0,80 d'\glslink{ap50}{AP50} contre 0,56 pour \glslink{yolov5s}{YOLOv5s} à 640 et 0,73 pour \glslink{tph-yolov5}{TPH-YOLOv5l}
+    à 1536 (12,8\,\glslink{fps}{FPS}) \src{Table~IV}. Sur \glslink{xavier-nx}{Jetson Xavier NX}, en TensorRT, il tourne à
+    23,6\,\glslink{fps}{FPS} en moyenne, mais à 5,1\,\glslink{fps}{FPS} quand le module de mouvement global est appelé
     \src{Table~VIII} ; la précision sur la carte et la puissance ne sont pas mesurées.
-  \item GL-YOMO \citep{arxiv-2411.02582-real-time-detection-small-uavs}\pp{} suit la même
-    logique global/local avec \gl{flot}{flot optique} et Kalman, à 21,6\,FPS sur Xavier NX
-    \src{§IV-E}. Sur Drone-vs-Bird, son AP (0,763) est sous celle de RT-DETR (0,773), à un
-    seuil d'\gl{IoU}{IoU} de 0,1 \src{Table~II}. Le point de vue du capteur n'est pas déclaré.
+  \item \glslink{gl-yomo}{GL-YOMO} \citep{arxiv-2411.02582-real-time-detection-small-uavs}\pp{} suit la même
+    logique global/local avec \gl{flot}{flot optique} et \glslink{kalman}{Kalman}, à 21,6\,\glslink{fps}{FPS} sur \glslink{xavier-nx}{Xavier NX}
+    \src{§IV-E}. Sur Drone-vs-Bird, son \glslink{ap}{AP} (0,763) est sous celle de \glslink{detr}{RT-DETR} (0,773), à un
+    seuil d'\glslink{iou}{IoU} de 0,1 \src{Table~II}. Le point de vue du capteur n'est pas déclaré.
 \end{itemize}
-GLAD est le seul travail air $\rightarrow$ air du corpus avec un chiffre embarqué. Sa
-décomposition montre que la partie non neuronale (homographie, Lucas-Kanade, morphologie)
-devient le goulot sur Jetson, ce qui plaide pour son accélération matérielle \deduit.
+\paragraph{Fermer la boucle à bord.} SCOUT
+\citep{arxiv-2609.21005-project-scout-interceptor-drone-perimeter}\pp{} est le seul
+intercepteur du corpus dont toute la chaîne tourne à bord, détection, suivi et commande, sur
+une \glslink{orin-nx}{Jetson Orin NX} 16\,Go \src{§IV-A}. Un \glslink{yolo26n}{YOLO26n}, pré-entraîné sur quatre jeux dont
+Det-Fly et DUT Anti-UAV puis affiné sur 3\,931 images de la cible (un DJI Neo), passe en
+TensorRT en FP16 ; \glslink{bytetrack}{ByteTrack}, un filtre géométrique de rejet des sauts et une loi PD
+saturée « gardien de but » ferment la boucle par MAVROS \src{§III}. Chiffres rapportés :
+\begin{itemize}
+  \item \glslink{map50}{mAP@50} de 0,955 (0,824 en \glslink{map5095}{mAP@50-95}) sur une validation de 437 images de la même
+    cible \src{Table~I} ;
+  \item 48\,\glslink{fps}{FPS} pour la chaîne de détection en TensorRT contre 22,5 en PyTorch, avec une
+    inférence de 7,9\,\glslink{u-ms}{ms} et 20,8\,ms pour la chaîne côté détecteur, hors SDK caméra et
+    transport d'image \src{§III-B.2, Table~IV}\med ;
+  \item en vol (104,5\,\glslink{u-s}{s}, en intérieur), 31,82\,\glslink{fps}{FPS} de publication, un écart maximal de
+    100,7\,ms entre messages et 92,2\,\% d'images avec détection valide
+    \src{Table~III}.
+\end{itemize}
+Les deux débits ne mesurent pas la même chose (banc partiel contre publication en vol) et
+ne se comparent pas. La puissance est \nr, ainsi que la charge CPU/GPU ; la \glslink{gamme}{gamme} est celle
+des \glslink{jetson}{Jetson} (autour de 10 à 25\,\glslink{u-w}{W}) \deduit. Les limites sont nettes : un vol en salle
+(20$\times$40$\times$5\,m), une seule cible pilotée à la main, aucun taux
+d'interception \src{§IV-D}, une validation du même domaine que l'affinage (risque de fuite
+\deduit), ni \glslink{aps}{AP$_S$} ni précision par distance, ni code publié.
+
+\glslink{glad}{GLAD} et SCOUT sont les deux travaux air $\rightarrow$ air du corpus avec un débit mesuré
+sur la carte, tous deux sur \glslink{jetson}{Jetson} et sans puissance ; seul SCOUT est évalué en vol. La
+décomposition de \glslink{glad}{GLAD} montre que la partie non neuronale (homographie, Lucas-Kanade, morphologie)
+devient le goulot sur \glslink{jetson}{Jetson}, ce qui plaide pour son accélération matérielle \deduit.
 L'idée global $\rightarrow$ local contourne aussi la perte de résolution du
-sous-échantillonnage à 640\,px sans \gl{teteP2}{tête P2} : un petit \gl{YOLO}{YOLO} sur une région de
+sous-échantillonnage à 640\,px sans \glslink{p2head}{tête P2} : un petit \glslink{yolo}{YOLO} sur une région de
 320$\times$320 est un candidat naturel pour un FPGA \deduit.
 
 \subsection{Bilan}
 
 Aucun détecteur air $\rightarrow$ air du corpus n'est mesuré sur \gl{SoC}{SoC} FPGA ou \gl{MCU}{MCU}, et
-aucun n'a de puissance mesurée. Aucun n'est évalué en \gl{boucle}{boucle fermée} sur un intercepteur.
+aucun n'a de puissance mesurée. Un seul, SCOUT, est évalué en \gl{boucle}{boucle fermée} sur un
+intercepteur, en salle, contre une seule cible et sans métrique d'interception
+\citep[§IV-D]{arxiv-2609.21005-project-scout-interceptor-drone-perimeter}\pp. La détection
+événementielle air $\rightarrow$ air est absente du corpus.
 Il manque aussi un jeu air $\rightarrow$ air multi-classes (drones, oiseaux, avions) qui
 permette de mesurer les fausses alarmes d'un intercepteur ; Anti2
 \citep{2024-gao-dataset-detection-method-unmanned-aerial} a les classes mais mêle les

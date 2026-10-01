@@ -34,7 +34,12 @@
   ],
   "tags": [
     "drone-racing",
-    "end-to-end"
+    "end-to-end",
+    "mbrl",
+    "dreamerv3",
+    "visuomotor",
+    "hil",
+    "sim-to-real"
   ],
   "added": "2026-09-29",
   "extraction": {
@@ -46,6 +51,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

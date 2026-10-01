@@ -1,0 +1,580 @@
+% Glossaire des métriques et unités (type=metriques), base drone
+% Une entrée par clé ; les parents sont définis avant leurs enfants.
+% Tri : métriques par nom, puis ressources FPGA (préfixe « zr- »), puis unités (préfixe « zz- »).
+% Sources : corpus drone seul ; connaissance générale marquée \horscorpus ; chiffres calculés
+% à partir de valeurs publiées marqués \deduit ; \pp = preprint non relu par les pairs.
+
+% ---------------------------------------------------------------- Précision de détection
+\newglossaryentry{iou}{type=metriques, name={IoU}, sort={iou},
+  description={Intersection over Union (indice de Jaccard) entre une boîte prédite $A$ et
+  une boîte de référence $B$ : $\mathrm{IoU} = |A\cap B|/|A\cup B|$, de 0 à 1, plus haut =
+  mieux. Sert de seuil pour décider qu'une détection est juste (AP, mAP), et le seuil change
+  d'un article à l'autre : 0,5 le plus souvent, 0,25 pour un YOLOv4 sur ZCU104
+  \citep[Table~11]{2024-nguyen-fpga-soc-implementation-yolov4-flying}, 0,1 en contre-drone
+  \citep[Table~II]{arxiv-2411.02582-real-time-detection-small-uavs}\pp, 0,7 pour l'AP de
+  UAVDT \citep[§3.1]{arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object}\pp. Employée
+  seule comme précision, l'IoU n'est pas comparable à une mAP (voir l'IoU moyen de DAC-SDC).}}
+
+\newglossaryentry{iou-dacsdc}{type=metriques, name={IoU moyen (DAC-SDC)}, sort={iou-dacsdc}, parent=iou,
+  description={Métrique du concours DAC-SDC : IoU moyen sur le jeu de test, avec un seul
+  objet par image et sans tenir compte de la classe
+  \citep[§2.3]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. Dans la base, les valeurs
+  vont de 0,492 (SystemsETHZ 2018) à 0,731 (SkyNet 2020)
+  \citep[Tables~2 et 4]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. Un IoU de 0,70 n'est pas une
+  mAP de 70 : pas de classes, pas de seuil, pas d'images à plusieurs objets. Les objets
+  occupent le plus souvent 1 à 2\,\% de l'image 640$\times$360
+  \citep[§2.1]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. Le score du concours combine
+  cet IoU avec l'énergie (voir DAC-SDC). Le même SkyNet donne 0,731 sur TX2 et 0,716 sur
+  Ultra96 \citep[Tables~5--6]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp.}}
+
+\newglossaryentry{ap}{type=metriques, name={AP}, sort={ap},
+  description={Average Precision : aire sous la courbe précision-rappel d'une classe, les
+  détections étant jugées justes au-delà d'un seuil d'IoU ; de 0 à 1 (ou en \%), plus haut =
+  mieux. L'interpolation de la courbe varie selon le protocole (11 points pour VOC, 101 pour
+  COCO) \horscorpus{} ; ARD-MAV la donne à 11 points
+  \citep[Table~IV]{arxiv-2312.11008-global-local-mav-detection-challenging}\pp. Piège : dans la
+  notation COCO, \enquote{AP} désigne la moyenne sur les seuils d'IoU 0,50 à 0,95
+  \horscorpus, c'est-à-dire la mAP50-95 (ClusDet, 26,7 à 28,4 sur VisDrone val
+  \citep[Table~1]{arxiv-1904.08008-clustered-object-detection-aerial-images}\pp). D'autres
+  articles notent \enquote{AP} sans seuil, ce qui interdit la comparaison : Dogfight
+  donne 89 sur NPS-Drones et 72 sur FL-Drones, jeux ré-annotés par les auteurs
+  \citep[Tables~1--2]{arxiv-2103.17242-dogfight-detecting-drones-drones-videos}\pp. Sur
+  Det-Fly, l'AP va de 82,4 (Grid R-CNN) à 68,8 (SSD512 MobileNetV2), sur GPU de bureau
+  \citep[§V]{2021-zheng-air-air-visual-detection-micro}.}}
+
+\newglossaryentry{ap50}{type=metriques, name={AP50}, sort={ap50}, parent=ap,
+  description={AP au seuil d'IoU 0,5 (AP@0.5), parfois étiquetée \enquote{mAP} dans la notation
+  du jeu. Elle dépend fortement du jeu : le même Faster R-CNN ResNet-50 obtient 97,8 sur
+  MAV-VID et 63,2 sur Drone-vs-Bird
+  \citep[Table~1]{arxiv-2103.13933-unmanned-aerial-vehicle-visual-detection}\pp. Sur VisDrone, le
+  réglage fin sur tuiles (SAHI) amène TOOD à 43,5 d'AP50 en test-dev
+  \citep[Table~1]{arxiv-2202.06934-slicing-aided-hyper-inference-fine}\pp, valeur qui ne se
+  compare pas à l'AP COCO 0,5:0,95 du même jeu.}}
+
+\newglossaryentry{aps}{type=metriques, name={AP$_S$}, sort={aps}, parent=ap,
+  description={AP restreinte aux petits objets (surface inférieure à $32^2$ pixels dans le
+  protocole COCO \horscorpus) ; noté aussi mAP$_s$ ou mAP\_small. C'est la métrique qui
+  correspond au sujet drone, et elle est presque toujours absente : QueryDet ne rapporte
+  que le rappel sur VisDrone
+  \citep[Table~2]{arxiv-2103.09136-querydet-cascaded-sparse-query-accelerating}\pp, Drone-YOLO n'en
+  donne pas \citep[Tables~4--5]{2023-zhang-drone-yolo-efficient-neural-network}, pas plus que le
+  YOLOv4 sur ZCU104 de Nguyen et al. \citep[Table~11]{2024-nguyen-fpga-soc-implementation-yolov4-flying}.
+  Un des rares cas : YOLOv7-Drone
+  passe de 19,4 à 20,3 (tête P2) puis 22,0 \citep[Tables~9 et 12]{2023-fu-efficient-yolov7-drone-enhanced-object},
+  sur VisDrone val, entrée 640. Aucun article du corpus ne la mesure après quantification
+  \deduit.}}
+
+\newglossaryentry{apiou01}{type=metriques, name={AP à IoU 0,1}, sort={apiou01}, parent=ap,
+  description={AP calculée avec un seuil d'IoU de 0,1, utilisée en contre-drone quand la
+  cible occupe moins de 0,1\,\% de l'image
+  \citep[§I]{arxiv-2411.02582-real-time-detection-small-uavs}\pp. GL-YOMO obtient 0,763 sur
+  Drone-vs-Bird, contre 0,773 pour RT-DETR et 0,761 pour YOLOv5s
+  \citep[Table~II]{arxiv-2411.02582-real-time-detection-small-uavs}\pp : trois détecteurs à moins
+  de 0,02 d'écart, ce qui montre que le seuil est trop tolérant pour les départager
+  \deduit. Ne se compare ni à une AP50 ni à une mAP@0,25.}}
+
+\newglossaryentry{map}{type=metriques, name={mAP}, sort={map},
+  description={mean Average Precision : moyenne des AP par classe ; plus haut = mieux. Sans
+  seuil précisé, la valeur ne se lit pas. Cas du corpus : \enquote{mAP COCO} sans seuil
+  (YOLOv8n à 31, YOLOv8s à 39, YOLOv8m à 44, quel que soit le Jetson, 32 sur Raspberry Pi~5 avec
+  Hailo-8)
+  \citep[§IV-C]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp ; une
+  astérisque sur la mAP COCO de SATAY non extraite du PDF
+  \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}, alors
+  que sa Table~IV est en mAP50 ; \enquote{mAP (IoU n/r)} chez Elhence et al.
+  \citep[§V-A]{2025-elhence-fpga-accelerated-yolox-enhanced-attention} et dans BlankSkip
+  \citep[Table~2]{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp. Autres pièges : jeu propre
+  (voir mAP50-95), jeu restreint à quelques classes (3 classes de VOC, 3 objets au plus par
+  image, pour TinyissimoYOLO
+  \citep[§I]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}), mesure sur GPU et
+  non sur la cible embarquée.}}
+
+\newglossaryentry{map50}{type=metriques, name={mAP50}, sort={map50}, parent=map,
+  description={mAP au seuil d'IoU 0,5 (notée aussi mAP@0.5, mAP@0,5, mAP@50). Elle est plus
+  indulgente que la mAP50-95 sur la localisation : les deux ne se comparent pas. Pièges
+  illustrés par VisDrone : test contre val (Drone-YOLO nano, 31,0 en test et 38,1 en val
+  \citep[Tables~4--5]{2023-zhang-drone-yolo-efficient-neural-network}) ; classe unique (17,68 pour la seule
+  classe \emph{car} de VisDrone-DET, sur Zynq-7020
+  \citep[Table~9]{2025-cali-optimized-implementation-yolov3-tiny-real}) ; jeu propre à une
+  cible (93,6 pour YOLOv4 sur un jeu de drones des auteurs, sur GPU
+  \citep[Table~4]{2021-liu-real-time-small-drones-detection}) ; résolution et split (55,3 en val avec une entrée de 1280
+  \citep[Table~4]{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight}\pp{} contre 31,7 à 45,7
+  pour GCL-YOLO sur VisDrone-DET2021, split non précisé
+  \citep[Table~3]{2023-cao-gcl-yolo-ghostconv-lightweight-yolo}).}}
+
+\newglossaryentry{map025}{type=metriques, name={mAP@0,25}, sort={map025}, parent=map,
+  description={mAP au seuil d'IoU 0,25, choisie par Nguyen et al. pour de petits objets
+  volants \citep[§3.5]{2024-nguyen-fpga-soc-implementation-yolov4-flying}. YOLOv4 passe de
+  90,37 en FP32 à 83,70 en INT8 sur ZCU104, YOLOv4-tiny de 78,50 à 72,24
+  \citep[Table~11]{2024-nguyen-fpga-soc-implementation-yolov4-flying}. Jeu propre
+  (2\,000 images de test), seuil plus lâche que la mAP50 : aucune comparaison avec une
+  mAP@0,5 publiée.}}
+
+\newglossaryentry{map5095}{type=metriques, name={mAP50-95}, sort={map5095}, parent=map,
+  description={mAP moyennée sur les seuils d'IoU de 0,50 à 0,95 par pas de 0,05 (notée aussi
+  mAP@[.5:.95], mAP@0.5:0.95 ; l'\enquote{AP} de COCO). Plus basse que la mAP50 sur le même
+  modèle. Piège du jeu propre à une cible : YOLOv8n atteint 84,22 (FP32) puis 71,90
+  (INT8) sur Jetson Orin Nano, dans une salle avec un seul TurtleBot
+  \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}, alors que le même type de
+  modèle, modifié pour le DPU, tombe à 26 sur COCO et monte à 66 sur un jeu de personnes
+  \citep[Table~II]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp. Sur VisDrone, test-dev et
+  test-challenge diffèrent : un ensemble de cinq TPH-YOLOv5 donne 37,32 en test-dev et 39,18
+  en test-challenge \citep[§4.2, Table~3]{arxiv-2108.11539-tph-yolov5-improved-yolov5-transformer}\pp.}}
+
+\newglossaryentry{pr}{type=metriques, name={Précision et rappel}, sort={precision-rappel},
+  description={Précision $P = \mathrm{VP}/(\mathrm{VP}+\mathrm{FP})$ (part des détections
+  justes) et rappel $R = \mathrm{VP}/(\mathrm{VP}+\mathrm{FN})$ (part des cibles trouvées),
+  à un seuil de confiance et d'IoU donné ; plus haut = mieux. Hors de ce point de
+  fonctionnement, ils ne disent rien : GL-YOMO donne $P = 0{,}886$ et $R = 0{,}809$ à IoU
+  0,1 sur Drone-vs-Bird \citep[Table~II]{arxiv-2411.02582-real-time-detection-small-uavs}\pp. Le
+  mot \enquote{precision@20px} du suivi est une autre quantité (voir ce terme).}}
+
+\newglossaryentry{f1}{type=metriques, name={F1}, sort={f1},
+  description={Moyenne harmonique de la précision $P$ et du rappel $R$ :
+  $F_1 = 2PR/(P+R)$, de 0 à 1 (ou en \%), plus haut = mieux ; dépend du seuil de décision.
+  Deux F1 du corpus ne se comparent pas : 74,2 sur Drone-vs-Bird à IoU 0,5 pour une
+  soustraction de fond \citep[Table~1]{2020-seidaliyeva-real-time-accurate-drone-detection} ;
+  76,01 (infrarouge) et 78,49 (visible) en moyenne sur des intervalles de distance, et
+  93,23 pour un classifieur audio sur un autre jeu
+  \citep[§VI]{arxiv-2007.07396-real-time-drone-detection-tracking}.}}
+
+\newglossaryentry{meanconf}{type=metriques, name={Confiance moyenne}, sort={confiance-moyenne},
+  description={\enquote{Mean confidence} : moyenne des scores de confiance du détecteur sur
+  ses détections, sans vérité terrain. Ce n'est pas une précision : elle ne dit pas si les
+  détections sont justes, et un modèle mal calibré peut en afficher beaucoup \horscorpus. La base la marque
+  \enquote{pas une précision}. Feng et al. l'emploient pour comparer des cartes : YOLOv3 à
+  99,7 sur Jetson Nano (vidéo~1) mais 71,5 (vidéo~2), YOLOv3-tiny à 59,7 puis 54,1, et une
+  valeur nulle pour YOLOv3-tiny sur Raspberry~Pi~4 (vidéo~1)
+  \citep[Table~3]{2022-feng-benchmark-analysis-yolo-performance-edge}. Sans mAP, ces
+  chiffres n'autorisent aucune conclusion sur la qualité de détection \deduit.}}
+
+\newglossaryentry{top1}{type=metriques, name={Top-1}, sort={top1},
+  description={Taux de bonne classification pour la classe de plus haut score (top-5 : la
+  bonne classe parmi les cinq premières) ; plus haut = mieux. Métrique de classification,
+  non de détection : les 98,4 \% de LFC sur MNIST
+  \citep[Table~3]{arxiv-1612.07119-finn-framework-fast-scalable-binarized} et les 74,0 \% de top-5
+  de DoReFa-Net \citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep} n'ont aucun lien avec la mAP
+  de Tincy YOLO (50,1 sur VOC, même table).}}
+
+\newglossaryentry{detrate}{type=metriques, name={Taux de détection}, sort={taux-de-detection},
+  description={Part des images (ou des essais) où une détection valide est produite. Défini
+  par chaque article, il n'est pas un rappel : NOVA donne 98,6\,\% en milieu urbain contre
+  93,1\,\% dans le scénario surélevé, en essais de terrain
+  \citep[§V-E]{arxiv-2506.18689-nova-navigation-object-centric-visual}\pp ; SCOUT, 92,2\,\%
+  d'images avec détection valide en vol, sur une séquence de 104,5\,s
+  \citep[Table~III]{arxiv-2609.21005-project-scout-interceptor-drone-perimeter}\pp. Ni l'un ni
+  l'autre ne donne de faux positifs ni d'IoU \deduit.}}
+
+% ---------------------------------------------------------------- Suivi
+\newglossaryentry{auc}{type=metriques, name={AUC de succès}, sort={auc-succes},
+  description={Aire sous la courbe de succès en suivi d'objet (protocole OPE, one-pass
+  evaluation) : part des images où l'IoU dépasse un seuil, moyennée sur les seuils ; de 0 à 1,
+  ou en \%, plus haut = mieux. Valeurs du corpus, souvent lues sur des figures : SiamAPN++
+  56,0 sur UAV20L et 58,0 sur UAV123@10fps
+  \citep[Fig.~4]{arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network}\pp ; TCTrack 58,2 sur
+  UAVTrack112\_L \citep[§4.2]{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}\pp ; MDNet 46,4
+  sur UAVDT-SOT à 0,28\,FPS sur CPU
+  \citep[§3.3]{arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object}\pp. Piège : jeu et séquences
+  différents d'un article à l'autre, et vitesse mesurée sur un PC avant tout test en vol.}}
+
+\newglossaryentry{prec20}{type=metriques, name={Precision@20px}, sort={precision20px},
+  description={Part des images où le centre de la boîte prédite est à moins de 20 pixels du
+  centre de référence ; de 0 à 1 ou en \%, plus haut = mieux. Ce n'est pas la précision de
+  détection (voir Précision et rappel). Seuil absolu en pixels : sa sévérité dépend de la
+  résolution de l'image \deduit. HiFT : 78,7 sur UAV123
+  \citep[Table~1]{arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial}\pp, 76,3 sur UAV20L
+  \citep[Table~2]{arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial}\pp.}}
+
+\newglossaryentry{ao}{type=metriques, name={AO}, sort={ao},
+  description={Average Overlap : IoU moyen entre les boîtes prédites et la vérité sur toutes
+  les images d'une séquence, puis sur le jeu (protocole GOT-10k \horscorpus) ; plus haut =
+  mieux. SiamRPN++ à backbone SkyNet donne 36,4 et SiamMask 39,0 sur GOT-10k
+  \citep[Tables~8--9]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp, à 41,22 et
+  30,15\,FPS sur GTX~1080~Ti de bureau. L'AO d'un suiveur n'est pas l'IoU de DAC-SDC (une
+  boîte par image, sans suivi).}}
+
+\newglossaryentry{msa}{type=metriques, name={SA / mSA}, sort={msa},
+  description={State Accuracy d'Anti-UAV : IoU sur les images où la cible est visible, et
+  score de l'absence prédite sinon, moyenné par séquence puis sur le jeu (mSA)
+  \citep[§III-E]{arxiv-2101.08466-anti-uav-large-multi-modal}\pp ; plus haut = mieux. Elle
+  intègre la disparition de la cible, contrairement à l'AUC de succès. Exemples : SiamRCNN à
+  74,33 en validation infrarouge et 65,41 en test, KCF à 32,88
+  \citep[Tables~III--IV]{arxiv-2101.08466-anti-uav-large-multi-modal}\pp ; SiamDT à 68,19 en test
+  et 71,65 en validation sur Anti-UAV410, la validation étant optimiste puisque tirée des mêmes
+  séquences que l'entraînement
+  \citep[§V-B]{2024-huang-anti-uav410-thermal-infrared-benchmark}. Jeu de contre-drone filmé du sol :
+  métrique reprise, non contribution embarquée.}}
+
+\newglossaryentry{mota}{type=metriques, name={MOTA}, sort={mota},
+  description={Multiple Object Tracking Accuracy : $1 - (\mathrm{FN}+\mathrm{FP}+\mathrm{IDS})/\mathrm{GT}$
+  (CLEAR-MOT \horscorpus), jusqu'à 1 ou en \%, peut être négative, plus haut = mieux ;
+  elle pèse surtout la détection. UAVDT-MOT : 43,0 pour MDP avec des détections Faster R-CNN,
+  à 0,68\,FPS sur CPU \citep[Table~3]{arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object}\pp ;
+  défi VisDrone, TrackCG à 42,6 \citep[Table~5]{arxiv-2001.06303-detection-tracking-meet-drones-challenge}\pp.
+  Les détections fournies changent d'un protocole à l'autre.}}
+
+\newglossaryentry{idf1}{type=metriques, name={IDF1}, sort={idf1},
+  description={F1 d'identification : score F1 des identités correctement attribuées dans le
+  temps \horscorpus ; plus haut = mieux. Complète la MOTA, qui ignore la durée de bonne
+  identité. Défi VisDrone : IDF1 de 58,0 pour TrackCG, avec une MOTA de 42,6
+  \citep[Table~5]{arxiv-2001.06303-detection-tracking-meet-drones-challenge}\pp. Le survey événementiel
+  la cite pour le jeu FRED \citep{arxiv-2508.04564-drone-detection-event-cameras}\pp.}}
+
+% ---------------------------------------------------------------- Navigation et perception 3D
+\newglossaryentry{epe}{type=metriques, name={EPE}, sort={epe},
+  description={End-Point Error : distance euclidienne moyenne, en pixels, entre le flot
+  optique prédit et le flot de référence ; plus bas = mieux. NanoFlowNet : 7,122 en niveaux
+  de gris et 7,726 en couleur sur MPI Sintel (train, clean) à 141\,FPS sur GTX~1070
+  Max-Q \citep[Table~IV]{arxiv-2209.06918-nanoflownet-real-time-dense-optical}\pp. Piège : la version
+  INT8 sur GAP8, à 5,57\,FPS, n'a pas d'EPE mesurée, seulement un SQNR
+  \citep[Table~IV]{arxiv-2209.06918-nanoflownet-real-time-dense-optical}\pp : la précision et le débit
+  ne portent pas sur le même modèle.}}
+
+\newglossaryentry{ate}{type=metriques, name={ATE / erreur de trajectoire}, sort={ate},
+  description={Absolute Trajectory Error : écart entre la trajectoire estimée et la
+  trajectoire de référence, en mètres (RMS), ou normalisé par la longueur parcourue, en \%.
+  Plus bas = mieux. Navion donne une erreur normalisée de 0,28\,\% sur EuRoC, contre 0,22\,\%
+  en logiciel \citep[§V-A]{2019-suleiman-navion-2-mw-fully-integrated}. NGPS annonce 1,7 à 6,0\,m
+  d'ATE entre 40 et 150\,m contre 6,74 à 55,81\,m pour un VIO monoculaire, avec un pire cas
+  de 6,04\,m à 150\,m
+  \citep[§IV-C et §IV-E2]{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp. Une erreur en \% et une erreur en
+  mètres ne se comparent pas.}}
+
+\newglossaryentry{rmse}{type=metriques, name={RMSE de position}, sort={rmse},
+  description={Racine de l'erreur quadratique moyenne de position, en mètres ; plus bas =
+  mieux, et très sensible aux écarts extrêmes. NGPS : 2,94\,m sur cinq vols de 60 à 150\,m, avec
+  2,6\,FPS \citep[§IV-B]{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp. Suivi de plusieurs MAV en
+  simulation : environ 1,4\,m \citep[§VI-C.3]{2023-zheng-detection-localization-tracking-multiple-mavs}.
+  La vérité terrain (capture de mouvement, GNSS, simulation) change d'un article à l'autre.}}
+
+\newglossaryentry{mae}{type=metriques, name={MAE de pose}, sort={mae},
+  description={Mean Absolute Error : moyenne des valeurs absolues des erreurs, en unité de
+  la grandeur (degrés pour un lacet, mètres pour une position) ; plus bas = mieux. Adaptation
+  de domaine sur GAP8 : 13,1° de MAE de lacet sur des portes réelles pour un CNN de 6\,M de
+  paramètres, à 32,8\,FPS et 30,4\,ms
+  \citep[Table~I]{arxiv-2603.02936-self-supervised-domain-adaptation-visual}\pp. Un angle moyen ne dit
+  pas la distribution des erreurs, qui compte pour le franchissement d'une porte \deduit.}}
+
+\newglossaryentry{succesvol}{type=metriques, name={Taux de succès en vol}, sort={taux-de-succes-en-vol},
+  description={Part des essais où la tâche est accomplie, selon un critère propre à
+  l'article ; plus haut = mieux, mais avec peu d'essais. SINGER : 76,67\,\% (23 essais sur 30)
+  à moins de 1\,m du but, 66,67\,\% en tout embarqué, contre 53,33\,\% pour la base de
+  référence CLIPSeg \citep[§VI-D]{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp ; un
+  essai vaut 3,3 points \deduit. Loquercio et al. à 10\,m/s : 60\,\% en vol réel en forêt
+  contre 70\,\% en simulation \citep[Table~1]{arxiv-2110.05113-learning-high-speed-flight-wild}. Piège :
+  simulation et réel, environnements et critères ne se mélangent pas.}}
+
+\newglossaryentry{vsure}{type=metriques, name={Vitesse sûre}, sort={vitesse-sure},
+  description={Vitesse maximale à laquelle le drone peut encore s'arrêter avant un obstacle
+  détecté à la distance $d$ : $v = a_{\max}\bigl(\sqrt{T^2 + 2d/a_{\max}} - T\bigr)$, avec $T$ la
+  latence de perception à action et $a_{\max}$ l'accélération maximale
+  \citep[Éq.~3, §2.3]{2020-krishnan-sky-not-limit-visual-performance}. Plus haut = mieux. Le modèle
+  F-1 en tire un roofline : l'erreur du modèle sur la vitesse sûre est de 5 à 10\,\%, et il
+  surestime toujours \citep[§IV]{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}\pp ;
+  alléger le dissipateur la relève de 75\,\% et doubler le calculateur la baisse de 33\,\%
+  \citep[§VI]{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}\pp. Les papiers YOLO et FPGA du corpus ne la
+  mesurent pas \deduit.}}
+
+\newglossaryentry{psnr}{type=metriques, name={PSNR}, sort={psnr},
+  description={Peak Signal-to-Noise Ratio : $10\log_{10}(\mathrm{MAX}^2/\mathrm{MSE})$, en dB,
+  plus haut = mieux. Pour un rendu NeRF, mesure l'écart à l'image de référence. Tiny-DroNeRF :
+  26,94\,dB sur des images de 160 pixels de côté, 5,7\,dB sous Instant-NGP sur 800 pixels
+  \citep[Table~I]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp, et 21,2\,dB sur des données
+  réelles de nano-drone \citep[§V-D]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp. Comparer
+  deux PSNR suppose même résolution, même jeu et même nombre de vues.}}
+
+\newglossaryentry{ttfa}{type=metriques, name={TTFA}, sort={ttfa},
+  description={Time-to-first-action : délai entre le début d'une requête au modèle et le
+  premier jeton d'action valide \citep[§5.3]{arxiv-2605.00884-litevla-h-dual-rate-vision}\pp ; plus
+  bas = mieux. Sépare le délai d'action de la latence complète d'une phrase. LiteVLA-H sur
+  Jetson : action en 50,65\,ms (19,74\,Hz) et réponse sémantique en 149,90 à 164,57\,ms
+  \citep[§6.1]{arxiv-2605.00884-litevla-h-dual-rate-vision}\pp ; le pré-remplissage pèse 47,8\,ms
+  \citep[§6.2]{arxiv-2605.00884-litevla-h-dual-rate-vision}\pp. Identifier le 50,65\,ms au TTFA est une
+  déduction \deduit.}}
+
+% ---------------------------------------------------------------- Débit, latence et coût
+\newglossaryentry{fps}{type=metriques, name={FPS}, sort={fps},
+  description={Images (frames) traitées par seconde ; plus haut = mieux. Ce n'est pas
+  l'inverse de la latence dès que le calcul est pipeliné, groupé ou multi-fil : YOLOv4 sur
+  ZCU104 passe de 9,2 à 17,9\,FPS avec quatre fils (latence de bout en bout de 107,94\,ms avec
+  un seul) \citep[Tables~12--13]{2024-nguyen-fpga-soc-implementation-yolov4-flying}.
+  Pièges : FPS de l'accélérateur seul ou de la chaîne (208,69\,FPS pour le cœur, environ 30
+  en streaming caméra, avec 32,2\,ms de prétraitement et 25,8\,ms de post-traitement sur
+  l'ARM \citep[Table~10, §4.4]{2025-cali-optimized-implementation-yolov3-tiny-real}) ; règle du
+  concours (le FPS de DAC-SDC 2022 exclut le chargement des images : 2\,020,6 en 2022 contre 299,3
+  en 2021 \citep[Tables~5--6, §2.3]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}) ;
+  lot (voir ce terme) ; résolution d'entrée ; jeu d'images. Un FPS mesuré sur une vidéo de test
+  n'est pas celui d'un flux de caméra.}}
+
+\newglossaryentry{fpsw}{type=metriques, name={FPS/W}, sort={fps/w}, parent=fps,
+  description={Débit par watt, $\mathrm{FPS}/P$, soit des images par joule ; son inverse est
+  l'énergie par image. Plus haut = mieux. N'a de sens qu'à portée de puissance égale
+  (colonne \texttt{power\_scope} : puce, carte, estimée, non précisée). Calculs faits à
+  partir de valeurs publiées \deduit : YOLOv8n INT8 sur Orin NX, 65,83\,FPS pour 10,305\,W,
+  soit 6,4\,FPS/W, contre 6,0 sur Orin Nano (44,9\,FPS pour 7,483\,W), puissances de télémétrie
+  \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look} ; SkyNet, 5,0\,FPS/W sur TX2 et
+  3,5 sur Ultra96, portées non décrites, FPGA en lot de 4
+  \citep[Tables~5--6]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp ; SEUer 2022, environ
+  1\,430\,FPS/W sur ZU3 (1,413\,W), mais avec un FPS qui exclut le chargement des images
+  \citep[Table~6]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. Un FPS/W de MCU
+  (Tiny-PULP-Dronet : 89\,FPS pour 34\,mW sur la puce, soit environ 2\,600\,FPS/W
+  \deduit{} \citep[§III-A]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp) ne se compare pas à
+  celui d'un détecteur : le réseau de collision et un YOLO n'ont pas la même tâche.}}
+
+\newglossaryentry{lot}{type=metriques, name={Lot (batch)}, sort={lot},
+  description={Nombre d'images traitées ensemble. Un débit en lot cache la latence par image :
+  les 25,05\,FPS de SkyNet sur Ultra96 sont obtenus en lot de 4, sans latence par image rapportée
+  \citep[§6.4]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp. Un lot de 1 est la bonne
+  hypothèse pour un drone qui traite chaque image à l'arrivée : Drone-YOLO mesure sur une
+  vidéo HD à lot 1 \citep[§5.2]{2023-zhang-drone-yolo-efficient-neural-network}, tandis que la
+  Table~4 de l'étude Jetson et Raspberry~Pi~5 ne donne pas le lot
+  \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.}}
+
+\newglossaryentry{latence}{type=metriques, name={Latence}, sort={latence},
+  description={Délai entre une entrée et sa sortie, en ms ; plus bas = mieux, et c'est la
+  grandeur qui compte pour le vol (Kaufmann et al. : 40\,ms pour le réseau de portes sur
+  Jetson et 8\,ms pour la politique sur CPU, avec une caméra à 30\,Hz
+  \citep[Methods]{2023-kaufmann-champion-level-drone-racing-deep}). Trois périmètres circulent : le
+  réseau seul (5,5\,ms pour TinyissimoYOLO sur MAX78000
+  \citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}), la chaîne du détecteur,
+  la boucle perception-commande complète. Un réseau de 96\,ms à 50\,MHz (PULP-Dronet) tombe à 11,3\,ms une
+  fois réduit \citep[§III-B]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp. Ne pas confondre
+  avec 1/FPS (voir FPS et lot).}}
+
+\newglossaryentry{latpartielle}{type=metriques, name={Latence partielle}, sort={latence-partielle}, parent=latence,
+  description={Sous-total d'une chaîne, présenté comme la latence du système. SCOUT : 7,9\,ms
+  d'inférence TensorRT, 20,8\,ms pour la chaîne côté détecteur, mais hors SDK de la caméra et
+  transport d'image, et 22,5\,FPS avec PyTorch contre 48 avec TensorRT
+  \citep[Table~IV, §III-B.2]{arxiv-2609.21005-project-scout-interceptor-drone-perimeter}\pp. YOPOv2 :
+  3\,ms en simulation (2\,ms d'inférence et 1\,ms de post-traitement) sur i7 et RTX~3060, mais
+  8,2\,ms sur Orin~NX en vol réel
+  \citep[§IV-B]{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp. Ni l'un ni l'autre ne donne la latence
+  de la capture à la commande.}}
+
+\newglossaryentry{latsimulee}{type=metriques, name={Latence simulée (GVSOC)}, sort={latence-simulee}, parent=latence,
+  description={Latence issue d'un simulateur de cycles et non de la puce. Tiny-DroNeRF : 73\,ms
+  par pas d'entraînement et 4\,100\,ms pour le rendu d'une image 160$\times$160 sur GAP9, valeurs
+  de GVSOC \citep[§V-C]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp. Le simulateur est
+  cycle-accurate, mais rien n'a été mesuré sur la puce, et la puissance de 60\,mW qui l'accompagne
+  est une moyenne dont la méthode n'est pas décrite.}}
+
+\newglossaryentry{gops}{type=metriques, name={GOPS}, sort={gops},
+  description={Giga-opérations par seconde, débit de calcul ; plus haut = mieux (GOP :
+  nombre d'opérations d'une inférence, propriété du modèle). Pour un réseau,
+  $\mathrm{GOPS} = \mathrm{GOP}\times\mathrm{FPS}$. Pièges : 1 MAC compte pour 2 opérations
+  \horscorpus{}, convention pas toujours rappelée ; crête contre débit effectif (GAP9 annonce
+  15,6\,GOPS en DSP et 32,2\,GMAC/s en apprentissage automatique
+  \citep[§2.1]{arxiv-2407.13706-gap9shield-150gops-ai-capable-ultra}\pp, sans détecteur derrière) ; GOPS sans
+  FPS. DAC-SDC 2022 : 808,2\,GOPS pour SEUer et 906,5 pour Ultrateam
+  \citep[Table~6]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}, mais avec un FPS qui exclut le
+  chargement des images ; SATAY, 1\,244\,GOPS pour YOLOv8s sur VCU118, à 57,4\,W de portée non décrite
+  \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.}}
+
+\newglossaryentry{gopsw}{type=metriques, name={GOPS/W}, sort={gops/w}, parent=gops,
+  description={GOPS par watt, efficacité de calcul ; plus haut = mieux. Piège : crête de
+  la puce contre mesure sur un réseau, et portée de la puissance. GAP8 : 600\,GMAC/s/W en
+  crête du moteur de convolution, tandis que le §IV écrit \enquote{10\,GMAC/s/W}, unité erronée
+  \citep[Abstract, §IV]{2018-flamand-gap-8-risc-v-soc}. GAP9 : 330\,$\mu$W par GOP, soit environ
+  3\,000\,GOPS/W \deduit{} \citep[§2.1]{arxiv-2407.13706-gap9shield-150gops-ai-capable-ultra}\pp. Les
+  GOPS/W d'un survey (81,92 pour YOLOv2 sur Arria-10, 79 pour un SSD sur ZU3EG) sont repris sans
+  vérification à la source \citep[§V-A]{2025-hozhabr-survey-real-time-object-detection}.}}
+
+\newglossaryentry{tops}{type=metriques, name={TOPS}, sort={tops},
+  description={Téra-opérations par seconde ($10^{12}$) ; plus haut = mieux, mais c'est presque
+  toujours une valeur de crête de fiche technique \constr. YOPOv2 prend « 100\,TOPS » pour
+  le GPU d'un Orin~NX \citep[§IV-A]{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp ; Elhence et al.
+  attribuent 0,28\,TOPS à un STM32H7A3 qui fait tourner un YOLOX en 15\,FPS, valeur invraisemblable
+  \citep[§V-D]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}. Un survey cite environ 1 à
+  143\,TOPS pour des FPGA, avec la mise en garde contre ces crêtes
+  \citep[Table~IV]{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp.}}
+
+\newglossaryentry{flops}{type=metriques, name={FLOPs}, sort={flops},
+  description={Nombre d'opérations flottantes d'une inférence (GFLOPs : milliards) ; plus bas =
+  mieux. Mesure de coût théorique, pas de latence : la convolution creuse de YOLOv7-Drone
+  réduit les GFLOPs sans gain sur GPU dense, et le modèle final reste à 144,6\,GFLOPs
+  \citep[Table~5]{2023-fu-efficient-yolov7-drone-enhanced-object}. Ils dépendent de la résolution :
+  TPH-YOLOv5 compte 556,6\,GFLOPs à 25\,FPS sur UAVDT (entrée 1024) et 315,4 à 7,4\,FPS sur VisDrone
+  (entrée 1536) \citep[Tables~5--6]{2023-zhao-tph-yolov5-boosting-object-detection}. L'élagage de 30\,\% de
+  LCAM-YOLOX baisse de 8,45 à 6,31\,GFLOPs
+  \citep[Table~IV]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}. Ne pas confondre FLOPs
+  (nombre) et FLOPS (débit).}}
+
+\newglossaryentry{mac}{type=metriques, name={MAC}, sort={mac},
+  description={Multiply-ACcumulate : une multiplication suivie d'une addition, opération de
+  base d'un réseau (MMAC : millions ; GMAC/s : débit). 1 MAC = 2 opérations dans la convention
+  des GOPS \horscorpus. Coût des modèles de nano-drone : PULP-Frontnet de 4,0 à 14,1\,MMAC par
+  image \citep[Table~II]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp. Débit de la puce : GAP8
+  annonce 10\,GMAC/s à 90\,MHz (Abstract) contre 9,2 à 100\,MHz en 8$\times$8 bits
+  \citep[Table~I]{2018-flamand-gap-8-risc-v-soc} ; MAX78000, 107\,MAC par cycle
+  \citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}. Des MAC sans mesure de
+  latence ne disent pas si le réseau tient dans le budget de vol.}}
+
+\newglossaryentry{energie}{type=metriques, name={Énergie par inférence}, sort={energie-par-inference},
+  description={Énergie consommée par une image traitée, $E = P\times t$, en mJ ou $\mu$J ;
+  plus bas = mieux. Plage du corpus : 10\,$\mu$J pour CIFAR-10 sur GAP8
+  \citep[§IV]{2018-flamand-gap-8-risc-v-soc}, 27\,$\mu$J sur Loihi à 200\,Hz mais sans entrées-sorties
+  \citep[Abstract]{arxiv-2303.08778-fully-neuromorphic-vision-control-autonomous}\pp, 196\,$\mu$J pour
+  TinyissimoYOLO sur MAX78000 \citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint},
+  0,179\,J pour YOLOv8n INT8 sur Orin NX \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.
+  Piège : le périmètre (réseau seul contre carte entière), et des énergies qui ne se recalculent
+  pas : SATAY donne 252\,mJ là où $6{,}8\,\mathrm{ms}\times42{,}9\,\mathrm{W} \approx 292$\,mJ
+  \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} \deduit{} ; de
+  même, 0,179\,J pour YOLOv8n INT8 sur Orin~NX contre $10{,}305\,\mathrm{W}/65{,}83\,\mathrm{FPS}
+  \approx 0{,}157$\,J \deduit.}}
+
+\newglossaryentry{energiereq}{type=metriques, name={Énergie par requête}, sort={energie-par-requete}, parent=energie,
+  description={Énergie par requête au modèle, en mWh, repos soustrait : $E = (E_{\mathrm{tot}} -
+  E_{\mathrm{repos}})/N$, mesurée au wattmètre USB. YOLOv8n sur Orin Nano : 0,13 à 0,22\,mWh, contre
+  0,28 à 1,07 sur Jetson Nano
+  \citep[§IV]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp. Le repos de l'Orin Nano,
+  362\,mWh sur 5\,min, est le plus élevé de toutes les plateformes
+  \citep[Fig.~2a]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp : soustraire le repos
+  avantage la carte qui consomme beaucoup à vide.}}
+
+\newglossaryentry{portee}{type=metriques, name={Portée de la puissance}, sort={portee},
+  description={Ce que la puissance rapportée englobe, notée dans \texttt{power\_scope} :
+  \emph{board} (carte entière au wattmètre), \emph{chip} (rails ou télémétrie, par exemple
+  \texttt{tegrastats}), \emph{estimated} (outil de conception), \emph{unspecified}. Dans la
+  base, 247 lignes sur 352 n'ont aucune puissance. Deux puissances de portées différentes ne
+  se comparent pas : 10,305\,W de télémétrie sur Orin~NX
+  \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}, 13,20\,W à la carte sur ZCU104
+  contre 9,72 sur KV260 \citep[§V-D]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}, 16,1\,W au repos
+  à la prise sur un autre ZCU104
+  \citep[§5.3]{2024-nguyen-fpga-soc-implementation-yolov4-flying}, 34\,mW sur la puce GAP8 pour Tiny-PULP-Dronet
+  \citep[§III]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp{} et 64\,mW pour la carte
+  de DroNet \citep[§VII]{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}\pp : ni le réseau ni la portée
+  ne sont les mêmes.}}
+
+\newglossaryentry{gamme}{type=metriques, name={Gamme de puissance}, sort={gamme-de-puissance},
+  description={Ordre de grandeur de la puissance d'un résultat : \emph{nano} (GAP8, MCU,
+  ASIC, du mW à quelques centaines de mW), \emph{FPGA} (SoC Zynq ou Kria, de 1 à 30\,W selon la
+  carte), \emph{Jetson} (environ 10\,W). Exemples : Navion à 24\,mW sur la puce, 2\,mW à 20\,FPS
+  \citep[§V-A, §V-D]{2019-suleiman-navion-2-mw-fully-integrated} ; le Zynq-7020 de Calì et al., 2,12 à
+  2,55\,W à la carte \citep[Table~9]{2025-cali-optimized-implementation-yolov3-tiny-real} ; YOLOv8n sur
+  Orin Nano, 7,5\,W \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}. Trois ordres de
+  grandeur séparent les gammes, mais aussi la tâche : navigation en niveaux de gris d'un côté, détection
+  640$\times$640 de l'autre \deduit.}}
+
+\newglossaryentry{dac-sdc}{type=metriques, name={DAC-SDC}, sort={dac-sdc},
+  description={Design Automation Conference System Design Contest : concours de détection
+  d'un objet par image (jeu DJI-UAV) sur plateformes imposées. Le score combine l'IoU et
+  l'énergie, $\mathrm{score} = \mathrm{IoU}\times(1+\mathrm{ES})$, avec une énergie
+  logarithmique à base différente pour FPGA et GPU
+  \citep[Éq.~3--6]{2021-xu-dac-sdc-low-power-object}, et des seuils d'IoU 0,7 et de 30\,FPS à
+  partir de 2021 \citep[§2.3, Éq.~3--4]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. La puissance
+  est mesurée au wattmètre sur la carte FPGA, par les capteurs internes sur TX2
+  \citep[§2.3]{2021-xu-dac-sdc-low-power-object}. Chiffres propres au concours (IoU mono-objet, FPS
+  qui exclut le chargement depuis 2022) : jamais directement comparables à des résultats sur
+  VisDrone.}}
+
+% ---------------------------------------------------------------- Ressources FPGA
+\newglossaryentry{lut}{type=metriques, name={LUT}, sort={zr-lut},
+  description={Look-Up Table : brique logique d'un FPGA (table de vérité à 6 entrées sur les
+  familles AMD récentes \constr). Compte rapporté à la capacité du circuit : DAC-SDC
+  sur Zynq UltraScale+ ZU3, de 45\,900 (XJTU-Tripler 2019) à 65\,700 LUT (Ultrateam 2022)
+  \citep[Tables~3 et 6]{2024-zhang-comprehensive-analysis-dac-sdc-fpga} pour un circuit de 70\,560
+  \constr ; YOLOv3-tiny réduit sur Zynq-7020, 41\,605 LUT
+  \citep[Table~9]{2025-cali-optimized-implementation-yolov3-tiny-real}. Piège : un compte seul ne
+  vaut rien sans la référence du circuit.}}
+
+\newglossaryentry{ff}{type=metriques, name={FF}, sort={zr-ff},
+  description={Flip-flop : bascule à un bit, registre du FPGA. Les ressources FF sont données
+  avec les LUT, par exemple \enquote{high} dès un seul cœur DPU sur Kria KV260
+  \citep[§V-C]{2025-elhence-fpga-accelerated-yolox-enhanced-attention} ; la Table~VI chiffrée de cet
+  article est absente de l'extraction. \texttt{benchmarks.csv} n'a pas de colonne FF : le
+  chiffre n'est pas relevé dans la base.}}
+
+\newglossaryentry{dsp}{type=metriques, name={DSP}, sort={zr-dsp},
+  description={Bloc de traitement du signal d'un FPGA : multiplieur-accumulateur câblé ; avec
+  les LUT et la BRAM, il borne le parallélisme d'un accélérateur. DAC-SDC sur Zynq-7020 : 220 DSP
+  pour TGIIF 2018 et 172 pour SystemsETHZ, contre 263 à 360 sur ZU3 entre 2019 et 2022
+  \citep[Tables~2--6]{2024-zhang-comprehensive-analysis-dac-sdc-fpga} ; YOLOv3-tiny réduit : 204 DSP
+  \citep[Table~9]{2025-cali-optimized-implementation-yolov3-tiny-real}. Un Zynq-7020 en compte 220
+  \constr{} : TGIIF les emploie tous. Zhang et al. normalisent le FPS au prorata des DSP,
+  approximation maison \citep[§4.4]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. La quantification
+  change l'usage d'un DSP (plusieurs MAC INT8 par bloc \horscorpus).}}
+
+\newglossaryentry{bram}{type=metriques, name={BRAM}, sort={zr-bram},
+  description={Block RAM : mémoire embarquée du FPGA, en blocs de 18 ou 36\,Kbit
+  \horscorpus ; elle borne la taille des poids et des tampons en place. Unités non homogènes : 138
+  blocs pour YOLOv3-tiny réduit sur Zynq-7020
+  \citep[Table~9]{2025-cali-optimized-implementation-yolov3-tiny-real} ; SATAY, pour YOLOv8s, 2\,782,5 sur VCU110 et 661 sur
+  VCU118 \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}, sans
+  unité précisée dans la base ; Zhang et al. donnent la BRAM en Mo
+  \citep[Tables~2--6]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. Ramener à des kbit avant de
+  comparer.}}
+
+\newglossaryentry{uram}{type=metriques, name={URAM}, sort={zr-uram}, parent=bram,
+  description={UltraRAM : mémoire de 288\,Kbit des familles UltraScale+ \constr, plus grande
+  que la BRAM, absente des Zynq-7000. Sur KV260, l'URAM permet de garder BRAM et DSP
+  \enquote{modérés} \citep[§V-C]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}, mais le
+  chiffre est absent de l'extraction. Aucun compte d'URAM chiffré dans la base.}}
+
+% ---------------------------------------------------------------- Unités
+\newglossaryentry{u-w}{type=metriques, name={W}, sort={zz-01-w},
+  description={Watt, unité de puissance. Gamme FPGA et Jetson : 1,413\,W pour SEUer sur ZU3 (carte)
+  \citep[Table~6]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}, 13,5\,W pour SkyNet sur TX2 (portée non
+  décrite) \citep[Table~5]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp. À donner avec sa
+  portée.}}
+
+\newglossaryentry{u-mw}{type=metriques, name={mW}, sort={zz-02-mw},
+  description={Milliwatt ($10^{-3}$\,W) : unité de la gamme nano. GAP8 : 15\,mW pour CIFAR-10
+  \citep[§IV]{2018-flamand-gap-8-risc-v-soc}, 34\,mW pour Tiny-PULP-Dronet sur la puce
+  \citep[§III]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp, 86,6\,mW pour PULP-Frontnet
+  \citep[§V-B]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp.}}
+
+\newglossaryentry{u-j}{type=metriques, name={J}, sort={zz-03-j},
+  description={Joule, unité d'énergie ($1\,\mathrm{J} = 1\,\mathrm{W}\cdot\mathrm{s}$). 0,179\,J par image pour YOLOv8n INT8
+  sur Orin~NX \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.}}
+
+\newglossaryentry{u-mj}{type=metriques, name={mJ}, sort={zz-04-mj},
+  description={Millijoule ($10^{-3}$\,J). SATAY : 317\,mJ par image sur ZCU104 contre 277 sur
+  TX2 pour YOLOv5n en 640$\times$640 \citep[Table~IV]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}
+  ; 6,1\,mJ pour Apollo4b contre 196\,$\mu$J pour MAX78000
+  \citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}.}}
+
+\newglossaryentry{u-uj}{type=metriques, name={µJ}, sort={zz-05-uj},
+  description={Microjoule ($10^{-6}$\,J), énergie par inférence des MCU et du neuromorphique :
+  10\,$\mu$J pour GAP8 \citep[§IV]{2018-flamand-gap-8-risc-v-soc}, 27\,$\mu$J pour un réseau sur Loihi
+  \citep[Abstract]{arxiv-2303.08778-fully-neuromorphic-vision-control-autonomous}\pp.}}
+
+\newglossaryentry{u-mwh}{type=metriques, name={mWh}, sort={zz-06-mwh},
+  description={Milliwatt-heure ($3{,}6\,\mathrm{J}$), unité d'énergie des batteries et des
+  mesures sur plusieurs requêtes : 0,13 à 0,22\,mWh par requête YOLOv8n sur Orin Nano
+  \citep[§IV]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp. À ne pas confondre avec
+  mAh (charge).}}
+
+\newglossaryentry{u-s}{type=metriques, name={s}, sort={zz-07-s},
+  description={Seconde. Unité des temps d'entraînement ou de cycle d'une mission, par exemple
+  4,1\,s pour rendre une image 160$\times$160 (simulation)
+  \citep[§V-C]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp.}}
+
+\newglossaryentry{u-ms}{type=metriques, name={ms}, sort={zz-08-ms},
+  description={Milliseconde ($10^{-3}$\,s), unité de latence : 5,5\,ms pour TinyissimoYOLO sur
+  MAX78000, 359\,ms sur STM32H7A3
+  \citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}. À situer : inférence seule
+  ou chaîne.}}
+
+\newglossaryentry{u-hz}{type=metriques, name={Hz}, sort={zz-09-hz},
+  description={Hertz, fréquence ($1\,\mathrm{Hz} = 1\,\mathrm{s}^{-1}$). Pour une boucle de
+  contrôle, c'est l'inverse de la période, comme le FPS pour une caméra : action à
+  19,74\,Hz et sémantique à 6,67\,Hz pour LiteVLA-H
+  \citep[§6.1]{arxiv-2605.00884-litevla-h-dual-rate-vision}\pp, caméra à 30\,Hz contre 120\,Hz de
+  pilotes humains \citep[Discussion]{2023-kaufmann-champion-level-drone-racing-deep}.}}
+
+\newglossaryentry{u-mhz}{type=metriques, name={MHz}, sort={zz-10-mhz},
+  description={Mégahertz, fréquence d'horloge. Le débit d'un même réseau dépend du point de
+  fonctionnement : Tiny-PULP-Dronet à 89\,FPS avec le contrôleur à 50\,MHz, 160\,FPS à 250\,MHz
+  \citep[§III-B]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp ; DPU à 300\,MHz sur Zynq
+  UltraScale+ \citep[§V-D]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}.}}
+
+\newglossaryentry{u-ko}{type=metriques, name={Ko}, sort={zz-11-ko},
+  description={Kilo-octet ($10^3$ octets, \enquote{kB} dans les articles). Mémoire de nano-drone :
+  512\,Ko de L2 et 64\,Ko de L1 sur GAP8 \citep[§II-A]{2018-flamand-gap-8-risc-v-soc} ; 6,4\,Ko de poids
+  pour Tiny-PULP-Dronet \citep[§II]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp.}}
+
+\newglossaryentry{u-mo}{type=metriques, name={Mo}, sort={zz-12-mo},
+  description={Méga-octet ($10^6$ octets, \enquote{MB} dans les articles). Le réseau de proximité
+  de PULP-Frontnet compte 6\,116\,Ko, soit environ 6,1\,Mo
+  \citep[Table~II]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp. La BRAM d'un FPGA se donne parfois
+  en Mo \citep[Tables~2--6]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}.}}

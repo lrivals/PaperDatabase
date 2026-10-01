@@ -37,7 +37,13 @@
   "tags": [
     "air-to-air",
     "jetson",
-    "orin-nx"
+    "orin-nx",
+    "yolo26",
+    "bytetrack",
+    "tensorrt",
+    "ros",
+    "goalkeeper",
+    "dji-neo"
   ],
   "added": "2026-09-29",
   "extraction": {
@@ -49,6 +55,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

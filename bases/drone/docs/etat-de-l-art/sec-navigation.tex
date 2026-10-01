@@ -4,8 +4,8 @@
 
 \subsection{Suivi mono-objet sur Jetson}
 
-Le groupe Vision4Robotics (Tongji) publie trois trackers \gl{siamois}{siamois} à \gl{backbone}{backbone} AlexNet,
-testés à bord d'un drone sur Jetson AGX Xavier, tous sans TensorRT et sans mesure de
+Le groupe Vision4Robotics (Tongji) publie trois trackers \glslink{siamtracker}{siamois} à \gl{backbone}{backbone} \glslink{alexnet}{AlexNet},
+testés à bord d'un drone sur \glslink{agx-xavier}{Jetson AGX Xavier}, tous sans TensorRT et sans mesure de
 puissance.
 
 \begin{table}[!htbp]
@@ -15,57 +15,171 @@ puissance n'est rapporté.}
 \label{tab:trackers}
 \begin{tabularx}{\textwidth}{@{}P{3.4cm}LrP{2.8cm}@{}}
 \toprule
-Tracker & Précision sur benchmark (bureau) & \gl{FPS}{FPS} à bord & FPS bureau \\
+Tracker & Précision sur benchmark (bureau) & \glslink{fps}{FPS} à bord & \glslink{fps}{FPS} bureau \\
 \midrule
-SiamAPN++ \citep{arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network}\pp &
-  UAV20L : précision 0,736, \gl{AUC}{AUC} 0,560 \src{Fig.~4a}\med & 34,9 \src{§V}\med & \nr \\
-HiFT \citep{arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial}\pp &
+\glslink{siamapnpp}{SiamAPN++} \citep{arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network}\pp &
+  UAV20L : précision 0,736, \glslink{auc}{AUC} 0,560 \src{Fig.~4a}\med & 34,9 \src{§V}\med & \nr \\
+\glslink{hift}{HiFT} \citep{arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial}\pp &
   UAV20L : précision 0,763 \src{Table~2} & 31,2 \src{§5}\med & 127 (\gl{GPU}{GPU} non précisé) \\
-TCTrack \citep{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}\pp &
+\glslink{tctrack}{TCTrack} \citep{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}\pp &
   UAVTrack112\_L : succès 0,582 \src{§4.2}\med & > 27 \src{§5}\med & 125,6 (« PC ») \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Le passage du bureau à la Xavier divise le débit par quatre environ, sans analyse du
-goulot \deduit. TCTrack apporte une observation utile au choix d'un backbone : sur Xavier,
-AlexNet prend 3,4\,ms contre 13,7\,ms pour MobileNetV2, attribués au coût d'accès mémoire
+Le passage du bureau à la \glslink{agx-xavier}{Xavier} divise le débit par quatre environ, sans analyse du
+goulot \deduit. \glslink{tctrack}{TCTrack} apporte une observation utile au choix d'un backbone : sur \glslink{agx-xavier}{Xavier},
+\glslink{alexnet}{AlexNet} prend 3,4\,\glslink{u-ms}{ms} contre 13,7\,ms pour \glslink{mobilenetv2}{MobileNetV2}, attribués au coût d'accès mémoire
 des réseaux « mobiles » \citep[Table~1]{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}.
-Aucun tracker siamois ou à \gl{transformer}{Transformer} n'est porté sur \gl{FPGA}{FPGA} ou \gl{MCU}{MCU} dans le corpus, et
+Aucun tracker siamois ou à \glslink{attention}{Transformer} n'est porté sur \gl{FPGA}{FPGA} ou \gl{MCU}{MCU} dans le corpus, et
 aucun n'étudie la \gl{quantif}{quantification}. Du côté multi-objets, les trackers par association de
-positions sont quasi gratuits : SORT tourne à 245\,FPS sur \gl{CPU}{CPU} dans UAVDT
+positions sont quasi gratuits : SORT tourne à 245\,\glslink{fps}{FPS} sur \gl{CPU}{CPU} dans UAVDT
 \citep[Table~3]{arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object}\med. Le coût
 embarqué du suivi est donc dans le détecteur \deduit.
 
 \subsection{Vol agile : la référence Jetson de Zurich}
 
-Deux travaux de l'université de Zurich fixent les ordres de grandeur de la \gl{gamme}{gamme Jetson}
+Deux travaux de l'université de Zurich fixent les ordres de grandeur de la \glslink{gamme}{gamme Jetson}
 pour un drone agile de moins d'un kilogramme.
 \begin{itemize}
   \item \citet{arxiv-2110.05113-learning-high-speed-flight-wild} (Science Robotics)
-    apprennent une politique de \gl{bout}{bout en bout} à partir d'images de profondeur. Sur Jetson
-    TX2, la latence est de 41,6\,ms, dont 38,9 d'inférence \src{Table~1}. En forêt, le
+    apprennent une politique de \gl{bout}{bout en bout} à partir d'images de profondeur. Sur \glslink{tx2}{Jetson
+    TX2}, la latence est de 41,6\,\glslink{u-ms}{ms}, dont 38,9 d'inférence \src{Table~1}. En forêt, le
     drone réussit 100\,\% des vols à 5\,m/s et 60\,\% à 10\,m/s \src{§2-A}. Le papier
-    relie explicitement latence et \gl{vitesse}{vitesse sûre} maximale \src{§S5}.
+    relie explicitement latence et \glslink{vsure}{vitesse sûre} maximale \src{§S5}.
   \item \citet{2023-kaufmann-champion-level-drone-racing-deep} (Nature) battent des
     champions humains de course FPV avec des capteurs et un calcul embarqués. Le détecteur
-    de portes (un petit U-Net) prend 40\,ms en TensorRT \gl{FP32}{FP16} sur le GPU du TX2, la
+    de portes (un petit U-Net) prend 40\,ms en TensorRT \gl{FP32}{FP16} sur le GPU du \glslink{tx2}{TX2}, la
     politique 8\,ms sur son CPU (Methods)\med. La vision est le goulot, et la caméra à
-    30\,Hz est un facteur limitant face aux 120\,Hz des pilotes (Discussion).
+    30\,\glslink{u-hz}{Hz} est un facteur limitant face aux 120\,Hz des pilotes (Discussion).
 \end{itemize}
 Aucun des deux ne mesure la puissance du calculateur. Le survey de
-\citet{arxiv-2301.01755-autonomous-drone-racing-survey} affirme que la famille Jetson est
+\citet{arxiv-2301.01755-autonomous-drone-racing-survey} affirme que la famille \glslink{jetson}{Jetson} est
 le plus petit matériel suffisant pour des réseaux complexes, ce qui fixe des châssis de
 6 pouces \src{§VII-C} : il ignore les nano-drones et ne discute pas le FPGA. Il cite comme
 question ouverte la détection d'un adversaire depuis la caméra embarquée (\emph{multiplayer
 racing}, §VIII-C), c'est-à-dire un cas \gl{airair}{air $\rightarrow$ air}.
 
+\paragraph{Politiques apprises en simulation.} Deux \gl{preprint}{preprints} récents poussent la
+politique pixels $\rightarrow$ commandes (poussée collective et vitesses angulaires) plus
+loin, mais sans aucune mesure de calcul à bord. \citet{arxiv-2501.14377-dream-fly-model-reinforcement-learning}\pp{}
+entraînent une politique de course par \glslink{dreamerv3}{DreamerV3} (apprentissage par renforcement avec modèle
+du monde) sur des images RGB 64$\times$64 \src{§IV} ; PPO et SAC n'apprennent aucun vol utile
+dans les mêmes conditions (Fig.~3, sans valeur numérique). L'entraînement prend environ
+240\,h sur un \gl{GPU}{GPU} de bureau Quadro RTX~8000 \src{§IV-A}, et le vol « réel », jusqu'à 9\,m/s
+(résumé), est un \gl{hil}{hardware-in-the-loop} : images rendues par simulateur, commandes
+calculées sur un ordinateur déporté \src{§V-A}. Latence, débit, puissance et taille du
+réseau embarqué : \nr. \citet{arxiv-2604.12916-e2e-fly-integrated-training-deployment}\pp{}
+proposent une chaîne complète d'entraînement (simulation différentiable, PPO ou rétropropagation
+dans le temps), de validation et de déploiement, avec un quadrirotor embarquant un \glslink{n100}{Intel N100}
+(x86 basse consommation, \glslink{gamme}{gamme} non mesurée) \src{§VI-A}. Le seul chiffre de calcul est une
+latence de communication d'environ 90\,\glslink{u-ms}{ms} en commande déportée, ramenée sous 30\,ms avec le
+calcul à bord \src{§VI-C2}. Les 100\,\% de réussite en course avec obstacles sont obtenus en
+simulation \src{§VII-E} ; le transfert réel n'est montré qu'en figures, sans taux de succès
+ni baseline publiée. Ces deux travaux confirment que la politique de contrôle elle-même
+n'est pas le goulot \deduit, mais ni l'un ni l'autre ne donne la latence d'inférence de sa
+politique sur le calculateur de bord.
+
+\subsection{Suivi de cible et navigation sémantique sur Jetson Orin}
+
+Quatre \gl{preprint}{preprints} de 2025--2026 font tourner une chaîne complète perception
+$\rightarrow$ estimation $\rightarrow$ contrôle sur un module \glslink{orin}{Jetson Orin}, en vol réel
+(tableau~\ref{tab:orin-nav}). Aucun ne rapporte de puissance ni de mode de puissance :
+ils se situent dans la \glslink{gamme}{gamme Jetson} (5 à 30\,\glslink{u-w}{W} selon le module et le mode) sans plus de
+précision \deduit. Le seul repère de puissance \glslink{orin}{Orin} du corpus porte sur une autre charge,
+\glslink{yolov8n}{YOLOv8n} \gl{INT8}{INT8} (10,3\,W sur \glslink{orin-nx}{Orin NX}, 7,5\,W sur \glslink{orin-nano}{Orin Nano}, par
+\gl{telemetrie}{télémétrie}) \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look} :
+un ordre de grandeur, pas une mesure de ces systèmes.
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Chaînes de navigation et de suivi mesurées à bord sur Jetson Orin (tous
+preprints). Puissance \texttt{n/r} partout ; résultats de mission sur les essais propres
+aux auteurs, non comparables entre eux.}
+\label{tab:orin-nav}
+\begin{tabularx}{\textwidth}{@{}P{2.6cm}P{2.2cm}LL@{}}
+\toprule
+Système & Calculateur & Calcul mesuré à bord & Résultat de mission \\
+\midrule
+\glslink{yopov2}{YOPOv2-Tracker} \citep{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp &
+  \glslink{orin-nx}{Orin NX} & perception $\rightarrow$ action 8,2\,\glslink{u-ms}{ms} en moyenne \src{§IV-B-3}\med ; précision
+  numérique \nr & suivi d'un humain à 6\,m/s en forêt, 5,6\,m/s entre bâtiments
+  \src{§IV-B-3} \\
+NOVA \citep{arxiv-2506.18689-nova-navigation-object-centric-visual}\pp &
+  \glslink{orin-nx}{Orin NX} 16\,Go & \glslink{yolov11s}{YOLOv11-s} \gl{FP32}{FP16} TensorRT : 92\,\glslink{u-hz}{Hz} \src{§IV-B}\med ; complétion de
+  profondeur (\glslink{depthanythingv2}{DepthAnythingV2} ViT-S) : 31,6\,\glslink{u-ms}{ms} \src{§IV-C}\med & détections 93,1 à
+  98,6\,\% selon le scénario, cible à plus de 53\,km/h en forêt \src{§V-E}\med \\
+NGPS \citep{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp &
+  \glslink{orin-nx}{Orin NX} & appariement satellite 2,6\,\glslink{u-hz}{Hz} sur GPU, 0,5\,Hz sur \gl{CPU}{CPU} \src{§IV-D}\med &
+  \glslink{rmse}{RMSE} de position 2,94\,m contre 10,37\,m en VIO seul \src{§IV-B, §IV-E4}\med \\
+\glslink{singer}{SINGER} \citep{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp &
+  \glslink{orin-nano}{Orin Nano} 8\,Go & \glslink{clipseg}{CLIPSeg} (ViT-B/16, 86\,M param.) 12\,\glslink{u-hz}{Hz} en ONNX Runtime, 3\,Hz sans
+  optimisation \src{§V}\med & 76,67\,\% des essais à moins de 1\,m du but (30 essais),
+  contre 53,33\,\% pour la baseline \src{§VI-D}\med \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Suivi agile de bout en bout.} \citet{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp{}
+remplacent la chaîne détection $\rightarrow$ carte $\rightarrow$ planification par un seul
+réseau convolutionnel (\glslink{resnet}{ResNet-18}, entrée RGB-D 160$\times$96) qui prédit directement des
+primitives de trajectoire, à la manière des boîtes d'ancrage d'un détecteur \src{§III-C}.
+Sur un quadrotor de 850\,g, la latence perception $\rightarrow$ action est de 8,2\,\glslink{u-ms}{ms} sur
+\glslink{orin-nx}{Orin NX} \src{§IV-B-3}, soit près de cinq fois moins que l'inférence de
+\citet{arxiv-2110.05113-learning-high-speed-flight-wild} sur \glslink{tx2}{TX2} \deduit{} (calculateurs et
+réseaux différents). Les 3\,ms annoncés en simulation sont mesurés sur un GPU de bureau \glslink{rtx30mid}{RTX~3060}
+\src{§IV-B-1}. Les baselines (Elas.~Tracker, Vis.~Tracker) sont conçues pour
+2 à 2,5\,m/s et les taux de succès ne sont donnés qu'en figure, sur 10 essais par vitesse :
+comparaison favorable à la méthode \deduit.
+
+\paragraph{Suivi à haute vitesse sans GPS.} \citet{arxiv-2506.18689-nova-navigation-object-centric-visual}\pp{}
+suivent une personne ou un véhicule sans capture de mouvement ni localisation globale, dans
+le repère de la cible : détecteur \glslink{yolov11s}{YOLOv11-s} avec zoom adaptatif, complétion de profondeur,
+\glslink{ukf}{filtre de Kalman \emph{unscented}} et commande prédictive non linéaire, le tout sur \glslink{orin-nx}{Orin NX}
+\src{§III}. Le chiffre utile pour le calcul est l'écart entre modules : la complétion de
+profondeur (31,6\,\glslink{u-ms}{ms}) est environ trois fois plus lente que le détecteur
+(92\,\glslink{u-hz}{Hz}, soit 10,9\,ms) \deduit. Sur ce pipeline, le coût n'est donc pas dans le détecteur,
+contrairement au suivi multi-objets ci-dessus. Le « \glslink{detrate}{taux de détection} » n'est pas défini
+contre une vérité terrain : il ne se compare ni à une \glslink{map}{mAP} ni à un \glslink{iou}{IoU}. Un seul vol par
+scénario, aucune baseline, aucune latence de \gl{bout}{bout en bout}.
+
+\paragraph{Navigation guidée par le langage.} \citet{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp{}
+pilotent un drone de 5 pouces vers un objet désigné en langage naturel, avec tout le calcul
+sur \glslink{orin-nano}{Jetson Orin Nano}. La perception est un modèle de fondation, \glslink{clipseg}{CLIPSeg} (segmentation
+conditionnée par le texte), dont la carte de chaleur alimente une petite politique
+visuomotrice à 20\,\glslink{u-hz}{Hz} \src{§V}. \glslink{clipseg}{CLIPSeg} est le goulot : 12\,Hz au mieux après conversion
+ONNX, sous la fréquence de la commande \src{§V, §VI-C}. Sur 30 essais en environnement et
+requêtes inconnus, 76,67\,\% atteignent le but à moins de 1\,m (66,67\,\% sans cap de
+référence externe) \src{§VI-D}\med ; la baseline est une implantation minimale écrite par
+les auteurs. Pas d'évitement d'obstacles, ni de puissance, ni de latence mesurée. C'est le
+seul modèle de type vision--langage exécuté à bord dans cette section.
+
+\paragraph{Ce que ces quatre travaux changent.} Ils déplacent la référence de la \glslink{gamme}{gamme
+Jetson} du \glslink{tx2}{TX2} vers l'\glslink{orin}{Orin}, et montrent qu'en suivi et en navigation sémantique le goulot
+est un réseau de perception dense (profondeur, segmentation, appariement), pas le
+détecteur ni la politique \deduit. Ils reproduisent aussi les manques de la littérature
+Zurich : aucune puissance, aucune autonomie, aucun lien chiffré entre cadence de
+perception et \glslink{vsure}{vitesse sûre}, aucune \gl{quantif}{quantification} au-delà du FP16, aucun portage
+\gl{FPGA}{FPGA} ou \gl{MCU}{MCU}.
+
 \subsection{Localisation et plateformes hétérogènes}
 
 \citet{2021-guo-fpga-uav-heterogeneous-computing-platform} proposent de réunir contrôle
-de vol (\gl{PID}{PID}) et prétraitement sur un Zynq-7020, avec une Jetson AGX Xavier pour
+de vol (\gl{PID}{PID}) et prétraitement sur un \glslink{xc7z020}{Zynq-7020}, avec une \glslink{agx-xavier}{Jetson AGX Xavier} pour
 l'inférence. C'est une proposition sans aucune mesure de latence, de masse ou de puissance,
 à citer avec prudence \src{§III--IV}. \citet{arxiv-2307.10255-land-localize-infrastructure-free-scalable}\pp{}
 localisent un essaim de nano-drones par \gl{UWB}{UWB}, sans vision ; le module radio seul consomme
-environ 350\,mW par drone \src{§V-C}, un ordre de grandeur à garder face au budget de
+environ 350\,\glslink{u-mw}{mW} par drone \src{§V-C}, un ordre de grandeur à garder face au budget de
 calcul d'un nano-drone.
+
+La localisation visuelle absolue sans GNSS n'a qu'un représentant.
+\citet{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp{} (auteur unique ; accepté à IROS 2026
+selon le PDF, non vérifié) apparient l'image d'une caméra orientée vers le bas avec une
+image satellite (\glslink{superpoint}{SuperPoint} + \glslink{lightglue}{LightGlue}) et fusionnent le résultat avec un VIO et l'IMU,
+à 60--150\,m d'altitude \src{§III}. Sur \glslink{orin-nx}{Orin NX}, l'appariement tourne à 2,6\,\glslink{u-hz}{Hz} sur GPU et
+0,5\,Hz sur CPU, \glslink{lightglue}{LightGlue} prenant 82\,\% du temps GPU \src{§IV-D}\med. L'erreur de position
+fusionnée est de 2,94\,m contre 10,37\,m pour le VIO seul \src{§IV-B, §IV-E4}\med, sur cinq
+vols à 2--4\,m/s ; l'\glslink{ate}{ATE} atteint 6,04\,m au pire à 150\,m d'altitude \src{§IV-E2}. La comparaison à
+un autre VIO vient d'un autre article et d'autres données (non appariée), et puissance,
+mémoire et latence de \gl{bout}{bout en bout} sont \nr. L'appariement par \glslink{attention}{attention} de
+\glslink{lightglue}{LightGlue}, goulot mesuré, n'a aucun équivalent \gl{FPGA}{FPGA} ou \gl{NPU}{NPU} dans le corpus.

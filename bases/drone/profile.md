@@ -67,6 +67,12 @@ avions, drone racing, vol agile, VIO, MPC, sim-to-real.
 ## Suggestions en attente
 
 <!-- Une ligne par suggestion : - AAAA-MM-JJ (source : paper_id ou /base-profile) — proposition — raison -->
+- 2026-10-01 (arxiv-2509.18610-singer-onboard-generalist-vision-language, arxiv-2605.00884-litevla-h-dual-rate-vision, arxiv-2609.25415-cloud-edge-split-profiling-onboard) — sous-thème « VLM / VLA embarqués et split bord-cloud » sous system-codesign / tracking-navigation, tags vlm et vla, inclus seulement avec mesure sur calculateur embarqué — trois papiers hors YOLO/FPGA, aucun terme VLM/VLA dans le vocabulaire
+- 2026-10-01 (arxiv-2508.04564-drone-detection-event-cameras) — vocabulaire « caméra événementielle / neuromorphique (DVS, SNN, Loihi, Speck) », tag event-camera ; préciser son statut sol → air — survey de capteurs surtout fixes, tag de point de vue non posé
+- 2026-10-01 (arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance) — sous-thème « apprentissage embarqué / fédéré sur nano-drone », tag on-device-training — non couvert par le profil
+- 2026-10-01 (arxiv-2607.18936-ngps-gps-denied-aerial-geo) — « navigation sans GNSS par géolocalisation visuelle » comme sous-thème de tracking-navigation, tag gnss-denied — le profil n'exclut que la localisation non visuelle
+- 2026-10-01 (arxiv-2609.21005-project-scout-interceptor-drone-perimeter) — termes « interception », « C-UAS » au vocabulaire de counter-uav — absents
+- 2026-10-01 (arxiv-2603.02936-self-supervised-domain-adaptation-visual) — « adaptation de domaine sim-to-real embarquée » au vocabulaire — seul sim-to-real y figure
 
 ## Historique
 

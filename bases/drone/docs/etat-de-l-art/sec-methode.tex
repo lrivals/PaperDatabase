@@ -3,9 +3,13 @@
 \label{sec:methode}
 
 \paragraph{Corpus.} Ce document ne s'appuie que sur la base \texttt{drone} de
-PaperDatabase telle qu'elle était le 29 septembre 2026 : 73 articles, tous dotés d'une
-fiche de lecture complète, et 324 lignes de mesures dans \texttt{benchmarks.csv}, issues
-de 58 articles. Aucune référence extérieure à la base n'est citée comme source. Les
+PaperDatabase telle qu'elle était le 1\textsuperscript{er} octobre 2026 : 86 articles,
+tous dotés d'une fiche de lecture complète, et 352 lignes de mesures dans
+\texttt{benchmarks.csv}, issues de 67 articles. La première version (29 septembre)
+reposait sur 73 articles et 324 lignes ; les 13 articles ajoutés portent surtout sur la
+navigation, le \gl{SoC}{SoC} \glslink{gap9}{GAP9} et les modèles vision-langage embarqués. Un 87\textsuperscript{e}
+article de la base, consacré au guidage terminal d'un drone vers une cible, n'est pas
+traité. Aucune référence extérieure à la base n'est citée comme source. Les
 travaux cités par un survey sont signalés comme tels ; leurs chiffres ne sont pas vérifiés
 à la source et servent à orienter la lecture, pas à comparer.
 
@@ -17,15 +21,15 @@ travaux cités par un survey sont signalés comme tels ; leurs chiffres ne sont 
 \toprule
 Axe & Articles & Axe & Articles \\
 \midrule
-Détection drone, petits objets & 29 & Nano-drones, \gl{MCU}{MCU}, \gl{ASIC}{ASIC}, neuromorphique & 16 \\
-Suivi et navigation & 27 & Accélération \gl{FPGA}{FPGA} / \gl{SoC}{SoC} & 14 \\
-Contre-drone & 17 & Co-design calcul--énergie--vol & 14 \\
-Jeux de données et challenges & 15 & Surveys & 7 \\
+Détection drone, petits objets & 29 & Nano-drones, \gl{MCU}{MCU}, \gl{ASIC}{ASIC}, neuromorphique & 20 \\
+Suivi et navigation & 37 & Accélération \gl{FPGA}{FPGA} / \gl{SoC}{SoC} & 14 \\
+Contre-drone & 19 & Co-design calcul--énergie--vol & 19 \\
+Jeux de données et challenges & 16 & Surveys & 8 \\
  & & Fiabilité du calcul embarqué & 2 \\
 \midrule
-\multicolumn{4}{@{}l}{Types : 30 articles de journal, 7 de conférence, 36 \gl{preprint}{preprints} arXiv
+\multicolumn{4}{@{}l}{Types : 30 articles de journal, 7 de conférence, 49 \gl{preprint}{preprints} arXiv
 (dont plusieurs publiés depuis, voir le texte).} \\
-\multicolumn{4}{@{}l}{Années : 2016--2020 : 14 ; 2021--2023 : 38 ; 2024--2026 : 21.} \\
+\multicolumn{4}{@{}l}{Années : 2016--2020 : 14 ; 2021--2023 : 38 ; 2024--2026 : 34.} \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -33,30 +37,31 @@ Jeux de données et challenges & 15 & Surveys & 7 \\
 \paragraph{Origine des chiffres.} Chaque valeur est reprise de la fiche ou de
 \texttt{benchmarks.csv}, avec la section ou le tableau de l'article entre crochets, par
 exemple \src{Table~4}. Une valeur que les auteurs ne donnent pas s'écrit \nr{} : elle
-n'est jamais estimée. Un calcul fait à partir des chiffres publiés (par exemple un \gl{FPS}{FPS}/W)
-est marqué \deduit. Sur les 324 lignes, 176 sont en confiance \emph{high} et 148 en
+n'est jamais estimée. Un calcul fait à partir des chiffres publiés (par exemple un \glslink{fps}{FPS}/W)
+est marqué \deduit. Sur les 352 lignes, 177 sont en confiance \emph{high} et 175 en
 \emph{medium} : valeurs lues dans le texte qui commente une figure, ou tableaux
 reconstruits automatiquement. Ces dernières sont marquées \med{} dans les tableaux. Aucune
 ligne n'est en confiance \emph{low}.
 
-\paragraph{Portée de la puissance.} Une puissance n'a de sens qu'avec sa \gl{portee}{portée}. La base
+\paragraph{Portée de la puissance.} Une puissance n'a de sens qu'avec sa \glslink{portee}{portée}. La base
 distingue \emph{board} (carte entière, au wattmètre), \emph{chip} (rails de la puce ou
 \gl{telemetrie}{télémétrie} embarquée comme \texttt{tegrastats}), \emph{estimated} (outil de conception,
-par exemple Vivado) et \emph{unspecified} (méthode non décrite). Sur les 324 lignes,
-222 n'ont pas de puissance (69\,\%) ; les autres se répartissent en 51 \emph{board},
-20 \emph{chip}, 29 \emph{unspecified} et 2 \emph{estimated}. Deux puissances de portées
+par exemple Vivado) et \emph{unspecified} (méthode non décrite). Sur les 352 lignes,
+247 n'ont pas de puissance (70\,\%) ; les autres se répartissent en 51 \emph{board},
+20 \emph{chip}, 32 \emph{unspecified} et 2 \emph{estimated}. Aucune des 28 lignes
+ajoutées le 1\textsuperscript{er} octobre n'a de puissance mesurée à la carte. Deux puissances de portées
 différentes ne se comparent pas.
 
 \paragraph{Gamme de puissance.} Tout résultat est situé dans une gamme : \emph{nano}
-(GAP8, MCU, ASIC ; de quelques mW à quelques centaines de mW), \emph{FPGA} (SoC Zynq ou
-Kria, de 1 à 30\,W selon la carte), \emph{Jetson} (autour de 10\,W, de 5 à 30\,W selon le
+(\glslink{gap8}{GAP8}, MCU, ASIC ; de quelques \glslink{u-mw}{mW} à quelques centaines de mW), \emph{FPGA} (SoC \glslink{zynq}{Zynq} ou
+Kria, de 1 à 30\,\glslink{u-w}{W} selon la carte), \emph{\glslink{jetson}{Jetson}} (autour de 10\,W, de 5 à 30\,W selon le
 module et le mode). Les résultats sur \gl{GPU}{GPU} de bureau (RTX, Titan, Tesla) sont signalés
 comme tels : ils ne sont jamais des résultats embarqués, quoi qu'en dise leur titre.
 
-\paragraph{Métriques de précision.} Elles ne se comparent qu'à protocole égal. L'\gl{IoU}{IoU} moyen
-mono-objet du \gl{DAC-SDC}{DAC-SDC} n'est pas une \gl{mAP}{mAP} ; la mAP@0.5 de VisDrone n'est pas l'\gl{AP}{AP} \gl{COCO}{COCO}
-[.5:.95] du protocole officiel ; l'AP d'UAVDT est calculée à IoU 0,7 dans l'article
-d'origine ; certains travaux de contre-drone évaluent à IoU 0,1 ou 0,25.
+\paragraph{Métriques de précision.} Elles ne se comparent qu'à protocole égal. L'\glslink{iou}{IoU} moyen
+mono-objet du \glslink{dac-sdc}{DAC-SDC} n'est pas une \glslink{map}{mAP} ; la \glslink{map50}{mAP@0.5} de VisDrone n'est pas l'\glslink{ap}{AP} \gl{COCO}{COCO}
+[.5:.95] du protocole officiel ; l'\glslink{ap}{AP} d'UAVDT est calculée à \glslink{iou}{IoU} 0,7 dans l'article
+d'origine ; certains travaux de contre-drone évaluent à \glslink{iou}{IoU} 0,1 ou 0,25.
 
 \paragraph{Contre-drone : point de vue du capteur.} Chaque article de contre-drone est
 classé \emph{air $\rightarrow$ air} (détecteur à bord d'un drone), \emph{sol

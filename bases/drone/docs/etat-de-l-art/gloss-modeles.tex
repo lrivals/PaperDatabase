@@ -1,0 +1,790 @@
+% Glossaire des modèles (type=modeles) de la base drone : détecteurs YOLO et variantes drone,
+% autres détecteurs, backbones, suivi, navigation, vision-langage, early-exit, opérateurs.
+% Chiffres : \citep[§]{paper_id} s'ils viennent d'une fiche ou de benchmarks.csv (+ \pp si
+% preprint), sinon \horscorpus. Les parents sont définis avant leurs enfants.
+
+% ---------------------------------------------------------------- Famille YOLO
+\newglossaryentry{yolo}{type=modeles, name={YOLO}, sort={YOLO},
+  description={\emph{You Only Look Once} : famille de détecteurs en une étape, qui prédisent en
+  une seule passe, sur une grille, des boîtes, un score d'objet et des scores de classe, puis
+  filtrent les doublons par NMS. Depuis YOLOv3, l'architecture se découpe en backbone, neck
+  (fusion multi-échelle) et tête de détection. C'est le détecteur dominant du corpus drone :
+  du Tiny YOLO quantifié sur Zynq (Tincy YOLO) aux YOLOv5 à YOLO26 sur Jetson, FPGA ou
+  GPU de bureau, et la base de presque toutes les variantes \enquote{petits objets} (têtes P2,
+  Transformers, convolutions Ghost).}}
+
+\newglossaryentry{yolov2}{type=modeles, name={YOLOv2}, sort={YOLO 02}, parent=yolo,
+  description={Deuxième version : backbone Darknet-19, boîtes d'ancrage (\emph{anchors}),
+  normalisation par lot, couche \emph{passthrough}, une seule échelle de sortie
+  \horscorpus. Dans le corpus drone, c'est le détecteur visuel du système multi-capteurs de
+  \citet{arxiv-2007.07396-real-time-drone-detection-tracking} (caméras visible 416$\times$416 et
+  infrarouge 256$\times$256) : F1 de 78,49 en visible et 76,01 en infrarouge
+  \citep[§VI]{arxiv-2007.07396-real-time-drone-detection-tracking}, sur GPU de portable. Tiny
+  YOLOv2 est cité par la revue de \citet{2022-ahmed-survey-uav-computing-platforms-hardware}
+  pour son efficacité sur FPGA.}}
+
+\newglossaryentry{yolov3}{type=modeles, name={YOLOv3}, sort={YOLO 03}, parent=yolo,
+  description={Troisième version : backbone Darknet-53 (blocs résiduels), prédiction à trois
+  échelles par un neck de type FPN, trois ancres par échelle, classes en sigmoïdes
+  indépendantes. Face à YOLOv2 : multi-échelle et backbone plus profond, donc meilleurs petits
+  objets. Dans le corpus : référence de détection de drone sur GPU, avec 72,3 d'AP sur Det-Fly
+  pour 32\,ms sur RTX 2080\,Ti \citep[Table~II]{2021-zheng-air-air-visual-detection-micro} et
+  97,7 d'AP50 sur Anti-UAV à 36\,FPS (plateforme n/r)
+  \citep[Table~1]{arxiv-2103.13933-unmanned-aerial-vehicle-visual-detection}\pp ; mesuré sur
+  Jetson Nano, Jetson Xavier NX et Raspberry Pi avec NCS2 par
+  \citet{2022-feng-benchmark-analysis-yolo-performance-edge} : 1,7\,FPS sur Nano à 416, 6,1 sur
+  Xavier NX \citep[Table~3]{2022-feng-benchmark-analysis-yolo-performance-edge}.}}
+
+\newglossaryentry{yolov3-tiny}{type=modeles, name={YOLOv3-tiny}, sort={YOLO 03 tiny},
+  parent=yolov3,
+  description={Version réduite de YOLOv3 : suite de convolutions 3$\times$3 et de max-pooling,
+  deux échelles de sortie au lieu de trois. Sur Jetson Xavier NX elle atteint 41,1\,FPS à 416
+  pour 13,5\,W, contre 6,8\,FPS sur Nano \citep[Table~3]{2022-feng-benchmark-analysis-yolo-performance-edge}.
+  Sur FPGA, \citet{2025-cali-optimized-implementation-yolov3-tiny-real} la réduisent encore (une
+  seule tête 13$\times$13, filtres divisés par 5, W4/A4 par FINN) : 17,68 de mAP@0,5 sur la seule
+  classe \enquote{car} de VisDrone-DET, 164,79\,FPS et 2,55\,W de carte à 200\,MHz sur XC7Z020
+  \citep[Tables~9 et 14]{2025-cali-optimized-implementation-yolov3-tiny-real}. SATAY la porte
+  en W8A16 sur Virtex UltraScale \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.}}
+
+\newglossaryentry{slimyolov3}{type=modeles, name={SlimYOLOv3}, sort={YOLO 03 z Slim},
+  parent=yolov3,
+  description={YOLOv3-SPP3 élagué par \emph{network slimming} : régularisation L1 sur les
+  facteurs d'échelle des BatchNorm puis suppression des canaux sous un seuil global et un
+  seuil local. À 832$\times$832, la variante -SPP3-90 retire 85,9\,\% des FLOPs et 87,5\,\% des
+  paramètres pour 42,6\,\% de temps d'inférence en moins sur GTX\,1080\,Ti seulement
+  \citep[§5]{arxiv-1907.11093-slimyolov3-narrower-faster-better-real}\pp : l'élagage de canaux
+  ne suit pas les FLOPs en latence. Son principe est repris par
+  \citet{2021-liu-real-time-small-drones-detection} pour YOLOv4.}}
+
+\newglossaryentry{yolov4}{type=modeles, name={YOLOv4}, sort={YOLO 04}, parent=yolo,
+  description={Quatrième version : backbone CSPDarknet53, module SPP et neck PANet, tête de
+  YOLOv3 à ancres, activation Mish, augmentations Mosaic. Dans le corpus, deux usages. Détection
+  de petits drones : \citet{2021-liu-real-time-small-drones-detection} l'élaguent
+  (canaux, couches, \emph{shortcut}) : 90,5 de mAP@0,5 à 69\,FPS contre 93,6 à 43\,FPS pour le
+  modèle complet, sur Tesla P100 \citep[Table~4]{2021-liu-real-time-small-drones-detection}.
+  Portage FPGA : \citet{2024-nguyen-fpga-soc-implementation-yolov4-flying} l'adaptent au DPU
+  (Mish vers LeakyReLU, SPP 5/6/8) et l'élaguent à 0,6 sur ZCU104 : 82,41 de mAP@0,25 à
+  29,0\,FPS contre 83,70 à 17,9\,FPS, et 27,9 contre 30,1\,W à la prise
+  \citep[Tables~11 et 13]{2024-nguyen-fpga-soc-implementation-yolov4-flying}.}}
+
+\newglossaryentry{yolov4-tiny}{type=modeles, name={YOLOv4-tiny}, sort={YOLO 04 tiny},
+  parent=yolov4,
+  description={Version réduite de YOLOv4 (backbone CSPDarknet53-tiny, deux têtes). Nguyen et al.
+  y ajoutent une troisième tête pour les petits objets (variante \enquote{3L}) : 72,24 de
+  mAP@0,25 à 125\,FPS sur ZCU104 (DPU, 4 threads), contre 83,70 à 17,9\,FPS pour YOLOv4 complet
+  \citep[Table~11]{2024-nguyen-fpga-soc-implementation-yolov4-flying}. Sur Jetson Nano à 416,
+  \citet{2022-feng-benchmark-analysis-yolo-performance-edge} mesurent 15,0\,FPS contre 1,6 pour
+  YOLOv4 \citep[Table~6]{2022-feng-benchmark-analysis-yolo-performance-edge}.}}
+
+\newglossaryentry{yolov5}{type=modeles, name={YOLOv5}, sort={YOLO 05}, parent=yolo,
+  description={Version d'Ultralytics, sans article : réimplémentation PyTorch à ancres, backbone
+  CSP, neck PANet, activation SiLU, tailles n à x par multiplicateurs de profondeur et de
+  largeur \horscorpus. C'est la base la plus utilisée des YOLO drone du corpus : TPH-YOLOv5,
+  SF-YOLOv5, GCL-YOLO, GLAD, GL-YOMO. \citet{2022-jung-improved-yolov5-efficient-object-detection}
+  y remplacent SiLU par ELU (\enquote{ConvELU}) : 95,5 contre 94,6 de mAP@0,5 sur un jeu
+  propre \citep[Tables~2--3]{2022-jung-improved-yolov5-efficient-object-detection}.
+  \citet{2023-zheng-detection-localization-tracking-multiple-mavs} l'emploient pour exclure les
+  objets courants (RTX 3070).}}
+
+\newglossaryentry{yolov5n}{type=modeles, name={YOLOv5n}, sort={YOLO 05 1n}, parent=yolov5,
+  description={Taille \emph{nano}. SATAY la déploie sur ZCU104 en 640$\times$640 : 26,7 de mAP50
+  COCO, 21,41\,ms et 14,5\,W (méthode de mesure n/r), contre 32,28\,ms et 8,58\,W pour le
+  Jetson TX2 \citep[Table~IV]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.}}
+
+\newglossaryentry{yolov5s}{type=modeles, name={YOLOv5s}, sort={YOLO 05 2s}, parent=yolov5,
+  description={Taille \emph{small}. SATAY la couvre sur Virtex UltraScale en W8A16 (VCU110 :
+  46,4\,ms, 24,8\,W) \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
+  Elle sert de détecteur de base à GLAD et à la variante ConvELU de Jung et al.}}
+
+\newglossaryentry{sf-yolov5}{type=modeles, name={SF-YOLOv5}, sort={YOLO 05 z SF},
+  parent=yolov5,
+  description={\emph{Small-Fast} : YOLOv5s sans la couche C5 ni la sortie P5, avec un neck
+  PB-FPN (chemin supplémentaire haut vers bas) et un SPPF devant chaque tête
+  \citep[§3]{2022-liu-sf-yolov5-lightweight-small-object}. À l'inverse des variantes à tête P2,
+  l'allègement vient du retrait de la tête des grands objets : 2,24\,M paramètres, 13,8\,GFLOPs,
+  34,3 de mAP@0,5 sur VisDrone, 11,5\,ms sur RTX 2060
+  \citep[Table~4]{2022-liu-sf-yolov5-lightweight-small-object}. Aucun test embarqué.}}
+
+\newglossaryentry{tph-yolov5}{type=modeles, name={TPH-YOLOv5}, sort={YOLO 05 z TPH},
+  parent=yolov5,
+  description={\emph{Transformer Prediction Head} : YOLOv5x à quatre têtes (ajout d'une tête
+  P2 \enquote{tiny}), blocs Transformer (puis Swin) dans les têtes, module CBAM,
+  multi-scale testing fusionné par WBF et ensemble de modèles. Au challenge VisDrone 2021, un
+  ensemble atteint 39,18 d'AP \citep[§4.2]{arxiv-2108.11539-tph-yolov5-improved-yolov5-transformer}\pp,
+  mais le modèle seul fait 7,36\,FPS (34,0 d'AP, VisDrone test-dev) sur RTX 3090 Ti
+  \citep[Table~5]{2023-zhao-tph-yolov5-boosting-object-detection}. Référence de précision
+  \enquote{YOLO drone SOTA}, jamais portée sur un accélérateur dans le corpus.}}
+
+\newglossaryentry{tph-yolov5pp}{type=modeles, name={TPH-YOLOv5++}, sort={YOLO 05 z TPH2},
+  parent=tph-yolov5,
+  description={Extension de TPH-YOLOv5 : la tête P2 est supprimée et un module CA-Trans
+  (\emph{cross-layer asymmetric transformer}, attention locale éparse limitée à un voisinage
+  2$\times$2) transfère son information vers le niveau P3
+  \citep[§3.3]{2023-zhao-tph-yolov5-boosting-object-detection}. Sur VisDrone test-dev : 33,1
+  d'AP à 11,86\,FPS contre 34,0 à 7,36 ; sur UAVDT : 30,1 d'AP à 42,19\,FPS contre 26,9 à 25,12
+  \citep[Tables~5--6]{2023-zhao-tph-yolov5-boosting-object-detection}.}}
+
+\newglossaryentry{gcl-yolo}{type=modeles, name={GCL-YOLO}, sort={YOLO 05 z GCL},
+  parent=yolov5,
+  description={YOLOv5 allégé pour petits objets : backbone à convolutions Ghost (modules ELAG3,
+  GSPPF), neck avec tête P2 et suppression de la tête P5, perte Focal-EIOU
+  \citep[§3]{2023-cao-gcl-yolo-ghostconv-lightweight-yolo}. Quatre tailles N/S/M/L ; la version
+  S fait 1,64\,M paramètres, 39,6 de mAP50 sur VisDrone à 53\,FPS (GPU de mesure n/r), contre
+  32,7 pour YOLOv5-S \citep[Table~3]{2023-cao-gcl-yolo-ghostconv-lightweight-yolo}. Aucune
+  mesure sur plateforme drone.}}
+
+\newglossaryentry{glad}{type=modeles, name={GLAD}, sort={YOLO 05 z GLAD}, parent=yolov5s,
+  description={\emph{Global-Local MAV Detector} : un YOLOv5s global sur l'image entière, un
+  YOLOv5s local sur une fenêtre 300$\times$300 centrée par un filtre de Kalman, et un module de
+  mouvement (homographie, différence d'images) en cas d'échec
+  \citep[§III]{arxiv-2312.11008-global-local-mav-detection-challenging}\pp. Sur ARD-MAV
+  (objets de 0,02\,\% de l'image en moyenne) : 80 d'AP@0,5 à 146,5\,FPS sur RTX 3070 et
+  23,6\,FPS sur Jetson Xavier NX
+  \citep[Tables~IV et VIII]{arxiv-2312.11008-global-local-mav-detection-challenging}\pp.}}
+
+\newglossaryentry{gl-yomo}{type=modeles, name={GL-YOMO}, sort={YOLO 05 z GLYOMO},
+  parent=yolov5,
+  description={Suite de GLAD : YOLOv5 à quatre têtes P3--P6 (la tête ajoutée est P6, pas P2),
+  C3Ghost, modules d'ASF-YOLO, plus détecteur de mouvement (Lucas-Kanade, template matching) et
+  validation par filtre de Kalman, en pipeline global puis local
+  \citep[§III]{arxiv-2411.02582-real-time-detection-small-uavs}\pp. Sur Drone-vs-Bird : 76,3
+  d'AP (IoU 0,1) \citep[Table~II]{arxiv-2411.02582-real-time-detection-small-uavs}\pp, soit moins
+  que RT-DETR (0,773) ; 21,6\,FPS sur Jetson Xavier NX
+  \citep[§IV-E]{arxiv-2411.02582-real-time-detection-small-uavs}\pp.}}
+
+\newglossaryentry{yolov7}{type=modeles, name={YOLOv7}, sort={YOLO 07}, parent=yolo,
+  description={Septième version : blocs ELAN, re-paramétrisation (RepConv), têtes auxiliaires
+  à étiquetage guidé \horscorpus. Base de deux variantes drone du corpus. Dans l'étude de
+  \citet{2022-liu-sf-yolov5-lightweight-small-object}, YOLOv7 atteint 76,1 de mAP@0,5 en
+  18,0\,ms sur RTX 2060 (jeu WIDER FACE) \citep[Table~3]{2022-liu-sf-yolov5-lightweight-small-object}.
+  YOLOv7-tiny est le détecteur de Bo et al. cité par la revue d'\citet{arxiv-2504.11967-securing-skies-comprehensive-survey-anti}\pp.}}
+
+\newglossaryentry{efficient-yolov7-drone}{type=modeles, name={Efficient YOLOv7-Drone},
+  sort={YOLO 07 z Efficient}, parent=yolov7,
+  description={YOLOv7 avec tête P2 ajoutée, tête P5 et stage 5 supprimés (moins 56,29\,\% de
+  paramètres), convolution creuse à masque (TGM-CESC) et fusion descendante P2--P3--P4
+  \citep[§3.2--3.4]{2023-fu-efficient-yolov7-drone-enhanced-object}. À 640$\times$640 sur VisDrone :
+  32,1 de mAP@0,5:0,95 à 89,29\,FPS (RTX 3090) contre 28,6 à 212,76\,FPS pour YOLOv7
+  \citep[Table~5]{2023-fu-efficient-yolov7-drone-enhanced-object} ; 39,9 à 1280
+  \citep[Table~3]{2023-fu-efficient-yolov7-drone-enhanced-object}. \enquote{Efficient} vaut face aux
+  méthodes coarse-to-fine, pas face à YOLOv7.}}
+
+\newglossaryentry{f-yolov7}{type=modeles, name={F-YOLOv7}, sort={YOLO 07 z F}, parent=yolov7,
+  description={YOLOv7 dont les blocs ELAN sont remplacés par un module \emph{Faster}
+  (convolution partielle de FasterNet) et dont la perte CIoU devient FIoU (sigmoïde au lieu de
+  l'arctan) \citep[§4]{2025-du-f-yolov7-fast-robust-real}. Sur DUT Anti-UAV : 92,80 d'AP@0,5 à
+  169\,FPS (RTX 4090) ; avec soustraction de fond en prétraitement (Pre-F-YOLOv7, caméra
+  supposée fixe) 98,80 à 159\,FPS \citep[Table~2]{2025-du-f-yolov7-fast-robust-real}. GPU de
+  bureau seulement.}}
+
+\newglossaryentry{yolov8}{type=modeles, name={YOLOv8}, sort={YOLO 08}, parent=yolo,
+  description={Version d'Ultralytics : tête découplée et \emph{sans ancres}, blocs C2f
+  (avec opération \emph{split}), SiLU, régression par Distribution Focal Loss, tailles n à x
+  \horscorpus. Base des variantes drone Drone-YOLO, DEAL-YOLO, YOLO-GCOF et DroneScan-YOLO, et
+  détecteur le plus comparé sur plateformes embarquées : Jetson Orin et Raspberry Pi 5 chez
+  \citet{arxiv-2502.15737-performance-analysis-you-only-look} et
+  \citet{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp, DPU de ZCU104 chez
+  Karki et al., SATAY sur Virtex.}}
+
+\newglossaryentry{yolov8n}{type=modeles, name={YOLOv8n}, sort={YOLO 08 1n}, parent=yolov8,
+  description={Taille \emph{nano}. Sur Jetson Orin NX (jeu propre de drones Tello), TensorRT INT8
+  donne 65,83\,FPS à 71,9 de mAP50-95 contre 58,82\,FPS à 84,4 en FP16, pour 10,3 à 10,9\,W
+  \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look} : la PTQ INT8 coûte 12,5
+  points. Sur le DPU de ZCU104, la variante \enquote{DPU-aware} (SiLU vers ReLU, split vers
+  convolutions 1$\times$1) perd 30 points sur KITTI après INT8 (0,64 vers 0,34 de mAP50-95)
+  \citep[Table~II]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.}}
+
+\newglossaryentry{yolov8s}{type=modeles, name={YOLOv8s}, sort={YOLO 08 2s}, parent=yolov8,
+  description={Taille \emph{small}. Orin NX : 56,32\,FPS en INT8 contre 48,24 en FP16, 11,0 à
+  12,8\,W \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look} ; Raspberry Pi 5
+  (NCNN FP32) : 7,32\,FPS. SATAY la déploie sur Virtex UltraScale (VCU110 : 122,8\,ms)
+  \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
+  Base de DroneScan-YOLO.}}
+
+\newglossaryentry{yolov8m}{type=modeles, name={YOLOv8m}, sort={YOLO 08 3m}, parent=yolov8,
+  description={Taille \emph{medium} (44 de mAP COCO) évaluée avec n et s sur Jetson Nano,
+  Orin Nano et Raspberry Pi 5 avec accélérateur Hailo-8
+  \citep[§IV-C]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.}}
+
+\newglossaryentry{yolo-obb}{type=modeles, name={YOLO-OBB}, sort={YOLO 08 z OBB},
+  parent=yolov8,
+  description={Variantes à boîtes orientées (\emph{oriented bounding boxes}) de YOLOv8n,
+  YOLO11n et YOLO26n, qui ajoutent un angle à la régression de boîte, pour les images
+  aériennes. Karki et al. les compilent aussi pour le DPU de ZCU104 : 56 de mAP50-95 sur DIOR-R
+  et 31 sur DOTA pour YOLOv8n-OBB après INT8
+  \citep[Table~II]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp ; YOLO26n-OBB tient
+  29,55\,FPS de bout en bout \citep[§IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.}}
+
+\newglossaryentry{drone-yolo}{type=modeles, name={Drone-YOLO}, sort={YOLO 08 z Drone},
+  parent=yolov8,
+  description={Famille de cinq modèles (nano à large) dérivés de YOLOv8 : tête P2 (PAFPN à quatre
+  niveaux), fusion \enquote{sandwich} et sous-échantillonnage RepVGG
+  \citep[§3]{2023-zhang-drone-yolo-efficient-neural-network}. La tête P2 apporte l'essentiel du
+  gain (mAP50 de 43,7 à 50,5 sur VisDrone val) mais coûte cher : sur Jetson TX2, la version
+  nano met 127,4\,ms contre 30,8\,ms pour YOLOv8n à nombre de paramètres égal
+  \citep[Tables~6--7]{2023-zhang-drone-yolo-efficient-neural-network}. Large : 40,7 de mAP50 sur
+  VisDrone test \citep[Table~4]{2023-zhang-drone-yolo-efficient-neural-network}.}}
+
+\newglossaryentry{deal-yolo}{type=modeles, name={DEAL-YOLO}, sort={YOLO 08 z DEAL},
+  parent=yolov8n,
+  description={YOLOv8n (0,994\,M paramètres) pour la détection d'animaux par drone : pertes
+  Wise-IoU et NWD, P5 remplacée par P2, module SSFF, optimiseur SOAP, inférence en deux passes
+  sur les détections peu confiantes \citep[§2]{arxiv-2503.04698-deal-yolo-drone-efficient-animal}\pp.
+  93,3 de mAP@0,5 sur WAID \citep[Table~2]{arxiv-2503.04698-deal-yolo-drone-efficient-animal}\pp.
+  Plateforme d'inférence n/r.}}
+
+\newglossaryentry{yolo-gcof}{type=modeles, name={YOLO-GCOF}, sort={YOLO 08 z GCOF},
+  parent=yolov8n,
+  description={YOLOv8n pour le contre-drone à basse altitude : bloc GI-DGCST à la place de C2f,
+  neck CSA-HSFPN, tête partagée Detect-OGCH, perte Focaler-SIoU
+  \citep[§III]{2025-yu-yolo-gcof-lightweight-low-altitude}. 1,2\,M paramètres, 4,1\,GFLOPs ;
+  92,6 de mAP@0,5 sur A\&T et 91,5 sur DUT Anti-UAV, évalués sur GPU
+  \citep[§IV-D7]{2025-yu-yolo-gcof-lightweight-low-altitude}. Pas de tête P2.}}
+
+\newglossaryentry{dronescan-yolo}{type=modeles, name={DroneScan-YOLO}, sort={YOLO 08 z Scan},
+  parent=yolov8s,
+  description={YOLOv8s à 1280\,px (10,23\,M paramètres) avec élagage dynamique de filtres
+  (RPA-Block, masque non structuré), branche P2 légère (MSFD) et perte SAL-NWD
+  \citep[§3]{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight}\pp. 55,3 de mAP@0,5
+  sur VisDrone à 96,7\,FPS sur GPU de portable
+  \citep[Table~4]{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight}\pp ; les
+  paramètres élagués ne sont pas retirés physiquement
+  \citep[§5]{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight}\pp.}}
+
+\newglossaryentry{yolov9}{type=modeles, name={YOLOv9}, sort={YOLO 09}, parent=yolo,
+  description={Neuvième version : backbone GELAN et information de gradient programmable (PGI),
+  dont la branche auxiliaire est retirée à l'inférence \horscorpus. Dans le corpus, seulement
+  dans \citet{2024-gao-dataset-detection-method-unmanned-aerial} : DotD-YOLOv9-C, avec une perte
+  fondée sur la \emph{Normalized Distance} (DotD), atteint 92,6 de mAP@0,5 sur le jeu Anti2 de
+  l'article \citep[Table~5]{2024-gao-dataset-detection-method-unmanned-aerial}, sans mesure de
+  vitesse.}}
+
+\newglossaryentry{yolov11}{type=modeles, name={YOLO11}, sort={YOLO 11}, parent=yolo,
+  description={Version d'Ultralytics qui succède à YOLOv8 : blocs C3k2 et module d'attention
+  C2PSA dans le backbone, tête sans ancres \horscorpus. L'attention et SiLU ne passent pas sur la
+  DPU : Karki et al. approchent C2PSA par des convolutions 1$\times$1 et un hard-sigmoid
+  \citep[§III-B]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.}}
+
+\newglossaryentry{yolov11n}{type=modeles, name={YOLOv11n}, sort={YOLO 11 1n}, parent=yolov11,
+  description={Taille \emph{nano}. La variante DPU-aware perd peu après INT8 sur ZCU104 : 0,59 vers
+  0,57 de mAP50-95 sur VOC, 0,60 vers 0,59 sur KITTI
+  \citep[Table~II]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp, nettement mieux que YOLOv8n.
+  Base de YOLO-Drone.}}
+
+\newglossaryentry{yolov11s}{type=modeles, name={YOLOv11-small}, sort={YOLO 11 2s},
+  parent=yolov11,
+  description={Taille \emph{small}. NOVA l'entraîne sur COCO avec un zoom adaptatif autour de la
+  boîte précédente (entrée 320$\times$256) : 92\,Hz sous TensorRT FP16 sur Jetson Orin NX
+  \citep[§IV-B]{arxiv-2506.18689-nova-navigation-object-centric-visual}\pp, détecteur du suivi de
+  cible en vol.}}
+
+\newglossaryentry{yolo-drone}{type=modeles, name={YOLO-Drone}, sort={YOLO 11 z Drone},
+  parent=yolov11n,
+  description={YOLOv11n dont la tête utilise des GhostConv et des blocs C2f à la place de C3k2
+  (\emph{GhostHead}) ; le backbone est inchangé, pas de tête P2
+  \citep[Fig.~4]{arxiv-2511.10905-yolo-drone-efficient-object-detection}. 30,4 de mAP@0,5 sur
+  VisDrone, 1,8\,ms sur GPU Tesla T4 \citep[Table~2]{arxiv-2511.10905-yolo-drone-efficient-object-detection}.
+  Aucun test embarqué.}}
+
+\newglossaryentry{yolo26n}{type=modeles, name={YOLO26n}, sort={YOLO 26n}, parent=yolo,
+  description={Taille \emph{nano} de YOLO26 (écrit aussi YOLOv26n), présentée comme détecteur
+  de bout en bout sans NMS ni DFL \citep[§III-B3]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.
+  Deux usages dans le corpus. Sur le drone intercepteur SCOUT, affiné sur 3\,931 images du drone
+  cible puis couplé à ByteTrack : TensorRT FP16 sur Jetson Orin NX, 48\,FPS (20,8\,ms) contre
+  22,5\,FPS sous PyTorch \citep[Table~IV]{arxiv-2609.21005-project-scout-interceptor-drone-perimeter}\pp,
+  31,82\,FPS en vol avec 92,2\,\% de détections valides
+  \citep[Table~III]{arxiv-2609.21005-project-scout-interceptor-drone-perimeter}\pp. Sur ZCU104,
+  Karki et al. la compilent pour le DPU : 34,05\,FPS de bout en bout, le NMS étant conservé
+  \citep[§IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.}}
+
+\newglossaryentry{yolox}{type=modeles, name={YOLOX}, sort={YOLO X}, parent=yolo,
+  description={Variante sans ancres, à tête découplée et affectation dynamique des positifs
+  (SimOTA) \horscorpus. Dans le corpus, base de LCAM-YOLOX (détection de feux de forêt).}}
+
+\newglossaryentry{lcam-yolox}{type=modeles, name={LCAM-YOLOX}, sort={YOLO X z LCAM},
+  parent=yolox,
+  description={YOLOX (neck FPN+PAN, trois têtes, 640$\times$640) avec attention de canal et
+  spatiale par couche (LCAM, type CBAM) et Soft-NMS, pour la détection de feux de forêt par
+  drone \citep[§III]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}. Élagué à 30\,\% puis
+  PTQ INT8 pour le DPU : sur Kria KV260, 195\,FPS et 9,72\,W (carte) à 78,11 de mAP, 387\,FPS à
+  2 cœurs ; Jetson Nano 65\,FPS, STM32H7A3 15\,FPS (précisions n/r)
+  \citep[§V-A, §V-D]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}. Tableaux absents de
+  l'extraction : chiffres lus dans le texte.}}
+
+\newglossaryentry{tincy-yolo}{type=modeles, name={Tincy YOLO}, sort={YOLO z Tincy},
+  parent=yolo,
+  description={Tiny YOLO modifié par FINN-R : poids binaires et activations 3~bits (W1A3) sauf
+  première et dernière couches (8~bits). 50,1 de mAP sur PASCAL VOC contre 57,1 pour le
+  modèle de départ \citep[§5.1]{arxiv-1809.04570-finn-r-end-end-deep}. Premier YOLO quantifié sur
+  SoC Zynq du corpus, rapporté en GOp/s : 133 sur PYNQ-Z1 (2,5\,W) et 288 sur Ultra96 (9,7\,W),
+  sans FPS ni latence \citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep}.}}
+
+\newglossaryentry{tinyissimoyolo}{type=modeles, name={TinyissimoYOLO}, sort={YOLO z Tinyissimo},
+  parent=yolo,
+  description={Détecteur pour microcontrôleur inspiré de YOLOv1 : entrée 88$\times$88,
+  convolutions 3$\times$3 uniquement, grille de sortie 4$\times$4, INT8 par QAT, dimensionné
+  pour les 442\,kB de poids du MAX78000. 58,5 de mAP sur un VOC réduit à 3 classes ; sur
+  MAX78000, 5,5\,ms et 196\,µJ par inférence (MCU seul), contre 359\,ms sur STM32H7A3
+  \citep[§III, Table~II]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}. Seul
+  détecteur de type YOLO sur MCU du corpus.}}
+
+\newglossaryentry{skynet}{type=modeles, name={SkyNet}, sort={SkyNet},
+  description={Réseau de détection mono-objet conçu de bas en haut pour DAC-SDC : un
+  \enquote{Bundle} (convolutions depthwise 3$\times$3 et pointwise 1$\times$1, BN, ReLU6)
+  empilé 6 fois, choisi par recherche sous contrainte de latence GPU et FPGA, avec bypass et
+  tête YOLO à deux ancres \citep[§4--5]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp.
+  Vainqueur de DAC-SDC'19 : IoU 0,716, 25,05\,FPS et 7,26\,W sur Ultra96, 67,33\,FPS et
+  13,5\,W sur TX2 \citep[Tables~5--6]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp.
+  Sert aussi de backbone à SiamRPN++ et SiamMask. Repris par plusieurs équipes DAC-SDC
+  2020--2021, dont une version en streaming à 299,3\,FPS \citep[Table~5]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}.}}
+
+\newglossaryentry{ultranet}{type=modeles, name={UltraNet}, sort={UltraNet},
+  description={Réseau de détection mono-objet de huit couches de convolution, quantifié en
+  W4/A4, qui domine DAC-SDC à partir de 2020 avec SkyNet. Les équipes 2021--2022 le portent en
+  architecture streaming avec \emph{DSP packing} : la version SEUer 2022 atteint 70,3 d'IoU,
+  2\,020,6\,FPS et 1,41\,W sur ZU3EG \citep[Table~6]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}.
+  IoU mono-objet, non comparable au mAP multi-classe de VisDrone.}}
+
+% ---------------------------------------------------------- Autres détecteurs
+\newglossaryentry{ssd}{type=modeles, name={SSD}, sort={SSD},
+  description={\emph{Single Shot MultiBox Detector} : détecteur en une étape à ancres
+  (\emph{default boxes}) sur plusieurs cartes de résolutions décroissantes, suivi d'un NMS.
+  Dans le corpus : TGIIF, un SSD élagué en 8~bits, gagne le volet FPGA de DAC-SDC'18 (IoU 0,62
+  à 11,96\,FPS sur XC7Z020) \citep[§5.2.1]{2021-xu-dac-sdc-low-power-object} ; SSD512 est évalué
+  sur MAV-VID (96,7 d'AP50 à 32,4\,FPS)
+  \citep[Table~1]{arxiv-2103.13933-unmanned-aerial-vehicle-visual-detection}\pp et sur Det-Fly
+  (78,7 d'AP en 84\,ms avec ResNet-50, 68,8 en 53\,ms avec MobileNetV2)
+  \citep[Table~II, §V-B]{2021-zheng-air-air-visual-detection-micro}.}}
+
+\newglossaryentry{ssd-mobilenetv2}{type=modeles, name={SSD-MobileNetV2}, sort={SSD 1 MbV2},
+  parent=ssd,
+  description={SSD à backbone MobileNetV2, décliné en trois largeurs (1,0$\times$, 0,75$\times$,
+  0,5$\times$). Sur nano-drone (AI-deck GAP8, 160\,MHz, INT8), la version 1,0$\times$ tient
+  1,6\,FPS pour 134,5\,mW à la carte \citep[Table~II]{arxiv-2301.12175-bio-inspired-autonomous-exploration-policies}\pp ;
+  BlankSkip la mesure à 1,50\,FPS pour 55,5 de mAP (version 0,5$\times$ : 3,50\,FPS, 41,5)
+  \citep[Table~2]{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp. Détecteurs
+  multi-objets du corpus sur GAP8.}}
+
+\newglossaryentry{ssdlite-mobiledet}{type=modeles, name={SSDLite MobileDet},
+  sort={SSD 2 MobileDet}, parent=ssd,
+  description={Détecteur mobile à têtes SSDLite (convolutions séparables) et backbone MobileDet,
+  recherché pour les accélérateurs mobiles \horscorpus. Alqahtani et al. mesurent 27 de mAP COCO
+  contre 16 à 17 pour SSD MobileNet V1 sur Jetson Orin Nano, Jetson Nano et Raspberry Pi 5 avec
+  Hailo-8 \citep[§IV-C]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.}}
+
+\newglossaryentry{retinanet}{type=modeles, name={RetinaNet}, sort={RetinaNet},
+  description={Détecteur en une étape à ancres sur pyramide de caractéristiques, entraîné avec
+  la \emph{focal loss} \horscorpus. Dans le corpus : 77,9 d'AP sur Det-Fly avec ResNet-50
+  \citep[Table~II]{2021-zheng-air-air-visual-detection-micro}, 78,21\,\% de mAP en baseline de
+  la détection de feu \citep[§V-A1]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}, et
+  base de QueryDet.}}
+
+\newglossaryentry{querydet}{type=modeles, name={QueryDet}, sort={RetinaNet z QueryDet},
+  parent=retinanet,
+  description={RetinaNet à tête P2 dont les niveaux fins ne sont évalués qu'aux positions
+  proposées par une carte de présence de petits objets (\emph{Cascade Sparse Query}, convolution
+  éparse) \citep[§3.2]{arxiv-2103.09136-querydet-cascaded-sparse-query-accelerating}\pp. Sur
+  VisDrone : 28,32 d'AP à 2,75\,FPS avec CSQ contre 28,35 à 1,16\,FPS sans
+  \citep[Table~2]{arxiv-2103.09136-querydet-cascaded-sparse-query-accelerating}\pp. Il réduit le
+  coût de la tête P2, au prix d'une convolution éparse peu adaptée au FPGA \deduit.}}
+
+\newglossaryentry{faster-rcnn}{type=modeles, name={Faster R-CNN}, sort={Faster R-CNN},
+  description={Détecteur en deux étapes : un réseau de propositions (RPN) génère des régions,
+  puis une tête les classe et affine les boîtes \horscorpus. Plus précis mais plus lent que les
+  détecteurs en une étape : 18,0\,FPS contre 32,4 pour SSD512 sur MAV-VID
+  \citep[Table~1]{arxiv-2103.13933-unmanned-aerial-vehicle-visual-detection}\pp, 70,5 d'AP sur
+  Det-Fly \citep[Table~II]{2021-zheng-air-air-visual-detection-micro}. Base de ClusDet.}}
+
+\newglossaryentry{clusdet}{type=modeles, name={ClusDet}, sort={Faster R-CNN z ClusDet},
+  parent=faster-rcnn,
+  description={Faster R-CNN + FPN précédé d'un réseau de propositions de \emph{groupes} d'objets
+  (CPNet), d'une régression d'échelle (ScaleNet) et d'une fusion itérative
+  \citep[§3]{arxiv-1904.08008-clustered-object-detection-aerial-images}\pp : les groupes sont
+  recadrés puis détectés à échelle normalisée. VisDrone val : 26,7 d'AP (ResNet-50, 273\,ms sur
+  GTX 1080\,Ti) à 28,4 (ResNeXt-101, 773\,ms)
+  \citep[Table~1]{arxiv-1904.08008-clustered-object-detection-aerial-images}\pp. Typique des
+  méthodes de précision hors temps réel.}}
+
+\newglossaryentry{ufpmp-det}{type=modeles, name={UFPMP-Det}, sort={UFPMP-Det},
+  description={Détecteur de petits objets en deux temps : un détecteur grossier propose des
+  régions, qui sont fusionnées et assemblées en une seule mosaïque (\emph{Unified Foreground
+  Packing}), détectée en une passe par un réseau à tête multi-proxy (MP-Det)
+  \citep[§3]{arxiv-2112.10415-ufpmp-det-accurate-efficient-object}\pp. VisDrone val : 36,6 d'AP
+  (ResNet-50) à 39,2 (ResNeXt-101), 152\,ms sur GTX 1080\,Ti pour la configuration de la
+  Table~3 \citep[Tables~1 et 3]{arxiv-2112.10415-ufpmp-det-accurate-efficient-object}\pp.}}
+
+\newglossaryentry{sahi}{type=modeles, name={SAHI}, sort={SAHI},
+  description={\emph{Slicing Aided Hyper Inference} : cadre indépendant du détecteur, qui
+  découpe l'image en tuiles recouvrantes, détecte sur chacune puis fusionne par NMS
+  \citep[§3]{arxiv-2202.06934-slicing-aided-hyper-inference-fine}\pp. Applicable sans
+  réentraînement ; avec fine-tuning sur tuiles, FCOS atteint 38,5 d'AP50 sur VisDrone
+  \citep[Table~1]{arxiv-2202.06934-slicing-aided-hyper-inference-fine}\pp. Multiplie le nombre
+  d'inférences par image, ce qui l'éloigne du temps réel embarqué \deduit.}}
+
+\newglossaryentry{detr}{type=modeles, name={DETR}, sort={DETR},
+  description={\emph{DEtection TRansformer} : backbone CNN suivi d'un encodeur-décodeur
+  transformer qui produit un ensemble fixe de boîtes à partir de requêtes apprises ; l'appariement
+  hongrois supprime ancres et NMS \horscorpus. Dans le corpus, évalué sur GPU : 97,1 d'AP50 sur
+  MAV-VID à 21,4\,FPS \citep[Table~1]{arxiv-2103.13933-unmanned-aerial-vehicle-visual-detection}\pp.
+  RT-DETR (sa version temps réel) sert de comparaison à GL-YOMO sur Drone-vs-Bird (AP 0,773)
+  \citep[Table~II]{arxiv-2411.02582-real-time-detection-small-uavs}\pp.}}
+
+% ------------------------------------------------------------------ Backbones
+\newglossaryentry{darknet}{type=modeles, name={Darknet}, sort={Darknet},
+  description={À la fois le framework C d'entraînement de YOLO et la famille de backbones
+  Darknet-19 (YOLOv2) et Darknet-53 (YOLOv3, résiduel). Dans le corpus : Darknet-53 est le
+  backbone de YOLOv3 sur Det-Fly \citep[§IV]{2021-zheng-air-air-visual-detection-micro},
+  le framework sert aux mesures sur Jetson sans TensorRT de
+  \citet{2022-feng-benchmark-analysis-yolo-performance-edge}, et \citet{2024-nguyen-fpga-soc-implementation-yolov4-flying}
+  convertissent leurs modèles Darknet vers Keras puis Vitis AI.}}
+
+\newglossaryentry{resnet}{type=modeles, name={ResNet}, sort={ResNet},
+  description={Famille de réseaux à connexions résiduelles (ResNet-18, -50, -101\ldots). Backbone
+  par défaut des détecteurs de précision du corpus (ClusDet, QueryDet, UFPMP-Det, SSD512,
+  Faster R-CNN, Dogfight) ; ResNet-18 allégé dans YOPOv2-Tracker
+  \citep[§III-C]{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp ; le DroNet de Loquercio et
+  Palossi en est un dérivé peu profond à connexions résiduelles
+  \citep[§III-A]{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}\pp. Tiny-PULP-Dronet en
+  retire les by-pass \citep[§II]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp.}}
+
+\newglossaryentry{vgg16}{type=modeles, name={VGG-16}, sort={VGG16},
+  description={Classifieur de 2014 à 13 convolutions 3$\times$3 et 3 couches denses, régulier
+  mais lourd \horscorpus. Dans le corpus : réseau de contrôle de bout en bout du modèle de vol de
+  \citet{2020-krishnan-sky-not-limit-visual-performance} (28\,Hz sur Jetson AGX Xavier, 10 sur
+  TX2, 1,3 sur NCS \citep[§4]{2020-krishnan-sky-not-limit-visual-performance}), et backbone
+  allégé du SSD vainqueur de DAC-SDC'18. Un SSD-VGG16 dépasse 80\,W sur FPGA selon la revue de
+  \citet[§VI-A]{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp.}}
+
+\newglossaryentry{alexnet}{type=modeles, name={AlexNet}, sort={AlexNet},
+  description={Classifieur de 2012 à 5 convolutions et 3 couches denses. Dans le corpus, backbone
+  de tous les trackers siamois pour drone (SiamAPN++, HiFT, TCTrack), choisi pour la latence :
+  3,4\,ms sur Jetson AGX Xavier contre 13,7 pour MobileNetV2, à cause du coût d'accès mémoire
+  des réseaux mobiles \citep[§4.1, Table~1]{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}\pp.}}
+
+\newglossaryentry{squeezenet}{type=modeles, name={SqueezeNet}, sort={SqueezeNet},
+  description={Classifieur compact fondé sur des modules \enquote{fire} (compression
+  1$\times$1, puis expansion 1$\times$1 et 3$\times$3). L'équipe SystemsETHZ de DAC-SDC le
+  binarise (\emph{halfFire}) et lui ajoute une tête YOLO : IoU 0,49 à 25,97\,FPS sur XC7Z020
+  en 2018 \citep[§5.2.1]{2021-xu-dac-sdc-low-power-object} ; en 2019 la variante RectHalfSqznet
+  avec tête SSD atteint 0,553 d'IoU à 55,1\,FPS sur ZU3EG
+  \citep[Table~3]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}.}}
+
+\newglossaryentry{mobilenet}{type=modeles, name={MobileNet}, sort={MobileNet},
+  description={Famille de backbones légers fondés sur la convolution séparable en profondeur
+  (depthwise puis pointwise 1$\times$1) ; V2 ajoute les blocs résiduels inversés à goulot
+  linéaire \horscorpus. Présents dans le corpus de la détection embarquée (SSD) à la
+  navigation (Loquercio).}}
+
+\newglossaryentry{mobilenetv1}{type=modeles, name={MobileNetV1}, sort={MobileNet 1},
+  parent=mobilenet,
+  description={Première version, sans bloc résiduel. Backbone de SSD MobileNet V1 chez
+  \citet{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp : 16 de mAP COCO
+  sur Jetson Orin Nano \citep[§IV-C]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.
+  L'équipe iSmart2 de DAC-SDC'18 l'associe à une tête YOLO (IoU 0,573, 7,35\,FPS sur XC7Z020)
+  \citep[§5.2.1]{2021-xu-dac-sdc-low-power-object}.}}
+
+\newglossaryentry{mobilenetv2}{type=modeles, name={MobileNetV2}, sort={MobileNet 2},
+  parent=mobilenet,
+  description={Blocs résiduels inversés à goulot linéaire. Dans le corpus : classifieur
+  32$\times$32 drone / oiseau / fond après soustraction de fond
+  \citep[§3.4]{2020-seidaliyeva-real-time-accurate-drone-detection}, backbone des SSD sur GAP8
+  (Lamberti et al., BlankSkip), de RetinaNet allégé dans QueryDet (28,94 d'AP)
+  \citep[Table~7]{arxiv-2103.09136-querydet-cascaded-sparse-query-accelerating}\pp et baseline
+  de la détection de feu à 13\,FPS et 68,23\,\%
+  \citep[§V-A1]{2025-elhence-fpga-accelerated-yolox-enhanced-attention}.}}
+
+\newglossaryentry{mobilenetv3}{type=modeles, name={MobileNetV3}, sort={MobileNet 3},
+  parent=mobilenet,
+  description={Version issue d'une recherche d'architecture, avec modules d'attention
+  squeeze-excitation \horscorpus. Extracteur de profondeur de la politique de vol à haute
+  vitesse de \citet{arxiv-2110.05113-learning-high-speed-flight-wild}, suivi d'une convolution 1D
+  et d'un MLP qui prédisent trois trajectoires : 24,3\,FPS (41,6\,ms) sur Jetson TX2 pour 60\,\%
+  de succès en forêt réelle \citep[Table~1]{arxiv-2110.05113-learning-high-speed-flight-wild}.}}
+
+% ------------------------------------------------------- Réseaux binaires (FINN)
+\newglossaryentry{bnn}{type=modeles, name={BNN}, sort={BNN},
+  description={\emph{Binarized Neural Network} : poids et activations sur 1~bit ($\pm 1$) ; le
+  produit scalaire devient un XNOR et un comptage de bits, la BN suivie du signe un simple
+  seuil, ce qui convient aux LUT d'un FPGA. Dans le corpus, c'est la base de FINN
+  \citep{arxiv-1612.07119-finn-framework-fast-scalable-binarized} et FINN-R, dont descendent
+  Tincy YOLO et, dans la même lignée de flot dataflow, le portage W4/A4 de YOLOv3-tiny de
+  \citet{2025-cali-optimized-implementation-yolov3-tiny-real}.}}
+
+\newglossaryentry{cnv}{type=modeles, name={CNV}, sort={CNV}, parent=bnn,
+  description={Classifieur binaire de référence de FINN pour CIFAR-10 et SVHN : trois fois (deux
+  convolutions 3$\times$3 et un max-pooling) avec 64, 128 et 256 canaux, puis deux couches
+  denses. CNV-max atteint 21\,900 images/s à 80,1\,\% de précision sur CIFAR-10 sur ZC706
+  (11,7\,W) ; CNV-fix, 11\,600 images/s pour une latence de 0,55\,ms
+  \citep[Tables~3--4]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}. Hors vision
+  aérienne : sert de preuve de concept du flot FINN.}}
+
+% ------------------------------------------------------------------- Suivi
+\newglossaryentry{siamtracker}{type=modeles, name={Tracker siamois}, sort={Tracker siamois},
+  description={Suivi d'objet unique par réseau jumeau : le gabarit (127$\times$127) et la zone de
+  recherche (287$\times$287) passent par le même backbone, et une corrélation entre cartes donne
+  la position de la cible \horscorpus. Famille dominante du suivi aérien du corpus, avec un
+  backbone AlexNet pour tenir sur Jetson (SiamAPN++, HiFT, TCTrack) ; SiamRPN++ et SiamMask à
+  backbone SkyNet sont évalués sur GOT-10k (36,4 et 39,0 d'AO)
+  \citep[Tables~8--9]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp.}}
+
+\newglossaryentry{siamapnpp}{type=modeles, name={SiamAPN++}, sort={Tracker siamois 1 APN},
+  parent=siamtracker,
+  description={Tracker siamois à réseau de propositions d'ancres adaptatives à double
+  caractéristique (APN-DF) et agrégation attentionnelle (AAN)
+  \citep[§III]{arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network}\pp. 56,0 d'AUC de
+  succès sur UAV20L \citep[Fig.~4a]{arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network}\pp ;
+  34,9\,FPS sur Jetson AGX Xavier en vol réel
+  \citep[§V]{arxiv-2106.08816-siamapn-siamese-attentional-aggregation-network}\pp.}}
+
+\newglossaryentry{hift}{type=modeles, name={HiFT}, sort={Tracker siamois 2 HiFT},
+  parent=siamtracker,
+  description={\emph{Hierarchical Feature Transformer} : l'encodeur fusionne les cartes de
+  corrélation de haute résolution (couches 3 et 4) par attention multi-têtes, le décodeur prend
+  celle de la couche 5 à la place des requêtes d'objets
+  \citep[§3.2]{arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial}\pp, tête sans
+  ancres. 78,7 de précision à 20\,px sur UAV123
+  \citep[Table~1]{arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial}\pp ; 31,2\,FPS
+  sur Jetson AGX Xavier en test réel
+  \citep[§5]{arxiv-2108.00202-hift-hierarchical-feature-transformer-aerial}\pp.}}
+
+\newglossaryentry{tctrack}{type=modeles, name={TCTrack}, sort={Tracker siamois 3 TCTrack},
+  parent=siamtracker,
+  description={Tracker siamois qui injecte le contexte temporel : convolutions dont les poids sont
+  recalibrés par les descripteurs des images passées (TAdaConv) et Transformer à mémoire
+  constante (AT-Trans) \citep[§3]{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}\pp.
+  58,2 d'AUC de succès sur UAVTrack112\_L à 125,6\,FPS sur PC (GPU n/r), 27\,FPS sur Jetson AGX
+  Xavier en test réel \citep[§1, §5]{arxiv-2203.01885-tctrack-temporal-contexts-aerial-tracking}\pp.}}
+
+\newglossaryentry{bytetrack}{type=modeles, name={ByteTrack}, sort={ByteTrack},
+  description={Suivi multi-objets par association de détections, y compris celles de faible
+  confiance, en deux passes \horscorpus. SCOUT l'associe à YOLO26n sur Jetson Orin NX (deux pools,
+  seuil 0,50, confiance minimale 0,06) et ajoute un filtre géométrique de rejet des sauts de
+  détection \citep[§III-B]{arxiv-2609.21005-project-scout-interceptor-drone-perimeter}\pp. Cité
+  par la revue sur caméras événementielles comme suiveur de référence sur FRED
+  \citep[§5]{arxiv-2508.04564-drone-detection-event-cameras}\pp.}}
+
+\newglossaryentry{kalman}{type=modeles, name={Filtre de Kalman}, sort={Kalman},
+  description={Estimateur récursif d'état à partir de mesures bruitées, qui alterne prédiction
+  (modèle de mouvement) et mise à jour \horscorpus. Omniprésent dans le corpus comme brique de
+  suivi : prédiction de la fenêtre locale de GLAD
+  \citep[§III]{arxiv-2312.11008-global-local-mav-detection-challenging}\pp, validation des
+  correspondances de GL-YOMO, correction de la dérive de la VIO dans Swift
+  \citep[Methods]{2023-kaufmann-champion-level-drone-racing-deep}.}}
+
+\newglossaryentry{ekf}{type=modeles, name={EKF}, sort={Kalman 1 EKF}, parent=kalman,
+  description={Filtre de Kalman étendu : linéarise les modèles autour de l'estimation. Dans
+  YOPOv2-Tracker, un EKF à vitesse constante assure la cohérence spatio-temporelle de la cible
+  au sein du NMS des primitives de mouvement
+  \citep[§III-B]{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp.}}
+
+\newglossaryentry{ukf}{type=modeles, name={UKF}, sort={Kalman 2 UKF}, parent=kalman,
+  description={Filtre de Kalman \emph{unscented} : propage des points sigma au travers du modèle
+  non linéaire, sans le linéariser \horscorpus. NOVA en fait tourner un à 200\,Hz pour fusionner
+  IMU et détections asynchrones \citep[§III-B3]{arxiv-2506.18689-nova-navigation-object-centric-visual}\pp ;
+  NGPS, un UKF à 15 états fusionnant GPS visuel, VIO et IMU
+  \citep[§III-E]{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp.}}
+
+% -------------------------------------------------------------- Navigation
+\newglossaryentry{dronet}{type=modeles, name={DroNet}, sort={DroNet},
+  description={CNN résiduel léger à deux sorties (angle de braquage en régression, probabilité de
+  collision en classification), entraîné sur des images de voiture et de vélo pour la navigation
+  d'un drone sans carte \horscorpus. Environ 41\,MMAC par image
+  \citep[§III-A]{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}\pp. C'est le réseau de
+  navigation de référence des nano-drones du corpus (PULP-Dronet, Tiny-PULP-Dronet,
+  roofline de Krishnan et al.).}}
+
+\newglossaryentry{pulp-dronet}{type=modeles, name={PULP-Dronet}, sort={DroNet 1 PULP},
+  parent=dronet,
+  description={DroNet porté sur le SoC GAP8 : Fixed16 Q4.12 avec réentraînement QAT,
+  max-pooling 2$\times$2, fine-tuning sur images de la caméra embarquée, tiling par AutoTiler sur
+  8 cœurs \citep[§IV]{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}\pp. 89,1\,\% de
+  précision de collision ; 6\,FPS pour 64\,mW ou 18\,FPS pour 284\,mW
+  \citep[§VI, Table~II]{arxiv-1805.01831-64mw-dnn-visual-navigation-engine}\pp. Gamme nano
+  (mW).}}
+
+\newglossaryentry{tiny-pulp-dronet}{type=modeles, name={Tiny-PULP-Dronet},
+  sort={DroNet 2 Tiny}, parent=pulp-dronet,
+  description={PULP-Dronet réduit : canaux multipliés par $\gamma=0{,}125$ et branches by-pass
+  supprimées, car le réseau est creux (jusqu'à 92\,\% de neurones inactifs) et sur-apprend
+  \citep[§II]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp. 6,4\,kB et 1,5\,MMAC
+  contre 320\,kB et 41\,MMAC ; 88\,\% de précision, 89\,FPS pour 34\,mW sur GAP8, contre
+  10\,FPS à fréquence égale \citep[§III]{arxiv-2407.02405-tiny-pulp-dronets-squeezing-neural}\pp.}}
+
+\newglossaryentry{pulp-frontnet}{type=modeles, name={PULP-Frontnet}, sort={Frontnet},
+  description={CNN sans connexions résiduelles qui estime la pose d'une personne devant un
+  nano-drone pour l'interaction humain-drone, quantifié en INT8 (NEMO) et déployé par DORY sur
+  GAP8 \citep[§IV]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp. Trois variantes : la
+  80$\times$32 tient 18,5\,FPS pour 8,6\,mW (puissance minimale) ou 134,7\,FPS pour 86,6\,mW
+  \citep[§V-B]{arxiv-2103.10873-fully-onboard-ai-powered-human}\pp.}}
+
+\newglossaryentry{nanoflownet}{type=modeles, name={NanoFlowNet}, sort={NanoFlowNet},
+  description={Réseau de flux optique dense dérivé de STDC-Seg (convolutions séparables, filtres
+  divisés par 4), guidé à l'entraînement par les frontières de mouvement, pour l'évitement
+  d'obstacles d'un nano-drone \citep[§III]{arxiv-2209.06918-nanoflownet-real-time-dense-optical}\pp.
+  5,57\,FPS en niveaux de gris 112$\times$160 sur GAP8 (INT8 PTQ) ; 141\,FPS et 7,122 px d'erreur
+  de bout sur MPI Sintel sur GTX 1070
+  \citep[Table~IV]{arxiv-2209.06918-nanoflownet-real-time-dense-optical}\pp.}}
+
+\newglossaryentry{dreamerv3}{type=modeles, name={DreamerV3}, sort={DreamerV3},
+  description={Apprentissage par renforcement avec modèle du monde : un RSSM prédit dynamique,
+  récompense et continuation à partir d'images, et l'acteur-critique s'entraîne sur des
+  trajectoires imaginées. Dream-to-Fly l'applique à la course de drones à partir de pixels
+  64$\times$64 : seul DreamerV3 converge, en 20\,M d'interactions et environ 240\,h
+  d'entraînement, là où PPO et SAC échouent
+  \citep[§IV-A]{arxiv-2501.14377-dream-fly-model-reinforcement-learning}\pp. Validé en
+  hardware-in-the-loop (calcul déporté), sans mesure embarquée.}}
+
+\newglossaryentry{yopov2}{type=modeles, name={YOPOv2-Tracker}, sort={YOPOv2},
+  description={Réseau unique de planification de trajectoire pour le suivi agile : entrée RGB-D
+  160$\times$96, backbone ResNet-18 modifié, sortie de primitives de mouvement qui jouent le rôle
+  d'ancres, entraîné par rétropropagation du coût de trajectoire sans démonstrations
+  \citep[§III]{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp. Latence perception-action de
+  8,2\,ms sur Jetson Orin NX en vol réel (3\,ms sur PC)
+  \citep[§IV-B]{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp, suivi jusqu'à 6\,m/s.}}
+
+\newglossaryentry{swift}{type=modeles, name={Swift}, sort={Swift},
+  description={Système de course de drones qui bat des pilotes champions : détecteur de coins de
+  portes (U-Net à 6 niveaux, 384$\times$384), VIO et filtre de Kalman pour l'état, et politique
+  de contrôle MLP (2 couches de 128) entraînée par PPO en simulation
+  \citep[Methods]{2023-kaufmann-champion-level-drone-racing-deep}. Sur Jetson TX2 : 40\,ms pour
+  le détecteur (TensorRT FP16), 8\,ms pour la politique sur CPU
+  \citep[Methods]{2023-kaufmann-champion-level-drone-racing-deep}. Référence de latence
+  perception-contrôle en vol agile.}}
+
+\newglossaryentry{superpoint}{type=modeles, name={SuperPoint}, sort={SuperPoint},
+  description={Détecteur-descripteur de points d'intérêt appris (descripteurs de 256 dimensions)
+  \horscorpus. Dans NGPS, il extrait les points de l'image du drone et de la tuile satellite avant
+  l'appariement par LightGlue \citep[§III-C]{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp.}}
+
+\newglossaryentry{lightglue}{type=modeles, name={LightGlue}, sort={LightGlue},
+  description={Réseau d'appariement de points d'intérêt à attention, qui peut s'arrêter tôt sur
+  les paires faciles \horscorpus. Dans NGPS (RANSAC sur homographie, au moins 20 correspondances),
+  il représente 82\,\% du temps GPU : le module tourne à 2,6\,Hz sous CUDA et 0,5\,Hz sur CPU,
+  sur Jetson Orin NX \citep[§IV-D]{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp. Le
+  positionnement visuel atteint 2,94\,m de RMSE contre 10,37\,m pour la VIO seule
+  \citep[§IV-E4]{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp.}}
+
+\newglossaryentry{vinsfusion}{type=modeles, name={VINS-Fusion}, sort={VINS-Fusion},
+  description={Odométrie visuelle-inertielle par optimisation sur fenêtre glissante, monoculaire,
+  stéréo ou avec GPS \horscorpus. Fournit l'état aux contrôleurs de YOPOv2-Tracker (quadrotor
+  maison, Orin NX) \citep[§IV-A]{arxiv-2505.06923-yopov2-tracker-end-end-agile}\pp et la VIO
+  monoculaire de NGPS (fenêtre de 10 images clés, 150 points KLT)
+  \citep[§III-B]{arxiv-2607.18936-ngps-gps-denied-aerial-geo}\pp.}}
+
+\newglossaryentry{depthanythingv2}{type=modeles, name={DepthAnythingV2}, sort={DepthAnythingV2},
+  description={Modèle de fondation d'estimation de profondeur monoculaire à backbone ViT
+  \horscorpus. NOVA utilise la variante ViT-S, alignée sur la disparité stéréo par un polynôme
+  d'ordre 2 pour compléter la profondeur : 31,6\,ms par image sur Jetson Orin NX
+  \citep[§IV-C]{arxiv-2506.18689-nova-navigation-object-centric-visual}\pp.}}
+
+% ----------------------------------------------------------- Vision-langage
+\newglossaryentry{clip}{type=modeles, name={CLIP}, sort={CLIP},
+  description={Modèle image-texte entraîné par contraste, dont les embeddings relient une requête
+  textuelle à une image \horscorpus. Dans SINGER, un champ sémantique CLIP est distillé dans la
+  scène de Gaussian Splatting du simulateur
+  \citep[§IV-B]{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp.}}
+
+\newglossaryentry{clipseg}{type=modeles, name={CLIPSeg}, sort={CLIP 1 Seg}, parent=clip,
+  description={Segmentation guidée par texte au-dessus de CLIP ViT-B/16 (86\,M de paramètres) :
+  une requête et une image donnent une carte de chaleur. Étage de perception de SINGER sur Jetson
+  Orin Nano : 3\,Hz sans optimisation, 12\,Hz en ONNX sur CUDA, qui borne la boucle de
+  perception \citep[§V]{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp.}}
+
+\newglossaryentry{singer}{type=modeles, name={SINGER}, sort={SINGER},
+  description={Politique de navigation vers un but sémantique donné par texte, entièrement
+  embarquée, entraînée par imitation d'un expert (RRT* + MPC) dans un simulateur photoréaliste
+  \citep[§IV]{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp. En vol réel
+  (30 essais, bureau factice) : but atteint à moins de 1\,m dans 76,67\,\% des cas avec le nord
+  fourni, 66,67\,\% avec capteurs embarqués seuls, contre 53,33\,\% pour une baseline
+  CLIPSeg + PD \citep[§VI-D]{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp.}}
+
+\newglossaryentry{svnet}{type=modeles, name={SV-Net}, sort={SINGER z SV-Net}, parent=singer,
+  description={Réseau visuomoteur léger de SOUS-VIDE réutilisé par SINGER : il prend en entrée
+  les logits de CLIPSeg convertis en carte de chaleur, un historique de masse et de poussée, et
+  sort poussée collective et vitesses angulaires à 20\,Hz
+  \citep[§V]{arxiv-2509.18610-singer-onboard-generalist-vision-language}\pp. Taille en
+  paramètres, latence et puissance propres : n/r.}}
+
+\newglossaryentry{smolvlm}{type=modeles, name={SmolVLM-256M}, sort={SmolVLM},
+  description={Modèle vision-langage compact : encodeur SigLIP, projection par \emph{pixel
+  shuffle} et décodeur SmolLM2-135M \citep[§II]{arxiv-2609.25415-cloud-edge-split-profiling-onboard}\pp.
+  Profilé par \citet{arxiv-2609.25415-cloud-edge-split-profiling-onboard}\pp sur un Jetson et un
+  GPU cloud : 2,76\,s tout embarqué, 0,72\,s tout cloud, 2,09\,s avec coupure après la
+  projection (moins 24\,\% face à l'embarqué), pour 15\,J à bord contre 26\,J
+  \citep[§V-A1, Fig.~6 et 9]{arxiv-2609.25415-cloud-edge-split-profiling-onboard}\pp.}}
+
+\newglossaryentry{litevla-h}{type=modeles, name={LiteVLA-H}, sort={LiteVLA-H},
+  description={Modèle vision-langage-action de 256\,M de paramètres, à deux modes (action en 1 à
+  2 tokens, sémantique en phrase) et ordonnanceur à deux cadences où l'action passe en priorité
+  \citep[§3]{arxiv-2605.00884-litevla-h-dual-rate-vision}\pp. Sur Jetson AGX Orin en FP16 :
+  50,65\,ms (19,74\,Hz) pour l'action, 149,90\,ms (6,67\,Hz) pour une phrase
+  \citep[§6.1]{arxiv-2605.00884-litevla-h-dual-rate-vision}\pp, la latence étant dominée par le
+  pre-fill multimodal. Surcoût du double régime : 3,6\,W.}}
+
+\newglossaryentry{nerf}{type=modeles, name={NeRF}, sort={NeRF},
+  description={\emph{Neural Radiance Field} : un MLP encode une scène 3D comme densité et couleur
+  en tout point, rendue par intégration le long des rayons \horscorpus. Hors temps réel : dans le
+  corpus, seulement porté à l'échelle d'un nano-drone par Tiny-DroNeRF.}}
+
+\newglossaryentry{instantngp}{type=modeles, name={Instant-NGP}, sort={NeRF 1 Instant},
+  parent=nerf,
+  description={NeRF accéléré par une table de hachage multi-résolution et de petits MLP, avec une
+  grille d'occupation \horscorpus. Version de départ de Tiny-DroNeRF : 527\,MB, 17,52\,GOp par
+  pas, 32,59\,dB de PSNR \citep[Table~II]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp.}}
+
+\newglossaryentry{tiny-dronerf}{type=modeles, name={Tiny-DroNeRF}, sort={NeRF 2 Tiny},
+  parent=instantngp,
+  description={Instant-NGP réduit (1 image par pas, 160$\times$160, table de hachage $2^{13}$) et
+  écrit en C pour le cluster du SoC GAP9 d'un nano-drone, en float16
+  \citep[§IV]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp. 0,284\,MB de paramètres,
+  26,94\,dB de PSNR (5,7\,dB de moins), 73\,ms par pas d'entraînement amorti, 4,1\,s par rendu
+  de 160$\times$160, mesurés au simulateur cycle-accurate GVSOC et non sur la puce
+  \citep[§V-C]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp ; 21,2\,dB avec des
+  images de vol réel \citep[§V-D]{arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance}\pp.}}
+
+% --------------------------------------------------------------- Early-exit
+\newglossaryentry{blankskip}{type=modeles, name={BlankSkip}, sort={BlankSkip},
+  description={Sortie anticipée (\emph{early exit}) pour détecteur : une branche légère (0,078\,M
+  de paramètres) accrochée à une couche intermédiaire d'un SSD-MobileNetV2 classe l'image
+  \enquote{vide} ou \enquote{non vide} et court-circuite le détecteur dans le premier cas ;
+  le seuil est réglable en vol \citep[§3]{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp.
+  Sur GAP8 (INT8, DORY) : 54,0 de mAP à 1,86\,FPS en moyenne contre 55,5 à 1,50\,FPS pour le
+  modèle statique (+24\,\%) \citep[Table~2]{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp ;
+  2,07\,FPS sur vidéo d'exploration \citep[§4.2.1]{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp.
+  Puissance non mesurée.}}
+
+% --------------------------------------------------------------- Opérateurs
+\newglossaryentry{nms}{type=modeles, name={NMS}, sort={NMS},
+  description={\emph{Non-Maximum Suppression} : suppression des boîtes redondantes d'un détecteur
+  par seuil d'IoU \horscorpus. Dans le corpus c'est souvent le goulot : sur ARM, Nguyen et al. le
+  mesurent à environ 3,9\,ms par image \citep[Table~12]{2024-nguyen-fpga-soc-implementation-yolov4-flying}, et
+  \citet{arxiv-2607.13106-no-attention-no-problem-dpu}\pp concluent que le post-traitement sur
+  l'ARM, non le DPU, limite le débit de bout en bout \citep[§IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.
+  YOLO26 est annoncé sans NMS, mais celui-ci est conservé pour l'évaluation
+  \citep[§III-B3]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp ; Soft-NMS dans LCAM-YOLOX.}}
+
+\newglossaryentry{attention}{type=modeles, name={Attention / Transformer}, sort={Attention},
+  description={Mécanisme de pondération de positions par produit de requêtes et de clés,
+  empilé en Transformer \horscorpus. Apparaît dans le corpus drone sous trois formes : têtes
+  Transformer ou Swin de TPH-YOLOv5, Transformer de suivi (HiFT, TCTrack), attention de canal et
+  spatiale (CBAM dans LCAM-YOLOX). Sur FPGA, elle pose problème : le module C2PSA de YOLO11 doit
+  être approché par des convolutions 1$\times$1 et un hard-sigmoid pour passer sur le DPU
+  \citep[§III-B]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.}}
+
+\newglossaryentry{p2head}{type=modeles, name={Tête P2}, sort={Tete P2},
+  description={Tête de détection supplémentaire sur la carte de stride 4 (160$\times$160 à
+  640 px), dédiée aux objets minuscules. Recette récurrente des YOLO drone : TPH-YOLOv5,
+  Drone-YOLO, Efficient YOLOv7-Drone, GCL-YOLO, DEAL-YOLO, QueryDet, DroneScan-YOLO. Gain
+  important (43,7 vers 50,5 de mAP50 pour Drone-YOLO) mais coût élevé en activations :
+  13,68 vers 10,89\,FPS pour TPH-YOLOv5 \citep[Table~5]{2023-zhao-tph-yolov5-boosting-object-detection}
+  et latence TX2 multipliée par 4,1 pour Drone-YOLO nano
+  \citep[Table~6]{2023-zhang-drone-yolo-efficient-neural-network}. Absente des YOLO portés sur FPGA
+  du corpus ; SF-YOLOv5, lui, retire P5 sans ajouter P2.}}
+
+\newglossaryentry{ghostconv}{type=modeles, name={GhostConv}, sort={GhostConv},
+  description={Convolution \enquote{fantôme} (GhostNet) : une convolution réduite produit une
+  partie des canaux, le reste étant généré par des opérations linéaires peu coûteuses
+  \horscorpus. Réduit paramètres et FLOPs : backbone de GCL-YOLO, tête de YOLO-Drone, C3Ghost de
+  GL-YOMO. Seule, elle fait pourtant chuter le mAP50 de GCL-YOLO de 32,7 à 28,8
+  \citep[§4.5]{2023-cao-gcl-yolo-ghostconv-lightweight-yolo}, et elle est moins efficace sur DPU
+  \deduit.}}

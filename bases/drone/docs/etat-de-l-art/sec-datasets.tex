@@ -9,20 +9,20 @@ résument trois éditions du challenge (2018--2020). Le jeu compte 263 clips (17
 images) et 10\,209 images fixes, plus de 2,5 millions de boîtes sur 10 catégories, prises
 par des DJI dans 14 villes chinoises, jusqu'à 2000$\times$1500 en image fixe
 \src{§1}. La tâche DET se découpe en 6\,471 / 548 / 1\,580 / 1\,610 images
-(train / val / test-challenge / \gl{testdev}{test-dev}) \src{§4.1} et suit le protocole \gl{AP}{AP} \gl{COCO}{COCO}. Le
-meilleur résultat de 2020, DroneEye2020 (Cascade R-CNN + DetectoRS), atteint 34,57 d'AP
+(train / val / test-challenge / \gl{testdev}{test-dev}) \src{§4.1} et suit le protocole \glslink{ap}{AP} \gl{COCO}{COCO}. Le
+meilleur résultat de 2020, DroneEye2020 (Cascade R-CNN + DetectoRS), atteint 34,57 d'\glslink{ap}{AP}
 \src{Table~2} ; le meilleur détecteur reste sous 25\,\% sur \emph{person} et
 \emph{bicycle} \src{§4.5}. Les auteurs reconnaissent que les soumissions privilégient la
-précision sur l'efficacité : les méthodes vidéo tournent à moins de 10\,\gl{FPS}{FPS} sur une GTX
-1080Ti \src{§5.3, §8}. Le §8 formule d'ailleurs le problème de la thèse : les ressources
+précision sur l'efficacité : les méthodes vidéo tournent à moins de 10\,\glslink{fps}{FPS} sur une \glslink{gtx1080ti}{GTX
+1080Ti} \src{§5.3, §8}. Le §8 formule d'ailleurs le problème de la thèse : les ressources
 d'un drone rendent impossible le déploiement de gros modèles.
 
 \paragraph{UAVDT.} \citet{arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object}\pp{}
 (version ECCV~2018 probable, non vérifiée) proposent 100 séquences urbaines à 1080$\times$540,
 environ 80\,000 images annotées et 0,84\,M de boîtes de véhicules, avec des attributs
 d'altitude, de vue et de météo \src{§2.1}. 27,5\,\% des objets font moins de 400 pixels
-\src{§4}. Le meilleur détecteur (R-FCN) obtient 34,35\,\% d'AP, mais à un seuil d'\gl{IoU}{IoU} de
-0,7 \src{§3.1} : ces chiffres ne se comparent pas aux AP@0.5 publiés ensuite sur UAVDT.
+\src{§4}. Le meilleur détecteur (R-FCN) obtient 34,35\,\% d'\glslink{ap}{AP}, mais à un seuil d'\glslink{iou}{IoU} de
+0,7 \src{§3.1} : ces chiffres ne se comparent pas aux \glslink{ap50}{AP@0.5} publiés ensuite sur UAVDT.
 L'attribut altitude relie directement la précision à un paramètre de vol \deduit.
 
 \subsection{Détection sous contrainte d'énergie : le DAC-SDC}
@@ -31,13 +31,13 @@ Le Low Power Object Detection Challenge du DAC est le seul contexte du corpus o�
 précision, le débit et l'énergie sont mesurés par un tiers selon un protocole commun, sur
 plateforme imposée. \citet{2021-xu-dac-sdc-low-power-object} décrivent l'édition 2018 :
 images DJI 640$\times$360, un seul objet par image, la plupart occupant 1 à 2\,\% de
-l'image ; plateformes PYNQ-Z1 et Jetson TX2 ; énergie mesurée au wattmètre pour le \gl{FPGA}{FPGA}
+l'image ; plateformes \glslink{pynq-z1}{PYNQ-Z1} et \glslink{tx2}{Jetson TX2} ; énergie mesurée au wattmètre pour le \gl{FPGA}{FPGA}
 \src{§2}. \citet{2024-zhang-comprehensive-analysis-dac-sdc-fpga} étendent l'analyse aux
-éditions 2018--2022 (PYNQ-Z1 puis Ultra96) et en tirent des règles de co-design
+éditions 2018--2022 (\glslink{pynq-z1}{PYNQ-Z1} puis \glslink{ultra96}{Ultra96}) et en tirent des règles de co-design
 (section~\ref{sec:fpga}).
 
-Deux réserves pèsent sur toute réutilisation. La métrique est un IoU moyen sans classe
-sur un objet unique, qui ne se compare pas à une \gl{mAP}{mAP} multi-classe
+Deux réserves pèsent sur toute réutilisation. La métrique est un \glslink{iou-dacsdc}{IoU moyen} sans classe
+sur un objet unique, qui ne se compare pas à une \glslink{map}{mAP} multi-classe
 \citep[§2.3]{2024-zhang-comprehensive-analysis-dac-sdc-fpga}. Et la règle de mesure
 change : à partir de 2022, le temps ne compte plus le chargement des images \src{§2.3},
 ce qui explique une partie du saut de débit de cette édition.
@@ -47,7 +47,7 @@ ce qui explique une partie du saut de débit de cette édition.
 Le tableau~\ref{tab:datasets-cuav} classe les jeux du corpus par point de vue. Le constat
 est net : les grands jeux (Anti-UAV, Anti-UAV410, Drone-vs-Bird, DUT Anti-UAV) sont pris
 depuis le sol ou ne déclarent pas le capteur ; les jeux \gl{airair}{air $\rightarrow$ air} sont petits
-et récents. Aucun ne comporte de piste « efficacité » (FPS, puissance, plateforme) : le
+et récents. Aucun ne comporte de piste « efficacité » (\glslink{fps}{FPS}, puissance, plateforme) : le
 survey de \citet{arxiv-2507.10006-vision-anti-unmanned-aerial-technology}\pp{} le relève
 lui-même \src{§V-A}.
 
@@ -60,22 +60,22 @@ lui-même \src{§V-A}.
 Jeu, article & Point de vue & Contenu & Métrique \\
 \midrule
 Det-Fly \citep{2021-zheng-air-air-visual-detection-micro} & air $\rightarrow$ air &
-  13\,271 images 4K, un DJI Mavic filmé par un M210, 10--100\,m ; public \src{§III} & AP \\
+  13\,271 images 4K, un DJI Mavic filmé par un M210, 10--100\,m ; public \src{§III} & \glslink{ap}{AP} \\
 NPS-Drones, FL-Drones, ré-annotés \citep{arxiv-2103.17242-dogfight-detecting-drones-drones-videos}\pp &
-  air $\rightarrow$ air & 50 et 14 vidéos ; cibles de 0,05 et 0,07\,\% de l'image \src{§1} & AP, F1 \\
+  air $\rightarrow$ air & 50 et 14 vidéos ; cibles de 0,05 et 0,07\,\% de l'image \src{§1} & \glslink{ap}{AP}, \glslink{f1}{F1} \\
 ARD-MAV \citep{arxiv-2312.11008-global-local-mav-detection-challenging}\pp & air $\rightarrow$ air &
   60 vidéos 1920$\times$1080, 106\,665 images, cibles de 0,02\,\% de l'image en moyenne
-  \src{Table~I} & AP50 \\
+  \src{Table~I} & \glslink{ap50}{AP50} \\
 Anti2 \citep{2024-gao-dataset-detection-method-unmanned-aerial} & mixte & 5\,062 images, 4 classes
-  (drone, oiseau, hélicoptère, avion) \src{§3} & mAP@0.5 \\
+  (drone, oiseau, hélicoptère, avion) \src{§3} & \glslink{map50}{mAP@0.5} \\
 Anti-UAV \citep{arxiv-2101.08466-anti-uav-large-multi-modal}\pp & non déclaré (sol probable) &
-  318 paires RGB--IR non alignées, cibles < 40\,px \src{Table~I} & \gl{mSA}{mSA} \\
+  318 paires RGB--IR non alignées, cibles < 40\,px \src{Table~I} & \glslink{msa}{mSA} \\
 Anti-UAV410 \citep{2024-huang-anti-uav410-thermal-infrared-benchmark} & non déclaré (sol probable) &
-  410 séquences IR, plus de 100 à drone < 10\,px \src{§III} & SA \\
+  410 séquences IR, plus de 100 à drone < 10\,px \src{§III} & \glslink{msa}{SA} \\
 MAV-VID, Drone-vs-Bird \citep{arxiv-2103.13933-unmanned-aerial-vehicle-visual-detection}\pp &
-  surtout \gl{solair}{sol $\rightarrow$ air} & 64 et 77 vidéos ; Drone-vs-Bird : cibles de 0,10\,\% \src{§3.1} & AP50 \\
+  surtout \gl{solair}{sol $\rightarrow$ air} & 64 et 77 vidéos ; Drone-vs-Bird : cibles de 0,10\,\% \src{§3.1} & \glslink{ap50}{AP50} \\
 Halmstad \citep{arxiv-2007.07396-real-time-drone-detection-tracking} & sol $\rightarrow$ air &
-  650 vidéos IR + visible, 90 clips audio ; public \src{§IV} & F1 \\
+  650 vidéos IR + visible, 90 clips audio ; public \src{§IV} & \glslink{f1}{F1} \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -87,7 +87,7 @@ bureau et montre que la précision s'effondre sous 30 pixels de cible \src{§5.6
 
 \paragraph{Ce que les jeux ne mesurent pas.} Aucun des grands benchmarks du corpus
 (VisDrone, UAVDT, Anti-UAV, Anti-UAV410, WebUAV-3M, Det-Fly) ne rapporte de débit sur
-plateforme embarquée ni de puissance. Seul le \gl{DAC-SDC}{DAC-SDC} le fait, au prix d'une tâche
-simplifiée. Les AP par taille d'objet sont rares même dans les jeux dédiés aux petits
-objets : VisDrone ne publie pas d'\gl{APS}{AP$_S$} séparé dans ses tableaux de synthèse
+plateforme embarquée ni de puissance. Seul le \glslink{dac-sdc}{DAC-SDC} le fait, au prix d'une tâche
+simplifiée. Les \glslink{ap}{AP} par taille d'objet sont rares même dans les jeux dédiés aux petits
+objets : VisDrone ne publie pas d'\glslink{aps}{AP$_S$} séparé dans ses tableaux de synthèse
 \citep[§4]{arxiv-2001.06303-detection-tracking-meet-drones-challenge}.

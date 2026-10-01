@@ -44,3 +44,17 @@
 
 \setlength{\parskip}{0.35em}
 \newcommand{\med}{\textsuperscript{m}}                % ligne benchmarks.csv en confiance medium
+
+% Glossaires : plateformes, modèles, métriques et unités. Chaque apparition d'un terme dans le
+% texte est un lien \glslink vers son entrée ; chaque entrée liste les sections où il apparaît.
+% Les acronymes et le lexique restent dans sec-glossaire.tex (liens \gl).
+\usepackage[toc,counter=section,nopostdot,nogroupskip,style=tree]{glossaries}
+\newglossary[plg]{plateformes}{pls}{plo}{Glossaire des plateformes}
+\newglossary[mog]{modeles}{mos}{moo}{Glossaire des modèles}
+\newglossary[meg]{metriques}{mes}{meo}{Glossaire des métriques et unités}
+\makeglossaries
+\newcommand{\constr}{{\footnotesize[constructeur, hors corpus]}}
+\newcommand{\horscorpus}{{\footnotesize[hors corpus]}}
+\input{gloss-plateformes}
+\input{gloss-modeles}
+\input{gloss-metriques}

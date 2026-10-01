@@ -42,19 +42,24 @@
   ],
   "tags": [
     "end-to-end",
-    "orin-nx"
+    "orin-nx",
+    "drone-racing",
+    "agile-tracking",
+    "differentiable-planning",
+    "tensorrt",
+    "resnet-18",
+    "real-world-flight"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "pymupdf",
     "ok": false,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

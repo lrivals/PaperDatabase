@@ -4,27 +4,27 @@
 
 \subsection{La recette dominante : tête P2, attention, suppression de P5}
 
-Les \gl{YOLO}{YOLO} spécialisés drone du corpus modifient tous la pyramide de caractéristiques pour
-les petits objets. Trois gestes reviennent : ajouter une \gl{teteP2}{tête P2} (stride 4, carte de
-160$\times$160 pour une entrée de 640), ajouter de l'\gl{attention}{attention} ou des blocs \gl{transformer}{Transformer},
+Les \glslink{yolo}{YOLO} spécialisés drone du corpus modifient tous la pyramide de caractéristiques pour
+les petits objets. Trois gestes reviennent : ajouter une \glslink{p2head}{tête P2} (stride 4, carte de
+160$\times$160 pour une entrée de 640), ajouter de l'\glslink{attention}{attention} ou des blocs \glslink{attention}{Transformer},
 et supprimer la tête P5, qui porte beaucoup de paramètres mais sert surtout aux grands
 objets.
 
-\paragraph{TPH-YOLOv5 et TPH-YOLOv5++.} TPH-YOLOv5
+\paragraph{TPH-YOLOv5 et TPH-YOLOv5++.} \glslink{tph-yolov5}{TPH-YOLOv5}
 \citep{arxiv-2108.11539-tph-yolov5-improved-yolov5-transformer}\pp{} est la référence de
-cette famille : YOLOv5x, quatrième tête P2, têtes à Transformer, CBAM, test multi-échelle
-et ensemble de cinq modèles. L'ensemble atteint 39,18 de \gl{mAP}{mAP} [.5:.95] sur le
-test-challenge VisDrone 2021 \src{§4.2}\med{}, sur RTX 3090, sans aucune vitesse rapportée.
-La tête P2 fait passer YOLOv5x de 219 à 259\,\gl{FLOPs}{GFLOPs} \src{§4.3}. \citet{2023-zhao-tph-yolov5-boosting-object-detection}
-mesurent ce coût : la tête P2 seule apporte +2,1 points d'\gl{AP}{AP}, fait passer la mémoire \gl{GPU}{GPU} de
-4\,279 à 4\,667\,Mo et le débit de 13,68 à 10,89\,\gl{FPS}{FPS} \src{Table~5}. TPH-YOLOv5++ remplace
-la tête P2 par un transfert d'information vers P3 (CA-Trans) et remonte à 11,86\,FPS pour
-33,1 d'AP sur \gl{testdev}{test-dev}, contre 7,36\,FPS et 34,0 pour TPH-YOLOv5 \src{Table~5} ; toujours
-sur RTX 3090 Ti, à 1536$\times$1536.
+cette famille : \glslink{yolov5}{YOLOv5x}, quatrième \glslink{p2head}{tête P2}, têtes à \glslink{attention}{Transformer}, CBAM, test multi-échelle
+et ensemble de cinq modèles. L'ensemble atteint 39,18 de \glslink{map}{mAP} [.5:.95] sur le
+test-challenge VisDrone 2021 \src{§4.2}\med{}, sur \glslink{rtx3090}{RTX 3090}, sans aucune vitesse rapportée.
+La \glslink{p2head}{tête P2} fait passer \glslink{yolov5}{YOLOv5x} de 219 à 259\,\glslink{flops}{GFLOPs} \src{§4.3}. \citet{2023-zhao-tph-yolov5-boosting-object-detection}
+mesurent ce coût : la \glslink{p2head}{tête P2} seule apporte +2,1 points d'\glslink{ap}{AP}, fait passer la mémoire \gl{GPU}{GPU} de
+4\,279 à 4\,667\,\glslink{u-mo}{Mo} et le débit de 13,68 à 10,89\,\glslink{fps}{FPS} \src{Table~5}. \glslink{tph-yolov5pp}{TPH-YOLOv5++} remplace
+la \glslink{p2head}{tête P2} par un transfert d'information vers P3 (CA-Trans) et remonte à 11,86\,\glslink{fps}{FPS} pour
+33,1 d'\glslink{ap}{AP} sur \gl{testdev}{test-dev}, contre 7,36\,\glslink{fps}{FPS} et 34,0 pour \glslink{tph-yolov5}{TPH-YOLOv5} \src{Table~5} ; toujours
+sur \glslink{rtx3090}{RTX 3090 Ti}, à 1536$\times$1536.
 
 \paragraph{Variantes légères.} Le tableau~\ref{tab:yolo-drone} rassemble les autres
 variantes. Toutes allègent le réseau en paramètres ; aucune ne mesure son coût sur une
-cible embarquée, sauf Drone-YOLO.
+cible embarquée, sauf \glslink{drone-yolo}{Drone-YOLO}.
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -36,107 +36,107 @@ permet pas de classer.}
 \toprule
 Modèle & Modification principale & Précision & Coût, plateforme \\
 \midrule
-GCL-YOLO-S \citep{2023-cao-gcl-yolo-ghostconv-lightweight-yolo} & \gl{depthwise}{GhostConv}, P2 ajoutée, P5
-  retirée ; 1,64\,M param. & 39,6 mAP50 \src{Table~3} & 53\,FPS, GPU n/r \\
-Efficient YOLOv7-Drone \citep{2023-fu-efficient-yolov7-drone-enhanced-object} & P2, P5 retirée,
-  convolution creuse guidée par le premier plan & 32,1 AP (val, 640) \src{Table~2} & 89\,FPS
-  contre 213 pour YOLOv7, RTX 3090 \src{Table~5} \\
-Drone-YOLO nano \citep{2023-zhang-drone-yolo-efficient-neural-network} & P2, sandwich-fusion,
-  RepVGG ; 3,05\,M param. & 38,1 mAP50 (val) \src{Table~5} & 127,4\,ms sur Jetson TX2
+\glslink{gcl-yolo}{GCL-YOLO-S} \citep{2023-cao-gcl-yolo-ghostconv-lightweight-yolo} & \gl{depthwise}{GhostConv}, P2 ajoutée, P5
+  retirée ; 1,64\,M param. & 39,6 \glslink{map50}{mAP50} \src{Table~3} & 53\,\glslink{fps}{FPS}, GPU n/r \\
+\glslink{efficient-yolov7-drone}{Efficient YOLOv7-Drone} \citep{2023-fu-efficient-yolov7-drone-enhanced-object} & P2, P5 retirée,
+  convolution creuse guidée par le premier plan & 32,1 \glslink{ap}{AP} (val, 640) \src{Table~2} & 89\,\glslink{fps}{FPS}
+  contre 213 pour \glslink{yolov7}{YOLOv7}, \glslink{rtx3090}{RTX 3090} \src{Table~5} \\
+\glslink{drone-yolo}{Drone-YOLO} nano \citep{2023-zhang-drone-yolo-efficient-neural-network} & P2, sandwich-fusion,
+  RepVGG ; 3,05\,M param. & 38,1 \glslink{map50}{mAP50} (val) \src{Table~5} & 127,4\,\glslink{u-ms}{ms} sur \glslink{tx2}{Jetson TX2}
   \src{Table~6} \\
-SF-YOLOv5 \citep{2022-liu-sf-yolov5-lightweight-small-object} & P5 retirée, PB-FPN ;
-  2,23\,M param. & 34,3 mAP50\med{} \src{Table~4} & 11,5\,ms, RTX 2060 \\
-DroneScan-YOLO \citep{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight}\pp &
-  entrée 1280, branche P2, \gl{elagage}{pruning} non structuré & 55,3 mAP50 (val) \src{Table~4} & 96,7\,FPS,
-  RTX 4090 portable \\
-YOLO-Drone \citep{arxiv-2511.10905-yolo-drone-efficient-object-detection} & GhostConv dans la
-  tête de YOLOv11n & 30,4 mAP50 \src{Table~2} & 1,8\,ms, Tesla T4 \\
-DEAL-YOLO \citep{arxiv-2503.04698-deal-yolo-drone-efficient-animal}\pp & P2 à la place de P5,
-  NWD ; faune (hors VisDrone) & 48,5 mAP50, BuckTales \src{Table~1} & \nr \\
+\glslink{sf-yolov5}{SF-YOLOv5} \citep{2022-liu-sf-yolov5-lightweight-small-object} & P5 retirée, PB-FPN ;
+  2,23\,M param. & 34,3 \glslink{map50}{mAP50}\med{} \src{Table~4} & 11,5\,ms, \glslink{rtx2060}{RTX 2060} \\
+\glslink{dronescan-yolo}{DroneScan-YOLO} \citep{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight}\pp &
+  entrée 1280, branche P2, \gl{elagage}{pruning} non structuré & 55,3 \glslink{map50}{mAP50} (val) \src{Table~4} & 96,7\,\glslink{fps}{FPS},
+  \glslink{rtx4090}{RTX 4090} portable \\
+\glslink{yolo-drone}{YOLO-Drone} \citep{arxiv-2511.10905-yolo-drone-efficient-object-detection} & \glslink{ghostconv}{GhostConv} dans la
+  tête de \glslink{yolov11n}{YOLOv11n} & 30,4 \glslink{map50}{mAP50} \src{Table~2} & 1,8\,ms, \glslink{gpu-cloud}{Tesla T4} \\
+\glslink{deal-yolo}{DEAL-YOLO} \citep{arxiv-2503.04698-deal-yolo-drone-efficient-animal}\pp & P2 à la place de P5,
+  NWD ; faune (hors VisDrone) & 48,5 \glslink{map50}{mAP50}, BuckTales \src{Table~1} & \nr \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\paragraph{Ce que coûte la tête P2.} Trois articles donnent un chiffre. Drone-YOLO nano
-met 127,4\,ms par image sur Jetson TX2, contre 30,8\,ms pour YOLOv8n à nombre de
-paramètres égal, soit quatre fois plus lent pour +4,1 points de mAP50
+\paragraph{Ce que coûte la tête P2.} Trois articles donnent un chiffre. \glslink{drone-yolo}{Drone-YOLO} nano
+met 127,4\,\glslink{u-ms}{ms} par image sur \glslink{tx2}{Jetson TX2}, contre 30,8\,ms pour \glslink{yolov8n}{YOLOv8n} à nombre de
+paramètres égal, soit quatre fois plus lent pour +4,1 points de \glslink{map50}{mAP50}
 \citep[Table~6]{2023-zhang-drone-yolo-efficient-neural-network} ; l'auteur conclut
 pourtant à des résultats « highly accurate » sans commenter la latence. Pour
-Efficient YOLOv7-Drone, ajouter P2 fait tomber le débit de 212,8 à 137,0\,FPS sur RTX 3090
-\citep[Table~5]{2023-fu-efficient-yolov7-drone-enhanced-object}. GCL-YOLO-S perd 7\,FPS
-face à YOLOv5-S alors que ses GFLOPs baissent \citep[Table~3,
+\glslink{efficient-yolov7-drone}{Efficient YOLOv7-Drone}, ajouter P2 fait tomber le débit de 212,8 à 137,0\,\glslink{fps}{FPS} sur \glslink{rtx3090}{RTX 3090}
+\citep[Table~5]{2023-fu-efficient-yolov7-drone-enhanced-object}. \glslink{gcl-yolo}{GCL-YOLO-S} perd 7\,\glslink{fps}{FPS}
+face à \glslink{yolov5s}{YOLOv5-S} alors que ses \glslink{flops}{GFLOPs} baissent \citep[Table~3,
 §5]{2023-cao-gcl-yolo-ghostconv-lightweight-yolo}. Le coût de P2 est donc un coût
-d'activations et d'accès mémoire, que les FLOPs et le nombre de paramètres ne voient pas
+d'activations et d'accès mémoire, que les \glslink{flops}{FLOPs} et le nombre de paramètres ne voient pas
 \deduit. Sur un \gl{FPGA}{FPGA}, où les activations d'une carte 160$\times$160 doivent tenir en
 mémoire on-chip, c'est précisément ce coût qui domine \deduit.
 
 \paragraph{Paramètres et FLOPs ne prédisent pas la latence.} Le constat revient dans cinq
-articles. SF-YOLOv5 retire 68\,\% des paramètres pour 7\,\% de latence en moins
-\citep[Table~3]{2022-liu-sf-yolov5-lightweight-small-object}. SlimYOLOv3
+articles. \glslink{sf-yolov5}{SF-YOLOv5} retire 68\,\% des paramètres pour 7\,\% de latence en moins
+\citep[Table~3]{2022-liu-sf-yolov5-lightweight-small-object}. \glslink{slimyolov3}{SlimYOLOv3}
 \citep{arxiv-1907.11093-slimyolov3-narrower-faster-better-real}\pp{} (version ICCVW~2019
-probable) retire 90,8\,\% des FLOPs de YOLOv3-SPP3 par élagage de canaux pour 49,5\,\% de
-temps en moins sur GTX 1080 Ti \src{§5}, et reste plus lent que YOLOv3-tiny à FLOPs
-comparables. F-YOLOv7 divise les FLOPs par 2,8 sans gain de débit sur RTX 4090
-\citep[Table~2]{2025-du-f-yolov7-fast-robust-real}. DroneScan-YOLO reconnaît que son
+probable) retire 90,8\,\% des \glslink{flops}{FLOPs} de \glslink{yolov3}{YOLOv3-SPP3} par élagage de canaux pour 49,5\,\% de
+temps en moins sur \glslink{gtx1080ti}{GTX 1080 Ti} \src{§5}, et reste plus lent que \glslink{yolov3-tiny}{YOLOv3-tiny} à \glslink{flops}{FLOPs}
+comparables. \glslink{f-yolov7}{F-YOLOv7} divise les \glslink{flops}{FLOPs} par 2,8 sans gain de débit sur \glslink{rtx4090}{RTX 4090}
+\citep[Table~2]{2025-du-f-yolov7-fast-robust-real}. \glslink{dronescan-yolo}{DroneScan-YOLO} reconnaît que son
 pruning non structuré ne retire aucun paramètre et n'accélère rien sur matériel embarqué
-\citep[§5]{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight}. YOLO-GCOF,
-annoncé pour Raspberry Pi 4B, ne donne que des GFLOPs
+\citep[§5]{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight}. \glslink{yolo-gcof}{YOLO-GCOF},
+annoncé pour \glslink{rpi}{Raspberry Pi 4B}, ne donne que des \glslink{flops}{GFLOPs}
 \citep[§IV-D8]{2025-yu-yolo-gcof-lightweight-low-altitude}. Tous ces résultats sont sur
-GPU de bureau : sur FPGA, \gl{NPU}{NPU} ou \gl{MCU}{MCU}, l'effet peut s'inverser (GhostConv et depthwise
-sont souvent mal servis par un \gl{DPU}{DPU}) \deduit.
+\glslink{gpu-bureau}{GPU de bureau} : sur FPGA, \gl{NPU}{NPU} ou \gl{MCU}{MCU}, l'effet peut s'inverser (\glslink{ghostconv}{GhostConv} et depthwise
+sont souvent mal servis par un \glslink{dpu}{DPU}) \deduit.
 
 \subsection{Calculer seulement où sont les objets}
 
 Une deuxième famille garde un détecteur à résolution modeste et concentre le calcul sur
 les régions utiles.
 \begin{itemize}
-  \item \textbf{Tuilage} : SAHI \citep{arxiv-2202.06934-slicing-aided-hyper-inference-fine}\pp{}
+  \item \textbf{Tuilage} : \glslink{sahi}{SAHI} \citep{arxiv-2202.06934-slicing-aided-hyper-inference-fine}\pp{}
     (publié à ICIP~2022 d'après son DOI) découpe l'image en tuiles 640$\times$640. Avec
-    fine-tuning sur tuiles, TOOD passe de 29,4 à 43,5 d'AP50 sur VisDrone test-dev, et
-    son \gl{APS}{AP50$_S$} de 18,1 à 31,7 \src{Table~1}. Le coût, linéaire en nombre de tuiles
+    fine-tuning sur tuiles, TOOD passe de 29,4 à 43,5 d'\glslink{ap50}{AP50} sur VisDrone test-dev, et
+    son \glslink{aps}{AP50$_S$} de 18,1 à 31,7 \src{Table~1}. Le coût, linéaire en nombre de tuiles
     \src{§5}, n'est pas mesuré.
-  \item \textbf{Régions denses} : ClusDet
+  \item \textbf{Régions denses} : \glslink{clusdet}{ClusDet}
     \citep{arxiv-1904.08008-clustered-object-detection-aerial-images}\pp{} détecte des
-    groupes d'objets puis les traite à part ; il atteint 26,7 d'AP et 17,6 d'AP$_S$ en R-50
-    \src{Table~1}, mais met 0,273\,s par image sur GTX 1080 Ti, cinq fois plus que la
-    baseline sans découpage. UFPMP-Det
+    groupes d'objets puis les traite à part ; il atteint 26,7 d'\glslink{ap}{AP} et 17,6 d'\glslink{aps}{AP$_S$} en R-50
+    \src{Table~1}, mais met 0,273\,s par image sur \glslink{gtx1080ti}{GTX 1080 Ti}, cinq fois plus que la
+    baseline sans découpage. \glslink{ufpmp-det}{UFPMP-Det}
     \citep{arxiv-2112.10415-ufpmp-det-accurate-efficient-object}\pp{} assemble les régions
-    en une mosaïque unique et atteint 36,6 d'AP en R-50 sur VisDrone val, pour 0,152\,s par
+    en une mosaïque unique et atteint 36,6 d'\glslink{ap}{AP} en R-50 sur VisDrone val, pour 0,152\,s par
     image \src{Tables~1, 3}.
-  \item \textbf{Requêtes éparses} : QueryDet
+  \item \textbf{Requêtes éparses} : \glslink{querydet}{QueryDet}
     \citep{arxiv-2103.09136-querydet-cascaded-sparse-query-accelerating}\pp{} ne calcule
     la tête haute résolution qu'aux positions désignées par une carte basse résolution. Sur
-    \gl{COCO}{COCO}, il garde le gain d'AP$_S$ de P2 (24,33 contre 22,64) à 14,88\,FPS, contre 4,85
-    pour une tête P2 dense \src{Table~1}. Sur VisDrone, il plafonne à 2,75\,FPS
+    \gl{COCO}{COCO}, il garde le gain d'\glslink{aps}{AP$_S$} de P2 (24,33 contre 22,64) à 14,88\,\glslink{fps}{FPS}, contre 4,85
+    pour une \glslink{p2head}{tête P2} dense \src{Table~1}. Sur VisDrone, il plafonne à 2,75\,\glslink{fps}{FPS}
     \src{Table~2}.
-  \item \textbf{Sortie anticipée} : BlankSkip
+  \item \textbf{Sortie anticipée} : \glslink{blankskip}{BlankSkip}
     \citep{arxiv-2603.28149-blankskip-early-exit-object-detection}\pp{} saute le reste du
     réseau sur les images vides ; il est traité avec les nano-drones
     (section~\ref{sec:nano}).
 \end{itemize}
-Aucune de ces méthodes n'est mesurée sur cible embarquée, sauf BlankSkip. Aucune ne
+Aucune de ces méthodes n'est mesurée sur cible embarquée, sauf \glslink{blankskip}{BlankSkip}. Aucune ne
 rapporte la latence au pire cas ni la gigue, alors que leur coût dépend du contenu de la
 scène. Du point de vue matériel, elles ne se valent pas : la mosaïque de taille fixe
-d'UFPMP-Det ou le \gl{tuilage}{tuilage} de SAHI gardent un calcul dense et régulier, favorable à un
-accélérateur à entrée fixe, alors que la convolution éparse de QueryDet repose sur des
+d'\glslink{ufpmp-det}{UFPMP-Det} ou le \gl{tuilage}{tuilage} de \glslink{sahi}{SAHI} gardent un calcul dense et régulier, favorable à un
+accélérateur à entrée fixe, alors que la convolution éparse de \glslink{querydet}{QueryDet} repose sur des
 accès irréguliers \deduit.
 
 \subsection{Protocoles et comparabilité}
 
 Les chiffres VisDrone du corpus ne se comparent presque jamais entre eux :
 \begin{itemize}
-  \item le split varie (validation pour Efficient YOLOv7-Drone, ClusDet, UFPMP-Det,
-    DroneScan-YOLO ; test-dev pour TPH-YOLOv5 et SAHI ; non précisé pour GCL-YOLO et
-    YOLO-Drone) ;
-  \item la métrique varie (mAP50 pour les YOLO, AP COCO pour les autres) ;
-  \item la résolution varie de 640 à 1920\,px, et DroneScan-YOLO compare son modèle à
+  \item le split varie (validation pour \glslink{efficient-yolov7-drone}{Efficient YOLOv7-Drone}, \glslink{clusdet}{ClusDet}, \glslink{ufpmp-det}{UFPMP-Det},
+    \glslink{dronescan-yolo}{DroneScan-YOLO} ; test-dev pour \glslink{tph-yolov5}{TPH-YOLOv5} et \glslink{sahi}{SAHI} ; non précisé pour \glslink{gcl-yolo}{GCL-YOLO} et
+    \glslink{yolo-drone}{YOLO-Drone}) ;
+  \item la métrique varie (\glslink{map50}{mAP50} pour les \glslink{yolo}{YOLO}, \glslink{ap}{AP} COCO pour les autres) ;
+  \item la résolution varie de 640 à 1920\,px, et \glslink{dronescan-yolo}{DroneScan-YOLO} compare son modèle à
     1280\,px à des baselines à 640\,px \citep[§5]{arxiv-2604.13278-dronescan-yolo-redundancy-aware-lightweight} ;
   \item les baselines sont souvent réentraînées sans pré-entraînement, ou reprises des
     papiers d'origine.
 \end{itemize}
 Surtout, les gains annoncés sont souvent de l'ordre du point, sur un seul entraînement et
 sans écart-type : +0,9 point pour \citet{2022-jung-improved-yolov5-efficient-object-detection},
-+0,5 pour YOLO-Drone, +1,3 pour SF-YOLOv5. Enfin, l'AP$_S$ n'est rapportée que par trois
-articles de ce groupe (ClusDet, SAHI, Efficient YOLOv7-Drone, ce dernier seulement pour ses
++0,5 pour \glslink{yolo-drone}{YOLO-Drone}, +1,3 pour \glslink{sf-yolov5}{SF-YOLOv5}. Enfin, l'\glslink{aps}{AP$_S$} n'est rapportée que par trois
+articles de ce groupe (\glslink{clusdet}{ClusDet}, \glslink{sahi}{SAHI}, \glslink{efficient-yolov7-drone}{Efficient YOLOv7-Drone}, ce dernier seulement pour ses
 modèles intermédiaires : 19,4 à 22,0\,\% \citep[Tables~9, 12]{2023-fu-efficient-yolov7-drone-enhanced-object}),
 alors que tous visent les petits objets.

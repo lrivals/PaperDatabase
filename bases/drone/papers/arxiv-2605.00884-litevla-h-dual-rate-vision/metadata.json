@@ -26,23 +26,29 @@
   "url": "https://arxiv.org/abs/2605.00884",
   "type": "preprint",
   "axes": [
-    "system-codesign"
+    "system-codesign",
+    "tracking-navigation"
   ],
   "tags": [
     "jetson",
-    "vlm"
+    "jetson-agx-orin",
+    "vlm",
+    "vla",
+    "dual-rate",
+    "time-to-first-action",
+    "prefill",
+    "fp16"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "pymupdf",
     "ok": false,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

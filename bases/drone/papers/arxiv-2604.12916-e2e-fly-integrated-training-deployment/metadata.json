@@ -42,11 +42,19 @@
   "url": "https://arxiv.org/abs/2604.12916",
   "type": "preprint",
   "axes": [
-    "tracking-navigation"
+    "tracking-navigation",
+    "system-codesign"
   ],
   "tags": [
     "end-to-end",
-    "intel-n100"
+    "drone-racing",
+    "sim-to-real",
+    "differentiable-simulation",
+    "reinforcement-learning",
+    "intel-n100",
+    "hardware-in-the-loop",
+    "visfly",
+    "betaflight"
   ],
   "added": "2026-09-29",
   "extraction": {
@@ -58,6 +66,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

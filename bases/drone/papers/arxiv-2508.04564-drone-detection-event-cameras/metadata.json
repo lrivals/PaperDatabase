@@ -30,23 +30,33 @@
   "url": "https://arxiv.org/abs/2508.04564",
   "type": "preprint",
   "axes": [
+    "surveys",
+    "counter-uav",
     "tracking-navigation",
-    "counter-uav"
+    "datasets-benchmarks",
+    "nano-drone"
   ],
   "tags": [
-    "event-camera"
+    "event-camera",
+    "neuromorphic",
+    "snn",
+    "ground-to-air",
+    "propeller-signature",
+    "drone-forecasting",
+    "FRED",
+    "Loihi",
+    "Speck"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "pymupdf",
     "ok": false,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

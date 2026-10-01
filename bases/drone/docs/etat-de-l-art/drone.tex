@@ -4,7 +4,7 @@
 \title{\textbf{Vision embarquée sur drone}\\[0.3em]
   \large État de l'art établi à partir du corpus PaperDatabase (base \texttt{drone})}
 \author{Léonard Rivals}
-\date{29 septembre 2026 --- brouillon}
+\date{29 septembre 2026, mis à jour le 1\textsuperscript{er} octobre 2026 --- brouillon}
 
 \begin{document}
 \maketitle
@@ -13,19 +13,20 @@
 Ce document fait l'état de l'art de la vision par réseaux de neurones embarquée sur
 drone. Il couvre les jeux de données, la détection de petits objets, les accélérateurs
 embarqués (\gl{FPGA}{FPGA}, \gl{MCU}{MCU}, \gl{ASIC}{ASIC}, neuromorphique), le suivi et la navigation, le contre-drone
-et le co-design entre calcul, énergie et vol. Il s'appuie sur les 73 fiches de lecture et
-les 324 lignes de mesures d'une base de 73 articles. Chaque chiffre porte sa source, et
-chaque puissance sa \gl{portee}{portée}. Quatre constats en ressortent. D'abord, les \gl{YOLO}{YOLO} spécialisés
-drone (\gl{teteP2}{tête P2}, \gl{transformer}{Transformer}, \gl{attention}{attention}) ne sont mesurés que sur \gl{GPU}{GPU} de bureau, alors que
-les implantations FPGA du corpus restent sur YOLOv3-tiny, YOLOv4 ou YOLOX, parfois amputés
-de leur branche multi-échelle. Ensuite, aucune des 324 lignes ne rapporte de précision
-par taille d'objet (\gl{APS}{AP$_S$}) : l'effet de la \gl{quantif}{quantification} sur les petits objets n'est pas
-mesuré. Troisième constat : les trois \gl{gamme}{gammes de puissance} (nano en mW, FPGA en W, Jetson
-autour de 10\,W) ne sont presque jamais comparées sur une même tâche, et 69\,\% des lignes
-n'ont pas de puissance. Enfin, les modèles qui relient latence, masse et vitesse de vol
+et le co-design entre calcul, énergie et vol. Il s'appuie sur les 86 fiches de lecture et
+les 352 lignes de mesures de la base. Chaque chiffre porte sa source, et
+chaque puissance sa \glslink{portee}{portée}. Quatre constats en ressortent. D'abord, les \glslink{yolo}{YOLO} spécialisés
+drone (\glslink{p2head}{tête P2}, \glslink{attention}{Transformer}, \glslink{attention}{attention}) ne sont mesurés que sur \gl{GPU}{GPU} de bureau, alors que
+les implantations FPGA du corpus restent sur \glslink{yolov3-tiny}{YOLOv3-tiny}, \glslink{yolov4}{YOLOv4} ou \glslink{yolox}{YOLOX}, parfois amputés
+de leur branche multi-échelle. Ensuite, aucune des 352 lignes ne rapporte de précision
+par taille d'objet (\glslink{aps}{AP$_S$}) : l'effet de la \gl{quantif}{quantification} sur les petits objets n'est pas
+mesuré. Troisième constat : les trois \glslink{gamme}{gammes de puissance} (nano en \glslink{u-mw}{mW}, FPGA en \glslink{u-w}{W}, \glslink{jetson}{Jetson}
+autour de 10\,W) ne sont presque jamais comparées sur une même tâche, et 70\,\% des lignes
+n'ont pas de puissance ; aucun des 13 articles ajoutés en octobre (\glslink{gap9}{GAP9}, navigation sur
+\glslink{orin}{Orin}, modèles vision-langage embarqués) n'en mesure à la carte. Enfin, les modèles qui relient latence, masse et vitesse de vol
 sûre existent (MAVBench, \gl{roofline}{modèle F-1}), mais aucun n'a été appliqué à un détecteur sur FPGA.
 En contre-drone, le cas embarqué (\gl{airair}{air $\rightarrow$ air}, détecteur sur un intercepteur)
-n'a aucun coût mesuré sur \gl{SoC}{SoC}. Le document termine sur les gaps et trois questions de
+n'a été évalué en vol que sur \glslink{jetson}{Jetson}, sans puissance, et jamais sur \gl{SoC}{SoC} FPGA ou MCU. Le document termine sur les gaps et trois questions de
 thèse candidates.
 \end{abstract}
 
@@ -37,15 +38,15 @@ Un drone impose au calcul embarqué des contraintes que les benchmarks de vision
 ignorent : la masse et la puissance du calculateur se paient en autonomie et en
 agilité, la latence de perception borne la vitesse de vol sûre, et les objets à détecter
 occupent souvent une infime fraction de l'image. Trois gammes de calcul coexistent : les
-nano-drones de quelques dizaines de grammes, avec des \gl{MCU}{MCU} parallèles comme le GAP8 (mW) ;
-les \gl{SoC}{SoC} \gl{FPGA}{FPGA} (quelques W) ; les modules Jetson (autour de 10\,W), qui équipent les drones
+nano-drones de quelques dizaines de grammes, avec des \gl{MCU}{MCU} parallèles comme le \glslink{gap8}{GAP8} et le \glslink{gap9}{GAP9} (\glslink{u-mw}{mW}) ;
+les \gl{SoC}{SoC} \gl{FPGA}{FPGA} (quelques \glslink{u-w}{W}) ; les modules \glslink{jetson}{Jetson} (autour de 10\,W), qui équipent les drones
 agiles de moins d'un kilogramme.
 
 Ce document répond à trois questions, à partir du corpus seulement :
 \begin{itemize}
   \item quels jeux de données et quels détecteurs font l'état de l'art de la vision
     depuis un drone, et à quel coût (sections~\ref{sec:datasets} et~\ref{sec:detection}) ?
-  \item que sait-on exécuter à bord, dans chaque \gl{gamme}{gamme de puissance}, pour la détection,
+  \item que sait-on exécuter à bord, dans chaque \glslink{gamme}{gamme de puissance}, pour la détection,
     le suivi et la navigation (sections~\ref{sec:fpga} à~\ref{sec:contre-drone}) ?
   \item comment relier ces chiffres à la mission du drone, et que reste-t-il à faire
     (sections~\ref{sec:codesign} à~\ref{sec:gaps}) ?
@@ -68,19 +69,25 @@ le drone.
 \section{Conclusion}
 
 La vision embarquée sur drone dispose de jeux de données de référence (VisDrone, UAVDT,
-\gl{DAC-SDC}{DAC-SDC}, Det-Fly), d'une littérature abondante de détecteurs pour petits objets et de
-démonstrations convaincantes dans chaque \gl{gamme}{gamme de puissance} : SSD-MobileNetV2 sur GAP8 à
-134\,mW, YOLOX sur KV260 à 10\,W, perception et contrôle de course sur Jetson TX2. Le
+\glslink{dac-sdc}{DAC-SDC}, Det-Fly), d'une littérature abondante de détecteurs pour petits objets et de
+démonstrations convaincantes dans chaque \glslink{gamme}{gamme de puissance} : \glslink{ssd-mobilenetv2}{SSD-MobileNetV2} sur \glslink{gap8}{GAP8} à
+134\,\glslink{u-mw}{mW}, \glslink{yolox}{YOLOX} sur \glslink{kv260}{KV260} à 10\,\glslink{u-w}{W}, perception et contrôle de course sur \glslink{tx2}{Jetson TX2},
+suivi agile et détection air $\rightarrow$ air en vol sur \glslink{orin-nx}{Jetson Orin NX}. Le
 corpus montre pourtant que ces trois littératures se croisent peu :
 \begin{itemize}
   \item les détecteurs les plus précis sur VisDrone sont mesurés sur \gl{GPU}{GPU} de bureau, et le
-    seul portage embarqué d'une \gl{teteP2}{tête P2} (Drone-YOLO sur TX2) coûte un facteur 3 à 4 en
+    seul portage embarqué d'une \glslink{p2head}{tête P2} (\glslink{drone-yolo}{Drone-YOLO} sur \glslink{tx2}{TX2}) coûte un facteur 3 à 4 en
     latence ;
-  \item les designs \gl{FPGA}{FPGA} optimisent le débit sur des réseaux minuscules (DAC-SDC) ou
-    simplifiés, avec des précisions non comparables et sans \gl{APS}{AP$_S$} ;
+  \item les designs \gl{FPGA}{FPGA} optimisent le débit sur des réseaux minuscules (\glslink{dac-sdc}{DAC-SDC}) ou
+    simplifiés, avec des précisions non comparables et sans \glslink{aps}{AP$_S$} ;
   \item le co-design calcul--vol est modélisé, rarement mesuré, et jamais pour un FPGA ;
   \item le contre-drone \gl{airair}{air $\rightarrow$ air} a des jeux publics (Det-Fly, NPS-Drones,
-    ARD-MAV) mais un seul chiffre embarqué, sur Jetson et sans puissance.
+    ARD-MAV) mais deux chiffres embarqués seulement (\glslink{glad}{GLAD}, SCOUT), tous deux sur \glslink{jetson}{Jetson} et sans
+    puissance ; seul SCOUT ferme la boucle en vol, en salle et sans taux d'interception ;
+  \item la navigation et les modèles vision-langage embarqués sur \glslink{orin}{Orin} (profondeur,
+    segmentation, appariement d'images) ont un goulot de perception dense jamais mesuré en
+    puissance ni porté sur FPGA ; le \glslink{gap9}{GAP9}, nouvelle génération nano, n'a encore ni puissance
+    mesurée ni détecteur dans le corpus.
 \end{itemize}
 Ces manques dessinent un sujet de thèse cohérent : porter un détecteur de petits objets
 récent sur un \gl{SoC}{SoC} embarquable, mesurer honnêtement sa précision par taille d'objet et sa
@@ -90,17 +97,17 @@ puissance à la carte, et traduire le résultat en métrique de mission.
 \begin{enumerate}
   \item \textbf{Papier à lire en priorité} : les deux références de
     \citet{2025-hozhabr-survey-real-time-object-detection} sur le post-traitement matériel
-    (\gl{NMS}{NMS} pipeliné d'Anupreetham et al., système tout-FPGA de D.~Zhang et al.), absentes de
+    (\glslink{nms}{NMS} pipeliné d'Anupreetham et al., système tout-FPGA de D.~Zhang et al.), absentes de
     la base : elles répondent au goulot \gl{PS}{PS} observé dans quatre papiers.
-  \item \textbf{Expérience à reproduire} : YOLOv8n entraîné sur Det-Fly
-    \citep{2021-zheng-air-air-visual-detection-micro}, en \gl{INT8}{INT8} sur KV260 (Vitis~AI) et sur
-    Jetson Orin, avec \gl{AP}{AP} et AP$_S$ mesurées sur la carte, latence de \gl{bout}{bout en bout} et
+  \item \textbf{Expérience à reproduire} : \glslink{yolov8n}{YOLOv8n} entraîné sur Det-Fly
+    \citep{2021-zheng-air-air-visual-detection-micro}, en \gl{INT8}{INT8} sur \glslink{kv260}{KV260} (Vitis~AI) et sur
+    \glslink{orin}{Jetson Orin}, avec \glslink{ap}{AP} et \glslink{aps}{AP$_S$} mesurées sur la carte, latence de \gl{bout}{bout en bout} et
     puissance à la carte des deux côtés.
   \item \textbf{Gap à creuser} : placer les designs de
     \citet{2025-cali-optimized-implementation-yolov3-tiny-real} et
     \citet{2025-elhence-fpga-accelerated-yolox-enhanced-attention} sur le \gl{roofline}{modèle F-1} de
     \citet{arxiv-2204.10898-roofline-model-uavs-bottleneck-analysis}, pour obtenir la
-    première métrique de \gl{vitesse}{vitesse sûre} d'un détecteur FPGA.
+    première métrique de \glslink{vsure}{vitesse sûre} d'un détecteur FPGA.
 \end{enumerate}
 
 \bibliographystyle{plainnat}
@@ -108,5 +115,17 @@ puissance à la carte, et traduire le résultat en métrique de mission.
 
 \appendix
 \input{sec-glossaire}
+
+\clearpage
+\section*{Glossaires}
+\addcontentsline{toc}{section}{Glossaires}
+Chaque entrée renvoie aux sections où le terme apparaît ; dans le texte, chaque apparition
+est un lien vers son entrée. Une valeur suivie de \constr{} vient de la documentation du
+constructeur, \horscorpus{} de connaissances générales : ni l'une ni l'autre n'est tirée du
+corpus. Les acronymes et le vocabulaire propre à ce document sont dans les deux annexes
+précédentes.
+\printglossary[type=plateformes]
+\printglossary[type=modeles]
+\printglossary[type=metriques]
 
 \end{document}

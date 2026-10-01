@@ -30,8 +30,11 @@
   ],
   "tags": [
     "jetson",
-    "orin-nx",
-    "vlm"
+    "vlm",
+    "split-computing",
+    "edge-cloud",
+    "energy",
+    "orin-nx-deduced"
   ],
   "added": "2026-09-29",
   "extraction": {
@@ -44,6 +47,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

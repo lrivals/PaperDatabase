@@ -1,4 +1,5 @@
-% Généré par glossify.py : glossaire des acronymes et lexique (cibles des liens \gl)
+% Glossaire des acronymes et lexique (cibles des liens \gl). Les plateformes, modèles,
+% métriques et unités sont dans gloss-*.tex (liens \glslink).
 \section{Glossaire des acronymes}
 \label{sec:acronymes}
 
@@ -8,33 +9,19 @@
 Acronyme & Signification \\
 \midrule
 \endhead
-\leavevmode\hypertarget{gl:AP}{AP} & \emph{Average Precision}, précision moyenne d'un détecteur (aire sous la courbe précision--rappel) ; \gl{mAP}{mAP} si moyennée sur les classes \\
 \leavevmode\hypertarget{gl:ASIC}{ASIC} & \emph{Application-Specific Integrated Circuit}, circuit intégré conçu pour une seule fonction \\
-\leavevmode\hypertarget{gl:AUC}{AUC} & \emph{Area Under the Curve}, aire sous la courbe de succès en suivi d'objet \\
-\leavevmode\hypertarget{gl:BRAM}{BRAM} & \emph{Block RAM}, mémoire embarquée d'un FPGA ; avec l'URAM, elle borne ce qui tient sur la puce \\
 \leavevmode\hypertarget{gl:CNN}{CNN} & \emph{Convolutional Neural Network}, réseau de neurones convolutif \\
 \leavevmode\hypertarget{gl:COCO}{COCO} & \emph{Common Objects in Context}, jeu de détection généraliste (80 classes) et protocole d'AP moyenné sur les seuils d'IoU 0,5 à 0,95 \\
 \leavevmode\hypertarget{gl:CPU}{CPU} & \emph{Central Processing Unit}, processeur généraliste \\
-\leavevmode\hypertarget{gl:DAC-SDC}{DAC-SDC} & \emph{Design Automation Conference -- System Design Contest}, concours de détection basse consommation sur images de drone, plateformes imposées (PYNQ-Z1, Ultra96, Jetson TX2) \\
 \leavevmode\hypertarget{gl:DMA}{DMA} & \emph{Direct Memory Access}, transfert mémoire sans intervention du processeur \\
-\leavevmode\hypertarget{gl:DPU}{DPU} & \emph{Deep-learning Processing Unit}, accélérateur CNN générique de Vitis~AI (AMD-Xilinx), programmé par instructions, en INT8 \\
-\leavevmode\hypertarget{gl:DSP}{DSP} & \emph{Digital Signal Processing (bloc)}, multiplieur-accumulateur câblé d'un FPGA \\
 \leavevmode\hypertarget{gl:DVS}{DVS} & \emph{Dynamic Vision Sensor}, caméra événementielle : chaque pixel émet un événement quand sa luminosité change \\
 \leavevmode\hypertarget{gl:FINN}{FINN} & \emph{FINN (AMD-Xilinx)}, toolflow dataflow open source pour réseaux quantifiés sur FPGA \\
-\leavevmode\hypertarget{gl:FLOPs}{FLOPs} & \emph{Floating-Point Operations}, nombre d'opérations d'une inférence (GFLOPs : milliards) ; mesure de coût théorique, pas de latence \\
 \leavevmode\hypertarget{gl:FP32}{FP32} & \emph{Floating Point 32 bits}, flottant simple précision ; FP16 : demi-précision \\
 \leavevmode\hypertarget{gl:FPGA}{FPGA} & \emph{Field-Programmable Gate Array}, circuit logique reprogrammable ; en SoC (Zynq, Kria), associé à des cœurs ARM \\
-\leavevmode\hypertarget{gl:FPS}{FPS} & \emph{Frames Per Second}, images par seconde (débit) \\
-\leavevmode\hypertarget{gl:GOPS}{GOPS} & \emph{Giga Operations Per Second}, milliards d'opérations par seconde \\
 \leavevmode\hypertarget{gl:GPU}{GPU} & \emph{Graphics Processing Unit}, processeur graphique ; « GPU de bureau » (RTX, Titan, Tesla) par opposition au GPU embarqué des Jetson \\
 \leavevmode\hypertarget{gl:AI}{IA} & intelligence artificielle \\
 \leavevmode\hypertarget{gl:INT8}{INT8} & \emph{entiers sur 8 bits}, précision numérique après quantification ; INT4 : 4 bits \\
-\leavevmode\hypertarget{gl:IoU}{IoU} & \emph{Intersection over Union}, recouvrement entre boîte prédite et boîte réelle ; au DAC-SDC, IoU moyen d'un objet unique, qui n'est pas une mAP \\
-\leavevmode\hypertarget{gl:MAC}{MAC} & \emph{Multiply-Accumulate}, multiplication-accumulation ; MMAC, GMAC : millions, milliards \\
-\leavevmode\hypertarget{gl:mAP}{mAP} & \emph{mean Average Precision}, AP moyennée sur les classes ; mAP50 ou AP50 : au seuil d'IoU 0,5 ; mAP50-95 : protocole COCO \\
 \leavevmode\hypertarget{gl:MCU}{MCU} & \emph{Microcontroller Unit}, microcontrôleur (Cortex-M, GAP8, MAX78000) \\
-\leavevmode\hypertarget{gl:mSA}{mSA} & \emph{mean State Accuracy}, métrique des jeux Anti-UAV : IoU quand la cible est visible, prédiction d'absence sinon \\
-\leavevmode\hypertarget{gl:NMS}{NMS} & \emph{Non-Maximum Suppression}, suppression des boîtes de détection en double, en post-traitement \\
 \leavevmode\hypertarget{gl:NPU}{NPU} & \emph{Neural Processing Unit}, accélérateur de réseaux de neurones (Hailo-8, Edge TPU, VPU Myriad) \\
 \leavevmode\hypertarget{gl:PID}{PID} & \emph{Proportionnel-Intégral-Dérivé}, régulateur classique du contrôle de vol \\
 \leavevmode\hypertarget{gl:PS}{PS} & \emph{Processing System}, partie processeur (cœurs ARM) d'un SoC FPGA ; PL : logique programmable \\
@@ -44,11 +31,9 @@ Acronyme & Signification \\
 \leavevmode\hypertarget{gl:SNN}{SNN} & \emph{Spiking Neural Network}, réseau de neurones impulsionnels, exécuté sur puce neuromorphique (Loihi) \\
 \leavevmode\hypertarget{gl:SoC}{SoC} & \emph{System on Chip}, puce intégrant processeurs et accélérateurs (SoC FPGA : Zynq, Kria) \\
 \leavevmode\hypertarget{gl:SRAM}{SRAM} & \emph{Static RAM}, mémoire statique ; dans un FPGA, elle stocke aussi la configuration \\
-\leavevmode\hypertarget{gl:SSD}{SSD} & \emph{Single Shot MultiBox Detector}, détecteur à un étage, souvent avec backbone MobileNet \\
 \leavevmode\hypertarget{gl:TDP}{TDP} & \emph{Thermal Design Power}, puissance thermique nominale d'une puce, pas sa consommation mesurée \\
 \leavevmode\hypertarget{gl:UWB}{UWB} & \emph{Ultra-Wideband}, radio à bande ultra-large, utilisée pour la télémétrie de distance \\
 \leavevmode\hypertarget{gl:VOC}{VOC} & \emph{PASCAL Visual Object Classes}, jeu de détection généraliste (20 classes) \\
-\leavevmode\hypertarget{gl:YOLO}{YOLO} & \emph{You Only Look Once}, famille de détecteurs d'objets à un étage (v3 à v26) \\
 \bottomrule
 \end{longtable}}
 
@@ -63,8 +48,6 @@ Terme & Sens dans ce document \\
 \midrule
 \endhead
 \leavevmode\hypertarget{gl:airair}{air $\rightarrow$ air} & contre-drone où le détecteur est à bord d'un drone (intercepteur) ; seul cas qui relève de l'IA embarquée \\
-\leavevmode\hypertarget{gl:APS}{AP$_S$} & AP sur les petits objets (moins de 32$\times$32 pixels, protocole COCO) \\
-\leavevmode\hypertarget{gl:attention}{attention} & mécanisme qui pondère les caractéristiques selon leur pertinence (canal, espace, ou attention matricielle des Transformer) \\
 \leavevmode\hypertarget{gl:backbone}{backbone} & partie du réseau qui extrait les caractéristiques, avant le neck et les têtes \\
 \leavevmode\hypertarget{gl:boucle}{boucle fermée} & la perception pilote réellement le drone pendant l'essai, par opposition à une évaluation sur données enregistrées \\
 \leavevmode\hypertarget{gl:bout}{bout en bout (latence, débit)} & de l'acquisition de l'image à la sortie des boîtes, pré- et post-traitement compris \\
@@ -75,13 +58,10 @@ Terme & Sens dans ce document \\
 \leavevmode\hypertarget{gl:egomotion}{ego-motion} & mouvement propre de la caméra embarquée, à compenser avant d'exploiter le mouvement de la cible \\
 \leavevmode\hypertarget{gl:elagage}{élagage (pruning)} & suppression de canaux, de couches ou de poids ; seul l'élagage structuré accélère sur matériel \\
 \leavevmode\hypertarget{gl:flot}{flot optique} & champ de déplacement apparent des pixels entre deux images \\
-\leavevmode\hypertarget{gl:gamme}{gamme de puissance} & nano (mW), FPGA (W), Jetson (autour de 10\,W) ; tout résultat y est situé \\
 \leavevmode\hypertarget{gl:hil}{hardware-in-the-loop} & simulation du drone et de son environnement avec le calculateur réel dans la boucle \\
-\leavevmode\hypertarget{gl:lot}{lot (batch)} & nombre d'images traitées ensemble ; un débit en lot n'est pas une latence par image \\
 \leavevmode\hypertarget{gl:nr}{\texttt{n/r}} & valeur non rapportée par les auteurs ; jamais estimée \\
 \leavevmode\hypertarget{gl:pixthr}{pixel throughput} & débit normalisé par la résolution : FPS $\times$ pixels par image \\
 \leavevmode\hypertarget{gl:genou}{point de genou} & dans le modèle F-1, débit de décision au-delà duquel accélérer le calcul n'augmente plus la vitesse sûre \\
-\leavevmode\hypertarget{gl:portee}{portée de la puissance} & ce que couvre une puissance : carte entière (board), puce (chip), estimée (outil) ou non décrite \\
 \leavevmode\hypertarget{gl:preprint}{preprint (\textsuperscript{\textsc{pp}})} & article déposé sur arXiv, non relu par les pairs dans la version ingérée \\
 \leavevmode\hypertarget{gl:quantif}{quantification} & passage des poids et activations à une précision réduite (INT8, INT4, W4/A4) \\
 \leavevmode\hypertarget{gl:roofline}{roofline, modèle F-1} & modèle de performance borné par le calcul et la mémoire ; F-1 : sa version pour drone, qui borne la vitesse sûre \\
@@ -92,11 +72,7 @@ Terme & Sens dans ce document \\
 \leavevmode\hypertarget{gl:telemetrie}{télémétrie} & mesure de puissance par les capteurs de la carte (tegrastats, PMIC) ; portée puce ou module \\
 \leavevmode\hypertarget{gl:testdev}{test-dev, validation} & splits d'évaluation de VisDrone ; les chiffres de l'un ne se comparent pas à ceux de l'autre \\
 \leavevmode\hypertarget{gl:toolflow}{toolflow} & chaîne automatique qui transforme un réseau entraîné en accélérateur (FINN, SATAY, Vitis~AI) \\
-\leavevmode\hypertarget{gl:siamois}{tracker siamois} & tracker qui compare un gabarit de la cible à une zone de recherche avec un même réseau \\
-\leavevmode\hypertarget{gl:transformer}{Transformer} & bloc à attention multi-têtes, issu du traitement du langage \\
 \leavevmode\hypertarget{gl:tuilage}{tuilage} & découpage d'une image haute résolution en tuiles inférées séparément \\
-\leavevmode\hypertarget{gl:teteP2}{tête P2 (et P5)} & tête de détection sur la carte de stride 4 (160$\times$160 pour une entrée de 640), pour les petits objets ; P5 : stride 32, grands objets \\
-\leavevmode\hypertarget{gl:vitesse}{vitesse sûre} & vitesse maximale à laquelle le drone peut encore s'arrêter avant un obstacle détecté \\
 \leavevmode\hypertarget{gl:wa}{W$x$/A$y$} & précision numérique : poids sur $x$ bits, activations sur $y$ bits \\
 \bottomrule
 \end{longtable}}

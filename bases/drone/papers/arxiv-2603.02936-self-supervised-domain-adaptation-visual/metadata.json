@@ -43,19 +43,25 @@
   ],
   "tags": [
     "crazyflie",
-    "drone-racing"
+    "domain-adaptation",
+    "drone-racing",
+    "gap9",
+    "int8",
+    "ne16",
+    "pose-estimation",
+    "self-supervised",
+    "sim-to-real"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "pymupdf",
     "ok": false,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

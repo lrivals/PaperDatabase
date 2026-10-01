@@ -37,19 +37,25 @@
     "nano-drone"
   ],
   "tags": [
-    "gap9"
+    "gap9",
+    "crazyflie",
+    "nerf",
+    "instant-ngp",
+    "federated-learning",
+    "swarm",
+    "on-device-training",
+    "3d-reconstruction"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "pymupdf",
     "ok": false,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

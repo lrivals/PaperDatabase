@@ -26,14 +26,19 @@
   "url": "https://arxiv.org/abs/2509.18610",
   "type": "preprint",
   "axes": [
-    "datasets-benchmarks",
-    "system-codesign",
-    "tracking-navigation"
+    "tracking-navigation",
+    "system-codesign"
   ],
   "tags": [
     "jetson",
     "orin-nano",
-    "vlm"
+    "vlm",
+    "clip",
+    "clipseg",
+    "gaussian-splatting",
+    "imitation-learning",
+    "sim-to-real",
+    "onnx"
   ],
   "added": "2026-09-29",
   "extraction": {
@@ -41,12 +46,11 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 3 mot(s) réparé(s) (lib/ligatures.py)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

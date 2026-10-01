@@ -19,18 +19,28 @@
   "tags": [
     "jetson",
     "orin-nx",
-    "gnss-denied"
+    "gnss-denied",
+    "vio",
+    "vins-fusion",
+    "superpoint",
+    "lightglue",
+    "ukf",
+    "ardupilot",
+    "satellite-matching",
+    "orthomosaic",
+    "iros-2026-accepted"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "pymupdf",
     "ok": false,
     "warnings": [
-      "métadonnées à vérifier à la main"
+      "métadonnées vérifiées contre le texte (auteur unique, indépendant ; accepté à IROS 2026 selon le bandeau, publication à venir)",
+      "extraction pymupdf : corps des tableaux III à IX absents du texte extrait (chiffres seulement via le texte courant)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

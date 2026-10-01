@@ -1,0 +1,157 @@
+% Section commune : toolflows CNN -> FPGA
+\section{Toolflows : du réseau entraîné au bitstream}
+\label{sec:toolflows}
+
+Un toolflow traduit un réseau décrit dans un framework d'apprentissage en une architecture
+matérielle, sous les contraintes de ressources d'une puce donnée
+\citep[§1]{2018-venieris-toolflows-mapping-convolutional-neural-networks}. Le corpus couvre
+quatre lignées dataflow (FINN, fpgaConvNet, hls4ml, SATAY) et le flot industriel
+d'AMD, Vitis~AI, qui exécute le réseau sur un moteur unique (la DPU).
+
+\subsection{FINN et FINN-R : réseaux binaires puis quantifiés}
+
+\citet{arxiv-1612.07119-finn-framework-fast-scalable-binarized} partent d'un constat : sur
+une Zynq UltraScale+ ZU19EG, le pic binaire (66\,TOPS) vaut environ 16 fois le pic 8~bits,
+et un AlexNet binarisé tiendrait on-chip \src{§3.1}. FINN génère une architecture
+streaming, un moteur par couche, tous les poids en mémoire on-chip \src{§4.1}. Trois idées
+de ce papier sont reprises partout ensuite :
+\begin{itemize}
+  \item l'accumulation par \emph{popcount}, qui coûte à peu près moitié moins de LUT
+    qu'une accumulation signée \src{§4.2.1} ;
+  \item le remplacement de la batch normalization suivie du signe par un simple seuil
+    \src{§4.2.2} ;
+  \item le \emph{folding} (P PE $\times$ S voies SIMD par couche), qui équilibre les débits
+    des couches \src{§4.4}.
+\end{itemize}
+La mesure est soignée : puissance de la puce ($P_{chip}$, lue par PMBus) et de la carte
+($P_{wall}$, au wattmètre), moyennées sur 10\,s \src{§5.1}. Les réseaux sont petits :
+MLP sur MNIST, et un CNN (CNV) sur CIFAR-10 à 80,1\,\% de précision. CNV-max atteint
+21\,900\,images/s pour 3,6\,W de puce et 11,7\,W de carte sur une ZC706
+\src{Tables~3--4}. La carte consomme environ 7\,W au repos \src{§5.2.2} : un FPS/W
+calculé sur la carte ne se transpose donc pas à une carte plus sobre \deduit.
+
+\citet{arxiv-1809.04570-finn-r-end-end-deep} étendent FINN aux précisions multiples. FINN-R
+est structuré comme un compilateur, avec une représentation intermédiaire qui connaît la
+quantification de chaque nœud \src{§4}. Il apporte :
+\begin{itemize}
+  \item des modèles de coût : les LUT d'un produit scalaire sont proportionnelles au
+    produit (nombre d'éléments $\times$ bits de poids $\times$ bits d'activation), et le
+    modèle prédit la synthèse à $\pm$30\,\% près \src{§3.1--3.2} ;
+  \item deux architectures : \emph{dataflow} (un moteur par couche) et \emph{multilayer
+    offload} (MO), qui réutilise une partie du pipeline en boucle avec les cartes
+    d'activation en mémoire externe, pour les réseaux trop gros \src{§3.3}.
+\end{itemize}
+Sur petite cible, le MO fonctionne mal. Tincy YOLO (W1A3) n'atteint que 133\,GOp/s sur
+PYNQ-Z1 et 288\,GOp/s sur Ultra96, avec une prédiction juste à 66--68\,\% seulement
+\src{Table~5}. Le papier ne donne aucun FPS pour ce détecteur. L'outil ne gère que les
+ressources et le débit : latence et puissance ne sont pas modélisées \src{§4}.
+
+\subsection{fpgaConvNet : partitionner ou recharger les poids}
+
+\citet{arxiv-1711.08740-fpgaconvnet-toolflow-mapping-diverse-convolutional} modélisent le
+réseau en \emph{synchronous dataflow} et explorent quatre transformations
+\src{§2.4} :
+\begin{itemize}
+  \item le partitionnement avec reconfiguration du FPGA, amortie par lots, qui vise le
+    débit ;
+  \item le repli à gros grain (nombre d'unités par couche) ;
+  \item le repli à grain fin (parallélisme du produit scalaire) ;
+  \item le rechargement des poids sur une architecture unique, sans reconfiguration, qui
+    vise la latence.
+\end{itemize}
+C'est la seule lignée du corpus conçue pour des réseaux qui ne tiennent pas on-chip. Elle
+calcule en virgule fixe 16~bits et ne descend pas plus bas ; FINN-R le relève
+\citep[§2.2]{arxiv-1809.04570-finn-r-end-end-deep}. La comparaison au Tegra~X1 est l'une
+des rares du corpus à budget de puissance égal (5\,W) et avec la même méthode de mesure
+des deux côtés : jusqu'à 5,53$\times$ le débit du GPU, et jusqu'à 6,65$\times$ en mode
+latence \src{§3.1}. Deux réserves : le GPU est bridé à 76,8\,MHz, et les valeurs absolues
+ne figurent que dans une figure. Le papier, un article de workshop, ne donne ni
+ressources ni précision.
+
+\subsection{hls4ml : la très faible latence, venue de la physique des particules}
+
+hls4ml est né pour le déclenchement de premier niveau du LHC, avec une latence de l'ordre
+de la microseconde. Chaque couche y devient un bloc matériel dont le parallélisme se règle
+par le \emph{reuse factor}
+\citep[§4.2]{arxiv-2103.05579-hls4ml-open-source-codesign-workflow}. Le volet CNN
+\citep{arxiv-2101.05108-fast-convolutional-neural-networks-fpgas} traite la convolution en
+flux, avec une fenêtre glissante \src{§3}. Sur un petit classifieur SVHN (12\,858 poids) :
+\begin{itemize}
+  \item en quantification post-entraînement (PTQ), la précision s'effondre sous 14~bits ;
+  \item en quantification pendant l'entraînement (QAT, avec QKeras), elle tient jusqu'à 3
+    à 4~bits \src{§7--8} ;
+  \item le modèle QAT élagué sur 7~bits prend 174 DSP au lieu de 6\,377 sur VU9P, pour une
+    latence d'environ 5\,µs \src{Table~3} ;
+  \item sur XC7Z020, il atteint 2\,831\,images/s pour 171\,µs de latence \src{Table~4}.
+\end{itemize}
+Aucune puissance FPGA n'est mesurée : l'énergie citée est une estimation ASIC 45\,nm.
+
+La version 2025 \citep{arxiv-2512.01463-hls4ml-flexible-open-source-platform}\pp{} ajoute
+l'arithmétique distribuée sans DSP et la quantification par paramètre (HGQ). Elle s'évalue
+en placement-routage hors contexte, sur de petits modèles, sans puissance, et ses auteurs
+reconnaissent que les gros modèles échouent en synthèse \src{§9, §11}.
+\citet{2024-campos-end-end-codesign-hessian-aware} relient la quantification mixte guidée
+par la Hessienne (HAWQ, largeurs choisies par programmation linéaire en nombres entiers
+sous budget de BOPs) à hls4ml via QONNX. Sur un MLP, ils obtiennent $-$95,7\,\% de DSP
+pour $-$1,07 point de précision \src{Table~2}. Mais les latences sont estimées par Vivado
+HLS, aucun design ne tourne sur carte \src{§6.2}, et la puce cible est ambiguë (voir la
+fiche). Enfin, \citet{arxiv-2602.15751-enabling-low-latency-machine-learning} ajoutent un
+backend pour les FPGA flash durcis Microchip PolarFire, limité aux couches denses et ReLU
+\src{§5.1}.
+
+\subsection{SATAY : un toolflow streaming pour YOLO}
+
+\citet{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} sont
+les premiers du corpus à automatiser une architecture streaming pour la détection
+(YOLOv3-tiny, YOLOv5, YOLOv8), de l'ONNX au bitstream \src{§IV}. Leurs réponses aux
+opérations propres à YOLO :
+\begin{itemize}
+  \item HardSwish en remplacement de SiLU \src{§III-B} ;
+  \item redimensionnement (\emph{resize}) calculé à la volée \src{§III-B} ;
+  \item FIFO logicielle en DDR pour les longues connexions résiduelles. Déporter les 5 plus
+    gros tampons réduit la mémoire on-chip totale de 17\,\% \src{§V, Fig.~9}.
+\end{itemize}
+Tous les poids restent on-chip (jusqu'à 26\,MB, \src{§IV-C}). La seule carte embarquée
+testée est la ZCU104, avec YOLOv5n (section~\ref{sec:detection}).
+
+\subsection{Vitis AI et la DPU : le flot par défaut, peu documenté}
+
+Dans le corpus, Vitis~AI n'apparaît que comme flot utilisateur : YOLOv5 INT8 sur Kria KV260
+\citep{arxiv-2507.18174-real-time-object-detection-classification} et RetinaNet ResNet-50
+INT8 sur ZCU104 et KV260
+\citep{arxiv-2211.11647-benchmarking-edge-computing-devices-grape}. Ce dernier papier montre
+le coût d'adaptation du modèle : il faut dupliquer une convolution du FPN pour que tout le
+réseau tienne sur la DPU sans repli sur le CPU \src{§2.3}. Vitis~AI n'a que 2 lignes dans
+\texttt{benchmarks.csv}, alors que c'est le flot par défaut du KV260.
+
+\subsection{Synthèse}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Toolflows du corpus (lu dans les fiches). « Puissance » : existe-t-il une mesure
+sur carte dans les articles du corpus ?}
+\label{tab:toolflows}
+\begin{tabularx}{\textwidth}{@{}lLLLL@{}}
+\toprule
+Toolflow & Architecture & Précisions & Tâches démontrées & Puissance mesurée \\
+\midrule
+FINN / FINN-R & streaming ; MO pour gros réseaux & binaire à 8 bits & classification ;
+  Tincy YOLO en MO & oui (puce et carte, FINN ; carte, FINN-R) \\
+fpgaConvNet & SDF ; partitionnement ou rechargement des poids & FXP16 & classification
+  (AlexNet à DenseNet) & dynamique de carte, repos soustrait \\
+hls4ml & un bloc par couche, reuse factor & virgule fixe arbitraire, HGQ & MLP, petits CNN,
+  AE et VAE (physique) & non (estimations seulement) \\
+SATAY & streaming, FIFO logicielle DDR & W8A16 (PTQ) & YOLOv3-tiny à v8 & méthode non
+  décrite \\
+Vitis AI (DPU) & moteur unique & INT8 & YOLOv5, RetinaNet & méthode non décrite ou valeurs en
+  figure \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Aucun article du corpus ne compare deux de ces flots, mesurés, sur un même réseau et une
+même carte. Les papiers d'outil comparent des chiffres publiés
+\citep[§2.6]{2018-venieris-toolflows-mapping-convolutional-neural-networks} ou ne comparent
+pas \citep{arxiv-2512.01463-hls4ml-flexible-open-source-platform,arxiv-2103.05579-hls4ml-open-source-codesign-workflow}.
+QONNX, lisible par FINN et par hls4ml, rend cette comparaison techniquement faisable
+\citep[§2.3]{2024-campos-end-end-codesign-hessian-aware}.

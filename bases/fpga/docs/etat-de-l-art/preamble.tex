@@ -1,0 +1,44 @@
+% Préambule commun aux deux états de l'art (fpga.tex, vision-embarquee.tex)
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[section]{placeins}
+\usepackage{csquotes}
+\usepackage{textcomp}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{00B5}{\textmu}
+\DeclareUnicodeCharacter{03BC}{\ensuremath{\mu}}
+\DeclareUnicodeCharacter{03A6}{\ensuremath{\Phi}}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{2009}{\,}
+\DeclareUnicodeCharacter{202F}{\,}
+
+\newcommand{\nr}{\texttt{n/r}}
+\newcommand{\deduit}{\textit{(déduit)}}
+\newcommand{\pp}{\textsuperscript{\textsc{pp}}}   % preprint non relu par les pairs
+\newcommand{\src}[1]{{\footnotesize[#1]}}          % section source d'un chiffre
+\newcommand{\gap}[1]{\paragraph{Gap : #1.}}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.12}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\setlength{\parskip}{0.35em}
+\newif\ifcomplete   % \completetrue dans vision-embarquee.tex

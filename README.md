@@ -370,8 +370,8 @@ Au 01/10/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-
   thèse « IA embarquée sécuritaire certifiable sur FPGA » (axes `safety-certification` et
   `person-detection`). 101 articles, tous fichés ; 299 lignes dans `benchmarks.csv` (216 sur
   FPGA) ; 36 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md), dont 29 étayés (8ᵉ passage,
-  avec sections sûreté et détection de personnes). Un état de l'art LaTeX, local et non versionné,
-  est rédigé dans `bases/fpga/docs/etat-de-l-art/`.
+  avec sections sûreté et détection de personnes). Un état de l'art LaTeX (sources et PDF) est dans
+  [bases/fpga/docs/etat-de-l-art/](bases/fpga/docs/etat-de-l-art/).
 - `drone` : 73 articles, tous fichés ; 324 lignes dans `benchmarks.csv` ; 19 gaps dans
   [bases/drone/gaps.md](bases/drone/gaps.md), dont 17 étayés. Les 24 derniers articles ont
   été ajoutés par dépôt manuel des PDF dans `inbox/`, avec leur export de citation.

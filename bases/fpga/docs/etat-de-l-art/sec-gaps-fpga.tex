@@ -1,0 +1,229 @@
+% Section commune : gaps FPGA (repris de gaps.md, 8e passage)
+% Inclus par fpga.tex ET vision-embarquee.tex : pas de \ref nu vers sec:surete (absente de
+% vision-embarquee.tex) ; le renvoi est protégé par \ifcsname r@sec:surete.
+\section{Zones non couvertes et pistes de recherche}
+\label{sec:gaps}
+
+Les gaps ci-dessous viennent de \texttt{gaps.md} (8\textsuperscript{e} passage,
+01/10/2026), établi sur les 101 fiches de la base et les 299 lignes de
+\texttt{benchmarks.csv}, dont 216 sur FPGA. La carte compte 36 gaps, dont 29 étayés. Un
+gap \emph{étayé} est constaté dans plusieurs fiches ; cela ne prouve pas qu'il est absent
+de la littérature. Un gap à l'état d'\emph{hypothèse} ne repose que sur l'absence de
+papiers dans la base. Le tableau~\ref{tab:gaps-fpga} reprend les gaps d'architecture, de
+mesure et d'apprentissage ; le tableau~\ref{tab:gaps-surete} ceux de sûreté et de détection
+de personnes, deux axes ajoutés à la base avec le thème de thèse%
+\ifcsname r@sec:surete\endcsname{} (détail en section~\ref{sec:surete})\fi.
+
+Trois gaps du passage précédent ont changé, parce qu'une fiche nouvelle les contredit :
+\begin{itemize}
+  \item \enquote{autoencodeur complet sur une petite FPGA} est supprimé. Un CAE complet,
+    score par erreur de reconstruction, tourne en INT8 sur le DPU d'une ZCU104
+    \citep[§IV-B, Table~VI]{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator},
+    et une compression apprise place encodeur et décodeur sur ZCU102
+    \citep[Table~X]{arxiv-2503.04832-lightweight-embedded-fpga-deployment-learned}\pp. Le
+    coût des déconvolutions sur une puce plus petite passe dans le gap de l'anomalie
+    visuelle ;
+  \item \enquote{les apprentissages sur FPGA évitent la rétropropagation} devient
+    \enquote{rétropropagation lente, en flottant, énergie non mesurée}. EF-Train fait
+    FP\,/\,BP\,/\,WU en FP32 sur ZCU102, à 2,08\,ms par image pour un petit CNN
+    CIFAR-10 à batch~128
+    \citep[Table~7]{arxiv-2202.10935-ef-train-enable-efficient-device}\pp ; Chameleon le
+    fait en FP16, à 413\,ms et 1,22\,J par image, contre 33\,ms sur Jetson Nano
+    \citep[Table~VI]{2024-aggarwal-chameleon-dual-memory-replay-online} ;
+  \item \enquote{CL sur FPGA : précision faible} devient \enquote{énergie de portée non
+    précisée}. SLDA sur DPU atteint 78,79\,\% sur CORe50 (objet), à 9,00\,W lus sur les
+    rails sans portée déclarée
+    \citep[Table~V]{2021-piyasena-accelerating-continual-learning-edge-fpga}.
+\end{itemize}
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Gaps FPGA d'architecture, de mesure et d'apprentissage : statut dans le corpus et
+piste principale.}
+\label{tab:gaps-fpga}
+\begin{tabularx}{\textwidth}{@{}P{4.6cm}P{2.5cm}L@{}}
+\toprule
+Gap & Statut & Piste \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Autoencodeurs}} \\
+Anomalie visuelle (images RGB) par AE sur FPGA embarquée & étayé (15 fiches) ; un
+  contre-exemple partiel (hyperspectral, seuil réglé sur le test) & chaîne CAE INT8 de
+  Vitis~AI sur MVTec AD et KV260, seuil fixé hors du test, AUROC et puissance de carte ;
+  coût des déconvolutions en dataflow \\
+Compression apprise embarquée avec codage entropique & hypothèse (4 fiches) & chaîne
+  complète sur plateforme à basse consommation, énergie par image mesurée \\
+VAE en matériel pour un latent de grande dimension & hypothèse (2 fiches) & coût d'un
+  générateur gaussien parallèle ; score $D_{KL}$ déterministe en alternative \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Détection}} \\
+Protocole de mesure commun pour YOLO sur FPGA & étayé (24 fiches) & mAP sur la cible,
+  batch~1 de bout en bout avec pire cas et gigue, puissance de puce et de carte \\
+Détection en dataflow quantifié sur SoC à mémoire limitée & étayé (13 fiches), nuancé &
+  YOLO récent en W4--W8 par FINN ou SATAY sur KV260, face à la DPU sur la même carte \\
+Petits objets : effet de la quantification par taille d'objet & étayé (2 fiches) pour
+  l'absence ; hypothèse sinon & AP\textsubscript{small} COCO mesurée sur la cible \\
+Post-traitement et interaction PS--PL & étayé (14 fiches) & NMS matériel à côté de la DPU,
+  latence de bout en bout et borne \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Mesure et comparaison}} \\
+Précision non vérifiée sur la cible & étayé (20 fiches), nuancé & mAP COCO val sur la
+  carte, étape par étape (quantification, compilation, opérateurs, NMS) \\
+Baseline Jetson récente mesurée dans les mêmes conditions & étayé (27 fiches) & même modèle,
+  même précision numérique, même batch, même méthode de puissance sur KV260 et Orin Nano \\
+Puissance puce contre carte & étayé (40 fiches + \texttt{benchmarks.csv}) & télémétrie de
+  la puce + wattmètre de carte + puissance au repos sur la même carte \\
+Métriques flatteuses et comparaisons biaisées & étayé (20 fiches) & recalculer les rapports
+  annoncés à métriques imposées \\
+Code et bitstreams rarement publiés & étayé ($\approx$\,55 fiches expérimentales) & publier
+  projet, bitstream et scripts de mesure \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Toolflows}} \\
+Comparaison croisée hls4ml / FINN / Vitis AI & étayé (12 fiches), nuancé & un même YOLO à
+  opérateurs ReLU exporté en QONNX, trois flots, une carte \\
+Réseaux qui ne tiennent pas on-chip & étayé (13 fiches) & quantification agressive + FCMP
+  ou éviction SMOF, coût à batch~1 et variabilité temporelle \\
+Modèle de puissance validé dans les toolflows & hypothèse (outils) ; étayé (7 fiches) pour
+  l'estimation non validée & vérifier la documentation actuelle de FINN et hls4ml \\
+NAS et quantification mixte guidées par des mesures FPGA & hypothèse (nuancée) & HAWQ + ILP
+  appliqués à la tête d'un YOLO \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Apprentissage continu}} \\
+Rétropropagation sur SoC FPGA : lente, en flottant, énergie non mesurée & étayé (7 fiches)
+  & queue de réseau en précision réduite en PL, étage figé sur la DPU \\
+Adaptation à la dérive en détection d'anomalies & hypothèse (5 fiches) & ONLAD sur les
+  caractéristiques d'un encodeur CNN figé \\
+CL sur FPGA : énergie de portée non précisée ou estimée & étayé (6 fiches) & remesurer SLDA
+  avec wattmètre et télémétrie \\
+Apprentissage continu limité à la classification & étayé (13 fiches), nuancé (détection
+  incrémentale sans FPGA) & Latent Distillation sur une tête YOLO, backbone figé sur la DPU
+  \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Gaps de sûreté, de certification et de détection de personnes : statut dans le
+corpus et piste principale. Aucun texte normatif n'est dans la base.}
+\label{tab:gaps-surete}
+\begin{tabularx}{\textwidth}{@{}P{4.6cm}P{2.5cm}L@{}}
+\toprule
+Gap & Statut & Piste \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Sûreté, fiabilité et certification}} \\
+Aucun détecteur quantifié sur FPGA dans les travaux de fiabilité, de vérification ou de
+  surveillance & étayé (25 fiches) & un YOLOv3-tiny ou v8n sur KV260, objet commun aux
+  expériences de fiabilité, de mAP sur cible et de moniteur \\
+Fiabilité SEU d'un détecteur : criticité par couche, TMR sélectif, DPU contre dataflow &
+  étayé (9 fiches) & injection (configuration, BRAM, multi-fautes) sur un YOLO INT8 FINN et
+  DPU ; durcissement sélectif chiffré en LUT et BRAM \\
+Critère d'erreur dangereuse pour la détection de personnes ; FIT et précision vers SIL / PL
+  & étayé (11 fiches) & non-détection définie sur une séquence ; taux de défaillance par
+  heure combinant inexactitude et fautes \\
+Preuve d'équivalence modèle $\rightarrow$ bitstream ; qualification des toolflows & étayé
+  (14 fiches) & sorties bit à bit du modèle QONNX et du bitstream ; analyse TQL de FINN ou
+  Vitis~AI \\
+Vérification formelle non scalable aux CNN de détection & étayé (4 fiches) ; hypothèse pour
+  les outils récents & vérifier un moniteur ou un post-traitement RTL, plus petit que le
+  réseau \\
+Moniteurs d'exécution (OOD, incertitude, conforme) non portés sur FPGA & étayé (20 fiches)
+  & prédiction conforme, puis moniteur à boîtes en PL ; surcoût mesuré sur KV260 \\
+Correspondance des cadres aéronautique et automobile avec les normes industrielles & étayé
+  (11 fiches) ; hypothèse pour la littérature & tableau objectif par objectif vers IEC 61508,
+  ISO 13849 et ISO/IEC TR 5469 \\
+Déterminisme du FPGA : WCET et gigue non mesurés & étayé (12 fiches) & traces de latence
+  sur $10^5$ images, DPU, FINN et TensorRT \\
+Apprentissage en ligne exclu des cadres de certification & étayé (13 fiches) & SLDA
+  StaticCov avec test de non-régression avant activation \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Détection de personnes en milieu industriel}} \\
+Jeu de données et cas d'assurance en zone industrielle & étayé (8 fiches) ; hypothèse pour
+  la littérature & recherche de jeux EPI ; ODD d'exemple selon AMLAS \\
+Détecteurs de personnes quantifiés sur FPGA & étayé (9 fiches) ; un seul travail mesuré &
+  YOLOv8n sur CrowdHuman, rappel à FPPI fixé sur KV260, flottant et INT8 \\
+Chaîne détection $\rightarrow$ suivi $\rightarrow$ ré-identification sur FPGA & étayé (4
+  fiches) ; hypothèse pour la Re-ID & suivi simple (SORT) sur le PS de la KV260 \\
+Robustesse adverse des détecteurs quantifiés & hypothèse (3 fiches) & rejouer un patch
+  adverse sur le YOLO quantifié, avec et sans moniteur \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\gap{la sûreté du détecteur embarqué} Les deux moitiés du sujet de thèse existent, mais
+séparément. Les études de fiabilité sur FPGA portent sur de petits classifieurs : 19 et
+1\,848 poids
+\citep[§I, §III]{2019-libano-selective-hardening-neural-networks-fpgas}, un QNN FINN sur
+MNIST et CIFAR-10
+\citep[§V]{arxiv-1912.07394-efficient-error-tolerant-quantized-neural}. Inversement,
+aucun des 18 papiers de l'axe \texttt{yolo-fpga} ne traite la sûreté, et le seul YOLO
+\enquote{certifié} du corpus tourne sur Jetson
+\citep[§V]{arxiv-2406.12362-certified-ml-object-detection-surveillance}. Les guides
+renvoient l'implémentation à plus tard : l'EASA écarte la conformité du matériel
+spécialisé \citep[§4.2.3]{2020-easa-concepts-design-assurance-neural-networks} et
+n'accepte pas l'apprentissage en ligne
+\citep[MOC LM-02]{2024-easa-concept-paper-guidance-level-1}.
+
+\gap{la détection de personnes sur FPGA} Un seul papier mesure un détecteur de personnes
+sur FPGA : YOLOv8, v11 et v26 nano en INT8 sur ZCU104, mAP@0.5:0.95 de 0,66 à 0,79 sur un
+jeu maison non publié, 34,05\,FPS de bout en bout et une puissance estimée par Vivado
+\citep[Table~II, §IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp. Aucun travail
+ne donne de taux de personnes manquées à taux de fausse alarme fixé.
+
+\subsection{Quatre questions de thèse candidates}
+
+Les pistes suivantes sont des propositions de ce document \deduit. Elles combinent des gaps
+étayés et s'appuient sur des briques déjà présentes dans le corpus. Elles partagent un
+même objet expérimental : un YOLO quantifié de détection de personnes sur KV260.
+
+\begin{enumerate}
+  \item \textbf{Un détecteur de personnes certifiable sur SoC FPGA.} Établir, pour un même
+    YOLO, une chaîne de preuve d'équivalence entre le modèle QONNX et le bitstream, une borne
+    de latence mesurée (pire cas, gigue) et un moniteur d'exécution sur la même puce.
+    Briques existantes :
+    \begin{itemize}
+      \item le YOLOv3-tiny allégé en w2a4 par FINN sur Zynq-7020
+        \citep{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp, flot dataflow plus
+        inspectable que la DPU \deduit ;
+      \item la criticité par couche et le TMR sélectif de
+        \citet{2019-libano-selective-hardening-neural-networks-fpgas} ;
+      \item la prédiction conforme sur YOLO
+        \citep{arxiv-2304.06052-confident-object-detection-conformal-prediction}\pp{} et le
+        moniteur à boîtes d'abstraction
+        \citep{arxiv-1911.09032-outside-box-abstraction-monitoring-neural}.
+    \end{itemize}
+    Verrou : relier ces mesures à un taux de défaillance dangereuse par heure, dans un cadre
+    de sécurité machine que le corpus ne contient pas encore.
+  \item \textbf{Un protocole de mesure et une comparaison croisée des flots.} Un même YOLO
+    compilé par Vitis~AI, et par FINN ou hls4ml via QONNX, sur KV260, face à une Jetson Orin
+    Nano. Mesures : mAP COCO et rappel de personnes sur la cible, latence de bout en bout et
+    sa distribution, puissance de puce et de carte. Le protocole partirait du cadre
+    d'\citet{arxiv-2304.11580-framework-benchmarking-real-time-embedded} (mAP sur la carte,
+    puissance de carte, repos déduit) et de ceux de DAC-SDC
+    \citep{2021-xu-dac-sdc-low-power-object}, de FINN
+    \citep{arxiv-1612.07119-finn-framework-fast-scalable-binarized} et d'Alqahtani et al.
+    \citep{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.
+  \item \textbf{Détection d'anomalies visuelles par autoencodeur convolutif sur SoC FPGA.}
+    Briques existantes :
+    \begin{itemize}
+      \item le CAE INT8 sur DPU et son score par reconstruction
+        \citep{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator}, dont le
+        seuil est réglé sur le test ;
+      \item l'encodeur ternaire paramétrable de
+        \citet{2021-manjunath-energy-efficient-edgeai-autoencoder-accelerator} ;
+      \item le score calculé sur la puce et le VAE réduit à l'encodeur de
+        \citet{arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised}.
+    \end{itemize}
+    Verrou : une AUROC mesurée sur la carte, sur MVTec AD, avec un seuil fixé hors du test,
+    sur KV260 ou en dataflow. Le même score pourrait servir de moniteur hors distribution
+    pour le détecteur \deduit.
+  \item \textbf{Adaptation en ligne certifiable par construction.} Un étage figé INT8 sur
+    la DPU et une petite tête apprenante : SLDA
+    \citep{2021-piyasena-accelerating-continual-learning-edge-fpga}, recette QLR-CL
+    \citep{arxiv-2110.10486-tinyml-platform-device-continual-learning} ou OS-ELM pour la
+    dérive \citep{2019-tsukada-neural-network-device-learning-anomaly}. Un test de
+    non-régression sur un jeu de référence embarqué et un retour arrière précéderaient
+    toute activation des nouveaux paramètres. Mesures : latence et énergie par mise à jour,
+    surcoût de la validation. L'extension à la détection reste ouverte : la détection
+    incrémentale n'existe que sans FPGA
+    \citep{arxiv-2409.01872-latent-distillation-continual-object-detection}\pp.
+\end{enumerate}

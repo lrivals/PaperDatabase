@@ -1,0 +1,124 @@
+% Section commune : analyse critique transversale
+\section{Analyse critique : ce que les chiffres publiés permettent de conclure}
+\label{sec:critique}
+
+\subsection{La puissance : rarement mesurée sur la carte, jamais sur la puce FPGA}
+
+Recompte de \texttt{benchmarks.csv} sur les 101 lignes mesurées sur FPGA :
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Portée de la puissance dans les lignes FPGA de \texttt{benchmarks.csv}.}
+\label{tab:portee}
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Portée & Lignes & Origine \\
+\midrule
+\emph{board} (carte au wattmètre) & 18 & FINN 8, FINN-R 8, Zhang 2015 1, ONLAD 1 \\
+\emph{chip} & 0 & --- \\
+\emph{board-dynamic} & 0 & --- \\
+\emph{estimated} (outil) & 8 & Manjunath, Que 2024, ImageHD \\
+\emph{unspecified} & 31 & dont SATAY, Zhai, REQ-YOLO, Malviya \\
+puissance non rapportée (\nr) & 44 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Les 17 lignes \emph{chip} de la base viennent toutes de Jetson, du Raspberry~Pi~5 ou d'un
+ASIC. Les 18 lignes \emph{board} FPGA viennent de quatre articles, dont trois antérieurs
+à 2019. Plusieurs comparaisons publiées mettent face à face des portées différentes :
+\begin{itemize}
+  \item une puissance dynamique de quelques mW contre des puissances totales
+    \citep[Table~16]{2019-coutinho-deep-neural-network-hardware-implementation} ;
+  \item la carte entière contre le CPU seul et le GPU seul
+    \citep[§6.4]{2019-tsukada-neural-network-device-learning-anomaly} ;
+  \item le TDP d'un Xeon pris comme puissance mesurée
+    \citep[§5.2]{2015-zhang-optimizing-fpga-accelerator-design-deep} ;
+  \item une estimation de l'outil contre des mesures par nvidia-smi
+    \citep[§VII-D]{arxiv-2604.21280-imagehd-energy-efficient-device-continual}.
+\end{itemize}
+Le survey de \citet{2023-shuvo-efficient-acceleration-deep-learning-inference} rappelle,
+dans sa partie sur les conditions de test, qu'un processeur peut afficher une très faible
+consommation en omettant les accès à la mémoire externe, et qu'il faut séparer résultats
+simulés et mesurés \src{§IX-I}.
+
+\subsection{Des métriques qui flattent}
+
+\begin{itemize}
+  \item \textbf{Latence amortie} : un débit inverse présenté comme une latence
+    \citep[§IV-E]{2024-que-low-latency-variational-autoencoder-fpgas}.
+  \item \textbf{GOp/s par DSP} : cette métrique efface les écarts de précision (de W1A8 à
+    W32A32) et de carte
+    \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
+    Venieris et al. la jugeaient valable seulement dans une même famille de FPGA
+    \citep[§3.1]{2018-venieris-toolflows-mapping-convolutional-neural-networks}.
+  \item \textbf{GOPS/W dynamiques} face à des GOPS/W totaux
+    \citep[Table~8]{2023-zhai-fpga-vehicle-detection-tracking-accelerator}.
+  \item \textbf{GOPS projetés} sur un FPGA hypothétique, comparés à des GOPS mesurés
+    \citep[Tables~16--17]{2019-coutinho-deep-neural-network-hardware-implementation}.
+  \item \textbf{GOp/s seul}, sans FPS, pour un détecteur
+    \citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep}.
+  \item \textbf{Précisions non comparables} : IoU d'un seul objet (DAC-SDC), AP à une
+    classe (Zhai), \enquote{accuracy} sur 72 images (Al Amin), \enquote{accuracy} non
+    définie d'un débruiteur (arxiv-2301.07050\pp).
+\end{itemize}
+Shuvo et al. le formulent ainsi : \enquote{EI requires a universal and comprehensive set of
+quality metrics to execute meaningful comparisons of DL models, optimization algorithms,
+and hardware platforms} \src{§XIV-C}. La grille de Venieris et al. (débit, latence à
+batch~1, ressources, puissance, précision, mémoire) existe depuis 2018 ; aucune fiche du
+corpus ne la reprend en entier.
+
+\subsection{La précision n'est presque jamais remesurée sur la cible}
+
+Quantifier et compiler un réseau change sa précision, et la plupart des articles ne la
+remesurent pas sur la carte :
+\begin{itemize}
+  \item AP identique en FP32 et en INT16 à trois décimales
+    \citep[Table~8]{2023-zhai-fpga-vehicle-detection-tracking-accelerator} ;
+  \item quantification simulée par ONNX Runtime
+    \citep[§IV-A]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} ;
+  \item comparaison au C++ généré, pas au FPGA
+    \citep[§8]{arxiv-2101.05108-fast-convolutional-neural-networks-fpgas} ;
+  \item AUC mesurées en TensorFlow
+    \citep[§5]{2019-tsukada-neural-network-device-learning-anomaly} ;
+  \item seules des pertes relatives de mAP sont données
+    \citep[§6.2]{2019-ding-req-yolo-resource-aware-efficient}.
+\end{itemize}
+Quand la mesure sur cible est faite, elle révèle une perte :
+\begin{itemize}
+  \item 85,02\,\% sur FPGA contre 88,8\,\% sur CPU
+    \citep[§IV-B]{2022-malviya-edge-compatible-convolutional-autoencoder-implemented} ;
+  \item 93,38\,\% contre 93,4\,\%
+    \citep[§V-D1]{2019-coutinho-deep-neural-network-hardware-implementation}.
+\end{itemize}
+Hors FPGA, la conversion peut être catastrophique : OpenVINO fait tomber YOLOv3-tiny à 0\,\%
+de confiance moyenne sur NCS2
+\citep[Table~3]{2022-feng-benchmark-analysis-yolo-performance-edge}. La PTQ INT8 de
+TensorRT coûte de 6,4 à 12,3 points de mAP50-95
+\citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.
+
+\subsection{Baselines GPU embarqué faibles ou absentes}
+
+Quand un article FPGA se compare à un GPU embarqué, la baseline est ancienne ou
+sous-optimisée :
+\begin{itemize}
+  \item TX2 sans TensorRT mentionné
+    \citep[Table~2]{2019-ding-req-yolo-resource-aware-efficient} ;
+  \item TX2 de 2017, framework \nr{}
+    \citep[Table~IV]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} ;
+  \item Jetson Nano reprise d'un autre article, avec un autre modèle
+    \citep[Table~7]{2023-zhai-fpga-vehicle-detection-tracking-accelerator} ;
+  \item Jetson AGX Orin exécutée en PyTorch à batch~1
+    \citep[§VII-C]{arxiv-2604.21280-imagehd-energy-efficient-device-continual}.
+\end{itemize}
+Les deux protocoles équitables du corpus sont anciens : fpgaConvNet face au Tegra~X1
+(2017), à budget de puissance égal, et DAC-SDC (2018), mesuré par les organisateurs.
+Aucune source du corpus ne compare une FPGA embarquée à une Jetson Orin.
+
+\subsection{Reproductibilité}
+
+Sur les 33 fiches expérimentales, aucune ne publie explicitement de bitstream. Sept
+publient ou annoncent un code propre : Magalhães, FINN-R en partie, la branche hls4ml de
+l'AE du LHC, REQ-YOLO (probablement la partie entraînement), DAC-SDC (code des meilleures
+équipes), le streamer de FCMP et l'extension HAWQ de Campos. Réserve : la lecture se
+limite au texte extrait, et les liens en note de bas de page sont souvent perdus.

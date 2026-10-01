@@ -1,0 +1,44 @@
+% Section propre à la version complète : gaps entre plateformes (gaps.md, 8e passage)
+\subsection{Gaps entre plateformes}
+\label{sec:gaps-transverses}
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Gaps entre plateformes (repris de \texttt{gaps.md}, 8\textsuperscript{e} passage).}
+\label{tab:gaps-transverses}
+\begin{tabularx}{\textwidth}{@{}P{4.6cm}P{2.3cm}L@{}}
+\toprule
+Gap & Statut & Piste \\
+\midrule
+Pas de synthèse quantitative FPGA / Jetson / MCU à NPU, ni de synthèse sûreté ×
+  accélérateur FPGA de détection & étayé (16 surveys) & argument de positionnement pour
+  l'état de l'art d'un pré-projet \\
+Aucune passerelle MCU--FPGA pour la détection & hypothèse (8 fiches) & porter
+  TinyissimoYOLO, ou le LP-YOLO Slim w2a4 de
+  \citet{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp, sur petit FPGA et sur
+  MCU, et mesurer l'énergie par inférence à portée égale \\
+Aucune comparaison MCU / FPGA / Jetson pour un même algorithme d'apprentissage continu &
+  étayé (9 fiches) & porter SLDA ou QLR-CL (étage figé INT8) sur KV260, sur Orin et sur
+  GAP9, avec la même mesure de puissance \\
+Baseline Jetson Orin mesurée face à une FPGA dans les mêmes conditions & étayé (27 fiches) ;
+  partiellement comblé sur AGX Xavier
+  \citep{arxiv-2304.11580-framework-benchmarking-real-time-embedded} & même modèle, même
+  précision numérique, même méthode de puissance sur KV260 et Orin Nano \\
+Anomalie par AE hors FPGA & 2 lignes sur Xavier NX
+  \citep{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator}, aucune sur
+  MCU & baseline MCU pour
+  tout AE d'anomalie porté sur FPGA \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+La passerelle MCU--FPGA est un sujet à part entière. Côté MCU, les accélérateurs intégrés
+(MAX78000, GAP9, STM32N6) atteignent des énergies de l'ordre de la centaine de
+microjoules par inférence pour de très petits détecteurs
+\citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}. Côté FPGA,
+les détecteurs compressés du DAC-SDC ont des tailles comparables : 64\,Ko de poids pour
+SystemsETHZ \citep[§4.2]{2021-xu-dac-sdc-low-power-object}. Le premier détecteur dataflow
+de la base de taille proche d'un MCU est un YOLOv3-tiny allégé en w2a4 par FINN sur XC7Z020, à 2,91\,W au rail 12\,V
+\citep[§V-VI]{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp, mais il n'est pas
+porté sur MCU. Aucun travail du corpus ne mesure un même réseau sur les deux. Un MCU à NPU
+est pourtant le concurrent le plus direct d'un petit FPGA en détection à très basse consommation \deduit.

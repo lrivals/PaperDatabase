@@ -1,0 +1,63 @@
+% Section propre à la version complète : panorama des plateformes et des surveys
+\section{Plateformes de la vision embarquée}
+\label{sec:plateformes}
+
+\subsection{Quatre familles de cibles}
+
+Le corpus couvre quatre familles de plateformes, avec des outils et des métriques propres :
+\begin{itemize}
+  \item \textbf{SoC FPGA} (Zynq-7000, Zynq UltraScale+, Kria) : un accélérateur taillé pour
+    le réseau, en précision arbitraire. Outils : Vitis~AI (moteur unique, INT8) ou flots
+    dataflow (FINN, hls4ml, SATAY). Voir les sections~\ref{sec:architectures}
+    et~\ref{sec:toolflows}.
+  \item \textbf{GPU embarqués} (Jetson Nano, TX2, Xavier NX, Orin Nano et NX) : un
+    accélérateur généraliste. Outil : TensorRT, en FP32, FP16 ou INT8. Selon la table de
+    \citet[Table~4]{arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded},
+    une Jetson AGX Orin annonce 15 à 40\,W et 275\,TOPS (données constructeur).
+  \item \textbf{NPU et VPU} en coprocesseur : Intel NCS2 et Myriad~2 (OpenVINO),
+    Coral Edge TPU (INT8), Hailo-8 (HailoRT).
+  \item \textbf{Microcontrôleurs}, avec ou sans accélérateur (STM32, GAP9, MAX78000) : moins
+    de 1\,Mo de SRAM, un budget de quelques mW à quelques dizaines de mW.
+    \citet[Table~4]{2025-el-zeinaty-designing-object-detection-models-tinyml} en recensent
+    huit, dont quatre à accélérateur IA (STM32N6, GAP9, K210, MAX78000).
+\end{itemize}
+Les ordres de grandeur de puissance vont donc de quelques dizaines de milliwatts (VEGA :
+62\,mW, \citealp[§V-D]{arxiv-2110.10486-tinyml-platform-device-continual-learning}) à
+une quinzaine de watts (Jetson Orin NX : 10 à 14\,W de télémétrie,
+\citealp[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}).
+
+\subsection{Les surveys : l'embarqué sans FPGA, ou le FPGA sans comparaison}
+
+Les huit surveys du corpus se répartissent en deux groupes qui ne se recoupent pas.
+
+\paragraph{Surveys « embarqué ».}
+\begin{itemize}
+  \item \citet{arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded} couvrent
+    la conception manuelle, la NAS guidée par le matériel, la compression, l'apprentissage
+    sur l'appareil et les LLM. Leur matériel se limite aux Jetson, TPU et NPU, sans aucun
+    FPGA \src{Table~4}. Ils rappellent que les FLOPs ne prédisent pas la latence réelle
+    \src{§2.3} et que l'entraînement embarqué est limité par la mémoire des activations,
+    pas par les paramètres \src{§5.1}.
+  \item \citet{2023-shuvo-efficient-acceleration-deep-learning-inference} couvrent toute la
+    chaîne de l'inférence sur l'edge (Proc.\ IEEE). Le FPGA y occupe une sous-section
+    \src{§XI-C1}, et la comparaison entre plateformes reste qualitative.
+  \item \citet{2024-mittal-comprehensive-survey-deep-learning-lightweight} recense 26
+    détecteurs légers. Le FPGA n'a qu'un paragraphe \src{§4.3.3}, et les FPS des
+    Tables~5--6 ne sont associés à aucune plateforme, ce qui les rend inexploitables pour
+    une comparaison matérielle.
+  \item \citet{2025-el-zeinaty-designing-object-detection-models-tinyml} traitent la
+    détection sur MCU. Le FPGA n'y est évoqué qu'en passant \src{§6.1.3, §8}.
+\end{itemize}
+
+\paragraph{Surveys FPGA.}
+\citet{2025-hozhabr-survey-real-time-object-detection},
+\citet{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp{},
+\citet{arxiv-1806.01683-accelerating-cnn-inference-fpgas-survey}\pp{} et
+\citet{2018-venieris-toolflows-mapping-convolutional-neural-networks} ne comparent pas
+quantitativement les FPGA aux Jetson ou aux MCU. Hozhabr et Giorgi le font de façon
+qualitative \src{Table~5} ; les gains face au GPU qu'ils citent sont ceux des travaux
+d'origine, souvent obtenus contre des GPU de bureau.
+
+Aucun survey du corpus ne propose donc une synthèse quantitative FPGA / Jetson / MCU à NPU
+sur des critères communs. La section~\ref{sec:comparaison} en esquisse une à partir de
+\texttt{benchmarks.csv}, et montre pourquoi elle reste fragile.

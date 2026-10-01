@@ -1,0 +1,127 @@
+\documentclass[11pt,a4paper]{article}
+\input{preamble}
+
+\title{\textbf{Vision embarquée sur FPGA}\\[0.3em]
+  \large Vers une IA embarquée sûre et certifiable : état de l'art établi à partir du
+  corpus PaperDatabase}
+\author{Léonard Rivals}
+\date{1\textsuperscript{er} octobre 2026 --- brouillon}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ce document fait l'état de l'art de la vision par réseaux de neurones sur FPGA :
+accélérateurs CNN, toolflows, détection d'objets de type YOLO, autoencodeurs,
+apprentissage continu embarqué, et ce qu'il faudrait pour certifier un tel système. Il
+s'appuie sur les 101 fiches de lecture et les 216 mesures sur FPGA d'une base de 101
+articles, en donnant la source de chaque chiffre et la portée de chaque puissance. Il en
+ressort cinq constats. Les toolflows dataflow (FINN, hls4ml, fpgaConvNet, SATAY) sont
+matures pour de petits réseaux, mais bornés par la mémoire on-chip dès qu'on vise un
+détecteur ou un autoencodeur d'images sur une petite puce. La détection sur FPGA manque
+d'un protocole de mesure commun : ses 87 mesures emploient 15 métriques de précision
+différentes, 32 seulement portent une mAP COCO, et aucune ne réunit mAP standard, débit de
+bout en bout et puissance de carte mesurée ; aucune ne donne de pire cas de latence. Un
+seul article détecte des anomalies d'images par autoencodeur sur FPGA embarquée, sur des
+images hyperspectrales et avec un seuil réglé sur le test ; aucun ne le fait sur des
+images RGB réelles. L'apprentissage sur FPGA existe, rétropropagation comprise, mais il est
+lent, en flottant, d'énergie mal mesurée, et aucun ne porte sur la détection. Enfin, les
+travaux de sûreté (fiabilité, vérification, surveillance à l'exécution, guides de
+certification) et les accélérateurs de détection ne se rejoignent pas : les premiers
+portent sur de petits classifieurs, les seconds ignorent la sûreté, et les guides
+renvoient l'implémentation sur FPGA à plus tard. Le document termine sur les gaps et
+quatre questions de thèse candidates.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+Un FPGA embarqué, par exemple un SoC Zynq ou un module Kria, associe des processeurs ARM à
+une logique programmable. On peut y implanter un accélérateur taillé pour un réseau donné,
+avec la précision numérique de son choix. Les promesses sont connues : une latence
+déterministe, une bonne efficacité énergétique et une précision arbitraire. Les
+contraintes aussi : peu de mémoire on-chip, des outils de conception lourds et une chaîne
+de compilation qui peut dégrader le modèle.
+
+Le cas d'application visé est un YOLO embarqué de vidéosurveillance, qui détecte et
+identifie des personnes dans une zone industrielle dangereuse. Un tel système doit être
+rapide et sobre, mais aussi \emph{sûr} : il faut pouvoir montrer qu'il détecte les
+personnes avec un taux de défaillance acceptable, et que cette preuve vaut pour le circuit
+qui tourne sur la carte. Ce document répond à quatre questions, à partir du corpus
+seulement :
+\begin{itemize}
+  \item quelles architectures et quels outils permettent aujourd'hui de porter un réseau de
+    vision sur FPGA, et avec quelles limites (sections~\ref{sec:architectures}
+    et~\ref{sec:toolflows}) ?
+  \item où en sont les trois applications visées par la thèse : la détection YOLO, les
+    autoencodeurs et l'apprentissage continu (sections~\ref{sec:detection}
+    à~\ref{sec:cl-fpga}) ?
+  \item que sait-on garantir d'un tel système : fiabilité face aux fautes matérielles,
+    vérification, surveillance à l'exécution, cadres de certification
+    (section~\ref{sec:surete}) ?
+  \item que peut-on conclure des chiffres publiés, et que reste-t-il à faire
+    (sections~\ref{sec:critique} et~\ref{sec:gaps}) ?
+\end{itemize}
+Les Jetson, MCU et NPU n'apparaissent ici que comme baselines. Une version élargie à toute
+la vision embarquée, qui les traite pour eux-mêmes, existe à part.
+
+\input{sec-methode}
+\input{sec-architectures}
+\input{sec-toolflows}
+\input{sec-detection-fpga}
+\input{sec-autoencodeurs}
+\input{sec-cl-fpga}
+\input{sec-surete-certification}
+\input{sec-critique}
+\input{sec-gaps-fpga}
+
+\section{Conclusion}
+
+Sur FPGA, la vision embarquée dispose d'une méthode de dimensionnement éprouvée
+(roofline, tuilage des boucles), d'outils ouverts pour les réseaux quantifiés (FINN,
+hls4ml) et, depuis SATAY, d'un toolflow streaming pour YOLO. Le corpus montre pourtant un
+écart persistant entre ce que les outils démontrent et ce qu'exige une application de
+vision sûre sur une petite carte :
+\begin{itemize}
+  \item les démonstrations portent sur de petits réseaux ou de grosses puces ;
+  \item les réseaux profonds butent sur la mémoire on-chip ;
+  \item les mesures de puissance et de précision sur la cible sont rares, et aucune ne
+    donne de pire cas de latence ;
+  \item l'anomalie visuelle par autoencodeur n'est traitée que sur un cas hyperspectral, et
+    aucun article n'adapte en ligne un détecteur ;
+  \item aucun détecteur sur FPGA n'a été soumis à une injection de fautes, à une
+    vérification ou à un moniteur d'exécution, et aucun cadre du corpus ne relie ces
+    garanties aux normes de sécurité industrielles (section~\ref{sec:surete}).
+\end{itemize}
+Ces manques sont autant de sujets possibles : ils combinent une contribution
+d'architecture (tenir sur KV260), une contribution méthodologique (mesurer correctement)
+et une contribution de sûreté (prouver que le circuit déployé fait ce que fait le modèle).
+
+\paragraph{Pistes concrètes.}
+\begin{enumerate}
+  \item \textbf{Expérience à reproduire} : le cadre de
+    \citet[§4.1, Table~1]{arxiv-2304.11580-framework-benchmarking-real-time-embedded}
+    (mAP COCO mesurée sur la carte, puissance de carte, repos déduit), transposé à un
+    YOLOv8n sur KV260 par Vitis~AI et par FINN, face à une Jetson Orin Nano. Il faudrait y
+    ajouter la puissance de puce et une distribution de latence (p99, max) sur un grand
+    nombre d'images.
+  \item \textbf{Sûreté} : sur le YOLOv3-tiny w2a4 de
+    \citet{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp, comparer bit à bit les
+    sorties du modèle QONNX et du bitstream, puis appliquer la méthode d'injection et de
+    criticité par couche de
+    \citet{2019-libano-selective-hardening-neural-networks-fpgas}, BRAM comprises.
+  \item \textbf{Gap à creuser} : un autoencodeur convolutif d'anomalie visuelle sur MVTec AD
+    et KV260, en reprenant la chaîne de
+    \citet{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator} avec un seuil
+    fixé hors du test ; le même score servirait de moniteur hors distribution pour le
+    détecteur \deduit.
+  \item \textbf{Lectures à ajouter} : ISO/IEC TR~5469 (ou une présentation publique), des
+    travaux de sécurité machine avec apprentissage, et des jeux de détection de personnes
+    avec EPI ; aucun n'est dans la base.
+\end{enumerate}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}

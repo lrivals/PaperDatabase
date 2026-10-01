@@ -1,0 +1,115 @@
+\documentclass[11pt,a4paper]{article}
+\input{preamble}
+\completetrue
+
+\title{\textbf{Vision embarquée par réseaux de neurones}\\[0.3em]
+  \large FPGA, GPU embarqués, NPU et microcontrôleurs\\
+  État de l'art établi à partir du corpus PaperDatabase}
+\author{Léonard Rivals}
+\date{26 septembre 2026 --- brouillon}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ce document fait l'état de l'art de la vision embarquée par réseaux de neurones sur quatre
+familles de plateformes : SoC FPGA, GPU embarqués (Jetson), NPU et VPU en coprocesseur, et
+microcontrôleurs. Il couvre la détection d'objets, les autoencodeurs et l'apprentissage
+continu. Ses sections thématiques s'appuient sur les 41 fiches de lecture et les 172
+lignes de mesures d'une base de 45 articles (26 septembre 2026) ; ses gaps, sur les 101
+fiches et 299 lignes de la base du 1\textsuperscript{er} octobre 2026. Chaque chiffre
+porte sa source et chaque puissance sa portée.
+Il en ressort trois constats :
+\begin{itemize}
+  \item chaque famille de plateformes a ses outils et ses métriques, et les surveys du
+    corpus traitent soit l'embarqué sans FPGA, soit le FPGA sans comparaison chiffrée ;
+  \item les rares comparaisons à tâche égale ne montrent pas d'avantage énergétique net du
+    FPGA sur un GPU embarqué, et les protocoles équitables datent de 2017--2018 ;
+  \item la précision est rarement remesurée sur la cible, alors que la quantification et
+    la compilation la dégradent (de 6 à 12 points de mAP50-95 en INT8 sur Jetson, et une
+    chute à zéro après conversion OpenVINO dans un cas).
+\end{itemize}
+Les zones non couvertes (anomalie visuelle par autoencodeur sur FPGA, passerelle
+MCU--FPGA, apprentissage continu en détection) sont rassemblées en fin de document.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+La vision embarquée demande d'exécuter un réseau de neurones au plus près du capteur, sous
+des contraintes de latence, de puissance et de mémoire. Plusieurs familles de plateformes
+répondent à ce besoin :
+\begin{itemize}
+  \item le GPU embarqué, programmable et outillé (TensorRT) ;
+  \item le NPU ou le VPU en coprocesseur, qui accélère des modèles INT8 ;
+  \item le microcontrôleur, éventuellement doté d'un accélérateur, pour les budgets de
+    quelques milliwatts ;
+  \item le SoC FPGA, qui permet un accélérateur taillé pour le réseau, au prix d'une chaîne
+    de conception plus lourde.
+\end{itemize}
+
+Ce document répond à trois questions, à partir du corpus seulement :
+\begin{itemize}
+  \item quelles plateformes et quels outils existent, et que disent les surveys
+    (section~\ref{sec:plateformes}) ?
+  \item où en sont la détection d'objets, les autoencodeurs et l'apprentissage continu sur
+    chacune (sections~\ref{sec:architectures} à~\ref{sec:cl-mcu}) ?
+  \item que permettent de conclure les chiffres publiés, et que reste-t-il à faire
+    (sections~\ref{sec:comparaison}, \ref{sec:critique} et~\ref{sec:gaps}) ?
+\end{itemize}
+Le corpus a été constitué pour une thèse sur la vision embarquée sur FPGA : le FPGA y est
+donc surreprésenté (101 lignes de mesures sur 172). Une version centrée sur le FPGA existe
+à part.
+
+\input{sec-methode}
+\input{sec-plateformes}
+\input{sec-architectures}
+\input{sec-toolflows}
+\input{sec-detection-fpga}
+\input{sec-detection-autres}
+\input{sec-comparaison}
+\input{sec-autoencodeurs}
+\input{sec-cl-fpga}
+\input{sec-cl-mcu}
+\input{sec-critique}
+\input{sec-gaps-fpga}
+\input{sec-gaps-transverses}
+
+\section{Conclusion}
+
+Chaque famille de plateformes occupe une niche :
+\begin{itemize}
+  \item le MCU à accélérateur pour les très petits modèles, à quelques centaines de
+    microjoules par inférence ;
+  \item le GPU embarqué pour la facilité de déploiement, à quelques dizaines de FPS pour
+    7 à 15\,W de télémétrie ;
+  \item le FPGA pour la latence déterministe et la précision arbitraire.
+\end{itemize}
+Le corpus ne permet pas de les départager sur un même réseau : les mesures ne partagent ni
+le modèle, ni la précision numérique, ni la méthode de puissance, et la précision est
+rarement vérifiée sur la cible. Cette absence de comparaison propre est elle-même un
+résultat, et une opportunité de recherche.
+
+\paragraph{Pistes concrètes.}
+\begin{enumerate}
+  \item \textbf{Lire en priorité} les quatre articles de la base sans fiche. Le survey
+    d'anomalie visuelle de \citet{2023-cui-survey-unsupervised-anomaly-detection-algorithms}
+    oriente l'axe autoencodeurs ; \citet{arxiv-2206.15472-device-training-256kb-memory}\pp{}
+    et \citet{arxiv-2409.07114-continual-incremental-learning-tinyml-device} complètent
+    l'apprentissage embarqué sur MCU.
+  \item \textbf{Expérience à reproduire} : le protocole
+    d'\citet{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp{} (mAP COCO
+    val, service à une requête, repos soustrait), étendu à une KV260 par Vitis~AI et à un
+    MCU à NPU, avec en plus la télémétrie de la puce et la précision numérique déclarée.
+  \item \textbf{Gap à creuser} : la passerelle MCU--FPGA pour la détection. Porter
+    TinyissimoYOLO
+    \citep{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint} sur petit FPGA
+    (FINN ou hls4ml) et mesurer l'énergie par inférence en portée puce, comme sur le
+    MAX78000.
+\end{enumerate}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}

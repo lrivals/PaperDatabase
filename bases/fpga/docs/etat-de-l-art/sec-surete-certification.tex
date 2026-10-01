@@ -1,0 +1,340 @@
+% Section : sûreté, fiabilité et certification (axe safety-certification + détection de personnes)
+\section{Sûreté, fiabilité et certification}
+\label{sec:surete}
+
+Les sections précédentes jugent un accélérateur à son débit, à sa puissance et à sa
+précision. Pour un YOLO qui surveille des personnes dans une zone industrielle dangereuse,
+la question change : il ne suffit plus de dire combien d'images par seconde le système
+traite, il faut dire quelle preuve on peut fournir qu'il détecte les personnes avec un taux
+de défaillance acceptable, et que cette preuve vaut pour le réseau quantifié et compilé qui
+tourne sur la carte. \enquote{Sécuritaire} s'entend ici d'abord au sens de la sûreté de
+fonctionnement (\emph{safety}) ; la sécurité face aux attaques (\emph{security}) est un
+volet secondaire. Le corpus compte 29 fiches sur cet axe. Trois seulement mesurent quelque
+chose sur un FPGA, et aucune ne porte sur un détecteur d'objets.
+
+\subsection{Cadres de certification et guides d'assurance}
+
+\paragraph{L'EASA : learning assurance et cycle en W.} Le rapport CoDANN
+\citep{2020-easa-concepts-design-assurance-neural-networks} pose le vocabulaire repris
+ensuite : un cycle de vie en W qui ajoute au cycle en V la gestion des données, de
+l'apprentissage et la vérification du modèle d'inférence \src{§6.1}, la séparation entre
+fonction et moniteur (\emph{Doer/Checker}) avec un discriminateur hors distribution
+\src{§6.6}, et l'allocation d'objectifs quantitatifs de $10^{-7}$ et $10^{-9}$ par heure de
+vol \src{§9.2.5, Fig.~9.3}. Deux limites comptent pour la thèse. Les bornes de
+généralisation théoriques sont jugées inutilisables pour de gros réseaux, si bien que les
+garanties reposent sur un échantillonnage i.i.d.\ du domaine opérationnel, lui-même
+difficile à démontrer \src{§5.3.5, §6.2.8}. Le matériel est hors périmètre : la conformité
+DO-254 des GPU, ASIC et FPGA \enquote{will not be addressed} \src{§4.2.3}, et la
+vérification de l'étape d'implémentation est laissée à un travail futur \src{§6.5}.
+
+CoDANN~II \citep{2024-easa-concepts-design-assurance-neural-networks} traite justement le
+passage du modèle entraîné au modèle déployé. Il distingue équivalence ponctuelle,
+proximité ponctuelle et équivalence en moyenne entre les deux \src{§3.6.1}, et propose
+d'évaluer la borne de généralisation directement sur le modèle transformé (quantifié,
+élagué) dans l'environnement d'inférence \src{§3.7.3}, avec qualification des outils selon
+DO-178C §12.2 \src{§3.7.1}. Il exige que le moniteur hors distribution reçoive le même
+niveau d'assurance que la fonction principale \src{§5.2.2}. Il argumente enfin pour le FPGA
+contre le GPU : logique personnalisée ou Soft IP plus visibles, alors que le GPU repose sur
+des pilotes, un microcode et un ordonnancement propriétaires \src{§3.2.2, Annexe~B}. Cet
+argument est une position d'entreprise (Daedalean), non étayée par des mesures ; les
+sections sur la sûreté du système et les DAL sont retirées de la version publique.
+
+Le concept paper Issue~02 \citep{2024-easa-concept-paper-guidance-level-1} est le
+document d'autorité le plus concret du corpus, mais il reste non contraignant (moyens de
+conformité \enquote{anticipated}). Quatre points touchent directement le sujet :
+\begin{itemize}
+  \item l'apprentissage en ligne n'est pas accepté : le modèle est gelé à l'approbation
+    \src{§C.1, MOC LM-02} ;
+  \item les FPGA et ASIC relèvent des guides existants (AMC 20-152A), alors que les GPU et
+    autres accélérateurs d'IA demanderont des guides propres \src{MOC IMP-05} ;
+  \item la quantification qui change le comportement doit être traitée dans l'apprentissage
+    \src{LM-06} ; en implémentation, seules les optimisations sans effet sur le
+    comportement sont admises \src{MOC IMP-04-2}, et la préservation des propriétés après
+    conversion doit être vérifiée, méthodes formelles \enquote{expected to be necessary}
+    \src{IMP-06} ;
+  \item le système surveille que ses entrées restent dans l'ODD et en distribution, et que
+    ses sorties respectent des bornes de performance et de confiance \src{EXP-04 à EXP-07},
+    avec repli sur un système classique \src{SRM-02}.
+\end{itemize}
+Le seul cas d'usage en vision (Visual Landing System) tourne sur un GPU COTS non certifié
+\src{§F.2.1.3.3}, et le document ne dit rien de l'équivalence numérique entre modèle
+entraîné et bitstream, ni des SEU.
+
+\paragraph{Guides académiques.} AMLAS
+\citep{arxiv-2102.01564-guidance-assurance-machine-learning-autonomous}\pp{} propose six
+étapes (périmètre, exigences, données, apprentissage, vérification, déploiement), chacune
+close par un patron d'argument en GSN. Ses exemples sont proches du cas d'application,
+comme l'exigence \enquote{identifier toute personne présente avec une précision d'au moins
+0,93} \src{Stage~2, Ex.~7}. Le matériel n'y apparaît qu'à l'intégration, pour vérifier que la
+plateforme cible convient au modèle \src{Stage~6, Ex.~45}.
+\citet{arxiv-1905.04223-assuring-machine-learning-lifecycle-desiderata}\pp{} structurent le
+cycle de vie en quatre étapes et listent les desiderata de chacune ; ils incluent la surveillance des internes du modèle contre les SEU \src{§7.2.2} et le test sur
+la cible, parce que la représentation numérique change entre étapes \src{§7.4.1}. Le livre
+blanc du projet DEEL \citep{arxiv-2103.10529-white-paper-machine-learning-certified}\pp{}
+formule sept défis (évaluation probabiliste, résilience, spécifiabilité, données,
+explicabilité, robustesse, vérifiabilité) \src{§4}. Deux idées y sont directement
+transposables : une perte asymétrique où la non-détection d'un piéton est catastrophique et
+la fausse détection seulement \enquote{major} \src{§4.2.4.2}, et la conversion d'un taux
+d'erreur par image en taux de défaillance par heure \src{§4.2.4.4}. L'implémentation est
+hors périmètre \src{§1.3}. Les surveys de
+\citet{2020-schwalbe-survey-methods-safety-assurance-machine},
+\citet{arxiv-1709.02435-analysis-iso-26262-machine-learning}\pp{} et
+\citet{arxiv-1812.08342-survey-safety-trustworthiness-deep-neural}\pp{} partent tous
+d'ISO~26262 ou de l'automobile. Le deuxième note qu'une fonction de perception comme
+\enquote{reconnaître un piéton} est peut-être inspécifiable, et recommande pour les ASIL
+élevés des reconnaisseurs redondants entraînés sur des modèles et des données différents
+\src{§III-C}.
+
+\paragraph{Un processus appliqué à un YOLO de surveillance.}
+\citet{arxiv-2406.12362-certified-ml-object-detection-surveillance} appliquent en partie le
+processus ARP6983/ED-324, encore en rédaction, à la détection de drones intrus par
+YOLOv3-tiny sur Jetson AGX Xavier. Ils dérivent un ODD du constituant ML (taille des
+objets, position, luminosité) \src{§II}, corrigent le biais de position du jeu de données
+\src{§III}, découpent l'image 1920$\times$1080 en tuiles \src{Table~I} et réécrivent le
+GEMM en CUDA pour éviter cuBLAS, fermé et difficile à analyser \src{§V}. Les exigences
+citées sont une détection supérieure à 80\,\% et une latence inférieure à 50\,ms
+\src{§I-A} ; la latence obtenue est de 15\,ms en FP16, sans dire si elle porte sur une tuile
+ou sur l'image \src{§V-B}. Aucune métrique de détection n'est publiée (confidentialité,
+§I-A), et la traçabilité s'arrête aux pilotes NVIDIA \src{§VI}. C'est le travail du corpus
+le plus proche du cas d'application, mais sans FPGA.
+
+\paragraph{Normes industrielles : citées, pas traitées.} Aucune fiche ne traite l'IEC 61508,
+l'ISO 13849, l'IEC 62061 ou l'ISO/IEC TR~5469 pour elles-mêmes. L'IEC 61508 n'apparaît que
+comme contexte \citep[§1, §2.3]{2017-li-understanding-error-propagation-deep-learning},
+avec la cible de moins de 10~FIT tirée d'ISO~26262, reprise pour l'ASIL~D par
+\citet[§III-C]{2024-rech-artificial-neural-networks-space-safety}. La revue de
+\citet{2018-halme-review-vision-safety-systems-human} s'appuie sur l'ISO 10218-1/2 et
+l'ISO/TS 15066 \src{§2} ; sur 15 méthodes de vision pour la collaboration humain-robot,
+seul SafetyEYE est commercial et certifié \src{Table~1}. Les correspondances entre les
+objectifs EASA ou AMLAS et les niveaux SIL ou PL ne figurent que dans les gaps rédigés par
+les fiches \deduit.
+
+\subsection{Fiabilité matérielle : SEU, radiations, injection de fautes}
+
+\citet{2017-li-understanding-error-propagation-deep-learning} caractérisent par simulation
+(pas de RTL, pas de faisceau) la propagation de bit-flips transitoires dans un accélérateur
+de DNN. Le taux de corruptions silencieuses dépend fortement du type de données : 7,19\,\%
+en virgule fixe 32b\_rb10 contre 0,38\,\% en FLOAT pour AlexNet \src{§5.1.1}, et seuls les
+bits de poids fort comptent \src{§5.1.2}. Un détecteur fondé sur des bornes d'activation par
+couche (SED) atteint 90,21\,\% de précision et 92,5\,\% de rappel \src{§6.2} (l'introduction
+donne d'autres chiffres, §1) et ramène le FIT d'Eyeriss de 8,55 à 0,35 en FLOAT
+\src{§6.2}. Il est aveugle aux corruptions qui restent dans la plage apprise.
+
+Les deux articles de Libano et al. sont les seuls du corpus à étudier les SEU de la mémoire
+de configuration d'un FPGA SRAM.
+\citet{2019-libano-selective-hardening-neural-networks-fpgas} isolent chaque couche dans un
+Pblock, injectent des fautes dans la mémoire de configuration et valident sous neutrons
+(LANSCE, ChipIR) \src{§III}. Sur un ANN de 19 poids (XC7Z020), le TMR de la seule couche la
+plus vulnérable réduit la probabilité d'erreur de 64,2\,\%, contre 85,1\,\% pour le TMR
+complet \src{§V-C, Fig.~7}. Sur un CNN MNIST de 1\,848 poids (ZU9EG), il masque environ
+40\,\% des fautes pour 8\,\% de ressources en plus ; le TMR complet ne tient pas dans la
+puce \src{§V-C}. Les BRAM, où résident souvent les poids, sont exclues de l'injection
+\src{§III-A}. \citet{2020-libano-understanding-impact-quantization-accuracy-radiation}
+binarisent les couches convolutives du même type de réseau : la section efficace estimée
+baisse de 39\,\%, mais la part d'erreurs critiques passe de 26 à 38\,\% \src{§IV-B}. Leur
+indicateur MEBF, qui combine inexactitude du modèle et radiations, montre qu'au niveau de la
+mer l'inexactitude domine \src{§IV-B, Fig.~5} ; les auteurs notent eux-mêmes que ce
+résultat, obtenu pour une inférence de 233\,ns, ne se transpose pas tel quel à un détecteur
+\src{§V}.
+
+\citet{arxiv-1912.07394-efficient-error-tolerant-quantized-neural} injectent des fautes
+\enquote{stuck-at} par canal dans des QNN FINN sur ZCU104. Sur CNV (CIFAR-10), un seul
+canal bloqué coûte jusqu'à environ 10,8~points de précision \src{Table~II}. Répliquer
+seulement les canaux critiques coûte 49,87\,\% de MAC en plus pour une chute tolérée de
+2\,\%, et 173,47\,\% pour 0,5\,\%, contre 200\,\% pour le TMR complet \src{Table~III}. Les
+SEU de configuration sont renvoyés à un travail futur \src{§VII}. FT-ClipAct
+\citep{arxiv-1912.00941-ft-clipact-resilience-analysis-deep}\pp{} remplace ReLU par une
+activation écrêtée à un seuil appris : à un taux de fautes de $5\times10^{-7}$ dans les
+poids, AlexNet garde 69,36\,\% de précision contre 51,16\,\% sans protection \src{§V-B,
+Fig.~7a}, en simulation PyTorch seulement.
+
+Deux surveys cadrent ces travaux. \citet{2023-ruospo-survey-deep-learning-resilience-assessment}
+classent l'évaluation en quatre familles (simulation logicielle, simulation matérielle,
+plateforme, radiation) \src{Table~1} ; la simulation RTL d'un petit CNN demande environ
+25\,min par inférence \src{Discussion}, et les résultats d'injection dans la mémoire de
+configuration varient d'un composant à l'autre et avec la température \src{Open
+challenges}. \citet{2024-rech-artificial-neural-networks-space-safety} rassemble les
+résultats sous faisceau, surtout sur GPU. Il définit une erreur critique en détection par
+un seuil de Jaccard sur les boîtes \src{§II-C} et recense des mitigations peu coûteuses :
+ABFT jusqu'à 85\,\% des erreurs critiques détectées, cohérence temporelle entre images
+environ 70\,\% \src{§VI-A}, RP-DWC 75\,\% pour moins de 20\,\% de surcoût \src{§VI-B}. Ces
+chiffres viennent d'autres travaux et ne sont pas comparables entre eux.
+
+Toutes les mesures portent sur des classifieurs, de 19 poids à VGG-16. Hormis le seuil de
+Jaccard de Rech, la criticité d'une erreur de détecteur (personne manquée contre fausse
+alarme) n'est pas définie, et le passage d'un FIT mesuré à un objectif SIL ou PL n'est
+traité nulle part \deduit.
+
+\subsection{Vérification formelle}
+
+Reluplex \citep{arxiv-1702.01135-reluplex-efficient-smt-solver-verifying}\pp{} étend le
+simplexe aux contraintes ReLU. Sur les 45 réseaux ACAS~Xu de 300 ReLU, qui remplacent une
+table de plus de 2\,Go par moins de 3\,Mo \src{§5}, la propriété $\varphi_1$ est prouvée sur
+41 réseaux en 394\,517\,s au total, avec 4 timeouts \src{Table~2}, et $\varphi_8$ révèle un
+contre-exemple. Le solveur travaille en flottant et ne garantit pas la correction
+\src{§4} : il vérifie le modèle idéalisé, pas le réseau déployé \deduit.
+\citet{arxiv-1709.06662-verifying-properties-binarized-deep-neural}\pp{} encodent
+exactement un BNN en SAT, ce qui permet aussi de vérifier l'équivalence de deux réseaux
+\src{§5}. Sur un réseau dense de cinq blocs, avec un timeout de 300\,s, la robustesse à
+$\epsilon = 3$ n'est certifiée que pour au plus 21 des 200 images de MNIST-back-image
+\src{Table~2}. \citet{arxiv-2012.08185-scalable-verification-quantized-neural-networks}
+vérifient bit à bit des réseaux en virgule fixe ; ils montrent que le problème est
+PSPACE-difficile avec une spécification bit-vector \src{Théorème~1}, et annoncent un gain
+allant jusqu'à trois ordres de grandeur sur les outils existants \src{Abstract}, sur un
+réseau dense de 52\,650 paramètres. Leurs tableaux de résultats sont mal extraits ; la
+fiche ne garantit pas les chiffres cellule par cellule.
+
+L'écart d'échelle est de plusieurs ordres de grandeur : le survey de
+\citet[§4.2, §4.3]{arxiv-1812.08342-survey-safety-trustworthiness-deep-neural}\pp{} situe
+les méthodes à bornes approchées à quelques milliers, au plus 10\,000, neurones cachés, et
+le concept paper EASA juge les méthodes formelles limitées à des évaluations locales
+\citep[§C.3.1.6]{2024-easa-concept-paper-guidance-level-1}. Prouver une propriété d'un YOLO
+complet n'est pas à portée. Deux usages restent plausibles \deduit : vérifier des
+sous-composants (une tête, un moniteur binaire), et vérifier l'équivalence entre le réseau
+quantifié de référence et ce que calcule le circuit, ce qu'aucun article du corpus ne fait.
+
+\subsection{Surveillance à l'exécution et incertitude}
+
+Les moniteurs du corpus sont presque tous évalués sur des classifieurs :
+\begin{itemize}
+  \item la probabilité softmax maximale (MSP)
+    \citep{arxiv-1610.02136-baseline-detecting-misclassified-out-distribution} sépare
+    CIFAR-10 de SUN avec une AUROC de 95 \src{Table~2}, mais tombe à 61 sur une tâche de NLP
+    presque dans la distribution \src{Table~8} ;
+  \item les patrons d'activation on/off stockés dans un BDD
+    \citep{arxiv-1809.06573-runtime-monitoring-neuron-activation-patterns}\pp{} : sur
+    GTSRB, à $\gamma = 3$, le moniteur se tait 95,42\,\% du temps et, quand il alerte,
+    l'image est mal classée dans 54,54\,\% des cas \src{Table~I} ; les BDD limitent
+    pratiquement la couche surveillée à environ 200 neurones \src{§II} ;
+  \item les boîtes d'abstraction sur les couches cachées
+    \citep{arxiv-1911.09032-outside-box-abstraction-monitoring-neural} : une entrée
+    d'entraînement n'est jamais rejetée \src{Prop.~1}, la mémoire ne dépend pas de la taille
+    du jeu \src{§4.3} et le test prend moins d'une milliseconde par entrée sur un portable
+    \src{§5} ;
+  \item SafeML \citep{arxiv-2005.13166-safeml-safety-monitoring-machine-learning}\pp{}
+    compare des distributions empiriques sur un tampon d'échantillons ; sur un cas jouet,
+    il estime une exactitude minimale de 0,772 là où la vraie vaut 0,508 \src{Table~1},
+    c'est-à-dire qu'il se trompe dans le sens dangereux.
+\end{itemize}
+
+Trois travaux portent sur la détection d'objets. Gaussian YOLOv3
+\citep{arxiv-1904.04620-gaussian-yolov3-accurate-fast-object}\pp{} prédit une variance par
+coordonnée de boîte pour 0,04\,\% de FLOPs en plus \src{§3.1} et réduit les faux positifs
+de 41,40\,\% sur KITTI au seuil 0,5 \src{Table~4} ; c'est une incertitude aléatoire de
+localisation, sans calibration ni OOD, mesurée sur GTX~1080~Ti.
+\citet{arxiv-2011.10671-review-comparative-probabilistic-object-detection} comparent les
+méthodes d'incertitude sur RetinaNet : la mAP ne mesure pas la qualité de l'incertitude, la
+modélisation directe de la variance est essentielle, et MC-Dropout ou les ensembles
+n'apportent pas assez pour leur coût (2 à 3~FPS pour 10 passes de MC-Dropout) \src{§IV-D,
+§V-A}. Sous décalage de domaine (Lyft), la mAP s'effondre vers 5 à 6 pour toutes les
+variantes \src{Table~IV, corps possiblement décalé à l'extraction}. Enfin,
+\citet{arxiv-2304.06052-confident-object-detection-conformal-prediction}\pp{} appliquent la
+prédiction conforme à YOLOv5m, DETR et DiffusionDet sur 3\,414 images de signaux
+ferroviaires : la couverture empirique des boîtes va de 0,92 à 1,00 pour une cible de 0,9
+\src{Table~4}. La garantie ne porte que sur les vrais positifs \src{§4.1} : une personne
+manquée n'est pas couverte, et l'hypothèse d'échangeabilité ne tient pas sur une longue
+durée \src{§6}.
+
+Aucun de ces moniteurs n'est implanté sur FPGA, ni évalué sur des personnes en milieu
+industriel. Plusieurs se réduisent à des comparaisons ou à des additions (seuil sur la MSP,
+test d'appartenance à une boîte, marge conforme), ce qui les rend a priori peu coûteux en
+logique \deduit ; leur coût réel et leur effet sur un réseau INT8 restent à mesurer.
+
+\subsection{Logiciel prédictible et traçabilité de l'implémentation}
+
+ACETONE \citep{2022-de-albuquerque-silva-acetone-predictable-programming-framework-ml}
+génère du C séquentiel, à allocation statique, depuis un réseau entraîné, pour la
+traçabilité et le calcul de WCET exigés par DO-178C \src{§1, §3}. L'écart numérique au
+modèle est de l'ordre de $10^{-6}$ en FP32 \src{§5}, mais la préservation de la sémantique
+est testée, pas prouvée. Le WCET est calculé par OTAWA sur un lpc2138, non représentatif du
+Cortex-A15 mesuré \src{§4.2}, et l'analyse échoue faute de mémoire pour AlexNet et la
+variante déroulée \src{§5}. Rien d'équivalent n'existe dans le corpus pour un flot HLS ou
+RTL \deduit.
+
+Côté FPGA, les accélérateurs YOLO du corpus ne traitent pas la sûreté. Sur KV260,
+\citet{2026-fata-low-cost-fpga-enhanced-cnn} renvoient la tolérance aux fautes à un travail
+futur \src{§VI}, et leur latence varie selon la vidéo \src{Fig.~14}. Sur ZCU104,
+\citet{arxiv-2607.13106-no-attention-no-problem-dpu}\pp{} détectent des personnes sur un jeu
+CCTV non publié ; la mAP@0.5:0.95 passe de 0,75 sur CPU à 0,71 sur le FPGA en INT8 pour
+YOLOv11n, et de 0,64 à 0,34 pour YOLOv8n sur KITTI \src{Table~II}. Un tel écart, imprévisible
+d'un modèle à l'autre, est exactement ce que l'objectif IMP-06 demanderait de borner
+\deduit. Le constat rejoint celui de la section~\ref{sec:critique} : la précision n'est
+presque jamais remesurée sur la cible.
+
+\subsection{Détection de personnes et robustesse}
+
+La revue de \citet{2018-halme-review-vision-safety-systems-human} donne le cadre fonctionnel
+du cas d'application (arrêt de sécurité, surveillance de vitesse et de distance de
+séparation) et ses difficultés : occultations, sensibilité des caméras 2D à la lumière et à
+la poussière, latences de perception non traitées \src{§4}. Elle n'évalue aucun détecteur de
+personnes appris. CrowdHuman \citep{arxiv-1805.00123-crowdhuman-benchmark-detecting-human-crowd}\pp{}
+mesure la difficulté de l'occultation : 22,64 personnes par image en moyenne \src{Table~2},
+et un FPN atteint un taux d'échec moyen (mMR) de 50,42 sur le corps entier contre 10,08 sur
+Caltech \src{Table~7}. Ce sont des images du web, sans scène industrielle ni EPI. Le survey
+de ré-identification \citep{arxiv-2001.04193-deep-learning-person-re-identification}\pp{}
+note une forte chute des performances entre jeux de données et sous attaque adverse
+\src{§2.4.2}, sans aucune mesure embarquée. Pour la sécurité,
+\citet{arxiv-1904.08653-fooling-automated-surveillance-cameras-adversarial}\pp{} montrent
+qu'un patch imprimé fait tomber le rappel de YOLOv2 sur Inria de 100 à 26,46\,\%
+\src{Table~1} ; le 100\,\% vient de ce que les vérités terrain sont produites par le même
+détecteur \src{§4}. L'effet de la quantification et de la compilation FPGA sur cette
+vulnérabilité n'est pas étudié.
+
+\subsection{Bilan}
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Familles de garanties dans le corpus : cible matérielle, modèle étudié et limite
+principale pour un YOLO certifiable sur FPGA.}
+\label{tab:surete}
+\begin{tabularx}{\textwidth}{@{}P{2.5cm}P{3cm}P{2.2cm}P{2.3cm}L@{}}
+\toprule
+Famille & Travaux & Cible & Modèle & Limite principale \\
+\midrule
+Cadres et guides & EASA\,\textsuperscript{a}, AMLAS, DEEL, Ashmore & aucune & générique & matériel hors périmètre ou renvoyé à AMC 20-152A ; aviation ou automobile \\
+Processus appliqué & ARP6983\,\textsuperscript{b} & Jetson AGX Xavier & YOLOv3-tiny & pas de FPGA ; aucune métrique de détection publiée \\
+Injection de fautes, radiations & Li, Libano\,\textsuperscript{c}, Gambardella & simulateur ; Zynq, ZU9EG, ZCU104 & classifieurs (19 poids à NiN) & aucun détecteur ; pas de lien FIT--SIL \\
+Mitigation logicielle & FT-ClipAct, Rech\,\textsuperscript{d} & simulation ; GPU surtout & classifieurs & transfert vers FPGA quantifié non fait \\
+Vérification formelle & Reluplex, BNN\,\textsuperscript{e}, QNN\,\textsuperscript{f} & CPU (solveurs) & denses, $\leq$ 52\,650 paramètres & échelle ; pas d'équivalence avec le circuit \\
+Moniteurs OOD & MSP, patrons, boîtes, SafeML & CPU, GPU & classifieurs & jamais sur détecteur ni sur FPGA \\
+Incertitude, conforme & Gaussian YOLOv3, POD\,\textsuperscript{g}, conforme\,\textsuperscript{h} & GPU de bureau & YOLOv3, RetinaNet, YOLOv5m & faux négatifs non couverts ; coût FPGA inconnu \\
+Code prédictible & ACETONE & CPU ARM & MLP, CNN FP32 & pas de HLS/RTL ni de quantification \\
+Personnes, robustesse & Halme, CrowdHuman, Re-ID, patch\,\textsuperscript{i} & aucune ou GPU & FPN, YOLOv2 & ni scène industrielle ni cible embarquée \\
+\bottomrule
+\end{tabularx}
+
+\smallskip\raggedright\footnotesize
+\textsuperscript{a}\,\citet{2020-easa-concepts-design-assurance-neural-networks},
+\citet{2024-easa-concepts-design-assurance-neural-networks},
+\citet{2024-easa-concept-paper-guidance-level-1} ;
+\textsuperscript{b}\,\citet{arxiv-2406.12362-certified-ml-object-detection-surveillance} ;
+\textsuperscript{c}\,\citet{2019-libano-selective-hardening-neural-networks-fpgas},
+\citet{2020-libano-understanding-impact-quantization-accuracy-radiation} ;
+\textsuperscript{d}\,\citet{2024-rech-artificial-neural-networks-space-safety} ;
+\textsuperscript{e}\,\citet{arxiv-1709.06662-verifying-properties-binarized-deep-neural}\pp ;
+\textsuperscript{f}\,\citet{arxiv-2012.08185-scalable-verification-quantized-neural-networks} ;
+\textsuperscript{g}\,\citet{arxiv-2011.10671-review-comparative-probabilistic-object-detection} ;
+\textsuperscript{h}\,\citet{arxiv-2304.06052-confident-object-detection-conformal-prediction}\pp ;
+\textsuperscript{i}\,\citet{arxiv-1904.08653-fooling-automated-surveillance-cameras-adversarial}\pp.
+\end{table}
+
+Le tableau~\ref{tab:surete} montre des briques qui ne se rejoignent pas. Les cadres
+disent quoi prouver mais pas comment le faire sur un FPGA ; les méthodes de fiabilité,
+de vérification et de surveillance savent faire sur un petit classifieur, presque jamais
+sur un détecteur, et jamais sur un détecteur implanté sur FPGA. Pour un YOLO certifiable
+sur FPGA, il manquerait au minimum \deduit :
+\begin{itemize}
+  \item une correspondance entre les objectifs EASA ou AMLAS et les normes industrielles
+    (IEC 61508, ISO 13849, ISO/IEC TR~5469) ;
+  \item une métrique de criticité propre à la détection de personnes, reliée à un taux de
+    défaillance par heure, puis à un SIL ou un PL ;
+  \item une campagne d'injection de fautes et un durcissement sélectif sur un YOLO quantifié,
+    BRAM comprises ;
+  \item une preuve, ou au moins une borne mesurée, de l'écart entre le modèle de référence et
+    le circuit déployé ;
+  \item un moniteur d'exécution implanté sur la même puce, au coût et à la latence mesurés ;
+  \item un jeu de données de personnes en zone industrielle, sur lequel évaluer le tout.
+\end{itemize}
+L'EASA ajoute une tension avec l'axe apprentissage continu de ce document : le modèle doit
+être gelé à l'approbation \citep[MOC LM-02]{2024-easa-concept-paper-guidance-level-1}. Ces
+manques sont repris parmi les gaps de la section~\ref{sec:gaps}.

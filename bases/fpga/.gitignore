@@ -12,5 +12,10 @@ xbase_candidates.csv
 # liens vers le code partagé
 /.venv
 
-# État de l'art (brouillon local, hors git pour l'instant)
-docs/etat-de-l-art/
+# État de l'art : fichiers intermédiaires de LaTeX
+docs/etat-de-l-art/*.aux
+docs/etat-de-l-art/*.bbl
+docs/etat-de-l-art/*.blg
+docs/etat-de-l-art/*.log
+docs/etat-de-l-art/*.out
+docs/etat-de-l-art/*.toc

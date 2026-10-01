@@ -1,0 +1,96 @@
+% Section commune : architectures d'accélérateurs CNN sur FPGA
+\section{Architectures d'accélérateurs CNN sur FPGA}
+\label{sec:architectures}
+
+\subsection{Le modèle roofline et l'exploration de l'espace de conception}
+
+\citet{2015-zhang-optimizing-fpga-accelerator-design-deep} posent le problème qui structure
+la suite : à ressources égales, deux accélérateurs peuvent différer de 90\,\% en
+performance, parce que le débit de calcul ne correspond pas à la bande passante mémoire
+\src{§1}. Ils appliquent le modèle \emph{roofline} : la performance atteignable est le
+minimum entre le toit de calcul et le produit du ratio calcul/communication par la bande
+passante \src{§2.3, Éq.~1}. Le tuilage des boucles de la convolution fixe ces deux
+grandeurs, et une énumération exhaustive (au plus 98\,000 designs légaux, explorés en
+10~minutes) choisit la meilleure configuration \src{§3.4--3.5}. Des facteurs de déroulage
+uniformes pour toutes les couches restent à moins de 5\,\% de l'optimum par couche et
+évitent de reprogrammer le FPGA entre couches \src{Table~4}.
+
+Le résultat, 61,62\,GFLOPS sur les convolutions d'AlexNet en FP32 sur un Virtex-7 VX485T
+pour 18,61\,W mesurés sur la carte \src{Tables~7--8}, est daté : calcul flottant, et
+seules les convolutions sont accélérées (ni pooling, ni couches denses, \src{§2.1}). Le
+gain énergétique de 24,6$\times$ sur le CPU repose sur le TDP du Xeon et non sur une
+mesure \src{§5.2, Table~8}. La méthode, elle, reste la référence du dimensionnement d'un
+accélérateur.
+
+\subsection{Deux familles : moteur de calcul unique et architecture \emph{streaming}}
+
+Les deux surveys de 2018 du corpus proposent des taxonomies complémentaires.
+\citet{arxiv-1806.01683-accelerating-cnn-inference-fpgas-survey}\pp{} classent les
+optimisations en trois familles \src{§2.4.4, Fig.~2} :
+\begin{itemize}
+  \item les \emph{transformations de calcul} : GEMM, Winograd (2,25$\times$ moins de
+    multiplications pour $F(2{\times}2, 3{\times}3)$), FFT \src{§3} ;
+  \item l'\emph{optimisation du chemin de données} : réseaux systoliques, SIMD, déroulage et
+    tuilage des boucles, dataflow \src{§4} ;
+  \item le \emph{calcul approché} : virgule fixe, réseaux binaires ou ternaires, élagage,
+    rang faible \src{§5}.
+\end{itemize}
+Ils rappellent que les convolutions représentent plus de 90\,\% du temps de calcul et les
+couches denses plus de 90\,\% des poids \src{§2.4.1, Table~2}.
+
+\citet{2018-venieris-toolflows-mapping-convolutional-neural-networks} recensent 13 toolflows
+et les séparent selon leur architecture \src{§2.3} :
+\begin{itemize}
+  \item \textbf{streaming} (un bloc matériel par couche, en pipeline) : fpgaConvNet,
+    DeepBurning, Haddoc2, AutoCodeGen, FINN. Ces designs sont efficaces, mais il faut un
+    bitstream par réseau, et la taille du réseau est bornée par la mémoire on-chip ;
+  \item \textbf{moteur de calcul unique}, piloté par logiciel (réseau systolique ou produit
+    matriciel) : Angel-Eye, ALAMO, DnnWeaver, Caffeine, FP-DNN, Snowflake, SysArrayAccel,
+    FFTCodeGen. Un seul bitstream sert plusieurs réseaux.
+\end{itemize}
+Leurs enseignements \src{§2.7} : le RTL optimisé bat le HLS, une exploration plus fine
+donne de meilleurs designs, et les moteurs uniques profitent des réseaux réguliers (VGG16)
+mais souffrent des noyaux hétérogènes (AlexNet). Ils proposent aussi une grille
+d'évaluation \src{§3.1} : débit en GOp/s avec le nombre d'opérations, les poids et le
+batch, latence à batch~1, ressources, puissance, précision applicative et répartition
+mémoire on-chip/off-chip. Les métriques normalisées (GOp/s par DSP ou par kLUT) ne valent,
+selon eux, qu'à l'intérieur d'une même famille de FPGA.
+
+Deux réserves sur ce survey : ses chiffres sont repris des publications ou des auteurs,
+sans qu'aucun outil soit relancé \src{§2.6}, et ses tableaux comparatifs ne contiennent ni
+puissance ni précision. Les auteurs du survey sont aussi ceux de fpgaConvNet, ce qui invite
+à lire avec recul les comparaisons qui le concernent \deduit.
+
+\subsection{La mémoire on-chip, goulot de l'architecture streaming}
+
+Une architecture streaming garde les poids en mémoire on-chip. Sur une petite puce, c'est
+la BRAM qui limite. \citet{arxiv-2011.07317-memory-efficient-dataflow-inference-deep}\pp{},
+de l'équipe FINN, en donnent la cause : la forme des mémoires de poids, dictée par le
+parallélisme (PE $\times$ SIMD), s'accorde mal aux blocs de 18\,Kb, dont une grande partie
+reste vide \src{§II-B}. Le rendement d'occupation des BRAM tombe à 52,9\,\% pour un
+ResNet-50 quantifié sur Alveo~U250 \src{Table~IV}. Leur technique, FCMP, sur-cadence la
+mémoire par rapport au calcul et regroupe plusieurs tampons de poids par BRAM :
+\begin{itemize}
+  \item jusqu'à 30\,\% de mémoire on-chip en moins, pour environ 5\,\% de LUT en plus
+    \src{§I} ;
+  \item le classifieur CNV-W1A1 (CIFAR-10) passe du Zynq 7020 au 7012S sans perte de débit
+    \src{Table~V} ;
+  \item ResNet-50 (W1A2, 67,3\,\% de top-1) tourne en dataflow sur une seule puce, mais sur
+    une Alveo~U250 : 2\,703\,FPS, 1,9\,ms de latence, 71\,W dont la méthode de mesure n'est
+    pas décrite \src{Table~II}.
+\end{itemize}
+L'empaquetage des activations (FIFO, tampons de lignes) reste en travail futur \src{§VI}.
+
+D'autres réponses au même problème apparaissent dans le corpus :
+\begin{itemize}
+  \item le rechargement des poids de fpgaConvNet (section~\ref{sec:toolflows}) ;
+  \item la compression structurée de REQ-YOLO, qui fait tenir tous les poids en BRAM
+    (section~\ref{sec:detection}) ;
+  \item la FIFO logicielle de SATAY, qui déporte en DDR les plus gros tampons des
+    connexions résiduelles (section~\ref{sec:toolflows}).
+\end{itemize}
+Côté MCU, le même verrou existe pour la SRAM des activations :
+\citet{arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference} le contournent par une
+inférence par patchs, qui divise le pic mémoire par 4 à 6 sur un STM32F746 \src{Fig.~6}.
+Transposer cet ordonnancement par patchs à la BRAM d'un accélérateur streaming n'est pas
+traité dans le corpus \deduit.

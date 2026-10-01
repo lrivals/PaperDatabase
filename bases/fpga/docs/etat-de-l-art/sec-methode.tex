@@ -1,0 +1,45 @@
+% Section commune : méthode et conventions de lecture
+\section{Méthode et conventions}
+\label{sec:methode}
+
+\paragraph{Corpus.} Ce document ne s'appuie que sur la base PaperDatabase. Il a été écrit
+en deux temps. Les sections thématiques (architectures, toolflows, détection, autoencodeurs,
+apprentissage continu, comparaisons et critique) décrivent la base du 26 septembre 2026 :
+45 articles, 41 fiches de lecture complètes et 172 lignes de mesures dans
+\texttt{benchmarks.csv} (31 articles, dont 101 lignes mesurées sur FPGA) ; leurs comptes
+sont ceux de cette date. La section sur la sûreté et les sections de gaps reposent sur la
+base du 1\textsuperscript{er} octobre 2026 : 101 articles, tous fichés, et 299 lignes de
+mesures (54 articles, dont 216 lignes sur FPGA). Les 60 articles ajoutés entre-temps
+(surtout sûreté et certification, détection de personnes, quelques détecteurs sur FPGA) ne
+sont donc repris dans les sections thématiques que lorsqu'ils contredisent un constat.
+Aucune référence extérieure à la base n'est citée comme source.
+
+\paragraph{Origine des chiffres.} Chaque valeur est reprise de la fiche ou de
+\texttt{benchmarks.csv}, avec la section ou le tableau de l'article entre crochets, par
+exemple \src{Table 8}. Une valeur que les auteurs ne donnent pas s'écrit \nr{} : elle n'est
+jamais estimée. Les chiffres d'un survey sont ceux des travaux qu'il cite. Ils ne sont pas
+vérifiés à la source et servent à orienter la lecture, pas à comparer. Les lignes de
+\texttt{benchmarks.csv} en confiance \emph{medium} viennent de tableaux reconstruits
+automatiquement (Docling, PyMuPDF) ou de valeurs lues dans le texte qui commente une
+figure. Elles sont signalées par~$^{m}$ dans les tableaux. Une seule ligne est en confiance
+\emph{low} ; elle est signalée dans le texte.
+
+\paragraph{Portée de la puissance.} Une puissance n'a de sens qu'avec sa portée. La base
+distingue \emph{board} (carte entière, au wattmètre), \emph{chip} (rails de la puce ou
+télémétrie embarquée), \emph{board-dynamic} (carte, repos soustrait), \emph{estimated}
+(outil de conception, par exemple le rapport de Vivado) et \emph{unspecified} (méthode non
+décrite). Les tableaux donnent cette portée à côté de chaque valeur. Deux puissances de
+portées différentes ne se comparent pas.
+
+\paragraph{Lu contre déduit.} Sauf mention, une affirmation résume ce que disent les
+auteurs. Une inférence de la fiche ou de ce document est marquée \deduit. Un article marqué
+\pp{} est un preprint non relu par les pairs (au moins dans la version ingérée).
+
+\paragraph{Limites de la méthode.} Le corpus est petit (45 articles) et vient d'une
+bibliographie de départ constituée à partir de résumés. Les effectifs par axe sont
+déséquilibrés : 24 fiches sur les plateformes, 14 sur les toolflows, 11 sur les
+autoencodeurs, 8 sur YOLO sur FPGA, 8 surveys et 5 sur l'apprentissage continu. Un
+\enquote{gap} signifie donc qu'un sujet est absent \emph{de ce corpus}. Son absence de la
+littérature reste une hypothèse tant qu'une recherche ciblée ne l'a pas confirmée. Enfin,
+les fiches ont été rédigées à partir du texte extrait des PDF : les valeurs données
+uniquement dans des figures sont souvent \nr.

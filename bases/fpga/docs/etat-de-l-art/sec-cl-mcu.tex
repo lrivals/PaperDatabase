@@ -1,0 +1,47 @@
+% Section propre à la version complète : apprentissage continu sur MCU et ASIC
+\section{Apprentissage continu sur microcontrôleurs et ASIC}
+\label{sec:cl-mcu}
+
+\paragraph{Replay latent quantifié sur ASIC PULP (QLR-CL).}
+\citet{arxiv-2110.10486-tinyml-platform-device-continual-learning} découpent un MobileNet-V1
+(entrée 128$\times$128) en deux étages \src{§III-C} :
+\begin{itemize}
+  \item un \emph{étage figé}, quantifié en INT8 ;
+  \item un \emph{étage adaptatif}, réentraîné en FP32 par rétropropagation, sur un mélange
+    de nouvelles images et d'activations intermédiaires stockées en 8~bits (\emph{latent
+    replays}).
+\end{itemize}
+Sur Core50, stocker ces activations en UINT-8 ne coûte que 0,26 point face au FP32
+\src{§V-B}. En dessous de 6~bits, l'apprentissage ne converge plus. Sur VEGA (ASIC 22\,nm,
+62\,mW mesurés sur la puce), un événement d'apprentissage coûte 2,07\,s et 0,13\,J si seule
+la dernière couche est réentraînée. Si l'on remonte à la couche~23, il faut 877\,s et
+54,3\,J \src{Table~IV}. Avec le même code, VEGA est en moyenne 65 fois plus rapide et 37
+fois plus économe qu'un STM32L4 \src{§V-E}. La comparaison au Snapdragon~845, elle, suppose
+une enveloppe de 4\,W non mesurée \src{§V-E}.
+
+\paragraph{Apprentissage incrémental de classes à partir de peu d'exemples, sur GAP9
+(O-FSCIL).} \citet{arxiv-2403.07851-12-mj-per-class-device} figent un MobileNetV2 et
+ajoutent chaque nouvelle classe sous la forme d'un prototype : la moyenne des
+caractéristiques de ses 5 exemples, sans rétropropagation \src{§IV, §V-B}. Sur GAP9, en
+INT8, ajouter une classe coûte 11,35\,mJ pour 62,44\,\% de précision moyenne sur
+CIFAR-100. Le plus gros backbone atteint 66,51\,\% pour 22,75\,mJ \src{Tables~II et IV}.
+Le titre combine deux configurations : les 68,62\,\% viennent d'un ResNet-12 FP32 sur GPU,
+les 12\,mJ du plus petit modèle déployé \src{Table~II}.
+
+\paragraph{Non encore fichés.} L'entraînement sous 256\,KB de mémoire
+\citep{arxiv-2206.15472-device-training-256kb-memory}\pp{} et l'apprentissage continu sur MCU
+par distillation de données \citep{arxiv-2409.07114-continual-incremental-learning-tinyml-device}
+sont dans la base, mais sans fiche : ils ne sont pas exploités ici. Le survey de
+\citet{arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded} traite
+l'apprentissage continu embarqué en une page, sans aucun chiffre système \src{§5.2}.
+
+\paragraph{Bilan transversal.} Les cinq fiches d'apprentissage continu couvrent au plus
+deux familles de plateformes chacune :
+\begin{itemize}
+  \item QLR-CL : ASIC et MCU ;
+  \item O-FSCIL : MCU ;
+  \item ImageHD : FPGA, face au CPU, au GPU et à une Jetson non optimisée ;
+  \item ONLAD : FPGA, face au CPU et au GPU.
+\end{itemize}
+Aucun algorithme d'apprentissage continu n'est mesuré à la fois sur MCU, FPGA et Jetson.
+\texttt{benchmarks.csv} n'a aucune ligne d'apprentissage continu sur Jetson.

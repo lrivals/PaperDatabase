@@ -1,0 +1,89 @@
+% Section propre à la version complète : comparaison entre plateformes
+\section{Comparer les plateformes : ce que le corpus permet, et ce qu'il ne permet pas}
+\label{sec:comparaison}
+
+\subsection{Débit et puissance rapportés}
+
+La figure~\ref{fig:fps-power} place toutes les lignes de \texttt{benchmarks.csv} qui ont à
+la fois un FPS et une puissance (52 sur 172). Elle se lit avec prudence. Les tâches, les
+modèles et les résolutions diffèrent d'un point à l'autre. Les points pleins ont une
+puissance mesurée (sur la puce ou la carte) ; les points creux, une puissance estimée ou
+de portée inconnue.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{../../figures/bench_fps_power.png}
+\caption{Débit et puissance rapportés, en échelles logarithmiques ; les droites
+pointillées sont des lignes d'iso-efficacité en FPS/W. Figure générée par
+\texttt{bin/pdb plot} à partir de \texttt{benchmarks.csv} (26/09/2026).}
+\label{fig:fps-power}
+\end{figure}
+
+Pour la détection (panneau de gauche), ce que la figure montre :
+\begin{itemize}
+  \item les GPU Jetson se regroupent entre 7 et 15\,W, pour quelques dizaines d'images par
+    seconde ;
+  \item les FPGA s'étalent sur deux ordres de grandeur de débit, pour une puissance
+    comparable ;
+  \item presque tous les points FPGA sont creux : leur puissance est estimée ou de portée
+    inconnue.
+\end{itemize}
+Ce que la figure ne permet pas : conclure qu'une famille est plus efficace qu'une autre.
+Aucun couple de points ne partage à la fois le modèle, la résolution, la précision
+numérique et la méthode de mesure \deduit.
+
+\subsection{Énergie par inférence : des ordres de grandeur}
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Énergie par inférence (ou par événement d'apprentissage) rapportée dans le corpus.
+Tâches, modèles et portées diffèrent : ces valeurs donnent des ordres de grandeur, pas un
+classement.}
+\label{tab:energie}
+\begin{tabularx}{\textwidth}{@{}P{2.6cm}LP{2.4cm}rP{2.6cm}@{}}
+\toprule
+Travail & Tâche, modèle & Plateforme & Énergie & Portée, source \\
+\midrule
+TinyissimoYOLO & détection 88$\times$88, 3 classes & MAX78000 & 196\,µJ & MCU seul, §III \\
+TinyissimoYOLO & idem & Apollo4b & 6,1\,mJ & MCU seul, §III \\
+Manjunath & encodeur AE 120$\times$120 & Artix-7 & 0,25\,mJ & estimée (Vivado), Table~5 \\
+ImageHD & clustering continu, CIFAR-10 & ZCU104 & 0,97\,mJ & estimée (Vitis), Table~VII \\
+Rey & YOLOv8n 640 INT8 & Orin NX & 179\,mJ & télémétrie, Table~4 \\
+Rey & YOLOv8n 640 INT8 & Orin Nano & 185\,mJ & télémétrie, Table~4 \\
+SATAY & YOLOv5n 640 & ZCU104 & 317\,mJ & non décrite, Table~IV$^{m}$ \\
+SATAY (baseline) & YOLOv5n 640 & Jetson TX2 & 277\,mJ & non décrite, Table~IV$^{m}$ \\
+F-LIC & encodage 720p (compression apprise) & VCU118 & 1,41\,J & non décrite, Fig.~6$^{m}$ \\
+F-LIC (baseline) & idem & Xavier NX & 1,43\,J & non décrite, Fig.~6$^{m}$ \\
+O-FSCIL & ajout d'une classe (5 exemples) & GAP9 & 11,35\,mJ & non décrite, Table~IV \\
+QLR-CL & événement d'apprentissage ($l = 27$) & VEGA & 0,13\,J & puce, Table~IV \\
+QLR-CL & idem & STM32L4 & 4,80\,J & Table~IV \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Deux comparaisons seulement se font à tâche égale et sont mesurées par les mêmes auteurs :
+\begin{itemize}
+  \item SATAY face à la TX2 : même YOLOv5n et même résolution. L'énergie par inférence est
+    du même ordre, mais la méthode de mesure n'est pas décrite ;
+  \item F-LIC face à la Xavier NX : même codec. L'énergie est à parité (1,41 contre 1,43\,J),
+    alors que F-LIC tourne sur une grosse FPGA.
+\end{itemize}
+Aucune ne montre un avantage net du FPGA sur un GPU embarqué. Pour mémoire, le YOLOv3-tiny
+de Zhai et al. donnerait environ 136\,mJ par image (12,51\,W divisés par 91,65\,FPS,
+\citealp[Table~8]{2023-zhai-fpga-vehicle-detection-tracking-accelerator}). Ce calcul est
+le nôtre \deduit{}, et la portée de cette puissance n'est pas décrite.
+
+\subsection{Pourquoi la comparaison reste ouverte}
+
+Pour comparer honnêtement un FPGA embarqué, une Jetson et un MCU, il faudrait, sur un même
+réseau :
+\begin{itemize}
+  \item la même précision numérique et le même batch ;
+  \item une précision mesurée sur chaque cible ;
+  \item une latence de bout en bout, post-traitement compris ;
+  \item une puissance de puce et de carte, avec le repos mesuré.
+\end{itemize}
+Dans le corpus, les deux protocoles qui s'en approchent datent de 2017--2018 (fpgaConvNet
+contre Tegra~X1, DAC-SDC). Les meilleures baselines Jetson récentes (Rey, Alqahtani\pp)
+n'ont pas de FPGA. Les travaux FPGA récents (SATAY, ImageHD) se comparent à des Jetson
+anciennes ou non optimisées.

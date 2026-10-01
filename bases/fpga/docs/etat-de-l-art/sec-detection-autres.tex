@@ -1,0 +1,103 @@
+% Section propre à la version complète : détection hors FPGA
+\section{Détection d'objets hors FPGA : GPU embarqués, NPU et microcontrôleurs}
+\label{sec:detection-autres}
+
+\subsection{GPU embarqués et NPU}
+
+\paragraph{Premiers bancs d'essai : des protocoles incomplets.}
+\citet{2022-feng-benchmark-analysis-yolo-performance-edge} comparent YOLOv3 et YOLOv4
+(complets et tiny) sur Jetson Nano, Xavier NX et Raspberry~Pi~4 + NCS2, en FP16. Leurs choix
+limitent la portée des résultats :
+\begin{itemize}
+  \item les Jetson tournent sous Darknet, sans TensorRT, choisi exprès pour rester
+    comparable au Raspberry~Pi \src{§3.2} ;
+  \item aucune précision n'est mesurée : la \enquote{mean confidence} est une moyenne des
+    scores de confiance, sans vérité terrain \src{§4.1} ;
+  \item la portée de la puissance n'est pas décrite.
+\end{itemize}
+Résultat marquant : après conversion par OpenVINO, YOLOv3-tiny sur NCS2 tombe à 0\,\% de
+confiance moyenne, contre 59,7\,\% sur les Jetson \src{Table~3}. La conversion vers un
+accélérateur peut dégrader la détection sans que rien ne l'indique.
+
+\citet{arxiv-2211.11647-benchmarking-edge-computing-devices-grape} comparent un gros
+détecteur, RetinaNet ResNet-50, sur Jetson TX2, Coral Edge TPU, ZCU104 et KV260, avec une
+mAP mesurée et une puissance à l'entrée de la carte \src{§2.5}. Les FPGA atteignent 14 à
+25\,FPS, les GPU embarqués 3 à 5\,FPS \src{Abstract}. Mais la TX2 tourne en FP32 ou FP16
+et les FPGA en INT8 : l'écart mêle l'effet du matériel et celui de la quantification. Les
+Jetson Nano ont été exclues faute de mémoire pour la conversion \src{§4}. La plupart des
+valeurs ne figurent que dans des graphiques.
+
+\paragraph{Baselines Jetson Orin.} Deux travaux récents fournissent les baselines les plus
+utiles du corpus :
+\begin{itemize}
+  \item \citet{arxiv-2502.15737-performance-analysis-you-only-look} mesurent YOLOv8n et s
+    en 640$\times$640 sous TensorRT (FP32, FP16, INT8), avec une puissance par télémétrie
+    (tegrastats) et une énergie par inférence \src{§3.2, Table~4}. Leur jeu de données est
+    privé et facile : une seule cible, en intérieur. La PTQ INT8 y coûte 6,4 à 12,3 points
+    de mAP50-95, alors que la discussion parle d'une perte non significative \src{§6}.
+  \item \citet{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp{} donnent
+    la seule mAP COCO val du corpus sur Orin Nano et sur Hailo-8. Leur protocole est
+    réutilisable : service à une requête à la fois, repos mesuré puis soustrait, trois
+    répétitions \src{§III}. La précision numérique des moteurs TensorRT et Hailo n'est pas
+    indiquée, et la mAP est identique sur Jetson Nano et Orin Nano, ce qui laisse douter
+    qu'elle ait été mesurée sur chaque carte \src{§IV-C}.
+\end{itemize}
+
+\subsection{Microcontrôleurs}
+
+Sur MCU, la contrainte principale est la mémoire. Le survey de
+\citet{2025-el-zeinaty-designing-object-detection-models-tinyml} recense des détecteurs de
+55 à 789\,MMACs, avec des pics de SRAM de 53 à 511\,kB et des mAP VOC de 51 à 75\,\%
+\src{Table~8}, chiffres repris des articles d'origine. Ce tableau ne donne ni latence ni
+énergie, bien que le survey présente ces métriques comme essentielles \src{§4.2}.
+
+\citet{arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference} exécutent les premiers
+blocs du réseau par patchs, ce qui réduit le pic de SRAM, et cherchent conjointement
+l'architecture et l'ordonnancement \src{§3}. MCUNetV2-M4 atteint 64,6\,\% de mAP VOC en
+247\,kB de SRAM sur un Cortex-M4 \src{Table~3}. Ni la latence ni l'énergie de ces
+détecteurs ne sont données.
+
+\citet{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint} mesurent un petit
+YOLO en 88$\times$88 sur quatre MCU, avec la puissance du MCU seul \src{§III}. Sur le
+MAX78000, qui intègre un accélérateur CNN, une inférence dure 5,5\,ms et coûte 196\,µJ ; le
+Cortex-M7 d'un STM32H7A3 met 359\,ms \src{§III, Fig.~2}$^{m}$. L'accélérateur intégré fait
+donc la différence (plus de 65 fois plus rapide). La mAP de 58,5\,\% porte sur 3 classes
+de VOC et au plus 3 objets par image \src{Table~II} ; elle ne se compare pas aux mAP
+de MCUNetV2 sur 20 classes. Le papier lui-même donne trois valeurs différentes selon
+l'endroit (voir la fiche).
+
+\subsection{Tableau des détecteurs hors FPGA}
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Détecteurs hors FPGA dans \texttt{benchmarks.csv} (sélection). Précisions non
+comparables d'une ligne à l'autre. $^{m}$ : confiance \emph{medium}. Portée : c =
+\emph{chip}, u = \emph{unspecified}.}
+\label{tab:detection-autres}
+\begin{tabularx}{\textwidth}{@{}P{1.8cm}P{2.6cm}LP{2.5cm}rrrl@{}}
+\toprule
+Travail & Modèle, précision & Plateforme & Métrique & Préc. & FPS & ms & W \\
+\midrule
+Rey & YOLOv8n 640 INT8 & Orin Nano & mAP50-95, jeu privé & 71,9 & 44,9 & 23,16 & 7,48 (c) \\
+Rey & YOLOv8n 640 FP16 & Orin Nano & mAP50-95, jeu privé & 84,4 & 40,0 & 26,70 & 7,42 (c) \\
+Rey & YOLOv8n 640 INT8 & Orin NX & mAP50-95, jeu privé & 71,9 & 65,83 & 15,16 & 10,31 (c) \\
+Rey & YOLOv8n 640 FP32 & RPi~5 (CPU) & mAP50-95, jeu privé & 84,4 & 8,47 & 118 & 5,44 (c)$^{m}$ \\
+Alqahtani & YOLOv8n 640, précision \nr & Orin Nano & mAP COCO val & 31 & \nr & 16 & \nr$^{m}$ \\
+Alqahtani & YOLOv8n 640, précision \nr & RPi~5 + Hailo-8 & mAP COCO val & 32 & \nr & 76 & \nr$^{m}$ \\
+Feng & YOLOv3-tiny 416 FP16 & Xavier NX (sans TensorRT) & confiance moy. & 59,7 & 41,1 & \nr & 13,5 (u) \\
+Feng & YOLOv3-tiny 416 FP16 & RPi~4 + NCS2 & confiance moy. & 0 & 18,8 & \nr & 6,5 (u)$^{m}$ \\
+TinyissimoYOLO & 88$\times$88 INT8 & MAX78000 & mAP VOC 3 classes & 58,5 & 180 & 5,5 & \nr$^{m}$ \\
+TinyissimoYOLO & 88$\times$88 INT8 & STM32H7A3 & mAP VOC 3 classes & 58,5 & \nr & 359 & \nr$^{m}$ \\
+MCUNetV2 & M4 + YOLOv3 INT8 & STM32F412 & mAP VOC & 64,6 & \nr & \nr & \nr \\
+MCUNetV2 & H7 + YOLOv3 INT8 & STM32H743 & mAP VOC & 68,3 & \nr & \nr & \nr \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Sources : Rey \citep[Table~4, §4]{arxiv-2502.15737-performance-analysis-you-only-look} ;
+Alqahtani \citep[§IV-B--C]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object} ;
+Feng \citep[Table~3]{2022-feng-benchmark-analysis-yolo-performance-edge} ; TinyissimoYOLO
+\citep[§III, Table~II]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint} ;
+MCUNetV2 \citep[Table~3]{arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference}. Chez
+Rey et al., la portée \emph{chip} correspond à une télémétrie embarquée (rails du module
+Jetson, PMIC du Raspberry~Pi), pas à un wattmètre sur la carte.

@@ -1,0 +1,63 @@
+% Section commune : apprentissage embarqué et continu sur FPGA
+\section{Apprentissage embarqué et continu sur FPGA}
+\label{sec:cl-fpga}
+
+Un modèle figé ne s'adapte pas à la dérive des données. L'apprentissage sur l'appareil y
+répond, mais la rétropropagation coûte cher en mémoire et en énergie. Les deux seuls
+apprentissages sur FPGA du corpus l'évitent.
+
+\paragraph{ONLAD : apprentissage séquentiel sans rétropropagation.}
+\citet{2019-tsukada-neural-network-device-learning-anomaly} entraînent en ligne un AE à une
+couche cachée par OS-ELM :
+\begin{itemize}
+  \item les poids d'entrée sont aléatoires et figés, et seuls les poids de sortie sont mis
+    à jour par moindres carrés récursifs \src{§2.2, §3.3} ;
+  \item à batch~1, la seule inversion matricielle devient une division scalaire, sans
+    changer la solution \src{§3.1} ;
+  \item un facteur d'oubli léger gère la dérive : l'AUC passe de 0,55--0,59 sans oubli à
+    0,78--0,90 sous dérive simulée \src{Table~5}.
+\end{itemize}
+Le cœur (Vivado HLS, virgule fixe 32~bits, 100\,MHz) tourne sur PYNQ-Z1. C'est l'une des
+rares mesures de carte FPGA du corpus : 3,1\,W au wattmètre, ARM compris \src{§6.4}.
+Limites : les AUC sont évaluées en TensorFlow et non sur le cœur en virgule fixe
+\src{§5--6} ; la dérive est simulée par permutation de classes ; les baselines CPU et GPU,
+en TensorFlow à batch~1, sont dominées par les surcoûts d'appel, ce que les auteurs
+reconnaissent \src{§6.2.1}.
+
+\paragraph{ImageHD : calcul hyperdimensionnel sur un extracteur figé.}
+\citet{arxiv-2604.21280-imagehd-energy-efficient-device-continual} combinent un MobileNetV2
+INT8 figé, un encodage en hypervecteurs binaires et une mémoire de clusters bornée,
+fusionnée par un kMeans++ simplifié \src{§IV}. L'accélérateur streaming (Vitis HLS) tient
+sur une ZCU104 à 300\,MHz : 0,27\,ms et 0,97\,mJ par image sur CIFAR-10
+\src{Tables~VI--VII}. Deux réserves fortes :
+\begin{itemize}
+  \item la précision de clustering est très basse (0,27 sur CIFAR-10, 0,19 sur CORe50),
+    alors que l'article parle d'une \enquote{strong accuracy} \src{Table~VI, §IX} ;
+  \item latence et puissance du FPGA viennent de l'analyseur de Vitis, c'est-à-dire d'une
+    estimation, alors que CPU et GPU sont mesurés (powertop, nvidia-smi). Les gains de
+    258$\times$ à 383$\times$ en énergie mélangent estimation et mesure \src{§VII-D}.
+\end{itemize}
+
+\paragraph{Références hors FPGA.} Deux travaux fixent des ordres de grandeur qu'un
+apprentissage continu sur FPGA devrait battre ou justifier :
+\begin{itemize}
+  \item QLR-CL sur VEGA, un ASIC PULP 22\,nm : 62\,mW de puce
+    \citep[§V-D]{arxiv-2110.10486-tinyml-platform-device-continual-learning} ;
+  \item O-FSCIL sur le MCU GAP9 : 11 à 23\,mJ par nouvelle classe
+    \citep[Table~IV]{arxiv-2403.07851-12-mj-per-class-device}.
+\end{itemize}
+\ifcomplete Tous deux sont détaillés en section~\ref{sec:cl-mcu}.\else Tous deux sont détaillés dans la version complète de l'état de l'art.\fi La seule
+rétropropagation embarquée du corpus (la queue d'un MobileNet-V1, en FP32) tourne sur VEGA,
+pas sur un FPGA
+\citep[§IV-B]{arxiv-2110.10486-tinyml-platform-device-continual-learning}. Venieris et al.
+jugeaient déjà l'entraînement sur FPGA \enquote{à peine exploré} en 2018
+\citep[§3.2]{2018-venieris-toolflows-mapping-convolutional-neural-networks}.
+
+\paragraph{Ce qui manque.} Toutes les fiches d'apprentissage continu font de la
+classification ou du clustering ; \texttt{benchmarks.csv} n'a aucune ligne qui croise
+détection et apprentissage continu. Deux questions restent ouvertes dans le corpus :
+\begin{itemize}
+  \item une rétropropagation de la queue d'un réseau sur SoC FPGA, avec l'étage figé en
+    logique programmable ;
+  \item l'incrémental de classes en détection.
+\end{itemize}

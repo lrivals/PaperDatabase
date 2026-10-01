@@ -11,7 +11,7 @@ contient trois : deux servent à préparer une thèse, la troisième rassemble l
 
 | Base | Intitulé | Dossier |
 |---|---|---|
-| `fpga` | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | [`bases/fpga/`](bases/fpga/) |
+| `fpga` | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) ; thèse « IA embarquée sécuritaire certifiable sur FPGA » | [`bases/fpga/`](bases/fpga/) |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | [`bases/drone/`](bases/drone/) |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | [`bases/stage/`](bases/stage/) |
 
@@ -192,9 +192,9 @@ Au 29/09/2026 :
 
 | Base | Intitulé | Dossier | Papiers | Fiches faites | Lignes de benchmark |
 |---|---|---|---|---|---|
-| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | `bases/fpga/` | 45 | 41 | 172 |
+| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu, sûreté et certification) | `bases/fpga/` | 101 | 101 | 299 |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 73 | 73 | 324 |
-| `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` | 50 | 0 | 4 |
+| `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` | 56 | 56 | 100 |
 
 La base `drone` s'appelait auparavant `DroneVisionDB` et vivait dans un dossier séparé. Chaque
 base a son `CLAUDE.md` (règles propres au domaine), son [`profile.md`](bases/drone/profile.md)
@@ -365,19 +365,23 @@ PaperDatabase/                # le code seul ; les données sont dans bases/
 
 ## État et documentation
 
-Au 29/09/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-bases-actuelles)) :
-- `fpga` : vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo et MCU. 45 articles, dont
-  41 fichés ; 172 lignes dans `benchmarks.csv` ; 24 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md), dont 17
-  étayés.
+Au 01/10/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-bases-actuelles)) :
+- `fpga` : vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo et MCU, orientée vers la
+  thèse « IA embarquée sécuritaire certifiable sur FPGA » (axes `safety-certification` et
+  `person-detection`). 101 articles, tous fichés ; 299 lignes dans `benchmarks.csv` (216 sur
+  FPGA) ; 36 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md), dont 29 étayés (8ᵉ passage,
+  avec sections sûreté et détection de personnes). Un état de l'art LaTeX, local et non versionné,
+  est rédigé dans `bases/fpga/docs/etat-de-l-art/`.
 - `drone` : 73 articles, tous fichés ; 324 lignes dans `benchmarks.csv` ; 19 gaps dans
   [bases/drone/gaps.md](bases/drone/gaps.md), dont 17 étayés. Les 24 derniers articles ont
   été ajoutés par dépôt manuel des PDF dans `inbox/`, avec leur export de citation.
 - `stage` : références d'un stage (apprentissage continu embarqué sur MCU, maintenance
-  prédictive). 50 articles : 33 par arXiv, 16 PDF locaux ou en accès libre avec l'export
-  BibTeX du manuscrit, 1 importé de `fpga` ; 12 références sans version téléchargeable
-  automatiquement restent à déposer à la main (liste dans [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire)).
+  prédictive). 56 articles, tous fichés (33 par arXiv, 22 PDF locaux, en accès libre ou
+  déposés à la main, 1 importé de `fpga`) ; 100 lignes dans `benchmarks.csv` ; 15 gaps dans
+  [bases/stage/gaps.md](bases/stage/gaps.md), dont 12 étayés. Les références sans version
+  téléchargeable automatiquement restantes sont à déposer à la main (liste dans [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire)).
 
-### Ce qui marche (testé : 205 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
+### Ce qui marche (testé : 210 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 
 - acquisition arXiv, DOI (via OpenAlex), PDF local, par lot ; exports `.bib` / `.ris`
   éditeur prioritaires sur l'en-tête GROBID (vérifié sur 6 exports IEEE, ACM, MDPI,

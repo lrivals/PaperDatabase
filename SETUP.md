@@ -743,8 +743,29 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 29/09/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 01/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 01/10/2026 (base fpga : profil, 8ᵉ passage des gaps, état de l'art).**
+- Profil (`/base-profile`) : règle `safety-certification` élargie (EASA, assurance, ODD,
+  TQL, moniteurs, conformal, incertitude) et `radiation` restreint aux effets radiatifs ;
+  `person-detection` dans `hardware_axes` ; papiers hors sujet 13 → 4. 19 des 22 suggestions
+  retenues, 1 écartée (élargir `yolo-fpga`), 2 reportées (ci-dessous).
+- `gaps.md`, 8ᵉ passage (101 fiches, 299 lignes) : 36 gaps dont 29 étayés ; sections
+  nouvelles « Sûreté, fiabilité et certification » (9) et « Détection de personnes en milieu
+  industriel » (4) ; gap « AE complet sur petite FPGA » supprimé (contredit par 2407.17647 et
+  2503.04832).
+- État de l'art LaTeX (`bases/fpga/docs/etat-de-l-art/`) : section
+  `sec-surete-certification.tex` (34 papiers cités), gaps et cadre de `fpga.tex` repris,
+  `refs.bib` complété depuis les `metadata.json`.
+
+- [ ] **Schéma : type « report »** pour les rapports d'autorité (EASA CoDANN 2020 / II,
+  Concept Paper 2024 ont `type: null`) — suggestion de profil reportée le 01/10/2026.
+- [ ] **Schéma : mesures sans plateforme embarquée** (Re-ID, détection de personnes sur GPU)
+  dans `benchmarks.csv` ou à part — utiles comme référence pour le cas d'application ;
+  suggestion reportée le 01/10/2026.
+- [ ] Base fpga : `arxiv-2607.13106` annonce 29 lignes de benchmarks dans sa fiche, 23 dans
+  `benchmarks.csv` (lignes IP DPU de la Table III manquantes), relevé au 8ᵉ passage.
 
 **Bilan du 29/09/2026 (figures multi-bases).** `pdb plot` adapté aux bases sans mesures
 matérielles (base stage : fps, gops, puissance, LUT/DSP presque tous n/r) : une figure sans
@@ -1088,12 +1109,9 @@ Défauts mis au jour, à corriger (tâche 12) :
   of deep neural networks in FPGAs for particle physics* (arXiv 1804.06913, 4 citants),
   *Latency-Driven Design for FPGA-based Convolutional Neural Networks* (FPL 2017).
 - [ ] Trier les candidats de `bin/pdb discover` (premier passage le 24/09/2026, métadonnées
-  OpenAlex non vérifiées) via `/paper-discover`. En tête : *Fast convolutional neural
-  networks on FPGAs with hls4ml* (arXiv 2101.05108, cite 4 papiers du corpus) ;
-  *Autoencoders on field-programmable gate arrays for real-time, unsupervised new physics
-  detection at 40 MHz at the LHC* (arXiv 2108.03986) pour l'axe `autoencoder-fpga`, qui
-  n'a qu'un papier ; *A TinyML Platform for On-Device Continual Learning With Quantized
-  Latent Replays* (arXiv 2110.10486) pour la comparaison MCU / FPGA en apprentissage continu.
+  OpenAlex non vérifiées) via `/paper-discover`. Les trois cités en tête à l'époque
+  (2101.05108, 2108.03986, 2110.10486) sont dans la base et fichés (constaté le 01/10/2026) ;
+  `candidates.csv` reste à trier.
 - [x] Clé OpenAlex gratuite (`OPENALEX_API_KEY`) configurée dans `~/.bashrc` le
   24/09/2026 : `--query` et `--axis` ne dépendent plus de la recherche anonyme (HTTP 429 et
   503 constatés sans clé).

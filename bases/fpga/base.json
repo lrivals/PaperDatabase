@@ -16,8 +16,8 @@
     "continual-learning": "continual|incremental|lifelong|\\breplay\\b|few-shot",
     "toolflows": "hls4ml|\\bFINN\\b|vitis ai|fpga ai suite|\\bSATAY\\b|tool ?flow|codesign workflow",
     "platforms": "zynq|kria|kv260|zcu ?10[24]|pynq|versal|ultrascale|jetson",
-    "safety-certification": "safety[- ]critical|functional safety|safety assurance|certif(?:ication|iable|ied)|\\bSEUs?\\b|single[- ]event|soft errors?|fault[- ](?:injection|toleran)|radiation|\\bTMR\\b|ISO 26262|IEC 61508|DO-178|DO-254|out-of-distribution|\\bOOD\\b|runtime monitor|formal verification|verif(?:y|ying|ication) (?:of )?(?:quantized|binarized|neural)",
-    "person-detection": "pedestrian|person (?:detection|re-?identification)|human detection|\\bworkers?\\b|\\bPPE\\b|hard ?hat|construction site|hazardous|human-robot"
+    "safety-certification": "safety[- ]critical|functional safety|safety assurance|safety systems?|certif(?:ication|iable|ied)|\\bSEUs?\\b|single[- ]event|soft errors?|fault[- ](?:injection|toleran)|radiation(?:-induced| tests?| hardness| effects)|\\bTMR\\b|ISO 26262|IEC 61508|ISO 13849|DO-178|DO-254|\\bEASA\\b|learning assurance|design assurance|operational design domain|AMC 20-1\\d\\d|tool qualification|out-of-distribution|\\bOOD\\b|novelty detection|runtime monitor|abstraction-based monitor|formal verification|verif(?:y|ying|ication)[\\w -]{0,30}(?:quantized|binarized|neural)|conformal (?:prediction|risk control)|uncertainty (?:quantification|estimation)|localization uncertainty|probabilistic object detection|trustworth",
+    "person-detection": "pedestrian|person (?:detection|re-?identification)|human detection|crowd|\\bworkers?\\b|\\bPPE\\b|hard ?hat|construction site|hazardous|human-robot"
   },
   "axis_queries": {
     "surveys": "survey FPGA deep learning accelerator",
@@ -32,10 +32,11 @@
   "hardware_axes": [
     "toolflows",
     "platforms",
-    "safety-certification"
+    "safety-certification",
+    "person-detection"
   ],
   "topic_re": "\\bFPGAs?\\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\\bHLS\\b|high-level synthesis|\\bSoC\\b|edge (?:ai|devices?|inference)|embedded",
-  "title_topic_re": "\\bFPGAs?\\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\\bHLS\\b|high-level synthesis|\\bSoC\\b|edge (?:ai|devices?|inference)|embedded|accelerators?\\b|\\bhardware\\b|tinyml|micro-?controllers?|\\bMCUs?\\b|on-device|(?:extreme|the|at) edge\\b|edge (?:computing|intelligence|artificial)",
+  "title_topic_re": "\\bFPGAs?\\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\\bHLS\\b|high-level synthesis|\\bSoC\\b|edge (?:ai|devices?|inference)|embedded|accelerators?\\b|\\bhardware\\b|tinyml|micro-?controllers?|\\bMCUs?\\b|on-device|(?:extreme|the|at) edge\\b|edge (?:computing|intelligence|artificial)|\\btiny (?:deep learning|ml)\\b",
   "topic_min_hits": 2,
   "tag_rules": [
     [
@@ -145,6 +146,22 @@
     [
       "\\bPPE\\b|personal protective|hard ?hat",
       "ppe"
+    ],
+    [
+      "conformal (?:prediction|risk control)",
+      "conformal"
+    ],
+    [
+      "\\bEASA\\b|learning assurance",
+      "easa"
+    ],
+    [
+      "uncertainty",
+      "uncertainty"
+    ],
+    [
+      "human-robot|\\bHRC\\b",
+      "hrc"
     ]
   ]
 }

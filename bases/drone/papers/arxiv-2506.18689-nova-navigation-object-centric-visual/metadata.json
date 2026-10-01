@@ -1,0 +1,41 @@
+{
+  "id": "arxiv-2506.18689-nova-navigation-object-centric-visual",
+  "title": "NOVA: Navigation via Object-Centric Visual Autonomy for High-Speed Target Tracking in Unstructured GPS-Denied Environments",
+  "authors": [
+    {
+      "given": "Alessandro",
+      "family": "Saviolo"
+    },
+    {
+      "given": "Giuseppe",
+      "family": "Loianno"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2506.18689",
+  "url": "https://arxiv.org/abs/2506.18689",
+  "type": "preprint",
+  "axes": [
+    "datasets-benchmarks",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "jetson",
+    "orin-nx"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

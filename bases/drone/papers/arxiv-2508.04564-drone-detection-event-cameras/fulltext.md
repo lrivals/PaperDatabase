@@ -1,0 +1,214 @@
+---
+id: arxiv-2508.04564-drone-detection-event-cameras
+title: "Drone Detection with Event Cameras"
+year: 2025
+backend: pymupdf
+---
+
+Drone Detection with Event Cameras
+
+Gabriele Magrini University of Florence
+
+Florence
+
+gabriele.magrini@unifi.it
+
+Lorenzo Berlincioni University of Florence
+
+Florence
+
+lorenzo.berlincioni@unifi.it
+
+Luca Cultrera University of Florence
+
+Florence
+
+luca.cultrera@unifi.com
+
+Federico Becattini University of Siena
+
+Siena
+
+federico.becattini@unisi.it
+
+Pietro Pala University of Florence
+
+Florence
+
+pietro.pala@unifi.it
+
+## Abstract
+
+The diffusion of drones presents significant security and safety challenges. Traditional surveillance systems, particularly conventional frame-based cameras, struggle to reliably detect these targets due to their small size, high agility, and the resulting motion blur and poor performance in challenging lighting conditions. This paper surveys the emerging field of event-based vision as a robust solution to these problems. Event cameras virtually eliminate motion blur and enable consistent detection in extreme lighting. Their sparse, asynchronous output suppresses static backgrounds, enabling low-latency focus on motion cues. We review the state-of-the-art in event-based drone detection, from data representation methods to advanced processing pipelines using spiking neural networks. The discussion extends beyond simple detection to cover more sophisticated tasks such as real-time tracking, trajectory forecasting, and unique identification through propeller signature analysis. By examining current methodologies, available datasets, and the distinct advantages of the technology, this work demonstrates that event-based vision provides a powerful foundation for the next generation of reliable, low-latency, and efficient counter-UAV systems.
+
+## 1. Introduction
+
+The proliferation of small unmanned aerial vehicles (UAVs), commonly known as drones, has marked a significant technological turning point, unlocking a vast range of applications from commercial logistics and precision agriculture to infrastructure inspection and cinematography. However, this increasing accessibility has concurrently given rise to pressing challenges in security and public safety [67]. The potential for malicious use, including unau-
+
+**Figure 1.** Event camera based drone detection works trend. We show the number of papers trough the years 2012-2024 as results of the query on Google Scholar (event camera OR neuromorphic vision) AND (drone OR UAV) AND (detection).
+
+thorized surveillance, the disruption of controlled airspace, smuggling of contraband, and threats to critical infrastructure, has established the development of robust and reliable counter-UAV systems as a paramount research priority. The intrinsic characteristics of these aircraft, namely their small size, high agility, low acoustic and thermal signatures, and often non-metallic composition, present a serious detection challenge for traditional surveillance technologies.
+
+Among the various sensing modalities employed for drone detection, vision-based systems are particularly compelling due to their passive nature and ability to provide rich information for target classification and identification [29, 46]. Nevertheless, conventional frame-based cameras, which acquire images at a fixed rate, suffer from fundamental limitations when tasked with detecting drone targets. The high angular velocity of a drone, especially in
+
+close-range scenarios, frequently leads to significant motion blur, which degrades feature representation and complicates detection and tracking. Furthermore, the limited dynamic range of standard CMOS sensors makes them highly susceptible to challenging lighting conditions. A drone silhouetted against a bright sky can be lost in sensor saturation, while one operating in low-light or shadowed regions may fail to generate sufficient contrast for detection [38, 44]. These limitations necessitate a paradigm shift in visual sensing to overcome the specific challenges posed by drone detection.
+
+In response to these shortcomings, a new class of bioinspired sensors, known as event cameras, has emerged as a technology for high-speed and high-dynamic-range applications [19]. Unlike traditional cameras that capture a sequence of intensity frames, event cameras operate asynchronously. Each pixel independently monitors for changes in log-scale brightness. When a change exceeds a programmable threshold, the pixel generates an event containing its spatial coordinates, a microsecond-resolution timestamp, and the polarity of the brightness change. This eventdriven data acquisition results in a sparse and continuous stream of information that encodes the dynamic aspects of a scene. The key advantages of this paradigm include a temporal resolution on the order of microseconds, which virtually eliminates motion blur; a very high dynamic range of over 120 dB, enabling robust performance in extreme lighting conditions; and low power consumption, as static parts of the scene generate no data.
+
+The unique properties of event cameras are well-suited to the drone detection problem [35]. The high temporal resolution ensures that the fine details and motion trajectory of a fast-moving drone are captured without blur, providing a rich signal for detection and tracking algorithms [34, 42]. The high dynamic range allows for consistent detection in scenarios with severe backlighting or poor illumination, where conventional cameras would fail. Furthermore, the inherent data sparsity, which naturally filters out static backgrounds and highlights moving objects, serves as a powerful attentional mechanism. This significantly reduces data redundancy and allows computational resources to be focused on the target of interest, making event cameras an ideal sensor for real-time, low-latency, and powerefficient counter-UAV systems [5, 27]. In this work, we study these distinct advantages, analyzing the rapid diffusion of event cameras for drone detection (see Fig. 1).
+
+## 2. Drone Recognition Across Domains
+
+Recognition of flying objects generally falls into two main categories: natural entities like birds and insects, and artificial ones such as drones, flying vehicles and, generally speaking, Unmanned Aerial Vehicles (UAVs). Among these, drone recognition has attracted significant attention
+
+Event Drone Sensing
+
+Tasks
+
+Detection
+
+Tracking
+
+Forecasting
+
+Obstacle Avoidance
+
+Propeller Analysis
+
+Encoding
+
+Event Frames
+
+Point Cloud (x, y, t, p)
+
+Voxel Grids
+
+Time Retraining Frames
+
+Spiking Representations
+
+Datasets
+
+Event-only
+
+Multimodal
+
+Simulated
+
+**Figure 2.** Drone Sensing Taxonomy. We group the related works taken into account and extrapolate a precise taxonomy.
+
+due to growing security concerns, including risks related to unauthorized surveillance, airspace violations, and breaches of restricted zones.
+
+Significant effort has been dedicated to improving the detection of unidentified flying objects across multiple sensor domains. The most common approach relies on the RGB domain, leveraging the maturity, low cost, and high quality of standard cameras [4, 11, 13, 20, 26, 41, 51, 65, 77]. Research in this area includes methods for detecting flying objects from a single moving camera [4] or tracking small unmanned aerial systems (UAS) [51]. Others use visible camera systems [26], develop real-time aerial localization and tracking systems [65], and enable collision avoidance through visual detection [77]. Beyond standard visual light, other optical sensors are also employed. Thermal cameras are used for night-time UAV detection [1], while Short-Wave Infrared (SWIR) cameras provide robust detection capabilities in both day and night scenarios [4]. Some studies adopt alternative optical bands, such as SWIR [10, 44] or combine multiple bands, such as VIS, SWIR, MWIR, and LWIR for a more comprehensive evaluation [20]. Further diversifying optical methods, some works employ depth maps [7] or LiDAR sensors for detectand-avoid applications [15]. Non-optical methods are also common. Radar systems, such as a 35 GHz FMCW system, are used for drone detection [16], and cost-effective Radio Frequency (RF) based detection methods have been investigated [45]. Finally, acoustic sensors can detect drones by identifying their sound signatures [10, 40], a technique that is sometimes paired with optical detection methods [10].
+
+## 3. Event-based Drone Sensing
+
+Event-based drone sensing can be declined according to several subtasks and can be addressed in different ways depending on how the event stream is represented. We summarize the key distinctions in Fig. 2. In the following, we provide a formal definition of event streams and drone sensing from two different viewpoints: drone detection and drone fencing. Let E denote a stream of events, defined as
+
+E = {ei = (xi, yi, pi, ti)}i∈N,
+
+where xi ∈[0, W −1] and yi ∈[0, H −1] represent the spatial coordinates of the event ei, pi ∈{0, 1} denotes its polarity, and ti ∈[0, ∞) is its timestamp.
+
+Drone Detection The objective of the drone detection task is to train a detector D(It) that produces a set of predicted bounding boxes
+
+ˆB = {ˆbk = (ˆxk, ˆyk, ˆwk, ˆhk, ˆtk)}k∈N,
+
+where each bounding box is defined by its top-left corner (ˆxk, ˆyk), its width ˆwk, height ˆhk, and associated timestamp ˆtk. The detector operates on the input It, which can be either the event stream, but also a combination of the event stream E and a corresponding RGB stream V, collected over a temporal window of duration ∆ending at detection time t. All detections at time t must be based solely on data available up to time t, without access to any future information.
+
+Drone Fencing Differently from drone detection, the goal of drone fencing is not the precise localization of a drone within a scene, but rather to determine its passage or mere presence within a predefined surveilled area. In the drone fencing task, the objective is to train an identifier F(I) that produces a binary output Pt at any given time t, indicating the drone presence in the scene.
+
+Challenges of Drone Detection The steep increment in usage and diffusion of drones in the last years has dramatically increased the related challenges for their detection. This can be linked to 4 main causes, that affect event-based drone detection: • Variety: modern drones are characterized by a notable variety of shape, dimensions and goals, making detection based solely on appearance hard to generalize in the wild; • High speed: the speed range in drones is notable and is not trivial to retrieve information at high fps; • Extreme scenarios: the conditions in which drone detection is necessary covers also extreme weather scenarios, low light environments, and harsh meteorological conditions (eg. rain, snow) which are challenging for event cameras too [9, 38];
+
+• Distractors and concurrent objects: The operational environments often contain numerous other flying objects such as birds, other drones, airplanes, and even insects [11, 36], which can act as distractors and confuse detection systems.
+
+## 4. Event-based Drone Detection
+
+A significant variety of event-based drone detectors is present in the literature. Their characteristics mainly depend on the nature of the data and the way in which the data is represented: on the one hand, the availability of other modalities in addition to the event stream requires the model to handle multiple parallel streams; on the other hand, different ways of representing events may require different types of architecture to process them. A comparison of common event representations is shown in Fig. 3, where we depict a moving drone as an event point cloud, a voxel grid, or as two frame-based representations.
+
+Frame Based In contrast to the native, asynchronous nature of event data, frame-based approaches transform streams of events into dense, temporally integrated representations that mimic traditional image formats. This conversion enables the direct application of established computer vision algorithms and architectures, which require structured inputs and are difficult to adapt to irregular, sparse data.
+
+Several recent works on drone detection with event cameras [17, 35, 38, 39, 78] rely on frame-like representations obtained by accumulating events over a fixed temporal window ∆t. For instance, Mandula et al. [39] accumulate events within constant intervals to produce two-channel representations: one for positive and one for negative brightness changes, which are then processed by a CNN-based detector. The authors also exploit this representation to spatially align event and RGB frames for annotation transfer. Similarly, Magrini et al. [35] propose a multimodal detection pipeline in which event frames are fused with RGB inputs in a network based on Detr [6]. In this setup, events are grouped in intervals of ∆t = 1/F, where F is the RGB frame rate. In Magrini et al. [38], synchronized RGB and event frames are used for detection, tracking, and trajectory forecasting of UAVs in challenging real-world conditions.
+
+In Eldeborg et al. [17], a Spiking Neural Network (SNN) and an Artificial Neural Network (ANN) are trained using artificial event frames. The input to both models is a 128×128 frame with two polarity channels, obtained either by aggregating events within 50ms (ANN) or by feeding them sequentially in 1ms slices (SNN). In Zundel et al. [78], event frames are fed into a YOLO-based detector [50], and DBSCAN [18] is used for post-processing to identify and track drone clusters.
+
+(a) Event point cloud (b) Event voxel grid (c) Time accumulation frame (d) Time Surface frame
+
+**Figure 3.** Event data representations. Comparison of different views of the event data for a drone. Samples from the FRED dataset [38].
+
+These studies demonstrate that frame-based event representations can be effectively integrated into conventional vision pipelines. They enable low-latency inference, efficient implementation on existing hardware, and compatibility with widely used neural architectures such as ResNet [23], MobileNet [25], and YOLO. Moreover, frame-based inputs simplify data augmentation, training routines, and multimodal fusion. However, this approach sacrifices finegrained temporal details by aggregating events over time, which can blur fast motion and miss brief dynamics critical for detecting small, fast drones. It also discards the original sparsity and temporal resolution from the event stream.
+
+Point Cloud Based Event camera streams can be seen as time-continuous point clouds, thanks to the extreme temporal granularity offered by the neuromorphic sensor. At the same time, all the information is retained. Yet the different nature of the point cloud topology and semantics, when compared to typical 3D point clouds, makes the usage of standard point-based methods non-trivial. In the context of event-based tiny object detection, and specifically small or distant drones, Chen et al. [9] propose the Event-based Sparse Segmentation Network (EV-SpSegNet), a U-shaped architecture designed for direct processing of sparse event point clouds. A key component is the Grouped Dilated Sparse Convolution Attention (GDSCA) module, which leverages sparse convolutions and patch attention to efficiently capture multi-scale local and long-range spatiotemporal contextual features, critical for identifying the continuous curve-like trajectories of small moving targets. The key idea is that the movement described by an object in the 3D event point cloud is distinctive of its nature and can therefore be used for object detection by first segmenting the point cloud. Complementing this, the novel Spatiotemporal Correlation (STC) Loss is introduced to specifically promote event continuity and suppress isolated noise, further enhancing the network’s ability to segment tiny objects in event streams. Another approach, presented in Magrini et al. [36], is based on the classification of algorithmically detected objects in the event stream. In this case, the task is
+
+to correctly classify multiple classes of unidentified flying objects, specifically drones, birds and insects, using a point cloud-based network. Specifically, the usage of PointNet [47] and PointNet++ [48] demonstrates a strong capability in distinguishing these classes by the implicit nature of their movements in an event point cloud.
+
+Voxels Voxel grid representations [75] discretize the spatio-temporal volume of events into a regular 3D structure. The 2D sensor plane is extended along the temporal axis, which is partitioned into time bins. Each voxel encodes the number of events occurring at a given pixel location during a specific temporal interval. This representation captures temporal dynamics more explicitly than accumulated frames, while preserving a dense and regular structure compatible with standard deep learning architectures. Liu et al. [34] exploit voxel representations to compute event-driven optical flow. While not specific to drone detection, the voxel-based representation enables real-time motion analysis [74], a key component for detecting fastmoving objects. Wang et al. [62] present a more direct application, where EventVOT introduces a high-resolution benchmark and voxel-based baseline for object tracking, including UAVs. In this work, the voxel grid captures fine temporal motion information, and its regular shape facilitates the fusion with RGB modalities.
+
+Time-retaining Frames While conventional frame representations aggregate events into static histograms over a fixed temporal window ∆t, time-aware frame representations aim to retain the temporal structure of the event stream within a frame-like format. These encodings not only capture spatial event density but also preserve the relative timing of individual events, enabling networks to exploit dynamic motion cues. A classic example of time-retaining approach is Time Surface [54], where each pixel value encodes the timestamp of the most recent event. Similarly, Temporal Binary Representation (TBR) [28] and its spiking variant SpikeTBR [37] encode temporal information into the pixel values of frame representations. Mitrokhin et
+
+al.[42] leverage a motion-compensated time image to segment moving objects from background motion. The representation encodes per-pixel timing information, allowing the system to disentangle drone trajectories from camerainduced motion.
+
+End-to-end Neuromorphic approaches This scenario involves a complete pipeline of neuromorphic sensing, processing, and computing. Unlike hybrid approaches, where event data is converted into intermediate representations to interface with conventional deep learning models, end-toend neuromorphic systems maintain the spike-based nature of the signal throughout the entire processing chain. This includes both Spiking Neural Network (SNN) architectures and dedicated neuromorphic hardware, such as Intel’s Loihi [14] or SynSense’s Speck [66], which are designed to exploit the sparse, event-driven characteristics of the input. These systems offer unmatched energy efficiency and latency, making them especially suitable for edge deployments in scenarios like drone detection, where power and bandwidth constraints are critical. In Kirkland et al. [31], the authors propose a low-power UAV detection system based on a retina-inspired neuromorphic vision sensor, leveraging a deep convolutional Spiking Neural Network trained using Spike-Timing Dependent Plasticity (STDP). The system is designed to detect drones by processing asynchronous event streams in real time, demonstrating the potential of STDP-trained SNNs for efficient aerial threat detection in edge scenarios. Another significant advantage of end-to-end neuromorphic pipelines is the extremely low power consumption; in Eldeborg et al. [17] the authors present a low-power drone detection system utilizing the Speck processor and embedded event-based camera to establish a virtual tripwire, with a Spiking neural network tasked with classifying the presence of the drone in the scene (drone fencing task, see Sec. 3). In Zhang et al.[68], the authors propose a low-power UAV object detection system based on event cameras, leveraging a Spiking Swin Transformer architecture that combines spiking neurons with hierarchical transformer features. In this case, no deployment on a real neuromorphic chip has been used.
+
+## 5. Beyond Neuromorphic Drone Detection
+
+Drone Tracking A natural extension of the drone detection task is drone tracking. In the drone tracking task, drone instances must be spatio-temporally identified across the entirety of a stream of events. Several event-based generalpurpose tracking approaches have been proposed in the literature. Early works adapted traditional computer vision techniques, such as combining Discriminative Correlation Filters (DCF) with Convolutional Neural Network (CNN) features by first converting event streams into frame-like representations [32]. SiamEvent [8] shifted the focus to
+
+**Figure 4.** Drone tracking task. Drone tracking annotations taken from the FRED dataset [38]. Different colors correspond to different drones.
+
+learning an edge-aware similarity metric more aligned with the information content of events. More recently, spiking neural networks have also been used for object tracking [69].
+
+The first work to address drone tracking [42] proposed the EED dataset, which contained small drones among other objects. The task was addressed by developing an unconstrained motion segmentation model that estimated the effects of 3D camera motion from the event stream. A larger benchmark for object tracking including also UAVs, EventVOT [62], was recently proposed. The authors also present HDETrack, a tracking framework that leverages knowledge distillation, training a lightweight, event-only student tracker to mimic a powerful, multimodal RGB- Event teacher network, achieving high performance with low latency. Recently, some works have focused solely on tracking drones. Iaboni et al. [27] proposed a low-cost motion capture system that uses an event camera to track multiple quadrotors in real-time. The method combines YOLOv5 with KD-tree tracking, trained on synthetic event frames. End-to-end models for real-time neuromorphic detection and tracking of UAVs have also been proposed [55]: an asynchronous, event-by-event method, combines corner tracking with clustering to identify targets, a design choice aimed at minimizing computational load. A more traditional model is also proposed in the same work, where the event stream is first accumulated into event frames.
+
+The authors of the FRED dataset [38] instead introduced a larger-scale benchmark for drone detection and tracking, better formalizing the task and proposing several tracking-by-detection baselines, combining object detections such as YOLO [30], RT-DETR [73] and Faster- RCNN [22] with the state-of-the-art tracker ByteTrack [70]. An RGB-Event multimodal tracker is also proposed, based on ER-DETR [35]. MOTA (Multi-Object Tracking Accuracy), IDF1 (Identity F1 score), ID Switch, Precision and Recall are used to evaluate the trackers. An example is shown in Fig. 4.
+
+Drone Forecasting Forecasting the position of fastmoving objects is an extremely challenging task. How-
+
+**Figure 5.** Drone forecasting task. Annotation for the forecasting task from FRED [38]. Blue: past; Green: GT; Red: prediction.
+
+ever, the benefits of event cameras have been demonstrated in the literature [43]. Despite this, only a few works exist on forecasting the trajectories of UAVs with event cameras, which will likely become a fundamental application in the near future. Liang et al. Liang et al. [33] proposes an unsupervised approach that utilizes raw LiDAR point clouds to extract drone trajectories and aligns them with event camera images through motion consistency to generate pseudo-labels. By combining kinematic estimation with a visual Mamba neural network in a self-supervised manner, the method predicts future drone trajectories, outperforming supervised image-only and audio-visual baselines in long-horizon predictions. Magrini et al. [38] instead propose the only publicly available benchmark for event-based drone forecasting. The authors present blind references based on LSTMs or transformers that observe only drone coordinates and show that event-based models can largely improve the performance. Interestingly, event-based models consistently outperform RGB-based ones and the proposed multimodal approach outperforms unimodal models for short-term predictions. An example is shown in Fig. 5.
+
+Propeller Blade Analysis A highly effective method for drone identification using event cameras is the analysis of the visual signature generated by propellers. As can be seen in Fig. 6, the rapid rotation of blades, which causes motion blur for standard cameras, creates a rich, high-frequency spatio-temporal pattern perfectly suited for the microsecond temporal resolution of event sensors [2, 52, 56]. These sensors leverage their high temporal resolution, high dynamic range (HDR), and sparse, event-driven output to capture the periodic brightness changes from the blades, effectively filtering out the static background [24, 52, 56]. This unique signature serves as a robust feature to distinguish drones from other objects and effectively acts as an uncooperative, natural fiducial marker for detection and tracking [52].
+
+Several methodologies have been developed to analyze this propeller signature. Frequency-domain techniques treat the event stream as a periodic signal to extract its core frequency components. This analysis is conceptually analogous to the use of micro-Doppler signatures in radar systems for drone identification [16, 17]. More advanced prob-
+
+**Figure 6.** Propeller Blade Analysis. Drone propeller blades observed with an event camera. Image taken from [71].
+
+abilistic methods offer greater robustness. One of these approaches models local event arrivals as Poisson processes to statistically distinguish the periodic bursts from propeller blades against background noise in real-time [56]. Finally, learning-based approaches have leveraged deep neural networks. The seminal work, EVPropNet, trained a CNN exclusively on a large-scale synthetic dataset of propeller events [52]. This network transfers directly to real-world scenarios without retraining, enabling complex on-drone applications like autonomous following and mid-air landing on unmarked drones, shifting the paradigm from passive surveillance to active robotic interaction.
+
+These analysis methods enable precise quantitative measurements of a drone’s operational state. The field of event-based tachometry focuses on estimating propeller rotational speed with high fidelity. Systems like EV-Tach have demonstrated performance comparable to commercial laser tachometers, with relative errors as low as 0.03%, while functioning in difficult lighting conditions [68, 72]. Other methods, like EB-ASM, also achieve high accuracy and have demonstrated the crucial capability of measuring the speeds of multiple propellers simultaneously with a single camera, which is essential for monitoring multi-rotor drones [2]. Beyond speed, the analysis can be extended to full state estimation. For instance, by fitting an ellipse to the aggregated event cloud generated by a propeller, it is possible to derive the drone’s pitch and roll angles, providing valuable attitude information [56]. The evolution of these applications shows a clear progression from simple detection to sophisticated tachometry and state estimation, establishing propeller signature analysis as a key technology for both remote surveillance and advanced autonomous robotics.
+
+In the work by Stewart et al [57, 58], the authors present a virtual fence system for drone detection based on event cameras. The approach leverages the unique rotational signature of drone propellers, captured as periodic patterns in the event stream. By computing temporal histograms and applying spectral analysis, the system detects drones by identifying characteristic frequency peaks associated with
+
+Dataset Resolution RGB / Event Duration Drone-Centric Drone Types Tasks Anti-UAV [29] 1920 × 1080 ✓/ × 4h:25m ✓ ≥6 Det,Track Pawelczyk et al. [46] 640×480 ✓/ × 51446 frames ✓ - Det EED [42] 240 × 180 × / ✓ ≤0h:30m × - Det, Track VisEvent [61] 346 × 260 ✓/ ✓ ≤5h × - Det EventVOT [62] 1280 × 720 × / ✓ ≤5h × - Det F-UAV-D [39] 1280 × 720 ✓/ ✓ 0h:30m ✓ Det Ev-UAV [9] 346 × 240 × / ✓ 0h:15m ✓ - Det,Track Ev-Flying [36] 1280 × 720 × / ✓ 1h:07m × Det,Track NeRDD [35] 1280 × 720 ✓/ ✓ 3h:30m ✓ Det CRSOT [76] 1280 × 720 ✓/ ✓ 2h:50m ✓ - Det,Track FRED [38] 1280 × 720 ✓/ ✓ 7h:07m ✓ Det,Track,Forecast
+
+**Table 1.** Comparison of event-based drone datasets. RGB/Event: availability of modalities. Drone-centric: whether the drone is the primary subject. Task: which tasks the dataset is aimed at (Detection, Tracking, Forecasting)
+
+propeller motion. A substantial improvement was then presented [59], in which the propeller analysis is used directly for the drone spatial detection instead of only presence detection. These methods are purely algorithmic and need no neural network or training data.
+
+## 6. Datasets
+
+Before delving deep into the existing datasets and their characteristics, we need to make a further distinction. Since event cameras alone provide for many advantages not present in other sensors, many works in the literature focus on data gathered by this sensor only. On the other side, the usage of multiple sensors concurrently presents the advantage of better reliability, especially in the presence of challenging scenarios and a more complete coverage of the scene by using complementary domains (e.g., the RGB domain can retain color information that may be crucial for distinction between drones and other kinds of flying objects). Tab. 1 provides an overview of event-based drone sensing datasets.
+
+Event Only Datasets Many methods rely solely on event data due to its rich temporal and spatial content. Singlemodality data is easier to collect, requiring only labeling and no sensor synchronization. We can make a further distinction: drone-centered datasets and drone-containing datasets. This difference pertains to the simple inclusion of drone instances in a broader dataset (drone-containing) versus datasets that focus on drone detection as their primary objective (drone-centered). A collection of 10,000 event frames, among the first drone-centered event based dataset, was first presented by Iaboni et al. [27]. Here, the dataset focuses on multi-quadrotor localization and tracking. The system uses a ceiling-mounted event camera to monitor quadrotors flying indoors and outdoors. The dataset cap-
+
+tures multiple quadrotors (up to 6) in motion across various lighting conditions, flight speeds, and altitudes. In [9], the authors present Ev-UAV, a dataset comprising 147 sequences and over 2.3 million event-level annotations, featuring extremely small targets. The dataset captures diverse scenarios, including urban clutter and extreme lighting conditions. An alternative approach is presented in Da et al. [12]: here the authors present SFERA, a novel stereo fisheye event camera system developed for fast, omnidirectional drone detection and tracking. Two synchronized fisheye Prophesee cameras provide 360◦spherical coverage. The dataset includes over 35 minutes of annotated recordings of drones in outdoor environments under various flight trajectories. Annotations provide per-frame drone positions projected in spherical coordinates. Other works focus on generic object detection, with a broader focus on large quantities of classes, but also including recordings of drones [42, 62, 63].
+
+Multi-modal Datasets Beyond the event camera-only datasets, another subset of datasets comprises complementary domains to be used with the neuromorphic data. These kinds of approaches have a number of advantages as well as some practical disadvantages. On one hand, they provide for more resilient data to domain-specific limitations: one common event camera problem is in fact related to scenarios in which objects may remain stationary for a certain period of time, leading to a total loss of information about said objects. In this scenario, a complementary RGB camera can improve the chance of retaining information [60, 64]. RGB data also helps to distinguish drones from birds, insects, and other flying agents. Some of the major downsides of these approaches are related to the difficulty in setting up the recording station when multiple sources are present. A general-purpose dataset, comprising also annotation of
+
+drones, is presented in Wang et al. [61], in which the authors gather 820 video pairs (RGB + event) collected across realworld scenarios featuring fast motion, low illumination, and cluttered backgrounds. The dataset focuses on tracking and adopts a low-resolution event camera (346×240). Similarly, Zhu et al. [76] tackle this approach with a more diverse data scenario, with the main goal of tracking different objects at high resolution. In Mandula et al. [39], the authors introduce F-UAV-D, a dedicated RGB-neuromorphic dataset for event-based UAV detection. The dataset was captured using the Prophesee EVK4 (1280×720) for the event stream and Sony’s IMX219 for the RGB frames. The dataset comprises approximately 30 minutes of eventframe videos featuring fast-moving drones in both controlled indoor and outdoor scenarios. In Magrini et al. [35], the authors introduce NeRDD (Neuromorphic-RGB Drone Detection), a multimodal benchmark dataset with spatiotemporally synchronized event (DVS) and RGB data, with over 3.5 hours of annotated drone footage collected from stationary ground cameras. Another similar dataset, FRED [38], is composed of a total of more than 7 hours of annotations for drone detection, tracking and forecasting, which includes high-resolution recordings of five drone models and challenging settings such as rain, low light, insect distractors, and indoor/outdoor scenarios.
+
+Simulators and Synthetic Data Since data gathering is a complex and time-consuming process, especially regarding the labeling phase, another frequently common method of creating drone-related datasets is through the simulation of drone-populated environments or the generation of synthetic data. Labeling is potentially free, and scene parameters (e.g., lighting, weather, motion) are fully controllable.
+
+Simulators are also frequently paired with event simulation networks, which create synthetic events from temporally upsampled RGB or grayscale images [21, 49]. This can be applied to both On-Drone [3] and Off-Drone approaches. The main disadvantage of this approach is the limited environment realism, with risks of domain shift when compared to real recordings and scenarios. Simulations may be slow and computationally heavy, with limited lighting and temporal realism, both critical for event data.
+
+Another direction for synthetic data generation is the usage of 3D environments with embedded physical properties, which can result in more realistic data and light simulation. Specialized tools for drone flight simulation have also been developed: Shah et al. [53] proposed an event-based camera simulation module that takes the output from a regular simulated camera, applies a non-linear operation, subtracts successive frames, and then thresholds the outcome. For accurately capturing a rotating propeller’s spectral signature, this approach would demand an exceptionally high frame rate from the simulated camera. In Eldeborg et al. [17], the
+
+authors propose a mix of a small portion of real neuromorphic data combined with a substantial amount of synthetic data, simulated using Blender: in this case, the goal is to simulate the rotating propellers of a UAV.
+
+## 7. Conclusions
+
+In this paper, we addressed the critical challenge of drone detection, where traditional cameras are often hindered by motion blur and limited dynamic range. Event cameras offer a robust alternative, using their high temporal resolution, high dynamic range, and sparse data output to effectively capture small, fast-moving drones in challenging lighting conditions. The field is advancing rapidly, with methods evolving from converting event data into frames for use in conventional neural networks to processing it in its raw point cloud form or with spiking neural networks. Research has also progressed beyond simple detection to tackle more complex tasks such as drone tracking, trajectory forecasting, and unique identification through the analysis of propeller blade signatures. Event-based vision addresses the limits of conventional sensors, enabling efficient, lowlatency counter-UAV solutions.
+
+Acknowledgements
+
+This paper was partially funded by Leonardo S.p.A. and by the project ”Collaborative Explainable neuro-symbolic AI for Decision Support Assistant”, CAI4DSA, CUP B13C23005640006. This work was partially supported by the Piano per lo Sviluppo della Ricerca (PSR 2023) of the University of Siena, project FEATHER: Forecasting and Estimation of Actions and Trajectories for Human–robot intERactions.

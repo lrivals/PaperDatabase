@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2509.18610-singer-onboard-generalist-vision-language",
+  "title": "SINGER: An Onboard Generalist Vision-Language Navigation Policy for Drones",
+  "authors": [
+    {
+      "given": "Maximilian",
+      "family": "Adang"
+    },
+    {
+      "given": "JunEn",
+      "family": "Low"
+    },
+    {
+      "given": "Ola",
+      "family": "Shorinwa"
+    },
+    {
+      "given": "Mac",
+      "family": "Schwager"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2509.18610",
+  "url": "https://arxiv.org/abs/2509.18610",
+  "type": "preprint",
+  "axes": [
+    "datasets-benchmarks",
+    "system-codesign",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "jetson",
+    "orin-nano",
+    "vlm"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 3 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

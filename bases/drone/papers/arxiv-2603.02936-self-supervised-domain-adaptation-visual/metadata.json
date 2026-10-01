@@ -1,0 +1,61 @@
+{
+  "id": "arxiv-2603.02936-self-supervised-domain-adaptation-visual",
+  "title": "Self-supervised Domain Adaptation for Visual 3D Pose Estimation of Nano-drone Racing Gates by Enforcing Geometric Consistency",
+  "authors": [
+    {
+      "given": "Nicholas",
+      "family": "Carlotti"
+    },
+    {
+      "given": "Michele",
+      "family": "Antonazzi"
+    },
+    {
+      "given": "Elia",
+      "family": "Cereda"
+    },
+    {
+      "given": "Mirko",
+      "family": "Nava"
+    },
+    {
+      "given": "Nicola",
+      "family": "Basilico"
+    },
+    {
+      "given": "Daniele",
+      "family": "Palossi"
+    },
+    {
+      "given": "Alessandro",
+      "family": "Giusti"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2603.02936",
+  "url": "https://arxiv.org/abs/2603.02936",
+  "type": "preprint",
+  "axes": [
+    "nano-drone",
+    "tracking-navigation"
+  ],
+  "tags": [
+    "crazyflie",
+    "drone-racing"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

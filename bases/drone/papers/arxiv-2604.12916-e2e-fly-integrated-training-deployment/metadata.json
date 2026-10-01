@@ -1,0 +1,63 @@
+{
+  "id": "arxiv-2604.12916-e2e-fly-integrated-training-deployment",
+  "title": "E2E-Fly: An Integrated Training-to-Deployment System for End-to-End Quadrotor Autonomy",
+  "authors": [
+    {
+      "given": "Fangyu",
+      "family": "Sun"
+    },
+    {
+      "given": "Fanxing",
+      "family": "Li"
+    },
+    {
+      "given": "Linzuo",
+      "family": "Zhang"
+    },
+    {
+      "given": "Yu",
+      "family": "Hu"
+    },
+    {
+      "given": "Renbiao",
+      "family": "Jin"
+    },
+    {
+      "given": "Shuyu",
+      "family": "Wu"
+    },
+    {
+      "given": "Wenxian",
+      "family": "Yu"
+    },
+    {
+      "given": "Danping",
+      "family": "Zou"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2604.12916",
+  "url": "https://arxiv.org/abs/2604.12916",
+  "type": "preprint",
+  "axes": [
+    "tracking-navigation"
+  ],
+  "tags": [
+    "end-to-end",
+    "intel-n100"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

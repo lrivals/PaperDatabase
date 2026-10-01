@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-2609.21005-project-scout-interceptor-drone-perimeter",
+  "title": "Project SCOUT: Interceptor Drone for Perimeter Defense",
+  "authors": [
+    {
+      "given": "Azmain",
+      "family": "Yousuf"
+    },
+    {
+      "given": "Siwei",
+      "family": "Cai"
+    },
+    {
+      "given": "Knut",
+      "family": "Peterson"
+    },
+    {
+      "given": "Lifeng",
+      "family": "Zhou"
+    },
+    {
+      "given": "David",
+      "family": "Han"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2609.21005",
+  "url": "https://arxiv.org/abs/2609.21005",
+  "type": "preprint",
+  "axes": [
+    "counter-uav",
+    "tracking-navigation",
+    "system-codesign"
+  ],
+  "tags": [
+    "air-to-air",
+    "jetson",
+    "orin-nx"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

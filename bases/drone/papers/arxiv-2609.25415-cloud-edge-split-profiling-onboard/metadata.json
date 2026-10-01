@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-2609.25415-cloud-edge-split-profiling-onboard",
+  "title": "Cloud, Edge, or Split? Profiling Onboard and Split Vision-Language Model Deployment for Drone AI",
+  "authors": [
+    {
+      "given": "Zoha",
+      "family": "Azimi"
+    },
+    {
+      "given": "Reza",
+      "family": "Farahani"
+    },
+    {
+      "given": "Schahram",
+      "family": "Dustdar"
+    },
+    {
+      "given": "Christian",
+      "family": "Timmerer"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2609.25415",
+  "url": "https://arxiv.org/abs/2609.25415",
+  "type": "preprint",
+  "axes": [
+    "system-codesign"
+  ],
+  "tags": [
+    "jetson",
+    "orin-nx",
+    "vlm"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "sections numérotées non détectées : III, V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

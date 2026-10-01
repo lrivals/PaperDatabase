@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2407.13706-gap9shield-150gops-ai-capable-ultra",
+  "title": "GAP9Shield: A 150GOPS AI-capable Ultra-low Power Module for Vision and Ranging Applications on Nano-drones",
+  "authors": [
+    {
+      "given": "Hanna",
+      "family": "Müller"
+    },
+    {
+      "given": "Victor",
+      "family": "Kartsch"
+    },
+    {
+      "given": "Luca",
+      "family": "Benini"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2407.13706",
+  "url": "https://arxiv.org/abs/2407.13706",
+  "type": "preprint",
+  "axes": [
+    "nano-drone"
+  ],
+  "tags": [
+    "gap9"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 1 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

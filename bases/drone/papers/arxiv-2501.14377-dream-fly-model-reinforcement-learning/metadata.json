@@ -1,0 +1,51 @@
+{
+  "id": "arxiv-2501.14377-dream-fly-model-reinforcement-learning",
+  "title": "Dream to Fly: Model-Based Reinforcement Learning for Vision-Based Drone Flight",
+  "authors": [
+    {
+      "given": "Angel",
+      "family": "Romero"
+    },
+    {
+      "given": "Ashwin",
+      "family": "Shenai"
+    },
+    {
+      "given": "Ismail",
+      "family": "Geles"
+    },
+    {
+      "given": "Elie",
+      "family": "Aljalbout"
+    },
+    {
+      "given": "Davide",
+      "family": "Scaramuzza"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2501.14377",
+  "url": "https://arxiv.org/abs/2501.14377",
+  "type": "preprint",
+  "axes": [
+    "tracking-navigation"
+  ],
+  "tags": [
+    "drone-racing",
+    "end-to-end"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

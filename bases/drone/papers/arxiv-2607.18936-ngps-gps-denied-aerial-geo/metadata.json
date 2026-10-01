@@ -1,0 +1,36 @@
+{
+  "id": "arxiv-2607.18936-ngps-gps-denied-aerial-geo",
+  "title": "NGPS: GPS-Denied Aerial Geo-Localization and 2.5D Reconstruction via Deep Satellite Image Matching and Multi-Rate Sensor Fusion",
+  "authors": [
+    {
+      "given": "Sanket",
+      "family": "Sharma"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2607.18936",
+  "url": "https://arxiv.org/abs/2607.18936",
+  "type": "preprint",
+  "axes": [
+    "tracking-navigation"
+  ],
+  "tags": [
+    "jetson",
+    "orin-nx",
+    "gnss-denied"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

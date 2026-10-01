@@ -1,0 +1,55 @@
+{
+  "id": "arxiv-2603.01850-tiny-dronerf-tiny-neural-radiance",
+  "title": "Tiny-DroNeRF: Tiny Neural Radiance Fields aboard Federated Learning-enabled Nano-drones",
+  "authors": [
+    {
+      "given": "Ilenia",
+      "family": "Carboni"
+    },
+    {
+      "given": "Elia",
+      "family": "Cereda"
+    },
+    {
+      "given": "Lorenzo",
+      "family": "Lamberti"
+    },
+    {
+      "given": "Daniele",
+      "family": "Malpetti"
+    },
+    {
+      "given": "Francesco",
+      "family": "Conti"
+    },
+    {
+      "given": "Daniele",
+      "family": "Palossi"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2603.01850",
+  "url": "https://arxiv.org/abs/2603.01850",
+  "type": "preprint",
+  "axes": [
+    "nano-drone"
+  ],
+  "tags": [
+    "gap9"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

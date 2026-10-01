@@ -1,0 +1,60 @@
+{
+  "id": "arxiv-2505.06923-yopov2-tracker-end-end-agile",
+  "title": "YOPOv2-Tracker: An End-to-End Agile Tracking and Navigation Framework from Perception to Action",
+  "authors": [
+    {
+      "given": "Junjie",
+      "family": "Lu"
+    },
+    {
+      "given": "Yulin",
+      "family": "Hui"
+    },
+    {
+      "given": "Xuewei",
+      "family": "Zhang"
+    },
+    {
+      "given": "Wencan",
+      "family": "Feng"
+    },
+    {
+      "given": "Hongming",
+      "family": "Shen"
+    },
+    {
+      "given": "Zhiyu",
+      "family": "Li"
+    },
+    {
+      "given": "Bailing",
+      "family": "Tian"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2505.06923",
+  "url": "https://arxiv.org/abs/2505.06923",
+  "type": "preprint",
+  "axes": [
+    "tracking-navigation"
+  ],
+  "tags": [
+    "end-to-end",
+    "orin-nx"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

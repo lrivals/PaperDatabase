@@ -1,0 +1,19 @@
+{"id": "dev-y1", "q": "Quelles approches du corpus permettent d'entraîner ou d'adapter un modèle directement sur microcontrôleur, avec quels budgets mémoire ?", "verdict": "partiel",
+ "requirements": [
+  {"text": "Identifier les approches du corpus permettant d'entraîner ou d'adapter un modèle sur microcontrôleur", "status": "couvert"},
+  {"text": "Budgets mémoire (SRAM/Flash) de chaque approche sur MCU", "status": "partiel"}],
+ "claims": [
+  {"text": "Tiny Training Engine + Sparse Update + Quantization-Aware Scaling : entraînement de CNN sur MCU sous 256KB SRAM et 1MB Flash, sans mémoire auxiliaire", "kind": "lu",
+   "citations": [{"id": "2206.15472#000.0", "excerpt": "first solution to enable tiny on-device training of convolutional neural networks under 256KB SRAM and 1MB Flash without auxiliary memory"}]},
+  {"text": "Le contexte du problème : les MCU ont typiquement une SRAM limitée à 256KB, alors que les frameworks cloud demandent >300MB même pour un petit modèle", "kind": "lu",
+   "citations": [{"id": "2206.15472#001.0", "excerpt": "a limited SRAM size like 256KB"}, {"id": "2206.15472#001.0", "excerpt": "require a large memory footprint (>300MB) even when training a small model"}]},
+  {"text": "TinyOL : transfer learning sur Arduino Nano (Cortex-M4 64MHz) en ajoutant une couche entraînable sur un modèle d'inférence gelé", "kind": "lu",
+   "citations": [{"id": "2110.10486#006.0", "excerpt": "TinyOL [23] brought the transfer learning task on a tiny devices, i.e. an Arduino Nano platform featuring a 64MHz ARM Cortex-M4, by adding a trainable layer on top of a frozen inference model"}]},
+  {"text": "TinyOL ne met à jour que la dernière couche, donc sans rétropropagation du gradient", "kind": "lu",
+   "citations": [{"id": "2110.10486#006.0", "excerpt": "Because only the coefficients of the last layer are updated during the online training process, no backpropagation of error gradients applies"}]},
+  {"text": "QLR-CL (Quantized Latent Replay) : front-end 8 bits gelé et Latent Replays compressés par quantification, jusqu'à 4.5× de mémoire de rehearsal en moins ; cible VEGA (PULP 22nm), comparée à un STM32L4", "kind": "lu",
+   "citations": [{"id": "2110.10486#002.1", "excerpt": "reducing up to 4.5× the memory needed for rehearsing"}]},
+  {"text": "Entraînement en faible précision : poids 16 bits avec arrondi stochastique, ×2 de mémoire d'entraînement en moins qu'en 32 bits", "kind": "lu",
+   "citations": [{"id": "2411.01431#055.1", "excerpt": "proposes to train the given network with 16-bit weights under stochastic rounding, which leads to ×2 less training memory consumption"}]},
+  {"text": "Aucun budget mémoire absolu en kB n'est relevé pour TinyOL ni pour QLR-CL ; seul TTE donne un budget chiffré (256KB SRAM, 1MB Flash), et la comparaison entre approches n'est pas à budget égal", "kind": "déduit", "citations": []}
+ ]}

@@ -1,0 +1,25 @@
+{"id": "dev-y2", "q": "Comment la puissance est-elle mesurée dans les études Jetson, Raspberry Pi et FPGA du corpus, et ces mesures sont-elles comparables entre elles ?", "verdict": "partiel",
+ "requirements": [
+  {"text": "Méthode de mesure de la puissance dans les études Jetson et Raspberry Pi", "status": "couvert"},
+  {"text": "Méthode de mesure de la puissance dans les études FPGA", "status": "couvert"},
+  {"text": "Comparabilité des mesures entre plateformes (portée de la mesure, conditions)", "status": "partiel"}],
+ "claims": [
+  {"text": "Dans 2502.15737, la puissance est suivie avec tegrastats sur Jetson et vcgencmd pmic_read_adc sur Raspberry Pi 5, moyennée sur la durée ; les lignes de benchmark sont étiquetées power_scope = chip.", "kind": "lu",
+   "citations": [{"id": "2502.15737#013.0", "excerpt": "Real-time power usage was monitored using tegrastats for Jetson devices and vcgencmd pmic_read_adc for the Raspberry Pi 5"}, {"paper": "2502.15737", "source_section": "Table 4"}]},
+  {"text": "Dans 2409.16808 (preprint), l'énergie est relevée par un lecteur Python sur un appareil séparé relié à un wattmètre UM25C, après mesure de la consommation au repos de chaque appareil sur cinq minutes.", "kind": "lu",
+   "citations": [{"id": "2409.16808#007.2", "excerpt": "Energy readings are collected using a Python-based energy reader running on a separate device connected to the UM25C power meter"}]},
+  {"text": "Dans 2022-feng, Jetson Nano (7,9 W), Xavier NX (15,2 W) et RPi 4B + NCS2 (6,0 W) pour YOLOv3 S=416 sont rapportés avec power_scope non précisé (unspecified) ; la puissance au repos a été mesurée avant les tests, mais l'instrument n'est pas identifié dans les passages trouvés.", "kind": "lu",
+   "citations": [{"id": "2022-feng#015.0", "excerpt": "Idle power of the accelerator-based SBCs was measured before all the benchmark tests"}, {"paper": "2022-feng", "source_section": "Table 3"}]},
+  {"text": "Dans FINN (1612.07119), deux mesures sont fournies : P chip via PMBus sur les rails d'alimentation du FPGA, et P wall via un wattmètre secteur pour la puissance totale de la carte, moyennées sur 10 s.", "kind": "lu",
+   "citations": [{"id": "1612.07119#019.3", "excerpt": "P chip using the PMBus interface to monitor the FPGA power supply rails, and P wall using a wall power meter for the total board power consumption"}]},
+  {"text": "Dans 2024-zhang, la puissance du FPGA est donnée par le power analyzer de Vivado (estimation) et celle de la carte entière par un wattmètre branché sur la plateforme de développement.", "kind": "lu",
+   "citations": [{"id": "2024-zhang#019.2", "excerpt": "The FPGA's power consumption was reported by the power analyzer of Vivado"}, {"id": "2024-zhang#019.2", "excerpt": "The power consumption of the entire board was measured using the power meter plugged into the development platform"}]},
+  {"text": "Dans 2019-tsukada, la puissance de la carte PYNQ-Z1 est mesurée avec un wattmètre (watt-heure) ordinaire (3,1 W, power_scope board).", "kind": "lu",
+   "citations": [{"id": "2019-tsukada#037.0", "excerpt": "We use an ordinary watt-hour meter to measure the power consumption of PYNQ-Z1 board"}]},
+  {"text": "Dans 2607.13106 (preprint), la puissance de 8,760 W du DPU B4096 sur ZCU104 provient de Table III (puissance Vivado, power_scope estimated), donc d'une estimation et non d'une mesure.", "kind": "lu",
+   "citations": [{"paper": "2607.13106", "source_section": "Table III"}]},
+  {"text": "Les valeurs de power_scope diffèrent entre ces études (chip pour 2502.15737 sur Jetson et Raspberry Pi 5 ; board pour FINN, 1612.07119, et 2021-alonso ; estimated pour les sorties Vivado ; unspecified pour 2022-feng et 2023-zhai), donc les watts ne se comparent pas directement.", "kind": "lu",
+   "citations": [{"paper": "2502.15737", "source_section": "Table 4"}, {"paper": "1612.07119", "source_section": "Table 3, Table 4"}, {"paper": "2022-feng", "source_section": "Table 3"}, {"paper": "2607.13106", "source_section": "Table III"}]},
+  {"text": "Les mesures ne sont pas comparables telles quelles : puissance puce (tegrastats, PMBus, estimation Vivado) et puissance carte ou secteur (wattmètre) n'incluent pas les mêmes composants (DRAM, régulateurs, périphériques), et les échantillonnages et charges diffèrent d'une étude à l'autre.", "kind": "déduit", "citations": []},
+  {"text": "Seules des comparaisons à périmètre identique (par exemple chip contre chip, ou carte contre carte, avec même modèle et même batch) sont défendables ; le papier 2022-feng, dont le périmètre n'est pas précisé, ne se rattache à aucune de ces classes avec certitude.", "kind": "déduit", "citations": []}
+ ]}

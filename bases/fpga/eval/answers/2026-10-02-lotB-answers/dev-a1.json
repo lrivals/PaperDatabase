@@ -1,0 +1,3 @@
+{"id":"dev-a1","q":"Quelles performances obtient la détection de polypes en endoscopie sur FPGA ?","verdict":"absent",
+"requirements":[{"text":"Performances (précision/mAP, FPS, latence) de la détection de polypes en endoscopie","status":"absent"},{"text":"Plateforme FPGA utilisée pour cette détection","status":"absent"},{"text":"Conditions de mesure (jeu de données, précision, batch)","status":"absent"}],
+"claims":[{"text":"La recherche lexicale « polyp » ne renvoie aucun passage et aucune ligne de benchmarks.csv ne concerne polypes/endoscopie ; la base ne traite pas ce sujet.","kind":"déduit","citations":[]}]}

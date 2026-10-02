@@ -1,0 +1,6 @@
+{"id": "ho-a3", "q": "Quels FPS obtient la détection d'adventices par YOLO sur FPGA pour le désherbage de précision ?", "verdict": "absent",
+ "requirements": [
+  {"text": "FPS d'un détecteur YOLO d'adventices (weeds) sur FPGA", "status": "absent"},
+  {"text": "Contexte désherbage de précision / agriculture pour cette mesure", "status": "absent"},
+  {"text": "Plateforme FPGA et condition de mesure associées", "status": "absent"}],
+ "claims": []}

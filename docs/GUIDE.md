@@ -68,8 +68,9 @@ Facultatif :
 - `.venv/bin/pip install -r requirements-viz.txt` pour la visualisation ;
 - `.venv/bin/pip install -r requirements-plot.txt` pour les figures statiques (`bin/pdb plot`) ;
 - `requirements-embed.txt` pour la similarité par embeddings ;
-- `.venv/bin/pip install -r requirements-rag.txt` puis `bin/pdb rag index --download` pour
-  la recherche de passages avec les modèles Qwen locaux (GPU CUDA) ;
+- **route GPU**, seulement si vous voulez utiliser votre carte graphique et qu'elle est CUDA :
+  `.venv/bin/pip install -r requirements-rag.txt` puis `bin/pdb gpu on` (§5, encadré
+  « Route GPU ») ; sans cela, tout tourne sur CPU ;
 - une clé OpenAlex gratuite pour la découverte (§4.3).
 
 ---
@@ -287,6 +288,14 @@ score ne permet de le détecter de façon fiable : jugez sur les extraits
 français, la recherche perd environ la moitié de ses bonnes réponses. Dans Claude Code, `/paper-ask <question>` enchaîne
 ces commandes et rend une réponse sourcée. Détails : [RAG.md](RAG.md) §5.
 
+**Route GPU (optionnelle).** Par défaut, `search` tourne sur CPU (bge-small). Si vous avez
+une carte graphique CUDA et voulez vous en servir, `bin/pdb gpu on` fait passer `search` (et
+donc `/paper-ask`) sur les modèles Qwen3 : mêmes commandes, mêmes `chunk_id`, meilleure
+tenue en français, ~3 s par recherche. `bin/pdb gpu` affiche l'état, `bin/pdb gpu off` revient
+au CPU. La route GPU donne aussi accès à `/paper-research`, qui cherche et propose des
+articles open access quand la base ne suffit pas (import seulement après votre accord).
+Sans GPU, rien ne change et rien n'échoue. Détails : [RAG.md](RAG.md) §13.
+
 ---
 
 ## 6. Contrôle qualité
@@ -328,6 +337,8 @@ Procédure complète : [SETUP.md §8](../SETUP.md#8-vérification).
 | `OpenAlex HTTP 503` | recherche anonyme suspendue | réessayer plus tard, ou clé gratuite (§4.3) ; `--forward --backward` fonctionnent sans recherche |
 | Mots coupés (« classi cation ») | ligatures perdues à l'extraction | `grep` sur un fragment plus court ; défaut connu (SETUP §9) |
 | `reindex` signale `fiche.md dit … metadata.json dit …` | statut modifié d'un seul côté | aligner `fiche:` dans `fiche.md` et `status.fiche` dans `metadata.json` |
+| `# route GPU indisponible : … ; moteur CPU` | route GPU demandée, mais pas de torch, pas de CUDA, ou base pas encore encodée par Qwen | `bin/pdb gpu` dit laquelle ; installer `requirements-rag.txt`, ou `bin/pdb reindex` ; sinon `bin/pdb gpu off`. La recherche a quand même répondu (CPU) |
+| `rag: route GPU (Qwen3) indisponible` | `pdb rag` / `/paper-research` lancés sans GPU | utiliser `pdb search` et `/paper-ask` |
 
 ---
 
@@ -398,7 +409,9 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb ingest --reparse [id…]` | ré-extrait les papiers déjà ingérés depuis leur TEI, sans GROBID |
 | `bin/pdb ingest --reparse --tables docling [--ocr] [id…]` | idem, et Docling pour les tableaux restés sans corps (lent, optionnel : `requirements-docling.txt`) |
 | `bin/pdb search "<q>"`, `show <id>`, `verify <id> "<cit.>"` | passages, texte exact, contrôle d'une citation |
-| `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
+| `bin/pdb gpu [on\|off\|status]` | route GPU optionnelle (Qwen3, CUDA) pour `search` ; `search --gpu\|--cpu` pour une seule requête |
+| `bin/pdb rag …` | outils de la route GPU : index de preuves, `acquire` / `approve` d'articles open access (RAG.md §13) |
+| `bin/pdb eval [--extract\|--rag\|--speed] [--gpu] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
 | `bin/pdb eval --answers <run>` | note les réponses enregistrées d'un run (EVAL.md §10) |
 | `bin/pdb grobid start\|stop\|status` | GROBID |
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
@@ -414,7 +427,8 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `/paper-fiche <paper_id>` | fiche de lecture et lignes de benchmark |
 | `/paper-gaps` | met à jour `gaps.md` |
 | `/paper-discover [axe \| gap \| mots-clés]` | propose des papiers à ajouter et attend votre accord |
-| `/paper-ask <question>` | réponse sourcée et vérifiée depuis la base |
+| `/paper-ask <question>` | réponse sourcée et vérifiée depuis la base (CPU, ou Qwen si la route GPU est active) |
+| `/paper-research <question>` | route GPU seulement : réponse avec boucle de lacunes et acquisition open access, après votre accord |
 | `/base-profile [consigne]` | propose d'affiner le profil de la base (axes, règles, périmètre) ; applique après accord |
 | `/eval-answers [answers\|answers_holdout]` | fait répondre `/paper-ask` aux questions du banc, à l'aveugle, puis note le run (EVAL.md §10) |
 

@@ -190,6 +190,40 @@ def bench_notes(papers, rows, fronts):
     return notes
 
 
+def gpu_indexes(root):
+    """Route GPU (pdb gpu) : vecteurs Qwen de pdb search et index de pdb rag, s'il existe.
+    Route désactivée : rien n'est encodé ; un index pdb rag existant est seulement signalé
+    s'il est périmé. Renvoie des notes."""
+    from lib import rag_models
+    sqlite = Path(root) / ".cache" / "rag" / "index.sqlite3"
+    ok, reason = rag_models.enabled()
+    if not ok:
+        if rag_models.wanted():
+            return [f"route GPU demandée mais indisponible ({reason}) : vecteurs Qwen non mis à jour"]
+        if sqlite.exists():
+            from lib import rag_qwen
+            try:
+                rag_qwen.open_index(root)[0].close()
+            except RuntimeError:
+                return ["index pdb rag (route GPU) périmé : bin/pdb rag index sur une machine avec GPU"]
+        return []
+    notes = []
+    try:
+        from lib import rag
+        m = rag.build_index(root, model=rag.GPU_MODEL)
+        print(f"Index de passages (GPU) : {m['encoded']} passages (ré)encodés ({m['model']}).")
+    except Exception as e:
+        notes.append(f"vecteurs Qwen non reconstruits : {e}")
+    if sqlite.exists():
+        try:
+            from lib import rag_qwen
+            r = rag_qwen.build(root, mode="hybrid")
+            print(f"Index pdb rag : {'inchangé' if r['unchanged'] else str(r['records']) + ' preuves'}.")
+        except Exception as e:
+            notes.append(f"index pdb rag non reconstruit : {e}")
+    return notes
+
+
 def run(root=ROOT):
     """Régénère INDEX.md et external_refs.csv. Retourne 1 si une incohérence est trouvée."""
     root = Path(root).resolve()
@@ -227,6 +261,7 @@ def run(root=ROOT):
                       "(requirements-embed.txt absent).")
         except Exception as e:  # l'index est dérivé : son échec ne bloque pas le reste
             notes.append(f"index de passages non reconstruit : {e}")
+        notes += gpu_indexes(ROOT)
     for n in notes:
         print(f"note    {n}")
     for pb in problems:

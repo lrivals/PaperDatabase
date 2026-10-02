@@ -492,11 +492,16 @@ def verify_accuracy(index, n=40, seed=0):
             for case, d in by_case.items()}
 
 
-def rag_quality(root, fixtures, modes=None, verify_n=40):
+def rag_quality(root, fixtures, modes=None, verify_n=40, gpu=False):
+    """gpu=True : mêmes jeux et mêmes clés avec le moteur Qwen (route GPU), pour que
+    pdb eval --rag --gpu --compare <run CPU> compare les deux moteurs."""
     from lib import rag
     modes = modes or rag.MODES + ("hybrid+rerank",)
-    index = rag.Index(root, rerank="hybrid+rerank" in modes)
-    out = {"passages": len(index.chunks), "model": index.model, "dense": index.dense, "sets": {}}
+    index = rag.Index(root, rerank="hybrid+rerank" in modes, gpu=gpu)
+    if gpu and not index.gpu:
+        raise RuntimeError(index.note.removesuffix(" ; moteur CPU"))
+    out = {"passages": len(index.chunks), "model": index.model, "dense": index.dense,
+           "gpu": index.gpu, "sets": {}}
     sets = {}
     for name in RAG_SETS + NEG_SETS:
         path = Path(fixtures) / f"{name}.jsonl"

@@ -368,6 +368,15 @@ Sur le pilote, le dense et le rerank Qwen n'améliorent pas la route lexicale
 **Fichiers.** `bin/rag_cli.py`, `lib/rag_qwen.py`, `docs/GUIDE.md`, `docs/RAG.md`,
 `templates/CLAUDE.base.md`.
 
+**État (02/10/2026).** Points 1 et 2 faits autrement que prévu : au lieu d'un
+`pdb rag evaluate --save`, les modèles Qwen sont devenus un moteur optionnel de
+`pdb search` (mêmes passages, mêmes `chunk_id`), activé par `bin/pdb gpu on` seulement si
+l'utilisateur veut utiliser sa carte graphique et qu'elle est CUDA. `pdb eval --rag --gpu`
+écrit les mêmes clés que `pdb eval --rag`, donc `--compare` met les deux moteurs côte à côte.
+`pdb rag` et `/paper-research` restent la route GPU (index de preuves, acquisition). Tableau
+« quand utiliser quoi » : [RAG.md §13](RAG.md#13-route-gpu-optionnelle-qwen3). Reste : point 3
+(`check-answer` et `numbers_match`), et le point 4 attend toujours le lot A sur GPU.
+
 ---
 
 ## Lot H — Provenance des réponses

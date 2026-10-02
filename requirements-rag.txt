@@ -1,4 +1,5 @@
-# Optional local RAG retrieval on Python 3.14 / NVIDIA GPU.
+# Optionnel : route GPU (Qwen3 sur GPU NVIDIA CUDA), seulement si l'on veut utiliser sa carte
+# graphique. Puis bin/pdb gpu on (docs/RAG.md §13). Sans ce fichier, tout tourne sur CPU.
 numpy==2.5.3
 torch==2.14.0
 transformers==5.17.0

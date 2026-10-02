@@ -1,10 +1,16 @@
 ---
 description: Answer a research question with the GPU (Qwen3) index and open-access acquisition
 argument-hint: <research question>
-allowed-tools: Read, Write, Grep, Glob, Bash(bin/pdb rag *), Bash(bin/pdb reindex)
+allowed-tools: Read, Write, Grep, Glob, Bash(bin/pdb rag *), Bash(bin/pdb gpu), Bash(bin/pdb reindex)
 ---
 
 Answer: $ARGUMENTS
+
+**GPU route only** (docs/RAG.md §13). The default route is `/paper-ask` (CPU). First run
+`bin/pdb gpu`: if it reports no CUDA GPU or missing torch/transformers, do not use
+`bin/pdb rag`; say so in one line and answer with the `/paper-ask` workflow instead
+(`.claude/commands/paper-ask.md`). Use this skill only when the user invoked it or asked for
+the GPU route or for open-access acquisition. Answer in French, with technical terms in English.
 
 Follow `CLAUDE.md` and `DATA_MODEL.md`. Use `bin/pdb rag index` when the index is missing or stale. Use `bin/pdb rag search "$ARGUMENTS"`; route questions about a paper's contribution through `--kind abstract` and numerical configurations through `--kind benchmark` plus exhaustive `bin/pdb rag benchmarks --filter-json ...`. Search both English and French formulations when appropriate. Results label original text, benchmark transcription, and curated notes. Treat notes as navigation and interpretation. For a selected benchmark or fiche, search its `paper_id` again with `--kind section` or `--kind table` and read the original source using `bin/pdb rag evidence ID --parent` before reporting the fact.
 

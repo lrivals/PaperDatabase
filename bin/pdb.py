@@ -23,8 +23,9 @@
                             plusieurs ids → une ligne par papier
   cites <id> [--external]   références du papier présentes dans la base (et hors base)
   cited-by <id>             papiers de la base qui le citent
-  search "<question>" [-k 8] [--paper ID] [--section S] [--mode M] [--rerank]
-                            passages pertinents, avec chunk_id, section, page (sans LLM)
+  search "<question>" [-k 8] [--paper ID] [--section S] [--mode M] [--rerank] [--gpu|--cpu]
+                            passages pertinents, avec chunk_id, section, page (sans LLM) ;
+                            moteur CPU par défaut, Qwen sur GPU si la route GPU est active
   show <chunk_id>… [--context N]
                             texte exact d'un passage (id court accepté : 1612.07119#019.0)
   verify <chunk_id> "<citation>" [--sha1 X]
@@ -32,12 +33,15 @@
   viz [--port N]            visualisation du corpus (http://127.0.0.1:8050)
   plot [bench|eval|corpus|all] [--only a,b] [--out DIR] [--format png|pdf|svg] [--list]
                             figures statiques : benchmarks, évaluation, statistiques du corpus
-  eval [--extract|--rag|--speed] [--save] [--compare [JSON]]
+  eval [--extract|--rag|--speed] [--gpu] [--save] [--compare [JSON]]
                             banc d'évaluation du logiciel (docs/EVAL.md)
   eval --answers DIR… | --questions [JEU]
                             note les réponses enregistrées d'un run / liste les questions
                             à poser (docs/EVAL.md §10)
-  rag <command>             recherche GPU (Qwen3), preuves, acquisition open access
+  gpu [status|on|off|download]
+                            route GPU optionnelle (Qwen3, CUDA) : état, activation, modèles
+  rag <command>             outils de la route GPU : index SQLite, preuves, acquisition
+                            open access (/paper-research) ; rag -h
   synth <command>           benchmark synthétique (docs/BENCHMARK.md)
   test [--rag]              lance les tests (--rag : pdb eval --rag)
 
@@ -436,9 +440,9 @@ def cmd_paper(args):
     return 0
 
 
-def _rag_index(rerank=False):
+def _rag_index(rerank=False, gpu=False):
     from lib import rag
-    return rag, rag.Index(ROOT, rerank=rerank)
+    return rag, rag.Index(ROOT, rerank=rerank, gpu=gpu)
 
 
 def cmd_search(args):
@@ -458,11 +462,18 @@ def cmd_search(args):
     p.add_argument("--rerank", action="store_true", help=(
         "reclasse les 30 premiers par un cross-encoder (anglais) : meilleur en anglais, "
         "un peu moins bon en français (docs/RAG.md §10)"))
+    engine = p.add_mutually_exclusive_group()
+    engine.add_argument("--gpu", dest="gpu", action="store_const", const=True, help=(
+        "moteur Qwen3 sur GPU CUDA (route GPU, pdb gpu) ; défaut : le réglage de pdb gpu"))
+    engine.add_argument("--cpu", dest="gpu", action="store_const", const=False,
+                        help="moteur CPU (bge-small, MiniLM) même si la route GPU est active")
     p.add_argument("--ids-only", action="store_true")
     p.add_argument("--format", choices=("tsv", "json"), default="tsv")
     a = p.parse_args(args)
 
-    rag, ix = _rag_index(rerank=a.rerank)
+    rag, ix = _rag_index(rerank=a.rerank, gpu=a.gpu)
+    if ix.note:
+        print(f"# {ix.note}", file=sys.stderr)
     ids = None
     if a.paper:
         found = query.resolve(a.paper, ix.metas)
@@ -476,8 +487,9 @@ def cmd_search(args):
         print("# aucun passage", file=sys.stderr)
         return 1
     if a.format == "json":
-        print(json.dumps([{k: h[k] for k in ("chunk_id", "paper_id", "section", "subsection",
-                                              "page", "score", "cos", "sha1")} for h in hits],
+        print(json.dumps([{**{k: h[k] for k in ("chunk_id", "paper_id", "section", "subsection",
+                                                 "page", "score", "cos", "sha1")},
+                           "model": ix.model if h["mode"] != "lexical" else None} for h in hits],
                          ensure_ascii=False, indent=1))
         return 0
     if hits[0]["mode"] != a.mode:
@@ -543,6 +555,54 @@ def cmd_verify(args):
     elsewhere = f"\ttrouvée dans {ix.short_chunk_id(where)}" if where != full else ""
     print(f"{status}\t{ratio:.2f}\t{ix.short_chunk_id(full)}{elsewhere}")
     return 0 if status in ("OK", "APPROX") and where == full else 1
+
+
+def cmd_gpu(args):
+    import argparse
+    from lib import rag_models
+    p = argparse.ArgumentParser(prog="pdb gpu", description=(
+        "Route GPU optionnelle : Qwen3-Embedding-4B et Qwen3-Reranker-4B sur GPU CUDA. "
+        "Désactivée par défaut : pdb search, /paper-ask et pdb eval restent sur le moteur CPU. "
+        "Activée (réglage de la machine, ou PDB_GPU=1), pdb search et pdb reindex utilisent "
+        "Qwen ; pdb rag et /paper-research (acquisition open access) en dépendent."))
+    p.add_argument("action", nargs="?", default="status", choices=("status", "on", "off", "download"))
+    a = p.parse_args(args)
+    if a.action == "off":
+        rag_models.set_wanted(False)
+        print("route GPU désactivée : moteur CPU (pdb search, /paper-ask)")
+        return 0
+    reason = rag_models.unavailable()
+    if a.action in ("on", "download"):
+        if reason:
+            print(f"pdb gpu {a.action} : {reason} ; la route CPU reste utilisée", file=sys.stderr)
+            return 1
+        if a.action == "on":
+            rag_models.set_wanted(True)
+        if a.action == "download" or not rag_models.models_cached():
+            print("téléchargement des modèles Qwen épinglés (≈ 16 Go, une seule fois)…")
+            rag_models.download_models()
+        if a.action == "on":
+            print("route GPU activée ; encodage des passages de la base active (pdb reindex)…")
+            return cmd_reindex([])
+        return 0
+    env = os.environ.get("PDB_GPU")
+    print(f"demandée\t{'oui' if rag_models.wanted() else 'non'}"
+          f"{f' (PDB_GPU={env})' if env else f' ({rag_models.config_path()})'}")
+    if reason:
+        print(f"disponible\tnon : {reason}")
+    else:
+        import torch
+        print(f"disponible\toui : {torch.cuda.get_device_name(0)}")
+    print(f"modèles\t{'en cache' if rag_models.models_cached() else 'absents (pdb gpu download)'}"
+          f"\t{rag_models.EMBED}, {rag_models.RERANK}")
+    from lib import rag
+    gpu_vecs = rag._cache_path(ROOT, rag.GPU_MODEL).exists()
+    sqlite = (ROOT / ".cache" / "rag" / "index.sqlite3").exists()
+    print(f"base {ROOT.name}\tvecteurs Qwen : {'oui' if gpu_vecs else 'non'} ; "
+          f"index pdb rag : {'oui' if sqlite else 'non'}")
+    ok, _ = rag_models.enabled()
+    print(f"route utilisée\t{'GPU (Qwen3)' if ok and gpu_vecs else 'CPU (bge-small)'}")
+    return 0
 
 
 def cmd_test(args):
@@ -670,6 +730,8 @@ def cmd_eval(args):
     p.add_argument("--extract", action="store_true", help="qualité de l'extraction")
     p.add_argument("--rag", action="store_true", help="recherche de passages, pertinence faible, verify")
     p.add_argument("--speed", action="store_true", help="temps d'exécution")
+    p.add_argument("--gpu", action="store_true",
+                   help="volet --rag avec le moteur Qwen (route GPU, pdb gpu) au lieu du moteur CPU")
     p.add_argument("--no-cli", action="store_true", help="--speed sans chronométrer les commandes à froid")
     p.add_argument("--answers", metavar="DIR", nargs="+",
                    help="note les réponses enregistrées d'un run (dossier de JSON, docs/EVAL.md §10) ; "
@@ -710,7 +772,11 @@ def cmd_eval(args):
         res["extraction"] = {"quality": ev.extraction_quality(ROOT), "header": ev.header_accuracy(ROOT),
                              "tables": ev.table_values(ROOT)}
     if a.rag:
-        res["rag"] = ev.rag_quality(ROOT, fixtures)
+        try:
+            res["rag"] = ev.rag_quality(ROOT, fixtures, gpu=a.gpu)
+        except RuntimeError as e:
+            print(f"pdb eval --gpu : {e}", file=sys.stderr)
+            return 1
     if a.speed:
         res["speed"] = ev.speed(ROOT, fixtures, cli=not a.no_cli)
     if a.answers:
@@ -741,7 +807,7 @@ def cmd_eval(args):
                                capture_output=True, text=True).stdout.strip()
         stamp = datetime.datetime.now().strftime("%Y-%m-%dT%H%M")
         results.mkdir(parents=True, exist_ok=True)
-        out = results / f"{stamp}-{sha}{'-dirty' if dirty else ''}.json"
+        out = results / f"{stamp}-{sha}{'-dirty' if dirty else ''}{'-gpu' if a.gpu else ''}.json"
         out.write_text(json.dumps({"date": stamp, "commit": sha, "dirty": bool(dirty),
                                    "base": base.CONFIG["name"], "volets": sorted(res), "results": res},
                                   ensure_ascii=False, indent=1, default=str) + "\n")
@@ -754,7 +820,7 @@ COMMANDS = {
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
     "eval": cmd_eval, "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
     "verify": cmd_verify, "cites": cmd_cites, "cited-by": cmd_cited_by,
-    "rag": cmd_rag, "synth": cmd_synth, "plot": cmd_plot,
+    "rag": cmd_rag, "gpu": cmd_gpu, "synth": cmd_synth, "plot": cmd_plot,
 }
 
 

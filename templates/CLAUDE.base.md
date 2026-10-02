@@ -50,6 +50,7 @@ vérifier avant de les citer.
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM |
 | `/paper-ask <question>` | réponse sourcée et vérifiée |
+| `/paper-research <question>` | route GPU, sur demande seulement (Qwen3, GPU CUDA, `bin/pdb gpu`) : recherche et acquisition open access ; sinon `/paper-ask` |
 | `bin/pdb paper <id \| mot>…` | fiche d'identité d'un papier |
 | `bin/pdb cites <id>` / `bin/pdb cited-by <id>` | graphe de citations internes |
 | `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition + ingestion + réindexation |

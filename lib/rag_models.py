@@ -1,12 +1,80 @@
-"""The two pinned local Qwen models. Imported only for dense indexing/search."""
+"""The two pinned local Qwen models (GPU route). Imported only for dense indexing/search.
 
-import numpy as np
+Optional: the default route is CPU (lib/rag.py, bge-small). The Qwen models are used only
+when the user turns the GPU route on (`bin/pdb gpu on`, or PDB_GPU=1) and CUDA is present;
+see enabled() and status(). numpy/torch/transformers are imported lazily, so this module
+loads on a CPU-only install (requirements.txt).
+"""
+
+import importlib.util
+import json
+import os
+from pathlib import Path
 
 EMBED = "Qwen/Qwen3-Embedding-4B"
 EMBED_REV = "5cf2132abc99cad020ac570b19d031efec650f2b"
 RERANK = "Qwen/Qwen3-Reranker-4B"
 RERANK_REV = "22e683669bc0f0bd69640a1354a6d0aebcfeede5"
 TASK = "Given a web search query, retrieve relevant passages that answer the query"
+
+
+def config_path(env=None):
+    """Machine-level setting, next to the base registry (lib/registry.py)."""
+    from lib import registry
+    return registry.path(env).with_name("config.json")
+
+
+def _config(env=None):
+    p = config_path(env)
+    try:
+        return json.loads(p.read_text(encoding="utf-8")) if p.is_file() else {}
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def set_wanted(on, env=None):
+    """Turn the GPU route on/off for this machine (bin/pdb gpu on|off)."""
+    p = config_path(env)
+    conf = _config(env)
+    conf["gpu"] = bool(on)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(conf, indent=1) + "\n", encoding="utf-8")
+
+
+def wanted(env=None):
+    """Has the user asked for the GPU route? PDB_GPU (1/0) overrides the saved setting."""
+    env = os.environ if env is None else env
+    flag = env.get("PDB_GPU", "").strip().lower()
+    if flag:
+        return flag not in ("0", "false", "no", "off", "non")
+    return bool(_config(env).get("gpu"))
+
+
+def installed():
+    return all(importlib.util.find_spec(m) is not None for m in ("numpy", "torch", "transformers"))
+
+
+def unavailable():
+    """None if the Qwen models can run here, else the reason (French, for the CLI)."""
+    if not installed():
+        return "torch/transformers absents (pip install -r requirements-rag.txt)"
+    import torch
+    if not torch.cuda.is_available():
+        return "aucun GPU CUDA détecté"
+    return None
+
+
+def models_cached():
+    hub = Path(os.environ.get("HF_HOME", Path.home() / ".cache" / "huggingface")) / "hub"
+    return all((hub / f"models--{m.replace('/', '--')}").exists() for m in (EMBED, RERANK))
+
+
+def enabled():
+    """(use_gpu, reason): the GPU route is used when wanted and available."""
+    if not wanted():
+        return False, "route GPU désactivée (bin/pdb gpu on pour l'activer)"
+    reason = unavailable()
+    return (reason is None), reason
 
 
 def download_models():
@@ -31,6 +99,7 @@ def _device():
 
 def embed_texts(texts, query=False, download=False, batch_size=8):
     """Official last-token pooling and query instruction; float32 unit vectors."""
+    import numpy as np
     import torch
     from transformers import AutoModel
     if not texts:

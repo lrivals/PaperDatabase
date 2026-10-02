@@ -20,6 +20,8 @@ construire, comment s'en servir. Suivi des tâches : [SETUP.md §9](../SETUP.md#
 | `pdb cites` / `cited-by`, `--external` | `lib/refs.citations`, `lib/query.citation_lines`, `bin/pdb.py` | `test_refs.py`, `test_query.py` | oui : `cited-by 1612.07119` (4 papiers), `cites 2025-hozhabr --external` (2 dans la base, 286 hors base) |
 | Reranking par cross-encoder (`search --rerank`) | `lib/rag.py` (`_cross_scores`, `Index.search(rerank=True)`) | idem (cross-encoder factice) | oui : évaluation §10, +1,2 s par recherche ; activé dans `/paper-ask` |
 
+| Route GPU optionnelle : moteur Qwen3 pour `pdb search` (`--gpu`), `pdb gpu`, `pdb eval --rag --gpu`, `pdb rag` réservé au GPU | `lib/rag.py`, [lib/rag_models.py](../lib/rag_models.py), `bin/pdb.py`, `bin/reindex.py` | `test_rag.py` (Qwen simulé), `test_rag_qwen.py` | non sur cette machine (pas de GPU) ; Qwen évalué par ailleurs (EVAL.md §8). §13 |
+
 Au total, `bin/pdb test` passe 133 tests (le 25/09/2026, après `cites`, `paper` multiple,
 ligatures, figures rendues au corps et mesures propres).
 
@@ -422,7 +424,9 @@ Fichier [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md). Outil
    bin/pdb test          # tests unitaires (encodeur factice)
    bin/pdb eval --rag    # évaluation sur le vrai modèle (§10)
    ```
-4. **Changer de modèle** : `rag.DEFAULT_MODEL` (et `QUERY_PREFIX` si le modèle en demande
+4. **Route GPU (optionnelle)** : seulement si l'on veut se servir de sa carte graphique
+   et qu'elle est CUDA. `bin/pdb gpu on` ; détails au §13.
+5. **Changer de modèle** : `rag.DEFAULT_MODEL` (et `QUERY_PREFIX` si le modèle en demande
    un), puis `bin/pdb reindex` et `bin/pdb eval --rag` pour comparer. L'ancien cache reste
    dans `.cache/rag/` ; il peut être supprimé.
 
@@ -567,3 +571,82 @@ comparaison, un seul `fulltext.md` en fait ~18 000 en moyenne.
 - les 8 appels `paper` pour connaître le type de publication pourraient se réduire à un
   seul avec une option `--fields type` sur plusieurs ids. Fait depuis :
   `pdb paper id1 id2 … --fields short,type`, utilisé par `/paper-ask`.
+
+---
+
+## 13. Route GPU optionnelle (Qwen3)
+
+Deux ensembles de recherche ont été développés en parallèle : la route décrite dans ce
+document (`lib/rag.py`, CPU) et une route GPU apportée par Maksym Lytvynenko (`lib/rag_qwen.py`,
+`lib/rag_models.py`, `lib/rag_external.py`, `bin/pdb rag`, `/paper-research` ;
+[RAG_IMPLEMENTATION_PLAN.md](RAG_IMPLEMENTATION_PLAN.md)). Elles travaillent ensemble selon
+une règle simple : **la route CPU est celle par défaut ; la route GPU ne sert que si
+l'utilisateur veut utiliser sa carte graphique, et s'il en a une (CUDA).**
+
+### 13.1 Quand utiliser quoi
+
+| Besoin | Sans GPU (défaut) | Avec la route GPU activée |
+|---|---|---|
+| Chercher des passages | `pdb search` (BM25 + bge-small, rerank MiniLM) | `pdb search` : même commande, moteur Qwen3-Embedding-4B + Qwen3-Reranker-4B |
+| Lire, vérifier une citation | `pdb show`, `pdb verify` | identiques (mêmes `chunk_id`) |
+| Répondre à une question | `/paper-ask` | `/paper-ask` (moteur Qwen automatiquement) |
+| Compléter la base par des articles open access | `/paper-discover`, `/paper-add` | en plus : `/paper-research` (`pdb rag acquire`, puis `approve` après accord) |
+| Filtres exhaustifs sur les benchmarks | `pdb bench` | en plus : `pdb rag benchmarks --filter-json` |
+| Évaluer la recherche | `pdb eval --rag` | `pdb eval --rag --gpu --compare <run CPU>` |
+
+La route GPU est utile surtout pour les questions en français et le vocabulaire éloigné du
+texte : sur les jeux de `pdb eval`, les modèles Qwen (mesurés avec `pdb rag`, RTX 5090 de
+32 Go) retrouvent dans les 5 premiers les 8 questions françaises, contre 5 avec bge-small, et
+gagnent 2 questions sur 25 au holdout, pour 3 à 4 s par requête avec rerank (EVAL.md §8,
+BENCHMARK.md). En anglais, la route CPU fait aussi bien sur le pilote. Chaque modèle 4B en
+BF16 occupe ~8 Go de mémoire GPU ; ils sont chargés l'un après l'autre. Les mesures du
+moteur Qwen intégré à `pdb search` restent à faire : `pdb eval --rag --gpu --compare`.
+
+### 13.2 Activer la route GPU
+
+```bash
+.venv/bin/pip install -r requirements-rag.txt   # torch, transformers (CUDA)
+bin/pdb gpu            # état : demandée ? GPU détecté ? modèles en cache ? vecteurs de la base ?
+bin/pdb gpu on         # active (réglage de la machine), télécharge les modèles (~16 Go) si
+                       # besoin, puis réindexe la base active (vecteurs Qwen)
+bin/pdb gpu off        # retour au moteur CPU
+PDB_GPU=1 bin/pdb …    # active pour une commande ou une session ; PDB_GPU=0 désactive
+```
+
+Le réglage est enregistré dans `~/.config/pdb/config.json` (à côté du registre des bases) :
+il concerne la machine, pas une base. `pdb search --gpu` ou `--cpu` force le moteur pour
+une seule recherche.
+
+**Repli.** Sans torch, sans CUDA, ou si les vecteurs Qwen de la base n'existent pas encore
+(base pas réindexée depuis l'activation), `pdb search` reste sur le moteur CPU et l'écrit
+sur stderr (`# route GPU indisponible : … ; moteur CPU`). Une question n'échoue jamais
+faute de GPU. `pdb rag` en mode `dense`/`hybrid`, `acquire` et `approve` s'arrêtent au
+contraire tout de suite avec un renvoi vers `pdb search` ; `pdb rag … --mode lexical`,
+`evidence`, `benchmarks` et `check-answer` tournent sans GPU.
+
+### 13.3 Ce qui est partagé
+
+- **Passages et identifiants.** Le moteur Qwen de `pdb search` encode exactement les
+  passages de `lib/rag.load_chunks` : `chunk_id`, `pdb show`, `pdb verify`, le mode
+  enregistrement de `/paper-ask` et `pdb eval --answers` ne changent pas.
+- **Cache.** `.cache/rag/` contient côte à côte `BAAI_bge-small-en-v1.5.npz` (CPU),
+  `Qwen_Qwen3-Embedding-4B.npz` (GPU, même format, même clé `chunk_id:sha1`, réencodage
+  incrémental) et, si `pdb rag index` a été lancé, `index.sqlite3` et `runs/` (route
+  `pdb rag`).
+- **Réindexation.** `pdb reindex` (et donc `add`, `ingest`) met toujours à jour les vecteurs
+  CPU. Route GPU active : aussi les vecteurs Qwen et, s'il existe, l'index SQLite de
+  `pdb rag`. Route inactive : un index `pdb rag` périmé est seulement signalé.
+- **Modèles.** Une seule définition des modèles épinglés (révisions comprises) :
+  `lib/rag_models.py`, utilisée par `pdb search --gpu`, `pdb rag` et l'acquisition.
+
+### 13.4 Ce qui reste propre à `pdb rag`
+
+`pdb rag` garde son index SQLite (FTS5 + vecteurs Qwen sur des morceaux de 512 jetons, avec
+fiches et lignes de `benchmarks.csv` indexées comme preuves), ses `evidence_id` hachés et
+son contrôle `check-answer` (identité et présence de l'extrait, pas les nombres). C'est
+l'outil de `/paper-research`, qui ajoute la boucle de lacunes et l'acquisition open access
+(OpenAlex + arXiv, budget borné, staging, import seulement après accord). Les deux formats
+d'identifiants ne se mélangent pas dans une même réponse. Unification restante (lot G de
+[AMELIORATIONS.md](AMELIORATIONS.md)) : `check-answer` qui contrôle aussi les nombres, et
+`/paper-research` sur les `chunk_id` de `pdb search`.
+

@@ -83,15 +83,15 @@ chiffre à chiffre ([docs/EVAL.md](../../docs/EVAL.md) §6).
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches `done` et `benchmarks.csv` |
 | `/paper-discover [axe \| gap \| mots-clés]` | cherche des candidats (OpenAlex), propose une liste courte, n'ajoute qu'après accord de l'utilisateur |
-| `/paper-ask <question>` | recherche hybride et réponse documentée ; peut ajouter automatiquement les articles open access utilisés comme preuve |
+| `/paper-research <question>` | **route GPU, sur demande seulement** (Qwen3, GPU CUDA, `bin/pdb gpu`) : recherche `bin/pdb rag` et acquisition d'articles open access, importés seulement après accord ; sans GPU, utiliser `/paper-ask` |
 | `bin/pdb plot [bench\|eval\|corpus\|all] [--only a,b] [--format png\|pdf]` | figures statiques (PNG par défaut) dans `figures/` : benchmarks (FPS/W, GOPS/W, ressources, précision), évaluation du logiciel, statistiques du corpus et carte des gaps ; sources et effectifs dans `figures/manifest.json` (`requirements-plot.txt`, SETUP.md §5) |
 | `.venv/bin/python bin/viz.py` | visualisation du corpus (app Dash, http://127.0.0.1:8050) : graphe 3D (couleur par thème, liens citations / références partagées / similarité textuelle / thèmes communs, recherche, filtres, détail avec fiche et benchmarks) et onglet Généalogie (frise des citations d'un papier ou d'un sujet). Dépendances : `requirements-viz.txt` (+ `requirements-embed.txt`, optionnel). Détails : [SETUP.md](../../SETUP.md) §5 |
 
 Après toute modification du corpus (fiche remplie, ligne de benchmark ajoutée) :
 `.venv/bin/python bin/reindex.py` (régénère `INDEX.md` et `external_refs.csv`) ;
 `bin/pdb add` et `bin/pdb ingest` le font d'eux-mêmes.
-Si `/paper-ask` utilise l'index de passages, relancer ensuite `bin/pdb rag index` ;
-une recherche sur un instantané périmé échoue explicitement.
+`reindex` met aussi à jour l'index de passages de `pdb search` (et, si la route GPU est
+active, les vecteurs Qwen et l'index de `pdb rag` : [docs/RAG.md §13](../../docs/RAG.md#13-route-gpu-optionnelle-qwen3)).
 
 Pour ajouter un article sous paywall, il faut déposer le PDF dans `inbox/` à la main, puis
 `bin/pdb ingest`. Aucun contournement de paywall.

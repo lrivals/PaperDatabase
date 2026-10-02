@@ -1,4 +1,8 @@
-"""Rebuildable evidence index over PaperDatabase's authoritative files."""
+"""Rebuildable evidence index over PaperDatabase's authoritative files (`bin/pdb rag`).
+
+GPU route (Qwen3, opt-in): the default route is `pdb search` (lib/rag.py, CPU). Lexical
+mode (SQLite FTS5) runs without a GPU; dense and hybrid modes need CUDA (lib/rag_models).
+"""
 
 import csv
 import hashlib
@@ -8,8 +12,6 @@ import os
 import re
 import sqlite3
 from pathlib import Path
-
-import numpy as np
 
 from lib import schema
 from lib import rag_models
@@ -250,6 +252,7 @@ def search(root, query, mode="hybrid", limit=12, paper=None, kind=None, rerankin
                                    (" AND " + " AND ".join(where) if where else ""), args))
             if not rows:
                 raise RuntimeError("dense index unavailable; run bin/pdb rag index")
+            import numpy as np
             q = rag_models.embed_texts([query], query=True)[0]
             mat = np.stack([np.frombuffer(r["vector"], dtype=np.float32) for r in rows])
             sims = mat @ q

@@ -92,6 +92,7 @@ class RagTest(unittest.TestCase):
              mock.patch.object(rag_external, "_arxiv_candidates", return_value=[]), \
              mock.patch.object(rag_external, "_download", side_effect=download), \
              mock.patch.object(rag_models, "rerank", side_effect=lambda q, texts: [0.9] * len(texts)), \
+             mock.patch.object(rag_models, "tokenizer", return_value=None), \
              mock.patch("bin.ingest.grobid_alive", return_value=False), \
              mock.patch("bin.reindex.run", return_value=0), \
              mock.patch.object(rag, "build", side_effect=lambda root, **kw: build_index(root, mode="lexical")):

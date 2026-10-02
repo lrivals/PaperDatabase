@@ -1,0 +1,14 @@
+{"id":"ho-y1","q":"Quelles techniques de tolérance aux fautes (bit flips, radiations) sont proposées pour l'inférence sur FPGA dans le corpus ?","verdict":"partiel",
+"requirements":[
+{"text":"Techniques de redondance (TMR, TMR sélectif, réplication de canaux) pour l'inférence de réseaux sur FPGA","status":"couvert"},
+{"text":"Techniques algorithmiques ou logicielles de résilience aux bit flips (activations bornées, etc.)","status":"couvert"},
+{"text":"Mitigation liée à la technologie FPGA (configuration SEU, flash vs SRAM) et détection (BIST, ECC)","status":"partiel"},
+{"text":"Efficacité comparée des techniques sur FPGA, mesurée sous radiation réelle","status":"absent"}],
+"claims":[
+{"text":"TMR sélectif : n'appliquer le TMR qu'aux couches les plus vulnérables d'un réseau sur FPGA, car le TMR global est très coûteux en LUT","kind":"lu","citations":[{"id":"2019-libano#001.2","excerpt":"we design and apply selective TMR only to those layers in the networks that have been found to be more vulnerable"}]},
+{"text":"Réplication ciblée de canaux, guidée par une injection d'erreurs accélérée sur FPGA, pour réduire les ressources par rapport au TMR classique","kind":"lu","citations":[{"id":"1912.07394#012.0","excerpt":"decide which channels have to be replicated to achieve a given level of error-tolerance"}]},
+{"text":"Les fonctions d'activation bornées (clipped) bloquent les activations de forte intensité potentiellement fautives (FT-ClipAct, preprint)","kind":"lu","citations":[{"id":"1912.00941#009.0","excerpt":"a technique based on clipped activation functions, which blocks the high-intensity (potentially faulty) activations"}]},
+{"text":"Le TMR (configuration SRAM) impose un surcoût d'au moins 3x en ressources logiques, alors que les FPGA flash (PolarFire) sont immunisés contre les SEU de configuration","kind":"lu","citations":[{"id":"2602.15751#006.0","excerpt":"TMR imposes a significant overhead of at least 3x in logic resources"},{"id":"2602.15751#006.0","excerpt":"inherently immune to these configuration SEUs"}]},
+{"text":"Au niveau matériel, DMR/TMR protègent les unités de calcul et les ECC les mémoires","kind":"lu","citations":[{"id":"1912.00941#001.1","excerpt":"Error Correction Codes (ECC) [12] for error-detection and correction in memories"}]},
+{"text":"Un BIST embarqué permet de surveiller le matériel du moteur d'inférence (cas du VPU Myriad, hors FPGA)","kind":"lu","citations":[{"id":"2024-rech#030.1","excerpt":"built-in self-test (BIST) that allows monitoring the performance of the inference engine hardware"}]},
+{"text":"Les techniques se répartissent en trois niveaux complémentaires : redondance matérielle sélective, robustification algorithmique, choix de technologie FPGA ; leur combinaison n'est pas évaluée dans la base","kind":"déduit","citations":[]}]}

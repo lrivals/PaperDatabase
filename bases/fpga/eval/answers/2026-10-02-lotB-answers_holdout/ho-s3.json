@@ -1,0 +1,12 @@
+{"id": "ho-s3", "q": "Sur quels microcontrôleurs TinyissimoYOLO a-t-il été déployé ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "liste des microcontrôleurs sur lesquels TinyissimoYOLO a été déployé", "status": "couvert"},
+  {"text": "précision de déploiement (quantification 8 bits) et source", "status": "couvert"}],
+ "claims": [
+  {"text": "TinyissimoYOLO a été déployé, en quantification 8 bits, sur les microcontrôleurs STM32H7A3, STM32L4R9, Apollo4b et sur l'accélérateur CNN du MAX78000.", "kind": "lu",
+   "citations": [{"id": "2306.00001#000.0", "excerpt": "deployed with 8-bit quantization on different microcontrollers, such as STM32H7A3, STM32L4R9, Apollo4b and on the MAX78000's CNN accelerator"}]},
+  {"text": "Sur le MAX78000, le réseau atteint jusqu'à 180 fps.", "kind": "lu",
+   "citations": [{"id": "2306.00001#000.0", "excerpt": "the proposed network has been deployed on the MAX78000 microcontroller achieving high frame-rate of up to 180 fps"},
+                 {"paper": "2306.00001", "source_section": "Abstract, §III (Fig. 2), Table II"}]},
+  {"text": "Le benchmark ne détaille que MAX78000, STM32H7A3 et Apollo4b (STM32L4R9 absent de benchmarks.csv).", "kind": "lu",
+   "citations": [{"paper": "2306.00001", "source_section": "§III (Fig. 2a), Table II"}]}]}

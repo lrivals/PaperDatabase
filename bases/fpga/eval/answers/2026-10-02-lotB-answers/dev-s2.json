@@ -1,0 +1,18 @@
+{"id": "dev-s2", "q": "Pourquoi les FPGA sont-ils utilisés pour la sélection d'événements de premier niveau au LHC ?", "verdict": "partiel",
+ "requirements": [
+  {"text": "Contrainte de débit et de latence du Level-1 trigger (40 MHz, quelques µs)", "status": "couvert"},
+  {"text": "Le L1T est implémenté sur FPGA (logique programmable sur cartes dédiées)", "status": "couvert"},
+  {"text": "Argument explicite pourquoi FPGA plutôt que CPU/GPU (déterminisme, parallélisme, reprogrammabilité)", "status": "partiel"}],
+ "claims": [
+  {"text": "Le LHC produit des collisions toutes les 25 ns, environ 1 MB de données brutes par événement, trop pour les ressources de traitement et de stockage ; le L1T réduit le taux de 40 MHz à 100 kHz.", "kind": "lu",
+   "citations": [{"id": "2101.05108#001.0", "excerpt": "reduce the event rate from 40 MHz to 100 kHz"}]},
+  {"text": "Le L1T fonctionne avec une latence fixe de l'ordre de 1 µs, à cause de la taille du système de buffering.", "kind": "lu",
+   "citations": [{"id": "2101.05108#001.0", "excerpt": "the L1T system operates with a fixed latency of O(1 µs)"}]},
+  {"text": "Dans ATLAS et CMS, les algorithmes du L1T sont déployés comme logique programmable sur des cartes électroniques sur mesure équipées de FPGA, le HLT tournant ensuite sur CPU.", "kind": "lu",
+   "citations": [{"id": "2108.03986#001.0", "excerpt": "algorithms are deployed as programmable logic on custom electronic boards equipped with field-programmable gate arrays (FPGAs)"}]},
+  {"text": "Le L1T doit réduire le taux d'événements de 2,5 ordres de grandeur en quelques microsecondes.", "kind": "lu",
+   "citations": [{"id": "2108.03986#001.0", "excerpt": "reducing the event rate by 2.5 orders of magnitude within a few microseconds"}]},
+  {"text": "Le premier étage traite les données à 40 MHz avec des ASICs ou FPGA sur mesure.", "kind": "lu",
+   "citations": [{"id": "2024-campos#001.3", "excerpt": "processes data at 40 MHz with custom ASICs or FPGAs"}]},
+  {"text": "Les FPGA conviennent probablement parce qu'ils offrent une latence déterministe et un parallélisme matériel compatibles avec une latence fixe de quelques µs, ce que des CPU ne garantissent pas ; c'est une inférence, aucun passage ne compare explicitement FPGA, CPU et GPU.", "kind": "déduit", "citations": []}
+ ]}

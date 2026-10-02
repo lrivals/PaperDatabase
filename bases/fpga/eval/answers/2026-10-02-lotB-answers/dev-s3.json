@@ -1,0 +1,14 @@
+{"id": "dev-s3", "q": "Avec quels outils la puissance est-elle mesurée sur les Jetson et le Raspberry Pi 5 dans l'étude YOLOv8 de Rey et al. ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "outil de mesure de la puissance sur les Jetson (Orin Nano, Orin NX)", "status": "couvert"},
+  {"text": "outil de mesure de la puissance sur le Raspberry Pi 5", "status": "couvert"}],
+ "claims": [
+  {"text": "Sur les Jetson, la puissance est suivie en temps réel avec tegrastats.", "kind": "lu",
+   "citations": [{"id": "2502.15737#013.0", "excerpt": "Real-time power usage was monitored using tegrastats for Jetson devices"}]},
+  {"text": "Sur le Raspberry Pi 5, la puissance est relevée avec vcgencmd pmic_read_adc.", "kind": "lu",
+   "citations": [{"id": "2502.15737#013.0", "excerpt": "vcgencmd pmic_read_adc for the Raspberry Pi 5"}]},
+  {"text": "Les outils sont propres à chaque appareil (tegrastats pour les Jetson, vcgencmd pmic_read_adc pour le Pi).", "kind": "lu",
+   "citations": [{"id": "2502.15737#015.0", "excerpt": "tegrastats for the Jetson and vcgencmd pmic_read_adc for the Raspberry Pi"}]},
+  {"text": "Les valeurs moyennées sur la durée servent à calculer l'énergie (W·s) et l'énergie par inférence (J/inference).", "kind": "lu",
+   "citations": [{"id": "2502.15737#013.0", "excerpt": "Power data, averaged over the duration, were used to calculate the energy consumption (W•s) and energy per inference (J/inference)"}]},
+  {"text": "Ces outils lisent des capteurs internes de la carte ou du SoC, donc sans wattmètre externe ; les lignes de benchmarks.csv sont étiquetées power_scope = chip.", "kind": "déduit", "citations": []}]}

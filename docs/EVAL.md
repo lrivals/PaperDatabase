@@ -338,6 +338,9 @@ Lecture :
   demande un jugement humain et consomme des tokens.
 - Pas de comparaison GROBID / Docling : le banc est prêt à la chiffrer une fois Docling
   branché (couverture, tableaux avec corps, valeurs dans le tableau cité).
+- Les extensions prévues pour ces limites sont spécifiées dans
+  [AMELIORATIONS.md](AMELIORATIONS.md) : évaluation des réponses finales (lot A) et vérité
+  terrain des cellules de tableaux (lot E-e).
 
 ## 8. Recherche GPU (Qwen3, `pdb rag`) sur les mêmes jeux (26/09/2026)
 

@@ -23,7 +23,9 @@ lancé dans la base qui reçoit. Détails : [README.md](README.md#plusieurs-base
 
 **Travailler sur le code.** Structure, scripts et installation : [SETUP.md](SETUP.md) ; état
 d'avancement : [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire) ; schémas et
-conventions : [DATA_MODEL.md](DATA_MODEL.md) ; guide d'utilisation : [docs/GUIDE.md](docs/GUIDE.md).
+conventions : [DATA_MODEL.md](DATA_MODEL.md) ; guide d'utilisation : [docs/GUIDE.md](docs/GUIDE.md) ;
+améliorations spécifiées (fiabilité des réponses, tableaux, nouveaux skills) :
+[docs/AMELIORATIONS.md](docs/AMELIORATIONS.md).
 Tests : `bin/pdb test`. Avant/après tout changement du pipeline : `bin/pdb eval --compare`
 ([docs/EVAL.md](docs/EVAL.md)). Une base neuve : `bin/pdb base new <nom> --theme "…"`
 (créée sous `bases/<nom>/`).

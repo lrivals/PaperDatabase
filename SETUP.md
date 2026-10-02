@@ -1189,6 +1189,23 @@ Défauts mis au jour, à corriger (tâche 12) :
   avec le vrai modèle (dépendance non installée) : à faire après
   `pip install -r requirements-embed.txt`. Réutilisable pour la recherche sémantique
   ci-dessous.
+- [ ] **Améliorations du 02/10/2026, spécifiées, non commencées** : fiabilité des réponses,
+  tableaux et nouveaux skills ([docs/AMELIORATIONS.md](docs/AMELIORATIONS.md), §10 pour
+  l'ordre) :
+  - [ ] lot A, évaluation des réponses finales (`pdb eval --answers`, 4 catégories, dont
+    hors corpus) — prérequis des autres lots ;
+  - [ ] lot B, verdict suffisant / partiel / absent par exigence dans `/paper-ask` ;
+  - [ ] lot C, preuves atomiques `claims.jsonl` et skill `/paper-extract` ;
+  - [ ] lot D, colonnes optionnelles de `benchmarks.csv` (`chunk_id`, split, résolution,
+    batch, définition de métrique, protocole) et `pdb bench --check` : reprend la piste 1
+    ci-dessous ;
+  - [ ] lot E, tableaux : bbox dans `sections.jsonl`, OCR par zone, index ligne par ligne
+    avec légende et en-tête, indicateurs de qualité, vérité terrain annotée ;
+  - [ ] lot F, recherche en français (requêtes multiples, modèle multilingue évalué, jeu
+    ≥ 30 questions) ;
+  - [ ] lot G, `pdb search` route de référence, `pdb rag evaluate --save` comparable ;
+  - [ ] lot H, snapshot dans `pdb search --format json`, journal de réponses optionnel ;
+  - [ ] skills `/paper-compare`, `/state-of-art`, `/table-review`, `/research-question`.
 - [ ] **Pistes d'amélioration du 26/09/2026, non commencées** (analyse de la doc et du
   corpus ; ordre proposé) :
   1. traçabilité : colonne `chunk_id` dans `benchmarks.csv` et `pdb bench --check`, qui

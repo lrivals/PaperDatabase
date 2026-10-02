@@ -1,0 +1,8 @@
+{"id":"ho-n1","q":"Quel débit atteint YOLOv3-tiny élagué sur le Zynq-7000 de Zhai et al., avec un puis deux modules de calcul ?","verdict":"suffisant",
+"requirements":[{"text":"Débit de YOLOv3-tiny élagué avec un module sur le Zynq-7000 de Zhai et al.","status":"couvert"},{"text":"Débit de YOLOv3-tiny élagué avec deux modules sur le même Zynq-7000","status":"couvert"}],
+"claims":[
+{"text":"Avec un module, YOLOv3-tiny élagué atteint 91.65 fps en INT16 (virgule fixe dynamique) et 59.14 fps en FP32 sur le Zynq-7000 XC7Z035-FFG676-2","kind":"lu","citations":[{"paper":"2023-zhai","source_section":"Table 8"}]},
+{"text":"Avec deux modules, YOLOv3-tiny élagué atteint 168.72 fps en INT16 et 112.66 fps en FP32 sur la même puce","kind":"lu","citations":[{"paper":"2023-zhai","source_section":"Table 9"}]},
+{"text":"Le texte confirme 168.72 fps pour YOLOv3-tiny en Fixed-16 avec plusieurs modules sur xc-7z035-ffg676-2","kind":"lu","citations":[{"id":"2023-zhai#048.0","excerpt":"the detection throughput of the Fixed-16 precision YOLOv3-tiny model reaches 168.72 fps"}]},
+{"text":"Passer de un à deux modules multiplie le débit INT16 par environ 1,84 (168.72 / 91.65), moins que 2x","kind":"déduit","citations":[]}
+]}

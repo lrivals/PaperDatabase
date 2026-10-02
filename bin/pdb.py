@@ -34,7 +34,7 @@
                             figures statiques : benchmarks, évaluation, statistiques du corpus
   eval [--extract|--rag|--speed] [--save] [--compare [JSON]]
                             banc d'évaluation du logiciel (docs/EVAL.md)
-  eval --answers DIR | --questions [JEU]
+  eval --answers DIR… | --questions [JEU]
                             note les réponses enregistrées d'un run / liste les questions
                             à poser (docs/EVAL.md §10)
   rag <command>             recherche GPU (Qwen3), preuves, acquisition open access
@@ -671,7 +671,7 @@ def cmd_eval(args):
     p.add_argument("--rag", action="store_true", help="recherche de passages, pertinence faible, verify")
     p.add_argument("--speed", action="store_true", help="temps d'exécution")
     p.add_argument("--no-cli", action="store_true", help="--speed sans chronométrer les commandes à froid")
-    p.add_argument("--answers", metavar="DIR",
+    p.add_argument("--answers", metavar="DIR", nargs="+",
                    help="note les réponses enregistrées d'un run (dossier de JSON, docs/EVAL.md §10) ; "
                         "seul volet lancé s'il est le seul demandé")
     p.add_argument("--questions", nargs="?", const="answers", metavar="JEU",
@@ -692,12 +692,14 @@ def cmd_eval(args):
         for qid, q in qs:
             print(f"{qid}\t{q}")
         return 0
-    if a.answers:
-        records = Path(a.answers).expanduser()
-        if not records.exists() and (ROOT / a.answers).exists():
-            records = ROOT / a.answers
-        if not records.exists():
-            p.error(f"--answers : introuvable : {a.answers}")
+    records = []
+    for d in a.answers or ():
+        path = Path(d).expanduser()
+        if not path.exists() and (ROOT / d).exists():
+            path = ROOT / d
+        if not path.exists():
+            p.error(f"--answers : introuvable : {d}")
+        records.append(path)
     if not (a.extract or a.rag or a.speed or a.answers):
         a.extract = a.rag = a.speed = True
     # le banc porte sur la base active : ses questions (eval/fixtures/, à défaut celles du
@@ -712,7 +714,7 @@ def cmd_eval(args):
     if a.speed:
         res["speed"] = ev.speed(ROOT, fixtures, cli=not a.no_cli)
     if a.answers:
-        res["answers"] = {"run": str(records), **ev.answers_quality(ROOT, fixtures, records)}
+        res["answers"] = {"run": ", ".join(map(str, records)), **ev.answers_quality(ROOT, fixtures, records)}
     _print_eval(res)
 
     flat = ev.flatten(res)

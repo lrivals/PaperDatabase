@@ -1,0 +1,18 @@
+{"id": "dev-s1", "q": "Comment FINN mesure-t-il la consommation électrique : au mur ou sur les rails d'alimentation du FPGA ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Le papier FINN (1612.07119) indique quelle(s) méthode(s) de mesure de puissance il utilise", "status": "couvert"},
+  {"text": "Distinguer mesure au mur (carte entière) et mesure sur les rails d'alimentation du FPGA", "status": "couvert"},
+  {"text": "Conditions de mesure (moyennage) et portée dans benchmarks.csv", "status": "couvert"}],
+ "claims": [
+  {"text": "FINN (1612.07119) fournit deux mesures par expérience : P chip, via l'interface PMBus qui surveille les rails d'alimentation du FPGA, et P wall, via un wattmètre au mur pour la consommation totale de la carte.", "kind": "lu",
+   "citations": [{"id": "1612.07119#019.3", "excerpt": "P chip using the PMBus interface to monitor the FPGA power supply rails, and P wall using a wall power meter for the total board power consumption"}]},
+  {"text": "Les mesures sont moyennées sur 10 secondes pendant l'exécution de l'accélérateur.", "kind": "lu",
+   "citations": [{"id": "1612.07119#019.3", "excerpt": "The measurements are averaged over a period of 10 seconds while the accelerator is running"}]},
+  {"text": "Dans benchmarks.csv, les lignes FINN portent power_scope=board et des valeurs comme 21.2 W (SFC-max) ou 11.7 W (CNV-max).", "kind": "lu",
+   "citations": [{"paper": "1612.07119", "source_section": "Table 3, Table 4"}]},
+  {"text": "FINN-R (1809.04570) mesure seulement via les rails PMBus disponibles, sans puissance carte complète.", "kind": "lu",
+   "citations": [{"id": "1809.04570#038.0", "excerpt": "no full board power, only as measured by PMBUS available rails"}]},
+  {"text": "Un travail récent utilisant FINN (2609.24757, preprint) mesure la puissance à l'entrée 12 V.", "kind": "lu",
+   "citations": [{"id": "2609.24757#013.0", "excerpt": "Power is measured at the 12 V input rail"}]},
+  {"text": "Les valeurs power_w de benchmarks.csv pour FINN ne distinguent pas P chip et P wall ; la colonne power_scope=board est donc à croiser avec le texte avant toute comparaison.", "kind": "déduit", "citations": []}
+ ]}

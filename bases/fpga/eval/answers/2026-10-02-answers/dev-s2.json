@@ -1,0 +1,20 @@
+{"id": "dev-s2", "q": "Pourquoi les FPGA sont-ils utilisés pour la sélection d'événements de premier niveau au LHC ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Le contexte : débit de collisions et de données du LHC qui impose un tri en ligne", "status": "couvert"},
+  {"text": "La contrainte de latence (microsecondes) et de débit (40 MHz) du niveau 1", "status": "couvert"},
+  {"text": "Le fait que le L1T est déployé sur FPGA (logique programmable sur cartes dédiées)", "status": "couvert"},
+  {"text": "La raison du choix FPGA (flexibilité/reprogrammation, déterminisme) explicitement argumentée", "status": "partiel"}
+ ],
+ "claims": [
+  {"text": "Le LHC produit des collisions toutes les 25 ns, d'environ 1 MB de données brutes chacune ; ce débit dépasse les ressources de traitement et de stockage, d'où un système de sélection en temps réel, le Level-1 trigger.", "kind": "lu",
+   "citations": [{"id": "2101.05108#001.0", "excerpt": "the LHC experiments run a real-time event selection system, the so-called Level-1 trigger (L1T), to reduce the event rate from 40 MHz to 100 kHz"}]},
+  {"text": "Le L1T opère à latence fixe de l'ordre de O(1 µs), à cause de la taille du système de buffering.", "kind": "lu",
+   "citations": [{"id": "2101.05108#001.0", "excerpt": "the L1T system operates with a fixed latency of O(1 µs)"}]},
+  {"text": "Dans ATLAS et CMS, les algorithmes du L1T sont déployés comme logique programmable sur des cartes électroniques dédiées équipées de FPGA ; le HLT, lui, tourne sur CPU du commerce.", "kind": "lu",
+   "citations": [{"id": "2108.03986#001.0", "excerpt": "algorithms are deployed as programmable logic on custom electronic boards equipped with field-programmable gate arrays (FPGAs)"}]},
+  {"text": "Le L1T réduit le taux d'événements d'environ 2,5 ordres de grandeur en quelques microsecondes.", "kind": "lu",
+   "citations": [{"id": "2108.03986#001.0", "excerpt": "reducing the event rate by 2.5 orders of magnitude within a few microseconds"}]},
+  {"text": "Le L1T traite les données à 40 MHz avec des ASIC ou FPGA sur mesure.", "kind": "lu",
+   "citations": [{"id": "2024-campos#001.3", "excerpt": "processes data at 40 MHz with custom ASICs or FPGAs"}]},
+  {"text": "Les FPGA conviennent donc parce qu'ils combinent traitement à très haut débit et latence déterministe de quelques microsecondes, tout en restant reprogrammables, contrairement aux CPU ; la base n'énonce pas cet argument en toutes lettres.", "kind": "déduit", "citations": []}
+ ]}

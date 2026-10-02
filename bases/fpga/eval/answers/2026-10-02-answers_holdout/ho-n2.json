@@ -1,0 +1,16 @@
+{"id": "ho-n2", "q": "Quelle latence ont les autoencodeurs DNN et CNN pour le déclenchement au LHC sur le VU9P ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Latence de l'autoencodeur DNN sur le VU9P", "status": "couvert"},
+  {"text": "Latence de l'autoencodeur CNN sur le VU9P", "status": "couvert"},
+  {"text": "Conditions de mesure (outil, horloge, estimation vs post-implémentation) et compatibilité avec la contrainte du déclenchement L1T", "status": "couvert"}],
+ "claims": [
+  {"text": "DNN AE (QAT 8 bits) : latence de 130 ns, II de 5 ns, sur Xilinx VU9P (Vivado HLS 2020.1, horloge 5 ns)", "kind": "lu",
+   "citations": [{"id": "2108.03986#021.0", "excerpt": "DNN AE QAT 8 bits | 2 | 5 | 1 | 0.5 | 130 | 5"}, {"paper": "2108.03986", "source_section": "Table II, Table III"}]},
+  {"text": "CNN AE (QAT 4 bits) : latence de 1480 ns, II de 895 ns, 47 % des LUT du VU9P", "kind": "lu",
+   "citations": [{"id": "2108.03986#021.0", "excerpt": "CNN AE QAT 4 bits | 8 | 47 | 5 | 6 | 1480 | 895"}, {"paper": "2108.03986", "source_section": "Table II, Table III"}]},
+  {"text": "Variantes VAE (encodeur seul) : DNN VAE 80 ns, CNN VAE 365 ns ; les modèles DNN utilisent moins de 5 % des ressources du VU9P et le CNN VAE moins de 12 %", "kind": "lu",
+   "citations": [{"id": "2108.03986#010.1", "excerpt": "The DNN (V)AE models use less than 5% of the Xilinx VU9P resources and the corresponding latency is within 130 ns, while the CNN VAE uses less than 12% and the corresponding latency is 365 ns"}, {"paper": "2108.03986", "source_section": "Table III"}]},
+  {"text": "L'AE CNN demande plus de ressources que disponibles dans la conclusion du papier, alors que les autres modèles tiennent dans le budget d'II du LHC", "kind": "lu",
+   "citations": [{"id": "2108.03986#010.1", "excerpt": "The CNN AE model is found to require more resources than are available"}, {"id": "2108.03986#010.1", "excerpt": "All three models have the initiation interval within the strict limit imposed by the frequency of bunch crossing at the LHC"}]},
+  {"text": "Les latences sont des estimations de synthèse HLS, pas des mesures post-place-and-route ; le papier est une publication de journal", "kind": "déduit", "citations": []}
+ ]}

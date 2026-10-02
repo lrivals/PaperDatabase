@@ -1,0 +1,9 @@
+{"id":"dev-a3","q":"Quel débit atteint la lecture de plaques d'immatriculation par YOLO sur Zynq ?","verdict":"absent",
+"requirements":[
+{"text":"Une tâche de lecture/reconnaissance de plaques d'immatriculation (ALPR) est traitée dans la base","status":"absent"},
+{"text":"Un détecteur YOLO exécute cette tâche sur une plateforme Zynq","status":"absent"},
+{"text":"Un débit (FPS) est rapporté pour cette configuration","status":"absent"}],
+"claims":[
+{"text":"Aucune ligne de benchmarks.csv ni aucun passage ne traite la lecture de plaques d'immatriculation.","kind":"déduit","citations":[]},
+{"text":"Le plus proche : détection de véhicules (pas de lecture de plaques) avec LP-YOLO sur Zynq XC7Z020 (PYNQ-Z1), débit maximal mesuré 44.29 FPS à 200 MHz (preprint).","kind":"lu","citations":[{"id":"2609.24757#020.0","excerpt":"The highest measured throughput is 44.29 FPS for LP-YOLO at 200 MHz."}]}
+]}

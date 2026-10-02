@@ -1195,8 +1195,10 @@ Défauts mis au jour, à corriger (tâche 12) :
   - [x] lot A, évaluation des réponses finales (02/10/2026) : `pdb eval --answers DIR` et
     `--questions`, mode `--record` de `/paper-ask`, skill `/eval-answers`, jeux de départ
     fpga `tests/fixtures/answers{,_holdout}.jsonl` (12 + 12, 4 catégories dont hors corpus),
-    protocole [docs/EVAL.md](docs/EVAL.md) §10. Restent : premier run de référence, jeux
-    40 / 60 relus par un tiers, jeux drone et stage, seuils ;
+    protocole [docs/EVAL.md](docs/EVAL.md) §10. Premier run le 02/10/2026, en lexical seul
+    (verdict juste 0,83 dev / 0,92 holdout, hors corpus 6/6, EVAL.md §10). Restent : run
+    hybride + rerank et second run (variance), sources alternatives dans les jeux, jeux
+    40 / 60 relus par un tiers, jeux drone et stage, notes humaines, seuils ;
   - [ ] lot B, verdict suffisant / partiel / absent par exigence dans `/paper-ask` ;
   - [ ] lot C, preuves atomiques `claims.jsonl` et skill `/paper-extract` ;
   - [ ] lot D, colonnes optionnelles de `benchmarks.csv` (`chunk_id`, split, résolution,

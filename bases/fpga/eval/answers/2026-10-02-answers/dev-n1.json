@@ -1,0 +1,14 @@
+{"id": "dev-n1", "q": "Quel débit et quelle latence d'inférence TinyissimoYOLO atteint-il sur le MAX78000 ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Débit (FPS) de TinyissimoYOLO sur le MAX78000", "status": "couvert"},
+  {"text": "Latence d'inférence de TinyissimoYOLO sur le MAX78000", "status": "couvert"},
+  {"text": "Conditions de mesure (entrée, fréquence, tension, portée)", "status": "couvert"}],
+ "claims": [
+  {"text": "TinyissimoYOLO atteint jusqu'à 180 fps sur le MAX78000 (accélérateur CNN)", "kind": "lu",
+   "citations": [{"id": "2306.00001#000.0", "excerpt": "achieving high frame-rate of up to 180 fps and an ultra-low energy consumption of only 196 µJ per inference"}, {"paper": "2306.00001", "source_section": "Abstract, §III (Fig. 2), Table II"}]},
+  {"text": "La latence d'inférence est de 5,5 ms (entrée 88×88, MAX78000 à 1,2 V et 50 MHz), confidence medium", "kind": "lu",
+   "citations": [{"paper": "2306.00001", "source_section": "Abstract, §III (Fig. 2), Table II"}]},
+  {"text": "Le MAX78000 surpasse les autres architectures testées en latence (STM32H7A3 : 359 ms)", "kind": "lu",
+   "citations": [{"id": "2306.00001#009.0", "excerpt": "The CNN accelerated MAX78000 µC outperforms the other architectures in terms of latency"}, {"paper": "2306.00001", "source_section": "§III (Fig. 2a), Table II"}]},
+  {"text": "180 fps correspond à environ 5,6 ms par image, cohérent avec 5,5 ms", "kind": "déduit", "citations": []}
+ ]}

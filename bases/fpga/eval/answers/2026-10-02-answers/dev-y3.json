@@ -1,0 +1,23 @@
+{"id": "dev-y3", "q": "Quels accélérateurs YOLO sur FPGA du corpus rapportent à la fois le débit, la puissance et une précision mesurée ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Identifier les accélérateurs YOLO sur FPGA du corpus", "status": "couvert"},
+  {"text": "Pour chacun, un débit (FPS) rapporté", "status": "couvert"},
+  {"text": "Pour chacun, une puissance rapportée avec sa portée (power_scope)", "status": "couvert"},
+  {"text": "Pour chacun, une précision mesurée (mAP, AP ou accuracy) avec sa métrique", "status": "couvert"}],
+ "claims": [
+  {"text": "2026-fata : YOLOv3-Tiny élagué sur Kria KV260 (DPU INT8), 24.3 FPS, 2.13 W (power_scope unspecified), accuracy 93.8 % sur VOC2012 (pas un mAP), confidence medium", "kind": "lu",
+   "citations": [{"id": "2026-fata#000.0", "excerpt": "achieved 93.8% detection accuracy, 24.3 FPS throughput, 41.59 ms latency, and just 2.13W of power consumption"}, {"paper": "2026-fata", "source_section": "Table 8"}]},
+  {"text": "2024-yan : YOLOv5s INT4 sur ZCU102, 79.1 FPS, 12.3 W (unspecified), mAP 73.8 sur PASCAL VOC", "kind": "lu",
+   "citations": [{"paper": "2024-yan", "source_section": "Table 2 ; Table 3"}]},
+  {"text": "2023-zhai : YOLOv3-tiny élagué sur Zynq XC7Z035, 91.65 FPS à 12.51 W en INT16 (59.14 FPS à 12.92 W en FP32), AP@0.5 59.9 sur UA-DETRAC ; YOLOv3 élagué 3.23 FPS, 12.73 W, AP@0.5 71.1", "kind": "lu",
+   "citations": [{"paper": "2023-zhai", "source_section": "Table 8"}]},
+  {"text": "2507.18174 : YOLOv5 sur Kria KV260 (DPU INT8), 9 FPS, 3.5 W (unspecified), précision de classification 98.6 % sur 72 images (pas un mAP)", "kind": "lu",
+   "citations": [{"paper": "2507.18174", "source_section": "Table I"}]},
+  {"text": "2609.24757 (preprint) : LP-YOLO sur PYNQ-Z1, par ex. Slim 256x256 w2a4 à 142.86 MHz : 35.66 FPS, 2.91 W (board), mAP@0.5 59.4 ; w4a4 320x320 : 35 FPS, 2.15 W, mAP 39.0 ; YOLOv3-tiny w4a4 : 12.35 FPS, 2.08 W, mAP 76.1", "kind": "lu",
+   "citations": [{"paper": "2609.24757", "source_section": "§V-B, §V-C, §V-D, §V-E"}]},
+  {"text": "2609.24757 : la puissance est mesurée sur le rail d'entrée 12 V et la précision rapportée en mAP@0.5", "kind": "lu",
+   "citations": [{"id": "2609.24757#013.0", "excerpt": "Power is measured at the 12 V input rail"}, {"id": "2609.24757#013.0", "excerpt": "Detection accuracy is reported as mAP@0.5"}]},
+  {"text": "2024-zhang (Kintex-7 / Virtex-7) rapporte mAP VOC et puissance carte 12.3 à 24.5 W mais le FPS est n/r dans benchmarks.csv (débit exprimé en GOP/s), donc ne satisfait pas les trois critères au sens FPS", "kind": "lu",
+   "citations": [{"paper": "2024-zhang", "source_section": "Table 3 ; Table 4"}]},
+  {"text": "Les précisions ne sont pas comparables entre accélérateurs : métriques (mAP, AP@0.5, accuracy, classification), jeux de données et portées de puissance (board vs unspecified) diffèrent", "kind": "déduit", "citations": []}
+ ]}

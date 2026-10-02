@@ -1,0 +1,13 @@
+{"id": "dev-n2", "q": "Quelle latence et quelle puissance au mur pour le prototype SFC-max de FINN sur ZC706 ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Latence du prototype SFC-max de FINN sur ZC706", "status": "couvert"},
+  {"text": "Puissance au mur (P wall, board) du même prototype", "status": "couvert"},
+  {"text": "Identification du prototype/plateforme (FINN, ZC706, 200 MHz)", "status": "couvert"}],
+ "claims": [
+  {"text": "Le prototype SFC-max de FINN atteint une latence de 0.31 µs (12.3 millions de classifications par seconde).", "kind": "lu",
+   "citations": [{"id": "1612.07119#020.0", "excerpt": "SFC-max achieving 12.3 million classifications per second at 0.31 µs latency while drawing less than 22 W total power"},
+                 {"paper": "1612.07119", "source_section": "Table 3, Table 4, §5.2.3 (BRAM)"}]},
+  {"text": "La puissance au mur (P wall) de SFC-max est de 21.2 W, contre 7.3 W pour la puce seule (P chip).", "kind": "lu",
+   "citations": [{"id": "1612.07119#037.0", "excerpt": "SFC-max | 12361 k 0.31 | 91131 | 4.5 | 7.3 | 21.2"},
+                 {"id": "1612.07119#039.0", "excerpt": "SFC-max | MNIST | ZC706 | 1 | 4.17 | 12,361 | 7.3 | 21.2"}]},
+  {"text": "Ces valeurs viennent du prototype FINN à 200 MHz ; la puissance de 21.2 W est une mesure carte (power_scope: board), non comparable à une puissance puce.", "kind": "déduit", "citations": []}]}

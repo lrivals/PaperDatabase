@@ -1,0 +1,504 @@
+{
+ "date": "2026-10-02T1111",
+ "commit": "353e788",
+ "dirty": true,
+ "base": "Vision embarquée sur FPGA — IA sûre et certifiable (YOLO, autoencodeurs, apprentissage continu)",
+ "volets": [
+  "answers"
+ ],
+ "results": {
+  "answers": {
+   "run": "eval/answers/2026-10-02-answers, eval/answers/2026-10-02-answers_holdout",
+   "records": 24,
+   "invalid": {},
+   "sets": {
+    "answers": {
+     "n": 12,
+     "verdict_accuracy": 0.8333333333333334,
+     "citation_accept_rate": 0.9629629629629629,
+     "unsupported_claim_rate": 0.023809523809523808,
+     "gold_source_recall": 0.9074074074074076,
+     "gold_value_recall": 1.0,
+     "cases": 12,
+     "answered": 12,
+     "missing": [],
+     "absent_recognized": 1.0,
+     "false_absent": 0.0,
+     "verdict_confusion": {
+      "suffisant": {
+       "suffisant": 7,
+       "partiel": 2,
+       "absent": 0
+      },
+      "partiel": {
+       "suffisant": 0,
+       "partiel": 0,
+       "absent": 0
+      },
+      "absent": {
+       "suffisant": 0,
+       "partiel": 0,
+       "absent": 3
+      }
+     },
+     "by_category": {
+      "simple": {
+       "n": 3,
+       "verdict_accuracy": 1.0,
+       "citation_accept_rate": 1.0,
+       "unsupported_claim_rate": 0.0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": null
+      },
+      "numeric": {
+       "n": 3,
+       "verdict_accuracy": 1.0,
+       "citation_accept_rate": 1.0,
+       "unsupported_claim_rate": 0.0,
+       "gold_source_recall": 0.8333333333333334,
+       "gold_value_recall": 1.0
+      },
+      "synthesis": {
+       "n": 3,
+       "verdict_accuracy": 0.3333333333333333,
+       "citation_accept_rate": 0.9230769230769231,
+       "unsupported_claim_rate": 0.05,
+       "gold_source_recall": 0.8888888888888888,
+       "gold_value_recall": null
+      },
+      "absent": {
+       "n": 3,
+       "verdict_accuracy": 1.0,
+       "citation_accept_rate": 1.0,
+       "unsupported_claim_rate": 0.0,
+       "gold_source_recall": null,
+       "gold_value_recall": null
+      }
+     },
+     "per_question": {
+      "dev-s1": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 6,
+       "claims_read": 5,
+       "citations": 5,
+       "citations_accepted": 5,
+       "citation_status": {
+        "OK": 5
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 1.0
+      },
+      "dev-s2": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 6,
+       "claims_read": 5,
+       "citations": 5,
+       "citations_accepted": 5,
+       "citation_status": {
+        "OK": 5
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.75
+      },
+      "dev-s3": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 4,
+       "claims_read": 3,
+       "citations": 3,
+       "citations_accepted": 3,
+       "citation_status": {
+        "OK": 3
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 1.0
+      },
+      "dev-n1": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 4,
+       "claims_read": 3,
+       "citations": 5,
+       "citations_accepted": 5,
+       "citation_status": {
+        "OK": 5
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 0.5,
+       "gold_value_recall": 1.0,
+       "requirements_declared_covered": 1.0
+      },
+      "dev-n2": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 3,
+       "claims_read": 2,
+       "citations": 4,
+       "citations_accepted": 4,
+       "citation_status": {
+        "OK": 4
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": 1.0,
+       "requirements_declared_covered": 1.0
+      },
+      "dev-n3": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 4,
+       "claims_read": 3,
+       "citations": 5,
+       "citations_accepted": 5,
+       "citation_status": {
+        "OK": 5
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": 1.0,
+       "requirements_declared_covered": 1.0
+      },
+      "dev-y1": {
+       "verdict": "partiel",
+       "verdict_ok": false,
+       "claims": 8,
+       "claims_read": 6,
+       "citations": 7,
+       "citations_accepted": 7,
+       "citation_status": {
+        "OK": 7
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 0.6666666666666666,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.25
+      },
+      "dev-y2": {
+       "verdict": "partiel",
+       "verdict_ok": false,
+       "claims": 9,
+       "claims_read": 7,
+       "citations": 10,
+       "citations_accepted": 8,
+       "citation_status": {
+        "OK": 8,
+        "ABSENT": 2
+       },
+       "unsupported_claims": 1,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.75
+      },
+      "dev-y3": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 8,
+       "claims_read": 7,
+       "citations": 9,
+       "citations_accepted": 9,
+       "citation_status": {
+        "OK": 9
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 1.0
+      },
+      "dev-a1": {
+       "verdict": "absent",
+       "verdict_ok": true,
+       "claims": 2,
+       "claims_read": 0,
+       "citations": 0,
+       "citations_accepted": 0,
+       "citation_status": {},
+       "unsupported_claims": 0,
+       "gold_source_recall": null,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.0
+      },
+      "dev-a2": {
+       "verdict": "absent",
+       "verdict_ok": true,
+       "claims": 1,
+       "claims_read": 0,
+       "citations": 0,
+       "citations_accepted": 0,
+       "citation_status": {},
+       "unsupported_claims": 0,
+       "gold_source_recall": null,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.0
+      },
+      "dev-a3": {
+       "verdict": "absent",
+       "verdict_ok": true,
+       "claims": 2,
+       "claims_read": 1,
+       "citations": 1,
+       "citations_accepted": 1,
+       "citation_status": {
+        "OK": 1
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": null,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.0
+      }
+     }
+    },
+    "answers_holdout": {
+     "n": 12,
+     "verdict_accuracy": 0.9166666666666666,
+     "citation_accept_rate": 1.0,
+     "unsupported_claim_rate": 0.0,
+     "gold_source_recall": 0.6666666666666666,
+     "gold_value_recall": 1.0,
+     "cases": 12,
+     "answered": 12,
+     "missing": [],
+     "absent_recognized": 1.0,
+     "false_absent": 0.0,
+     "verdict_confusion": {
+      "suffisant": {
+       "suffisant": 8,
+       "partiel": 1,
+       "absent": 0
+      },
+      "partiel": {
+       "suffisant": 0,
+       "partiel": 0,
+       "absent": 0
+      },
+      "absent": {
+       "suffisant": 0,
+       "partiel": 0,
+       "absent": 3
+      }
+     },
+     "by_category": {
+      "simple": {
+       "n": 3,
+       "verdict_accuracy": 1.0,
+       "citation_accept_rate": 1.0,
+       "unsupported_claim_rate": 0.0,
+       "gold_source_recall": 0.6666666666666666,
+       "gold_value_recall": null
+      },
+      "numeric": {
+       "n": 3,
+       "verdict_accuracy": 1.0,
+       "citation_accept_rate": 1.0,
+       "unsupported_claim_rate": 0.0,
+       "gold_source_recall": 0.6666666666666666,
+       "gold_value_recall": 1.0
+      },
+      "synthesis": {
+       "n": 3,
+       "verdict_accuracy": 0.6666666666666666,
+       "citation_accept_rate": 1.0,
+       "unsupported_claim_rate": 0.0,
+       "gold_source_recall": 0.6666666666666666,
+       "gold_value_recall": null
+      },
+      "absent": {
+       "n": 3,
+       "verdict_accuracy": 1.0,
+       "citation_accept_rate": 1.0,
+       "unsupported_claim_rate": 0.0,
+       "gold_source_recall": null,
+       "gold_value_recall": null
+      }
+     },
+     "per_question": {
+      "ho-s1": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 3,
+       "claims_read": 3,
+       "citations": 3,
+       "citations_accepted": 3,
+       "citation_status": {
+        "OK": 3
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 0.0,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 1.0
+      },
+      "ho-s2": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 5,
+       "claims_read": 4,
+       "citations": 4,
+       "citations_accepted": 4,
+       "citation_status": {
+        "OK": 4
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 1.0
+      },
+      "ho-s3": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 5,
+       "claims_read": 4,
+       "citations": 4,
+       "citations_accepted": 4,
+       "citation_status": {
+        "OK": 4
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 1.0
+      },
+      "ho-n1": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 3,
+       "claims_read": 2,
+       "citations": 4,
+       "citations_accepted": 4,
+       "citation_status": {
+        "OK": 4
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": 1.0,
+       "requirements_declared_covered": 1.0
+      },
+      "ho-n2": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 5,
+       "claims_read": 4,
+       "citations": 8,
+       "citations_accepted": 8,
+       "citation_status": {
+        "OK": 8
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 0.5,
+       "gold_value_recall": 1.0,
+       "requirements_declared_covered": 1.0
+      },
+      "ho-n3": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 6,
+       "claims_read": 5,
+       "citations": 6,
+       "citations_accepted": 6,
+       "citation_status": {
+        "OK": 6
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 0.5,
+       "gold_value_recall": 1.0,
+       "requirements_declared_covered": 1.0
+      },
+      "ho-y1": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 9,
+       "claims_read": 8,
+       "citations": 8,
+       "citations_accepted": 8,
+       "citation_status": {
+        "OK": 8
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 1.0,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 1.0
+      },
+      "ho-y2": {
+       "verdict": "suffisant",
+       "verdict_ok": true,
+       "claims": 7,
+       "claims_read": 6,
+       "citations": 6,
+       "citations_accepted": 6,
+       "citation_status": {
+        "OK": 6
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 0.5,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 1.0
+      },
+      "ho-y3": {
+       "verdict": "partiel",
+       "verdict_ok": false,
+       "claims": 7,
+       "claims_read": 6,
+       "citations": 6,
+       "citations_accepted": 6,
+       "citation_status": {
+        "OK": 6
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": 0.5,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.3333333333333333
+      },
+      "ho-a1": {
+       "verdict": "absent",
+       "verdict_ok": true,
+       "claims": 2,
+       "claims_read": 1,
+       "citations": 1,
+       "citations_accepted": 1,
+       "citation_status": {
+        "OK": 1
+       },
+       "unsupported_claims": 0,
+       "gold_source_recall": null,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.0
+      },
+      "ho-a2": {
+       "verdict": "absent",
+       "verdict_ok": true,
+       "claims": 0,
+       "claims_read": 0,
+       "citations": 0,
+       "citations_accepted": 0,
+       "citation_status": {},
+       "unsupported_claims": 0,
+       "gold_source_recall": null,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.0
+      },
+      "ho-a3": {
+       "verdict": "absent",
+       "verdict_ok": true,
+       "claims": 0,
+       "claims_read": 0,
+       "citations": 0,
+       "citations_accepted": 0,
+       "citation_status": {},
+       "unsupported_claims": 0,
+       "gold_source_recall": null,
+       "gold_value_recall": null,
+       "requirements_declared_covered": 0.0
+      }
+     }
+    }
+   },
+   "unknown_ids": []
+  }
+ }
+}

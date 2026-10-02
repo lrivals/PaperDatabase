@@ -1,0 +1,11 @@
+{"id":"ho-s2","q":"Quels compilateurs HLS d'autres fournisseurs que Vivado la nouvelle version de hls4ml prend-elle en charge ?","verdict":"suffisant",
+"requirements":[
+{"text":"Identifier la version récente de hls4ml décrite dans la base","status":"couvert"},
+{"text":"Lister les compilateurs HLS Intel/Altera pris en charge","status":"couvert"},
+{"text":"Lister les compilateurs HLS d'autres fournisseurs (Siemens EDA)","status":"couvert"}],
+"claims":[
+{"text":"La nouvelle version de hls4ml (article 2512.01463, preprint) peut cibler des compilateurs HLS de plusieurs fournisseurs, dont Vitis HLS, Intel oneAPI et Catapult HLS","kind":"lu","citations":[{"id":"2512.01463#000.0","excerpt":"can target HLS compilers from several vendors, including Vitis HLS, Intel oneAPI and Catapult HLS"}]},
+{"text":"hls4ml fournit cinq back ends pour des compilateurs HLS d'AMD/Xilinx, Intel/Altera et Siemens EDA","kind":"lu","citations":[{"id":"2512.01463#038.0","excerpt":"hls4ml provides five back ends supporting HLS compilers from AMD/Xilinx, Intel/Altera, and Siemens EDA"}]},
+{"text":"Côté Intel/Altera : back end Quartus (Intel HLS, abandonné) et back end oneAPI (oneAPI 2025.05)","kind":"lu","citations":[{"id":"2512.01463#038.0","excerpt":"the Quartus back end, targeting the discontinued Intel HLS, and the oneAPI back end, targeting oneAPI 2025.05"}]},
+{"text":"Côté Siemens EDA : back end Catapult pour Catapult HLS","kind":"lu","citations":[{"id":"2512.01463#003.1","excerpt":"the Catapult back end for Catapult HLS, targeting the Siemens EDA flow"}]},
+{"text":"Vivado seul n'est donc plus la cible unique : les alternatives sont Intel/Altera (Quartus/oneAPI) et Siemens (Catapult), en plus de Vitis côté AMD","kind":"déduit","citations":[]}]}

@@ -1,0 +1,106 @@
+{
+ "id": "ho-y1",
+ "q": "Quelles techniques de tolérance aux fautes (bit flips, radiations) sont proposées pour l'inférence sur FPGA dans le corpus ?",
+ "verdict": "suffisant",
+ "requirements": [
+  {
+   "text": "Techniques de redondance (TMR/DMR/ECC) pour l'inférence FPGA",
+   "status": "couvert"
+  },
+  {
+   "text": "Techniques spécifiques aux réseaux de neurones (hardening sélectif, clipping, réplication)",
+   "status": "couvert"
+  },
+  {
+   "text": "Techniques au niveau mémoire de configuration / radiations",
+   "status": "couvert"
+  }
+ ],
+ "claims": [
+  {
+   "text": "La redondance modulaire triple (TMR) est la technique standard contre les SEU de la mémoire de configuration des FPGA SRAM, au prix d'au moins 3x de ressources logiques.",
+   "kind": "lu",
+   "citations": [
+    {
+     "id": "2602.15751#006.0",
+     "excerpt": "The standard mitigation technique is Triple Modular Redundancy (TMR), where logic is triplicated and a voter system corrects any single fault"
+    }
+   ]
+  },
+  {
+   "text": "DMR/TMR (unités de calcul) et ECC (mémoires) sont les techniques de redondance matérielle usuelles.",
+   "kind": "lu",
+   "citations": [
+    {
+     "id": "1912.00941#001.1",
+     "excerpt": "Error Correction Codes (ECC) [12] for error-detection and correction in memories"
+    }
+   ]
+  },
+  {
+   "text": "Réplication sélective de canaux pour des QNN, moins redondante que le TMR (fautes permanentes).",
+   "kind": "lu",
+   "citations": [
+    {
+     "id": "1912.07394#000.0",
+     "excerpt": "selective channel replication which adds significantly less redundancy than used by the common triple modular redundancy"
+    }
+   ]
+  },
+  {
+   "text": "Ordonnancement tenant compte des fautes des processing elements pour implémentations repliées.",
+   "kind": "lu",
+   "citations": [
+    {
+     "id": "1912.07394#000.0",
+     "excerpt": "a fault-aware scheduling of processing elements for folded implementations"
+    }
+   ]
+  },
+  {
+   "text": "Hardening sélectif (TMR partiel) : environ 40% de masquage de fautes pour 8% de surcoût (CNN MNIST, expérience sous radiation).",
+   "kind": "lu",
+   "citations": [
+    {
+     "id": "2019-libano#011.4",
+     "excerpt": "our selective hardening approach achieves around 40% fault masking with a marginal overhead of only 8%"
+    }
+   ]
+  },
+  {
+   "text": "ReLU écrêtée (clipped activation, FT-ClipAct) : valeurs d'activation de forte intensité, possiblement fautives, mises à zéro (preprint).",
+   "kind": "lu",
+   "citations": [
+    {
+     "id": "1912.00941#004.0",
+     "excerpt": "we introduce a novel clipped version of the ReLU activation function"
+    }
+   ]
+  },
+  {
+   "text": "Un BIST embarqué surveille le moteur d'inférence du VPU Myriad (détection de fautes, hors FPGA).",
+   "kind": "lu",
+   "citations": [
+    {
+     "id": "2024-rech#030.1",
+     "excerpt": "a built-in self-test (BIST) that allows monitoring the performance of the inference engine hardware has been embedded on the Myriad VPU"
+    }
+   ]
+  },
+  {
+   "text": "Les FPGA flash (PolarFire) évitent les SEU de configuration par construction, sans TMR de configuration.",
+   "kind": "lu",
+   "citations": [
+    {
+     "id": "2602.15751#006.0",
+     "excerpt": "Their configuration is stored in nonvolatile flash memory cells, which are inherently immune to these configuration SEUs"
+    }
+   ]
+  },
+  {
+   "text": "Le corpus traite surtout l'évaluation de la résilience (injection de fautes) plus que des techniques validées en radiation sur YOLO/détection d'objets.",
+   "kind": "déduit",
+   "citations": []
+  }
+ ]
+}

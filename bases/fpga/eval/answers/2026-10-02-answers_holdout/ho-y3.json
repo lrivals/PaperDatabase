@@ -1,0 +1,13 @@
+{"id": "ho-y3", "q": "Quelles méthodes du corpus limitent l'oubli catastrophique en apprentissage incrémental de classes, et lesquelles tiennent sur microcontrôleur ?", "verdict": "partiel",
+ "requirements": [
+  {"text": "Inventaire des méthodes anti-oubli en apprentissage incrémental de classes (replay, régularisation, SLDA, etc.)", "status": "couvert"},
+  {"text": "Méthodes tenant sur microcontrôleur (budget mémoire, plateforme MCU)", "status": "partiel"},
+  {"text": "Chiffres de mémoire/précision/énergie sur MCU", "status": "partiel"}],
+ "claims": [
+  {"text": "Le survey class-IL distingue les méthodes à exemplaires (replay) et les méthodes sans exemplaires, et cite LwF, la régularisation de poids et iCaRL comme familles anti-oubli.", "kind": "lu", "citations": [{"id": "2010.15277#018.0", "excerpt": "It distinguishes between methods using exemplars to retain knowledge (blue, orange) and exemplar-free methods (green)"}]},
+  {"text": "Exstream (dernière couche FC + replay d'échantillons) est une baseline anti-oubli comparée à SLDA dans Piyasena et al.", "kind": "lu", "citations": [{"id": "2021-piyasena-accelerating-continual-learning-edge-fpga#018.0", "excerpt": "which only trains the last FC layer and prevents catastrophic forgetting of past classes via sample replay"}]},
+  {"text": "Quantized Latent Replay (QLR-CL) : compression de la mémoire de latent replay par 4× (quantification 8 bits) avec perte de précision minimale sur Core50 par rapport au FP32.", "kind": "lu", "citations": [{"id": "2110.10486#002.2", "excerpt": "minimal accuracy loss on the Core50 dataset compared to the FP32 baseline, when compressing the Latent Replay memory by 4× by means of 8-bit quantization"}]},
+  {"text": "L'apprentissage continu est réalisable avec moins de 64 MB de mémoire, compatible avec des appareils TinyML (plateforme VEGA, PULP RISC-V).", "kind": "lu", "citations": [{"id": "2110.10486#000.1", "excerpt": "continual learning can be achieved in practice using less than 64MB of memory"}]},
+  {"text": "Le portage de QLR-CL sur STM32L476RG (Cortex-M4 @ 80 MHz) est mesuré (Table IV) mais sa puissance est n/r ; il n'est pas démontré comme pratique là, VEGA étant 65× plus rapide.", "kind": "lu", "citations": [{"paper": "2110.10486", "source_section": "Table IV, §V-E"}]},
+  {"text": "Deep SLDA (Piyasena) est un accélérateur FPGA (ZCU102), pas une solution MCU ; puissance 3,34 à 5,04 W (portée unspecified).", "kind": "lu", "citations": [{"paper": "2021-piyasena-accelerating-continual-learning-edge-fpga", "source_section": "Table III"}]},
+  {"text": "Seul QLR-CL (latent replay quantifié) cible une classe de MCU/TinyML dans le corpus ; les approches SLDA et ImageHD visent FPGA.", "kind": "déduit", "citations": []}]}

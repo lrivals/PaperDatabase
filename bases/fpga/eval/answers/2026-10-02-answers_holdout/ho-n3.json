@@ -1,0 +1,14 @@
+{"id": "ho-n3", "q": "Quel débit et quelle puissance pour YOLOv8n en INT8 sur Jetson Orin Nano dans l'étude de Rey et al., et à quoi correspond cette puissance ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Débit (FPS) de YOLOv8n INT8 sur Jetson Orin Nano dans Rey et al.", "status": "couvert"},
+  {"text": "Puissance (W) de YOLOv8n INT8 sur Jetson Orin Nano dans Rey et al.", "status": "couvert"},
+  {"text": "Ce que la puissance mesure (méthode de mesure, portée : puce/carte, moyenne sur la durée)", "status": "couvert"}
+ ],
+ "claims": [
+  {"text": "YOLOv8n INT8 (PTQ TensorRT, 640×640) sur Jetson Orin Nano 8 GB : 44.90 FPS", "kind": "lu", "citations": [{"paper": "2502.15737", "source_section": "Table 4, §4 (Fig. 4)"}]},
+  {"text": "La puissance associée est de 7.483 W (confidence high ; power_scope chip dans benchmarks.csv)", "kind": "lu", "citations": [{"paper": "2502.15737", "source_section": "Table 4, §4 (Fig. 4)"}, {"id": "2502.15737#043.0", "excerpt": "Jetson Orin Nano + YOLOv8n INT8"}]},
+  {"text": "La puissance est mesurée en temps réel avec tegrastats sur les Jetson", "kind": "lu", "citations": [{"id": "2502.15737#013.0", "excerpt": "Real-time power usage was monitored using tegrastats for Jetson devices"}]},
+  {"text": "Cette puissance est une puissance moyenne sur la durée de l'essai, utilisée ensuite pour calculer l'énergie (W•s) et l'énergie par inférence (J/inference)", "kind": "lu", "citations": [{"id": "2502.15737#013.0", "excerpt": "Power data, averaged over the duration, were used to calculate the energy consumption (W•s)"}]},
+  {"text": "Le papier présente cette valeur de 7.483 comme « Energy Consumption (7.483 W•s) » dans la Table 7 (unité confuse : c'est la puissance moyenne en W)", "kind": "lu", "citations": [{"id": "2502.15737#043.0", "excerpt": "Jetson Orin Nano + YOLOv8n INT8"}]},
+  {"text": "La portée exacte de la mesure tegrastats (module/carte entière vs puce seule) n'est pas précisée par le passage ; l'étiquette chip de la base est une lecture, à ne pas comparer sans réserve à des mesures carte d'autres études", "kind": "déduit", "citations": []}
+ ]}

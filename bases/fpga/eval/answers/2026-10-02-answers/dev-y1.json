@@ -1,0 +1,23 @@
+{"id": "dev-y1", "q": "Quelles approches du corpus permettent d'entraîner ou d'adapter un modèle directement sur microcontrôleur, avec quels budgets mémoire ?", "verdict": "partiel",
+ "requirements": [
+  {"text": "Identifier les approches d'entraînement ou d'adaptation sur MCU (fine-tuning complet/partiel, continual learning, few-shot)", "status": "couvert"},
+  {"text": "Donner le budget mémoire (SRAM/Flash) de chaque approche sur la cible MCU", "status": "partiel"},
+  {"text": "Chiffrer les économies mémoire des techniques (sparse update, quantification des replays, mémoire explicite)", "status": "partiel"},
+  {"text": "Comparer les approches sur un pied d'égalité (mêmes tâches, mêmes cibles, mêmes mesures mémoire)", "status": "absent"}
+ ],
+ "claims": [
+  {"text": "Tiny Training Engine (sparse update + Quantization-Aware Scaling) permet le fine-tuning on-device, backbone compris, sous 256 KB de SRAM et 1 MB de Flash sans mémoire auxiliaire ; déployé sur STM32F746.", "kind": "lu",
+   "citations": [{"id": "2206.15472#001.4", "excerpt": "under 256KB SRAM and 1MB Flash without auxiliary memory"}]},
+  {"text": "Le sparse update avec optimisation de graphe TTE réduit le pic mémoire mesuré de 20-21x selon les modèles.", "kind": "lu",
+   "citations": [{"id": "2206.15472#028.0", "excerpt": "reduce the measured peak memory by 20-21× for different models"}]},
+  {"text": "MCUNet-5FPS entraîné sur cible (STM32F746, 320 KB SRAM / 1 MB Flash) atteint 89.1 % top-1 sur VWW (SRAM mesurée 206 KB, confidence medium).", "kind": "lu",
+   "citations": [{"paper": "2206.15472", "source_section": "§3.2"}]},
+  {"text": "TinyOL (Arduino Nano, Cortex-M4 64 MHz) n'entraîne que la couche finale au-dessus d'un modèle gelé, sans rétropropagation du gradient.", "kind": "lu",
+   "citations": [{"id": "2110.10486#006.0", "excerpt": "TinyOL [23] brought the transfer learning task on a tiny devices, i.e. an Arduino Nano platform featuring a 64MHz ARM Cortex-M4"}, {"id": "2110.10486#006.0", "excerpt": "no backpropagation of error gradients applies"}]},
+  {"text": "QLR-CL (latent replay quantifié) : tests sur STM32L476RG, couche LR l=27, 69.2 % d'accuracy Core50 NICv2-391, latence 139000 ms pour l'étage adaptatif.", "kind": "lu",
+   "citations": [{"paper": "2110.10486", "source_section": "Table IV, §V-E"}]},
+  {"text": "O-FSCIL sur GAP9 : mémoire explicite de seulement 9.6 kB pour 100 classes (vecteurs quantifiés à 3 bits).", "kind": "lu",
+   "citations": [{"id": "2403.07851#021.0", "excerpt": "memory requirements of only 9.6 kB for 100 classes"}]},
+  {"text": "Les chiffres de budget mémoire ne sont pas comparables d'une approche à l'autre (SRAM totale pour TTE, taille de la mémoire de replay en MB pour QLR-CL, mémoire explicite seule pour O-FSCIL) ; la mémoire de replay de QLR-CL n'est pas chiffrée dans les passages lus.", "kind": "déduit", "citations": []},
+  {"text": "ImageHD (2604.21280) cible FPGA et non MCU : hors périmètre direct.", "kind": "déduit", "citations": []}
+ ]}

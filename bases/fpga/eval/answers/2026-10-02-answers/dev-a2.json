@@ -1,0 +1,7 @@
+{"id":"dev-a2","q":"Quels accélérateurs FPGA reconnaissent la langue des signes en temps réel, et avec quelle précision ?","verdict":"absent",
+"requirements":[
+{"text":"Identifier des accélérateurs FPGA dédiés à la reconnaissance de la langue des signes","status":"absent"},
+{"text":"Établir le fonctionnement en temps réel (FPS ou latence) de ces accélérateurs","status":"absent"},
+{"text":"Donner la précision rapportée (métrique, jeu de données)","status":"absent"}],
+"claims":[
+{"text":"Aucun accélérateur FPGA de reconnaissance de la langue des signes n'est trouvé dans la base : les passages renvoyés portent sur la reconnaissance de panneaux routiers (GTSRB), les signes d'opérations arithmétiques ou le « gesture language » des lignes directrices EASA.","kind":"déduit","citations":[]}]}

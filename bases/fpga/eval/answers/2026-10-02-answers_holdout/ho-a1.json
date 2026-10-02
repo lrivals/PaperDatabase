@@ -1,0 +1,9 @@
+{"id": "ho-a1", "q": "Quelles précisions obtient la classification de cibles sonar sur FPGA embarqué ?", "verdict": "absent",
+ "requirements": [
+  {"text": "Un article du corpus traite de classification de cibles sonar", "status": "absent"},
+  {"text": "Mise en oeuvre sur FPGA embarqué de cette classification", "status": "absent"},
+  {"text": "Valeurs de précision (accuracy) rapportées pour cette tâche", "status": "absent"}],
+ "claims": [
+  {"text": "Aucun passage ni ligne de benchmarks.csv ne mentionne le sonar ; la recherche du terme « sonar » ne renvoie aucun passage.", "kind": "déduit", "citations": []},
+  {"text": "Seul voisinage : la survey cite des travaux d'un autre groupe (Cai et al.) sur la détection d'objets sous-marine sur FPGA, rapportant 33.14 FPS avec MobileNetV3-SSDLite, sans précision ni sonar dans le passage lu.", "kind": "lu", "citations": [{"id": "2025-hozhabr#049.1", "excerpt": "Cai et al. [68] proposed an FPGA-based approach for real-time underwater object detection"}]}
+ ]}

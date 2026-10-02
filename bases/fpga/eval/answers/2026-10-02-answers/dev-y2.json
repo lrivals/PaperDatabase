@@ -1,0 +1,26 @@
+{"id": "dev-y2", "q": "Comment la puissance est-elle mesurée dans les études Jetson, Raspberry Pi et FPGA du corpus, et ces mesures sont-elles comparables entre elles ?",
+ "verdict": "partiel",
+ "requirements": [
+  {"text": "Méthode de mesure de puissance sur Jetson et Raspberry Pi (outil, point de mesure)", "status": "couvert"},
+  {"text": "Méthode de mesure de puissance sur FPGA (mesure carte/puce vs estimation d'outil)", "status": "couvert"},
+  {"text": "Portée de puissance (power_scope) des valeurs rapportées par plateforme", "status": "couvert"},
+  {"text": "Comparabilité entre plateformes : conditions de mesure homogènes (charge, idle, batch, moyennage)", "status": "partiel"}
+ ],
+ "claims": [
+  {"text": "Dans 2502.15737, la puissance des Jetson est lue avec tegrastats et celle du Raspberry Pi 5 avec vcgencmd pmic_read_adc, moyennée sur la durée du test pour calculer l'énergie.", "kind": "lu",
+   "citations": [{"id": "2502.15737#013.0", "excerpt": "Real-time power usage was monitored using tegrastats for Jetson devices and vcgencmd pmic_read_adc for the Raspberry Pi 5"}]},
+  {"text": "Dans 2502.15737, ces valeurs sont classées power_scope = chip : Jetson Orin Nano 7.257 à 8.790 W, Orin NX 10.305 à 14.155 W, Raspberry Pi 5 (CPU seul) 5.422 et 5.441 W (confidence medium pour ces deux dernières lignes).", "kind": "lu",
+   "citations": [{"paper": "2502.15737", "source_section": "Table 4"}]},
+  {"text": "Dans 2409.16808 (preprint), l'énergie des Raspberry Pi et Jetson est relevée par un wattmètre externe UM25C, lu depuis un autre appareil, avec une mesure d'énergie au repos de 5 minutes.", "kind": "lu",
+   "citations": [{"id": "2409.16808#007.2", "excerpt": "Energy readings are collected using a Python-based energy reader running on a separate device connected to the UM25C power meter"}]},
+  {"text": "Dans 2022-feng, Jetson Nano (7.2 à 8.0 W), Xavier NX (13.2 à 15.2 W) et RPi 4B + NCS2 (6.0 à 6.8 W) ont un power_scope unspecified : la portée de la mesure n'est pas établie ; la puissance au repos a été mesurée séparément.", "kind": "lu",
+   "citations": [{"paper": "2022-feng", "source_section": "Table 3"}, {"id": "2022-feng#015.0", "excerpt": "Idle power of the accelerator-based SBCs was measured before all the benchmark tests."}]},
+  {"text": "Sur FPGA, FINN (1612.07119) rapporte deux mesures par expérience : P chip via PMBus sur les rails d'alimentation du FPGA, et P wall au wattmètre secteur pour la carte entière, moyennées sur 10 secondes.", "kind": "lu",
+   "citations": [{"id": "1612.07119#019.3", "excerpt": "P chip using the PMBus interface to monitor the FPGA power supply rails, and P wall using a wall power meter for the total board power consumption"}]},
+  {"text": "Dans 2024-zhang, la puissance du FPGA vient du power analyzer de Vivado (donc une estimation d'outil), tandis que la carte entière est mesurée au wattmètre ; seule la seconde est une mesure physique.", "kind": "lu",
+   "citations": [{"id": "2024-zhang#019.1", "excerpt": "The FPGA's power consumption was reported by the power analyzer of Vivado"}, {"id": "2024-zhang#019.2", "excerpt": "The power consumption of the entire board was measured using the power meter plugged into the development platform"}]},
+  {"text": "Dans benchmarks.csv, la portée varie selon les études FPGA : board (ex. 2024-zhang, 1612.07119, 2015-zhang, 2304.11580), chip (2110.10486, 2407.17647), estimated (ex. 2202.10935, 2021-manjunath), unspecified ou n/r pour beaucoup d'autres lignes.", "kind": "lu",
+   "citations": [{"paper": "2024-zhang", "source_section": "power_scope=board"}, {"paper": "2202.10935", "source_section": "power_scope=estimated"}]},
+  {"text": "Les mesures ne sont donc pas directement comparables : chip (tegrastats, PMBus, vcgencmd) exclut DRAM, périphériques et régulation que la carte entière (wattmètre) inclut ; une estimation Vivado est un modèle, pas une mesure ; et Jetson / RPi sont mesurés sous OS avec un logiciel de lecture, les FPGA via PMBus ou wattmètre.", "kind": "déduit", "citations": []},
+  {"text": "Même au sein d'une plateforme les conditions diffèrent (mode de puissance Jetson, moyennage de 10 s ou sur la durée du test, avec ou sans soustraction du repos), de sorte que les ratios FPS/W entre papiers ne se comparent que si power_scope et protocole sont identiques ; une comparaison fiable suppose la même portée (carte entière) et le même protocole.", "kind": "déduit", "citations": []}
+ ]}

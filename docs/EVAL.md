@@ -557,7 +557,7 @@ reste sans LLM : les réponses sont produites à part, puis notées.
 ```
 /eval-answers [answers|answers_holdout] [run]     # dans Claude Code : produit et note un run
 bin/pdb eval --questions [answers|answers_holdout] # id et question, sans les attentes
-bin/pdb eval --answers eval/answers/<run> [--save] [--compare]
+bin/pdb eval --answers eval/answers/<run>… [--save] [--compare]  # plusieurs runs : notés ensemble
 ```
 
 **Jeux.** `answers.jsonl` (dev) et `answers_holdout.jsonl`, dans `eval/fixtures/` de la base
@@ -612,7 +612,7 @@ ni sources, ni verdict attendu.
 | `verdict_accuracy` | verdict = verdict attendu |
 | `absent_recognized` | questions `absent` : verdict `absent` ou `partiel` |
 | `false_absent` | autres questions : verdict `absent` à tort |
-| `citation_accept_rate` | citations acceptées / citations. Passage : `rag.verify` sur l'extrait, `OK` ou `APPROX` **dans le passage indiqué** (comme le code 0 de `pdb verify`) ; sans extrait, inconnu, `NOMBRES` ou trouvé ailleurs : refusé. Benchmark : une ligne du papier dont la `source_section` contient celle citée |
+| `citation_accept_rate` | citations acceptées / citations. Passage : `rag.verify` sur l'extrait, `OK` ou `APPROX` **dans le passage indiqué** (comme le code 0 de `pdb verify`) ; sans extrait, inconnu, `NOMBRES` ou trouvé ailleurs : refusé. Benchmark : chaque partie de la section citée (séparée par `;` ou `,`) figure dans la `source_section` d'une ligne du papier |
 | `unsupported_claim_rate` | affirmations `lu` sans aucune citation acceptée / affirmations `lu` |
 | `gold_source_recall` | sources attendues citées (par une citation acceptée) |
 | `gold_value_recall` | valeurs attendues présentes dans une affirmation, avec leur unité |
@@ -642,3 +642,45 @@ Ne rien régler sur `answers_holdout`.
 les ids absents des jeux, les questions sans réponse et, par question, les verdicts faux et
 les affirmations non soutenues. `--save` enregistre le run dans `eval/results/` avec les
 autres volets ; `--compare` ignore le détail par question (`per_question`).
+
+### Premier run (02/10/2026)
+
+`bases/fpga/eval/results/2026-10-02T1111-353e788-dirty.json` ; réponses dans
+`bases/fpga/eval/answers/2026-10-02-answers{,_holdout}/`. Une réponse par question, par un
+agent Sonnet qui ne recevait que la question. **Configuration dégradée** : la recherche
+dense et le reranking étaient indisponibles (téléchargement des modèles refusé par le
+réseau du conteneur), donc `pdb search` en lexical seul, sans `--rerank`. Le run de
+référence de `/paper-ask` reste à faire avec le mode hybride + rerank.
+
+| Jeu | n | verdict juste | citations acceptées | affirmations non soutenues | sources attendues | valeurs attendues |
+|---|---|---|---|---|---|---|
+| dev | 12 | 0,83 | 0,96 | 0,02 | 0,91 | 1,00 |
+| holdout | 12 | 0,92 | 1,00 | 0,00 | 0,67 | 1,00 |
+
+Par catégorie, sur les deux jeux : `simple`, `numeric` et `absent` ont tous un verdict juste
+(18/18) ; `synthesis` en a 3 sur 6. Hors corpus : 6/6 questions reconnues `absent`, aucune
+question du corpus déclarée `absent` à tort.
+
+Lecture :
+- **Hors corpus.** Sur des questions proches du thème, les réponses disent que la base ne
+  traite pas le sujet, sans combler par des connaissances générales. C'est le comportement
+  que le score de recherche ne permettait pas d'obtenir (§5-6). Avec 6 questions, c'est un
+  signal, pas une mesure.
+- **Synthèse.** Les 3 verdicts faux sont `partiel` là où le jeu attend `suffisant` (dev-y1,
+  dev-y2, ho-y3). L'agent pose des exigences plus fines que celles du jeu (budget mémoire de
+  chaque méthode, protocole commun) et les trouve incomplètes : c'est défendable, et la
+  frontière suffisant / partiel des questions de synthèse est à préciser dans le jeu.
+- **Une source manquée deux fois** : 2409.07114 (apprentissage incrémental sur MCU), absente
+  de dev-y1 et de ho-y3 ; c'était déjà un échec de recherche du holdout passages (§5).
+- **Sources attendues trop étroites.** La plupart des écarts de `gold_source_recall` (0,67 en
+  holdout) viennent d'une source équivalente : le chiffre est cité par sa ligne `bench`
+  ou par le passage tableau plutôt que par la section de texte attendue (dev-n1, ho-n2,
+  ho-n3). Le jeu doit accepter des sources alternatives ; le chiffre sous-estime la réponse.
+- **Défauts réels relevés** : dev-s2 porte `suffisant` alors qu'une de ses exigences est
+  `partiel` (règle du verdict non appliquée) ; dev-y2 cite deux fois une ligne de
+  benchmark par `power_scope=board` au lieu de sa section source.
+- **Correcteur corrigé pendant le run** : une citation `bench` regroupant plusieurs lignes
+  (« Table 3 ; Table 4 ») était refusée ; chaque partie est maintenant contrôlée.
+
+Notes humaines : `grades.csv` créés, vides. Aucun seuil fixé : il faut un second run complet
+(variance d'un run à l'autre) et la configuration hybride + rerank.

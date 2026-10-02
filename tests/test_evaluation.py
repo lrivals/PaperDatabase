@@ -244,6 +244,13 @@ class TestAnswers(unittest.TestCase):
                                           self.bench)["accepted"])
         self.assertFalse(ev.check_citation(self.ix, {"paper": FINN, "source_section": "Table 9"},
                                            self.bench)["accepted"])
+        two = self.bench + [{"paper_id": FINN, "source_section": "Table 4"}]
+        self.assertTrue(ev.check_citation(self.ix, {"paper": FINN, "source_section": "Table 2 ; Table 4"},
+                                          two)["accepted"])  # citation regroupant deux lignes
+        self.assertFalse(ev.check_citation(self.ix, {"paper": FINN, "source_section": "Table 4, Table 9"},
+                                           two)["accepted"])
+        self.assertFalse(ev.check_citation(self.ix, {"paper": FINN, "source_section": "power_scope=board"},
+                                           two)["accepted"])
 
     def test_score_answer(self):
         c = case("n1", "numeric", "suffisant", gold_sources=[f"{FINN}#001", "2021-lin-mcunet"],
@@ -302,11 +309,18 @@ class TestAnswers(unittest.TestCase):
             w.writerow(("o1", "2", "2", "", "x"))
         out = ev.answers_quality(self.root, fx, run)
         self.assertEqual(out["records"], 4)
-        self.assertIn("bad.json", out["invalid"])
+        self.assertIn("run/bad.json", out["invalid"])
         self.assertEqual(out["unknown_ids"], ["zz"])
         self.assertEqual(list(out["sets"]), ["answers"])  # pas de answers_holdout.jsonl
         self.assertEqual(out["sets"]["answers"]["human"]["soutien"], 1.0)
         self.assertEqual(ev.answer_questions(fx, "answers")[0], ("s1", "question s1"))
+        run2 = self.root / "run2"
+        run2.mkdir()
+        (run2 / "m1.json").write_text(json.dumps(record("m1", "suffisant", [])))
+        (run2 / "o1.json").write_text(json.dumps(record("o1", "absent", [])))  # déjà dans run
+        both = ev.answers_quality(self.root, fx, [run, run2])
+        self.assertEqual(both["sets"]["answers"]["answered"], 4)
+        self.assertIn("run2/o1", both["invalid"])
         self.assertEqual(ev.answer_questions(fx, "answers_holdout"), [])
 
 

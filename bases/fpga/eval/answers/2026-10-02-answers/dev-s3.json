@@ -1,0 +1,10 @@
+{"id": "dev-s3", "q": "Avec quels outils la puissance est-elle mesurée sur les Jetson et le Raspberry Pi 5 dans l'étude YOLOv8 de Rey et al. ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Identifier l'étude YOLOv8 de Rey et al. dans la base", "status": "couvert"},
+  {"text": "Outil de mesure de puissance sur les Jetson", "status": "couvert"},
+  {"text": "Outil de mesure de puissance sur le Raspberry Pi 5", "status": "couvert"}],
+ "claims": [
+  {"text": "Sur les Jetson, la puissance est relevée avec tegrastats.", "kind": "lu", "citations": [{"id": "2502.15737#013.0", "excerpt": "Real-time power usage was monitored using tegrastats for Jetson devices and vcgencmd pmic_read_adc for the Raspberry Pi 5"}]},
+  {"text": "Sur le Raspberry Pi 5, la puissance est relevée avec vcgencmd pmic_read_adc.", "kind": "lu", "citations": [{"id": "2502.15737#013.0", "excerpt": "Real-time power usage was monitored using tegrastats for Jetson devices and vcgencmd pmic_read_adc for the Raspberry Pi 5"}]},
+  {"text": "La puissance moyenne sert à calculer l'énergie (W·s) et l'énergie par inférence (J/inférence).", "kind": "lu", "citations": [{"id": "2502.15737#013.0", "excerpt": "Power data, averaged over the duration, were used to calculate the energy consumption (W•s) and energy per inference (J/inference)"}]},
+  {"text": "Ce sont des outils logiciels propres à chaque plateforme, pas un wattmètre externe commun ; les valeurs Jetson/Pi ne sont donc pas strictement comparables (déduit).", "kind": "déduit", "citations": []}]}

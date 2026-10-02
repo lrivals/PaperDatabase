@@ -1,0 +1,13 @@
+{"id":"ho-y2","q":"Comment hls4ml et FINN règlent-ils le parallélisme des couches pour équilibrer débit et ressources ?","verdict":"suffisant",
+"requirements":[
+{"text":"hls4ml : mécanisme de réglage du parallélisme (reuse factor) et son effet débit/ressources","status":"couvert"},
+{"text":"FINN : mécanisme de réglage du parallélisme (folding, PE/SIMD) et son effet débit/ressources","status":"couvert"},
+{"text":"Équilibrage entre couches (par couche, goulots d'étranglement) dans chaque outil","status":"couvert"}],
+"claims":[
+{"text":"Dans hls4ml, le parallélisme est réglé par un reuse factor : nombre de fois qu'un multiplieur est réutilisé pour calculer la sortie d'une couche ; reuse factor 1 = design entièrement parallèle.","kind":"lu","citations":[{"id":"2024-campos#020.1","excerpt":"A fully parallel design corresponds to a reuse factor of one"}]},
+{"text":"Un reuse factor plus grand donne une latence et un II plus longs mais moins de ressources on-chip ; le débit est inversement proportionnel au reuse factor.","kind":"lu","citations":[{"id":"2103.05579#011.1","excerpt":"For larger reuse factors, the matrix-vector multiplication kernel has longer latency and II, but uses less on-chip resources"}]},
+{"text":"hls4ml implémente chaque couche indépendamment et séquentiellement : la latence totale est la somme des latences des couches plus celle de leurs connexions.","kind":"lu","citations":[{"id":"2103.05579#011.1","excerpt":"the total latency is equal to the sum of latencies of each layer plus the latency required to connect the layers"}]},
+{"text":"Dans FINN, le compromis passe par le folding (multiplexage temporel) : deux opérations sur une même unité de calcul demandent moitié moins de ressources mais donnent moitié moins de débit.","kind":"lu","citations":[{"id":"2021-alonso#006.0","excerpt":"time-multiplexing two operations onto a single compute unit will require half the hardware resources, but it will also yield half the throughput"}]},
+{"text":"FINN-R règle la concurrence par couche via P (PE), Q (SIMD) et M, avec Q diviseur de C et P diviseur de C'.","kind":"lu","citations":[{"id":"1809.04570#018.0","excerpt":"we choose Q as a factor of C, P as a factor of C"}]},
+{"text":"FINN-R équilibre le pipeline dataflow en élargissant les goulots d'étranglement les plus pressants.","kind":"lu","citations":[{"id":"1809.04570#018.0","excerpt":"it systematically widens the most pressing bottlenecks"}]},
+{"text":"Différence de granularité : hls4ml règle surtout un reuse factor (souvent global, couches séquentielles) alors que FINN équilibre explicitement un pipeline dataflow couche par couche.","kind":"déduit","citations":[]}]}

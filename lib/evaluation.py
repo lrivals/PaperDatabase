@@ -744,8 +744,8 @@ def check_citation(index, cit, bench_rows):
     """Contrôle d'une citation d'un enregistrement : dict {type, status, accepted, section,
     paper}. Passage : {"id", "excerpt"} revérifié par rag.verify (accepté = OK ou APPROX dans
     le passage indiqué, comme le code 0 de pdb verify). Benchmark : {"paper",
-    "source_section"} accepté si benchmarks.csv a une ligne de ce papier dont la
-    source_section contient celle citée."""
+    "source_section"} accepté si chaque partie de la section citée (séparateurs ; et ,)
+    figure dans la source_section d'une ligne de ce papier dans benchmarks.csv."""
     from lib import rag
     if cit.get("id"):
         full = index.resolve_chunk(cit["id"])
@@ -761,9 +761,11 @@ def check_citation(index, cit, bench_rows):
             status = "AILLEURS"
         return {**out, "status": status, "accepted": status in ("OK", "APPROX")}
     pid = _full_paper_id(index, cit.get("paper", ""))
-    want = fold(cit.get("source_section") or "").strip()
-    ok = bool(want) and any(r.get("paper_id") == pid and want in fold(r.get("source_section"))
-                            for r in bench_rows)
+    # une citation peut regrouper plusieurs lignes (« Table 3 ; Table 4 », « §V-B, §V-C ») :
+    # chaque partie doit figurer dans la source_section d'une ligne du papier
+    parts = [x.strip() for x in re.split(r"[;,]", fold(cit.get("source_section") or "")) if x.strip()]
+    sources = [fold(r.get("source_section")) for r in bench_rows if r.get("paper_id") == pid]
+    ok = bool(parts) and all(any(x in src for src in sources) for x in parts)
     return {"type": "benchmark", "status": "OK" if ok else "ABSENT", "accepted": ok,
             "section": None, "paper": pid}
 
@@ -891,14 +893,25 @@ def answer_quality(index, cases, records, bench_rows=(), grades=None):
     return out
 
 
-def answers_quality(root, fixtures, records_path):
+def answers_quality(root, fixtures, records_paths):
     """Volet « answers » de pdb eval : chaque jeu de ANSWER_SETS présent dans fixtures, noté
-    sur les enregistrements de records_path (les ids absents du jeu sont ignorés)."""
+    sur les enregistrements des dossiers (ou .jsonl) records_paths, réunis (un dossier par jeu
+    le plus souvent) ; les ids absents des jeux sont signalés."""
     from lib import rag
-    records, problems = load_answer_records(records_path)
+    if isinstance(records_paths, (str, Path)):
+        records_paths = [records_paths]
+    records, problems, grades = {}, {}, {}
+    for path in map(Path, records_paths):
+        recs, probs = load_answer_records(path)
+        for qid in set(recs) & set(records):
+            probs[qid] = [f"id en double entre dossiers : {qid}"]
+            del recs[qid]
+        records.update(recs)
+        problems.update({f"{path.name}/{k}": v for k, v in probs.items()})
+        if path.is_dir():
+            grades.update(load_grades(path / "grades.csv"))
     index = rag.Index(root)
     bench = _bench_rows(root)
-    grades = load_grades(Path(records_path) / "grades.csv") if Path(records_path).is_dir() else {}
     out = {"records": len(records), "invalid": problems, "sets": {}}
     known = set()
     for name in ANSWER_SETS:

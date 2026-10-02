@@ -1,0 +1,16 @@
+{"id": "ho-s3", "q": "Sur quels microcontrôleurs TinyissimoYOLO a-t-il été déployé ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Identifier le papier TinyissimoYOLO et sa cible (microcontrôleurs)", "status": "couvert"},
+  {"text": "Lister les MCU de déploiement (STM32H7A3, STM32L4R9, Apollo4b, MAX78000)", "status": "couvert"},
+  {"text": "Préciser les conditions de déploiement (quantification 8 bits, accélérateur CNN du MAX78000, fréquences)", "status": "couvert"}],
+ "claims": [
+  {"text": "TinyissimoYOLO est déployé, en quantification 8 bits, sur les MCU STM32H7A3, STM32L4R9, Apollo4b et sur l'accélérateur CNN du MAX78000.", "kind": "lu",
+   "citations": [{"id": "2306.00001#000.0", "excerpt": "deployed with 8-bit quantization on different microcontrollers, such as STM32H7A3, STM32L4R9, Apollo4b and on the MAX78000's CNN accelerator"}]},
+  {"text": "STM32L4R9 (Cortex-M4F), STM32H7 (Cortex-M7), Apollo4b (Cortex-M4F) et MAX78000 (accélérateur CNN intégré) sont les plateformes décrites.", "kind": "lu",
+   "citations": [{"id": "2306.00001#005.0", "excerpt": "A full pipeline demonstrator with MAX78000FTHR µC and on-device image sensor CameraCubeChip®is built"}]},
+  {"text": "Conditions de mesure : STM32L4R9 à 3,3 V et 120 MHz, Apollo4b à 1,8 V et 192 MHz.", "kind": "lu",
+   "citations": [{"id": "2306.00001#006.1", "excerpt": "STM32L4R9 @ (3.3 V; 120 MHz) and Apollo4b @ (1.8 V; 192 MHz)"}]},
+  {"text": "Le benchmarks.csv contient des lignes pour MAX78000, STM32H7A3 et Apollo4b (entrée 88×88, confidence medium).", "kind": "lu",
+   "citations": [{"paper": "2306.00001", "source_section": "Table II"}]},
+  {"text": "Le papier est publié en conférence (non preprint).", "kind": "déduit", "citations": []}
+ ]}

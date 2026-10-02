@@ -1,0 +1,9 @@
+{"id": "ho-s1", "q": "Quelle famille de FPGA résistants aux radiations est ciblée par l'extension de hls4ml pour le ML embarqué sur détecteur ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Identifier la famille de FPGA radiation-hard ciblée par l'extension de hls4ml", "status": "couvert"},
+  {"text": "Établir que l'extension de hls4ml (nouveau backend) vise le ML on-detector", "status": "couvert"}],
+ "claims": [
+  {"text": "L'extension de hls4ml cible les FPGA flash résistants aux radiations de Microchip, la famille PolarFire.", "kind": "lu", "citations": [{"id": "2602.15751#007.0", "excerpt": "we target flash-based radiation-hard FPGAs (Microchip PolarFire)"}]},
+  {"text": "hls4ml ne supportait pas les dispositifs Microchip résistants aux radiations avant ce travail.", "kind": "lu", "citations": [{"id": "2602.15751#001.4", "excerpt": "lacked support for radiation-hard Microchip devices"}]},
+  {"text": "L'extension prend la forme d'un nouveau backend hls4ml pour le compilateur Microchip SmartHLS.", "kind": "lu", "citations": [{"id": "2602.15751#001.4", "excerpt": "to support the Microchip SmartHLS compiler"}]}
+ ]}

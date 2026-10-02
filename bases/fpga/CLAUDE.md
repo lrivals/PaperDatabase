@@ -74,6 +74,7 @@ chiffre à chiffre ([docs/EVAL.md](../../docs/EVAL.md) §6).
 | `bin/pdb --base NOM <commande>` | agir sur une autre base que celle du dossier courant |
 | `/base-profile [consigne]` | le LLM propose d'affiner le profil (`profile.md`, axes et règles de `base.json`) ; rien n'est écrit sans accord |
 | `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation du logiciel : qualité d'extraction, recherche de passages, `verify`, temps ; à lancer avant/après tout changement du pipeline ([docs/EVAL.md](../../docs/EVAL.md)) |
+| `/eval-answers [answers\|answers_holdout]`, `bin/pdb eval --answers eval/answers/<run>…` | réponses finales : `/paper-ask` répond à l'aveugle aux questions du banc, puis notation (verdict, citations, valeurs) ; runs dans `eval/answers/` ([EVAL.md §10](../../docs/EVAL.md#10-réponses-finales-pdb-eval---answers-02102026)) |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ([docs/RAG.md](../../docs/RAG.md) §5.1) |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM, texte exact, contrôle d'une citation ([docs/RAG.md](../../docs/RAG.md) §5) |
 | `/paper-ask <question>` | réponse sourcée et vérifiée : `bench`, puis `search`, `show`, `verify` |

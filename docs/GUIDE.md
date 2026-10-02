@@ -300,7 +300,7 @@ Sans GPU, rien ne change et rien n'échoue. Détails : [RAG.md](RAG.md) §13.
 
 ## 6. Contrôle qualité
 
-L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Quatre réflexes :
+L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Cinq réflexes :
 
 1. **Les avertissements d'ingestion** (`bin/pdb status` liste les extractions à vérifier) :
    une section non détectée ou une table absente de `fulltext.md` signifie que ses chiffres
@@ -319,6 +319,12 @@ L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Qua
    `bin/pdb eval --compare` : il compare la qualité et les temps au dernier run enregistré,
    et signale les seuils non atteints. `bin/pdb eval --save` enregistre un nouveau run de
    référence. Protocole et résultats : [EVAL.md](EVAL.md).
+5. **Pour juger les réponses elles-mêmes**, `/eval-answers` fait répondre `/paper-ask` aux
+   questions du banc, à l'aveugle, et note le run : verdict de suffisance (dont les
+   questions hors corpus), citations revérifiées, valeurs attendues. Remplissez ensuite
+   `grades.csv` (0 à 2 par critère) : seul un humain juge qu'un passage soutient vraiment
+   la phrase. À relancer après un changement de `/paper-ask` ou du moteur de recherche
+   ([EVAL.md §10](EVAL.md#10-réponses-finales-pdb-eval---answers-02102026)).
 
 Procédure complète : [SETUP.md §8](../SETUP.md#8-vérification).
 
@@ -412,7 +418,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb gpu [on\|off\|status]` | route GPU optionnelle (Qwen3, CUDA) pour `search` ; `search --gpu\|--cpu` pour une seule requête |
 | `bin/pdb rag …` | outils de la route GPU : index de preuves, `acquire` / `approve` d'articles open access (RAG.md §13) |
 | `bin/pdb eval [--extract\|--rag\|--speed] [--gpu] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
-| `bin/pdb eval --answers <run>` | note les réponses enregistrées d'un run (EVAL.md §10) |
+| `bin/pdb eval --answers <run>…` | note les réponses enregistrées d'un run (EVAL.md §10) |
 | `bin/pdb grobid start\|stop\|status` | GROBID |
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
 | `bin/pdb plot [bench\|eval\|corpus] [--format pdf]` | figures statiques (PNG par défaut) dans `figures/` (`--list` : noms) |

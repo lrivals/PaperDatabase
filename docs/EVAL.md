@@ -688,4 +688,7 @@ Lecture :
   (« Table 3 ; Table 4 ») était refusée ; chaque partie est maintenant contrôlée.
 
 Notes humaines : `grades.csv` créés, vides. Aucun seuil fixé : il faut un second run complet
-(variance d'un run à l'autre) et la configuration hybride + rerank.
+(variance d'un run à l'autre) et la configuration hybride + rerank. Pour ce run de
+référence : `requirements-embed.txt` installé et `huggingface.co` joignable (bge-small et le
+cross-encoder se téléchargent au premier `pdb search`), puis `/eval-answers` sous un nouveau
+nom de run et `pdb eval --answers <dev> <holdout> --save --compare` contre ce premier run.

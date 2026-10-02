@@ -319,7 +319,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
 | `search`, `show`, `verify` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option ; Qwen3 sur GPU si la route GPU est active, `--gpu`/`--cpu` pour forcer), texte exact, contrôle de citation (statut `NOMBRES` si un nombre diffère) ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5, §13 |
 | `gpu [status\|on\|off\|download]` | `lib/rag_models.py` | route GPU optionnelle : état (torch, CUDA, modèles, vecteurs de la base), activation (réglage de la machine dans `~/.config/pdb/config.json`, ou `PDB_GPU=1`), téléchargement des modèles : §10, [docs/RAG.md](docs/RAG.md) §13 |
-| `eval [--extract\|--rag\|--speed] [--gpu] [--save] [--compare [JSON]]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
+| `eval [--extract\|--rag\|--speed] [--gpu] [--answers DIR…] [--save] [--compare [JSON]]`, `eval --questions [JEU]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; réponses finales enregistrées (`--answers`, jeux `answers*.jsonl`, `--questions` les liste sans les attentes : [docs/EVAL.md](docs/EVAL.md) §10) ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
 | `plot [bench\|eval\|corpus\|all] [--only a,b] [--out DIR] [--format png\|pdf\|svg] [--list]` | `lib/plotdata.py`, `lib/plotfig.py` | figures statiques, voir ci-dessous |
@@ -748,8 +748,21 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 01/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 02/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 02/10/2026 (fiabilité des réponses, route de recherche).**
+- Feuille de route [docs/AMELIORATIONS.md](docs/AMELIORATIONS.md) : 8 lots (A à H) et 5
+  skills, spécifiés.
+- Lot A en place : `pdb eval --answers DIR…` / `--questions`, mode `--record` de
+  `/paper-ask`, skill `/eval-answers`, jeux fpga 12 + 12 (EVAL.md §10). Premier run, en
+  lexical seul (modèles non téléchargeables dans le conteneur) : verdict juste 0,83 (dev) et
+  0,92 (holdout), hors corpus reconnu 6/6, citations acceptées 0,96 et 1,00. Faiblesses :
+  questions de synthèse (3 verdicts sur 6 justes), sources attendues trop étroites,
+  2409.07114 manqué deux fois.
+- Lot G en grande partie fait : une route de recherche, CPU par défaut, Qwen en moteur
+  optionnel de `pdb search` (`pdb gpu`, RAG.md §13).
+- 218 tests.
 
 **Bilan du 01/10/2026 (base fpga : profil, 8ᵉ passage des gaps, état de l'art).**
 - Profil (`/base-profile`) : règle `safety-certification` élargie (EASA, assurance, ODD,

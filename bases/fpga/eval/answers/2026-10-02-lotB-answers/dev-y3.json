@@ -1,0 +1,15 @@
+{"id":"dev-y3","q":"Quels accélérateurs YOLO sur FPGA du corpus rapportent à la fois le débit, la puissance et une précision mesurée ?","verdict":"suffisant",
+"requirements":[
+{"text":"Identifier les accélérateurs YOLO sur FPGA du corpus","status":"couvert"},
+{"text":"Débit (FPS) rapporté pour chacun","status":"couvert"},
+{"text":"Puissance (W) rapportée pour chacun","status":"couvert"},
+{"text":"Précision mesurée (mAP ou accuracy) pour chacun","status":"couvert"}],
+"claims":[
+{"text":"2023-zhai : YOLOv3-tiny élagué en INT16 sur Zynq XC7Z035 atteint 91.65 FPS, 12.51 W, AP@0.5 59.9 (UA-DETRAC) ; YOLOv3 élagué 3.23 FPS, 12.73 W, AP@0.5 71.1","kind":"lu","citations":[{"paper":"2023-zhai","source_section":"Table 8"}]},
+{"text":"2024-yan : YOLOv5s INT4 sur ZCU102 atteint 79.1 FPS, 12.3 W, mAP 73.8 (VOC07+12)","kind":"lu","citations":[{"paper":"2024-yan","source_section":"Table 2 ; Table 3 ; Table 1 ; §7.4"}]},
+{"text":"2026-fata : YOLOv3-Tiny élagué (70 %) INT8 sur Kria KV260 atteint 24.3 FPS, 2.13 W, accuracy 93.8 % (VOC2012, pas mAP)","kind":"lu","citations":[{"id":"2026-fata#000.0","excerpt":"93.8% detection accuracy, 24.3 FPS throughput, 41.59 ms latency, and just 2.13W of power consumption"},{"paper":"2026-fata","source_section":"Table 8"}]},
+{"text":"2609.24757 (preprint) : LP-YOLO Slim 256x256 w2a4 sur PYNQ-Z1 atteint 35.66 FPS, 2.91 W (carte), mAP@0.5 59.4 ; la puissance est mesurée au rail d'entrée 12 V","kind":"lu","citations":[{"id":"2609.24757#013.0","excerpt":"Power is measured at the 12 V input rail"},{"paper":"2609.24757","source_section":"§V-D, §VI, Table II"}]},
+{"text":"2507.18174 : YOLOv5 INT8 (DPU) sur Kria KV260 atteint 9 FPS, 3.5 W, classification accuracy 98.6 % sur 72 images (pas un mAP)","kind":"lu","citations":[{"paper":"2507.18174","source_section":"Table I"}]},
+{"text":"2024-zhang rapporte GOP/s (pas de FPS) et 12.3 à 24.5 W carte, précision 53.5 à 76.7 : il ne remplit pas les trois critères tels que demandés","kind":"lu","citations":[{"paper":"2024-zhang","source_section":"Table 3"},{"id":"2024-zhang#020.2","excerpt":"The performance of implementing YOLOv3 on the accelerator"}]},
+{"text":"Les puissances sont majoritairement de portée non précisée (power_scope unspecified) ; les précisions diffèrent (mAP, AP@0.5, accuracy) et les jeux de données aussi : classement direct non fiable","kind":"déduit","citations":[]}
+]}

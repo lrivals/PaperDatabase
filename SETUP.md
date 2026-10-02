@@ -1231,6 +1231,9 @@ Défauts mis au jour, à corriger (tâche 12) :
     comparable, `pdb rag` réservé au GPU ; RAG.md §13) ; reste `check-answer` qui contrôle
     les nombres et `/paper-research` sur les `chunk_id` ;
   - [ ] lot H, snapshot dans `pdb search --format json`, journal de réponses optionnel ;
+  - [ ] lot I, journal et coût des sous-agents : hook `PostToolUse`/`SubagentStop` vers
+    `.cache/agents.jsonl`, convention `[task_class]`, `pdb agents --report`, révision chiffrée
+    de la table de délégation du `CLAUDE.md` ;
   - [ ] skills `/paper-compare`, `/state-of-art`, `/table-review`, `/research-question`.
 - [ ] **Pistes d'amélioration du 26/09/2026, non commencées** (analyse de la doc et du
   corpus ; ordre proposé) :

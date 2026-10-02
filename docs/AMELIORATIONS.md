@@ -1,7 +1,8 @@
 # Feuille de route : fiabilité des réponses, tableaux et nouveaux skills
 
 Spécification du 02/10/2026. État : lot A en place et premier run fait ; lot G en grande partie
-fait (route unique, RAG.md §13) ; autres lots non commencés. Elle décrit comment mettre en place les
+fait (route unique, RAG.md §13) ; autres lots non commencés (lot I, journal des
+sous-agents, spécifié le 02/10/2026). Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
 cinq nouveaux skills. Chaque chantier part d'un constat mesuré dans le dépôt, puis donne la
@@ -21,9 +22,10 @@ Banc d'évaluation : [EVAL.md](EVAL.md). Schémas : [DATA_MODEL.md](../DATA_MODE
 6. [Lot F — Recherche en français](#lot-f--recherche-en-français)
 7. [Lot G — Une route de recherche de référence](#lot-g--une-route-de-recherche-de-référence)
 8. [Lot H — Provenance des réponses](#lot-h--provenance-des-réponses)
-9. [Nouveaux skills](#9-nouveaux-skills)
-10. [Ordre de mise en œuvre](#10-ordre-de-mise-en-œuvre)
-11. [Hors périmètre](#11-hors-périmètre)
+9. [Lot I — Journal et coût des sous-agents](#lot-i--journal-et-coût-des-sous-agents)
+10. [Nouveaux skills](#9-nouveaux-skills)
+11. [Ordre de mise en œuvre](#10-ordre-de-mise-en-œuvre)
+12. [Hors périmètre](#11-hors-périmètre)
 
 ---
 
@@ -407,6 +409,129 @@ quoi une réponse reposait.
 
 ---
 
+## Lot I — Journal et coût des sous-agents
+
+**Constat.** Le `CLAUDE.md` racine demande de déléguer aux sous-agents et de choisir le modèle
+selon la tâche (`haiku` pour la mécanique, `sonnet` pour l'extraction, `opus` pour la
+synthèse), mais rien n'est mesuré. On ne sait pas ce que coûte un appel, si la délégation
+économise des tokens par rapport à un travail fait en direct, ni si la table tâche → modèle
+est bien réglée. Or un agent démarre sans contexte : il paie à chaque appel son prompt
+système, la définition de ses outils, le prompt de la tâche et la relecture du `CLAUDE.md` de
+la base. Pour une petite tâche, ce coût fixe peut dépasser le gain.
+
+**Objectif.** Une ligne par appel de sous-agent (tâche, agent, modèle, tokens, durée, issue),
+puis un rapport qui permet de réviser la table de délégation avec des chiffres.
+
+### I-1. Sources de données
+
+Quatre pistes, de la plus simple à la plus complète. Elles se combinent : I-a pour le journal
+courant, I-b pour le détail, I-c pour rattraper le passé et mesurer l'agent principal.
+
+| Piste | Mécanisme | Donne | Limite |
+|---|---|---|---|
+| **I-a. Hook `PostToolUse` sur `Agent`** | `.claude/settings.json` (versionné), `matcher: "Agent"` (et `"Task"`, ancien nom de l'outil), commande `bin/agent_log.py`. Le hook reçoit en JSON sur stdin `session_id`, `cwd`, `tool_input` (`description`, `subagent_type`, `model`, `prompt`) et `tool_response` (`totalTokens`, `totalDurationMs`, `totalToolUseCount`, `usage` : `input_tokens`, `output_tokens`, `cache_read_input_tokens`, `cache_creation_input_tokens`). | Une ligne par appel, automatiquement, sans dépendre de la discipline du modèle. | Champs à confirmer sur la version de Claude Code installée : au premier essai, écrire le JSON brut dans `.cache/agents.raw.jsonl` et ajuster le parseur. Rien sur le détail tour par tour. |
+| **I-b. Hook `SubagentStop`** | Reçoit `agent_id`, `agent_type` et `agent_transcript_path` ; le script relit le transcript du sous-agent et somme `message.usage` de chaque message assistant. | Coût par tour, modèle réellement servi, liste des outils appelés et des fichiers lus : repère un agent qui lit `fulltext.md` en entier ou relance dix fois `pdb search`. | Transcript local à la machine ; format interne susceptible de changer. |
+| **I-c. Analyse a posteriori des transcripts** | Commande `bin/pdb agents` qui lit `~/.claude/projects/<projet>/<session>.jsonl` et `<session>/subagents/*.jsonl`. | Reconstruit le journal sans hook, rattrape les sessions passées, et mesure aussi le **coût de l'agent principal** : seule façon de comparer « délégué » et « fait en direct ». | À lancer à la main ; dépend du même format interne que I-b. |
+| **I-d. Rapport demandé dans le prompt** | L'agent termine par une ligne `TASK: <classe> \| MODEL: <modèle> \| VERIFIED: …`. | L'étiquette de tâche et un statut. | Un agent ne connaît pas sa propre consommation : jamais une source de tokens. Repli seulement. |
+
+**Étiquette de tâche.** Pour regrouper les appels, chaque `description` d'agent commence par
+la classe de la table de délégation entre crochets : `[paper-add]`, `[paper-fiche]`,
+`[bench-rows]`, `[paper-ask]`, `[explore]`, `[paper-gaps]`, `[base-profile]`, `[compare]`,
+`[plan]`, `[doi-lookup]`, `[candidates]`. Le hook la sépare de la description ; sans
+crochets, `task_class = "autre"`. Cette convention s'ajoute au `CLAUDE.md` racine, à côté de
+la table.
+
+### I-2. Format du journal
+
+`.cache/agents.jsonl` à la racine du dépôt : dérivé, non versionné (`.cache/` est déjà
+ignoré, principe §0), une ligne JSON par appel.
+
+```json
+{"ts": "2026-10-02T14:05:12Z", "session_id": "…", "base": "fpga",
+ "task_class": "paper-fiche", "description": "fiche de lin2024yolo",
+ "subagent_type": "general-purpose", "model_requested": "sonnet", "model_served": "claude-sonnet-…",
+ "input_tokens": 41200, "output_tokens": 3900, "cache_read": 28000, "cache_creation": 9100,
+ "total_tokens": 82200, "first_turn_tokens": 18500,
+ "duration_ms": 94000, "tool_calls": 17, "tools": {"Read": 6, "Bash": 9, "Edit": 2},
+ "status": "ok", "prompt_chars": 1450, "result_chars": 2100, "verified": null}
+```
+
+- `base` : nom de la base résolue depuis `cwd` par `data_root` (`lib/base.py`, même
+  règle que les commandes : `base.json` en remontant, sinon la base par défaut du registre).
+- `first_turn_tokens` (I-b) : tokens du premier tour, soit le coût fixe de démarrage.
+- `status` : `ok`, `erreur` ou `interrompu`.
+- `verified` : ce que l'agent principal a fait du résultat, `repris` (tel quel), `corrigé`
+  ou `refait`. Rempli après coup par `bin/pdb agents --mark <ts> corrigé`, ou par le skill
+  appelant quand il vérifie le rapport (règle « vérifier ce qu'ils rapportent » du
+  `CLAUDE.md`).
+
+Le hook n'échoue jamais bloquant : toute erreur de parsing est écrite dans
+`.cache/agents.errors.log` et le script sort avec le code 0.
+
+### I-3. Indicateurs
+
+`bin/pdb agents --report [--since AAAA-MM-JJ] [--by task|model|base]` produit un tableau
+Markdown :
+
+| Indicateur | Calcul | Ce qu'il dit |
+|---|---|---|
+| Coût par tâche × modèle | médiane et p90 de `total_tokens` | base de la révision de la table |
+| Coût en prix | tokens × tarif par modèle (input, output, cache read, cache write), tarifs dans un fichier de config et non en dur | les tokens d'`opus` et de `haiku` ne valent pas le même prix |
+| Surcoût de démarrage | `first_turn_tokens / total_tokens` | au-delà de ~50 %, la tâche est trop petite pour être déléguée |
+| Taux de reprise | part de `corrigé` + `refait` par tâche × modèle | un modèle moins cher mais souvent refait coûte plus cher au total |
+| Coût effectif | coût de l'agent + coût de la reprise par l'agent principal | le vrai coût d'une délégation |
+| Part de cache | `cache_read / (input_tokens + cache_read)` | faible sur des appels répétés (une fiche par agent) : préambule à rendre identique |
+| Outils | nombre d'appels et lectures volumineuses | lectures inutiles à interdire dans le prompt |
+| Témoin | même classe de tâche faite en direct (I-c) | la délégation est-elle rentable pour cette classe ? |
+
+### I-4. Pistes d'optimisation à tester
+
+Chaque piste se juge sur le rapport, avant/après, comme un changement de pipeline sur le
+banc d'EVAL.md :
+
+1. **Regrouper les tâches mécaniques.** Plusieurs `/paper-add` ou recherches de DOI dans un
+   seul agent `haiku` : le coût fixe se paie une fois.
+2. **Gabarit de prompt d'agent** (`templates/agent-prompt.md`) : base visée, chemin du
+   `CLAUDE.md` à lire, périmètre de fichiers, format de retour court. Un préambule identique
+   d'un appel à l'autre profite mieux du cache qu'un contexte recopié à chaque fois.
+3. **Ajuster les modèles d'après le taux de reprise.** Essayer `haiku` sur les fiches de
+   papiers courts, ou `sonnet` à la place d'`opus` pour `/paper-gaps` ; garder la
+   descente seulement si la reprise reste basse.
+4. **Restreindre les lectures.** Interdire dans le prompt la lecture intégrale de
+   `fulltext.md` (passer par `pdb search` / `pdb show`), limiter les outils au strict
+   nécessaire.
+5. **Seuil de délégation chiffré.** Remplacer « garder en direct ce qui est court » par un
+   seuil tiré du surcoût de démarrage mesuré (par exemple : ne pas déléguer une tâche dont
+   le coût direct estimé est inférieur au coût fixe d'un agent).
+6. **Résultats courts.** Demander un retour compact (chemins écrits, décisions, doutes)
+   plutôt qu'un compte rendu : tout ce que l'agent renvoie entre dans le contexte de
+   l'agent principal et se paie à chaque tour suivant.
+7. **Parallélisme utile seulement.** Des agents en parallèle ne coûtent pas moins de tokens ;
+   ils font gagner du temps. Les mesurer à part (`duration_ms`) pour ne pas confondre les
+   deux gains.
+
+### I-5. Mise en œuvre
+
+| Étape | Contenu |
+|---|---|
+| I-5a | `bin/agent_log.py` en mode brut (I-a) et hook dans `.claude/settings.json` ; quelques délégations pour fixer le format réel. |
+| I-5b | Parseur définitif, `.cache/agents.jsonl`, convention `[task_class]` dans le `CLAUDE.md` racine. |
+| I-5c | Hook `SubagentStop` (I-b) : `first_turn_tokens`, `tools`, `model_served`. |
+| I-5d | `bin/pdb agents` : `--report`, `--mark`, lecture des transcripts passés (I-c). |
+| I-5e | Après ~20 délégations : rapport consigné, révision chiffrée de la table du `CLAUDE.md`. |
+
+**Fichiers.** `.claude/settings.json`, `bin/agent_log.py`, `bin/pdb.py` (sous-commande
+`agents`), `lib/agentlog.py` (parsing commun hook / transcripts), `CLAUDE.md` racine,
+`templates/agent-prompt.md`, `tests/test_agentlog.py` (transcript et entrée de hook
+d'exemple dans `tests/fixtures/`).
+
+**Critère d'acceptation.** Chaque appel `Agent` d'une session produit une ligne valide dans
+`.cache/agents.jsonl` sans jamais bloquer la session ; `pdb agents --report` donne coût,
+surcoût de démarrage et taux de reprise par tâche × modèle ; la table de délégation du
+`CLAUDE.md` est révisée au moins une fois à partir de ce rapport.
+
+---
+
 ## 9. Nouveaux skills
 
 Format commun : `.claude/commands/<nom>.md`, front-matter `description`, `argument-hint`,
@@ -498,6 +623,7 @@ de preuve et de citation comptent le plus), ensuite `/paper-compare`, `/table-re
 | 7 | `/paper-compare`, `/state-of-art` | s'appuient sur C et D |
 | 8 | **Lots G et H** (route de référence, provenance) | décisions éclairées par le lot A |
 | 9 | **Lot F** (français), `/research-question` | gains moins prioritaires |
+| à part | **Lot I** (journal et coût des sous-agents) | indépendant du pipeline : peut commencer à tout moment, utile dès qu'on délègue |
 
 Pour chaque étape : tests dans `tests/` (`bin/pdb test`), `bin/pdb eval --save` avant et
 `--compare` après, mise à jour de `DATA_MODEL.md` si un format change, case cochée dans

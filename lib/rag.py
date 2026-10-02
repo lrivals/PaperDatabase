@@ -10,6 +10,13 @@ chaque passage renvoyé porte son chunk_id, sa section, sa page et le sha1 de so
   .cache/rag/<modèle>.npz, indexés par chunk_id:sha1 : seuls les passages nouveaux ou
   modifiés sont réencodés. Sans sentence-transformers, recherche lexicale seule.
 - Fusion : Reciprocal Rank Fusion, score = Σ 1 / (RRF_K + rang).
+
+Deux moteurs pour les mêmes passages (mêmes chunk_id, même pdb show / verify) :
+- CPU, par défaut : bge-small (dense) et MiniLM (rerank), sentence-transformers optionnel ;
+- GPU, sur demande : Qwen3-Embedding-4B et Qwen3-Reranker-4B (lib/rag_models), utilisés
+  seulement si l'utilisateur active la route GPU (bin/pdb gpu on, ou PDB_GPU=1) et qu'un GPU
+  CUDA est présent. Vecteurs dans .cache/rag/Qwen_Qwen3-Embedding-4B.npz, à côté de ceux du
+  CPU ; sans eux (base pas encore réindexée), la recherche reste sur le moteur CPU.
 """
 import difflib
 import hashlib
@@ -20,9 +27,10 @@ import unicodedata
 from collections import Counter
 from pathlib import Path
 
-from lib import embed, query
+from lib import embed, query, rag_models
 
 DEFAULT_MODEL = "BAAI/bge-small-en-v1.5"
+GPU_MODEL, GPU_RERANK_MODEL = rag_models.EMBED, rag_models.RERANK
 # Préfixe recommandé par le modèle pour encoder une requête (pas les passages).
 QUERY_PREFIX = {"BAAI/bge-small-en-v1.5": "Represent this sentence for searching relevant passages: "}
 SPLIT_OVER, WINDOW, OVERLAP = 250, 200, 40
@@ -41,10 +49,27 @@ _rerankers = {}
 
 def _cross_scores(q, texts, model=RERANK_MODEL):
     """Scores du cross-encoder ; séparé pour être remplacé dans les tests."""
+    if model == GPU_RERANK_MODEL:
+        return [float(x) for x in rag_models.rerank(q, texts)]
     if model not in _rerankers:
         from sentence_transformers import CrossEncoder
         _rerankers[model] = CrossEncoder(model)
     return [float(x) for x in _rerankers[model].predict([(q, t) for t in texts])]
+
+
+def encode(texts, model, query=False):
+    """Vecteurs normalisés des textes (requête : préfixe ou instruction du modèle)."""
+    if model == GPU_MODEL:
+        return rag_models.embed_texts(texts, query=query)
+    if query:
+        texts = [QUERY_PREFIX.get(model, "") + t for t in texts]
+    return embed._encode(texts, model)
+
+
+def dense_available(model):
+    """Le modèle peut-il encoder ici ? GPU : torch + CUDA ; CPU : sentence-transformers."""
+    return rag_models.unavailable() is None if model == GPU_MODEL else embed.available()
+
 
 _TOKEN = re.compile(r"[a-z0-9]+")
 
@@ -147,13 +172,15 @@ def build_index(root, chunks=None, model=DEFAULT_MODEL, force=False):
     """Encode les passages absents du cache ; renvoie un manifeste (dict).
 
     Sans sentence-transformers : aucun vecteur, mode lexical seul (manifest["dense"] = False).
+    model=GPU_MODEL : vecteurs Qwen (route GPU), si torch et CUDA sont présents.
     """
     chunks = chunks if chunks is not None else load_chunks(root)
     manifest = {"chunks": len(chunks), "papers": len({c["paper_id"] for c in chunks}),
-                "model": model, "dense": embed.available(), "encoded": 0}
+                "model": model, "dense": dense_available(model), "encoded": 0}
     if not manifest["dense"]:
         return manifest
-    quiet_model_loading(model)
+    if model != GPU_MODEL:
+        quiet_model_loading(model)
     import numpy as np
     path = _cache_path(root, model)
     cache = {}
@@ -163,7 +190,7 @@ def build_index(root, chunks=None, model=DEFAULT_MODEL, force=False):
     keys = [f"{c['chunk_id']}:{c['sha1']}" for c in chunks]
     missing = [i for i, k in enumerate(keys) if k not in cache]
     if missing:
-        vecs = np.asarray(embed._encode([encoded_text(chunks[i]) for i in missing], model),
+        vecs = np.asarray(encode([encoded_text(chunks[i]) for i in missing], model),
                           dtype=np.float32)
         for i, v in zip(missing, vecs):
             cache[keys[i]] = v
@@ -190,17 +217,36 @@ def _load_vectors(root, chunks, model):
 # ------------------------------------------------------------------ recherche
 
 class Index:
-    """Passages + BM25 + vecteurs (si disponibles). Chargé une fois par commande."""
+    """Passages + BM25 + vecteurs (si disponibles). Chargé une fois par commande.
 
-    def __init__(self, root, model=DEFAULT_MODEL, chunks=None, rerank=False):
+    gpu=True : moteur Qwen (route GPU) si ses vecteurs existent pour cette base et que CUDA
+    est présent ; sinon moteur CPU, et self.note dit pourquoi. gpu=None : réglage de la
+    machine (rag_models.enabled : bin/pdb gpu on, ou PDB_GPU=1)."""
+
+    def __init__(self, root, model=DEFAULT_MODEL, chunks=None, rerank=False, gpu=False):
         self.root = Path(root)
-        self.model = model
         self.chunks = chunks if chunks is not None else load_chunks(root)
         self.by_id = {c["chunk_id"]: i for i, c in enumerate(self.chunks)}
         self.bm25 = BM25([encoded_text(c) for c in self.chunks])
-        self.vecs = _load_vectors(root, self.chunks, model) if embed.available() else None
-        if self.vecs is not None:
-            quiet_model_loading(model, *([RERANK_MODEL] if rerank else []))
+        self.note = None
+        if gpu is None:
+            gpu = rag_models.wanted()
+        self.vecs = None
+        if gpu:
+            reason = rag_models.unavailable()
+            if reason is None:
+                self.vecs = _load_vectors(root, self.chunks, GPU_MODEL)
+                reason = None if self.vecs is not None else \
+                    "vecteurs GPU absents ou périmés pour cette base (bin/pdb reindex)"
+            if reason:
+                self.note = f"route GPU indisponible : {reason} ; moteur CPU"
+        self.gpu = self.vecs is not None
+        self.model = GPU_MODEL if self.gpu else model
+        self.rerank_model = GPU_RERANK_MODEL if self.gpu else RERANK_MODEL
+        if not self.gpu:
+            self.vecs = _load_vectors(root, self.chunks, model) if embed.available() else None
+            if self.vecs is not None:
+                quiet_model_loading(model, *([RERANK_MODEL] if rerank else []))
         self.metas = query.load_papers(root)
         self.short = query.short_ids(self.metas)
         self._axes = {m["id"]: set(m.get("axes") or []) for m in self.metas}
@@ -233,7 +279,7 @@ class Index:
         if rerank:
             pool = self.search(q, k=RERANK_TOP, mode=mode, paper_ids=paper_ids, axis=axis,
                                kind=kind, section=section)
-            ce = _cross_scores(q, [encoded_text(h) for h in pool])
+            ce = _cross_scores(q, [encoded_text(h) for h in pool], self.rerank_model)
             order = sorted(range(len(pool)), key=lambda i: (-ce[i], pool[i]["chunk_id"]))
             return [{**pool[i], "rerank": round(ce[i], 3)} for i in order[:k]]
         if mode not in MODES:
@@ -247,7 +293,7 @@ class Index:
             lex = sorted((i for i in cand if s[i] > 0), key=lambda i: (-s[i], self.chunks[i]["chunk_id"]))
             ranks.append({i: r for r, i in enumerate(lex, 1)})
         if mode in ("hybrid", "dense"):
-            qv = embed._encode([QUERY_PREFIX.get(self.model, "") + q], self.model)[0]
+            qv = encode([q], self.model, query=True)[0]
             sim = self.vecs @ qv
             den = sorted(cand, key=lambda i: (-float(sim[i]), self.chunks[i]["chunk_id"]))
             ranks.append({i: r for r, i in enumerate(den, 1)})
@@ -293,7 +339,7 @@ def relevance_score(index, q, hits=None, top=3):
     hits = hits if hits is not None else index.search(q, k=top)
     if not hits:
         return float("-inf")
-    return max(_cross_scores(q, [encoded_text(h) for h in hits[:top]]))
+    return max(_cross_scores(q, [encoded_text(h) for h in hits[:top]], index.rerank_model))
 
 
 # ------------------------------------------------------------------ extraits

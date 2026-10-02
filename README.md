@@ -101,7 +101,7 @@ colonnes de source toujours affichées) :
 |---|---|
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (plateforme, colonne renseignée, tri, `--count`) |
 | `bin/pdb paper <id \| mot>` | fiche d'identité d'un papier : métadonnées, preprint, statut de fiche, benchmarks |
-| `bin/pdb search "<question>"` | passages classés (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), avec `chunk_id`, section et page |
+| `bin/pdb search "<question>"` | passages classés (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), avec `chunk_id`, section et page ; modèles Qwen sur GPU si la route GPU est active (`bin/pdb gpu`) |
 | `bin/pdb show <chunk_id>` / `verify <chunk_id> "<citation>"` | texte exact d'un passage / contrôle qu'une citation y figure, nombres compris (`NOMBRES` si un chiffre diffère) |
 | `bin/pdb cites <id>` / `cited-by <id>` | graphe de citations internes, références hors base (`--external`) |
 
@@ -265,9 +265,11 @@ bin/pdb base register bases/stage --name stage
 
 ---
 
-## Recherche GPU et benchmark synthétique
+## Route GPU optionnelle et benchmark synthétique
 
-En complément de `pdb search`, `bin/pdb rag` indexe le corpus avec Qwen3-Embedding-4B et Qwen3-Reranker-4B (GPU CUDA, `requirements-rag.txt`) et peut acquérir des PDF en libre accès ; `/paper-research` s'en sert. `bin/pdb synth` construit un benchmark synthétique sur un corpus isolé de 200 articles (questions générées localement, validées par deux sessions indépendantes ; validation, agents et juge passent par Claude Code en mode non interactif) : [docs/BENCHMARK.md](docs/BENCHMARK.md), [SETUP.md §10](SETUP.md).
+Par défaut, la recherche de passages tourne sur CPU (`pdb search`, `/paper-ask`). Si vous voulez utiliser votre carte graphique et qu'elle est CUDA, la route GPU (contribution de Maksym Lytvynenko) s'active avec `.venv/bin/pip install -r requirements-rag.txt` puis `bin/pdb gpu on` : `pdb search` et `/paper-ask` passent alors sur Qwen3-Embedding-4B et Qwen3-Reranker-4B, avec les mêmes `chunk_id`, `show` et `verify`. Elle donne aussi accès à `bin/pdb rag` (index de preuves, acquisition de PDF en libre accès, importés après accord) et à `/paper-research`. Sans GPU, rien ne change et rien n'échoue ([docs/RAG.md §13](docs/RAG.md#13-route-gpu-optionnelle-qwen3)).
+
+`bin/pdb synth` construit un benchmark synthétique sur un corpus isolé de 200 articles (questions générées localement, validées par deux sessions indépendantes ; validation, agents et juge passent par Claude Code en mode non interactif) : [docs/BENCHMARK.md](docs/BENCHMARK.md), [SETUP.md §10](SETUP.md).
 
 ---
 

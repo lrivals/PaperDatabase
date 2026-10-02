@@ -26,6 +26,9 @@ d'avancement : [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire) ; sch
 conventions : [DATA_MODEL.md](DATA_MODEL.md) ; guide d'utilisation : [docs/GUIDE.md](docs/GUIDE.md) ;
 améliorations spécifiées (fiabilité des réponses, tableaux, nouveaux skills) :
 [docs/AMELIORATIONS.md](docs/AMELIORATIONS.md).
+Recherche de passages : route CPU par défaut (`pdb search`, `/paper-ask`) ; la route GPU
+(Qwen3 : `pdb gpu`, `pdb rag`, `/paper-research`) ne sert que si l'utilisateur veut utiliser
+sa carte graphique et qu'elle est CUDA ([docs/RAG.md §13](docs/RAG.md#13-route-gpu-optionnelle-qwen3)).
 Tests : `bin/pdb test`. Avant/après tout changement du pipeline : `bin/pdb eval --compare`
 ([docs/EVAL.md](docs/EVAL.md)). Une base neuve : `bin/pdb base new <nom> --theme "…"`
 (créée sous `bases/<nom>/`).

@@ -84,7 +84,11 @@ PaperDatabase/
 │   ├── schema.py
 │   ├── refs.py             # rapprochement des références, classement des externes, citations
 │   ├── query.py            # requêtes N0 sans LLM (pdb bench, paper, cites)
-│   ├── rag.py              # recherche de passages (pdb search, show, verify)
+│   ├── rag.py              # recherche de passages (pdb search, show, verify) ; moteur CPU
+│   │                       # par défaut, moteur Qwen si la route GPU est active (§10)
+│   ├── rag_models.py       # route GPU : modèles Qwen3 épinglés, détection CUDA, réglage pdb gpu
+│   ├── rag_qwen.py         # route GPU : index de preuves SQLite de pdb rag
+│   ├── rag_external.py     # route GPU : acquisition open access (pdb rag acquire / approve)
 │   ├── evaluation.py       # banc d'évaluation (pdb eval)
 │   ├── openalex.py         # client OpenAlex (DOI → arXiv, citations, recherche), cache
 │   ├── status.py           # état de la base et prochaines actions (pdb status)
@@ -313,8 +317,9 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `reindex` | `reindex.run` | |
 | `discover …` | `discover.run` | |
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
-| `search`, `show`, `verify` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), texte exact, contrôle de citation (statut `NOMBRES` si un nombre diffère) ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5 |
-| `eval [--extract\|--rag\|--speed] [--save] [--compare [JSON]]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
+| `search`, `show`, `verify` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option ; Qwen3 sur GPU si la route GPU est active, `--gpu`/`--cpu` pour forcer), texte exact, contrôle de citation (statut `NOMBRES` si un nombre diffère) ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5, §13 |
+| `gpu [status\|on\|off\|download]` | `lib/rag_models.py` | route GPU optionnelle : état (torch, CUDA, modèles, vecteurs de la base), activation (réglage de la machine dans `~/.config/pdb/config.json`, ou `PDB_GPU=1`), téléchargement des modèles : §10, [docs/RAG.md](docs/RAG.md) §13 |
+| `eval [--extract\|--rag\|--speed] [--gpu] [--save] [--compare [JSON]]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
 | `plot [bench\|eval\|corpus\|all] [--only a,b] [--out DIR] [--format png\|pdf\|svg] [--list]` | `lib/plotdata.py`, `lib/plotfig.py` | figures statiques, voir ci-dessous |
@@ -1206,7 +1211,10 @@ Défauts mis au jour, à corriger (tâche 12) :
     avec légende et en-tête, indicateurs de qualité, vérité terrain annotée ;
   - [ ] lot F, recherche en français (requêtes multiples, modèle multilingue évalué, jeu
     ≥ 30 questions) ;
-  - [ ] lot G, `pdb search` route de référence, `pdb rag evaluate --save` comparable ;
+  - [ ] lot G, `pdb search` route de référence : en grande partie fait le 02/10/2026 (route CPU par défaut,
+    Qwen comme moteur optionnel de `pdb search`, `pdb gpu`, `pdb eval --rag --gpu`
+    comparable, `pdb rag` réservé au GPU ; RAG.md §13) ; reste `check-answer` qui contrôle
+    les nombres et `/paper-research` sur les `chunk_id` ;
   - [ ] lot H, snapshot dans `pdb search --format json`, journal de réponses optionnel ;
   - [ ] skills `/paper-compare`, `/state-of-art`, `/table-review`, `/research-question`.
 - [ ] **Pistes d'amélioration du 26/09/2026, non commencées** (analyse de la doc et du
@@ -1235,11 +1243,28 @@ Défauts mis au jour, à corriger (tâche 12) :
   à l'arborescence. Pas de ChromaDB : une recherche exhaustive en numpy suffit jusqu'à
   ~10⁵ passages ([docs/RAG.md](docs/RAG.md) §11).
 
-## 10. Recherche GPU (Qwen3), acquisition et benchmark synthétique
+## 10. Route GPU optionnelle (Qwen3), acquisition et benchmark synthétique
 
-Second moteur de recherche, indépendant de `pdb search` (bge-small, CPU, §5) : module `lib/rag_qwen.py`, commande `bin/pdb rag`, skill `/paper-research`. Le benchmark synthétique qui l'évalue est `bin/pdb synth` ([docs/BENCHMARK.md](docs/BENCHMARK.md)).
+Route GPU optionnelle, apportée par Maksym Lytvynenko : modèles `lib/rag_models.py`,
+index de preuves `lib/rag_qwen.py`, acquisition `lib/rag_external.py`, commande
+`bin/pdb rag`, skill `/paper-research`. **Elle ne sert que si l'utilisateur veut utiliser
+sa carte graphique et qu'elle est CUDA** ; la route par défaut est `pdb search` (CPU, §5).
+Les deux routes travaillent ensemble ([docs/RAG.md §13](docs/RAG.md#13-route-gpu-optionnelle-qwen3)) :
 
-Installer `.venv/bin/pip install -r requirements-rag.txt`, puis lancer
+- `bin/pdb gpu on` active la route (réglage de la machine ; `PDB_GPU=1|0` pour une session).
+  `pdb search`, et donc `/paper-ask`, encodent alors les mêmes passages avec Qwen : mêmes
+  `chunk_id`, mêmes `show` / `verify`. Sans torch, sans CUDA ou sans vecteurs Qwen pour la
+  base, `pdb search` reste sur le CPU et le dit ;
+- `pdb reindex` met à jour les vecteurs Qwen et l'index de `pdb rag` quand la route est
+  active ;
+- `pdb eval --rag --gpu --compare <run CPU>` compare les deux moteurs sur les mêmes jeux ;
+- `pdb rag` (dense, hybride, `acquire`, `approve`) s'arrête d'emblée sans GPU et renvoie
+  vers `pdb search`.
+
+Le benchmark synthétique qui évalue la route est `bin/pdb synth` ([docs/BENCHMARK.md](docs/BENCHMARK.md)).
+
+Installer `.venv/bin/pip install -r requirements-rag.txt`, puis lancer `bin/pdb gpu on`
+(modèles et vecteurs de `pdb search`) et, pour `/paper-research`,
 `bin/pdb rag index --download`. Cette première exécution télécharge les versions épinglées
 de Qwen3-Embedding-4B et Qwen3-Reranker-4B ; les suivantes se font depuis le cache local.
 La commande nécessite un GPU CUDA compatible pour les modes `dense` et `hybrid`. Sur une
@@ -1265,7 +1290,7 @@ les extraits d'une réponse, enregistrer un JSON contenant `snapshot` et
 `bin/pdb rag check-answer réponse.json`. Ce contrôle est structurel : l'agent doit encore
 vérifier que le passage soutient réellement la phrase.
 
-Dans Claude Code, `/paper-research <question>` effectue une rédaction suivie d'une liste de
+Dans Claude Code, `/paper-research <question>` (route GPU seulement) effectue une rédaction suivie d'une liste de
 trois lacunes au maximum, de recherches complémentaires, puis d'un contrôle des sources.
 Quand le corpus ne suffit pas, `bin/pdb rag acquire "requête" --run identifiant` interroge
 OpenAlex et arXiv, met les PDF en staging, vérifie qu'un passage extrait répond à la requête,

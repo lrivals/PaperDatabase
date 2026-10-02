@@ -14,6 +14,9 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
    d'ensemble (qui mesure quoi, avec quelle portée), `--count paper_id,power_scope` résume
    sans lister les lignes.
 2. **Passages (N1).** Sinon, ou en complément, lance `bin/pdb search "<question>" -k 8 --rerank`.
+   - Le moteur est choisi par `search` : CPU par défaut, Qwen sur GPU si l'utilisateur a
+     activé la route GPU (`bin/pdb gpu on`). Ne force pas `--gpu` ; une ligne
+     `# route GPU indisponible` sur stderr n'est pas une erreur (la recherche a répondu sur CPU).
    - Le corpus est en anglais : formule la requête en anglais, et essaie une deuxième
      formulation si la première ne donne rien d'utile.
    - Restreins la recherche avec `--paper`, `--section` ou `--kind` quand la question le permet.
@@ -41,7 +44,9 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
    tous les papiers cités : `bin/pdb paper id1 id2 … --fields short,type`), et les
    `power_scope` qui diffèrent entre les lignes que tu compares. Pour situer un papier dans
    sa lignée : `bin/pdb cites <id>` / `bin/pdb cited-by <id>`.
-7. Termine par 2 ou 3 pistes : papier à lire, expérience, gap.
+7. Termine par 2 ou 3 pistes : papier à lire, expérience, gap. Si la base ne suffit pas,
+   propose `/paper-discover` ; `/paper-research` (acquisition open access) seulement si
+   l'utilisateur utilise la route GPU.
 
 Réponds en français et garde les termes techniques en anglais. Ajoute en fin de réponse la
 légende des ids courts utilisés (reprise du pied des sorties `# ids:`).

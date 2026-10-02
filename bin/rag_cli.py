@@ -1,4 +1,9 @@
-"""Evidence search and acquisition tools for the existing research assistant."""
+"""Evidence search and acquisition tools of the GPU route (Qwen3, CUDA; `pdb gpu`).
+
+The default route is CPU: `pdb search / show / verify` and /paper-ask. `pdb rag` serves
+/paper-research. Only `--mode lexical`, `evidence`, `benchmarks` and `check-answer` run
+without a GPU; the other commands stop early with a pointer to the CPU route.
+"""
 
 import argparse
 import contextlib
@@ -8,7 +13,7 @@ import sys
 import time
 from pathlib import Path
 
-from lib import base, rag_qwen as rag
+from lib import base, rag_models, rag_qwen as rag
 
 ROOT = Path(os.environ.get("PDB_RAG_ROOT", base.ROOT)).resolve()
 
@@ -45,6 +50,14 @@ def run(argv):
     evaluate.add_argument("--mode", choices=("lexical", "dense", "hybrid"), default="hybrid")
     evaluate.add_argument("--rerank", action="store_true")
     args = parser.parse_args(argv)
+    needs_gpu = (args.command in ("acquire", "approve") or
+                 args.command in ("index", "search", "evaluate") and args.mode != "lexical")
+    reason = rag_models.unavailable() if needs_gpu else None
+    if reason:
+        print(f"rag: route GPU (Qwen3) indisponible : {reason}.\n"
+              "     Route par défaut, sans GPU : bin/pdb search / show / verify (et /paper-ask) ;\n"
+              "     ou bin/pdb rag … --mode lexical. État : bin/pdb gpu.", file=sys.stderr)
+        return 1
     try:
         if args.command == "index":
             result = rag.build(ROOT, mode=args.mode, download=args.download)

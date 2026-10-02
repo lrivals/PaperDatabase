@@ -122,6 +122,59 @@ class TestRag(unittest.TestCase):
         self.assertEqual(top[0]["rerank"], 1.0)
         self.assertEqual(len(top), 2)
 
+    def test_gpu_engine_keeps_chunk_ids(self):
+        """Route GPU : même passages et chunk_id, encodeur et reranker Qwen (simulés)."""
+        qwen = lambda texts, query=False, **kw: fake_encode(texts, rag.GPU_MODEL)  # noqa: E731
+        with mock.patch.object(rag.rag_models, "unavailable", return_value=None), \
+                mock.patch.object(rag.rag_models, "embed_texts", side_effect=qwen) as enc, \
+                mock.patch.object(rag.rag_models, "rerank",
+                                  side_effect=lambda q, texts: [float("memory" in t.lower()) for t in texts]):
+            # vecteurs Qwen absents : moteur CPU, et la raison est dite
+            ix = rag.Index(self.root, gpu=True)
+            self.assertFalse(ix.gpu)
+            self.assertIn("vecteurs GPU absents", ix.note)
+            m = rag.build_index(self.root, model=rag.GPU_MODEL)
+            self.assertEqual(m["encoded"], m["chunks"])
+            self.assertTrue(rag._cache_path(self.root, rag.GPU_MODEL).exists())
+            ix = rag.Index(self.root, gpu=True)
+            self.assertTrue(ix.gpu and ix.dense)
+            self.assertEqual(ix.model, rag.GPU_MODEL)
+            calls = enc.call_count
+            hit = ix.search("binarized", k=1, mode="dense")[0]
+            self.assertEqual(hit["chunk_id"], "arxiv-1612.07119-finn#000.0")
+            self.assertTrue(enc.call_args.kwargs["query"])
+            self.assertEqual(enc.call_count, calls + 1)
+            top = ix.search("wall power measurement", k=1, rerank=True)
+            self.assertEqual(top[0]["chunk_id"], "2021-lin-mcunet#000.0")
+        self.assertEqual(rag.Index(self.root).model, rag.DEFAULT_MODEL)  # défaut : CPU
+
+    def test_gpu_unavailable_falls_back_to_cpu(self):
+        rag.build_index(self.root)
+        with mock.patch.object(rag.rag_models, "unavailable", return_value="aucun GPU CUDA détecté"):
+            ix = rag.Index(self.root, gpu=True)
+            self.assertFalse(ix.gpu)
+            self.assertEqual(ix.model, rag.DEFAULT_MODEL)
+            self.assertIn("aucun GPU", ix.note)
+            self.assertFalse(rag.build_index(self.root, model=rag.GPU_MODEL)["dense"])
+
+    def test_gpu_setting(self):
+        from lib import rag_models
+        env = {"PDB_REGISTRY": str(self.root / "cfg" / "bases.json")}
+        with mock.patch.dict("os.environ", env, clear=False):
+            import os
+            os.environ.pop("PDB_GPU", None)
+            self.assertFalse(rag_models.wanted())
+            rag_models.set_wanted(True)
+            self.assertTrue(rag_models.wanted())
+            self.assertTrue((self.root / "cfg" / "config.json").exists())
+            os.environ["PDB_GPU"] = "0"
+            self.assertFalse(rag_models.wanted())
+            os.environ["PDB_GPU"] = "1"
+            rag_models.set_wanted(False)
+            self.assertTrue(rag_models.wanted())
+            with mock.patch.object(rag_models, "unavailable", return_value=None):
+                self.assertEqual(rag_models.enabled(), (True, None))
+
     def test_lexical_fallback_without_vectors(self):
         with mock.patch.object(embed, "available", return_value=False):
             ix = rag.Index(self.root)

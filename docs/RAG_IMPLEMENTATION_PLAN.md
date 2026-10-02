@@ -1,5 +1,11 @@
 # RAG implementation on `dev`
 
+> **Status (2 October 2026).** This GPU stack is now the optional GPU route of PaperDatabase:
+> the default route stays CPU (`pdb search`, `/paper-ask`); the Qwen models serve
+> `pdb search` too when the user turns the GPU route on (`bin/pdb gpu on`), and `pdb rag` /
+> `/paper-research` are used only with a CUDA GPU. How the two routes fit together:
+> [RAG.md §13](RAG.md#13-route-gpu-optionnelle-qwen3).
+
 The first release adds local evidence retrieval to the existing assistant. It follows the OpenScholar pattern: retrieve, draft, list up to three evidence gaps, search those gaps, revise, and verify citations. External open-access papers used as evidence are added to the library with a `todo` fiche.
 
 1. Build a rebuildable SQLite FTS5 and Qwen3-Embedding-4B passage index over abstracts, sections, figures, tables, finished fiches, and benchmark configurations. Preserve exact source text, source hash, section, page hint, source type, and extraction warnings. Use BM25, dense cosine, reciprocal-rank fusion, and Qwen3-Reranker-4B. Keep derived data in `.cache/rag/` and existing corpus schemas intact.

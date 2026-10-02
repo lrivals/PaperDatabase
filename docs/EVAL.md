@@ -388,6 +388,11 @@ Lecture :
 - Différences de protocole : Qwen plafonne à 3 passages par papier et indexe aussi fiches et
   lignes de benchmark ; les limiter au texte original ne change pas le rappel (ligne
   « original text only » du JSON).
+- **Depuis le 02/10/2026**, les modèles Qwen sont aussi un moteur optionnel de `pdb search`
+  (route GPU, [RAG.md §13](RAG.md#13-route-gpu-optionnelle-qwen3)). Ils se mesurent alors
+  directement avec le banc : `pdb eval --rag --gpu --save` (fichier suffixé `-gpu`), puis
+  `pdb eval --rag --gpu --compare <run CPU>` ; plus besoin de `eval/qwen_on_eval.py` pour ce
+  moteur. Mesure à faire sur une machine avec GPU.
 
 ## 9. Banc par base
 

@@ -1,0 +1,3 @@
+{"id":"ho-a2","q":"Quelle consommation pour la détection de crises d'épilepsie par EEG sur microcontrôleur ?","verdict":"absent",
+"requirements":[{"text":"Consommation (mW/µJ par inférence) d'un détecteur de crises d'épilepsie par EEG","status":"absent"},{"text":"Plateforme microcontrôleur utilisée","status":"absent"},{"text":"Méthode/modèle de détection et conditions de mesure","status":"absent"}],
+"claims":[]}

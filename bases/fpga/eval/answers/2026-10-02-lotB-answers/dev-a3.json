@@ -1,0 +1,10 @@
+{"id": "dev-a3", "q": "Quel débit atteint la lecture de plaques d'immatriculation par YOLO sur Zynq ?", "verdict": "absent",
+ "requirements": [
+  {"text": "Débit (FPS) d'un système de lecture de plaques d'immatriculation (ALPR) basé sur YOLO", "status": "absent"},
+  {"text": "Plateforme Zynq sur laquelle ce débit est mesuré", "status": "absent"}
+ ],
+ "claims": [
+  {"text": "Le papier le plus proche traite la détection de véhicules (et non la lecture de plaques) avec des détecteurs dérivés de YOLO sur Zynq XC7Z020 (PYNQ-Z1).", "kind": "lu",
+   "citations": [{"id": "2609.24757#000.0", "excerpt": "real-time vehicle detection on the resourceconstrained Xilinx Zynq XC7Z020 device of the PYNQ-Z1 board"}]},
+  {"text": "Les débits de ce papier ne se transposent pas à la lecture de plaques, qui demanderait en plus une étape de reconnaissance de caractères.", "kind": "déduit", "citations": []}
+ ]}

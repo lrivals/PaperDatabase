@@ -1,0 +1,13 @@
+{"id": "ho-s1", "q": "Quelle famille de FPGA résistants aux radiations est ciblée par l'extension de hls4ml pour le ML embarqué sur détecteur ?",
+ "verdict": "suffisant",
+ "requirements": [
+  {"text": "Famille de FPGA radiation-hard ciblée par l'extension de hls4ml", "status": "couvert"},
+  {"text": "Lien avec le ML embarqué sur détecteur (on-detector)", "status": "couvert"}
+ ],
+ "claims": [
+  {"text": "L'extension (nouveau backend) de hls4ml cible la famille Microchip PolarFire, l'une des rares FPGA commercialement disponibles et résistants aux radiations.", "kind": "lu",
+   "citations": [{"id": "2602.15751#000.0", "excerpt": "Microchip PolarFire family of FPGAs, one of the few commercially available and radiation hard FPGAs"}]},
+  {"text": "PolarFire a été choisie pour sa tolérance inhérente aux radiations, grâce à son architecture flash, alternative aux FPGA SRAM nécessitant du TMR.", "kind": "lu",
+   "citations": [{"id": "2602.15751#001.3", "excerpt": "a device selected for its inherent radiation tolerance"},
+                 {"id": "2602.15751#001.3", "excerpt": "flash-based architecture as a superior alternative to traditional SRAM-based FPGAs requiring Triple Modular Redundancy (TMR)"}]}
+ ]}

@@ -13,6 +13,8 @@ bin/pdb eval --rag                # recherche, pertinence faible, verify (~2 min
 bin/pdb eval --speed [--no-cli]   # temps (~1 min)
 bin/pdb eval --save               # enregistre eval/results/<date>-<commit>.json
 bin/pdb eval --compare [JSON]     # écarts avec le dernier run enregistré ; code 1 si un seuil manque
+bin/pdb eval --answers DIR        # réponses finales enregistrées d'un run (§10)
+bin/pdb eval --questions [JEU]    # questions d'un jeu de réponses, sans les attentes (§10)
 bin/pdb test --rag                # alias de pdb eval --rag
 ```
 
@@ -335,12 +337,13 @@ Lecture :
   une bonne réponse formulée autrement (voir les 3 révisions du §3).
 - La vérité terrain des tableaux ne couvre que les valeurs reprises dans `benchmarks.csv`.
 - Pas d'évaluation de bout en bout de `/paper-ask` (réponse rédigée par un LLM) : elle
-  demande un jugement humain et consomme des tokens.
+  demande un jugement humain et consomme des tokens. *Depuis le 02/10/2026* : volet
+  `--answers` (§10), sans run de référence pour l'instant.
 - Pas de comparaison GROBID / Docling : le banc est prêt à la chiffrer une fois Docling
   branché (couverture, tableaux avec corps, valeurs dans le tableau cité).
 - Les extensions prévues pour ces limites sont spécifiées dans
-  [AMELIORATIONS.md](AMELIORATIONS.md) : évaluation des réponses finales (lot A) et vérité
-  terrain des cellules de tableaux (lot E-e).
+  [AMELIORATIONS.md](AMELIORATIONS.md) : évaluation des réponses finales (lot A, en place,
+  §10) et vérité terrain des cellules de tableaux (lot E-e).
 
 ## 8. Recherche GPU (Qwen3, `pdb rag`) sur les mêmes jeux (26/09/2026)
 
@@ -543,3 +546,99 @@ Lecture :
 - `pdb test` : 204 tests sur 205 réussissent. `test_rag_qwen.test_external_import_is_isolated`
   échoue parce qu'il ne peut pas charger un modèle depuis huggingface.co ; aucun code n'a
   changé.
+
+## 10. Réponses finales (`pdb eval --answers`, 02/10/2026)
+
+Lot A de [AMELIORATIONS.md](AMELIORATIONS.md). Les §3-8 mesurent le classement des passages ;
+ce volet mesure la **réponse rédigée** : sait-elle reconnaître une question hors corpus,
+ses citations tiennent-elles, retrouve-t-elle les sources et les valeurs attendues ? Le banc
+reste sans LLM : les réponses sont produites à part, puis notées.
+
+```
+/eval-answers [answers|answers_holdout] [run]     # dans Claude Code : produit et note un run
+bin/pdb eval --questions [answers|answers_holdout] # id et question, sans les attentes
+bin/pdb eval --answers eval/answers/<run> [--save] [--compare]
+```
+
+**Jeux.** `answers.jsonl` (dev) et `answers_holdout.jsonl`, dans `eval/fixtures/` de la base
+ou, pour fpga, dans `tests/fixtures/` (même règle que les autres jeux, `evaluation.paths`).
+Quatre catégories :
+
+| Catégorie | Ce qu'on vérifie | Verdict attendu |
+|---|---|---|
+| `simple` | un fait sourcé dans un papier | `suffisant` |
+| `numeric` | valeurs, unités, conditions | `suffisant` |
+| `synthesis` | couverture de plusieurs papiers | `suffisant` (ou `partiel`) |
+| `absent` | question proche du thème, non couverte par le corpus | `absent` |
+
+Une ligne du jeu :
+
+```json
+{"id": "dev-n1", "q": "Quel débit et quelle latence TinyissimoYOLO atteint-il sur le MAX78000 ?",
+ "category": "numeric", "required": ["le débit en FPS", "la latence par inférence"],
+ "gold_sources": ["2306.00001#000", "2306.00001#006"],
+ "gold_values": [{"field": "fps", "value": "180", "unit": "fps"}, {"field": "latency_ms", "value": "5.5", "unit": "ms"}],
+ "expected_verdict": "suffisant"}
+```
+
+- `gold_sources` : sections (`paper#NNN`, id court accepté) ou papiers entiers (`paper_id`),
+  vide pour `absent`.
+- `gold_values` (facultatif) : nombres attendus dans une affirmation de la réponse, avec leur
+  unité si `unit` est donnée ; virgule décimale française acceptée (« 64,6 % »).
+- Les questions `absent` sont choisies proches du thème (polypes en endoscopie, langue des
+  signes, sonar, EEG…) et vérifiées absentes par recherche plein texte dans `sections.jsonl` :
+  les jeux `rag_eval_neg*` (biologie, finance…) sont trop éloignés pour tester la réponse.
+
+**Enregistrement d'une réponse.** `/paper-ask … --record eval/answers/<run>/<id>.json` écrit
+la réponse sous forme d'affirmations citées, avec ses exigences et son verdict de suffisance
+(format dans [paper-ask.md](../.claude/commands/paper-ask.md)) :
+
+```json
+{"id": "dev-n1", "q": "…", "verdict": "suffisant",
+ "requirements": [{"text": "le débit en FPS", "status": "couvert"}],
+ "claims": [{"text": "TinyissimoYOLO atteint jusqu'à 180 fps sur le MAX78000.", "kind": "lu",
+             "citations": [{"id": "2306.00001#000.0", "excerpt": "achieving high frame-rate of up to 180 fps"}]},
+            {"text": "L'accélérateur CNN explique l'écart.", "kind": "déduit"}]}
+```
+
+Une citation de `pdb bench` s'écrit `{"paper": "1612.07119", "source_section": "Table 3"}`.
+`/eval-answers` ne donne aux agents que la question (`pdb eval --questions`) : ni catégorie,
+ni sources, ni verdict attendu.
+
+**Métriques**, par jeu et par catégorie (`lib/evaluation.py`, `answer_quality`) :
+
+| Métrique | Définition |
+|---|---|
+| `verdict_accuracy` | verdict = verdict attendu |
+| `absent_recognized` | questions `absent` : verdict `absent` ou `partiel` |
+| `false_absent` | autres questions : verdict `absent` à tort |
+| `citation_accept_rate` | citations acceptées / citations. Passage : `rag.verify` sur l'extrait, `OK` ou `APPROX` **dans le passage indiqué** (comme le code 0 de `pdb verify`) ; sans extrait, inconnu, `NOMBRES` ou trouvé ailleurs : refusé. Benchmark : une ligne du papier dont la `source_section` contient celle citée |
+| `unsupported_claim_rate` | affirmations `lu` sans aucune citation acceptée / affirmations `lu` |
+| `gold_source_recall` | sources attendues citées (par une citation acceptée) |
+| `gold_value_recall` | valeurs attendues présentes dans une affirmation, avec leur unité |
+| `verdict_confusion` | matrice attendu × obtenu |
+| `human.*` | notes de `grades.csv`, ramenées à [0, 1] |
+
+**Notes humaines.** `eval/answers/<run>/grades.csv`, colonnes
+`id,exigences,soutien,conditions,limites`, de 0 à 2 :
+
+| Critère | 0 | 1 | 2 |
+|---|---|---|---|
+| `exigences` | la question n'est pas traitée | traitée en partie | toutes les exigences traitées ou déclarées absentes |
+| `soutien` | une affirmation est contredite par son passage | des affirmations débordent leur passage | chaque affirmation `lu` est soutenue |
+| `conditions` | chiffres sans conditions | conditions partielles | plateforme, précision, batch, portée de puissance… explicites |
+| `limites` | aucune réserve | réserves génériques | limites du corpus et des mesures signalées |
+
+Les contrôles automatiques vérifient que les extraits existent, pas qu'ils soutiennent la
+phrase : seule la note `soutien` le dit.
+
+**Jeux de départ (fpga).** 12 questions dev et 12 holdout, 3 par catégorie, écrites par
+l'auteur du code : c'est une graine. Objectif : 40 dev / 60 holdout par base, écrits ou relus
+par quelqu'un d'autre. Aucun seuil n'est fixé dans `thresholds.json` avant deux runs
+complets, pour mesurer la variance d'un run à l'autre (même question, réponses différentes).
+Ne rien régler sur `answers_holdout`.
+
+**Lecture d'un run.** `pdb eval --answers` liste aussi les enregistrements non conformes,
+les ids absents des jeux, les questions sans réponse et, par question, les verdicts faux et
+les affirmations non soutenues. `--save` enregistre le run dans `eval/results/` avec les
+autres volets ; `--compare` ignore le détail par question (`per_question`).

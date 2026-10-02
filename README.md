@@ -358,7 +358,7 @@ PaperDatabase/                # le code seul ; les données sont dans bases/
 │                             # base, registry, bases, xbase, vizbases (plusieurs bases)
 ├── tests/
 └── .claude/commands/         # /paper-add, /paper-fiche, /paper-gaps, /paper-discover,
-                              # /paper-ask, /paper-research, /base-profile
+                              # /paper-ask, /paper-research, /base-profile, /eval-answers
 ```
 
 ---
@@ -381,7 +381,7 @@ Au 01/10/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-
   [bases/stage/gaps.md](bases/stage/gaps.md), dont 12 étayés. Les références sans version
   téléchargeable automatiquement restantes sont à déposer à la main (liste dans [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire)).
 
-### Ce qui marche (testé : 210 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
+### Ce qui marche (testé : 215 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 
 - acquisition arXiv, DOI (via OpenAlex), PDF local, par lot ; exports `.bib` / `.ris`
   éditeur prioritaires sur l'en-tête GROBID (vérifié sur 6 exports IEEE, ACM, MDPI,

@@ -399,6 +399,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb ingest --reparse --tables docling [--ocr] [id…]` | idem, et Docling pour les tableaux restés sans corps (lent, optionnel : `requirements-docling.txt`) |
 | `bin/pdb search "<q>"`, `show <id>`, `verify <id> "<cit.>"` | passages, texte exact, contrôle d'une citation |
 | `bin/pdb eval [--extract\|--rag\|--speed] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
+| `bin/pdb eval --answers <run>` | note les réponses enregistrées d'un run (EVAL.md §10) |
 | `bin/pdb grobid start\|stop\|status` | GROBID |
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
 | `bin/pdb plot [bench\|eval\|corpus] [--format pdf]` | figures statiques (PNG par défaut) dans `figures/` (`--list` : noms) |
@@ -415,6 +416,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `/paper-discover [axe \| gap \| mots-clés]` | propose des papiers à ajouter et attend votre accord |
 | `/paper-ask <question>` | réponse sourcée et vérifiée depuis la base |
 | `/base-profile [consigne]` | propose d'affiner le profil de la base (axes, règles, périmètre) ; applique après accord |
+| `/eval-answers [answers\|answers_holdout]` | fait répondre `/paper-ask` aux questions du banc, à l'aveugle, puis note le run (EVAL.md §10) |
 
 | Fichier | Rôle | Qui l'écrit |
 |---|---|---|

@@ -34,6 +34,9 @@
                             figures statiques : benchmarks, évaluation, statistiques du corpus
   eval [--extract|--rag|--speed] [--save] [--compare [JSON]]
                             banc d'évaluation du logiciel (docs/EVAL.md)
+  eval --answers DIR | --questions [JEU]
+                            note les réponses enregistrées d'un run / liste les questions
+                            à poser (docs/EVAL.md §10)
   rag <command>             recherche GPU (Qwen3), preuves, acquisition open access
   synth <command>           benchmark synthétique (docs/BENCHMARK.md)
   test [--rag]              lance les tests (--rag : pdb eval --rag)
@@ -628,6 +631,33 @@ def _print_eval(res):
         print(f"verify (ms)\t{sp['verify_ms']:.0f}")
         if "cli_s" in sp:
             print("commandes à froid (s)\t" + "\t".join(f"{k} {v:.2f}" for k, v in sp["cli_s"].items()))
+    an = res.get("answers")
+    if an:
+        print(f"## Réponses finales ({an['records']} enregistrements, {an['run']})")
+        for name, p in an["invalid"].items():
+            print(f"# non conforme : {name} : {'; '.join(p)}")
+        if an["unknown_ids"]:
+            print(f"# ids hors jeux : {', '.join(an['unknown_ids'])}")
+        cols = ("verdict_accuracy", "citation_accept_rate", "unsupported_claim_rate",
+                "gold_source_recall", "gold_value_recall")
+        print("jeu / catégorie\tn\tverdict juste\tcitations acceptées\taffirmations non soutenues"
+              "\tsources attendues\tvaleurs attendues")
+        for name, s in an["sets"].items():
+            print(f"{name} ({s['answered']}/{s['cases']} répondues)\t{s['n']}\t" + "\t".join(_fmt(s[c]) for c in cols))
+            for cat, c in s["by_category"].items():
+                print(f"\t{cat}\t{c['n']}\t" + "\t".join(_fmt(c[k]) for k in cols))
+            print(f"\thors corpus reconnu (absent ou partiel)\t{_fmt(s['absent_recognized'])}"
+                  f"\t« absent » à tort\t{_fmt(s['false_absent'])}")
+            if "human" in s:
+                h = s["human"]
+                print(f"\tnotes humaines ({h['n']} réponses, /1)\t" +
+                      "\t".join(f"{c} {_fmt(v)}" for c, v in h.items() if c != "n"))
+            if s["missing"]:
+                print(f"#   sans réponse : {', '.join(s['missing'])}")
+            for qid, q in s["per_question"].items():
+                if not q["verdict_ok"] or q["unsupported_claims"]:
+                    print(f"#   {qid} : verdict {q['verdict']}{'' if q['verdict_ok'] else ' (attendu autre)'}"
+                          f", {q['unsupported_claims']} affirmation(s) non soutenue(s), citations {q['citation_status']}")
 
 
 def cmd_eval(args):
@@ -641,15 +671,37 @@ def cmd_eval(args):
     p.add_argument("--rag", action="store_true", help="recherche de passages, pertinence faible, verify")
     p.add_argument("--speed", action="store_true", help="temps d'exécution")
     p.add_argument("--no-cli", action="store_true", help="--speed sans chronométrer les commandes à froid")
+    p.add_argument("--answers", metavar="DIR",
+                   help="note les réponses enregistrées d'un run (dossier de JSON, docs/EVAL.md §10) ; "
+                        "seul volet lancé s'il est le seul demandé")
+    p.add_argument("--questions", nargs="?", const="answers", metavar="JEU",
+                   help="affiche id et question d'un jeu de réponses (answers, answers_holdout), "
+                        "sans les attentes, puis s'arrête")
     p.add_argument("--save", action="store_true", help="enregistre eval/results/<date>-<commit>.json")
     p.add_argument("--compare", nargs="?", const="last", metavar="JSON",
                    help="écarts avec un run enregistré (défaut : le dernier) ; code 1 si un seuil n'est pas atteint")
     a = p.parse_args(args)
-    if not (a.extract or a.rag or a.speed):
+    fixtures, results, thresholds_path = ev.paths(ROOT, CODE)
+    if a.questions:
+        if a.questions not in ev.ANSWER_SETS:
+            p.error(f"--questions : {' | '.join(ev.ANSWER_SETS)}")
+        qs = ev.answer_questions(fixtures, a.questions)
+        if not qs:
+            print(f"pdb eval : aucun jeu {a.questions}.jsonl dans {fixtures}", file=sys.stderr)
+            return 1
+        for qid, q in qs:
+            print(f"{qid}\t{q}")
+        return 0
+    if a.answers:
+        records = Path(a.answers).expanduser()
+        if not records.exists() and (ROOT / a.answers).exists():
+            records = ROOT / a.answers
+        if not records.exists():
+            p.error(f"--answers : introuvable : {a.answers}")
+    if not (a.extract or a.rag or a.speed or a.answers):
         a.extract = a.rag = a.speed = True
     # le banc porte sur la base active : ses questions (eval/fixtures/, à défaut celles du
     # code, écrites pour la base fpga), ses seuils et ses runs enregistrés (evaluation.paths)
-    fixtures, results, thresholds_path = ev.paths(ROOT, CODE)
     print(f"# base : {base.CONFIG['name']} ({ROOT}) ; questions : {fixtures}\n")
     res = {}
     if a.extract:
@@ -659,6 +711,8 @@ def cmd_eval(args):
         res["rag"] = ev.rag_quality(ROOT, fixtures)
     if a.speed:
         res["speed"] = ev.speed(ROOT, fixtures, cli=not a.no_cli)
+    if a.answers:
+        res["answers"] = {"run": str(records), **ev.answers_quality(ROOT, fixtures, records)}
     _print_eval(res)
 
     flat = ev.flatten(res)

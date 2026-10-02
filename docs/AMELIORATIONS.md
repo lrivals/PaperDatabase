@@ -1,6 +1,6 @@
 # Feuille de route : fiabilité des réponses, tableaux et nouveaux skills
 
-Spécification du 02/10/2026, **non implémentée**. Elle décrit comment mettre en place les
+Spécification du 02/10/2026 ; lot A en place (même date), autres lots non commencés. Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
 cinq nouveaux skills. Chaque chantier part d'un constat mesuré dans le dépôt, puis donne la
@@ -45,6 +45,12 @@ Banc d'évaluation : [EVAL.md](EVAL.md). Schémas : [DATA_MODEL.md](../DATA_MODE
 ---
 
 ## Lot A — Évaluation des réponses finales
+
+> **En place le 02/10/2026** : `pdb eval --answers` / `--questions`, `lib/evaluation.py`
+> (`answer_quality`), mode `--record` de `/paper-ask`, skill `/eval-answers`, jeux de départ
+> fpga (12 + 12 questions). Protocole et formats : [EVAL.md §10](EVAL.md#10-réponses-finales-pdb-eval---answers-02102026).
+> Reste : premier run de référence, jeux complets (40 / 60) relus par un tiers, jeux des
+> bases drone et stage, seuils.
 
 **Constat.** Le banc mesure l'extraction, le classement des passages et `verify`, mais pas la
 réponse rédigée : « pas d'évaluation de bout en bout de `/paper-ask` » (EVAL.md §7). Or le

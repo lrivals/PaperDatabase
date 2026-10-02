@@ -11,6 +11,8 @@ des résultats : docs/EVAL.md.
 - rag : recall@5/@10, MRR, nDCG@10, paper@5 par mode et par jeu (dev, holdout, fr) ;
   alerte « pertinence faible » sur questions hors corpus ; vérification de citations.
 - speed : extraction hors GROBID, encodage, recherche à chaud, commandes CLI à froid.
+- answers : réponses finales enregistrées d'un run (verdict de suffisance, citations
+  revérifiées, sources et valeurs attendues, notes humaines).
 """
 import csv
 import json
@@ -601,6 +603,325 @@ def speed(root, fixtures, encode_n=200, cli=True):
     return out
 
 
+# ----------------------------------------------------------- réponses finales
+#
+# Lot A de docs/AMELIORATIONS.md, protocole dans docs/EVAL.md §10. Les réponses sont
+# produites à part (skill /eval-answers, un enregistrement JSON par question), puis notées
+# ici sans LLM : citations revérifiées par rag.verify, sources et valeurs attendues
+# retrouvées, verdict de suffisance comparé à l'attendu ; notes humaines facultatives
+# (grades.csv). Les jeux : <fixtures>/answers.jsonl (dev) et answers_holdout.jsonl.
+
+ANSWER_SETS = ("answers", "answers_holdout")
+CATEGORIES = ("simple", "numeric", "synthesis", "absent")
+VERDICTS = ("suffisant", "partiel", "absent")
+REQUIREMENT_STATUS = ("couvert", "partiel", "absent")
+CLAIM_KINDS = ("lu", "déduit")
+# grille humaine, 0 / 1 / 2 par critère (docs/EVAL.md §10)
+GRADE_CRITERIA = ("exigences", "soutien", "conditions", "limites")
+
+
+def _str_list(x):
+    return isinstance(x, list) and all(isinstance(s, str) and s.strip() for s in x)
+
+
+def validate_answer_case(case):
+    """Problèmes d'une question du jeu de réponses (liste vide si conforme)."""
+    p = []
+    for key in ("id", "q"):
+        if not isinstance(case.get(key), str) or not case[key].strip():
+            p.append(f"{key} manquant")
+    if case.get("category") not in CATEGORIES:
+        p.append(f"category ∉ {CATEGORIES}")
+    if case.get("expected_verdict") not in VERDICTS:
+        p.append(f"expected_verdict ∉ {VERDICTS}")
+    if not _str_list(case.get("required")) or not case.get("required"):
+        p.append("required : liste non vide de textes")
+    if not _str_list(case.get("gold_sources", [])):
+        p.append("gold_sources : liste de textes")
+    elif case.get("category") != "absent" and not case.get("gold_sources"):
+        p.append("gold_sources vide hors catégorie absent")
+    for v in case.get("gold_values", []):
+        if not isinstance(v, dict) or to_number(v.get("value")) is None:
+            p.append(f"gold_values : valeur numérique attendue ({v!r})")
+    return p
+
+
+def validate_answer_record(rec):
+    """Problèmes d'un enregistrement de réponse (liste vide si conforme)."""
+    p = []
+    if not isinstance(rec.get("id"), str) or not rec["id"].strip():
+        p.append("id manquant")
+    if rec.get("verdict") not in VERDICTS:
+        p.append(f"verdict ∉ {VERDICTS}")
+    for r in rec.get("requirements", []):
+        if not isinstance(r, dict) or r.get("status") not in REQUIREMENT_STATUS:
+            p.append(f"requirements : status ∉ {REQUIREMENT_STATUS}")
+    claims = rec.get("claims")
+    if not isinstance(claims, list):
+        return p + ["claims : liste attendue"]
+    for i, c in enumerate(claims):
+        if not isinstance(c, dict) or not isinstance(c.get("text"), str) or not c["text"].strip():
+            p.append(f"claims[{i}] : text manquant")
+            continue
+        if c.get("kind", "lu") not in CLAIM_KINDS:
+            p.append(f"claims[{i}] : kind ∉ {CLAIM_KINDS}")
+        for cit in c.get("citations", []):
+            if not isinstance(cit, dict) or not (cit.get("id") or cit.get("paper")):
+                p.append(f"claims[{i}] : citation sans id ni paper")
+    return p
+
+
+def to_number(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def load_answer_records(path):
+    """Enregistrements d'un run : dossier de *.json (un par question) ou fichier .jsonl.
+    Renvoie ({id: enregistrement}, {nom de fichier: [problèmes]})."""
+    path = Path(path)
+    if path.is_dir():
+        items = []
+        for f in sorted(path.glob("*.json")):
+            try:
+                items.append((f.name, json.loads(f.read_text())))
+            except json.JSONDecodeError as e:
+                items.append((f.name, e))
+    else:
+        items = [(f"{path.name}:{i}", json.loads(l))
+                 for i, l in enumerate(path.read_text().splitlines(), 1) if l.strip()]
+    records, problems = {}, {}
+    for name, rec in items:
+        if isinstance(rec, Exception):
+            problems[name] = [f"JSON illisible : {rec}"]
+            continue
+        p = validate_answer_record(rec) if isinstance(rec, dict) else ["objet JSON attendu"]
+        if p:
+            problems[name] = p
+        elif rec["id"] in records:
+            problems[name] = [f"id en double : {rec['id']}"]
+        else:
+            records[rec["id"]] = rec
+    return records, problems
+
+
+def load_grades(path):
+    """grades.csv (id + un entier 0-2 par critère de GRADE_CRITERIA, vide = non noté)."""
+    path = Path(path)
+    if not path.exists():
+        return {}
+    out = {}
+    with path.open(newline="") as f:
+        for row in csv.DictReader(f):
+            g = {}
+            for c in GRADE_CRITERIA:
+                v = (row.get(c) or "").strip()
+                if v in ("0", "1", "2"):
+                    g[c] = int(v)
+            if g and row.get("id"):
+                out[row["id"]] = g
+    return out
+
+
+def _bench_rows(root):
+    path = Path(root) / "benchmarks.csv"
+    if not path.exists():
+        return []
+    with path.open(newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def _full_paper_id(index, pid):
+    if pid in index.short:
+        return pid
+    full = [p for p, s in index.short.items() if s == pid]
+    return full[0] if full else pid
+
+
+def check_citation(index, cit, bench_rows):
+    """Contrôle d'une citation d'un enregistrement : dict {type, status, accepted, section,
+    paper}. Passage : {"id", "excerpt"} revérifié par rag.verify (accepté = OK ou APPROX dans
+    le passage indiqué, comme le code 0 de pdb verify). Benchmark : {"paper",
+    "source_section"} accepté si benchmarks.csv a une ligne de ce papier dont la
+    source_section contient celle citée."""
+    from lib import rag
+    if cit.get("id"):
+        full = index.resolve_chunk(cit["id"])
+        if not full:
+            return {"type": "passage", "status": "INCONNU", "accepted": False, "section": None, "paper": None}
+        c = index.chunks[index.by_id[full]]
+        out = {"type": "passage", "section": c["section_id"], "paper": c["paper_id"]}
+        excerpt = (cit.get("excerpt") or "").strip()
+        if not excerpt:
+            return {**out, "status": "SANS_EXTRAIT", "accepted": False}
+        status, _, where = rag.verify(index, full, excerpt)
+        if where != full:
+            status = "AILLEURS"
+        return {**out, "status": status, "accepted": status in ("OK", "APPROX")}
+    pid = _full_paper_id(index, cit.get("paper", ""))
+    want = fold(cit.get("source_section") or "").strip()
+    ok = bool(want) and any(r.get("paper_id") == pid and want in fold(r.get("source_section"))
+                            for r in bench_rows)
+    return {"type": "benchmark", "status": "OK" if ok else "ABSENT", "accepted": ok,
+            "section": None, "paper": pid}
+
+
+def _gold_hit(index, gold, sections, papers):
+    """Une source attendue est-elle citée ? « paper#NNN » (section, id court accepté) ou
+    paper_id seul (n'importe quel passage ou ligne de benchmark du papier)."""
+    if "#" in gold:
+        full = index.resolve_chunk(gold)
+        sid = full.rpartition(".")[0] if full else gold
+        return sid in sections
+    return _full_paper_id(index, gold) in papers
+
+
+_DECIMAL_COMMA = re.compile(r"(?<![\d,])(\d+),(\d{1,2})(?![\d,])")
+
+
+def _value_hit(gold, claims):
+    """La valeur attendue figure-t-elle dans une affirmation, avec son unité si elle est donnée ?
+    Les réponses sont en français : « 64,6 % » vaut 64.6 (virgule suivie de 1 ou 2 chiffres ;
+    « 12,361 » reste un séparateur de milliers)."""
+    unit = fold(gold.get("unit") or "").strip()
+    for c in claims:
+        found = numbers(c["text"]) | numbers(_DECIMAL_COMMA.sub(r"\1.\2", c["text"]))
+        if value_in(gold["value"], found) and (not unit or unit in fold(c["text"])):
+            return True
+    return False
+
+
+def score_answer(index, case, rec, bench_rows=()):
+    """Notation automatique d'une réponse (dict de métriques ; None = sans objet)."""
+    claims = rec.get("claims", [])
+    checks, sections, papers = [], set(), set()
+    supported = read = 0
+    statuses = Counter()
+    for c in claims:
+        ok_claim = False
+        for cit in c.get("citations", []):
+            ch = check_citation(index, cit, bench_rows)
+            checks.append(ch)
+            statuses[ch["status"]] += 1
+            if ch["accepted"]:
+                ok_claim = True
+                if ch["section"]:
+                    sections.add(ch["section"])
+                if ch["paper"]:
+                    papers.add(ch["paper"])
+        if c.get("kind", "lu") == "lu":
+            read += 1
+            supported += ok_claim
+    gold = case.get("gold_sources", [])
+    values = case.get("gold_values", [])
+    reqs = rec.get("requirements", [])
+    return {
+        "verdict": rec["verdict"],
+        "verdict_ok": rec["verdict"] == case["expected_verdict"],
+        "claims": len(claims),
+        "claims_read": read,
+        "citations": len(checks),
+        "citations_accepted": sum(ch["accepted"] for ch in checks),
+        "citation_status": dict(statuses),
+        "unsupported_claims": read - supported,
+        "gold_source_recall": (sum(_gold_hit(index, g, sections, papers) for g in gold) / len(gold)
+                               if gold else None),
+        "gold_value_recall": (sum(_value_hit(v, claims) for v in values) / len(values)
+                              if values else None),
+        "requirements_declared_covered": (sum(r["status"] == "couvert" for r in reqs) / len(reqs)
+                                          if reqs else None),
+    }
+
+
+def answer_quality(index, cases, records, bench_rows=(), grades=None):
+    """Agrégats d'un run sur un jeu : verdicts (exactitude, confusion, hors corpus reconnu,
+    « absent » à tort), citations acceptées, affirmations « lu » sans citation valide, rappel
+    des sources et des valeurs attendues, par catégorie ; notes humaines si grades."""
+    grades = grades or {}
+    per, missing = {}, []
+    for case in cases:
+        rec = records.get(case["id"])
+        if rec is None:
+            missing.append(case["id"])
+        else:
+            per[case["id"]] = score_answer(index, case, rec, bench_rows)
+    by_id = {c["id"]: c for c in cases}
+    answered = [by_id[i] for i in per]
+
+    def rate(pred, pool):
+        pool = list(pool)
+        return sum(map(pred, pool)) / len(pool) if pool else None
+
+    def summary(pool):
+        ids = [c["id"] for c in pool]
+        cit = sum(per[i]["citations"] for i in ids)
+        read = sum(per[i]["claims_read"] for i in ids)
+        return {
+            "n": len(ids),
+            "verdict_accuracy": rate(lambda i: per[i]["verdict_ok"], ids),
+            "citation_accept_rate": sum(per[i]["citations_accepted"] for i in ids) / cit if cit else None,
+            "unsupported_claim_rate": sum(per[i]["unsupported_claims"] for i in ids) / read if read else None,
+            "gold_source_recall": _mean(per[i]["gold_source_recall"] for i in ids),
+            "gold_value_recall": _mean(per[i]["gold_value_recall"] for i in ids),
+        }
+
+    confusion = {v: dict.fromkeys(VERDICTS, 0) for v in VERDICTS}
+    for c in answered:
+        confusion[c["expected_verdict"]][per[c["id"]]["verdict"]] += 1
+    out = {
+        **summary(answered),
+        "cases": len(cases),
+        "answered": len(per),
+        "missing": missing,
+        "absent_recognized": rate(lambda c: per[c["id"]]["verdict"] in ("absent", "partiel"),
+                                  (c for c in answered if c["expected_verdict"] == "absent")),
+        "false_absent": rate(lambda c: per[c["id"]]["verdict"] == "absent",
+                             (c for c in answered if c["expected_verdict"] != "absent")),
+        "verdict_confusion": confusion,
+        "by_category": {cat: summary([c for c in answered if c["category"] == cat])
+                        for cat in CATEGORIES if any(c["category"] == cat for c in answered)},
+        "per_question": per,
+    }
+    graded = {i: g for i, g in grades.items() if i in per}
+    if graded:
+        out["human"] = {"n": len(graded), **{
+            c: _mean(g[c] / 2 for g in graded.values() if c in g) for c in GRADE_CRITERIA}}
+    return out
+
+
+def answers_quality(root, fixtures, records_path):
+    """Volet « answers » de pdb eval : chaque jeu de ANSWER_SETS présent dans fixtures, noté
+    sur les enregistrements de records_path (les ids absents du jeu sont ignorés)."""
+    from lib import rag
+    records, problems = load_answer_records(records_path)
+    index = rag.Index(root)
+    bench = _bench_rows(root)
+    grades = load_grades(Path(records_path) / "grades.csv") if Path(records_path).is_dir() else {}
+    out = {"records": len(records), "invalid": problems, "sets": {}}
+    known = set()
+    for name in ANSWER_SETS:
+        path = Path(fixtures) / f"{name}.jsonl"
+        if not path.exists():
+            continue
+        cases = load_jsonl(path)
+        bad = {c.get("id", f"#{i}"): p for i, c in enumerate(cases) if (p := validate_answer_case(c))}
+        if bad:
+            raise ValueError(f"{path} non conforme : {bad}")
+        known |= {c["id"] for c in cases}
+        if any(c["id"] in records for c in cases):
+            out["sets"][name] = answer_quality(index, cases, records, bench, grades)
+    out["unknown_ids"] = sorted(set(records) - known)
+    return out
+
+
+def answer_questions(fixtures, name):
+    """(id, question) d'un jeu, sans les attentes : ce qui est donné aux agents qui répondent."""
+    path = Path(fixtures) / f"{name}.jsonl"
+    return [(c["id"], c["q"]) for c in load_jsonl(path)] if path.exists() else []
+
+
 # ------------------------------------------------------- rapport et comparaison
 
 def flatten(d, prefix=""):
@@ -638,7 +959,7 @@ def compare(old, new, ignore=("speed.",), tol=1e-9):
     défaut (bruités) ; les métriques par papier aussi, résumées par les agrégats."""
     diffs = []
     for key in sorted(set(old) | set(new)):
-        if key.startswith(ignore) or ".per_paper." in key:
+        if key.startswith(ignore) or ".per_paper." in key or ".per_question." in key:
             continue
         a, b = old.get(key), new.get(key)
         if a is None or b is None or abs(a - b) > tol:

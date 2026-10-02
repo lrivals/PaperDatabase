@@ -186,5 +186,129 @@ class TestRagMetrics(unittest.TestCase):
         self.assertEqual(acc["exact"]["accepted_rate"], 1.0)
 
 
+FINN = "arxiv-1612.07119-finn"
+POWER = "P wall using a wall power meter for the total board power consumption."
+
+
+def case(qid, category, verdict, **kw):
+    return {"id": qid, "q": f"question {qid}", "category": category, "required": ["x"],
+            "gold_sources": [], "expected_verdict": verdict, **kw}
+
+
+def record(qid, verdict, claims):
+    return {"id": qid, "q": f"question {qid}", "verdict": verdict, "claims": claims}
+
+
+@unittest.skipIf(rag is None, "numpy absent")
+class TestAnswers(unittest.TestCase):
+    """Volet « réponses finales » (docs/EVAL.md §10) sur le petit corpus de test_rag."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        write_corpus(self.root)
+        self.patches = [mock.patch.object(embed, "available", return_value=False)]
+        for p in self.patches:
+            p.start()
+        self.ix = rag.Index(self.root)
+        self.bench = [{"paper_id": FINN, "source_section": "Table 2, §5"}]
+
+    def tearDown(self):
+        for p in self.patches:
+            p.stop()
+        self.tmp.cleanup()
+
+    def test_validate_case_and_record(self):
+        self.assertEqual(ev.validate_answer_case(case("a", "simple", "suffisant", gold_sources=[f"{FINN}#001"])), [])
+        self.assertEqual(ev.validate_answer_case(case("b", "absent", "absent")), [])
+        bad = ev.validate_answer_case(case("c", "numeric", "oui", gold_values=[{"value": "n/r"}]))
+        self.assertTrue(any("expected_verdict" in p for p in bad))
+        self.assertTrue(any("gold_sources vide" in p for p in bad))
+        self.assertTrue(any("gold_values" in p for p in bad))
+        self.assertEqual(ev.validate_answer_record(record("a", "partiel", [])), [])
+        bad = ev.validate_answer_record({"id": "a", "verdict": "absent",
+                                         "claims": [{"text": "t", "kind": "vu", "citations": [{}]}]})
+        self.assertEqual(len(bad), 2)
+
+    def test_check_citation(self):
+        ok = ev.check_citation(self.ix, {"id": "1612.07119#001.0", "excerpt": POWER}, self.bench)
+        self.assertEqual((ok["status"], ok["accepted"], ok["section"]), ("OK", True, f"{FINN}#001"))
+        changed = ev.check_citation(self.ix, {"id": f"{FINN}#001", "excerpt": POWER.replace("total", "peak")},
+                                    self.bench)
+        self.assertEqual(changed["status"], "APPROX")
+        self.assertEqual(ev.check_citation(self.ix, {"id": f"{FINN}#000.0", "excerpt": POWER}, self.bench)["status"],
+                         "AILLEURS")  # citation trouvée dans un autre passage du papier : refusée
+        self.assertEqual(ev.check_citation(self.ix, {"id": f"{FINN}#001.0"}, self.bench)["status"], "SANS_EXTRAIT")
+        self.assertEqual(ev.check_citation(self.ix, {"id": "nowhere#000"}, self.bench)["status"], "INCONNU")
+        self.assertTrue(ev.check_citation(self.ix, {"paper": "1612.07119", "source_section": "table 2"},
+                                          self.bench)["accepted"])
+        self.assertFalse(ev.check_citation(self.ix, {"paper": FINN, "source_section": "Table 9"},
+                                           self.bench)["accepted"])
+
+    def test_score_answer(self):
+        c = case("n1", "numeric", "suffisant", gold_sources=[f"{FINN}#001", "2021-lin-mcunet"],
+                 gold_values=[{"value": "12.5", "unit": "W"}, {"value": "30", "unit": "FPS"}])
+        r = record("n1", "suffisant", [
+            {"text": "La puissance est mesurée au mur : 12.5 W.", "kind": "lu",
+             "citations": [{"id": "1612.07119#001.0", "excerpt": POWER}]},
+            {"text": "Atteint 30 images/s.", "kind": "lu", "citations": [{"id": "1612.07119#001.0"}]},
+            {"text": "Donc la mesure inclut la carte entière.", "kind": "déduit"},
+        ])
+        s = ev.score_answer(self.ix, c, r, self.bench)
+        self.assertTrue(s["verdict_ok"])
+        self.assertEqual((s["claims_read"], s["citations"], s["citations_accepted"]), (2, 2, 1))
+        self.assertEqual(s["unsupported_claims"], 1)  # citation sans extrait
+        self.assertEqual(s["gold_source_recall"], 0.5)  # section FINN citée, MCUNet non
+        self.assertEqual(s["gold_value_recall"], 0.5)  # 30 sans l'unité FPS
+        self.assertIsNone(s["requirements_declared_covered"])
+
+    def test_value_hit_french_decimals(self):
+        claims = [{"text": "MCUNetV2 atteint 64,6 % sous 256 kB et traite 12,361 k images/s."}]
+        self.assertTrue(ev._value_hit({"value": "64.6", "unit": "%"}, claims))
+        self.assertTrue(ev._value_hit({"value": "12361"}, claims))
+        self.assertFalse(ev._value_hit({"value": "12.361"}, claims))
+        self.assertFalse(ev._value_hit({"value": "64.6", "unit": "mAP"}, claims))
+
+    def test_answer_quality_and_cli_loader(self):
+        cases = [case("s1", "simple", "suffisant", gold_sources=[FINN]),
+                 case("o1", "absent", "absent"), case("o2", "absent", "absent"),
+                 case("m1", "simple", "suffisant", gold_sources=[FINN])]
+        records = {"s1": record("s1", "absent", []), "o1": record("o1", "partiel", []),
+                   "o2": record("o2", "suffisant", [{"text": "Faux.", "citations": []}])}
+        q = ev.answer_quality(self.ix, cases, records, self.bench, grades={"s1": {"exigences": 1}})
+        self.assertEqual((q["cases"], q["answered"], q["n"], q["missing"]), (4, 3, 3, ["m1"]))
+        self.assertEqual(q["verdict_accuracy"], 0.0)
+        self.assertEqual(q["absent_recognized"], 0.5)
+        self.assertEqual(q["false_absent"], 1.0)
+        self.assertEqual(q["verdict_confusion"]["absent"], {"suffisant": 1, "partiel": 1, "absent": 0})
+        self.assertEqual(q["by_category"]["absent"]["unsupported_claim_rate"], 1.0)
+        self.assertEqual(q["human"], {"n": 1, "exigences": 0.5, "soutien": None, "conditions": None,
+                                      "limites": None})
+        flat = ev.flatten({"answers": {"sets": {"answers": q}}})
+        self.assertFalse(ev.compare(flat, flat))
+        self.assertIn("answers.sets.answers.per_question.s1.claims", flat)
+
+        fx, run = self.root / "fx", self.root / "run"
+        fx.mkdir()
+        run.mkdir()
+        (fx / "answers.jsonl").write_text("\n".join(json.dumps(c) for c in cases) + "\n")
+        for qid, r in records.items():
+            (run / f"{qid}.json").write_text(json.dumps(r))
+        (run / "bad.json").write_text("{")
+        (run / "extra.json").write_text(json.dumps(record("zz", "absent", [])))
+        with (run / "grades.csv").open("w", newline="") as f:
+            w = csv.writer(f)
+            w.writerow(("id",) + ev.GRADE_CRITERIA)
+            w.writerow(("o1", "2", "2", "", "x"))
+        out = ev.answers_quality(self.root, fx, run)
+        self.assertEqual(out["records"], 4)
+        self.assertIn("bad.json", out["invalid"])
+        self.assertEqual(out["unknown_ids"], ["zz"])
+        self.assertEqual(list(out["sets"]), ["answers"])  # pas de answers_holdout.jsonl
+        self.assertEqual(out["sets"]["answers"]["human"]["soutien"], 1.0)
+        self.assertEqual(ev.answer_questions(fx, "answers")[0], ("s1", "question s1"))
+        self.assertEqual(ev.answer_questions(fx, "answers_holdout"), [])
+
+
 if __name__ == "__main__":
     unittest.main()

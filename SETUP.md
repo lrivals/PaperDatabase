@@ -124,7 +124,7 @@ PaperDatabase/
 │   ├── test_registry.py    # registre, ordre de résolution de la base active
 │   └── test_xbase.py       # scan entre bases, import, création, onglet Bases
 ├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask,
-│                           # /paper-research, /base-profile
+│                           # /paper-research, /base-profile, /eval-answers
 └── tests/ …
 ```
 
@@ -1072,7 +1072,7 @@ Défauts mis au jour, à corriger (tâche 12) :
 | `gaps.md` | 16 gaps, dont 12 étayés (5e passage, le 24/09/2026, 24 fiches `done`) |
 | Visualisation (`viz.py`, `lib/graph.py`, `lib/lineage.py`, `lib/vizfig.py`, `lib/embed.py`) | terminée le 24/09/2026 : graphe 3D (recherche, filtres, surlignage des liens, détail avec fiche et benchmarks, export HTML) et onglet Généalogie (papier ou sujet, suite probable déduite) ; embeddings optionnels ; testée (`test_graph.py`, `test_lineage.py`, `test_viz.py`, `test_embed.py` ; 77 tests au total avec ceux du 24/09/2026) ; 10 citations internes, 89 références externes co-citées |
 | Requêtes et recherche de passages (`lib/query.py`, `lib/rag.py`, `pdb bench`/`paper`/`search`/`show`/`verify`) | depuis le 25/09/2026 : BM25 + embeddings bge-small, fusion RRF, reranking optionnel, index incrémental ; `verify` contrôle les nombres et l'alerte « pertinence faible » est retirée (26/09/2026) ; testé (`test_query.py`, `test_rag.py`) et évalué (RAG.md §10, EVAL.md) ; skill `/paper-ask` essayée en réel (RAG.md §12) |
-| Banc d'évaluation (`bin/pdb eval`, `lib/evaluation.py`) | depuis le 26/09/2026 : extraction, recherche (dev, holdout, FR, hors corpus), `verify`, temps ; `--save` / `--compare` et seuils ; testé (`test_evaluation.py`) ; rapport de référence dans [docs/EVAL.md](docs/EVAL.md) §5, corrections mesurées (§6) |
+| Banc d'évaluation (`bin/pdb eval`, `lib/evaluation.py`) | depuis le 26/09/2026 : extraction, recherche (dev, holdout, FR, hors corpus), `verify`, temps ; réponses finales (`--answers`, 02/10/2026, EVAL.md §10) ; `--save` / `--compare` et seuils ; testé (`test_evaluation.py`) ; rapport de référence dans [docs/EVAL.md](docs/EVAL.md) §5, corrections mesurées (§6) |
 | Versionnage | dépôt git + remote GitHub ; travaux du 24/09/2026 commités et poussés |
 
 ### Tâches — corpus
@@ -1189,11 +1189,14 @@ Défauts mis au jour, à corriger (tâche 12) :
   avec le vrai modèle (dépendance non installée) : à faire après
   `pip install -r requirements-embed.txt`. Réutilisable pour la recherche sémantique
   ci-dessous.
-- [ ] **Améliorations du 02/10/2026, spécifiées, non commencées** : fiabilité des réponses,
+- [ ] **Améliorations du 02/10/2026, spécifiées** (lot A fait) : fiabilité des réponses,
   tableaux et nouveaux skills ([docs/AMELIORATIONS.md](docs/AMELIORATIONS.md), §10 pour
   l'ordre) :
-  - [ ] lot A, évaluation des réponses finales (`pdb eval --answers`, 4 catégories, dont
-    hors corpus) — prérequis des autres lots ;
+  - [x] lot A, évaluation des réponses finales (02/10/2026) : `pdb eval --answers DIR` et
+    `--questions`, mode `--record` de `/paper-ask`, skill `/eval-answers`, jeux de départ
+    fpga `tests/fixtures/answers{,_holdout}.jsonl` (12 + 12, 4 catégories dont hors corpus),
+    protocole [docs/EVAL.md](docs/EVAL.md) §10. Restent : premier run de référence, jeux
+    40 / 60 relus par un tiers, jeux drone et stage, seuils ;
   - [ ] lot B, verdict suffisant / partiel / absent par exigence dans `/paper-ask` ;
   - [ ] lot C, preuves atomiques `claims.jsonl` et skill `/paper-extract` ;
   - [ ] lot D, colonnes optionnelles de `benchmarks.csv` (`chunk_id`, split, résolution,

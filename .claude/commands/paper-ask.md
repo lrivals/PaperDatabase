@@ -1,6 +1,6 @@
 ---
 description: Répond à une question sur le corpus à partir de passages sourcés et vérifiés, sans lire fulltext.md
-allowed-tools: Read, Bash(bin/pdb bench:*), Bash(bin/pdb search:*), Bash(bin/pdb show:*), Bash(bin/pdb paper:*), Bash(bin/pdb verify:*), Bash(bin/pdb cites:*), Bash(bin/pdb cited-by:*)
+allowed-tools: Read, Write, Bash(bin/pdb bench:*), Bash(bin/pdb search:*), Bash(bin/pdb show:*), Bash(bin/pdb paper:*), Bash(bin/pdb verify:*), Bash(bin/pdb cites:*), Bash(bin/pdb cited-by:*)
 ---
 
 Question : $ARGUMENTS
@@ -45,3 +45,24 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
 
 Réponds en français et garde les termes techniques en anglais. Ajoute en fin de réponse la
 légende des ids courts utilisés (reprise du pied des sorties `# ids:`).
+
+**Mode enregistrement** (banc des réponses finales, `docs/EVAL.md` §10). Si la demande
+contient `--record <fichier.json>`, retire-le de la question, réponds normalement, puis écris
+ce fichier (et aucun autre) :
+
+```json
+{"id": "<nom du fichier sans .json>", "q": "<question>", "verdict": "suffisant|partiel|absent",
+ "requirements": [{"text": "<ce qu'une réponse complète doit établir>", "status": "couvert|partiel|absent"}],
+ "claims": [{"text": "<affirmation, telle que dans la réponse>", "kind": "lu|déduit",
+             "citations": [{"id": "<chunk_id>", "excerpt": "<extrait exact, vérifié par pdb verify>"},
+                           {"paper": "<id>", "source_section": "<Table 2>"}]}]}
+```
+
+- `requirements` : 2 à 5 exigences tirées de la question avant la recherche ; `couvert` =
+  établie par un passage vérifié, `partiel` = passage voisin (autre plateforme, autre batch,
+  autre portée de puissance), `absent` = rien trouvé.
+- `verdict` : `suffisant` si toutes sont couvertes, `absent` si aucune, `partiel` sinon.
+- Une affirmation `lu` a au moins une citation : passage (`id` + `excerpt` copié du passage
+  et accepté par `pdb verify`, avec le `chunk_id` corrigé si la sortie dit « trouvée dans
+  … ») ou ligne de `bench` (`paper` + `source_section`). Une affirmation `déduit` n'en a pas.
+- Les nombres s'écrivent dans `text` avec leur unité, comme dans la réponse.

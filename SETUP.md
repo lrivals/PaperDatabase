@@ -1194,17 +1194,21 @@ Défauts mis au jour, à corriger (tâche 12) :
   avec le vrai modèle (dépendance non installée) : à faire après
   `pip install -r requirements-embed.txt`. Réutilisable pour la recherche sémantique
   ci-dessous.
-- [ ] **Améliorations du 02/10/2026, spécifiées** (lot A fait) : fiabilité des réponses,
+- [ ] **Améliorations du 02/10/2026, spécifiées** (lots A et B faits) : fiabilité des réponses,
   tableaux et nouveaux skills ([docs/AMELIORATIONS.md](docs/AMELIORATIONS.md), §10 pour
   l'ordre) :
   - [x] lot A, évaluation des réponses finales (02/10/2026) : `pdb eval --answers DIR` et
     `--questions`, mode `--record` de `/paper-ask`, skill `/eval-answers`, jeux de départ
     fpga `tests/fixtures/answers{,_holdout}.jsonl` (12 + 12, 4 catégories dont hors corpus),
     protocole [docs/EVAL.md](docs/EVAL.md) §10. Premier run le 02/10/2026, en lexical seul
-    (verdict juste 0,83 dev / 0,92 holdout, hors corpus 6/6, EVAL.md §10). Restent : run
-    hybride + rerank et second run (variance), sources alternatives dans les jeux, jeux
+    (verdict juste 0,83 dev / 0,92 holdout, hors corpus 6/6, EVAL.md §10). Second run le
+    même jour (lot B), 22 verdicts sur 24 stables. Restent : run hybride + rerank, sources alternatives dans les jeux, jeux
     40 / 60 relus par un tiers, jeux drone et stage, notes humaines, seuils ;
-  - [ ] lot B, verdict suffisant / partiel / absent par exigence dans `/paper-ask` ;
+  - [x] lot B, verdict suffisant / partiel / absent par exigence dans `/paper-ask`
+    (02/10/2026) : exigences avant la recherche, verdict en tête de chaque réponse, même règle
+    dans `/paper-research` et les `CLAUDE.md` de base. Second run du banc (lexical seul) :
+    hors corpus 6/6, 0 faux `absent`, citations 1,00, 22 verdicts sur 24 stables
+    (EVAL.md §10) ;
   - [ ] lot C, preuves atomiques `claims.jsonl` et skill `/paper-extract` ;
   - [ ] lot D, colonnes optionnelles de `benchmarks.csv` (`chunk_id`, split, résolution,
     batch, définition de métrique, protocole) et `pdb bench --check` : reprend la piste 1

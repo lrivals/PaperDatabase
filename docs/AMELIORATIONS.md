@@ -1,6 +1,6 @@
 # Feuille de route : fiabilité des réponses, tableaux et nouveaux skills
 
-Spécification du 02/10/2026 ; lot A en place (même date), autres lots non commencés. Elle décrit comment mettre en place les
+Spécification du 02/10/2026 ; lots A et B en place (même date), autres lots non commencés. Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
 cinq nouveaux skills. Chaque chantier part d'un constat mesuré dans le dépôt, puis donne la
@@ -115,6 +115,13 @@ runs pour mesurer la variance.
 ---
 
 ## Lot B — Suffisance des preuves
+
+> **En place le 02/10/2026** : exigences, statut par exigence et verdict dans chaque réponse
+> de `/paper-ask` (plus seulement en mode `--record`), même règle dans `/paper-research`,
+> format des réponses des `CLAUDE.md` de base. Acceptation atteinte sur fpga (second run du
+> banc, lexical seul) : 6/6 hors corpus `absent`, 0 faux `absent` ; 22 verdicts sur 24
+> stables d'un run à l'autre. Reste : frontière suffisant / partiel des questions de
+> synthèse dans le jeu ([EVAL.md §10](EVAL.md#second-run-lot-b-02102026)).
 
 **Constat.** `pdb search` renvoie toujours des passages, même hors sujet ; l'alerte
 « pertinence faible » a été retirée faute de signal fiable (EVAL.md §6, commentaire en tête

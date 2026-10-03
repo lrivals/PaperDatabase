@@ -275,28 +275,32 @@ def table_values(root):
     only = Counter()
     lost = Counter()
     with open(Path(root) / "benchmarks.csv", newline="") as f:
-        for row in csv.DictReader(f):
-            cited = cited_tables(row["source_section"])
-            pid = row["paper_id"]
-            if not cited or pid not in tables_by_paper:
+        all_rows = list(csv.DictReader(f))
+    # valeurs des lignes qui citent leur passage (chunk_id, DATA_MODEL §7)
+    checked = [x for x in query.check_rows(root, list(enumerate(all_rows, start=2))) if x["column"]]
+    in_chunk = sum(x["status"] == "passage" for x in checked)
+    for row in all_rows:
+        cited = cited_tables(row["source_section"])
+        pid = row["paper_id"]
+        if not cited or pid not in tables_by_paper:
+            continue
+        found = set().union(*(tables_by_paper[pid].get(t, set()) for t in cited))
+        if not any(t in tables_by_paper[pid] for t in cited):
+            cited_missing += 1
+        tables_only = not _NOT_TABLE.search(_TABLE_REF.sub("", row["source_section"]))
+        for col in BENCH_VALUES:
+            hit = value_in(row.get(col), found)
+            if hit is None:
                 continue
-            found = set().union(*(tables_by_paper[pid].get(t, set()) for t in cited))
-            if not any(t in tables_by_paper[pid] for t in cited):
-                cited_missing += 1
-            tables_only = not _NOT_TABLE.search(_TABLE_REF.sub("", row["source_section"]))
-            for col in BENCH_VALUES:
-                hit = value_in(row.get(col), found)
-                if hit is None:
-                    continue
-                n += 1
-                in_table += hit
-                anywhere = hit or bool(value_in(row[col], text_by_paper[pid]))
-                in_text += anywhere
-                if anywhere and not hit:
-                    lost[short.get(pid, pid)] += 1
-                if tables_only:
-                    only["n"] += 1
-                    only["hit"] += hit
+            n += 1
+            in_table += hit
+            anywhere = hit or bool(value_in(row[col], text_by_paper[pid]))
+            in_text += anywhere
+            if anywhere and not hit:
+                lost[short.get(pid, pid)] += 1
+            if tables_only:
+                only["n"] += 1
+                only["hit"] += hit
     return {
         "values": n,
         "in_cited_table": in_table / n if n else None,
@@ -305,6 +309,8 @@ def table_values(root):
         "table_only_in_cited_table": only["hit"] / only["n"] if only["n"] else None,
         "rows_cited_table_absent": cited_missing,
         "found_outside_table": dict(lost.most_common()),
+        "cited_chunk_values": len(checked),
+        "in_cited_chunk": in_chunk / len(checked) if checked else None,
     }
 
 

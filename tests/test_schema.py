@@ -45,6 +45,36 @@ class TestPaperId(unittest.TestCase):
         self.assertTrue(schema.validate_paper_id("2025-kim-Yolo-Zynq", {"arxiv_id": None}))
 
 
+def bench_row(**kw):
+    row = {c: "n/r" for c in schema.BENCHMARK_COLUMNS}
+    row.update(paper_id=PID, model="YOLOv8n", confidence="high", source_section="Table 2")
+    row.update(kw)
+    return row
+
+
+class TestBenchmarkColumns(unittest.TestCase):
+    def test_header(self):
+        cols = list(schema.BENCHMARK_COLUMNS)
+        self.assertEqual(schema.check_header(cols), [])
+        self.assertEqual(schema.check_header(cols + ["batch", "chunk_id"]), [])  # sous-ensemble, tout ordre
+        self.assertEqual(schema.check_header(list(schema.ALL_COLUMNS)), [])
+        self.assertTrue(schema.check_header(cols[1:] + cols[:1]))                # ordre des obligatoires
+        self.assertTrue(schema.check_header(cols[:-1]))                          # obligatoire manquante
+        self.assertTrue(schema.check_header(cols + ["notes"]))                   # colonne inconnue
+        self.assertTrue(schema.check_header(cols + ["batch", "batch"]))          # doublon
+        self.assertTrue(schema.check_header(None))
+
+    def test_optional_values(self):
+        self.assertEqual(schema.validate_benchmark_row(bench_row()), [])
+        ok = bench_row(chunk_id=f"{PID}#041.0", batch="1", input_res="416x416", metric_def="n/r")
+        self.assertEqual(schema.validate_benchmark_row(ok), [])
+        self.assertEqual(schema.validate_benchmark_row(bench_row(chunk_id="2507.18174#041")), [])
+        self.assertTrue(schema.validate_benchmark_row(bench_row(input_res="")))  # présente : n/r, pas vide
+        self.assertTrue(schema.validate_benchmark_row(bench_row(batch="1.5")))
+        self.assertTrue(schema.validate_benchmark_row(bench_row(chunk_id="Table 2")))
+        self.assertTrue(schema.validate_benchmark_row(bench_row(chunk_id=f"{PID}#a.0")))
+
+
 class TestSectionRow(unittest.TestCase):
     def test_valid(self):
         self.assertEqual(schema.validate_section_row(section_row(12), PID, 12), [])

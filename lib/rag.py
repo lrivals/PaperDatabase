@@ -313,17 +313,7 @@ class Index:
     def resolve_chunk(self, cid):
         """chunk_id complet ou court (1612.07119#019.0) → chunk_id complet, ou None.
         Un id de section sans .k (…#019) désigne son premier passage."""
-        pid, sep, rest = cid.partition("#")
-        if not sep:
-            return None
-        if "." not in rest:
-            rest += ".0"
-        if f"{pid}#{rest}" in self.by_id:
-            return f"{pid}#{rest}"
-        full = [p for p, s in self.short.items() if s == pid]
-        if full and f"{full[0]}#{rest}" in self.by_id:
-            return f"{full[0]}#{rest}"
-        return None
+        return resolve_chunk_id(cid, self.by_id, self.short)
 
     def get(self, chunk_id, context=0):
         """Le passage et ses voisins du même papier (± context)."""
@@ -331,6 +321,22 @@ class Index:
         pid = self.chunks[i]["paper_id"]
         return [self.chunks[j] for j in range(max(0, i - context), min(len(self.chunks), i + context + 1))
                 if self.chunks[j]["paper_id"] == pid]
+
+
+def resolve_chunk_id(cid, by_id, short):
+    """chunk_id complet ou court → chunk_id complet, ou None. by_id : chunk_id complets connus ;
+    short : paper_id → id court (query.short_ids)."""
+    pid, sep, rest = (cid or "").strip().partition("#")
+    if not sep:
+        return None
+    if "." not in rest:
+        rest += ".0"
+    if f"{pid}#{rest}" in by_id:
+        return f"{pid}#{rest}"
+    full = [p for p, s in short.items() if s == pid]
+    if full and f"{full[0]}#{rest}" in by_id:
+        return f"{full[0]}#{rest}"
+    return None
 
 
 def relevance_score(index, q, hits=None, top=3):

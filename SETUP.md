@@ -748,7 +748,7 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 02/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 03/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
 
 **Bilan du 02/10/2026 (fiabilité des réponses, route de recherche).**
@@ -1223,9 +1223,13 @@ Défauts mis au jour, à corriger (tâche 12) :
     hors corpus 6/6, 0 faux `absent`, citations 1,00, 22 verdicts sur 24 stables
     (EVAL.md §10) ;
   - [ ] lot C, preuves atomiques `claims.jsonl` et skill `/paper-extract` ;
-  - [ ] lot D, colonnes optionnelles de `benchmarks.csv` (`chunk_id`, split, résolution,
-    batch, définition de métrique, protocole) et `pdb bench --check` : reprend la piste 1
-    ci-dessous ;
+  - [x] lot D-1 à D-4 (03/10/2026) : colonnes optionnelles de `benchmarks.csv` (`chunk_id`,
+    `metric_def`, `dataset_split`, `input_res`, `batch`, `measure_protocol`,
+    `original_value` ; `schema.check_header`), `pdb bench --add-columns` et `--check`
+    (valeur dans le passage cité), mesure `in_cited_chunk` du banc `table_values`,
+    `/paper-fiche` qui les remplit. Les trois bases réindexent sans changer leur CSV ;
+  - [ ] lot D-5, `pdb bench --comparable` (regroupement par tâche, jeu, split, métrique,
+    portée de puissance) ;
   - [ ] lot E, tableaux : bbox dans `sections.jsonl`, OCR par zone, index ligne par ligne
     avec légende et en-tête, indicateurs de qualité, vérité terrain annotée ;
   - [ ] lot F, recherche en français (requêtes multiples, modèle multilingue évalué, jeu
@@ -1241,8 +1245,8 @@ Défauts mis au jour, à corriger (tâche 12) :
   - [ ] skills `/paper-compare`, `/state-of-art`, `/table-review`, `/research-question`.
 - [ ] **Pistes d'amélioration du 26/09/2026, non commencées** (analyse de la doc et du
   corpus ; ordre proposé) :
-  1. traçabilité : colonne `chunk_id` dans `benchmarks.csv` et `pdb bench --check`, qui
-     vérifie que chaque valeur numérique apparaît dans son passage source ;
+  1. ~~traçabilité : colonne `chunk_id` dans `benchmarks.csv` et `pdb bench --check`~~ :
+     fait le 03/10/2026 (lot D) ;
   2. économie de tokens : `pdb outline <id>`, `pdb digest <id>` (abstract, contributions,
      résultats, conclusion, tableaux) et `pdb numbers <id>` (nombres + unités avec
      `chunk_id`). Réécrire ensuite `/paper-fiche` pour partir de ces sorties au lieu de lire

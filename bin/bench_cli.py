@@ -133,6 +133,7 @@ def prepare():
             shutil.copy2(path.parent / name, target / name)
         save(target / "metadata.json", meta)
         (target / "fiche.md").write_text(schema.render_fiche(meta))
+    # Corpus isolé : colonnes obligatoires seules, en-tête valide (schema.check_header).
     with (SOURCE / "benchmarks.csv").open("w", newline="") as f:
         csv.writer(f).writerow(schema.BENCHMARK_COLUMNS)
     if reindex.run(SOURCE):

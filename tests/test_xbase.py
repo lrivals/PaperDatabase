@@ -136,6 +136,19 @@ class XBaseTest(TwoBases):
         with open(self.drone / "benchmarks.csv", newline="") as f:
             self.assertEqual(sum(1 for _ in csv.DictReader(f)), 1)
 
+    def test_import_into_wider_header(self):
+        # la cible a des colonnes optionnelles : la ligne copiée garde l'alignement, n/r ailleurs
+        with open(self.drone / "benchmarks.csv", "w", newline="") as f:
+            csv.writer(f, lineterminator="\n").writerow([*schema.BENCHMARK_COLUMNS, "chunk_id", "batch"])
+        xbase.import_paper(self.fpga, "2015-zhang-optimizing-fpga", self.drone, "fpga")
+        with open(self.drone / "benchmarks.csv", newline="") as f:
+            reader = csv.DictReader(f)
+            self.assertEqual(schema.check_header(reader.fieldnames), [])
+            rows = list(reader)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual((rows[0]["model"], rows[0]["chunk_id"], rows[0]["batch"]), ("AlexNet", "n/r", "n/r"))
+        self.assertEqual(schema.validate_benchmark_row(rows[0]), [])
+
     def test_find_elsewhere(self):
         registry.register("fpga", self.fpga, self.env)
         registry.register("drone", self.drone, self.env)

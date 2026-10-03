@@ -1,7 +1,7 @@
 # Feuille de route : fiabilité des réponses, tableaux et nouveaux skills
 
-Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot G en grande partie
-fait (route unique, RAG.md §13) ; autres lots non commencés (lot I, journal des
+Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot D-1 à D-4 en place
+(03/10/2026) ; lot G en grande partie fait (route unique, RAG.md §13) ; autres lots non commencés (lot I, journal des
 sous-agents, spécifié le 02/10/2026). Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
@@ -198,6 +198,15 @@ original, ce qui coûte une recherche par affirmation.
 ---
 
 ## Lot D — Conditions de comparaison dans `benchmarks.csv`
+
+> **D-1 à D-4 en place le 03/10/2026** : `schema.OPTIONAL_COLUMNS` et `schema.check_header`,
+> utilisés par `reindex`, `rag_qwen` et l'import entre bases (`lib/xbase.py`, qui écrit
+> désormais avec l'en-tête de la base cible) ; `pdb bench --add-columns` pour étendre
+> l'en-tête à la demande (`reindex` ne touche jamais le CSV) ; `pdb bench --check`, avec les
+> statuts `passage` / `section` / `converti` (lu via `original_value`) / `absent` /
+> `introuvable` ; mesure `in_cited_chunk` du banc `table_values` ; `/paper-fiche`. Les trois
+> bases réindexent sans erreur avec leur CSV inchangé. `pdb synth` écrit ses propres CSV à
+> 20 colonnes, toujours valides. Reste D-5 (`--comparable`).
 
 **Constat.** `benchmarks.csv` a 20 colonnes fixes (`lib/schema.py:22`). Le jeu de données y
 figure, mais pas le split, la résolution, le batch, la définition exacte de la métrique ni

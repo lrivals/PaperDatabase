@@ -277,14 +277,16 @@ def _copy_benchmarks(src_csv, dst_csv, paper_id):
     if not rows:
         return 0
     fresh = not dst_csv.exists() or not dst_csv.read_text().strip()
+    fields = list(schema.BENCHMARK_COLUMNS)
     if not fresh:
         with open(dst_csv, newline="") as f:
-            if any(r.get("paper_id") == paper_id for r in csv.DictReader(f)):
+            reader = csv.DictReader(f)
+            fields = list(reader.fieldnames or fields)  # colonnes optionnelles de la cible
+            if any(r.get("paper_id") == paper_id for r in reader):
                 return 0
     with open(dst_csv, "a", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=schema.BENCHMARK_COLUMNS, extrasaction="ignore",
-                           lineterminator="\n")
+        w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
         if fresh:
             w.writeheader()
-        w.writerows(rows)
+        w.writerows({c: r.get(c) or schema.NR for c in fields} for r in rows)
     return len(rows)

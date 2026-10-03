@@ -28,6 +28,24 @@ class BenchTest(unittest.TestCase):
             self.assertEqual(reindex.run(root), 0)
             self.assertIn(source.name, (root / "INDEX.md").read_text())
 
+    def test_reindex_accepts_optional_columns(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            source = next((ROOT / "bases" / "fpga" / "papers").glob("*/metadata.json")).parent
+            shutil.copytree(source, root / "papers" / source.name,
+                            ignore=shutil.ignore_patterns("paper.pdf", "grobid.tei.xml"))
+            fields = [*schema.BENCHMARK_COLUMNS, "chunk_id", "input_res"]
+            with (root / "benchmarks.csv").open("w", newline="") as f:
+                w = csv.DictWriter(f, fieldnames=fields)
+                w.writeheader()
+                w.writerow({c: "n/r" for c in fields} | {
+                    "paper_id": source.name, "model": "m", "confidence": "high",
+                    "chunk_id": f"{source.name}#000.0", "input_res": "416x416"})
+            self.assertEqual(reindex.run(root), 0)
+            (root / "benchmarks.csv").write_text(
+                (root / "benchmarks.csv").read_text().replace("input_res", "notes", 1))
+            self.assertEqual(reindex.run(root), 1)
+
     def test_evidence_matches_original_locator_and_quote(self):
         evidence = {"paper_id": "p1", "id": "p1#001", "quote": "verified result"}
         hit = {"paper_id": "p1", "locator": "p1#001", "kind": "section",

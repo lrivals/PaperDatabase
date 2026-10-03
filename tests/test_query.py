@@ -167,6 +167,76 @@ class TestCitationLines(unittest.TestCase):
                                      "ext\t1\t2015\tRare\tdoi:10.1/r"])
 
 
+def _write_csv(root, rows, fields=schema.BENCHMARK_COLUMNS):
+    with open(Path(root) / "benchmarks.csv", "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
+        w.writeheader()
+        w.writerows(rows)
+
+
+class TestOptionalColumns(unittest.TestCase):
+    PID = "arxiv-1612.07119-finn"
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        d = self.root / "papers" / self.PID
+        d.mkdir(parents=True)
+        (d / "metadata.json").write_text(json.dumps(PAPERS[0]))
+        # section 001 : coupée en passages (rag.split_text au-delà de 250 mots) ; 002 : autre section
+        long = " ".join(["filler"] * 400)
+        secs = [("001", f"Table 1: CNV reaches 21,900 FPS at 11.7 W. {long} 283 GOPS"),
+                ("002", "The board idles at 7 W.")]
+        (d / "sections.jsonl").write_text("".join(json.dumps({
+            "id": f"{self.PID}#{sid}", "paper_id": self.PID, "kind": "table", "section": "5",
+            "subsection": None, "order": int(sid), "page": 1, "text": text}) + "\n"
+            for sid, text in secs))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_add_columns(self):
+        _write_csv(self.root, ROWS[:2])
+        self.assertEqual(query.add_columns(self.root, ["batch", "chunk_id"]), ["chunk_id", "batch"])
+        header, rows = query.load_benchmarks(self.root)
+        self.assertEqual(header, [*schema.BENCHMARK_COLUMNS, "chunk_id", "batch"])
+        self.assertEqual({r["batch"] for r in rows}, {"n/r"})
+        self.assertEqual(rows[0]["dataset"], "CIFAR-10")
+        self.assertEqual(query.add_columns(self.root, ["batch"]), [])
+        query.add_columns(self.root, list(schema.OPTIONAL_COLUMNS))
+        self.assertEqual(query.load_benchmarks(self.root)[0], list(schema.ALL_COLUMNS))
+        with self.assertRaises(ValueError):
+            query.add_columns(self.root, ["notes"])
+
+    def test_check_rows(self):
+        base = dict(ROWS[0], gops="283")
+        rows = [
+            (2, {**base, "chunk_id": "1612.07119#001.0"}),          # id court : 21900, 11.7 ici, 283 plus loin
+            (3, {**base, "chunk_id": f"{self.PID}#002", "fps": "21900"}),  # autre section : absent
+            (4, {**base, "chunk_id": f"{self.PID}#009.0"}),          # introuvable
+            (5, {**base, "chunk_id": "n/r"}),                        # ignorée
+            (6, dict(ROWS[0])),                                      # sans colonne chunk_id
+            (7, {**base, "chunk_id": f"{self.PID}#002", "power_w": "7000",
+                 "original_value": "7 W"}),                          # converti en mW
+        ]
+        out = query.check_rows(self.root, rows)
+        got = {(x["line"], x["column"]): x["status"] for x in out}
+        self.assertEqual(got[(2, "fps")], "passage")
+        self.assertEqual(got[(2, "power_w")], "passage")
+        self.assertEqual(got[(2, "gops")], "section")
+        self.assertEqual(got[(3, "fps")], "absent")
+        self.assertEqual(got[(4, None)], "introuvable")
+        self.assertEqual(got[(7, "power_w")], "converti")
+        self.assertEqual(got[(7, "fps")], "converti")   # original_value ne dit pas quelle colonne
+        self.assertFalse({line for line, _ in got} & {5, 6})
+        text = query.render_check(out, {self.PID: "1612.07119"})
+        self.assertIn("4 ligne(s) avec chunk_id", text)
+        self.assertNotIn("\tpassage", text)
+
+    def test_check_rows_without_chunk_ids(self):
+        self.assertEqual(query.check_rows(self.root, [(2, ROWS[0])]), [])
+
+
 class TestLoad(unittest.TestCase):
     def test_load_from_disk(self):
         with tempfile.TemporaryDirectory() as d:

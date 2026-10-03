@@ -197,7 +197,8 @@ options. Conventions communes :
 bin/pdb bench [--platform S] [--model S] [--task S] [--quant S] [--toolflow S] [--dataset S]
               [--paper ID] [--where COL=S]… [--min COL=X]… [--max COL=X]… [--has COL]…
               [--cols a,b,c | --count a,b] [--sort COL [--desc]] [-n N]
-              [--format tsv|md|json] [--max-chars N]
+              [--format tsv|md|json] [--max-chars N] [--check]
+bin/pdb bench --add-columns COL,…|all
 ```
 
 - Les filtres texte portent sur une sous-chaîne, insensible à la casse. Les raccourcis
@@ -232,6 +233,29 @@ paper	model	quantization	fps	power_w	power_scope	source_section	confidence
 ```
 
 Coût : ~40 tokens par ligne, contre ~10 000 pour lire `benchmarks.csv` en entier (38 Ko).
+
+**Colonnes optionnelles et `--check`** (DATA_MODEL §7). `--add-columns all` ajoute à l'en-tête
+les colonnes optionnelles (`chunk_id`, `metric_def`, `dataset_split`, `input_res`, `batch`,
+`measure_protocol`, `original_value`), à `n/r` dans les lignes existantes. Ensuite, filtres et
+`--cols` les acceptent comme les autres. `--check` prend les lignes filtrées qui ont un
+`chunk_id` et cherche chaque valeur numérique dans le passage cité (`rag.number_tokens`).
+Seules les valeurs qui n'y sont pas sont listées, avec l'un de ces statuts :
+
+| Statut | Signification |
+|---|---|
+| `section` | la valeur est dans un autre passage de la même section (tableau coupé en fenêtres) |
+| `converti` | la valeur manque, mais les nombres de `original_value` sont lus dans la section |
+| `absent` | la valeur n'est pas trouvée |
+| `introuvable` | le `chunk_id` ne correspond à aucun passage de ce papier |
+
+Code 1 si une valeur est `absent` ou un `chunk_id` `introuvable`.
+
+```
+$ bin/pdb bench --check --paper 2110.10486
+line	paper	chunk_id	column	value	status
+2	2110.10486	2110.10486#033.0	latency_ms	2070	absent
+# 1 ligne(s) avec chunk_id, 3 valeur(s) vérifiée(s), 1 dans le passage cité (33 %)
+```
 
 ### 5.2 `pdb search` — N1, recherche de passages
 

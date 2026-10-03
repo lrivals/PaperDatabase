@@ -42,6 +42,19 @@ BENCHMARK_COLUMNS = (
     "confidence",
 )
 
+# Colonnes optionnelles (DATA_MODEL §7) : après les obligatoires, un sous-ensemble dans
+# n'importe quel ordre. Absente, une colonne vaut n/r ; présente, elle suit les mêmes règles.
+OPTIONAL_COLUMNS = (
+    "chunk_id",          # passage qui contient la valeur (pdb show / pdb bench --check)
+    "metric_def",        # définition exacte de accuracy_metric
+    "dataset_split",
+    "input_res",
+    "batch",
+    "measure_protocol",  # comment FPS et puissance sont mesurés
+    "original_value",    # valeur telle qu'écrite, si une colonne est normalisée
+)
+ALL_COLUMNS = BENCHMARK_COLUMNS + OPTIONAL_COLUMNS
+
 # Colonnes numériques : un nombre ou n/r, rien d'autre.
 NUMERIC_COLUMNS = (
     "accuracy_value", "fps", "gops", "latency_ms", "power_w", "luts", "dsps", "bram",
@@ -130,13 +143,37 @@ def validate_metadata(d):
     return errs
 
 
+# chunk_id : <paper_id ou id court>#<section>[.<k>] (lib/rag.load_chunks, resolve_chunk_id)
+CHUNK_ID_RE = re.compile(r"^[^#\s]+#\d+(?:\.\d+)?$")
+
+
+def check_header(fieldnames):
+    """En-tête de benchmarks.csv : les colonnes obligatoires en tête et dans l'ordre, puis un
+    sous-ensemble des optionnelles. Liste des problèmes ; vide si conforme."""
+    names = list(fieldnames or ())
+    n = len(BENCHMARK_COLUMNS)
+    if tuple(names[:n]) != BENCHMARK_COLUMNS:
+        return ["en-tête : les colonnes de schema.BENCHMARK_COLUMNS doivent venir en tête, dans l'ordre"]
+    errs = []
+    extra = names[n:]
+    unknown = [c for c in extra if c not in OPTIONAL_COLUMNS]
+    if unknown:
+        errs.append(f"en-tête : colonne(s) inconnue(s) : {', '.join(unknown)} "
+                    f"(optionnelles : {', '.join(OPTIONAL_COLUMNS)})")
+    dup = sorted({c for c in extra if extra.count(c) > 1})
+    if dup:
+        errs.append(f"en-tête : colonne(s) en double : {', '.join(dup)}")
+    return errs
+
+
 def validate_benchmark_row(row):
     """row : dict issu de csv.DictReader. Liste des problèmes ; vide si conforme."""
     errs = []
     missing = [c for c in BENCHMARK_COLUMNS if c not in row]
     if missing:
         return [f"colonnes manquantes : {', '.join(missing)}"]
-    for c in BENCHMARK_COLUMNS:
+    present = [c for c in OPTIONAL_COLUMNS if c in row]
+    for c in (*BENCHMARK_COLUMNS, *present):
         if (row[c] or "").strip() == "":
             errs.append(f"{c} vide : écrire n/r")
     for c in NUMERIC_COLUMNS:
@@ -153,6 +190,12 @@ def validate_benchmark_row(row):
         errs.append(f"power_scope = {scope!r} alors que power_w = n/r : n/r attendu")
     elif power not in (NR, "") and scope not in POWER_SCOPES:
         errs.append(f"power_scope = {scope!r} : {' | '.join(POWER_SCOPES)}")
+    batch = (row.get("batch") or "").strip()
+    if batch not in ("", NR) and not batch.isdigit():
+        errs.append(f"batch = {batch!r} : entier ou n/r attendu")
+    chunk = (row.get("chunk_id") or "").strip()
+    if chunk not in ("", NR) and not CHUNK_ID_RE.match(chunk):
+        errs.append(f"chunk_id = {chunk!r} : forme <paper_id>#<section>.<k> attendue")
     return errs
 
 

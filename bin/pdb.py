@@ -45,9 +45,11 @@
   rag <command>             outils de la route GPU : index SQLite, preuves, acquisition
                             open access (/paper-research) ; rag -h
   synth <command>           benchmark synthétique (docs/BENCHMARK.md)
-  agents [--scan] [--report [--by task|model|base|task-model] [--since D]] [--mark ID VERDICT]
+  agents [--scan] [--report [--by task|model|base|task-model] [--since D] [--worst N]]
+         [--session ID] [--mark ID VERDICT]
                             journal et coût des sous-agents Claude Code (hook SubagentStop,
-                            .cache/agents.jsonl) ; --mark : repris|corrigé|refait
+                            .cache/agents.jsonl), économie estimée de la délégation ;
+                            --mark : repris|corrigé|refait
   test [--rag]              lance les tests (--rag : pdb eval --rag)
 
 Guide : docs/GUIDE.md. Détail des scripts : SETUP.md §5. Requêtes : docs/RAG.md.
@@ -929,16 +931,18 @@ def cmd_eval(args):
 def cmd_agents(args):
     """Journal et coût des sous-agents (lib/agentlog.py, docs/AMELIORATIONS.md lot I)."""
     import argparse
-    from lib import agentlog, registry
+    from lib import agentcost, agentlog, registry
     p = argparse.ArgumentParser(prog="pdb agents", description="journal et coût des sous-agents")
     p.add_argument("--scan", action="store_true",
                    help="rattrape les sous-agents des transcripts passés (dépôt et bases du registre)")
     p.add_argument("--force", action="store_true", help="avec --scan : relit aussi les agents déjà journalisés")
-    p.add_argument("--report", action="store_true", help="indicateurs par groupe (tableau Markdown)")
+    p.add_argument("--report", action="store_true",
+                   help="indicateurs par groupe, économie de la délégation, cas défavorables, calage")
+    p.add_argument("--session", metavar="ID", help="bilan d'une session (préfixe de session_id)")
+    p.add_argument("--worst", type=int, default=10, metavar="N", help="--report : N cas défavorables (défaut 10)")
     p.add_argument("--by", choices=sorted(agentlog.GROUPS), default="task-model")
     p.add_argument("--since", metavar="AAAA-MM-JJ")
     p.add_argument("--base", dest="only_base", metavar="NOM", help="seulement les appels faits dans cette base")
-    p.add_argument("--no-main", action="store_true", help="--report sans le témoin « agent principal »")
     p.add_argument("--mark", nargs=2, metavar=("ID", "VERDICT"),
                    help=f"issue d'un appel : {'|'.join(agentlog.VERDICTS)} (ID : préfixe d'agent_id ou ts)")
     p.add_argument("-n", type=int, default=20, help="lignes listées (défaut 20)")
@@ -965,15 +969,18 @@ def cmd_agents(args):
         recs = [r for r in recs if (r.get("ts") or "") >= a.since]
     if a.only_base:
         recs = [r for r in recs if r.get("base") == a.only_base]
+    if a.session:
+        print(agentcost.report_session(a.session, recs))
+        return 0
+    sessions = agentcost.load_sessions(recs)
+    recs = agentcost.calibrate(recs, sessions)  # sortie calée sur le cost-state de chaque session
     if a.report:
-        main = None
-        if not a.no_main:
-            main = {}
-            for r in recs:
-                sid, t = r.get("session_id"), r.get("transcript")
-                if sid and t and sid not in main:
-                    main[sid] = agentlog.main_session_usage(agentlog.session_transcript_of(t))
-        print(agentlog.report(recs, by=a.by, main=main))
+        print(agentlog.report(recs, by=a.by))
+        if recs:
+            print()
+            print(agentcost.report_savings(agentcost.savings(recs, sessions), by=a.by, worst=a.worst))
+            print()
+            print(agentcost.report_calibration(recs, sessions))
         return 0
     prices = agentlog.load_prices()
     print("ts\tagent_id\tbase\tclasse\tmodèle\ttokens\tcoût\tdurée\tissue\tdescription")

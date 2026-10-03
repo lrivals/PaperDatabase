@@ -324,7 +324,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
 | `plot [bench\|eval\|corpus\|all] [--only a,b] [--out DIR] [--format png\|pdf\|svg] [--list] [--stale] [--check [--brief]]` | `lib/plotdata.py`, `lib/plotfig.py` | figures statiques, voir ci-dessous |
-| `agents [--scan [--force]] [--report [--by task\|model\|base\|task-model] [--since D] [--no-main]] [--mark ID VERDICT]` | `lib/agentlog.py` | journal et coût des sous-agents Claude Code (`.cache/agents.jsonl` du dépôt), voir `bin/agent_log.py` ci-dessous |
+| `agents [--scan [--force]] [--report [--by task\|model\|base\|task-model] [--since D] [--worst N]] [--session ID] [--mark ID VERDICT]` | `lib/agentlog.py`, `lib/agentcost.py` | journal et coût des sous-agents Claude Code (`.cache/agents.jsonl` du dépôt), économie estimée de la délégation, calage sur le coût compté par Claude Code ; voir `bin/agent_log.py` ci-dessous |
 
 ### `bin/pdb plot`
 
@@ -669,8 +669,13 @@ autre dossier). Python du système, bibliothèque standard seulement ; ne bloque
 session (erreurs dans `.cache/agents.errors.log`, sortie 0 ; `PDB_AGENTLOG_RAW=1` garde
 l'entrée brute). `lib/agentlog.py` : parseur (tokens dédupliqués par `message.id`, premier
 tour, outils, lectures intégrales de `fulltext.md`), rattrapage des sessions passées,
-coût (tarifs dans `lib/agent_prices.json`) et rapport de `pdb agents`. Testé par
-`tests/test_agentlog.py`.
+coût (tarifs dans `lib/agent_prices.json`) et rapport de `pdb agents`. `lib/agentcost.py` :
+lecture du transcript principal (tours, appels `Agent`, retours, compactions, ligne
+`cost-state`), calage de la sortie des sous-agents sur le cost-state (les transcripts la
+sous-estiment), coût contrefactuel « fait en direct », vérification et lectures dupliquées,
+étiquettes des cas défavorables, bilan d'une session (`--session`). Formules et hypothèses :
+[AMELIORATIONS.md, I-3](docs/AMELIORATIONS.md#i-3-indicateurs). Testé par
+`tests/test_agentlog.py` et `tests/test_agentcost.py`.
 
 ### `lib/evaluation.py`
 
@@ -1312,7 +1317,11 @@ Défauts mis au jour, à corriger (tâche 12) :
   - [x] lot I, journal et coût des sous-agents (03/10/2026) : hook `SubagentStop` →
     `bin/agent_log.py` → `.cache/agents.jsonl`, `lib/agentlog.py`, `pdb agents [--scan]
     [--report] [--mark]`, convention `[classe]` dans le `CLAUDE.md` racine ; rattrapage :
-    67 sous-agents, 55,6 $ ;
+    67 sous-agents ; puis calage de la sortie sur le cost-state (les 4 sessions à 0 %,
+    sous-agents 78,9 $ au lieu de 55,6 $) et économie estimée de la délégation
+    (`lib/agentcost.py`, `--session`, `--worst` : 119 $, 59 % du direct estimé) ;
+  - [ ] lot I-6 : expérience appariée (même tâche en direct et déléguée) pour caler le
+    contrefactuel ;
   - [ ] lot I-5e : après une vingtaine d'appels étiquetés et notés, révision chiffrée de la
     table de délégation du `CLAUDE.md` (`pdb agents --report`) ;
   - [ ] lot J, `pdb compare` (`lib/compare.py`) : deux axes avec clé de précision et

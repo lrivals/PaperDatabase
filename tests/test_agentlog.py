@@ -123,9 +123,21 @@ class TestParse(unittest.TestCase):
         with self.assertRaises(ValueError):
             agentlog.mark("zzz", "repris", env)
 
-    def test_main_session_usage(self):
-        u = agentlog.main_session_usage(agentlog.session_transcript_of(self.t))
-        self.assertEqual((u["turns"], u["total_tokens"]), (1, 3 + 30 + 5000 + 100))
+    def test_incomplete_response(self):
+        """Sans stop_reason, l'usage journalisé est celui du début du flux : sortie estimée."""
+        big = {"type": "tool_use", "id": "t9", "name": "Write",
+               "input": {"file_path": "/x", "content": "y" * 3500}}
+        lines = [_assistant("m9", "2026-10-03T10:00:00Z", [{"type": "text", "text": "a"}], _usage(1, 8), stop=None),
+                 _assistant("m9", "2026-10-03T10:00:01Z", [big], _usage(1, 5, read=40), stop=None),
+                 _assistant("m10", "2026-10-03T10:00:02Z", [{"type": "text", "text": "ok"}], _usage(1, 7),
+                            stop="end_turn")]
+        m9, m10 = agentlog._assistant_messages(lines)
+        self.assertEqual(m9["usage"]["cache_read_input_tokens"], 40)  # usage max sur les lignes
+        self.assertGreater(m9["usage"]["output_tokens"], 1000)        # ≈ 3 560 car. / 3,5
+        self.assertTrue(m9.get("_estimated"))
+        self.assertEqual(len(m9["content"]), 2)
+        self.assertEqual(m10["usage"]["output_tokens"], 7)            # réponse complète : intacte
+        self.assertFalse(m10.get("_estimated"))
 
 
 class TestCostReport(unittest.TestCase):

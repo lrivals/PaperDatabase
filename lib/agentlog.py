@@ -27,6 +27,7 @@ PROJECTS = Path.home() / ".claude" / "projects"
 VERDICTS = ("repris", "corrigé", "refait")
 TASK_RE = re.compile(r"^\s*\[([\w-]+)\]\s*(.*)$", re.S)
 STARTUP_WARN = 0.5  # surcoût de démarrage au-delà duquel la tâche est trop petite pour un agent
+CHARS_PER_TOKEN = 3.5  # estimation de sortie quand l'usage du transcript est partiel
 
 
 def journal_dir(env=None):
@@ -58,9 +59,27 @@ def _read_jsonl(path):
     return out
 
 
+def _content_tokens(content):
+    """Sortie estimée d'après le contenu visible (texte, entrées d'outils, résumé de réflexion)."""
+    n = 0
+    for c in content:
+        if not isinstance(c, dict):
+            continue
+        n += len(c.get("text") or "") + len(c.get("thinking") or "")
+        if c.get("type") == "tool_use":
+            n += len(json.dumps(c.get("input") or {}, ensure_ascii=False))
+    return int(n / CHARS_PER_TOKEN)
+
+
 def _assistant_messages(lines, sidechain=None):
-    """Messages assistant uniques (par message.id), dans l'ordre, hors <synthetic>."""
-    seen, msgs = set(), []
+    """Messages assistant uniques (par message.id), dans l'ordre, hors <synthetic>.
+
+    Une réponse s'étale sur plusieurs lignes (un bloc de contenu chacune) : contenus mis bout à
+    bout, usage maximal. Une réponse sans `stop_reason` n'a que l'usage partiel du début du
+    flux (sortie très sous-estimée) : sa sortie devient l'estimation sur le contenu si elle est
+    plus grande (`_estimated`). Le calage sur le cost-state (`calibrate`) corrige le reste.
+    """
+    order, by = [], {}
     for d in lines:
         if d.get("type") != "assistant":
             continue
@@ -70,10 +89,28 @@ def _assistant_messages(lines, sidechain=None):
         if m.get("model") == "<synthetic>":
             continue
         mid = m.get("id") or d.get("uuid")
-        if mid in seen:
-            continue
-        seen.add(mid)
-        msgs.append(m)
+        if mid not in by:
+            by[mid] = {"id": mid, "model": m.get("model"), "content": [], "usage": {},
+                       "stop_reason": None, "_ts": d.get("timestamp")}
+            order.append(mid)
+        e = by[mid]
+        e["content"] += [c for c in m.get("content") or [] if isinstance(c, dict)]
+        e["stop_reason"] = e["stop_reason"] or m.get("stop_reason")
+        for k, v in (m.get("usage") or {}).items():
+            if isinstance(v, (int, float)):
+                e["usage"][k] = max(e["usage"].get(k, 0), v)
+            elif isinstance(v, dict):
+                sub = e["usage"].setdefault(k, {})
+                for k2, v2 in v.items():
+                    if isinstance(v2, (int, float)):
+                        sub[k2] = max(sub.get(k2, 0), v2)
+    msgs = [by[mid] for mid in order]
+    for e in msgs:
+        if not e["stop_reason"]:
+            est = _content_tokens(e["content"])
+            if est > e["usage"].get("output_tokens", 0):
+                e["usage"]["output_tokens"] = est
+                e["_estimated"] = True
     return msgs
 
 
@@ -165,19 +202,20 @@ def parse_subagent(path):
         **usage, "total_tokens": sum(usage[k] for k in ("input_tokens", "output_tokens", "cache_read",
                                                         "cache_creation")),
         "first_turn_tokens": _turn_tokens(msgs[0]) if msgs else 0, "turns": len(msgs),
+        "incomplete_turns": sum(1 for m in msgs if not m["stop_reason"]), "output_source": "transcript",
         "duration_ms": dur, "tool_calls": len(tools),
         "tools": dict(Counter(t.get("name") for t in tools)),
         "big_reads": sum(map(_big_read, tools)),
         "status": "ok" if last.get("stop_reason") == "end_turn" else "interrompu",
         "prompt_chars": None, "result_chars": len(result), "verified": None,
         "background": meta.get("requestShape") == "background" if meta else None,
-        "_tool_use_id": meta.get("toolUseId"), "transcript": str(path),
+        "tool_use_id": meta.get("toolUseId"), "transcript": str(path),
     }
 
 
 def enrich_from_parent(rec, session_transcript):
     """Complète avec l'appel Agent de l'agent principal : modèle demandé, taille du prompt."""
-    tid = rec.pop("_tool_use_id", None)
+    tid = rec.get("tool_use_id")
     p = Path(session_transcript) if session_transcript else None
     if not tid or not p or not p.is_file():
         return rec
@@ -273,19 +311,6 @@ def scan(roots, env=None, projects=None, force=False):
     return added, errors
 
 
-def main_session_usage(session_transcript):
-    """Tokens de l'agent principal d'une session (témoin I-c), hors sous-agents."""
-    p = Path(session_transcript)
-    if not p.is_file():
-        return None
-    msgs = _assistant_messages(_read_jsonl(p), sidechain=False)
-    u = _usage_sum(msgs)
-    models = Counter(m.get("model") for m in msgs if m.get("model"))
-    return {**u, "total_tokens": sum(u[k] for k in ("input_tokens", "output_tokens", "cache_read",
-                                                    "cache_creation")),
-            "turns": len(msgs), "model_served": models.most_common(1)[0][0] if models else None}
-
-
 # ---------------------------------------------------------------- coût et rapport (I-3)
 
 def load_prices(path=None):
@@ -374,8 +399,8 @@ def _usd(x):
     return "—" if x is None else f"{x:.2f} $"
 
 
-def report(records, by="task-model", prices=None, main=None):
-    """Rapport Markdown ; `main` = {session_id: usage de l'agent principal} (témoin)."""
+def report(records, by="task-model", prices=None):
+    """Rapport Markdown des sous-agents (l'économie et le calage : lib/agentcost.py)."""
     prices = load_prices() if prices is None else prices
     if not records:
         return "Journal vide : aucun sous-agent enregistré (bin/pdb agents --scan pour rattraper)."
@@ -401,15 +426,4 @@ def report(records, by="task-model", prices=None, main=None):
     out.append(f"1er tour : contexte de départ (prompt système, outils, tâche), coût fixe de chaque agent. "
                f"Démarrage : 1er tour / tokens ; ⚠ au-delà de {int(STARTUP_WARN * 100)} %, tâche sans doute "
                "trop petite pour être déléguée. Tokens : lectures de cache comprises, recomptées à chaque tour.")
-    if main:
-        sub = Counter()
-        for r in records:
-            sub[r.get("session_id")] += cost(r, prices) or 0
-        out += ["", f"## Agent principal (témoin, {len(main)} sessions)", "",
-                "| session | modèle | tours | tokens | coût | coût sous-agents |", "|---|---|--:|--:|--:|--:|"]
-        for sid, u in sorted(main.items(), key=lambda kv: -(kv[1] or {}).get("total_tokens", 0)):
-            if not u:
-                continue
-            out.append(f"| {sid[:8]} | {_short_model(u['model_served'])} | {u['turns']} | "
-                       f"{_k(u['total_tokens'])} | {_usd(cost(u, prices))} | {_usd(sub[sid])} |")
     return "\n".join(out)

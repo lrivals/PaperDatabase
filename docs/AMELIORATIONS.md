@@ -2,7 +2,8 @@
 
 Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot D en place
 (03/10/2026) ; lot G en grande partie fait (route unique, RAG.md §13) ; lot I en place
-(03/10/2026, journal des sous-agents, sauf la révision chiffrée I-5e) ; autres lots non commencés. Elle décrit comment mettre en place les
+(03/10/2026, journal des sous-agents, calage sur le cost-state et économie estimée de la
+délégation, sauf la révision chiffrée I-5e et l'expérience appariée I-6) ; autres lots non commencés. Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
 cinq nouveaux skills. Chaque chantier part d'un constat mesuré dans le dépôt, puis donne la
@@ -453,7 +454,30 @@ chiffrée de la table de délégation, une fois une vingtaine d'appels étiquet�
 Premier rattrapage (`--scan`, 67 sous-agents des sessions du 26/09 au 01/10, tous en classe
 « autre », faute d'étiquette) : 121 M tokens, 55,6 $ ; médiane 1,2 $ et 278 s par appel `opus`,
 0,4 $ et 106 s par appel `sonnet` ; premier tour d'environ 28k tokens (coût fixe) ; 91 à 94 %
-des tokens d'entrée lus en cache ; 139 lectures intégrales de `fulltext.md`.
+des tokens d'entrée lus en cache ; 139 lectures intégrales de `fulltext.md`. Ces coûts
+étaient sous-estimés (voir ci-dessous) : après calage, 78,9 $ pour les sous-agents, sur
+125,7 $ comptés par Claude Code pour les 4 sessions. Économie estimée de la délégation
+(I-3, contrefactuel) : 119 $, soit 59 % du coût estimé en direct. Aucun appel n'est
+perdant ; les moins rentables sont des agents `opus` lancés par l'agent principal `opus`.
+
+**Anomalie de sortie et calage.** Les transcripts sous-estiment les tokens de sortie. Une
+réponse sans `stop_reason` garde l'usage partiel du début du flux : 8 tokens pour un
+`tool_use` de 9 576 caractères. La réflexion non affichée n'y figure pas non plus. Pour la
+session a41ae4f9, le transcript donnait 23k tokens de sortie Sonnet contre 339k comptés par
+Claude Code, soit −15 à −25 % sur le coût des sous-agents. Les lectures de cache, elles,
+concordent exactement. Deux corrections :
+1. Par `message.id`, l'usage **maximal** de ses lignes. Une réponse sans `stop_reason`
+   prend pour sortie l'estimation sur son contenu (texte, réflexion visible, JSON des
+   entrées d'outils, divisé par 3,5) si elle est plus grande. Champs
+   `incomplete_turns` et `output_source` (`transcript`, ou `calé` après l'étape 2).
+2. **Calage par session.** Le transcript principal contient des lignes `{"type":
+   "cost-state", "modelUsage": {modèle: {outputTokens, cacheReadInputTokens, …}},
+   "totalCostUSD"}`, cumulatives ; la dernière fait foi. Pour chaque modèle, la sortie
+   manquante (cost-state − agent principal − sous-agents) est répartie au prorata des
+   réponses incomplètes. Calage seulement si les lectures de cache concordent à ±2 %
+   (sinon le journal de la session est incomplet). Fait à la lecture (`--report`,
+   `--session`), jamais dans le hook : la session n'y est pas finie. Résultat : les 4
+   sessions à 0 % du `totalCostUSD`.
 
 **Ce que la mise en œuvre a corrigé dans la conception.** Les agents sont lancés en
 arrière-plan par défaut : le résultat de l'outil `Agent` vaut alors `{status:
@@ -506,7 +530,8 @@ ignoré, principe §0), une ligne JSON par appel.
 - Champs ajoutés à la mise en œuvre : `agent_id` (clé du journal), `turns`,
   `cache_creation_1h` (écriture en cache à 1 h, facturée ×2 au lieu de ×1,25), `big_reads`
   (lectures intégrales de `fulltext.md` : `Read` sans `limit`, ou `cat`), `background`,
-  `transcript` (chemin, pour le témoin « agent principal »).
+  `transcript` (chemin, pour le contrefactuel), `tool_use_id` (appel `Agent` du transcript
+  principal), `incomplete_turns` et `output_source` (calage de la sortie, voir l'état).
 - Journal en ajout seul : `load` fusionne les lignes d'un même `agent_id`, la dernière
   valeur non nulle l'emportant. Une note `--mark` survit donc à une relecture du transcript
   (agent repris par SendMessage, `--scan --force`), et deux hooks simultanés ne se
@@ -533,7 +558,36 @@ Markdown :
 | Coût effectif | coût de l'agent + coût de la reprise par l'agent principal | le vrai coût d'une délégation |
 | Part de cache | `cache_read / (input_tokens + cache_read)` | faible sur des appels répétés (une fiche par agent) : préambule à rendre identique |
 | Outils | nombre d'appels et lectures volumineuses | lectures inutiles à interdire dans le prompt |
-| Témoin | même classe de tâche faite en direct (I-c) | la délégation est-elle rentable pour cette classe ? |
+| Économie | contrefactuel « fait en direct », ci-dessous | la délégation est-elle rentable pour cette classe ? |
+| Calage | Σ (agent principal + sous-agents) contre `totalCostUSD` du cost-state, par session | le comptage est-il juste ? |
+
+**Économie de la délégation (`lib/agentcost.py`).** Le coût de la même tâche faite en direct
+n'est jamais observé : on l'estime à partir du transcript principal. Ce qui compte, au
+tarif de l'agent principal : tout ce qui entre dans son contexte est écrit une fois en
+cache, puis relu à **chaque tour suivant**, jusqu'à la compaction ou la fin de session. Pour
+un agent de T tours, de sortie O (calée), de contexte accumulé G (dernier tour − premier),
+de résultat R et de prompt P, lancé quand le contexte principal vaut C0 et suivi de A tours
+principaux :
+
+- délégué = coût réel de l'agent + P × sortie + R × (écriture + A × lecture) ;
+- direct = O × sortie + G × écriture + (T × C0' + relectures internes) × lecture
+  + G × A' × lecture ;
+- économie = direct − délégué − vérification ; un agent noté `refait` est une perte sèche.
+
+Hypothèses : mêmes tours en direct qu'en délégué, sans coût de démarrage, aux tarifs de
+l'agent principal. En direct, le travail des agents précédents reste dans le contexte
+(C0' = C0 + leurs G). Le travail accumulé est vidé à la compaction réelle, ou à une
+compaction simulée quand contexte réel + travail accumulé dépasse 850k tokens : A' ≤ A.
+La **vérification** correspond aux `Read`, `Grep` et `Bash` de l'agent principal, après le
+retour, sur les fichiers que l'agent a écrits. Les **lectures dupliquées** (fichier déjà lu
+par un autre agent lancé moins de 2 min plus tôt) sont signalées, sans être ajoutées : elles
+sont déjà dans le coût des agents.
+
+Étiquettes des cas défavorables (`--report`, `--worst N`) : `même modèle` (même tarif des
+deux côtés), `fin de session` (A < 10 tours ou < 15 % des tours de la session),
+`résultat long` (R × A × lecture > 25 % du délégué), `démarrage` (premier tour > 50 %),
+`vérification lourde` (> 30 % du direct), `lectures dupliquées` (> 20 % de G), `refait`.
+`bin/pdb agents --session <id>` donne le bilan d'une session, agent par agent.
 
 ### I-4. Pistes d'optimisation à tester
 
@@ -569,18 +623,32 @@ banc d'EVAL.md :
 | I-5b ✓ | Parseur définitif (`lib/agentlog.py`), `.cache/agents.jsonl`, convention `[task_class]` dans le `CLAUDE.md` racine. |
 | I-5c ✓ | Hook `SubagentStop` (I-b) : `first_turn_tokens`, `tools`, `model_served`. |
 | I-5d ✓ | `bin/pdb agents` : liste, `--report [--by task\|model\|base\|task-model] [--since]` (avec le témoin « agent principal » par session), `--mark`, `--scan` (I-c). |
+| I-5f ✓ | Calage de la sortie sur le cost-state, contrefactuel (`lib/agentcost.py`), `--report` (économie, cas défavorables, calage), `--session`, `--worst` ; le témoin « agent principal » disparaît. |
 | I-5e (à faire) | Après ~20 délégations : rapport consigné, révision chiffrée de la table du `CLAUDE.md`. |
 
 **Fichiers.** `.claude/settings.json`, `bin/agent_log.py`, `bin/pdb.py` (sous-commande
-`agents`), `lib/agentlog.py` (parsing commun hook / transcripts), `CLAUDE.md` racine,
+`agents`), `lib/agentlog.py` (parsing commun hook / transcripts), `lib/agentcost.py` (calage,
+contrefactuel), `CLAUDE.md` racine,
 `templates/agent-prompt.md`, `lib/agent_prices.json` (tarifs), `lib/bases.py` (lien
-`.claude/settings.json` d'une base neuve), `tests/test_agentlog.py` (transcripts factices
+`.claude/settings.json` d'une base neuve), `tests/test_agentlog.py` et `tests/test_agentcost.py` (transcripts factices
 écrits par le test, hook lancé en sous-processus).
 
 **Critère d'acceptation.** Chaque appel `Agent` d'une session produit une ligne valide dans
 `.cache/agents.jsonl` sans jamais bloquer la session ; `pdb agents --report` donne coût,
 surcoût de démarrage et taux de reprise par tâche × modèle ; la table de délégation du
 `CLAUDE.md` est révisée au moins une fois à partir de ce rapport.
+
+### I-6. Expérience appariée (à faire, coûte des tokens)
+
+Le contrefactuel d'I-3 reste une estimation. Pour le caler, faire la même tâche deux fois,
+chacune dans une session neuve et dans la même base : par exemple 3 `/paper-fiche` sur des
+papiers voisins (taille et type proches), une fois en direct, une fois déléguées (un agent
+`sonnet` par fiche, gabarit `templates/agent-prompt.md`). Fiches remises à `todo` entre les
+deux runs. Comparer `bin/pdb agents --session <id>` des deux sessions : coût total compté par
+Claude Code, coût de l'agent principal, et, pour la session déléguée, le direct estimé
+comparé au coût réel de la session directe. Un écart supérieur à ±25 % remet en cause les
+hypothèses (mêmes tours, sans démarrage). Il faut alors corriger `lib/agentcost.py`, par
+exemple avec un facteur de tours en direct, avant toute révision de la table (I-5e).
 
 ---
 

@@ -3,7 +3,7 @@
 Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot D en place
 (03/10/2026) ; lot G en grande partie fait (route unique, RAG.md §13) ; lot I en place
 (03/10/2026, journal des sous-agents, calage sur le cost-state et économie estimée de la
-délégation, sauf la révision chiffrée I-5e et l'expérience appariée I-6) ; autres lots non commencés. Elle décrit comment mettre en place les
+délégation, expérience appariée I-6 faite, sauf la révision chiffrée I-5e) ; autres lots non commencés. Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
 cinq nouveaux skills. Chaque chantier part d'un constat mesuré dans le dépôt, puis donne la
@@ -638,17 +638,62 @@ contrefactuel), `CLAUDE.md` racine,
 surcoût de démarrage et taux de reprise par tâche × modèle ; la table de délégation du
 `CLAUDE.md` est révisée au moins une fois à partir de ce rapport.
 
-### I-6. Expérience appariée (à faire, coûte des tokens)
+### I-6. Expérience appariée (faite le 03/10/2026, n = 1)
 
-Le contrefactuel d'I-3 reste une estimation. Pour le caler, faire la même tâche deux fois,
-chacune dans une session neuve et dans la même base : par exemple 3 `/paper-fiche` sur des
-papiers voisins (taille et type proches), une fois en direct, une fois déléguées (un agent
-`sonnet` par fiche, gabarit `templates/agent-prompt.md`). Fiches remises à `todo` entre les
-deux runs. Comparer `bin/pdb agents --session <id>` des deux sessions : coût total compté par
-Claude Code, coût de l'agent principal, et, pour la session déléguée, le direct estimé
-comparé au coût réel de la session directe. Un écart supérieur à ±25 % remet en cause les
-hypothèses (mêmes tours, sans démarrage). Il faut alors corriger `lib/agentcost.py`, par
-exemple avec un facteur de tours en direct, avant toute révision de la table (I-5e).
+Le contrefactuel d'I-3 reste une estimation. Pour le caler, on a fait la même tâche deux
+fois, chacune dans une session neuve : 3 `/paper-fiche`, une fois en direct, une fois
+déléguées. On compare le coût réel de la session directe au coût que le modèle lui prédit à
+partir de la session déléguée.
+
+**Protocole.** Deux bases jetables, `exp-direct` et `exp-delegue`, chacune avec une copie
+des mêmes 3 papiers de la base `drone` (`pdb base import`, profil de `drone`, fiche
+remise au gabarit vide, `imported_from` retiré, `benchmarks.csv` vide). Ce sont 3 détecteurs
+YOLO de petits objets aux `fulltext.md` voisins : TPH-YOLOv5 (29k car.), SlimYOLOv3 (33k),
+SF-YOLOv5 (33k). Sessions lancées en parallèle par `claude -p --model claude-opus-5-5
+--permission-mode acceptEdits` (mêmes outils autorisés des deux côtés), avec le même prompt
+de départ (suivre `.claude/commands/paper-fiche.md`, réindexer une fois à la fin) et
+une seule consigne qui change :
+- **direct** : « fais tout toi-même, aucun sous-agent » (`--disallowedTools Agent`) ;
+- **délégué** : un agent `sonnet` par fiche, les 3 en parallèle, `[paper-fiche] <id>`,
+  prompt tiré de `templates/agent-prompt.md`. Les agents rendent leurs lignes CSV,
+  l'agent principal vérifie, écrit `benchmarks.csv` et réindexe (règle du `CLAUDE.md`).
+
+**Résultats.**
+
+| | direct | délégué |
+|---|--:|--:|
+| coût compté par Claude Code | 2,30 $ | 1,35 $ (Opus 0,46 $ + Sonnet 0,89 $) |
+| durée | 324 s | 133 s |
+| tours | 29 (Opus) | 6 (Opus) + 24 (3 agents Sonnet) |
+| sortie | 33,8k (Opus) | 7,4k (Opus) + 29,3k (Sonnet) |
+| contexte principal en fin de session | 139k | 54k |
+| lignes de `benchmarks.csv` | 24 (13 + 0 + 11) | 15 (8 + 0 + 7) |
+| taille des 3 fiches | 23,5k car. | 17,8k car. |
+
+Prédiction du modèle pour la session directe : coût réel délégué − Σ délégué + Σ direct
+estimé = 1,35 − 0,94 + 1,80 = **2,21 $, contre 2,30 $ réels (−4 %)**. C'est bien dans la
+marge de ±25 %, et le contrefactuel est gardé tel quel. L'étiquette `fin de session` sort
+pour les 3 agents (3 tours principaux après leur retour). Ici, c'est sans conséquence : la
+délégation fait tout de même gagner 41 % du coût et 59 % du temps.
+
+**Limites.** Un seul essai, sur une seule tâche. La relecture se paie peu ici : la session
+est courte (contexte de 139k au plus) et les agents reviennent à la fin. Les deux runs
+n'ont pas produit le même travail : en direct, Opus a écrit des fiches plus longues
+(+32 %) et 9 lignes de benchmark de plus (TPH-YOLOv5 : ablations complètes ; SF-YOLOv5 :
+plus de jeux). Une part de l'écart de coût est donc un écart de travail, pas seulement de
+tarif. La qualité n'a pas été notée : c'est une question pour I-5e (taux de reprise de
+`sonnet` sur `paper-fiche`). À refaire sur une tâche de synthèse (Opus délégué par Opus),
+où l'économie estimée est la plus faible.
+
+**Défaut trouvé par l'expérience.** Le hook `SubagentStop` passe **avant** l'écriture du
+dernier tour du sous-agent dans son transcript. La ligne journalisée perd alors la réponse
+finale et son usage : R vaut 0, et il manque 17 % des lectures de cache, ce qui empêchait
+le calage (garde-fou ±2 %). C'était le cas de 41 des 67 agents rattrapés plus tôt. Leurs
+totaux étaient déjà justes grâce au calage, mais pas leurs `result_chars`. Correction :
+`agentlog.wait_complete` relit le transcript jusqu'à `end_turn` et une taille stable. Le
+hook lance cette relecture dans un processus détaché (`bin/agent_log.py --refresh`,
+`PDB_AGENTLOG_WAIT`, 60 s par défaut), et `pdb agents --scan` relit aussi les agents
+journalisés incomplets, même sans `--force`.
 
 ---
 

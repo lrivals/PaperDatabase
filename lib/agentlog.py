@@ -294,9 +294,32 @@ def project_dirs(roots, projects=None):
                   if d.is_dir() and any(d.name == k or d.name.startswith(k + "-") for k in keys))
 
 
+def wait_complete(subagent_path, session_transcript=None, timeout=60.0, poll=1.0):
+    """Enregistrement relu jusqu'à ce que le transcript soit complet.
+
+    Au moment du hook SubagentStop, le dernier tour (réponse finale, son usage) n'est
+    souvent pas encore écrit : relire jusqu'à `status == "ok"` et une taille de fichier
+    stable, ou jusqu'à `timeout` secondes (on garde alors la dernière lecture).
+    """
+    import time
+    path = Path(subagent_path)
+    deadline, size = time.monotonic() + timeout, -1
+    while True:
+        new_size = path.stat().st_size if path.is_file() else -1
+        rec = parse_subagent(path)
+        if (rec["status"] == "ok" and new_size == size) or time.monotonic() >= deadline:
+            return enrich_from_parent(rec, session_transcript or session_transcript_of(path))
+        size = new_size
+        time.sleep(poll)
+
+
 def scan(roots, env=None, projects=None, force=False):
-    """Ajoute au journal les sous-agents des transcripts passés ; renvoie (ajoutés, erreurs)."""
-    known = {r["agent_id"] for r in load(env)}
+    """Ajoute au journal les sous-agents des transcripts passés ; renvoie (ajoutés, erreurs).
+
+    Un agent déjà journalisé mais incomplet (`status` autre que `ok` : hook passé avant
+    l'écriture du dernier tour) est relu.
+    """
+    known = {r["agent_id"] for r in load(env) if r.get("status") == "ok"}
     added, errors = 0, []
     for d in project_dirs(roots, projects):
         for t in sorted(d.glob("*/subagents/agent-*.jsonl")):

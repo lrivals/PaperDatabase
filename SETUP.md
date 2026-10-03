@@ -667,7 +667,10 @@ il lit le JSON du hook sur stdin, relit le transcript du sous-agent
 ajoute une ligne à `.cache/agents.jsonl` à la racine du dépôt (`$PDB_AGENTLOG_DIR` pour un
 autre dossier). Python du système, bibliothèque standard seulement ; ne bloque jamais la
 session (erreurs dans `.cache/agents.errors.log`, sortie 0 ; `PDB_AGENTLOG_RAW=1` garde
-l'entrée brute). `lib/agentlog.py` : parseur (tokens dédupliqués par `message.id`, premier
+l'entrée brute). Le dernier tour de l'agent n'est souvent pas encore écrit quand le hook
+passe : une ligne incomplète est réécrite par un processus détaché (`agent_log.py
+--refresh`, attente `PDB_AGENTLOG_WAIT`, 60 s par défaut), et `pdb agents --scan` relit les
+agents journalisés incomplets. `lib/agentlog.py` : parseur (tokens dédupliqués par `message.id`, premier
 tour, outils, lectures intégrales de `fulltext.md`), rattrapage des sessions passées,
 coût (tarifs dans `lib/agent_prices.json`) et rapport de `pdb agents`. `lib/agentcost.py` :
 lecture du transcript principal (tours, appels `Agent`, retours, compactions, ligne
@@ -1320,8 +1323,10 @@ Défauts mis au jour, à corriger (tâche 12) :
     67 sous-agents ; puis calage de la sortie sur le cost-state (les 4 sessions à 0 %,
     sous-agents 78,9 $ au lieu de 55,6 $) et économie estimée de la délégation
     (`lib/agentcost.py`, `--session`, `--worst` : 119 $, 59 % du direct estimé) ;
-  - [ ] lot I-6 : expérience appariée (même tâche en direct et déléguée) pour caler le
-    contrefactuel ;
+  - [x] lot I-6, expérience appariée (03/10/2026) : 3 `/paper-fiche` en direct (2,30 $, 324 s)
+    et déléguées à `sonnet` (1,35 $, 133 s) ; le contrefactuel prédit 2,21 $ pour le direct
+    (−4 %). Elle a révélé que le hook passait avant le dernier tour : relecture détachée
+    (`agent_log.py --refresh`) et `--scan` qui relit les agents incomplets ;
   - [ ] lot I-5e : après une vingtaine d'appels étiquetés et notés, révision chiffrée de la
     table de délégation du `CLAUDE.md` (`pdb agents --report`) ;
   - [ ] lot J, `pdb compare` (`lib/compare.py`) : deux axes avec clé de précision et

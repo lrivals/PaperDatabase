@@ -189,6 +189,24 @@ class TestHook(unittest.TestCase):
             recs = agentlog.load({"PDB_AGENTLOG_DIR": str(Path(d) / "cache")})
             self.assertEqual([(r["agent_id"], r["model_requested"]) for r in recs], [(AID, "sonnet")])
 
+    def test_hook_too_early_is_refreshed(self):
+        """Hook passé avant l'écriture du dernier tour : ligne incomplète, puis corrigée."""
+        with tempfile.TemporaryDirectory() as d:
+            t = write_session(Path(d) / "projects")
+            full = t.read_text()
+            t.write_text("".join(full.splitlines(keepends=True)[:-1]))  # sans le tour final
+            env = {"PDB_AGENTLOG_DIR": str(Path(d) / "cache")}
+            ev = {"session_id": SID, "transcript_path": str(agentlog.session_transcript_of(t)), "agent_id": AID}
+            self._run(json.dumps(ev), Path(d) / "cache")
+            self.assertEqual(agentlog.load(env)[0]["status"], "interrompu")
+            t.write_text(full)  # le tour final arrive
+            rec = agentlog.wait_complete(t, timeout=5, poll=0.05)
+            self.assertEqual((rec["status"], rec["turns"]), ("ok", 3))
+            # --scan relit un agent journalisé incomplet, même sans --force
+            self.assertEqual(agentlog.scan(["/repo"], env, projects=Path(d) / "projects"), (1, []))
+            self.assertEqual(agentlog.load(env)[0]["status"], "ok")
+            self.assertEqual(agentlog.scan(["/repo"], env, projects=Path(d) / "projects"), (0, []))
+
     def test_hook_never_fails(self):
         with tempfile.TemporaryDirectory() as d:
             for bad in ("", "{not json", json.dumps({"agent_id": "x"})):

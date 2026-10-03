@@ -129,6 +129,7 @@ PaperDatabase/
 │   └── test_xbase.py       # scan entre bases, import, création, onglet Bases
 ├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask,
 │                           # /paper-research, /base-profile, /eval-answers
+├── .claude/settings.json   # hook SubagentStop → bin/agent_log.py (journal des sous-agents)
 └── tests/ …
 ```
 
@@ -150,7 +151,7 @@ bases/<nom>/
 ├── eval/                   # runs du banc (results/), et ses propres fixtures/, thresholds.json s'il y a lieu
 ├── docs/                   # documents propres à la base (fpga : experiences/, etat-de-l-art/)
 ├── .cache/                 # non versionné : index de passages, embeddings, réponses OpenAlex
-├── bin, .venv, .claude/commands   # liens vers le code (racine du dépôt)
+├── bin, .venv, .claude/commands, .claude/settings.json   # liens vers le code (racine du dépôt)
 ├── inbox/                  # dépôt des PDF à ingérer
 └── papers/
     └── <paper_id>/
@@ -323,6 +324,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
 | `plot [bench\|eval\|corpus\|all] [--only a,b] [--out DIR] [--format png\|pdf\|svg] [--list] [--stale] [--check [--brief]]` | `lib/plotdata.py`, `lib/plotfig.py` | figures statiques, voir ci-dessous |
+| `agents [--scan [--force]] [--report [--by task\|model\|base\|task-model] [--since D] [--no-main]] [--mark ID VERDICT]` | `lib/agentlog.py` | journal et coût des sous-agents Claude Code (`.cache/agents.jsonl` du dépôt), voir `bin/agent_log.py` ci-dessous |
 
 ### `bin/pdb plot`
 
@@ -655,6 +657,20 @@ même page. Il n'accepte que des grilles ≥ 2 × 2 à moitié remplies (`usable
 légende « reconstruit par Docling : à vérifier ». Sortie mise en cache dans
 `papers/<id>/docling_tables.json`. Testé par `tests/test_tables.py`, sans Docling. Apport
 mesuré : [docs/EVAL.md](docs/EVAL.md) §6.
+
+### `bin/agent_log.py` et `lib/agentlog.py`
+
+Journal des sous-agents ([docs/AMELIORATIONS.md, lot I](docs/AMELIORATIONS.md#lot-i--journal-et-coût-des-sous-agents)).
+`agent_log.py` est le hook `SubagentStop` de `.claude/settings.json` (lié dans chaque base) :
+il lit le JSON du hook sur stdin, relit le transcript du sous-agent
+(`~/.claude/projects/<projet>/<session>/subagents/agent-<id>.jsonl` et son `.meta.json`) et
+ajoute une ligne à `.cache/agents.jsonl` à la racine du dépôt (`$PDB_AGENTLOG_DIR` pour un
+autre dossier). Python du système, bibliothèque standard seulement ; ne bloque jamais la
+session (erreurs dans `.cache/agents.errors.log`, sortie 0 ; `PDB_AGENTLOG_RAW=1` garde
+l'entrée brute). `lib/agentlog.py` : parseur (tokens dédupliqués par `message.id`, premier
+tour, outils, lectures intégrales de `fulltext.md`), rattrapage des sessions passées,
+coût (tarifs dans `lib/agent_prices.json`) et rapport de `pdb agents`. Testé par
+`tests/test_agentlog.py`.
 
 ### `lib/evaluation.py`
 
@@ -1293,9 +1309,12 @@ Défauts mis au jour, à corriger (tâche 12) :
     comparable, `pdb rag` réservé au GPU ; RAG.md §13) ; reste `check-answer` qui contrôle
     les nombres et `/paper-research` sur les `chunk_id` ;
   - [ ] lot H, snapshot dans `pdb search --format json`, journal de réponses optionnel ;
-  - [ ] lot I, journal et coût des sous-agents : hook `PostToolUse`/`SubagentStop` vers
-    `.cache/agents.jsonl`, convention `[task_class]`, `pdb agents --report`, révision chiffrée
-    de la table de délégation du `CLAUDE.md` ;
+  - [x] lot I, journal et coût des sous-agents (03/10/2026) : hook `SubagentStop` →
+    `bin/agent_log.py` → `.cache/agents.jsonl`, `lib/agentlog.py`, `pdb agents [--scan]
+    [--report] [--mark]`, convention `[classe]` dans le `CLAUDE.md` racine ; rattrapage :
+    67 sous-agents, 55,6 $ ;
+  - [ ] lot I-5e : après une vingtaine d'appels étiquetés et notés, révision chiffrée de la
+    table de délégation du `CLAUDE.md` (`pdb agents --report`) ;
   - [ ] lot J, `pdb compare` (`lib/compare.py`) : deux axes avec clé de précision et
     `power_scope` ensemble, trois blocs (retenues traçables, conditions qui varient ou
     manquent, exclusions motivées), confiance de la comparaison, JSON ; puis figures et

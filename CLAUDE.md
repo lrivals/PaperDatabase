@@ -51,4 +51,13 @@ ce qu'ils rapportent avant de le présenter. Un sous-agent qui doit réindexer q
 (`/paper-add` en lot) le fait avec `PDB_NO_PLOT=1` : la réindexation finale de l'agent
 principal refait les figures une seule fois.
 
+**Mesurer la délégation.** Un hook `SubagentStop` ([.claude/settings.json](.claude/settings.json),
+lié dans chaque base) journalise chaque sous-agent dans `.cache/agents.jsonl` (tokens, coût,
+durée, outils). Commencer la `description` de chaque agent par sa classe entre crochets :
+`[paper-add]`, `[paper-fiche]`, `[bench-rows]`, `[paper-ask]`, `[explore]`, `[paper-gaps]`,
+`[base-profile]`, `[compare]`, `[plan]`, `[doi-lookup]`, `[candidates]` (sinon : « autre »).
+Prompt d'agent : partir de [templates/agent-prompt.md](templates/agent-prompt.md). Après
+vérification du rapport : `bin/pdb agents --mark <id> repris|corrigé|refait`. Bilan :
+`bin/pdb agents --report` ([docs/AMELIORATIONS.md, lot I](docs/AMELIORATIONS.md#lot-i--journal-et-coût-des-sous-agents)).
+
 **Langue.** Français par défaut. Termes techniques et titres d'articles en anglais.

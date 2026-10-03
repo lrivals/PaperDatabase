@@ -45,6 +45,9 @@
   rag <command>             outils de la route GPU : index SQLite, preuves, acquisition
                             open access (/paper-research) ; rag -h
   synth <command>           benchmark synthétique (docs/BENCHMARK.md)
+  agents [--scan] [--report [--by task|model|base|task-model] [--since D]] [--mark ID VERDICT]
+                            journal et coût des sous-agents Claude Code (hook SubagentStop,
+                            .cache/agents.jsonl) ; --mark : repris|corrigé|refait
   test [--rag]              lance les tests (--rag : pdb eval --rag)
 
 Guide : docs/GUIDE.md. Détail des scripts : SETUP.md §5. Requêtes : docs/RAG.md.
@@ -923,7 +926,71 @@ def cmd_eval(args):
     return 1 if (a.compare and fails) else 0
 
 
+def cmd_agents(args):
+    """Journal et coût des sous-agents (lib/agentlog.py, docs/AMELIORATIONS.md lot I)."""
+    import argparse
+    from lib import agentlog, registry
+    p = argparse.ArgumentParser(prog="pdb agents", description="journal et coût des sous-agents")
+    p.add_argument("--scan", action="store_true",
+                   help="rattrape les sous-agents des transcripts passés (dépôt et bases du registre)")
+    p.add_argument("--force", action="store_true", help="avec --scan : relit aussi les agents déjà journalisés")
+    p.add_argument("--report", action="store_true", help="indicateurs par groupe (tableau Markdown)")
+    p.add_argument("--by", choices=sorted(agentlog.GROUPS), default="task-model")
+    p.add_argument("--since", metavar="AAAA-MM-JJ")
+    p.add_argument("--base", dest="only_base", metavar="NOM", help="seulement les appels faits dans cette base")
+    p.add_argument("--no-main", action="store_true", help="--report sans le témoin « agent principal »")
+    p.add_argument("--mark", nargs=2, metavar=("ID", "VERDICT"),
+                   help=f"issue d'un appel : {'|'.join(agentlog.VERDICTS)} (ID : préfixe d'agent_id ou ts)")
+    p.add_argument("-n", type=int, default=20, help="lignes listées (défaut 20)")
+    a = p.parse_args(args)
+
+    if a.mark:
+        try:
+            print(f"noté : {agentlog.mark(a.mark[0], a.mark[1])} → {a.mark[1]}")
+        except ValueError as e:
+            print(f"pdb agents --mark : {e}", file=sys.stderr)
+            return 1
+        return 0
+    if a.scan:
+        roots = [CODE, *(d for _, d in registry.all_bases())]
+        added, errors = agentlog.scan(roots, force=a.force)
+        print(f"{added} sous-agent(s) ajouté(s) au journal ({agentlog.journal_path()})")
+        for e in errors:
+            print(f"# illisible : {e}", file=sys.stderr)
+        if not a.report:
+            return 0
+
+    recs = agentlog.load()
+    if a.since:
+        recs = [r for r in recs if (r.get("ts") or "") >= a.since]
+    if a.only_base:
+        recs = [r for r in recs if r.get("base") == a.only_base]
+    if a.report:
+        main = None
+        if not a.no_main:
+            main = {}
+            for r in recs:
+                sid, t = r.get("session_id"), r.get("transcript")
+                if sid and t and sid not in main:
+                    main[sid] = agentlog.main_session_usage(agentlog.session_transcript_of(t))
+        print(agentlog.report(recs, by=a.by, main=main))
+        return 0
+    prices = agentlog.load_prices()
+    print("ts\tagent_id\tbase\tclasse\tmodèle\ttokens\tcoût\tdurée\tissue\tdescription")
+    for r in sorted(recs, key=lambda r: r.get("ts") or "")[-a.n:]:
+        c, d = agentlog.cost(r, prices), r.get("duration_ms")
+        print("\t".join(str(x) for x in (
+            (r.get("ts") or "")[:16], r["agent_id"][:10], r.get("base") or "", r.get("task_class"),
+            agentlog._short_model(r.get("model_served")), r.get("total_tokens"),
+            "" if c is None else f"{c:.2f}", "" if d is None else f"{d / 1000:.0f}s",
+            r.get("verified") or "", (r.get("description") or "")[:60])))
+    if not recs:
+        print("# journal vide : bin/pdb agents --scan rattrape les sessions passées", file=sys.stderr)
+    return 0
+
+
 COMMANDS = {
+    "agents": cmd_agents,
     "base": cmd_base, "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
     "eval": cmd_eval, "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,

@@ -70,7 +70,8 @@ def create(name, theme, root=None, title=None, env=None, reindex_after=True):
     (root / "inbox").mkdir()
     (root / ".claude").mkdir()
     for link, target in ((root / "bin", CODE / "bin"), (root / ".venv", CODE / ".venv"),
-                         (root / ".claude" / "commands", CODE / ".claude" / "commands")):
+                         (root / ".claude" / "commands", CODE / ".claude" / "commands"),
+                         (root / ".claude" / "settings.json", CODE / ".claude" / "settings.json")):
         link.symlink_to(os.path.relpath(target, link.parent))
 
     with open(root / "benchmarks.csv", "w", newline="") as f:

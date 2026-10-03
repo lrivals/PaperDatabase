@@ -450,6 +450,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb plot [bench\|eval\|corpus] [--format pdf]` | figures statiques (PNG par défaut) dans `figures/` (`--list` : noms) |
 | `bin/pdb plot --check` / `--stale` | classement des plateformes et tâches pour les figures, règles proposées / régénérer les seules figures périmées |
 | `bin/pdb test` | tests |
+| `bin/pdb agents [--report] [--scan]` | journal et coût des sous-agents Claude Code ; `--mark <id> repris\|corrigé\|refait` après vérification |
 | `bin/pdb base list \| new \| use \| info \| check` | gérer les bases (§8) |
 | `bin/pdb base scan [--from NOM]` / `base import NOM:<id>` | articles utiles dans les autres bases / copie |
 | `bin/pdb --base NOM <commande>` | agir sur une autre base que celle du dossier courant |

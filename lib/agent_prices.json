@@ -1,0 +1,18 @@
+{
+ "_doc": "Tarifs API en $ par million de tokens (lib/agentlog.py, pdb agents --report). Relevés le 2026-10-03 (skill claude-api, cache du 2026-09-25). Écriture en cache : input × cache_write_5m (TTL 5 min) ou × cache_write_1h (TTL 1 h). Un identifiant daté (claude-x-AAAAMMJJ) prend le tarif de son préfixe.",
+ "cache_write_5m": 1.25,
+ "cache_write_1h": 2.0,
+ "models": {
+  "claude-fable-5-1": {"input": 10.0, "output": 50.0, "cache_read": 0.25},
+  "claude-fable-5": {"input": 10.0, "output": 50.0, "cache_read": 1.0},
+  "claude-opus-5-5": {"input": 4.0, "output": 20.0, "cache_read": 0.2},
+  "claude-opus-5": {"input": 5.0, "output": 25.0, "cache_read": 0.5},
+  "claude-opus-4-8": {"input": 5.0, "output": 25.0, "cache_read": 0.5},
+  "claude-opus-4-7": {"input": 5.0, "output": 25.0, "cache_read": 0.5},
+  "claude-opus-4-6": {"input": 5.0, "output": 25.0, "cache_read": 0.5},
+  "claude-sonnet-5-5": {"input": 2.0, "output": 10.0, "cache_read": 0.2},
+  "claude-sonnet-5": {"input": 2.0, "output": 10.0, "cache_read": 0.2},
+  "claude-sonnet-4-6": {"input": 3.0, "output": 15.0, "cache_read": 0.3},
+  "claude-haiku-4-5": {"input": 1.0, "output": 5.0, "cache_read": 0.1}
+ }
+}

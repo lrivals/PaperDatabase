@@ -1,8 +1,8 @@
 # Feuille de route : fiabilité des réponses, tableaux et nouveaux skills
 
 Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot D en place
-(03/10/2026) ; lot G en grande partie fait (route unique, RAG.md §13) ; autres lots non commencés (lot I, journal des
-sous-agents, spécifié le 02/10/2026). Elle décrit comment mettre en place les
+(03/10/2026) ; lot G en grande partie fait (route unique, RAG.md §13) ; lot I en place
+(03/10/2026, journal des sous-agents, sauf la révision chiffrée I-5e) ; autres lots non commencés. Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
 cinq nouveaux skills. Chaque chantier part d'un constat mesuré dans le dépôt, puis donne la
@@ -445,6 +445,26 @@ la base. Pour une petite tâche, ce coût fixe peut dépasser le gain.
 **Objectif.** Une ligne par appel de sous-agent (tâche, agent, modèle, tokens, durée, issue),
 puis un rapport qui permet de réviser la table de délégation avec des chiffres.
 
+**État (03/10/2026).** En place : hook `SubagentStop` → `bin/agent_log.py` →
+`.cache/agents.jsonl`, `lib/agentlog.py`, `bin/pdb agents [--scan] [--report] [--mark]`,
+tarifs dans `lib/agent_prices.json`, convention `[classe]` dans le `CLAUDE.md` racine,
+gabarit `templates/agent-prompt.md`, `tests/test_agentlog.py`. Reste I-5e : la révision
+chiffrée de la table de délégation, une fois une vingtaine d'appels étiquetés et notés.
+Premier rattrapage (`--scan`, 67 sous-agents des sessions du 26/09 au 01/10, tous en classe
+« autre », faute d'étiquette) : 121 M tokens, 55,6 $ ; médiane 1,2 $ et 278 s par appel `opus`,
+0,4 $ et 106 s par appel `sonnet` ; premier tour d'environ 28k tokens (coût fixe) ; 91 à 94 %
+des tokens d'entrée lus en cache ; 139 lectures intégrales de `fulltext.md`.
+
+**Ce que la mise en œuvre a corrigé dans la conception.** Les agents sont lancés en
+arrière-plan par défaut : le résultat de l'outil `Agent` vaut alors `{status:
+"async_launched", agentId, resolvedModel, …}`, **sans aucun token**. La piste I-a
+(`PostToolUse`) ne voit donc pas les coûts et n'a pas été installée. La source est le
+transcript du sous-agent (I-b, I-c), lu par un seul parseur. Une même réponse s'y étale sur
+plusieurs lignes (un bloc de contenu par ligne, même `message.id`) : sans déduplication par
+`message.id`, les tokens seraient comptés deux fois. Le fichier voisin
+`agent-<id>.meta.json` donne `description`, `agentType` et `toolUseId`, qui relie à l'appel
+`Agent` du transcript principal (modèle demandé, taille du prompt).
+
 ### I-1. Sources de données
 
 Quatre pistes, de la plus simple à la plus complète. Elles se combinent : I-a pour le journal
@@ -452,9 +472,9 @@ courant, I-b pour le détail, I-c pour rattraper le passé et mesurer l'agent pr
 
 | Piste | Mécanisme | Donne | Limite |
 |---|---|---|---|
-| **I-a. Hook `PostToolUse` sur `Agent`** | `.claude/settings.json` (versionné), `matcher: "Agent"` (et `"Task"`, ancien nom de l'outil), commande `bin/agent_log.py`. Le hook reçoit en JSON sur stdin `session_id`, `cwd`, `tool_input` (`description`, `subagent_type`, `model`, `prompt`) et `tool_response` (`totalTokens`, `totalDurationMs`, `totalToolUseCount`, `usage` : `input_tokens`, `output_tokens`, `cache_read_input_tokens`, `cache_creation_input_tokens`). | Une ligne par appel, automatiquement, sans dépendre de la discipline du modèle. | Champs à confirmer sur la version de Claude Code installée : au premier essai, écrire le JSON brut dans `.cache/agents.raw.jsonl` et ajuster le parseur. Rien sur le détail tour par tour. |
-| **I-b. Hook `SubagentStop`** | Reçoit `agent_id`, `agent_type` et `agent_transcript_path` ; le script relit le transcript du sous-agent et somme `message.usage` de chaque message assistant. | Coût par tour, modèle réellement servi, liste des outils appelés et des fichiers lus : repère un agent qui lit `fulltext.md` en entier ou relance dix fois `pdb search`. | Transcript local à la machine ; format interne susceptible de changer. |
-| **I-c. Analyse a posteriori des transcripts** | Commande `bin/pdb agents` qui lit `~/.claude/projects/<projet>/<session>.jsonl` et `<session>/subagents/*.jsonl`. | Reconstruit le journal sans hook, rattrape les sessions passées, et mesure aussi le **coût de l'agent principal** : seule façon de comparer « délégué » et « fait en direct ». | À lancer à la main ; dépend du même format interne que I-b. |
+| **I-a. Hook `PostToolUse` sur `Agent`** (non retenu) | `.claude/settings.json` (versionné), `matcher: "Agent"` (et `"Task"`, ancien nom de l'outil), commande `bin/agent_log.py`. Le hook reçoit en JSON sur stdin `session_id`, `cwd`, `tool_input` (`description`, `subagent_type`, `model`, `prompt`) et `tool_response` (`totalTokens`, `totalDurationMs`, `totalToolUseCount`, `usage` : `input_tokens`, `output_tokens`, `cache_read_input_tokens`, `cache_creation_input_tokens`). | Une ligne par appel, automatiquement, sans dépendre de la discipline du modèle. | Champs à confirmer sur la version de Claude Code installée : au premier essai, écrire le JSON brut dans `.cache/agents.raw.jsonl` et ajuster le parseur. Rien sur le détail tour par tour. **Constaté : agents en arrière-plan → `async_launched`, sans tokens.** |
+| **I-b. Hook `SubagentStop`** (retenu) | Reçoit `agent_id`, `agent_type` et `agent_transcript_path` ; le script relit le transcript du sous-agent et somme `message.usage` de chaque message assistant (dédupliqué par `message.id`). Sans `agent_transcript_path`, le chemin se déduit de `transcript_path` et `agent_id`. | Coût par tour, modèle réellement servi, liste des outils appelés et des fichiers lus : repère un agent qui lit `fulltext.md` en entier ou relance dix fois `pdb search`. | Transcript local à la machine ; format interne susceptible de changer. |
+| **I-c. Analyse a posteriori des transcripts** (retenu) | Commande `bin/pdb agents --scan` qui lit `~/.claude/projects/<projet>/<session>.jsonl` et `<session>/subagents/*.jsonl`. | Reconstruit le journal sans hook, rattrape les sessions passées, et mesure aussi le **coût de l'agent principal** : seule façon de comparer « délégué » et « fait en direct ». | À lancer à la main ; dépend du même format interne que I-b. |
 | **I-d. Rapport demandé dans le prompt** | L'agent termine par une ligne `TASK: <classe> \| MODEL: <modèle> \| VERIFIED: …`. | L'étiquette de tâche et un statut. | Un agent ne connaît pas sa propre consommation : jamais une source de tokens. Repli seulement. |
 
 **Étiquette de tâche.** Pour regrouper les appels, chaque `description` d'agent commence par
@@ -482,9 +502,17 @@ ignoré, principe §0), une ligne JSON par appel.
 - `base` : nom de la base résolue depuis `cwd` par `data_root` (`lib/base.py`, même
   règle que les commandes : `base.json` en remontant, sinon la base par défaut du registre).
 - `first_turn_tokens` (I-b) : tokens du premier tour, soit le coût fixe de démarrage.
-- `status` : `ok`, `erreur` ou `interrompu`.
+- `status` : `ok` (dernier tour terminé par `end_turn`) ou `interrompu`.
+- Champs ajoutés à la mise en œuvre : `agent_id` (clé du journal), `turns`,
+  `cache_creation_1h` (écriture en cache à 1 h, facturée ×2 au lieu de ×1,25), `big_reads`
+  (lectures intégrales de `fulltext.md` : `Read` sans `limit`, ou `cat`), `background`,
+  `transcript` (chemin, pour le témoin « agent principal »).
+- Journal en ajout seul : `load` fusionne les lignes d'un même `agent_id`, la dernière
+  valeur non nulle l'emportant. Une note `--mark` survit donc à une relecture du transcript
+  (agent repris par SendMessage, `--scan --force`), et deux hooks simultanés ne se
+  marchent pas dessus.
 - `verified` : ce que l'agent principal a fait du résultat, `repris` (tel quel), `corrigé`
-  ou `refait`. Rempli après coup par `bin/pdb agents --mark <ts> corrigé`, ou par le skill
+  ou `refait`. Rempli après coup par `bin/pdb agents --mark <préfixe d'agent_id ou ts> corrigé`, ou par le skill
   appelant quand il vérifie le rapport (règle « vérifier ce qu'ils rapportent » du
   `CLAUDE.md`).
 
@@ -537,16 +565,17 @@ banc d'EVAL.md :
 
 | Étape | Contenu |
 |---|---|
-| I-5a | `bin/agent_log.py` en mode brut (I-a) et hook dans `.claude/settings.json` ; quelques délégations pour fixer le format réel. |
-| I-5b | Parseur définitif, `.cache/agents.jsonl`, convention `[task_class]` dans le `CLAUDE.md` racine. |
-| I-5c | Hook `SubagentStop` (I-b) : `first_turn_tokens`, `tools`, `model_served`. |
-| I-5d | `bin/pdb agents` : `--report`, `--mark`, lecture des transcripts passés (I-c). |
-| I-5e | Après ~20 délégations : rapport consigné, révision chiffrée de la table du `CLAUDE.md`. |
+| I-5a ✓ | `bin/agent_log.py` et hook `SubagentStop` dans `.claude/settings.json` (lien dans chaque base, créé aussi par `pdb base new`) ; format réel fixé sur les transcripts existants ; `PDB_AGENTLOG_RAW=1` garde l'entrée brute. |
+| I-5b ✓ | Parseur définitif (`lib/agentlog.py`), `.cache/agents.jsonl`, convention `[task_class]` dans le `CLAUDE.md` racine. |
+| I-5c ✓ | Hook `SubagentStop` (I-b) : `first_turn_tokens`, `tools`, `model_served`. |
+| I-5d ✓ | `bin/pdb agents` : liste, `--report [--by task\|model\|base\|task-model] [--since]` (avec le témoin « agent principal » par session), `--mark`, `--scan` (I-c). |
+| I-5e (à faire) | Après ~20 délégations : rapport consigné, révision chiffrée de la table du `CLAUDE.md`. |
 
 **Fichiers.** `.claude/settings.json`, `bin/agent_log.py`, `bin/pdb.py` (sous-commande
 `agents`), `lib/agentlog.py` (parsing commun hook / transcripts), `CLAUDE.md` racine,
-`templates/agent-prompt.md`, `tests/test_agentlog.py` (transcript et entrée de hook
-d'exemple dans `tests/fixtures/`).
+`templates/agent-prompt.md`, `lib/agent_prices.json` (tarifs), `lib/bases.py` (lien
+`.claude/settings.json` d'une base neuve), `tests/test_agentlog.py` (transcripts factices
+écrits par le test, hook lancé en sous-processus).
 
 **Critère d'acceptation.** Chaque appel `Agent` d'une session produit une ligne valide dans
 `.cache/agents.jsonl` sans jamais bloquer la session ; `pdb agents --report` donne coût,
@@ -749,7 +778,7 @@ de preuve et de citation comptent le plus), ensuite `/paper-compare`, `/table-re
 | 7 bis | **Lot J-4, J-5** (figures, colonnes `clock_mhz`, `latency_scope`) | au fil des besoins |
 | 8 | **Lots G et H** (route de référence, provenance) | décisions éclairées par le lot A |
 | 9 | **Lot F** (français), `/research-question` | gains moins prioritaires |
-| à part | **Lot I** (journal et coût des sous-agents) | indépendant du pipeline : peut commencer à tout moment, utile dès qu'on délègue |
+| à part | **Lot I** (journal et coût des sous-agents) | en place le 03/10/2026 ; reste la révision chiffrée de la table de délégation (I-5e) |
 
 Pour chaque étape : tests dans `tests/` (`bin/pdb test`), `bin/pdb eval --save` avant et
 `--compare` après, mise à jour de `DATA_MODEL.md` si un format change, case cochée dans

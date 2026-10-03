@@ -737,3 +737,29 @@ suffisant / partiel des questions de synthèse et de dev-s2 dans le jeu. Pour ce
 référence : `requirements-embed.txt` installé et `huggingface.co` joignable (bge-small et le
 cross-encoder se téléchargent au premier `pdb search`), puis `/eval-answers` sous un nouveau
 nom de run et `pdb eval --answers <dev> <holdout> --save --compare` contre ce second run.
+
+## 11. Lot D, colonnes optionnelles de `benchmarks.csv` (03/10/2026)
+
+`pdb eval --compare` sur fpga après le lot D-1 à D-4
+([AMELIORATIONS.md](AMELIORATIONS.md#lot-d--conditions-de-comparaison-dans-benchmarkscsv)).
+Le lot ne touche pas à la recherche : la seule modification de `lib/rag.py` extrait
+`resolve_chunk_id` de `Index.resolve_chunk`, sans changement de comportement.
+
+- **Nouvelle mesure** `in_cited_chunk` du volet tableaux : part des valeurs des lignes qui ont
+  un `chunk_id` retrouvées dans ce passage. `n/r` pour l'instant, aucune ligne n'a encore de
+  `chunk_id` (pas de migration en masse).
+- **Seuil non atteint, antérieur au lot** : recall@5 du holdout en hybride + rerank = 0,72
+  (plancher 0,8 ; 0,80 au run du 28/09, `2026-09-28T1039-76dc85e.json`, 45 papiers). Le même
+  volet relancé sur `main` sans le lot donne exactement les mêmes chiffres :
+
+  | Jeu | mode | recall@5 | recall@10 | MRR | nDCG@10 | paper@5 |
+  |---|---|---|---|---|---|---|
+  | rag_eval (20 q.) | hybrid+rerank | 0,90 | 0,95 | 0,76 | 0,39 | 0,95 |
+  | rag_eval_holdout (25 q.) | hybrid | 0,68 | 0,68 | 0,56 | 0,26 | 0,72 |
+  | rag_eval_holdout (25 q.) | hybrid+rerank | 0,72 | 0,72 | 0,62 | 0,31 | 0,80 |
+  | rag_eval_fr (8 q.) | hybrid+rerank | 0,38 | 0,50 | 0,29 | 0,11 | 0,62 |
+
+  La baisse vient d'entre le 28/09 et le 02/10 : la base est passée de 45 à 101 papiers
+  (plus de passages concurrents pour les mêmes questions), et la route de recherche a changé
+  (lot G). À isoler avant tout réglage : rejouer le run du 28/09 sur le corpus actuel avec
+  l'ancien code, puis l'inverse. Rien n'est réglé sur le holdout.

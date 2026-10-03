@@ -267,10 +267,18 @@ bin/pdb paper 1612.07119 2022-feng --fields short,type   # plusieurs papiers, un
 bin/pdb cites 2025-hozhabr --external   # ses références : dans la base, puis hors base
 bin/pdb cited-by 1612.07119         # papiers de la base qui citent FINN
 bin/pdb bench --own                 # vos propres mesures (paper_id own-…, DATA_MODEL §1)
+bin/pdb bench --check --paper 2110.10486   # chaque valeur est-elle dans le passage cité (chunk_id) ?
+bin/pdb bench --add-columns all     # une fois par base : colonnes optionnelles (chunk_id, split, batch…)
 ```
 
 Dans la sortie, `!` marque une ligne de confiance `low`, et les ids courts sont expliqués en
 pied de sortie.
+
+Les colonnes optionnelles de `benchmarks.csv` (DATA_MODEL §7) gardent les conditions d'une
+mesure : passage source (`chunk_id`), définition de la métrique, split, résolution, batch,
+protocole de mesure, valeur d'origine avant conversion. `/paper-fiche` les remplit pour les
+nouvelles lignes. `--check` liste alors les valeurs introuvables dans leur passage
+(statuts : [docs/RAG.md](RAG.md) §5.1).
 
 Pour le texte, `search` trouve les passages par le sens et par les mots, `show` affiche un
 passage exact, et `verify` contrôle qu'une citation y figure bien :

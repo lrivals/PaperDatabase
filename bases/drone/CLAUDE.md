@@ -73,7 +73,7 @@ chiffre à chiffre ([docs/EVAL.md](../../docs/EVAL.md) §6).
 | `bin/pdb base list` / `info` / `check` | bases enregistrées ; profil, axes et suggestions en attente de celle-ci ; effet des règles de `base.json` |
 | `bin/pdb base scan [--from fpga]` / `base import fpga:<paper_id>` | articles utiles présents ou cités dans la base fpga → `xbase_candidates.csv` ; copie d'un article (fiche repassée à `todo`) |
 | `/base-profile [consigne]` | le LLM propose d'affiner `profile.md` et `base.json` ; rien n'est écrit sans accord |
-| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ([docs/RAG.md](../../docs/RAG.md) §5.1) |
+| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ; `--check` : valeurs retrouvées dans leur passage (`chunk_id`) ([docs/RAG.md](../../docs/RAG.md) §5.1) |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM, texte exact, contrôle d'une citation ([docs/RAG.md](../../docs/RAG.md) §5) |
 | `/paper-ask <question>` | réponse sourcée et vérifiée : `bench`, puis `search`, `show`, `verify` |
 | `bin/pdb paper <id \| mot>…` | fiche d'identité d'un papier : métadonnées, preprint, statut de la fiche, nombre de benchmarks (`--bench` pour les lignes) ; plusieurs ids → une ligne par papier (`--fields short,type`) |

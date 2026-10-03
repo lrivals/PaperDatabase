@@ -751,6 +751,19 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 Point au 03/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
 
+**Bilan du 03/10/2026 (lot D, état de l'art fpga).**
+- Lot D-1 à D-4 en place : colonnes optionnelles de `benchmarks.csv` (DATA_MODEL §7),
+  `pdb bench --add-columns` et `--check`, mesure `in_cited_chunk`, `/paper-fiche`. Les trois
+  bases réindexent sans changer leur CSV. 226 tests.
+- `pdb eval --compare` (fpga) : recall@5 du holdout en hybride + rerank à 0,72, sous le
+  plancher de 0,8 ; même valeur sur `main` sans le lot, donc baisse antérieure (EVAL.md §11).
+- État de l'art LaTeX fpga : trois glossaires (plateformes, modèles, métriques et unités,
+  `gloss-*.tex`), liés depuis le texte, compilés par `makeglossaries` dans le Makefile ;
+  figures `pdb plot` régénérées sur les 299 lignes (nouvelle `bench_accuracy_latency`).
+
+- [ ] **Recherche : recall@5 du holdout fpga 0,80 → 0,72** entre le 28/09 et le 02/10
+  (corpus 45 → 101 papiers, lot G) : isoler la cause (EVAL.md §11) avant tout réglage.
+
 **Bilan du 02/10/2026 (fiabilité des réponses, route de recherche).**
 - Feuille de route [docs/AMELIORATIONS.md](docs/AMELIORATIONS.md) : 8 lots (A à H) et 5
   skills, spécifiés.

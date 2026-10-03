@@ -279,7 +279,10 @@ Les colonnes optionnelles de `benchmarks.csv` (DATA_MODEL §7) gardent les condi
 mesure : passage source (`chunk_id`), définition de la métrique, split, résolution, batch,
 protocole de mesure, valeur d'origine avant conversion. `/paper-fiche` les remplit pour les
 nouvelles lignes. `--check` liste alors les valeurs introuvables dans leur passage
-(statuts : [docs/RAG.md](RAG.md) §5.1).
+(statuts : [docs/RAG.md](RAG.md) §5.1). `--comparable` regroupe les lignes qui se comparent
+(même tâche, jeu, split et métrique, ou portée de puissance avec `--comparable power`) et
+signale celles qui en ont l'air sans l'être : à lancer avant de mettre côte à côte les
+chiffres de deux papiers.
 
 Pour le texte, `search` trouve les passages par le sens et par les mots, `show` affiche un
 passage exact, et `verify` contrôle qu'une citation y figure bien :

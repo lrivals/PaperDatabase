@@ -3,62 +3,62 @@
   "file": "bench_fps_power.png",
   "group": "bench",
   "description": "débit vs puissance, détection / autres tâches",
-  "generated": "2026-09-28T10:43:39",
+  "generated": "2026-10-01T15:23:22",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 52,
-  "total": 172
+  "n": 82,
+  "total": 299
  },
  "bench_gops_per_watt": {
   "file": "bench_gops_per_watt.png",
   "group": "bench",
   "description": "GOPS/W par précision de calcul",
-  "generated": "2026-09-28T10:43:40",
+  "generated": "2026-10-01T15:23:22",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 35,
-  "total": 172
+  "n": 54,
+  "total": 299
  },
  "bench_fpga_resources": {
   "file": "bench_fpga_resources.png",
   "group": "bench",
   "description": "LUT vs DSP des FPGA, par toolflow",
-  "generated": "2026-09-28T10:43:40",
+  "generated": "2026-10-01T15:23:22",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 54,
-  "total": 172
+  "n": 104,
+  "total": 299
  },
  "bench_accuracy_fps": {
   "file": "bench_accuracy_fps.png",
   "group": "bench",
   "description": "précision vs débit, un panneau par métrique",
-  "generated": "2026-09-28T10:43:41",
+  "generated": "2026-10-01T15:23:23",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 33,
-  "total": 172,
+  "n": 41,
+  "total": 299,
   "metrics": [
    "mAP50-95 (jeu propre, 1 cible)",
    "top-1 accuracy",
-   "AP@0.5 (UA-DETRAC, classe unique car)",
-   "PSNR dB à 0.2542 bpp (jeu n/r)"
+   "Top-1",
+   "BD-PSNR vs Balle fp32 (dB)"
   ]
  },
  "bench_quantization": {
   "file": "bench_quantization.png",
   "group": "bench",
   "description": "précision de calcul par famille de plateforme",
-  "generated": "2026-09-28T10:43:41",
+  "generated": "2026-10-01T15:23:24",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 172,
-  "total": 172
+  "n": 299,
+  "total": 299
  },
  "eval_retrieval": {
   "file": "eval_retrieval.png",
@@ -333,6 +333,23 @@
     "ASIC",
     "apprentissage continu"
    ]
+  ]
+ },
+ "bench_accuracy_latency": {
+  "file": "bench_accuracy_latency.png",
+  "group": "bench",
+  "description": "précision vs latence, un panneau par métrique",
+  "generated": "2026-10-01T15:23:24",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 42,
+  "total": 299,
+  "metrics": [
+   "top-1 accuracy",
+   "Top-1",
+   "mAP50-95 (jeu propre, 1 cible)",
+   "mAP COCO val (FiftyOne, IoU non précisée)"
   ]
  }
 }

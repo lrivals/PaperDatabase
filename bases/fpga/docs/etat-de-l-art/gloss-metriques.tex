@@ -1,0 +1,364 @@
+% Glossaire des métriques et unités (type=metriques)
+% Une entrée par clé ; les parents sont définis avant leurs enfants.
+% Tri : métriques par nom, puis ressources FPGA (préfixe « zr- »), puis unités (préfixe « zz- »).
+
+% ---------------------------------------------------------------- Précision de détection
+\newglossaryentry{iou}{type=metriques, name={IoU}, sort={iou},
+  description={Intersection over Union (indice de Jaccard) entre une boîte prédite $A$ et
+  une boîte de référence $B$ : $\mathrm{IoU} = |A\cap B|/|A\cup B|$, de 0 à 1, plus haut =
+  mieux. Sert de seuil pour décider qu'une détection est juste (AP, mAP). Employée seule
+  comme précision, elle n'est pas comparable à une mAP : DAC-SDC note l'IoU moyenne d'un
+  seul objet par image \citep[§2.3]{2021-xu-dac-sdc-low-power-object}, et SkyNet\pp{}
+  passe de 0,741 à 0,727 puis 0,680 en quantifiant
+  \citep[Table~7]{arxiv-1909.09709-skynet-hardware-efficient-method-object}. Un seuil de
+  Jaccard sert aussi à définir une erreur critique de détecteur sous radiations
+  \citep[§II-C]{2024-rech-artificial-neural-networks-space-safety}.}}
+
+\newglossaryentry{ap}{type=metriques, name={AP}, sort={ap},
+  description={Average Precision : aire sous la courbe précision-rappel d'une classe, les
+  détections étant jugées justes au-delà d'un seuil d'IoU ; de 0 à 1 (ou en \%), plus haut =
+  mieux. Le mode d'interpolation de la courbe varie selon le protocole (VOC, COCO)
+  \horscorpus. Piège : dans la notation COCO, \enquote{AP} désigne la moyenne sur les
+  classes et sur les seuils 0,50 à 0,95, c'est-à-dire la mAP50-95 ; une AP à une seule
+  classe (véhicules) n'est pas comparable à une mAP multi-classes
+  \citep[Table~8]{2023-zhai-fpga-vehicle-detection-tracking-accelerator}.}}
+
+\newglossaryentry{ap50}{type=metriques, name={AP50}, sort={ap50}, parent=ap,
+  description={AP au seuil d'IoU 0,5 (AP@0.5). Chez Zhai et al., l'AP@0.5 est identique en
+  FP32 et en INT16 à trois décimales, ce qui laisse penser qu'elle n'a pas été remesurée
+  sur la carte \citep[Table~8]{2023-zhai-fpga-vehicle-detection-tracking-accelerator}
+  \deduit.}}
+
+\newglossaryentry{map}{type=metriques, name={mAP}, sort={map},
+  description={mean Average Precision : moyenne des AP par classe ; plus haut = mieux. Sans
+  seuil précisé, le sens dépend du jeu (mAP50 sur VOC, mAP50-95 sur COCO). Pièges relevés :
+  le jeu de données (COCO à 80 classes, VOC à 20, une classe filtrée de VOC chez LP-YOLO\pp{}
+  \citep[§V]{arxiv-2609.24757-npu-accelerator-quantized-real-time}, jeu privé à une cible
+  \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}) ; la résolution
+  d'entrée ; la mesure simulée et non faite sur la carte (quantification simulée par ONNX
+  Runtime \citep[§IV-A]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}) ;
+  seules des pertes relatives données \citep[§6.2]{2019-ding-req-yolo-resource-aware-efficient}.
+  La mAP ne mesure pas la qualité de l'incertitude
+  \citep[§IV-D]{arxiv-2011.10671-review-comparative-probabilistic-object-detection}.}}
+
+\newglossaryentry{map50}{type=metriques, name={mAP50}, sort={map50}, parent=map,
+  description={mAP au seuil d'IoU 0,5 (notée aussi mAP@0.5, mAP@0,5) ; métrique principale
+  de VOC. Plus indulgente que la mAP50-95 sur la localisation : les deux ne se comparent pas.
+  Exemple : 59,4 de mAP@0,5 sur les seuls véhicules de VOC pour LP-YOLO Slim\pp{}
+  \citep[§V]{arxiv-2609.24757-npu-accelerator-quantized-real-time} ; 73,8 sur VOC, 1,5 point
+  sous le flottant, sans dire si la mesure est faite sur la carte
+  \citep[Table~2]{2024-yan-fpga-yolov5-accelerator-real-time}.}}
+
+\newglossaryentry{map5095}{type=metriques, name={mAP50-95}, sort={map5095}, parent=map,
+  description={mAP moyennée sur les seuils d'IoU de 0,50 à 0,95 par pas de 0,05 (notée aussi
+  mAP@0.5:0.95) ; métrique principale de COCO. Mesurée sur la carte, elle révèle des pertes
+  fortes et irrégulières : TensorRT INT8 38,6 contre DPU INT8 37,5 pour YOLOv4
+  \citep[Table~1]{arxiv-2304.11580-framework-benchmarking-real-time-embedded} ; YOLOv8n
+  de 0,64 à 0,34 sur KITTI, YOLOv11n de 0,75 à 0,71 sur un jeu de personnes
+  \citep[Table~II]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp ; 84,2 à 71,9 en INT8 sur
+  Jetson \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.}}
+
+\newglossaryentry{fppi}{type=metriques, name={FPPI}, sort={fppi},
+  description={False Positives Per Image : nombre moyen de fausses détections par image.
+  Le taux d'échec (miss rate) se lit à FPPI fixé ; le mMR du protocole Caltech en fait une
+  moyenne logarithmique, plus bas = mieux. Sur CrowdHuman, un FPN atteint un mMR de 50,42
+  sur le corps entier contre 10,08 sur Caltech
+  \citep[Table~7]{arxiv-1805.00123-crowdhuman-benchmark-detecting-human-crowd}\pp. Le mMR
+  reste une moyenne : il ne dit pas le taux de personnes manquées à un instant ni le pire
+  cas, ce qui compte pour la sûreté \deduit.}}
+
+% ---------------------------------------------------------------- Classification, anomalies
+\newglossaryentry{auroc}{type=metriques, name={AUROC}, sort={auroc},
+  description={Aire sous la courbe ROC (taux de vrais positifs contre taux de faux
+  positifs), notée aussi AUC ; de 0,5 (hasard) à 1, souvent donnée en \%. Indépendante du
+  seuil, elle ne dit donc rien du point de fonctionnement retenu ; le survey de Cui et al.
+  ne traite pas le réglage du seuil \citep[§VI-B]{2023-cui-survey-unsupervised-anomaly-detection-algorithms}
+  (AUROC image de 99,1 pour PatchCore sur MVTec AD, 92,2 sur un jeu réel, Tables~10 et 12).
+  Piège : AUC évaluées en TensorFlow et non sur le cœur FPGA
+  \citep[§5--6]{2019-tsukada-neural-network-device-learning-anomaly}.}}
+
+\newglossaryentry{f1}{type=metriques, name={F1}, sort={f1},
+  description={Moyenne harmonique de la précision $P$ et du rappel $R$ :
+  $F_1 = 2PR/(P+R)$, de 0 à 1 (ou en \%), plus haut = mieux ; dépend du seuil de décision.
+  Exemple de perte à la quantification : F1 nul après PTQ INT8 seule, 92,77 après
+  fine-tuning contre 94,05 en FP32, et 95,29 sur Xavier NX
+  \citep[Tables~III, VI]{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator}.}}
+
+% ---------------------------------------------------------------- Compression d'images
+\newglossaryentry{psnr}{type=metriques, name={PSNR}, sort={psnr},
+  description={Peak Signal-to-Noise Ratio : $10\log_{10}(\mathrm{MAX}^2/\mathrm{MSE})$, en dB,
+  plus haut = mieux. Ne se lit qu'avec le débit (bpp) : un point débit-distorsion, pas une
+  qualité absolue. Exemple : 29,94\,dB à 0,2542\,bpp pour F-LIC sur VCU118
+  \citep[Fig.~6]{2022-sun-f-lic-fpga-learned-image}.}}
+
+\newglossaryentry{ssim}{type=metriques, name={SSIM}, sort={ssim},
+  description={Structural Similarity : indice de similarité perceptuelle (luminance,
+  contraste, structure), au plus 1, plus haut = mieux ; MS-SSIM en est la version
+  multi-échelle. Exemple : 0,9647 sur VPU Myriad~2 contre 0,9651 en référence
+  \citep[§III-B--C]{2023-guerrisi-artificial-intelligence-board-image-compression}.}}
+
+\newglossaryentry{bpp}{type=metriques, name={bpp}, sort={bpp},
+  description={Bits par pixel du flux compressé ; plus bas = meilleure compression à
+  qualité égale. Piège : le débit n'a de sens que si le codage entropique est compté ; chez
+  F-LIC, il tourne sur le PC hôte \citep[Fig.~1]{2022-sun-f-lic-fpga-learned-image}, et
+  Φ-Sat-2 compresse d'un facteur 8 fixe, sans codage entropique
+  \citep[§II-A]{2023-guerrisi-artificial-intelligence-board-image-compression}.}}
+
+\newglossaryentry{bd-rate}{type=metriques, name={BD-rate}, sort={bd-rate},
+  description={Bjøntegaard delta rate : écart moyen de débit, en \%, entre deux courbes
+  débit-distorsion à qualité égale ; négatif = gain, positif = perte. La perte d'un
+  Ballé2018 quantifié en INT8 passe de 30,0 à 6,30\,\%, en simulation seulement
+  \citep[Table~I]{arxiv-2511.17135-multi-stage-optimization-framework-deploying}\pp.}}
+
+% ---------------------------------------------------------------- Débit et efficacité
+\newglossaryentry{fps}{type=metriques, name={FPS}, sort={fps},
+  description={Images (frames) traitées par seconde ; plus haut = mieux. Ce n'est pas
+  l'inverse de la latence dès que le calcul est pipeliné ou groupé (une \enquote{latence}
+  de 5,6\,ns qui est en fait un débit amorti, pour 85\,ns réels
+  \citep[§IV-E]{2024-que-low-latency-variational-autoencoder-fpgas}). Pièges : FPS du cœur
+  du réseau ou de bout en bout (NMS et pré-traitement sur l'ARM exclus
+  \citep[§2.5]{arxiv-2211.11647-benchmarking-edge-computing-devices-grape}, post-traitement
+  mono-cœur qui limite à 34,05\,FPS \citep[§IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp) ;
+  batch (batch~4 sur FPGA pour SkyNet\pp{}
+  \citep[Tables~5--7]{arxiv-1909.09709-skynet-hardware-efficient-method-object}, batch~1
+  contre 8 \citep[Table~VI]{2024-aggarwal-chameleon-dual-memory-replay-online}) ;
+  résolution d'entrée et jeu (256--320 pixels contre 640).}}
+
+\newglossaryentry{fpsw}{type=metriques, name={FPS/W}, sort={fps/w}, parent=fps,
+  description={Débit par watt, $\mathrm{FPS}/P$, soit des images par joule ; son inverse est
+  l'énergie par image. Plus haut = mieux. N'a de sens qu'à portée de puissance égale
+  (colonne \texttt{power\_scope} : puce, carte, carte moins le repos, estimée). À même
+  méthode (carte au multimètre), YOLOv4 INT8 tient 1,31\,FPS/W sur ZCU104 contre 2,05 sur AGX
+  Xavier \citep[Table~1]{arxiv-2304.11580-framework-benchmarking-real-time-embedded} ;
+  2,6\,FPS/W présentés comme efficaces sont sous quatre des cinq travaux cités
+  \citep[§IV-B, Table~I]{arxiv-2507.18174-real-time-object-detection-classification}.}}
+
+\newglossaryentry{gop}{type=metriques, name={GOP}, sort={gop},
+  description={Giga-opérations : nombre d'opérations (10$^9$) d'une inférence, propriété du
+  modèle et de la résolution, pas du matériel ; à ne pas confondre avec GOPS (un débit).
+  Exemple : 5,7\,GOP pour YOLOv3-tiny, en comptant un MAC pour deux opérations
+  \citep[Table~5]{2024-zhang-end-end-acceleration-yolo-object}.}}
+
+\newglossaryentry{gops}{type=metriques, name={GOPS}, sort={gops},
+  description={Giga-opérations par seconde (GOP/s), débit de calcul ; plus haut = mieux. Pour
+  un réseau, $\mathrm{GOPS} = \mathrm{GOP} \times \mathrm{FPS}$. Pièges : 1 MAC compte pour
+  2 opérations, convention pas toujours rappelée
+  \citep[Table~5]{2024-zhang-end-end-acceleration-yolo-object} ; GOPS de crête contre GOPS
+  effectifs sur un réseau ; GOPS projetés sur une FPGA hypothétique comparés à des GOPS mesurés
+  \citep[Tables~16--17]{2019-coutinho-deep-neural-network-hardware-implementation} ; GOPS
+  sans FPS pour un détecteur \citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep}, ou
+  \enquote{10,65x} entre réseaux de tailles différentes à FPS voisins
+  \citep[§V-D]{arxiv-2403.18921-smof-streaming-modern-cnns-fpgas}\pp.}}
+
+\newglossaryentry{gopsw}{type=metriques, name={GOPS/W}, sort={gops/w}, parent=gops,
+  description={Efficacité énergétique de calcul ; plus haut = mieux. Hérite des pièges des
+  GOPS (crête ou effectifs) et de ceux de la puissance (portée) : GOPS/W calculés sur une
+  puissance dynamique comparés à des GOPS/W totaux
+  \citep[Table~8]{2023-zhai-fpga-vehicle-detection-tracking-accelerator}.}}
+
+\newglossaryentry{gopsdsp}{type=metriques, name={GOPS/DSP}, sort={gops/dsp}, parent=gops,
+  description={Débit rapporté au nombre de DSP utilisés, censé mesurer le rendement de
+  l'architecture ; plus haut = mieux. Valable seulement dans une même famille de FPGA
+  \citep[§3.1]{2018-venieris-toolflows-mapping-convolutional-neural-networks}. Elle efface
+  la précision : 4 multiplications 4~bits par DSP donnent 0,49\,GOPS/DSP
+  \citep[Table~3]{2024-yan-fpga-yolov5-accelerator-real-time}, un MAC INT16 par DSP
+  0,018 \citep[Table~9]{2025-kim-design-implementation-yolov2-accelerator-zynq} ;
+  comparaisons de W1A8 à W32A32
+  \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.}}
+
+\newglossaryentry{tops}{type=metriques, name={TOPS}, sort={tops},
+  description={Téra-opérations par seconde (10$^{12}$ op/s). Dans le corpus, presque
+  toujours une valeur de crête : 275\,TOPS annoncés par le constructeur pour une Jetson AGX
+  Orin \citep[Table~4]{arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded} ;
+  66\,TOPS de pic binaire sur ZU19EG, environ 16 fois le pic 8~bits
+  \citep[§3.1]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}. Une crête dépend
+  de la précision et ne prédit pas le débit sur un réseau réel \deduit.}}
+
+\newglossaryentry{flops}{type=metriques, name={FLOPs}, sort={flops},
+  description={Nombre d'opérations en virgule flottante d'un modèle (un compte, pas un
+  débit). L'usage confond souvent FLOPs et MAC (facteur 2) \horscorpus. Les FLOPs ne
+  prédisent pas la latence réelle
+  \citep[§2.3]{arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded}.}}
+
+\newglossaryentry{gflops}{type=metriques, name={GFLOPS}, sort={gflops},
+  description={Giga-opérations flottantes par seconde : le GOPS d'un calcul en virgule
+  flottante. Exemples : 61,62\,GFLOPS en FP32 sur Virtex-7
+  \citep[Tables~7--8]{2015-zhang-optimizing-fpga-accelerator-design-deep} ; 28,15\,GFLOPS
+  en apprentissage sur ZCU102, à batch~128
+  \citep[§6]{arxiv-2202.10935-ef-train-enable-efficient-device}\pp.}}
+
+\newglossaryentry{mac}{type=metriques, name={MAC}, sort={mac},
+  description={Multiply-Accumulate : une multiplication suivie d'une addition, opération de
+  base des convolutions ; compte pour 2 opérations dans les GOPS
+  \citep[Table~5]{2024-zhang-end-end-acceleration-yolo-object}. Le nombre de MAC par DSP
+  dépend de la précision : un MAC INT16
+  \citep[§3.1]{2025-kim-design-implementation-yolov2-accelerator-zynq}, deux en 8~bits
+  \citep[§3.1]{2024-zhang-end-end-acceleration-yolo-object}, quatre en 4~bits
+  \citep[§4--5]{2024-yan-fpga-yolov5-accelerator-real-time}.}}
+
+% ---------------------------------------------------------------- Latence et temps réel
+\newglossaryentry{p99}{type=metriques, name={p99}, sort={p99},
+  description={99\textsuperscript{e} centile d'une distribution (ici de latence) : 99\,\% des
+  mesures sont en dessous. Plus informatif qu'une moyenne pour le temps réel, sans être un
+  pire cas. Aucun papier du corpus ne donne de p99, de pire cas ni de gigue de bout en bout :
+  moyennes sur quelques passes ou une vidéo
+  \citep{arxiv-2304.11580-framework-benchmarking-real-time-embedded}, latence variable selon
+  la vidéo \citep[Fig.~14]{2026-fata-low-cost-fpga-enhanced-cnn}.}}
+
+\newglossaryentry{wcet}{type=metriques, name={WCET}, sort={wcet},
+  description={Worst-Case Execution Time : borne supérieure, obtenue par analyse statique,
+  du temps d'exécution d'un programme sur une cible donnée ; exigé par DO-178C. Dans le
+  corpus, seul ACETONE le calcule (OTAWA), sur un lpc2138 non représentatif de la cible
+  mesurée, et l'analyse échoue pour AlexNet
+  \citep[§4.2, §5]{2022-de-albuquerque-silva-acetone-predictable-programming-framework-ml}.
+  Le WCET entre PS et PL n'est pas traité
+  \citep[§III-B]{arxiv-2509.04153-real-time-fpga-cnns-detection}.}}
+
+% ---------------------------------------------------------------- Sûreté et certification
+\newglossaryentry{fit}{type=metriques, name={FIT}, sort={fit},
+  description={Failures In Time : nombre de défaillances pour $10^9$ heures de
+  fonctionnement ; plus bas = mieux. Li et al. calculent
+  $\mathrm{FIT} = R_\mathrm{raw} \times \text{taille} \times P(\mathrm{SDC})$ avec
+  $R_\mathrm{raw} = 20{,}49$\,FIT/Mb extrapolé à 16\,nm \citep[§4.7]{2017-li-understanding-error-propagation-deep-learning},
+  citent la cible de moins de 10\,FIT d'ISO~26262 \citep[§1]{2017-li-understanding-error-propagation-deep-learning}
+  et ramènent le FIT d'Eyeriss de 8,55 à 0,35 \citep[§6.2]{2017-li-understanding-error-propagation-deep-learning}.
+  Le passage d'un FIT mesuré à un SIL ou un PL n'est traité nulle part \deduit.}}
+
+\newglossaryentry{sil}{type=metriques, name={SIL}, sort={sil},
+  description={Safety Integrity Level (IEC 61508) : niveau d'intégrité de sécurité d'une
+  fonction, de SIL~1 à SIL~4 (le plus exigeant), associé à une probabilité de défaillance
+  dangereuse par heure ou à la sollicitation. Dans le corpus, l'IEC 61508 n'apparaît que
+  comme contexte \citep[§1, §2.3]{2017-li-understanding-error-propagation-deep-learning} ;
+  l'équivalent automobile (ASIL, ISO~26262) est plus présent
+  \citep[§III-C]{2024-rech-artificial-neural-networks-space-safety}, et aucune fiche ne
+  relie une précision de détection ou un FIT à un SIL \deduit.}}
+
+\newglossaryentry{dal}{type=metriques, name={DAL}, sort={dal},
+  description={Design Assurance Level : niveau d'assurance de conception en aéronautique,
+  de A (défaillance catastrophique) à E, défini par DO-178C pour le logiciel et DO-254 pour
+  le matériel électronique complexe (FPGA, ASIC). Dans le corpus : la conformité DO-254 des
+  FPGA est hors périmètre de CoDANN
+  \citep[§4.2.3]{2020-easa-concepts-design-assurance-neural-networks} ; CoDANN~II renvoie à
+  DO-178C §12.2 pour la qualification des outils
+  \citep[§3.7.1]{2024-easa-concepts-design-assurance-neural-networks} ; l'EASA renvoie les
+  FPGA à AMC 20-152A \citep[MOC IMP-05]{2024-easa-concept-paper-guidance-level-1}.}}
+
+% ---------------------------------------------------------------- Protocole
+\newglossaryentry{dac-sdc}{type=metriques, name={DAC-SDC}, sort={dac-sdc},
+  description={System Design Contest de la conférence DAC : détection d'un seul objet par
+  image (images de drone), sur PYNQ-Z1 et Jetson TX2, mesurée par les organisateurs. Score
+  $= \mathrm{IoU} \times (1 + \mathrm{ES})$, ES logarithmique en énergie avec des bases
+  différentes pour FPGA et GPU ; débit minimal de 5\,FPS sur FPGA et 20 sur GPU ; FPGA au
+  wattmètre, TX2 par ses capteurs internes \citep[§2.3]{2021-xu-dac-sdc-low-power-object}.
+  Son IoU ne se compare pas à une mAP, et le classement ne passe pas d'une catégorie à
+  l'autre.}}
+
+% ---------------------------------------------------------------- Ressources FPGA
+\newglossaryentry{lut}{type=metriques, name={LUT}, sort={zr-lut},
+  description={Look-Up Table : cellule logique programmable de la FPGA (6 entrées sur les
+  familles AMD récentes \horscorpus), qui réalise la logique et de petites mémoires. Les
+  architectures streaming déplacent le calcul des DSP vers les LUT : l'accumulation par
+  popcount coûte à peu près moitié moins de LUT qu'une accumulation signée
+  \citep[§4.2.1]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}.}}
+
+\newglossaryentry{ff}{type=metriques, name={FF}, sort={zr-ff},
+  description={Flip-flop : bascule de registre de la logique programmable. Un gain de FF
+  n'a de sens qu'à débit égal : \enquote{$-26$\,\% de FF} face à des accélérateurs de 10,5 à
+  62,9\,GOPS, pour 2,33\,GOPS
+  \citep[Table~9]{2025-kim-design-implementation-yolov2-accelerator-zynq}.}}
+
+\newglossaryentry{dsp}{type=metriques, name={DSP}, sort={zr-dsp},
+  description={Bloc arithmétique câblé (DSP48 chez AMD : multiplieur et accumulateur), la
+  ressource rare des petites FPGA (220 sur le XC7Z020 de la PYNQ-Z1
+  \citep[§2.2]{2021-xu-dac-sdc-low-power-object}). La quantification change son
+  rendement (voir GOPS/DSP) ; la QAT et l'élagage font passer un modèle de 6\,377 à 174 DSP
+  \citep[Table~3]{arxiv-2101.05108-fast-convolutional-neural-networks-fpgas}.}}
+
+\newglossaryentry{bram}{type=metriques, name={BRAM}, sort={zr-bram},
+  description={Block RAM : mémoire on-chip en blocs de 36\,Kb, divisibles en deux de 18\,Kb
+  \horscorpus ; comptée en blocs dans \texttt{benchmarks.csv}, pas en Mo. Piège : un nombre de
+  BRAM dit peu de la capacité utilisée, la forme des mémoires de poids s'accordant mal aux
+  blocs (52,9\,\% d'occupation pour un ResNet-50
+  \citep[Table~IV]{arxiv-2011.07317-memory-efficient-dataflow-inference-deep}\pp). Les BRAM
+  sont exclues de l'injection de fautes de Libano et al.
+  \citep[§III-A]{2019-libano-selective-hardening-neural-networks-fpgas}.}}
+
+\newglossaryentry{uram}{type=metriques, name={URAM}, sort={zr-uram}, parent=bram,
+  description={UltraRAM : blocs de mémoire on-chip plus grands (288\,Kb) des
+  UltraScale+ \horscorpus. Sur KV260, un design place les couches 11 à 21 en URAM et occupe
+  100\,\% des BRAM et des URAM \citep[Table~9]{2026-fata-low-cost-fpga-enhanced-cnn}.}}
+
+% ---------------------------------------------------------------- Unités
+\newglossaryentry{u-w}{type=metriques, name={W}, sort={zz-01-w},
+  description={Watt, unité de puissance. Dans le corpus, de quelques mW (puissance dynamique
+  \citep[Table~16]{2019-coutinho-deep-neural-network-hardware-implementation}) et 0,04\,W
+  sur MCU GAP9 \citep[Table~II]{arxiv-2403.07851-12-mj-per-class-device} à 2--23\,W sur SoC
+  FPGA et environ 120--134\,W pour deux Alveo U280
+  \citep[Table~4]{2021-alonso-elastic-df-scaling-performance-dnn}. Toujours lire la portée :
+  une ZC706 consomme environ 7\,W au repos, inclus dans une mesure de carte
+  \citep[§5.2.2]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}.}}
+
+\newglossaryentry{u-mw}{type=metriques, name={mW}, sort={zz-02-mw},
+  description={Milliwatt ($10^{-3}$\,W), ordre de grandeur des MCU et ASIC : 62\,mW mesurés
+  sur la puce VEGA \citep[Table~IV]{arxiv-2110.10486-tinyml-platform-device-continual-learning}.}}
+
+\newglossaryentry{u-j}{type=metriques, name={J}, sort={zz-03-j},
+  description={Joule, unité d'énergie : $E = P \times t = P/\mathrm{FPS}$ par image ; plus
+  bas = mieux. Exemples : 1,41\,J par image 720p sur VCU118
+  \citep[Fig.~6]{2022-sun-f-lic-fpga-learned-image} ; 1,22\,J par image d'apprentissage sur
+  ZCU102 \citep[Table~VI]{2024-aggarwal-chameleon-dual-memory-replay-online}.}}
+
+\newglossaryentry{u-mj}{type=metriques, name={mJ}, sort={zz-04-mj},
+  description={Millijoule. Exemples : 21,52\,mJ par inférence sur DPU ZCU104
+  \citep[Table~VI]{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator} ;
+  11 à 23\,mJ par nouvelle classe sur MCU \citep[Tables~II, IV]{arxiv-2403.07851-12-mj-per-class-device}.}}
+
+\newglossaryentry{u-uj}{type=metriques, name={µJ}, sort={zz-05-uj},
+  description={Microjoule ($10^{-6}$\,J), énergie d'une inférence de petit réseau :
+  196\,µJ sur MAX78000 \citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint} ;
+  2\,535 et 44\,330\,µJ pour FINN et hls4ml sur Pynq-Z2
+  \citep[Table~5]{arxiv-2206.11791-open-source-fpga-ml-codesign}\pp.}}
+
+\newglossaryentry{u-s}{type=metriques, name={s}, sort={zz-06-s},
+  description={Seconde. Rencontrée pour les traitements lents : environ 12,6\,s par image
+  pour YOLOv2 sur XC7Z020 \citep[§4.2]{2025-kim-design-implementation-yolov2-accelerator-zynq} ;
+  2,07\,s par événement d'apprentissage sur VEGA
+  \citep[Table~IV]{arxiv-2110.10486-tinyml-platform-device-continual-learning}.}}
+
+\newglossaryentry{u-ms}{type=metriques, name={ms}, sort={zz-07-ms},
+  description={Milliseconde, unité usuelle de latence d'un détecteur : de 15,2\,ms de bout
+  en bout \citep[Table~5]{2024-zhang-end-end-acceleration-yolo-object} à 54,42\,ms
+  \citep[Table~1]{arxiv-2304.11580-framework-benchmarking-real-time-embedded}. Préciser
+  ce que couvre la latence (inférence seule, PL seule, bout en bout).}}
+
+\newglossaryentry{u-us}{type=metriques, name={µs}, sort={zz-08-us},
+  description={Microseconde : latence d'un petit réseau hls4ml, environ 5\,µs sur VU9P et
+  171\,µs sur XC7Z020 \citep[Tables~3--4]{arxiv-2101.05108-fast-convolutional-neural-networks-fpgas}.}}
+
+\newglossaryentry{u-ns}{type=metriques, name={ns}, sort={zz-09-ns},
+  description={Nanoseconde : latences de réseaux minuscules en logique pure, 85\,ns
+  (17 cycles) pour un VAE dense \citep[§IV-E]{2024-que-low-latency-variational-autoencoder-fpgas},
+  233\,ns chez Libano et al.
+  \citep[§V]{2020-libano-understanding-impact-quantization-accuracy-radiation}.}}
+
+\newglossaryentry{u-mhz}{type=metriques, name={MHz}, sort={zz-10-mhz},
+  description={Mégahertz, fréquence d'horloge ; débit et puissance en dépendent. Dans le
+  corpus, de 100 à 300\,MHz pour la logique FPGA ; un Tegra~X1 bridé à 76,8\,MHz pour
+  égaliser le budget de puissance
+  \citep[§3.1]{arxiv-1711.08740-fpgaconvnet-toolflow-mapping-diverse-convolutional}.}}
+
+\newglossaryentry{u-ko}{type=metriques, name={Ko}, sort={zz-11-ko},
+  description={Kilo-octet (KB, kB) ; le corpus ne distingue pas 1\,000 et 1\,024 octets.
+  Ordre de grandeur des SRAM de MCU : entraînement sous 256\,KB, 206\,KB mesurés
+  \citep[§3.2]{arxiv-2206.15472-device-training-256kb-memory} ; 630\,Ko de BRAM sur
+  PYNQ-Z1 \citep[§2.2]{2021-xu-dac-sdc-low-power-object}.}}
+
+\newglossaryentry{u-mo}{type=metriques, name={Mo}, sort={zz-12-mo},
+  description={Mégaoctet (MB) ; 1\,Mo = 8\,Mbit, à ne pas confondre avec le Mbit des fiches
+  techniques. Exemple : 3,5\,Mo de tampons de rejeu contre 48\,Mo
+  \citep[Tables~II, VI]{2024-aggarwal-chameleon-dual-memory-replay-online}.}}
+
+\newglossaryentry{u-mbit}{type=metriques, name={Mbit}, sort={zz-13-mbit},
+  description={Mégabit, unité des capacités mémoire on-chip des FPGA. Un YOLOv3-tiny
+  demanderait environ 34,7\,Mbit de poids à 4~bits, pour environ 4,9\,Mbit de BRAM sur le
+  XC7Z020 \citep[§III-A]{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp.}}

@@ -1,0 +1,378 @@
+% Glossaire des plateformes (type=plateformes).
+% Valeurs chiffrées : \citep[§x]{paper_id} si elles viennent du corpus (fiche ou benchmarks.csv),
+% \constr si elles viennent d'une fiche constructeur (hors corpus).
+% Une entrée parente est définie avant ses enfants ; profondeur maximale : 3 niveaux.
+
+% ---------------------------------------------------------------- IP d'accélération
+\newglossaryentry{dpu}{type=plateformes, name={DPU (DPUCZDX8G)}, sort={DPU},
+description={IP d'inférence CNN de Xilinx (AMD) livrée avec Vitis~AI : processeur programmable
+en INT8, implanté dans la PL des Zynq UltraScale+, auquel le compilateur XIR envoie un flot
+d'instructions. Configurations B512 à B4096, où le nombre est le parallélisme crête en
+opérations par cycle (B4096 : 4\,096 op./cycle, soit environ 1,2\,TOPS à 300\,MHz \deduit),
+jusqu'à quatre cœurs par puce \constr. Sur XCZU7EV, une B4096 occupe 55,8\,k LUT, 710 DSP,
+142 BRAM et 46 URAM, et la puissance estimée par Vivado va de 4,79\,W (B512) à 8,76\,W (B4096)
+\citep[Table~III]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp. C'est le flot
+« industriel » du corpus : détection YOLO sur ZCU104 et KV260, comparaisons FPGA / Jetson,
+tête d'apprentissage continu couplée au DPU \citep{2021-piyasena-accelerating-continual-learning-edge-fpga}.}}
+
+% ---------------------------------------------------------------- SoC FPGA Xilinx (AMD)
+\newglossaryentry{zynq}{type=plateformes, name={Zynq}, sort={Zynq},
+description={Famille de SoC FPGA de Xilinx (AMD) : un processeur ARM durci (PS) et une logique
+programmable (PL) sur la même puce, reliés par des bus AXI. Le corpus en utilise deux
+générations, le Zynq-7000 et le Zynq UltraScale+ MPSoC (dont le module Kria K26). C'est la
+cible principale de la thèse.}}
+
+\newglossaryentry{zynq7000}{type=plateformes, name={Zynq-7000}, sort={Zynq-7000},
+description={Première génération de Zynq, en 28\,nm
+\citep[§III]{2019-libano-selective-hardening-neural-networks-fpgas} ; PS double Cortex-A9
+(simple cœur pour les variantes S) et PL de type Artix-7 ou Kintex-7 selon la taille \constr.
+Petite cible bas coût du corpus : FINN, concours DAC-SDC, autoencodeurs HLS, ONLAD, YOLOv2 en
+RTL \citep{2025-kim-design-implementation-yolov2-accelerator-zynq}, et essais sous neutrons
+(LANSCE) de \citet[§III-B]{2019-libano-selective-hardening-neural-networks-fpgas}.}}
+
+\newglossaryentry{xc7z020}{type=plateformes, name={XC7Z020 (Zynq-7020)}, sort={XC7Z020},
+parent=zynq7000,
+description={Puce Zynq-7000 la plus utilisée du corpus : 53\,200 LUT, 106\,400 FF, 220 DSP
+\citep[§3.1]{2025-kim-design-implementation-yolov2-accelerator-zynq}, 280 BRAM18
+\citep[Table~1]{2019-tsukada-neural-network-device-learning-anomaly}, soit 140 BRAM36 et
+4,9\,Mbit \constr, que \citet[§2.2]{2021-xu-dac-sdc-low-power-object} arrondissent à
+630\,Ko. PS double Cortex-A9, à 650\,MHz sur PYNQ-Z1
+\citep[Table~1]{2019-tsukada-neural-network-device-learning-anomaly}. Cartes du corpus :
+PYNQ-Z1, PYNQ-Z2, Zybo Z7-20.}}
+
+\newglossaryentry{pynq-z1}{type=plateformes, name={PYNQ-Z1}, sort={PYNQ-Z1}, parent=xc7z020,
+description={Carte de développement Digilent \constr{} à XC7Z020-1CLG400C, 512\,Mo de DDR3,
+« environ 1-4\,W » \citep[§2.2]{2021-xu-dac-sdc-low-power-object}. Carte FPGA imposée du
+concours DAC-SDC ; 3,1\,W carte entière pour ONLAD
+\citep[§6.4]{2019-tsukada-neural-network-device-learning-anomaly} ; 2,0 à 2,9\,W pour un
+détecteur FINN \citep[§V]{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp. Utilisée
+aussi par FINN-R et EF-Train.}}
+
+\newglossaryentry{pynq-z2}{type=plateformes, name={PYNQ-Z2}, sort={PYNQ-Z2}, parent=xc7z020,
+description={Carte de développement TUL à XC7Z020 (xc7z020clg400-1)
+\citep[§8]{arxiv-2101.05108-fast-convolutional-neural-networks-fpgas} ; 512\,Mo de DDR3
+\constr. Seule carte FPGA du corpus mesurée selon le protocole MLPerf Tiny (Joulescope), avec
+hls4ml et FINN \citep[§4.4]{arxiv-2206.11791-open-source-fpga-ml-codesign}\pp ; sert aussi au
+CNN QKeras 7 bits de \citet{arxiv-2101.05108-fast-convolutional-neural-networks-fpgas} et au
+CAE vibratoire de \citet{2022-malviya-edge-compatible-convolutional-autoencoder-implemented}.}}
+
+\newglossaryentry{xc7z035}{type=plateformes, name={XC7Z035}, sort={XC7Z035}, parent=zynq7000,
+description={Puce Zynq-7000 de milieu de gamme : 171\,900 LUT, 343\,800 FF, 900 DSP,
+500 BRAM36 \constr. Un seul usage mesuré : l'accélérateur YOLO et suivi de véhicules de
+\citet[§4.1]{2023-zhai-fpga-vehicle-detection-tracking-accelerator} (XC7Z035-FFG676-2).}}
+
+\newglossaryentry{zc706}{type=plateformes, name={ZC706}, sort={ZC706}, parent=zynq7000,
+description={Carte d'évaluation Xilinx à Zynq-7000 XC7Z045 : double Cortex-A9, 218\,600 LUT,
+545 BRAM \citep[§5.1]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}\pp,
+900 DSP \constr. Carte du premier FINN, dont la puissance murale est dominée par environ 7\,W
+de repos \citep[§5.1]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}\pp ; la même
+puce (Z7045) porte le VAE de \citet{2024-que-low-latency-variational-autoencoder-fpgas}.}}
+
+\newglossaryentry{zynqmp}{type=plateformes, name={Zynq UltraScale+ MPSoC}, sort={Zynq UltraScale+},
+description={Seconde génération de Zynq, en 16\,nm FinFET
+\citep[§III]{2019-libano-selective-hardening-neural-networks-fpgas} ; PS quadri Cortex-A53,
+double Cortex-R5F et GPU Mali-400 (variantes EG et EV), encodeur vidéo VCU sur les EV ; PL à
+DSP48E2, BRAM et, sur les plus grosses puces, URAM \constr. Cible du DPU de Vitis~AI. Dans le
+texte, « UltraScale » seul peut aussi désigner les FPGA Kintex et Virtex UltraScale(+) sans
+processeur (VCU110, VCU118, Alveo).}}
+
+\newglossaryentry{xczu3eg}{type=plateformes, name={XCZU3EG}, sort={XCZU3EG}, parent=zynqmp,
+description={Plus petite puce Zynq UltraScale+ du corpus : 70\,560 LUT, 141\,120 FF, 360 DSP,
+216 BRAM36, sans URAM \constr ; « 71\,kLUT, 432 BRAM » (BRAM18) selon
+\citet[§4]{arxiv-1809.04570-finn-r-end-end-deep}\pp. CodeNet en occupe la totalité des BRAM et
+des DSP \citep[§5]{arxiv-2006.08357-codenet-efficient-deployment-input-adaptive}\pp. Puce de
+l'Ultra96, proche de la gamme Kria.}}
+
+\newglossaryentry{ultra96}{type=plateformes, name={Ultra96}, sort={Ultra96}, parent=xczu3eg,
+description={Carte Avnet à XCZU3EG, 2\,Go de LPDDR4 \constr. Carte des éditions 2019 et
+suivantes de DAC-SDC : SkyNet (pic théorique 144\,GOPS à 200\,MHz, 7,26\,W,
+\citealp[§6.4]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp), CodeNet
+(4,3\,W à vide, 5,6\,W en charge, carte,
+\citealp[§5]{arxiv-2006.08357-codenet-efficient-deployment-input-adaptive}\pp) et FINN-R.}}
+
+\newglossaryentry{xczu7ev}{type=plateformes, name={XCZU7EV}, sort={XCZU7EV}, parent=zynqmp,
+description={Puce Zynq UltraScale+ EV : 504\,k cellules logiques, 230\,400 LUT, 460\,800 FF,
+1\,728 DSP, 312 BRAM36 et 96 URAM \constr. \citet[§IV-C]{arxiv-2301.07050-energy-efficient-reconfigurable-autoencoder-implementation}
+annoncent « 504\,K LUT », ce qui est en fait le nombre de cellules logiques. Puce de la ZCU104.}}
+
+\newglossaryentry{zcu104}{type=plateformes, name={ZCU104}, sort={ZCU104}, parent=xczu7ev,
+description={Carte d'évaluation Xilinx à XCZU7EV, 2\,Go de DDR4 côté PS \constr. Carte FPGA la
+plus mesurée du corpus : DPU B512 à B4096 pour les YOLO récents
+\citep{arxiv-2607.13106-no-attention-no-problem-dpu}\pp, comparaison à la Jetson AGX Xavier
+(23\,W à l'entrée de la carte,
+\citealp[Table~1]{arxiv-2304.11580-framework-benchmarking-real-time-embedded}), RetinaNet sur
+deux cœurs DPU (25\,FPS,
+\citealp[§3]{arxiv-2211.11647-benchmarking-edge-computing-devices-grape}), SATAY, injection de
+fautes accélérée \citep{arxiv-1912.07394-efficient-error-tolerant-quantized-neural}.}}
+
+\newglossaryentry{xczu9eg}{type=plateformes, name={XCZU9EG}, sort={XCZU9EG}, parent=zynqmp,
+description={Puce Zynq UltraScale+ EG : 274\,080 LUT, 548\,160 FF, 2\,520 DSP, 912 BRAM36,
+sans URAM \constr ; 2\,520 DSP aussi dans
+\citet[Table~2]{2024-yan-fpga-yolov5-accelerator-real-time}. Puce de la ZCU102, irradiée au
+ChipIR par \citet[§III-B]{2019-libano-selective-hardening-neural-networks-fpgas}.}}
+
+\newglossaryentry{zcu102}{type=plateformes, name={ZCU102}, sort={ZCU102}, parent=xczu9eg,
+description={Carte d'évaluation Xilinx à XCZU9EG, 4\,Go de DDR4
+\citep[Table~2]{2024-yan-fpga-yolov5-accelerator-real-time}. Sert à YOLOv5s INT4 (79\,FPS,
+12,3\,W, \citealp[§7.4]{2024-yan-fpga-yolov5-accelerator-real-time}), à l'apprentissage
+continu (DPU B4096 et SLDA, \citealp{2021-piyasena-accelerating-continual-learning-edge-fpga} ;
+Chameleon, \citealp{2024-aggarwal-chameleon-dual-memory-replay-online} ; EF-Train) et à SMOF.}}
+
+\newglossaryentry{xck26}{type=plateformes, name={XCK26 (Kria K26)}, sort={XCK26}, parent=zynqmp,
+description={Puce Zynq UltraScale+ (variante EV, avec VCU) du module Kria K26, non vendue seule
+\constr : 256\,k cellules logiques, 117\,120 LUT, 234\,240 FF, 1\,248 DSP \constr ; 144 BRAM
+(648\,Ko), 64 URAM (environ 2,25\,Mo) et 4\,Go de DDR4 sur le module
+\citep[Table~6]{2026-fata-low-cost-fpga-enhanced-cnn}.}}
+
+\newglossaryentry{kv260}{type=plateformes, name={Kria KV260}, sort={KV260}, parent=xck26,
+description={Kit de démarrage AMD Xilinx « Vision AI » : module K26 sur carte porteuse à
+interfaces caméra. Cible matérielle visée par la thèse. Mesures du corpus : YOLOv3-Tiny INT8
+sur DPU, 24,3\,FPS pour 2,13\,W (portée non précisée,
+\citealp[Table~10]{2026-fata-low-cost-fpga-enhanced-cnn}) ; YOLOv5 INT8
+\citep{arxiv-2507.18174-real-time-object-detection-classification}\pp ; RetinaNet sur un cœur
+DPU \citep{arxiv-2211.11647-benchmarking-edge-computing-devices-grape}. Aucun protocole commun
+de mesure entre ces travaux.}}
+
+% ---------------------------------------------------------------- FPGA sans processeur durci
+\newglossaryentry{artix7}{type=plateformes, name={Artix-7}, sort={Artix-7},
+description={Famille FPGA Xilinx 28\,nm bas coût, sans processeur durci \constr. XC7A100T :
+63\,400 LUT, 240 DSP, 135 BRAM36 \constr (135 BRAM aussi chez
+\citealp[§VIII-A]{2021-manjunath-energy-efficient-edgeai-autoencoder-accelerator}) ;
+XC7A35T : 20\,800 LUT, 90 DSP, 50 BRAM36 \constr. Autoencodeur de Manjunath à 100\,MHz, Arty
+A7-100T sous MLPerf Tiny \citep{arxiv-2206.11791-open-source-fpga-ml-codesign}\pp, hls4ml
+\citep{arxiv-2512.01463-hls4ml-flexible-open-source-platform}\pp.}}
+
+\newglossaryentry{kintex7}{type=plateformes, name={Kintex-7}, sort={Kintex-7},
+description={Famille FPGA Xilinx 28\,nm de milieu de gamme, sans processeur durci \constr.
+Usage : carte KC705 de \citet{2024-zhang-end-end-acceleration-yolo-object}. « Kintex » seul
+désigne aussi la Kintex UltraScale annoncée par
+\citet[§6.1]{2024-campos-end-end-codesign-hessian-aware}, dont la référence (xcu250) est en
+fait celle de l'Alveo U250.}}
+
+\newglossaryentry{xc7k325t}{type=plateformes, name={XC7K325T}, sort={XC7K325T}, parent=kintex7,
+description={Puce Kintex-7 : 203\,k LUT, 840 DSP, 16\,Mbit de BRAM, sur carte KC705 avec 1\,Go
+de DDR3 \citep[§5.1]{2024-zhang-end-end-acceleration-yolo-object} ; 445 BRAM36 \constr. Porte
+YOLOv2 et YOLOv3-Tiny en INT8 tout sur FPGA, 401 à 418\,GOP/s, 7,8\,W puce et 12,3\,W carte
+\citep[§5.3]{2024-zhang-end-end-acceleration-yolo-object}.}}
+
+\newglossaryentry{virtex7}{type=plateformes, name={Virtex-7}, sort={Virtex-7},
+description={Famille FPGA Xilinx 28\,nm haut de gamme, sans processeur durci \constr. Cartes du
+corpus : VC707 (XC7VX485T, 18,61\,W carte,
+\citealp[§5.2]{2015-zhang-optimizing-fpga-accelerator-design-deep}), VC709 et ADM-PCIE-7V3
+(XC7VX690T). « Virtex » seul désigne aussi les Virtex UltraScale(+) (VCU110, VCU118) et le
+Virtex-6 ; aucune n'est une cible embarquée.}}
+
+\newglossaryentry{xc7vx690t}{type=plateformes, name={XC7VX690T}, sort={XC7VX690T}, parent=virtex7,
+description={Puce Virtex-7 : 433\,k LUT, 3\,600 DSP, 52,9\,Mbit de BRAM, deux DDR3 de 4\,Go sur
+VC709 \citep[§5.1]{2024-zhang-end-end-acceleration-yolo-object} ; 1\,470 BRAM36 \constr. Sert à
+ReQ-YOLO sur carte PCIe ADM-PCIE-7V3 (16\,Go de DDR3, 200\,MHz,
+\citealp[§6.3.1]{2019-ding-req-yolo-resource-aware-efficient} ; 21\,W,
+\citealp[Table~2]{2019-ding-req-yolo-resource-aware-efficient}) et à YOLOv2/v3 batch 2
+(914\,GOP/s, \citealp[Table~3]{2024-zhang-end-end-acceleration-yolo-object}).}}
+
+\newglossaryentry{xc6vlx240t}{type=plateformes, name={XC6VLX240T (Virtex-6)}, sort={XC6VLX240T},
+description={Puce Virtex-6 (40\,nm) du kit ML605 : 241\,152 cellules logiques, 150\,720 LUT,
+768 DSP48E1, 416 BRAM36 \constr ; les 768 multiplieurs sont aussi donnés par
+\citet[Table~3]{2019-coutinho-deep-neural-network-hardware-implementation}. Seul usage :
+l'autoencodeur empilé (SSAE) MNIST de Coutinho \citep[§V-D]{2019-coutinho-deep-neural-network-hardware-implementation}.}}
+
+\newglossaryentry{vcu118}{type=plateformes, name={VCU118}, sort={VCU118},
+description={Carte d'évaluation Xilinx à Virtex UltraScale+ XCVU9P (16\,nm) : 1\,182\,240 LUT
+et 6\,840 DSP \citep[Fig.~6]{2022-sun-f-lic-fpga-learned-image} ; 2\,160 BRAM36 et 960 URAM
+\constr. Grosse carte de laboratoire : compression d'image F-LIC, SATAY (YOLO, 23 à 67\,W,
+\citealp[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}),
+SMOF, et VAE de déclenchement au LHC \citep{arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised}.}}
+
+\newglossaryentry{polarfire}{type=plateformes, name={PolarFire}, sort={PolarFire},
+description={Famille FPGA Microchip 28\,nm à configuration non volatile (flash SONOS), donc
+insensible aux SEU de la mémoire de configuration \constr ; MPF300T : environ 300\,k éléments
+logiques \constr. Seul usage : hls4ml sur MPF300TS et MPF100T, limité aux couches denses et
+ReLU, environ 0,1\,W estimés
+\citep[§5.2]{arxiv-2602.15751-enabling-low-latency-machine-learning}\pp. Intéresse la thèse
+pour la tenue aux radiations.}}
+
+\newglossaryentry{stratix}{type=plateformes, name={Stratix}, sort={Stratix},
+description={Famille FPGA haut de gamme d'Intel (ex-Altera) ; Stratix~V en 28\,nm, Stratix~10
+en 14\,nm \constr. Présente seulement par citation : baseline Stratix~10 GX d'EF-Train
+(163\,GOPS, 20,6\,W, \citealp{arxiv-2202.10935-ef-train-enable-efficient-device}\pp) et
+valeur projetée de 12\,TOP/s à 141,2\,W
+\citep[Table~8]{arxiv-1806.01683-accelerating-cnn-inference-fpgas-survey}\pp.}}
+
+% ---------------------------------------------------------------- GPU embarqués NVIDIA
+\newglossaryentry{jetson}{type=plateformes, name={Jetson}, sort={Jetson},
+description={Gamme NVIDIA de modules embarqués (SoC ARM + GPU CUDA, mémoire LPDDR partagée) et
+de kits de développement ; logiciel JetPack et TensorRT (FP32, FP16, INT8), modes de
+puissance réglables \constr. Référence GPU embarqué du corpus, mais peu de travaux la
+comparent à un FPGA sur le même modèle.}}
+
+\newglossaryentry{jetson-nano}{type=plateformes, name={Jetson Nano}, sort={Jetson Nano}, parent=jetson,
+description={GPU Maxwell 128 cœurs (0,5\,TFLOPS), 4\,Go de LPDDR4, 5 à 10\,W
+\citep[Table~2]{2022-feng-benchmark-analysis-yolo-performance-edge} ; CPU quadri Cortex-A57
+\constr. Ne supporte que le FP16 selon
+\citet[§3.3.1]{2022-feng-benchmark-analysis-yolo-performance-edge}. Mesures YOLO
+\citep{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp, apprentissage
+continu \citep{2024-aggarwal-chameleon-dual-memory-replay-online}, et point de comparaison
+repris par plusieurs papiers FPGA.}}
+
+\newglossaryentry{tx2}{type=plateformes, name={Jetson TX2}, sort={Jetson TX2}, parent=jetson,
+description={GPU Pascal 256 cœurs, CPU double Denver~2 et quadri Cortex-A57, 8\,Go de LPDDR4,
+7,5 à 15\,W \constr ; 665\,GFLOPS crête à 1\,300\,MHz selon
+\citet[§6.4]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp. Plateforme GPU
+imposée de DAC-SDC \citep[§2.2]{2021-xu-dac-sdc-low-power-object} ; baseline de SkyNet, SATAY
+et ReQ-YOLO.}}
+
+\newglossaryentry{xavier-nx}{type=plateformes, name={Jetson Xavier NX}, sort={Jetson Xavier NX}, parent=jetson,
+description={GPU Volta 384 cœurs + 48 Tensor Cores (1,3\,TFLOPS), 8\,Go de LPDDR4x, 10 à 15\,W
+\citep[Table~2]{2022-feng-benchmark-analysis-yolo-performance-edge} ; CPU 6 cœurs Carmel,
+21\,TOPS INT8 \constr. Baseline GPU de \citet{2021-piyasena-accelerating-continual-learning-edge-fpga},
+de F-LIC \citep{2022-sun-f-lic-fpga-learned-image} et de
+\citet{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator}\pp{} (mode 10\,W).}}
+
+\newglossaryentry{agx-xavier}{type=plateformes, name={Jetson AGX Xavier}, sort={Jetson AGX Xavier}, parent=jetson,
+description={CPU 8 cœurs Carmel, GPU et NVDLA
+\citep[§V-A]{arxiv-2406.12362-certified-ml-object-detection-surveillance}\pp ; GPU Volta
+512 cœurs + 64 Tensor Cores, 2 NVDLA, 32\,Go, 10 à 30\,W, 32\,TOPS INT8 \constr. 16,5 à 28\,W
+mesurés à l'entrée de la carte selon la précision, face à une ZCU104
+\citep[Table~1]{arxiv-2304.11580-framework-benchmarking-real-time-embedded} ; cible de la
+détection certifiée en vidéosurveillance \citep{arxiv-2406.12362-certified-ml-object-detection-surveillance}\pp.}}
+
+\newglossaryentry{orin}{type=plateformes, name={Jetson Orin}, sort={Jetson Orin}, parent=jetson,
+description={Génération Jetson à GPU Ampere et CPU Cortex-A78AE \constr : Orin Nano, Orin NX,
+AGX Orin. Les lignes Orin du corpus viennent de deux papiers seulement, et aucun travail ne
+compare une FPGA à une Orin.}}
+
+\newglossaryentry{orin-nano}{type=plateformes, name={Jetson Orin Nano}, sort={Jetson Orin Nano}, parent=orin,
+description={6 × Cortex-A78AE, GPU Ampere 1\,024 cœurs + 32 Tensor Cores, 8\,Go, 7 à 15\,W
+\citep[Table~2]{arxiv-2502.15737-performance-analysis-you-only-look} ; 40\,TOPS INT8 annoncés
+au lancement pour la version 8\,Go \constr. Version 4\,Go dans
+\citet[Table~I]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp, qui y
+mesurent l'énergie au repos la plus élevée de leur banc (362\,mWh sur 5\,min, Fig.~2a).}}
+
+\newglossaryentry{orin-nx}{type=plateformes, name={Jetson Orin NX}, sort={Jetson Orin NX}, parent=orin,
+description={8 × Cortex-A78AE, 16\,Go, 10 à 25\,W
+\citep[Table~2]{arxiv-2502.15737-performance-analysis-you-only-look}. La même table donne un GPU
+Ampere de 2\,048 cœurs + 64 Tensor Cores, alors que la fiche constructeur annonce 1\,024 cœurs
++ 32 Tensor Cores et 100\,TOPS INT8 pour la version 16\,Go \constr. YOLOv8n INT8 : 65,8\,FPS
+pour environ 10,3\,W \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.}}
+
+\newglossaryentry{agx-orin}{type=plateformes, name={Jetson AGX Orin}, sort={Jetson AGX Orin}, parent=orin,
+description={15 à 40\,W et 275\,TOPS selon
+\citet[Table~4]{arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded} ; le
+constructeur annonce 12 × Cortex-A78AE et un GPU Ampere 2\,048 cœurs + 64 Tensor Cores, avec
+275\,TOPS et 15 à 60\,W pour la version 64\,Go, 200\,TOPS et 15 à 40\,W pour la version 32\,Go
+\constr : la table du corpus mêle les deux. Baseline GPU d'ImageHD
+\citep{arxiv-2604.21280-imagehd-energy-efficient-device-continual}\pp.}}
+
+% ---------------------------------------------------------------- MCU et SoC ultra-basse consommation
+\newglossaryentry{pulp}{type=plateformes, name={PULP}, sort={PULP},
+description={Parallel Ultra-Low Power : plateforme matérielle open source de l'ETH Zürich et de
+l'université de Bologne, à cluster de cœurs RISC-V partageant une mémoire L1 \constr. Base des
+puces VEGA et GAP9 du corpus.}}
+
+\newglossaryentry{vega}{type=plateformes, name={VEGA}, sort={VEGA}, parent=pulp,
+description={SoC PULP en 22\,nm GlobalFoundries : cluster de 9 cœurs RISC-V (8 de calcul + 1
+contrôleur), 4 FPU FP32/FP16 partagées, 128\,Ko de L1, 1,5\,Mo de L2, 4\,Mo de MRAM
+\citep[§IV-A]{arxiv-2110.10486-tinyml-platform-device-continual-learning}\pp ; 375\,MHz et
+62\,mW mesurés sur la puce seule \citep[§V-D]{arxiv-2110.10486-tinyml-platform-device-continual-learning}\pp.
+Plateforme de l'apprentissage continu par latent replay sur MCU.}}
+
+\newglossaryentry{gap9}{type=plateformes, name={GAP9}, sort={GAP9}, parent=pulp,
+description={MCU RISC-V de GreenWaves, dérivé de PULP, avec accélérateur NE16 \constr. Fabric
+controller + cluster de 9 cœurs, L3 externe de 8\,Mo, 650\,mV et 240\,MHz, environ 44 à 50\,mW
+\citep[§V-A, §VI-C]{arxiv-2403.07851-12-mj-per-class-device}\pp ; cluster 8 cœurs à 175\,MHz
+et 1,6\,Mo de SRAM selon
+\citet[Table~4]{2025-el-zeinaty-designing-object-detection-models-tinyml}. Apprentissage
+few-shot à 12\,mJ par classe et TinyissimoYOLO.}}
+
+\newglossaryentry{stm32}{type=plateformes, name={STM32}, sort={STM32},
+description={Famille de MCU 32 bits de STMicroelectronics à cœur Arm Cortex-M ; déploiement de
+réseaux par X-CUBE-AI ou TensorFlow Lite Micro \constr. Cible des travaux MCUNet,
+TinyissimoYOLO et de la comparaison à VEGA ; la référence « petite cible » face à laquelle un
+FPGA doit se justifier.}}
+
+\newglossaryentry{stm32f412}{type=plateformes, name={STM32F412}, sort={STM32F412}, parent=stm32,
+description={Cortex-M4, 256\,Ko de SRAM, 1\,Mo de Flash
+\citep[§4]{arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference}\pp ; 100\,MHz \constr.
+Porte MCUNetV2-YOLOv3-M4 (64,6\,\% de mAP VOC,
+\citealp[Table~4]{2025-el-zeinaty-designing-object-detection-models-tinyml}).}}
+
+\newglossaryentry{stm32f746}{type=plateformes, name={STM32F746}, sort={STM32F746}, parent=stm32,
+description={Cortex-M7 à 216\,MHz, 320\,Ko de SRAM, 1\,Mo de Flash
+\citep[§3.1]{arxiv-2206.15472-device-training-256kb-memory}\pp{} ;
+\citep[Table~4]{2025-el-zeinaty-designing-object-detection-models-tinyml}. Cible de
+l'entraînement sur l'appareil en 256\,Ko et de MCUNetV2.}}
+
+\newglossaryentry{stm32h743}{type=plateformes, name={STM32H743}, sort={STM32H743}, parent=stm32,
+description={Cortex-M7 à 480\,MHz, 1\,Mo de SRAM
+\citep[Table~4]{2025-el-zeinaty-designing-object-detection-models-tinyml} ; 512\,Ko de SRAM et
+2\,Mo de Flash selon \citet[§4]{arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference}\pp{}
+(le constructeur annonce 1\,Mo de RAM au total, dont 512\,Ko de SRAM AXI d'un seul tenant
+\constr). MCU de référence des détecteurs MCUNet, EtinyNet et XiNet.}}
+
+\newglossaryentry{stm32h7a3}{type=plateformes, name={STM32H7A3}, sort={STM32H7A3}, parent=stm32,
+description={Cortex-M7, utilisé à 3,3\,V et 192\,MHz
+\citep[Table~II]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}\pp ; jusqu'à
+280\,MHz, 1,4\,Mo de SRAM et 2\,Mo de Flash \constr. TinyissimoYOLO y tourne en 359\,ms par
+inférence \citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}\pp.}}
+
+\newglossaryentry{stm32l4}{type=plateformes, name={STM32L4}, sort={STM32L4}, parent=stm32,
+description={Série basse consommation à Cortex-M4. STM32L476RG à 80\,MHz (carte NUCLEO-64),
+65 fois plus lent que VEGA en moyenne
+\citep[§V-E]{arxiv-2110.10486-tinyml-platform-device-continual-learning}\pp ; 128\,Ko de SRAM
+\constr. STM32L4R9 (Cortex-M4F, 3,3\,V, 120\,MHz) dans
+\citet[Table~II]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}\pp.}}
+
+\newglossaryentry{stm32n6}{type=plateformes, name={STM32N6}, sort={STM32N6}, parent=stm32,
+description={MCU à Cortex-M55 et NPU, 800\,MHz, 4,2\,Mo de SRAM
+\citep[Table~4]{2025-el-zeinaty-designing-object-detection-models-tinyml} ; NPU Neural-ART
+d'environ 600\,GOPS \constr. Cité comme MCU à accélérateur IA ; aucune mesure dans le corpus.}}
+
+% ---------------------------------------------------------------- cœurs Arm
+\newglossaryentry{cortex-m4}{type=plateformes, name={Cortex-M4}, sort={Cortex-M4},
+description={Cœur Arm ARMv7E-M pour MCU, avec instructions DSP/SIMD et FPU simple précision
+optionnelle (Cortex-M4F) \constr. Présent dans les STM32F412 et STM32L4, le MAX78000 et
+l'Apollo4b du corpus.}}
+
+\newglossaryentry{cortex-m7}{type=plateformes, name={Cortex-M7}, sort={Cortex-M7},
+description={Cœur Arm ARMv7E-M haut de gamme pour MCU : pipeline superscalaire, caches, FPU
+optionnelle \constr. Présent dans les STM32F746, STM32H743 et STM32H7A3 du corpus.}}
+
+\newglossaryentry{cortex-a9}{type=plateformes, name={Cortex-A9}, sort={Cortex-A9},
+description={Cœur applicatif Arm ARMv7-A \constr ; processeur (PS) des Zynq-7000, à 650\,MHz
+sur PYNQ-Z1 \citep[Table~1]{2019-tsukada-neural-network-device-learning-anomaly}. Exécute le
+post-traitement YOLOv2 sous PetaLinux chez
+\citet[§4.2]{2025-kim-design-implementation-yolov2-accelerator-zynq}.}}
+
+\newglossaryentry{cortex-a15}{type=plateformes, name={Cortex-A15}, sort={Cortex-A15},
+description={Cœur applicatif Arm ARMv7-A \constr. Cible de mesure (SoC TI KeyStone) du code C
+avionique généré par ACETONE \citep[§4.2]{2022-de-albuquerque-silva-acetone-predictable-programming-framework-ml}.}}
+
+% ---------------------------------------------------------------- NPU, VPU, ASIC
+\newglossaryentry{ncs2}{type=plateformes, name={Intel NCS2 (Myriad)}, sort={NCS2},
+description={Neural Compute Stick 2 : clé USB~3.0 d'Intel à VPU Movidius Myriad X, environ
+1\,TFLOPS et 1\,W en plus de l'hôte \citep[Table~2]{2022-feng-benchmark-analysis-yolo-performance-edge},
+0,64\,W au repos \citep[Table~4]{2022-feng-benchmark-analysis-yolo-performance-edge} ;
+OpenVINO, FP16. Son prédécesseur, la Myriad~2, est la VPU des satellites Φ-Sat
+\citep{2023-guerrisi-artificial-intelligence-board-image-compression} et a été testée sous
+ions lourds \citep[§IV-C.3]{2024-rech-artificial-neural-networks-space-safety}.}}
+
+\newglossaryentry{hailo8}{type=plateformes, name={Hailo-8}, sort={Hailo-8},
+description={NPU dataflow de la société Hailo, 26\,TOPS INT8 pour environ 2,5\,W typiques
+\constr ; utilisée via la carte Raspberry Pi AI HAT+ et HailoRT
+\citep[§III-B2]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp. Seul point
+NPU du corpus : YOLOv8n, mAP COCO 32 en 76\,ms
+\citep[§IV]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.}}
+
+\newglossaryentry{edgetpu}{type=plateformes, name={Google Edge TPU (Coral)}, sort={Edge TPU},
+description={ASIC d'inférence INT8 de Google, 4\,TOPS pour 2\,W
+\citep[Table~4]{arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded}, vendu en
+clé USB, module ou Coral Dev Board \constr. Mesuré sur Coral Dev Board
+\citep{arxiv-2211.11647-benchmarking-edge-computing-devices-grape} et en clé USB sur Raspberry
+Pi, où YOLOv8 doit passer en 320 × 320
+\citep[§III-B2]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.}}
+
+\newglossaryentry{eyeriss}{type=plateformes, name={Eyeriss}, sort={Eyeriss},
+description={Accélérateur CNN ASIC du MIT (65\,nm, 168 PE, flot « row stationary») \constr ;
+166\,GOPS/W pour 278\,mW sur AlexNet \citep[§XI-B]{2023-shuvo-efficient-acceleration-deep-learning-inference}.
+Architecture de référence de l'étude de propagation d'erreurs et de FIT de
+\citet{2017-li-understanding-error-propagation-deep-learning}, en simulation.}}

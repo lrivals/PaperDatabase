@@ -8,119 +8,239 @@ Les premiers travaux sur la détection partent d'un constat de
 \citet[§1]{2019-ding-req-yolo-resource-aware-efficient} : la littérature FPGA accélère
 surtout la classification. En 2018, aucun toolflow ne visait la détection
 \citep[§2.6, §3.1]{2018-venieris-toolflows-mapping-convolutional-neural-networks}. Le
-corpus montre ensuite quatre approches.
+corpus montre ensuite cinq approches : compression puis design sur mesure, protocole commun
+de concours, co-conception du réseau et de l'accélérateur, design HLS ou RTL sur SoC, et
+flots automatiques (dataflow ou \glslink{dpu}{DPU} de Vitis~AI).
 
-\paragraph{Compression puis design sur mesure.} REQ-YOLO compresse Tiny YOLO (YOLOv2-tiny)
+\paragraph{Compression puis design sur mesure.} \glslink{req-yolo}{REQ-YOLO} compresse Tiny \glslink{yolo}{YOLO} (\glslink{yolov2-tiny}{YOLOv2-tiny})
 de deux façons :
 \begin{itemize}
   \item des matrices bloc-circulantes, qui transforment la convolution en FFT, produit
     terme à terme et FFT inverse \src{§3} ;
   \item une quantification hétérogène par ADMM qui choisit, couche par couche, entre des
-    multiplications sur DSP et des décalages sur LUT \src{§4}.
+    multiplications sur \glslink{dsp}{DSP} et des décalages sur \glslink{lut}{LUT} \src{§4}.
 \end{itemize}
-Tous les poids tiennent alors en BRAM \src{§5}. Sur un Virtex-7 690T en carte PCIe, le
-modèle atteint 314,2\,FPS pour 21\,W \src{Table~2}. Trois réserves :
+Tous les poids tiennent alors en \glslink{bram}{BRAM} \src{§5}. Sur un \glslink{virtex7}{Virtex-7} 690T en carte PCIe, le
+modèle atteint 314,2\,\glslink{fps}{FPS} pour 21\,\glslink{u-w}{W} \src{Table~2}. Trois réserves :
 \begin{itemize}
-  \item la latence de 3,18\,ms est une somme des latences par couche, sans transfert PCIe
-    ni NMS \src{Table~1} ;
-  \item la mAP absolue n'est pas dans le texte : seules des pertes relatives le sont
+  \item la latence de 3,18\,\glslink{u-ms}{ms} est une somme des latences par couche, sans transfert PCIe
+    ni \glslink{nms}{NMS} \src{Table~1} ;
+  \item la \glslink{map}{mAP} absolue n'est pas dans le texte : seules des pertes relatives le sont
     \src{§6.2} ;
   \item la plateforme n'a rien d'embarqué.
 \end{itemize}
-Face à une Jetson TX2 exécutant le même modèle (28,4\,FPS, 10,8\,W, \src{Table~2}), le
-gain est net, mais TensorRT n'est pas mentionné : la TX2 est vraisemblablement
+Face à une \glslink{tx2}{Jetson TX2} exécutant le même modèle (28,4\,\glslink{fps}{FPS}, 10,8\,\glslink{u-w}{W}, \src{Table~2}), le
+gain est net, mais TensorRT n'est pas mentionné : la \glslink{tx2}{TX2} est vraisemblablement
 sous-exploitée \deduit.
 
-\paragraph{Protocole commun, mesuré par un tiers.} Le concours DAC-SDC 2018
-\citep{2021-xu-dac-sdc-low-power-object} impose deux plateformes (PYNQ-Z1 et Jetson TX2),
+\paragraph{Protocole commun, mesuré par un tiers.} Le concours \glslink{dac-sdc}{DAC-SDC} 2018
+\citep{2021-xu-dac-sdc-low-power-object} impose deux plateformes (\glslink{pynq-z1}{PYNQ-Z1} et \glslink{tx2}{Jetson TX2}),
 un jeu de test caché d'images de drone, un débit minimal et une énergie mesurée au
 wattmètre par les organisateurs \src{§2.3}. C'est le seul protocole commun FPGA/GPU du
 corpus. Les équipes FPGA gagnantes utilisent des détecteurs maison en HLS ou RTL sur
-XC7Z020, avec les cartes d'activation en DDR \src{§4.2} :
+\glslink{xc7z020}{XC7Z020}, avec les cartes d'activation en DDR \src{§4.2} :
 \begin{itemize}
-  \item TGIIF, un SSD élagué en 8~bits : IoU de 0,62 à 11,96\,FPS \src{§5.2.1} ;
-  \item SystemsETHZ, un SqueezeNet binaire suivi d'une tête YOLO : IoU de 0,49 à
-    25,97\,FPS \src{§5.2.1}.
+  \item TGIIF, un \glslink{ssd}{SSD} élagué en 8~bits : \glslink{iou}{IoU} de 0,62 à 11,96\,\glslink{fps}{FPS} \src{§5.2.1} ;
+  \item SystemsETHZ, un \glslink{squeezenet}{SqueezeNet} binaire suivi d'une tête \glslink{yolo}{YOLO} : \glslink{iou}{IoU} de 0,49 à
+    25,97\,\glslink{fps}{FPS} \src{§5.2.1}.
 \end{itemize}
-Limites : la métrique est l'IoU d'un seul objet par image, pas une mAP ; les puissances
+Limites : la métrique est l'\glslink{iou}{IoU} d'un seul objet par image, pas une \glslink{map}{mAP} ; les puissances
 par équipe ne figurent qu'en figures ; le score composite utilise des bases de logarithme
 différentes pour le FPGA et le GPU \src{§2.3}. Les auteurs estiment que le FPGA consomme
 1/3 à 1/2 de l'énergie du GPU pour une précision proche, sans chiffre dans le texte
 \src{§5.3}.
 
-\paragraph{Design HLS sur SoC d'entrée de gamme.}
-\citet{2023-zhai-fpga-vehicle-detection-tracking-accelerator} élaguent YOLOv3-tiny par
-canaux (calcul divisé par 7,4), le quantifient en virgule fixe 16~bits dynamique et
-l'implantent en HLS sur un Zynq XC7Z035. Leur accélérateur combine Winograd pour les
-convolutions 3$\times$3 et im2col + GEMM pour les 1$\times$1 \src{§3.1, §3.5}. Le NMS et
-le suivi Deepsort tournent sur l'ARM \src{§3.3}. Avec un module, ils obtiennent
-91,65\,FPS pour 12,51\,W ; avec deux modules, 168,72\,FPS pour 15,18\,W
-\src{Tables~8--9}. La méthode de mesure de puissance n'est pas décrite. Deux points
-critiques :
+\paragraph{Co-conception du réseau et de l'accélérateur.} Deux travaux conçoivent le
+détecteur en fonction de la cible plutôt que de compresser un réseau de référence :
 \begin{itemize}
-  \item l'AP@0.5 est identique en FP32 et en INT16 à trois décimales, ce qui laisse penser
-    qu'elle n'a pas été remesurée sur la cible \deduit ;
-  \item la ligne Jetson Nano de leur comparaison vient d'un autre article et porte sur un
-    modèle non élagué \src{Table~7}. Le gain affiché vient donc surtout de l'élagage.
+  \item \glslink{skynet}{SkyNet} \citep{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp{},
+    vainqueur de \glslink{dac-sdc}{DAC-SDC} 2019, assemble des blocs \enquote{Bundles} évalués sur la cible
+    et cherche les canaux par essaim particulaire sous contrainte de latence \src{§4}. Le
+    même modèle est mesuré par les organisateurs sur \glslink{tx2}{TX2} (\glslink{iou}{IoU} 0,731, 67,33\,\glslink{fps}{FPS}, 13,50\,\glslink{u-w}{W})
+    et sur \glslink{ultra96}{Ultra96} (\glslink{iou}{IoU} 0,716, 25,05\,\glslink{fps}{FPS}, 7,26\,\glslink{u-w}{W}) \src{Tables~5--6}. Le FPGA traite des
+    lots de 4 images \src{§6.4} : les 25,05\,\glslink{fps}{FPS} sont un débit, pas l'inverse d'une latence
+    par image \deduit. Aucune ressource FPGA n'est rapportée.
+  \item \glslink{codenet}{CoDeNet} \citep{arxiv-2006.08357-codenet-efficient-deployment-input-adaptive}
+    adapte la convolution déformable au matériel (offsets bornés, entiers) et utilise une
+    tête \glslink{centernet}{CenterNet} sans \glslink{nms}{NMS} \src{§3.1, §4.1}. Sur \glslink{ultra96}{Ultra96}, en W4A8, la configuration
+    256$\times$256 obtient 51,1 d'\glslink{ap50}{AP50} VOC07 à 32,2\,\glslink{fps}{FPS}, 31\,\glslink{u-ms}{ms} à batch~1 et 5,6\,\glslink{u-w}{W} de
+    carte, dont 4,3\,\glslink{u-w}{W} au repos \src{Tables~3 et~5, §5}. En 512$\times$512, l'\glslink{ap50}{AP50} monte à
+    61,7 mais le débit tombe à 9,3\,\glslink{fps}{FPS}. Le résumé annonce \enquote{26,9 \glslink{fps}{fps}} et
+    \enquote{61,7 \glslink{ap50}{AP50}}, deux chiffres de configurations différentes.
 \end{itemize}
 
-\paragraph{Toolflow streaming et flot industriel.} SATAY
-(section~\ref{sec:toolflows}) couvre YOLOv3-tiny à YOLOv8s, mais ses meilleurs chiffres
-viennent de cartes Virtex de 23 à 67\,W \src{Table~III}. Sur la seule carte SoC testée,
-la ZCU104, YOLOv5n en 640$\times$640 obtient 26,7 de mAP50 COCO pour 21,41\,ms et
-14,5\,W, contre 27,7 de mAP50, 32,28\,ms et 8,58\,W pour une Jetson TX2
-\src{Table~IV}$^{m}$. L'énergie par inférence est du même ordre (317 contre 277\,mJ,
-\src{Table~IV}). À l'autre extrémité,
-\citet{arxiv-2507.18174-real-time-object-detection-classification} déploient YOLOv5 INT8
-par Vitis~AI sur KV260 : 9\,FPS et 3,5\,W, méthode non décrite \src{Table~I}. Leur
-précision (98,6\,\%) est une \enquote{classification accuracy} sur 72 images choisies, qui
-ne se compare à aucune mAP. Leur propre tableau contredit leur conclusion : 2,6\,FPS/W,
-sous quatre des cinq travaux cités \src{§IV-B, Table~I}.
+\paragraph{Design HLS ou RTL sur mesure.} Quatre travaux écrivent leur propre accélérateur,
+du SoC d'entrée de gamme au FPGA sans processeur dur :
+\begin{itemize}
+  \item \citet{2023-zhai-fpga-vehicle-detection-tracking-accelerator} élaguent \glslink{yolov3-tiny}{YOLOv3-tiny}
+    par canaux (calcul divisé par 7,4), le quantifient en virgule fixe 16~bits dynamique et
+    l'implantent en HLS sur un \glslink{zynq}{Zynq} \glslink{xc7z035}{XC7Z035}. Leur accélérateur combine Winograd pour les
+    convolutions 3$\times$3 et im2col + GEMM pour les 1$\times$1 \src{§3.1, §3.5}. Le \glslink{nms}{NMS}
+    et le suivi Deepsort tournent sur l'ARM \src{§3.3}. Avec un module, ils obtiennent
+    91,65\,\glslink{fps}{FPS} pour 12,51\,\glslink{u-w}{W} ; avec deux modules, 168,72\,\glslink{fps}{FPS} pour 15,18\,\glslink{u-w}{W}
+    \src{Tables~8--9}. La méthode de mesure de puissance n'est pas décrite. L'\glslink{ap}{AP}@0.5 est
+    identique en FP32 et en INT16 à trois décimales, ce qui laisse penser qu'elle n'a pas
+    été remesurée sur la cible \deduit. La ligne \glslink{jetson-nano}{Jetson Nano} de leur comparaison vient d'un
+    autre article et porte sur un modèle non élagué \src{Table~7} : le gain affiché vient
+    donc surtout de l'élagage.
+  \item \citet{2024-yan-fpga-yolov5-accelerator-real-time} quantifient tout \glslink{yolov5s}{YOLOv5s} en
+    4~bits, première couche comprise, et empaquettent quatre multiplications par \glslink{dsp}{DSP}
+    \src{§4--5}. Sur \glslink{zcu102}{ZCU102}, en 512$\times$512, ils annoncent 79,1\,\glslink{fps}{FPS}, 12,63\,\glslink{u-ms}{ms} et
+    12,3\,\glslink{u-w}{W} sans méthode de mesure, pour 73,8 de \glslink{map}{mAP} VOC (1,5 point sous le flottant)
+    \src{Tables~2--3}. Le \enquote{+29\,\% face à Vitis~AI} du résumé est un rapport de
+    \glslink{gopsdsp}{GOPS/DSP} face au \glslink{yolov3}{YOLOv3} d'un autre travail, pas une mesure de la \glslink{dpu}{DPU} sur la même carte
+    \src{Table~2}.
+  \item \citet{2024-zhang-end-end-acceleration-yolo-object} visent un FPGA sans cœur ARM
+    (\glslink{kintex7}{Kintex-7} \glslink{xc7k325t}{XC7K325T}, MicroBlaze) et mettent tout le post-traitement en matériel, \glslink{nms}{NMS}
+    compris \src{§3.5}. \glslink{yolov3-tiny}{YOLOv3-tiny} INT8 tient en 15,2\,\glslink{u-ms}{ms} de bout en bout
+    \src{Table~5}, pour 12,3\,\glslink{u-w}{W} au wattmètre de carte et 7,8\,\glslink{u-w}{W} de puce estimés par Vivado
+    \src{§5.1, Tables~3--4}. C'est la seule paire puce/carte FPGA du corpus, mais la puce est
+    estimée. Le débit n'est donné qu'en \glslink{gop}{GOP}/s, sans \glslink{fps}{FPS}.
+  \item \citet{2025-kim-design-implementation-yolov2-accelerator-zynq} implantent \glslink{yolov2}{YOLOv2}
+    INT16 en RTL sur le plus petit SoC du corpus (\glslink{zynq}{Zynq} \glslink{xc7z020}{XC7Z020}, 100\,\glslink{u-mhz}{MHz}). Une image
+    416$\times$416 demande 12,64\,\glslink{u-s}{s} \src{§4.2}, soit moins de 0,1\,\glslink{fps}{FPS} \deduit. La
+    précision n'est donnée que sur quelques détections d'exemple, pas en \glslink{map}{mAP}
+    \src{§4.2}, et les gains en \glslink{ff}{FF} et \glslink{dsp}{DSP} (jusqu'à $-26$ et $-15$\,\%) sont obtenus
+    contre des designs bien plus rapides \src{Table~9}.
+\end{itemize}
+
+\paragraph{Toolflow dataflow.} SATAY (section~\ref{sec:toolflows}) couvre \glslink{yolov3-tiny}{YOLOv3-tiny} à
+\glslink{yolov8s}{YOLOv8s}, mais ses meilleurs chiffres viennent de cartes \glslink{virtex7}{Virtex} de 23 à 67\,\glslink{u-w}{W}
+\src{Table~III}. Sur la seule carte SoC testée, la \glslink{zcu104}{ZCU104}, \glslink{yolov5n}{YOLOv5n} en 640$\times$640
+obtient 26,7 de \glslink{map50}{mAP50} COCO pour 21,41\,\glslink{u-ms}{ms} et 14,5\,\glslink{u-w}{W}, contre 27,7 de \glslink{map50}{mAP50}, 32,28\,\glslink{u-ms}{ms} et
+8,58\,\glslink{u-w}{W} pour une \glslink{tx2}{Jetson TX2} \src{Table~IV}$^{m}$. L'énergie par inférence est du même
+ordre (317 contre 277\,\glslink{u-mj}{mJ}, \src{Table~IV}). La quantification y est simulée par ONNX
+Runtime \src{§IV-A} : la \glslink{map}{mAP} n'est pas mesurée sur la carte. SMOF
+\citep{arxiv-2403.18921-smof-streaming-modern-cnns-fpgas}\pp{} étend fpgaConvNet aux
+réseaux qui débordent de la puce : \glslink{yolov8n}{YOLOv8n} atteint 184\,\glslink{fps}{FPS}, mais sur \glslink{vcu118}{VCU118} et sans
+mesure de puissance \src{Table~V}$^{m}$.
+
+Le dataflow quantifié existe désormais sur le plus petit SoC du corpus.
+\citet{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp{} entraînent par QAT
+(Brevitas) un \glslink{yolov3-tiny}{YOLOv3-tiny} très allégé, \glslink{lp-yolo}{LP-YOLO Slim}, en poids 2~bits et activations
+4~bits, et le compilent par FINN sur un \glslink{zynq}{Zynq} \glslink{xc7z020}{XC7Z020} (\glslink{pynq-z1}{PYNQ-Z1}). Ils mesurent 35,66\,\glslink{fps}{FPS},
+45,1\,\glslink{u-ms}{ms} de latence dans la PL et 2,91\,\glslink{u-w}{W} sur le rail 12\,V de la carte, pour 0,594 de
+\glslink{map50}{mAP@0,5} sur les véhicules de VOC \src{§V-D, Table~II}$^{m}$. Ils distinguent les
+estimations de FINN des mesures sur carte (38 contre 22\,\glslink{fps}{FPS} pour un même repliement,
+\src{§III-B}). Sur leur \glslink{yolov3-tiny}{YOLOv3-tiny} de référence en 4~bits, la QAT reste à environ 0,006
+de \glslink{map}{mAP} du flottant, contre environ 0,17 de perte en PTQ \src{§IV-B}. Réserves : classes de
+véhicules seules, débit mesuré par lots de 100 images, ressources non extraites, seuils de
+réussite fixés par les auteurs.
+
+\paragraph{Flot industriel : la DPU de Vitis~AI.} Quatre travaux utilisent la \glslink{dpu}{DPU}, le
+moteur unique d'AMD :
+\begin{itemize}
+  \item \citet{arxiv-2304.11580-framework-benchmarking-real-time-embedded} construisent un
+    banc où un hôte séparé envoie les images et calcule la \glslink{map}{mAP} à partir des sorties de la
+    carte \src{§3}. \glslink{yolov4}{YOLOv4} 512$\times$512 INT8 sur \glslink{zcu104}{ZCU104} obtient 37,5 de \glslink{map5095}{mAP50-95} COCO
+    pour 54,42\,\glslink{u-ms}{ms} d'inférence et 23\,\glslink{u-w}{W} de carte au multimètre \src{§4.1, Table~1}. Le
+    quantificateur coûte 2,2 points, la compilation pour la \glslink{dpu}{DPU} en retire encore
+    \src{§4.3}. C'est le travail du corpus qui s'approche le plus d'un protocole complet ;
+    il compare aussi le même modèle sur \glslink{agx-xavier}{Jetson AGX Xavier} (voir plus bas).
+  \item \citet{arxiv-2607.13106-no-attention-no-problem-dpu}\pp{} remplacent les opérateurs
+    que la \glslink{dpu}{DPU} ne sait pas exécuter (\glslink{silu}{SiLU} par \glslink{relu}{ReLU}, split par des convolutions 1$\times$1,
+    attention C2PSA approchée par un hard-sigmoid) et déploient \glslink{yolov8n}{YOLOv8n}, v11n et v26n en
+    PTQ INT8 sur \glslink{zcu104}{ZCU104} \src{§III-B}. La \glslink{map5095}{mAP50-95} mesurée avant et après le passage
+    sur la \glslink{dpu}{DPU} varie de façon imprévisible : \glslink{yolov11n}{YOLOv11n} perd 2 points sur VOC (0,59 à 0,57),
+    \glslink{yolov8n}{YOLOv8n} en perd 15 sur VOC (0,60 à 0,45) et 30 sur KITTI (0,64 à 0,34)
+    \src{Table~II}. Les modifications seules coûtent environ 3 points \src{§IV-B,
+    Table~I}. Le résumé annonce environ 5\,\% de perte, §IV-B environ 7\,\%. \glslink{yolov26n}{YOLOv26n}
+    tourne à 34,05\,\glslink{fps}{FPS} de bout en bout sur une vidéo de personnes \src{§IV-C}, et la
+    puissance (4,8 à 8,8\,\glslink{u-w}{W} selon la taille de \glslink{dpu}{DPU}) est une estimation de Vivado
+    \src{Table~III}.
+  \item \citet{2026-fata-low-cost-fpga-enhanced-cnn} sont les seuls à cibler la \glslink{kv260}{KV260}
+    avec une mesure complète de débit. Ils élaguent \glslink{yolov3-tiny}{YOLOv3-tiny} à 70\,\%, le quantifient
+    par QAT INT8 et ajoutent un contrôleur RTL qui garde les poids en \glslink{bram}{BRAM} et \glslink{uram}{URAM} plutôt
+    qu'en DDR \src{§IV-C--E}. Ils obtiennent 24,3\,\glslink{fps}{FPS}, 41,59\,\glslink{u-ms}{ms} et 2,13\,\glslink{u-w}{W} de portée non
+    précisée \src{Table~8}$^{m}$. Leur précision est une \enquote{accuracy}
+    (TP+TN)/(TP+TN+FP+FN), mal définie pour la détection (Eq.~4), et aucune baseline
+    flottante ne mesure la perte due à la compression. Leur GPU de comparaison, une
+    RTX~2070 de bureau, va plus vite (44,64\,\glslink{fps}{FPS}, \src{Table~10}).
+  \item \citet{arxiv-2507.18174-real-time-object-detection-classification} déploient
+    \glslink{yolov5}{YOLOv5} INT8 sur \glslink{kv260}{KV260} : 9\,\glslink{fps}{FPS} et 3,5\,\glslink{u-w}{W}, méthode non décrite \src{Table~I}. Leur
+    précision (98,6\,\%) est une \enquote{classification accuracy} sur 72 images
+    choisies, qui ne se compare à aucune \glslink{map}{mAP}. Leur propre tableau contredit leur
+    conclusion : 2,6\,\glslink{fpsw}{FPS/W}, sous quatre des cinq travaux cités \src{§IV-B, Table~I}.
+\end{itemize}
 
 \subsection{Tableau des détecteurs FPGA du corpus}
 
 \begin{table}[!htbp]
 \centering\footnotesize
-\caption{Détecteurs sur FPGA dans \texttt{benchmarks.csv}. Précisions non comparables
-d'une ligne à l'autre (jeux, métriques et résolutions différents). $^{m}$ : confiance
-\emph{medium}. Portée de puissance : u = \emph{unspecified}, b = \emph{board}.}
+\caption{Détecteurs sur FPGA dans \texttt{benchmarks.csv} (une ou deux lignes par travail).
+Précisions non comparables d'une ligne à l'autre (jeux, métriques et résolutions
+différents). $^{m}$ : confiance \emph{medium}. Portée de puissance : u =
+\emph{unspecified}, b = \emph{board}, e = \emph{estimated} (Vivado).}
 \label{tab:detection-fpga}
-\begin{tabularx}{\textwidth}{@{}P{2.2cm}LP{1.55cm}P{2.1cm}rrrl@{}}
+\begin{tabularx}{\textwidth}{@{}P{1.55cm}LP{1.8cm}P{2.1cm}rrrl@{}}
 \toprule
-Travail & Modèle, précision & Puce & Métrique & Préc. & FPS & ms & W (portée) \\
+Travail & Modèle, précision & Puce & Métrique & Préc. & \glslink{fps}{FPS} & ms & W (portée) \\
 \midrule
-REQ-YOLO & Tiny YOLO bloc-circulant, bits \nr & XC7VX690T & mAP VOC & \nr & 314,2 & 3,18 & 21 (u) \\
-FINN-R & Tincy YOLO W1A3 (MO) & XC7Z020 & mAP VOC & 50,1 & \nr & \nr & 2,5 (b) \\
-FINN-R & Tincy YOLO W1A3 (MO) & XCZU3EG & mAP VOC & 50,1 & \nr & \nr & 9,7 (b) \\
-DAC-SDC & TGIIF : SSD élagué INT8 & XC7Z020 & IoU, 1 objet & 62,4 & 11,96 & \nr & \nr$^{m}$ \\
-DAC-SDC & SystemsETHZ : SqueezeNet binaire + YOLO & XC7Z020 & IoU, 1 objet & 49,2 & 25,97 & \nr & \nr$^{m}$ \\
-Zhai & YOLOv3-tiny élagué INT16, 1 module & XC7Z035 & AP@0.5, 1 classe & 59,9 & 91,65 & \nr & 12,51 (u) \\
-Zhai & idem, 2 modules & XC7Z035 & --- & \nr & 168,72 & \nr & 15,18 (u) \\
-SATAY & YOLOv5n 640, PTQ & ZCU104 & mAP50 COCO & 26,7 & \nr & 21,41 & 14,5 (u)$^{m}$ \\
-SATAY & YOLOv8s 640, W8A16 & VCU118 & mAP$^{*}$ COCO & 61 & \nr & 24,5 & 57,4 (u)$^{m}$ \\
-Magalhães & RetinaNet R50 INT8, 2 DPU & ZCU104 & mAP VineSet & \nr & 25 & \nr & \nr$^{m}$ \\
-Al Amin & YOLOv5 INT8 (DPU) & KV260 & acc., 72 images & 98,6 & 9 & \nr & 3,5 (u) \\
+\glslink{req-yolo}{REQ-YOLO} & Tiny \glslink{yolo}{YOLO} bloc-circulant, bits \nr & \glslink{xc7vx690t}{XC7VX690T} & \glslink{map}{mAP} VOC & \nr & 314,2 & 3,18 & 21 (u) \\
+FINN-R & \glslink{tincy-yolo}{Tincy YOLO} W1A3 (MO) & \glslink{xc7z020}{XC7Z020} & \glslink{map}{mAP} VOC & 50,1 & \nr & \nr & 2,5 (b) \\
+FINN-R & \glslink{tincy-yolo}{Tincy YOLO} W1A3 (MO) & \glslink{xczu3eg}{XCZU3EG} & \glslink{map}{mAP} VOC & 50,1 & \nr & \nr & 9,7 (b) \\
+\glslink{dac-sdc}{DAC-SDC} & TGIIF : \glslink{ssd}{SSD} élagué INT8 & \glslink{xc7z020}{XC7Z020} & \glslink{iou}{IoU}, 1 objet & 62,4 & 11,96 & \nr & \nr$^{m}$ \\
+\glslink{dac-sdc}{DAC-SDC} & SystemsETHZ : \glslink{squeezenet}{SqueezeNet} binaire + \glslink{yolo}{YOLO} & \glslink{xc7z020}{XC7Z020} & \glslink{iou}{IoU}, 1 objet & 49,2 & 25,97 & \nr & \nr$^{m}$ \\
+\glslink{skynet}{SkyNet} & FM9/W11, lot de 4 & \glslink{xczu3eg}{XCZU3EG} & \glslink{iou}{IoU}, 1 objet & 71,6 & 25,05 & \nr & 7,26 (u) \\
+\glslink{codenet}{CoDeNet} & W4A8, 256, sans \glslink{nms}{NMS} & \glslink{xczu3eg}{XCZU3EG} & \glslink{ap50}{AP50} VOC07 & 51,1 & 32,2 & 31 & 5,6 (b)$^{m}$ \\
+\glslink{codenet}{CoDeNet} & W4A8, 512 & \glslink{xczu3eg}{XCZU3EG} & \glslink{ap50}{AP50} VOC07 & 61,7 & 9,3 & \nr & \nr$^{m}$ \\
+Zhai & \glslink{yolov3-tiny}{YOLOv3-tiny} élagué INT16, 1 module & \glslink{xc7z035}{XC7Z035} & \glslink{ap}{AP}@0.5, 1 classe & 59,9 & 91,65 & \nr & 12,51 (u) \\
+Zhai & idem, 2 modules & \glslink{xc7z035}{XC7Z035} & --- & \nr & 168,72 & \nr & 15,18 (u) \\
+Zhang 2024 & \glslink{yolov3-tiny}{YOLOv3-tiny} INT8, \glslink{nms}{NMS} matériel & \glslink{xc7k325t}{XC7K325T} & \glslink{map}{mAP} VOC & 58,1 & \nr & 15,2 & 12,3 (b) \\
+Yan & \glslink{yolov5s}{YOLOv5s} 512 W4A4 & \glslink{zcu102}{ZCU102} & \glslink{map}{mAP} VOC & 73,8 & 79,1 & 12,63 & 12,3 (u) \\
+Kim & \glslink{yolov2}{YOLOv2} 416 INT16, RTL & \glslink{xc7z020}{XC7Z020} & \nr & \nr & \nr & 12\,639 & 2,04 (u)$^{m}$ \\
+SATAY & \glslink{yolov5n}{YOLOv5n} 640, PTQ & \glslink{zcu104}{ZCU104} & \glslink{map50}{mAP50} COCO & 26,7 & \nr & 21,41 & 14,5 (u)$^{m}$ \\
+SATAY & \glslink{yolov8s}{YOLOv8s} 640, W8A16 & \glslink{vcu118}{VCU118} & \glslink{map}{mAP}$^{*}$ COCO & 61 & \nr & 24,5 & 57,4 (u)$^{m}$ \\
+SMOF & \glslink{yolov8n}{YOLOv8n} 640, bfp8 & \glslink{vcu118}{VCU118} & \glslink{map}{mAP} COCO (non nommée) & 35,1 & 184,27 & \nr & \nr$^{m}$ \\
+Gutierrez & \glslink{lp-yolo}{LP-YOLO Slim} 256 W2A4 (FINN) & \glslink{xc7z020}{XC7Z020} & \glslink{map50}{mAP@0,5} véhicules VOC & 59,4 & 35,66 & 45,11 & 2,91 (b)$^{m}$ \\
+Schlosser & \glslink{yolov4}{YOLOv4} 512 INT8 (\glslink{dpu}{DPU}) & \glslink{zcu104}{ZCU104} & \glslink{map5095}{mAP50-95} COCO & 37,5 & \nr & 54,42 & 23 (b) \\
+Karki & \glslink{yolov26n}{YOLOv26n} 416 INT8 (\glslink{dpu}{DPU}) & \glslink{zcu104}{ZCU104} & \glslink{map5095}{mAP50-95} personnes & 67 & 34,05 & 29,37 & 8,76 (e)$^{m}$ \\
+Fata & \glslink{yolov3-tiny}{YOLOv3-tiny} élagué INT8 (\glslink{dpu}{DPU}) & \glslink{xck26}{XCK26} & \enquote{accuracy} VOC & 93,8 & 24,3 & 41,59 & 2,13 (u)$^{m}$ \\
+Magalhães & RetinaNet R50 INT8, 2 \glslink{dpu}{DPU} & \glslink{zcu104}{ZCU104} & \glslink{map}{mAP} VineSet & \nr & 25 & \nr & \nr$^{m}$ \\
+Al Amin & \glslink{yolov5}{YOLOv5} INT8 (\glslink{dpu}{DPU}) & \glslink{kv260}{KV260} & acc., 72 images & 98,6 & 9 & \nr & 3,5 (u) \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Sources : REQ-YOLO \citep[Tables~1--2]{2019-ding-req-yolo-resource-aware-efficient} ; FINN-R
-\citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep} ; DAC-SDC
-\citep[§5.2.1]{2021-xu-dac-sdc-low-power-object} ; Zhai
-\citep[Tables~8--9]{2023-zhai-fpga-vehicle-detection-tracking-accelerator} ; SATAY
+Sources : \glslink{req-yolo}{REQ-YOLO} \citep[Tables~1--2]{2019-ding-req-yolo-resource-aware-efficient} ; FINN-R
+\citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep} ; \glslink{dac-sdc}{DAC-SDC}
+\citep[§5.2.1]{2021-xu-dac-sdc-low-power-object} ; \glslink{skynet}{SkyNet}
+\citep[Tables~6--7]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp{} ; \glslink{codenet}{CoDeNet}
+\citep[Tables~3, 5, 6]{arxiv-2006.08357-codenet-efficient-deployment-input-adaptive} ; Zhai
+\citep[Tables~8--9]{2023-zhai-fpga-vehicle-detection-tracking-accelerator} ; Zhang 2024
+\citep[Tables~4--5]{2024-zhang-end-end-acceleration-yolo-object} ; Yan
+\citep[Tables~2--3]{2024-yan-fpga-yolov5-accelerator-real-time} ; Kim
+\citep[Tables~8--9]{2025-kim-design-implementation-yolov2-accelerator-zynq} ; SATAY
 \citep[Tables~III--IV]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} ;
+SMOF \citep[Tables~III, V]{arxiv-2403.18921-smof-streaming-modern-cnns-fpgas}\pp{} ;
+Gutierrez \citep[§V-D, Table~II]{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp{} ;
+Schlosser \citep[Table~1]{arxiv-2304.11580-framework-benchmarking-real-time-embedded} ;
+Karki \citep[Tables~II--III, §IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp{} ;
+Fata \citep[Tables~7--8]{2026-fata-low-cost-fpga-enhanced-cnn} ;
 Magalhães \citep[§3]{arxiv-2211.11647-benchmarking-edge-computing-devices-grape} ; Al Amin
-\citep[Table~I]{arxiv-2507.18174-real-time-object-detection-classification}. La latence de REQ-YOLO est une somme des
-latences par couche. Le mAP$^{*}$ de SATAY porte un astérisque dont la définition n'a pas
-été extraite.
+\citep[Table~I]{arxiv-2507.18174-real-time-object-detection-classification}. La latence de
+\glslink{req-yolo}{REQ-YOLO} est une somme des latences par couche ; celle de Schlosser, l'inférence seule ;
+celle de Gutierrez, la PL seule (49,8\,\glslink{u-ms}{ms} de bout en bout). Chez Karki, la précision vient du jeu de personnes des auteurs et le débit d'une
+autre vidéo (PETS2009). Le \glslink{map}{mAP}$^{*}$ de SATAY porte un astérisque dont la définition n'a
+pas été extraite.
 
-\paragraph{Lecture du tableau.} D'après un recompte de \texttt{benchmarks.csv}, sur 29
-lignes de détection sur FPGA, 14 ont une mAP COCO, et toutes viennent de SATAY. Aucune ligne
-ne rapporte à la fois une mAP standard, un FPS de bout en bout et une puissance de carte
-mesurée. Les surveys de 2025 confirment ce manque d'homogénéité :
+\paragraph{Lecture du tableau.} Un recompte de \texttt{benchmarks.csv} au 1\textsuperscript{er}
+octobre 2026 (299 lignes, dont 216 sur FPGA) donne 87 lignes de détection sur FPGA, issues de
+17 articles. Elles emploient 14 libellés de précision différents, et 12 n'ont aucune
+précision ; 54 n'ont pas de \glslink{fps}{FPS} et 33 pas de puissance. Seules 21 lignes portent une \glslink{map}{mAP}
+COCO, issues de quatre articles : SATAY (14 lignes, quantification simulée), Karki et al.
+(3), Schlosser et al.\ (3) et SMOF (1). Les \glslink{map}{mAP} de Karki et de Schlosser sont les seules
+mesurées sur la carte. Dix lignes, de quatre articles, réunissent une précision, un débit
+ou une latence et une puissance de carte mesurée : Zhang 2024 (\glslink{map}{mAP} VOC), \glslink{codenet}{CoDeNet} (\glslink{ap50}{AP50}
+VOC07), Gutierrez et al.\ (véhicules VOC) et Schlosser et al.\ (\glslink{map}{mAP} COCO). Aucune ne réunit
+une \glslink{map}{mAP} COCO, un \glslink{fps}{FPS} de bout en bout à batch~1 et une puissance de carte mesurée sur une
+carte de la gamme Kria. Schlosser et al.\ s'en approchent le plus, avec une latence
+d'inférence seule et une \glslink{zcu104}{ZCU104} de 23\,\glslink{u-w}{W}.
+
+Les surveys de 2025 confirment ce manque d'homogénéité :
 \begin{itemize}
   \item \citet{2025-hozhabr-survey-real-time-object-detection} proposent de normaliser par
-    le \emph{pixel throughput} (FPS $\times$ pixels par image, \src{§II-C2}). Cela corrige
+    le \emph{pixel throughput} (\glslink{fps}{FPS} $\times$ pixels par image, \src{§II-C2}). Cela corrige
     la résolution, mais ni la précision ni la portée de puissance ;
   \item \citet{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp{} alignent des designs
     mesurés dans des conditions hétérogènes, avec des incohérences entre texte et tableaux
@@ -128,22 +248,61 @@ mesurée. Les surveys de 2025 confirment ce manque d'homogénéité :
 \end{itemize}
 Hozhabr et Giorgi affirment que \enquote{FPGAs have emerged as the optimal hardware
 platform, offering both speed and power efficiency} \src{§IV}, sans comparaison mesurée
-avec une Jetson récente ni un MCU à NPU.
+avec une \glslink{jetson}{Jetson} récente ni un MCU à NPU. Les deux travaux du corpus qui mesurent le même
+détecteur sur FPGA et sur \glslink{jetson}{Jetson} ne vont pas dans ce sens. Chez Schlosser et al., la
+\glslink{agx-xavier}{Jetson AGX Xavier} en INT8 sous TensorRT est plus rapide (22,0 contre 54,42\,\glslink{u-ms}{ms}), plus
+précise (38,6 contre 37,5) et plus efficace (2,05 contre 1,31\,\glslink{fpsw}{FPS/W}) que la \glslink{zcu104}{ZCU104}
+\src{Table~1}. Chez \glslink{skynet}{SkyNet}, la \glslink{tx2}{TX2} fait 4,99\,\glslink{fpsw}{FPS/W} et l'\glslink{ultra96}{Ultra96} 3,45, valeurs calculées
+à partir des Tables~5--6 \deduit.
 
 \subsection{Post-traitement et interaction PS--PL}
 
-Le NMS, le suivi et le redimensionnement tournent presque toujours sur le processeur du SoC
+Le \glslink{nms}{NMS}, le suivi et le redimensionnement tournent presque toujours sur le processeur du SoC
 et sont rarement comptés :
 \begin{itemize}
-  \item Zhai et al. : NMS et Deepsort sur l'ARM, inclus ou non dans le FPS, on ne sait pas
+  \item Zhai et al. : \glslink{nms}{NMS} et Deepsort sur l'ARM, inclus ou non dans le \glslink{fps}{FPS}, on ne sait pas
     \src{§3.3} ;
-  \item REQ-YOLO : latence sans NMS \src{Table~1} ;
+  \item \glslink{req-yolo}{REQ-YOLO} : latence sans \glslink{nms}{NMS} \src{Table~1} ;
   \item Magalhães et al. : cœur du réseau seul, pré- et post-traitement exclus
     \src{§2.5} ;
-  \item DAC-SDC : redimensionnement sur l'ARM \src{§4.2}.
+  \item \glslink{dac-sdc}{DAC-SDC} : redimensionnement sur l'ARM \src{§4.2} ;
+  \item Yan et al. : pré- et post-traitement, \glslink{nms}{NMS} compris, sur l'ARM \src{§5} ; Kim et
+    al. : couches de concaténation et de détection sur le \glslink{cortex-a9}{Cortex-A9} \src{§4.2} ;
+  \item Gutierrez et al. : décodage et \glslink{nms}{NMS} sur l'ARM \src{§II-B}, soit environ 4,7\,\glslink{u-ms}{ms}
+    entre la latence de la PL et celle de bout en bout \src{§V-D} \deduit ;
+  \item \glslink{codenet}{CoDeNet} : pas de \glslink{nms}{NMS}, mais la première couche tourne sur l'ARM \src{§4.2}.
 \end{itemize}
-Le survey de Sali et al. cite un cas où le débit passe de 195\,FPS pour la détection seule
-à 24\,FPS de bout en bout, à cause d'un post-traitement en Python \src{§VI-C} (chiffre d'un
-travail cité, non vérifié). Hozhabr et Giorgi citent deux contre-exemples, avec un NMS
-pipeliné en matériel ou un système entièrement sur FPGA \src{§V-A}. Tous deux sont sur de
-grosses puces (Stratix~10, Kintex-7) et restent à lire à la source.
+Le post-traitement limite souvent le débit. Karki et al.\ attribuent l'écart entre le débit
+de la \glslink{dpu}{DPU} et les 34,05\,\glslink{fps}{FPS} de bout en bout au post-traitement mono-cœur \src{§IV-C}. Sur
+\glslink{jetson}{Jetson}, Schlosser et al.\ mesurent un post-traitement en numpy plus long que l'inférence,
+alors que celui de la \glslink{dpu}{DPU} est optimisé par la Vitis AI Library \src{§4.2, Table~2}. Le
+survey de Sali et al.\ cite un cas où le débit passe de 195\,\glslink{fps}{FPS} pour la détection seule
+à 24\,\glslink{fps}{FPS} de bout en bout, à cause d'un post-traitement en Python \src{§VI-C} (chiffre d'un
+travail cité, non vérifié).
+
+Le contre-exemple est maintenant dans le corpus. Hozhabr et Giorgi citaient deux systèmes
+où le \glslink{nms}{NMS} est en matériel, sur \glslink{stratix}{Stratix}~10 et sur \glslink{kintex7}{Kintex-7} \src{§V-A}. Le second est
+l'article de \citet{2024-zhang-end-end-acceleration-yolo-object} : leur unité de
+post-traitement traite 845 boîtes en 0,38\,\glslink{u-ms}{ms} avec 8\,893 \glslink{lut}{LUT} et 19 \glslink{dsp}{DSP} \src{Table~2}.
+Elle tourne sur un FPGA sans cœur ARM, avec un MicroBlaze : aucun travail ne la place à
+côté d'une \glslink{dpu}{DPU} sur un SoC \glslink{zynq}{Zynq}.
+
+\subsection{Détection de personnes}
+
+Le cas d'application de la thèse est la détection de personnes. Un seul travail du corpus
+mesure un détecteur de personnes sur FPGA. \citet{arxiv-2607.13106-no-attention-no-problem-dpu}\pp{}
+entraînent leurs \glslink{yolo}{YOLO} nano sur un jeu maison (images de vidéosurveillance et de VOC, 18\,820
+images, une classe) et obtiennent sur la \glslink{dpu}{DPU} une \glslink{map5095}{mAP50-95} de 0,67 à 0,79 selon le
+modèle \src{§III-A, Table~II}. Le jeu n'est pas publié, et le débit est mesuré sur une
+autre vidéo. Les autres détecteurs FPGA visent des véhicules (Zhai, Kim, Gutierrez), des
+défauts de circuits imprimés (Yan), les classes de VOC ou des objets vus de drone.
+
+Côté données, CrowdHuman
+\citep{arxiv-1805.00123-crowdhuman-benchmark-detecting-human-crowd}\pp{} est le seul jeu de
+personnes du corpus : 15\,000 images d'entraînement, 22,64 personnes par image en moyenne,
+avec des boîtes de tête, de corps visible et de corps entier \src{§3, Table~2}. Ses images
+viennent du web, sans vidéo ni scène industrielle \src{§3.1}, et ses baselines sont des
+FPN \glslink{resnet}{ResNet-50} sur GPU \src{§4.1}. Dans tous ces travaux, la précision est une moyenne (\glslink{map}{mAP},
+ou mMR moyenné sur les fausses alarmes par image). Aucun ne donne un taux de personnes
+manquées à taux de fausses alarmes fixé, par distance ou par occultation, encore moins sur
+la cible.

@@ -15,8 +15,8 @@ grandeurs, et une énumération exhaustive (au plus 98\,000 designs légaux, exp
 uniformes pour toutes les couches restent à moins de 5\,\% de l'optimum par couche et
 évitent de reprogrammer le FPGA entre couches \src{Table~4}.
 
-Le résultat, 61,62\,GFLOPS sur les convolutions d'AlexNet en FP32 sur un Virtex-7 VX485T
-pour 18,61\,W mesurés sur la carte \src{Tables~7--8}, est daté : calcul flottant, et
+Le résultat, 61,62\,\glslink{gflops}{GFLOPS} sur les convolutions d'\glslink{alexnet}{AlexNet} en FP32 sur un \glslink{virtex7}{Virtex-7} VX485T
+pour 18,61\,\glslink{u-w}{W} mesurés sur la carte \src{Tables~7--8}, est daté : calcul flottant, et
 seules les convolutions sont accélérées (ni pooling, ni couches denses, \src{§2.1}). Le
 gain énergétique de 24,6$\times$ sur le CPU repose sur le TDP du Xeon et non sur une
 mesure \src{§5.2, Table~8}. La méthode, elle, reste la référence du dimensionnement d'un
@@ -49,11 +49,11 @@ et les séparent selon leur architecture \src{§2.3} :
     FFTCodeGen. Un seul bitstream sert plusieurs réseaux.
 \end{itemize}
 Leurs enseignements \src{§2.7} : le RTL optimisé bat le HLS, une exploration plus fine
-donne de meilleurs designs, et les moteurs uniques profitent des réseaux réguliers (VGG16)
-mais souffrent des noyaux hétérogènes (AlexNet). Ils proposent aussi une grille
+donne de meilleurs designs, et les moteurs uniques profitent des réseaux réguliers (\glslink{vgg16}{VGG16})
+mais souffrent des noyaux hétérogènes (\glslink{alexnet}{AlexNet}). Ils proposent aussi une grille
 d'évaluation \src{§3.1} : débit en GOp/s avec le nombre d'opérations, les poids et le
 batch, latence à batch~1, ressources, puissance, précision applicative et répartition
-mémoire on-chip/off-chip. Les métriques normalisées (GOp/s par DSP ou par kLUT) ne valent,
+mémoire on-chip/off-chip. Les métriques normalisées (GOp/s par \glslink{dsp}{DSP} ou par kLUT) ne valent,
 selon eux, qu'à l'intérieur d'une même famille de FPGA.
 
 Deux réserves sur ce survey : ses chiffres sont repris des publications ou des auteurs,
@@ -61,22 +61,35 @@ sans qu'aucun outil soit relancé \src{§2.6}, et ses tableaux comparatifs ne co
 puissance ni précision. Les auteurs du survey sont aussi ceux de fpgaConvNet, ce qui invite
 à lire avec recul les comparaisons qui le concernent \deduit.
 
+Sept ans plus tard, le survey de \citet{2025-hozhabr-survey-real-time-object-detection},
+consacré à la détection temps réel sur FPGA, reprend la même dichotomie, moteur unique ou
+streaming \src{§IV-A}. Il propose de normaliser le débit par la résolution (\emph{pixel
+throughput}, \glslink{fps}{FPS} $\times$ pixels par image, \src{§II-C2, Éq.~2}), ce qui ne règle ni la
+métrique de précision ni la portée de la puissance. Ses études de cas de détection
+n'emploient aucun toolflow dataflow quantifié (FINN, hls4ml) : ce sont des \glslink{dpu}{DPU} Vitis~AI et
+des accélérateurs HLS maison \src{Annexe~B}. La dichotomie de 2018 tient donc toujours, mais
+la détection sur FPGA s'est surtout développée du côté du moteur unique.
+
 \subsection{La mémoire on-chip, goulot de l'architecture streaming}
 
 Une architecture streaming garde les poids en mémoire on-chip. Sur une petite puce, c'est
-la BRAM qui limite. \citet{arxiv-2011.07317-memory-efficient-dataflow-inference-deep}\pp{},
+la \glslink{bram}{BRAM} qui limite. L'ordre de grandeur est donné par
+\citet{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp{} : un \glslink{yolov3-tiny}{YOLOv3-tiny} complet
+demanderait environ 34,7\,\glslink{u-mbit}{Mbit} de poids à 4~bits, pour environ 4,9\,\glslink{u-mbit}{Mbit} de \glslink{bram}{BRAM} sur le
+\glslink{xc7z020}{XC7Z020} \src{§III-A}. Il faut donc d'abord réduire le réseau (section~\ref{sec:toolflows}).
+\citet{arxiv-2011.07317-memory-efficient-dataflow-inference-deep}\pp{},
 de l'équipe FINN, en donnent la cause : la forme des mémoires de poids, dictée par le
 parallélisme (PE $\times$ SIMD), s'accorde mal aux blocs de 18\,Kb, dont une grande partie
-reste vide \src{§II-B}. Le rendement d'occupation des BRAM tombe à 52,9\,\% pour un
-ResNet-50 quantifié sur Alveo~U250 \src{Table~IV}. Leur technique, FCMP, sur-cadence la
-mémoire par rapport au calcul et regroupe plusieurs tampons de poids par BRAM :
+reste vide \src{§II-B}. Le rendement d'occupation des \glslink{bram}{BRAM} tombe à 52,9\,\% pour un
+\glslink{resnet}{ResNet-50} quantifié sur Alveo~U250 \src{Table~IV}. Leur technique, FCMP, sur-cadence la
+mémoire par rapport au calcul et regroupe plusieurs tampons de poids par \glslink{bram}{BRAM} :
 \begin{itemize}
-  \item jusqu'à 30\,\% de mémoire on-chip en moins, pour environ 5\,\% de LUT en plus
+  \item jusqu'à 30\,\% de mémoire on-chip en moins, pour environ 5\,\% de \glslink{lut}{LUT} en plus
     \src{§I} ;
-  \item le classifieur CNV-W1A1 (CIFAR-10) passe du Zynq 7020 au 7012S sans perte de débit
+  \item le classifieur CNV-W1A1 (CIFAR-10) passe du \glslink{xc7z020}{Zynq 7020} au 7012S sans perte de débit
     \src{Table~V} ;
-  \item ResNet-50 (W1A2, 67,3\,\% de top-1) tourne en dataflow sur une seule puce, mais sur
-    une Alveo~U250 : 2\,703\,FPS, 1,9\,ms de latence, 71\,W dont la méthode de mesure n'est
+  \item \glslink{resnet}{ResNet-50} (W1A2, 67,3\,\% de top-1) tourne en dataflow sur une seule puce, mais sur
+    une Alveo~U250 : 2\,703\,\glslink{fps}{FPS}, 1,9\,\glslink{u-ms}{ms} de latence, 71\,\glslink{u-w}{W} dont la méthode de mesure n'est
     pas décrite \src{Table~II}.
 \end{itemize}
 L'empaquetage des activations (FIFO, tampons de lignes) reste en travail futur \src{§VI}.
@@ -84,13 +97,61 @@ L'empaquetage des activations (FIFO, tampons de lignes) reste en travail futur \
 D'autres réponses au même problème apparaissent dans le corpus :
 \begin{itemize}
   \item le rechargement des poids de fpgaConvNet (section~\ref{sec:toolflows}) ;
-  \item la compression structurée de REQ-YOLO, qui fait tenir tous les poids en BRAM
+  \item la compression structurée de \glslink{req-yolo}{REQ-YOLO}, qui fait tenir tous les poids en \glslink{bram}{BRAM}
     (section~\ref{sec:detection}) ;
   \item la FIFO logicielle de SATAY, qui déporte en DDR les plus gros tampons des
-    connexions résiduelles (section~\ref{sec:toolflows}).
+    connexions résiduelles (section~\ref{sec:toolflows}) ;
+  \item l'éviction d'activations et la fragmentation des poids vers la DDR de SMOF, qui
+    généralisent l'idée de SATAY dans fpgaConvNet
+    \citep{arxiv-2403.18921-smof-streaming-modern-cnns-fpgas}\pp{}
+    (section~\ref{sec:toolflows}) ;
+  \item le partitionnement d'un accélérateur FINN sur plusieurs SLR ou plusieurs FPGA,
+    d'Elastic-DF \citep{2021-alonso-elastic-df-scaling-performance-dnn}, qui suppose un
+    cluster d'Alveo reliés en 100\,GbE \src{§5.1}.
 \end{itemize}
+Les deux dernières ont un prix que l'architecture « tout on-chip » n'a pas : le débit de
+SMOF dépend du taux de compression des activations, donc de l'image
+\citep[Fig.~8]{arxiv-2403.18921-smof-streaming-modern-cnns-fpgas}, et Elastic-DF vise le
+datacenter. Aucune ne mesure de puissance sur SoC embarqué.
+
+Le moteur unique n'échappe pas à la contrainte. Sur \glslink{kv260}{Kria KV260}, pour éviter la DDR,
+\citet{2026-fata-low-cost-fpga-enhanced-cnn} placent un contrôleur mémoire RTL entre la \glslink{dpu}{DPU}
+et la mémoire (couches 1 à 10 en \glslink{bram}{BRAM}, 11 à 21 en \glslink{uram}{URAM}, repli en DDR) et modifient le
+fichier \texttt{arch.json} du compilateur Vitis~AI \src{§IV-E--F}. Le design occupe 100\,\%
+des \glslink{bram}{BRAM} et des \glslink{uram}{URAM} \src{Table~9}, et le contournement n'est décrit que qualitativement.
 Côté MCU, le même verrou existe pour la SRAM des activations :
 \citet{arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference} le contournent par une
-inférence par patchs, qui divise le pic mémoire par 4 à 6 sur un STM32F746 \src{Fig.~6}.
-Transposer cet ordonnancement par patchs à la BRAM d'un accélérateur streaming n'est pas
+inférence par patchs, qui divise le pic mémoire par 4 à 6 sur un \glslink{stm32f746}{STM32F746} \src{Fig.~6}.
+Transposer cet ordonnancement par patchs à la \glslink{bram}{BRAM} d'un accélérateur streaming n'est pas
 traité dans le corpus \deduit.
+
+\subsection{Quantification et arithmétique : ce que le DSP y gagne}
+
+La quantification ne réduit pas seulement la mémoire : elle change le rendement des \glslink{dsp}{DSP}.
+Trois accélérateurs \glslink{yolo}{YOLO} à moteur unique, écrits en HLS ou en RTL, illustrent l'écart :
+\begin{itemize}
+  \item \citet{2024-yan-fpga-yolov5-accelerator-real-time} quantifient tout \glslink{yolov5s}{YOLOv5s} en
+    4~bits et empaquettent quatre multiplications 4~bits signées par DSP48, avec une
+    correction précalculée \src{§4--5}. Sur \glslink{zcu102}{ZCU102}, ils obtiennent 808,6\,\glslink{gops}{GOPS} et
+    0,49\,\glslink{gopsdsp}{GOPS/DSP} \src{§7.4, Table~3}, pour une \glslink{map}{mAP} VOC en baisse de 1,5~point
+    \src{Table~2, alignement de la ligne à vérifier} ;
+  \item \citet{2024-zhang-end-end-acceleration-yolo-object} empaquettent deux
+    multiplications 8~bits par \glslink{dsp}{DSP} grâce au pré-additionneur \src{§3.1}, et choisissent
+    leur ordonnancement (réutilisation des cartes d'activation plutôt que des poids) avec le
+    modèle roofline \src{§4.4} : la méthode de
+    \citet{2015-zhang-optimizing-fpga-accelerator-design-deep} sert toujours. Ils
+    atteignent 87\,\% du débit d'un design de référence avec 29,8\,\% de ses \glslink{dsp}{DSP}
+    \src{§5.3} ;
+  \item à l'opposé, \citet{2025-kim-design-implementation-yolov2-accelerator-zynq}, en
+    INT16 avec un \glslink{mac}{MAC} par \glslink{dsp}{DSP} sur \glslink{xc7z020}{XC7Z020}, restent à 2,33\,\glslink{gops}{GOPS} et 0,018\,\glslink{gopsdsp}{GOPS/DSP}, avec
+    environ 12,6\,\glslink{u-s}{s} par image \src{§3.1, §4.2, Table~9 reconstruite par Docling}.
+\end{itemize}
+Le rapport entre le premier et le dernier dépasse 25 en \glslink{gopsdsp}{GOPS/DSP} \deduit. Ces métriques
+normalisées ne comparent toutefois que des puces d'une même famille
+\citep[§3.1]{2018-venieris-toolflows-mapping-convolutional-neural-networks}, et la
+puissance de 12,3\,\glslink{u-w}{W} de \citet{2024-yan-fpga-yolov5-accelerator-real-time} n'a pas de méthode
+de mesure décrite \src{§7.4}. Côté streaming, la même logique pousse vers les \glslink{lut}{LUT} plutôt que
+les \glslink{dsp}{DSP} : accumulation par popcount de FINN, ou réduction de 6\,377 à 174~\glslink{dsp}{DSP} par QAT et
+élagage dans hls4ml (section~\ref{sec:toolflows}). L'empaquetage de plusieurs produits dans
+un \glslink{dsp}{DSP} ajoute une correction arithmétique qu'il faudra vérifier bit à bit dans une chaîne de
+preuve\ifcsname r@sec:surete\endcsname{} (section~\ref{sec:surete})\fi{} \deduit.

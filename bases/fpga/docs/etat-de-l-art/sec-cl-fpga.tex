@@ -3,32 +3,62 @@
 \label{sec:cl-fpga}
 
 Un modèle figé ne s'adapte pas à la dérive des données. L'apprentissage sur l'appareil y
-répond, mais la rétropropagation coûte cher en mémoire et en énergie. Les deux seuls
-apprentissages sur FPGA du corpus l'évitent.
+répond, mais la rétropropagation coûte cher en mémoire et en énergie. Le corpus compte six
+travaux qui apprennent sur FPGA, en deux familles :
+\begin{itemize}
+  \item sans rétropropagation : \glslink{onlad}{ONLAD} (\glslink{os-elm}{OS-ELM}), les accélérateurs \glslink{slda}{SLDA} et SONN de Piyasena,
+    \glslink{imagehd}{ImageHD} (calcul hyperdimensionnel) ;
+  \item avec rétropropagation : \glslink{ef-train}{EF-Train} et \glslink{chameleon}{Chameleon}. Elle y est lente et en flottant
+    (FP32 ou FP16).
+\end{itemize}
+Tous apprennent sur un SoC \glslink{zynq}{Zynq} (\glslink{pynq-z1}{PYNQ-Z1}, \glslink{zcu102}{ZCU102} ou \glslink{zcu104}{ZCU104}), et tous font de la
+classification, du clustering ou de l'anomalie non visuelle.
 
 \paragraph{ONLAD : apprentissage séquentiel sans rétropropagation.}
-\citet{2019-tsukada-neural-network-device-learning-anomaly} entraînent en ligne un AE à une
-couche cachée par OS-ELM :
+\citet{2019-tsukada-neural-network-device-learning-anomaly} entraînent en ligne un \glslink{ae}{AE} à une
+couche cachée par \glslink{os-elm}{OS-ELM} :
 \begin{itemize}
   \item les poids d'entrée sont aléatoires et figés, et seuls les poids de sortie sont mis
     à jour par moindres carrés récursifs \src{§2.2, §3.3} ;
   \item à batch~1, la seule inversion matricielle devient une division scalaire, sans
     changer la solution \src{§3.1} ;
-  \item un facteur d'oubli léger gère la dérive : l'AUC passe de 0,55--0,59 sans oubli à
+  \item un facteur d'oubli léger gère la dérive : l'\glslink{auroc}{AUC} passe de 0,55--0,59 sans oubli à
     0,78--0,90 sous dérive simulée \src{Table~5}.
 \end{itemize}
-Le cœur (Vivado HLS, virgule fixe 32~bits, 100\,MHz) tourne sur PYNQ-Z1. C'est l'une des
-rares mesures de carte FPGA du corpus : 3,1\,W au wattmètre, ARM compris \src{§6.4}.
-Limites : les AUC sont évaluées en TensorFlow et non sur le cœur en virgule fixe
+Le cœur (Vivado HLS, virgule fixe 32~bits, 100\,\glslink{u-mhz}{MHz}) tourne sur \glslink{pynq-z1}{PYNQ-Z1}. C'est l'une des
+rares mesures de carte FPGA du corpus : 3,1\,\glslink{u-w}{W} au wattmètre, ARM compris \src{§6.4}.
+Limites : les \glslink{auroc}{AUC} sont évaluées en TensorFlow et non sur le cœur en virgule fixe
 \src{§5--6} ; la dérive est simulée par permutation de classes ; les baselines CPU et GPU,
 en TensorFlow à batch~1, sont dominées par les surcoûts d'appel, ce que les auteurs
 reconnaissent \src{§6.2.1}.
 
+\paragraph{SLDA : un CNN figé sur la DPU, la dernière couche apprise en PL.}
+\citet{2021-piyasena-accelerating-continual-learning-edge-fpga} remplacent la dernière couche
+d'un \glslink{resnet}{ResNet18} figé par un Deep \glslink{slda}{SLDA}, qui met à jour en flux une moyenne par classe et une
+covariance partagée \src{§III-A}. Le \glslink{resnet}{ResNet18} tourne sur une \glslink{dpu}{DPU} \glslink{dpu}{B4096} (Vitis AI), le \glslink{slda}{SLDA}
+sur un accélérateur Vitis HLS à 200\,\glslink{u-mhz}{MHz}, sur la même \glslink{zcu102}{ZCU102} \src{§IV, §V-E} :
+\begin{itemize}
+  \item le système complet apprend à presque la vitesse de l'inférence : 168,67\,\glslink{fps}{FPS} contre
+    170,20 pour la \glslink{dpu}{DPU} seule, avec 78,79\,\% de précision (objet) sur CoRE50, pour 9,00\,\glslink{u-w}{W}
+    contre 8,16\,\glslink{u-w}{W} et 0,056 contre 0,048\,\glslink{u-j}{J} par image \src{Table~V, reconstruite par
+    Docling} ;
+  \item la précision est donc bonne, mais la puissance est lue sur les rails par l'outil de
+    la carte, sans portée précisée \src{§V-E}. L'inversion de la covariance reste sur l'ARM,
+    et son coût n'apparaît pas dans les latences \src{§IV-D} ;
+  \item l'accélérateur seul est 24 fois plus rapide que l'ARM A53 en variante PlasticCov
+    (47,85\,$\mu$s par échantillon), mais l'A53 bat le FPGA en StaticCov (2,80 contre
+    4,76\,$\mu$s) \src{Table~IV}. L'avantage du FPGA dépend de la variante.
+\end{itemize}
+La thèse de \citet{2021-piyasena-fpga-acceleration-continual-learning} ajoute un
+accélérateur de réseau auto-organisé (SONN), abandonné parce que sa mémoire et sa latence
+croissent avec le nombre de classes \src{§4.1}. Elle ajoute aussi un pilote Linux qui
+supprime environ 150\,$\mu$s de latence d'hôte due à OpenCL \src{§4.4}.
+
 \paragraph{ImageHD : calcul hyperdimensionnel sur un extracteur figé.}
-\citet{arxiv-2604.21280-imagehd-energy-efficient-device-continual} combinent un MobileNetV2
+\citet{arxiv-2604.21280-imagehd-energy-efficient-device-continual} combinent un \glslink{mobilenet}{MobileNetV2}
 INT8 figé, un encodage en hypervecteurs binaires et une mémoire de clusters bornée,
 fusionnée par un kMeans++ simplifié \src{§IV}. L'accélérateur streaming (Vitis HLS) tient
-sur une ZCU104 à 300\,MHz : 0,27\,ms et 0,97\,mJ par image sur CIFAR-10
+sur une \glslink{zcu104}{ZCU104} à 300\,\glslink{u-mhz}{MHz} : 0,27\,\glslink{u-ms}{ms} et 0,97\,\glslink{u-mj}{mJ} par image sur CIFAR-10
 \src{Tables~VI--VII}. Deux réserves fortes :
 \begin{itemize}
   \item la précision de clustering est très basse (0,27 sur CIFAR-10, 0,19 sur CORe50),
@@ -38,26 +68,96 @@ sur une ZCU104 à 300\,MHz : 0,27\,ms et 0,97\,mJ par image sur CIFAR-10
     258$\times$ à 383$\times$ en énergie mélangent estimation et mesure \src{§VII-D}.
 \end{itemize}
 
-\paragraph{Références hors FPGA.} Deux travaux fixent des ordres de grandeur qu'un
+\paragraph{La rétropropagation sur SoC FPGA existe, mais lente et en flottant.}
+\begin{itemize}
+  \item \textbf{\glslink{ef-train}{EF-Train}} \citep{arxiv-2202.10935-ef-train-enable-efficient-device}\pp{}
+    exécute la propagation avant, la rétropropagation et la mise à jour des poids sur un même
+    noyau de convolution, en FP32 et à 100\,\glslink{u-mhz}{MHz} \src{§3, §5.2, §6}. Une réorganisation des
+    données en DRAM supprime l'essentiel du coût de réallocation \src{§4, Tables~3--5}. Sur
+    \glslink{zcu102}{ZCU102}, un petit CNN CIFAR-10 s'entraîne à 28,15\,\glslink{gflops}{GFLOPS} et 2,08\,\glslink{u-ms}{ms} par image (batch
+    128). La précision atteint 64,82\,\% contre 65,22\,\% sur V100 \src{Table~7, §6.3}. La
+    puissance (6,89\,\glslink{u-w}{W}) vient du rapport Vivado \src{§6.3}, et il n'y a ni stratégie contre
+    l'oubli, ni baseline \glslink{jetson}{Jetson}.
+  \item \textbf{\glslink{chameleon}{Chameleon}} \citep{2024-aggarwal-chameleon-dual-memory-replay-online} rejoue
+    des activations latentes de \glslink{mobilenet}{MobileNetV1} depuis deux tampons, l'un sur la puce et l'autre
+    hors puce \src{§III}. Avec 3,5\,\glslink{u-mo}{Mo} de tampons, il atteint 79,48\,\% sur CoRE50, contre
+    79,07\,\% pour Latent Replay avec 48\,\glslink{u-mo}{Mo} \src{Tables~II et VI}. Son accélérateur FP16 sur \glslink{zcu102}{ZCU102}
+    (150\,\glslink{u-mhz}{MHz}, une couche à la fois) met 413\,\glslink{u-ms}{ms} et 1,22\,\glslink{u-j}{J} par image d'apprentissage. Une
+    \glslink{jetson-nano}{Jetson Nano}, à batch~8, met 33\,\glslink{u-ms}{ms} et 0,31\,\glslink{u-j}{J} \src{§IV-A, Table~VI}. Les auteurs
+    reconnaissent que le GPU est plus rapide \src{§V-D} ; la méthode de mesure de l'énergie
+    n'est pas décrite.
+\end{itemize}
+Venieris et al.\ jugeaient l'entraînement sur FPGA \enquote{à peine exploré} en 2018
+\citep[§3.2]{2018-venieris-toolflows-mapping-convolutional-neural-networks}. Le constat a
+changé : il est fait, mais aucune rétropropagation sur FPGA du corpus n'est en INT8, ni
+assez rapide pour un flux vidéo.
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Apprentissage sur FPGA dans le corpus : ce qui est appris, en quelle précision, et
+comment la puissance est obtenue.}
+\label{tab:cl-fpga}
+\begin{tabularx}{\textwidth}{@{}P{2.2cm}LP{1.9cm}P{1.7cm}P{2.5cm}P{2.6cm}@{}}
+\toprule
+Travail & Ce qui est appris & Arithmétique & Carte & Coût d'apprentissage & Puissance \\
+\midrule
+\glslink{onlad}{ONLAD}\,\textsuperscript{a} & poids de sortie d'un \glslink{ae}{AE} (\glslink{os-elm}{OS-ELM}) & fixe 32~bits & \glslink{pynq-z1}{PYNQ-Z1} & \nr{} (\glslink{auroc}{AUC} en logiciel) & carte, wattmètre (3,1\,\glslink{u-w}{W}) \\
+\glslink{slda}{SLDA}\,\textsuperscript{b} & dernière couche (\glslink{slda}{SLDA}), CNN figé sur \glslink{dpu}{DPU} & fixe 16/32~bits & \glslink{zcu102}{ZCU102} & 47,85\,$\mu$s / échantillon (PlasticCov) & rails, portée non dite \\
+SONN\,\textsuperscript{c} & réseau auto-organisé sur caractéristiques & INT8 & \glslink{zcu102}{ZCU102} & croît avec les classes & rails, portée non dite \\
+\glslink{imagehd}{ImageHD}\,\textsuperscript{d} & clusters d'hypervecteurs & binaire (\glslink{hdc}{HDC}) & \glslink{zcu104}{ZCU104} & 0,97\,\glslink{u-mj}{mJ} / image & estimée (Vitis) \\
+\glslink{ef-train}{EF-Train}\,\textsuperscript{e} & tout le CNN (rétropropagation) & FP32 & \glslink{pynq-z1}{PYNQ-Z1}, \glslink{zcu102}{ZCU102} & 2,08\,\glslink{u-ms}{ms} / image (batch 128) & estimée (Vivado) \\
+\glslink{chameleon}{Chameleon}\,\textsuperscript{f} & haut du \glslink{mobilenet}{MobileNetV1} (rétropropagation) & FP16 & \glslink{zcu102}{ZCU102} & 413\,\glslink{u-ms}{ms}, 1,22\,\glslink{u-j}{J} / image & méthode non décrite \\
+\bottomrule
+\end{tabularx}
+
+\smallskip\raggedright\footnotesize
+\textsuperscript{a}\,\citet{2019-tsukada-neural-network-device-learning-anomaly} ;
+\textsuperscript{b}\,\citet{2021-piyasena-accelerating-continual-learning-edge-fpga} ;
+\textsuperscript{c}\,\citet{2021-piyasena-fpga-acceleration-continual-learning} ;
+\textsuperscript{d}\,\citet{arxiv-2604.21280-imagehd-energy-efficient-device-continual} ;
+\textsuperscript{e}\,\citet{arxiv-2202.10935-ef-train-enable-efficient-device}\pp ;
+\textsuperscript{f}\,\citet{2024-aggarwal-chameleon-dual-memory-replay-online}.
+\end{table}
+
+\paragraph{Références hors FPGA.} Plusieurs travaux fixent des ordres de grandeur qu'un
 apprentissage continu sur FPGA devrait battre ou justifier :
 \begin{itemize}
-  \item QLR-CL sur VEGA, un ASIC PULP 22\,nm : 62\,mW de puce
-    \citep[§V-D]{arxiv-2110.10486-tinyml-platform-device-continual-learning} ;
-  \item O-FSCIL sur le MCU GAP9 : 11 à 23\,mJ par nouvelle classe
-    \citep[Table~IV]{arxiv-2403.07851-12-mj-per-class-device}.
+  \item \glslink{qlr-cl}{QLR-CL} sur \glslink{vega}{VEGA}, un ASIC \glslink{pulp}{PULP} 22\,nm : 62\,\glslink{u-mw}{mW} de puce
+    \citep[§V-D]{arxiv-2110.10486-tinyml-platform-device-continual-learning}. L'étage
+    adaptatif y est rétropropagé en FP32 \citep[§III-C]{arxiv-2110.10486-tinyml-platform-device-continual-learning} ;
+  \item O-FSCIL sur le MCU \glslink{gap9}{GAP9} : 11 à 23\,\glslink{u-mj}{mJ} par nouvelle classe
+    \citep[Table~IV]{arxiv-2403.07851-12-mj-per-class-device} ;
+  \item l'entraînement INT8 sous 256\,\glslink{u-ko}{KB} de SRAM d'un \glslink{stm32f746}{STM32F746}
+    \citep[§3.2]{arxiv-2206.15472-device-training-256kb-memory}, et \glslink{tinycl}{TinyCL}, un ASIC 65\,nm
+    qui rétropropage en virgule fixe 16~bits (86\,\glslink{u-mw}{mW} de synthèse)
+    \citep[§III-A, §IV-B]{arxiv-2402.09780-tinycl-efficient-hardware-architecture-continual}\pp.
 \end{itemize}
-\ifcomplete Tous deux sont détaillés en section~\ref{sec:cl-mcu}.\else Tous deux sont détaillés dans la version complète de l'état de l'art.\fi La seule
-rétropropagation embarquée du corpus (la queue d'un MobileNet-V1, en FP32) tourne sur VEGA,
-pas sur un FPGA
-\citep[§IV-B]{arxiv-2110.10486-tinyml-platform-device-continual-learning}. Venieris et al.
-jugeaient déjà l'entraînement sur FPGA \enquote{à peine exploré} en 2018
-\citep[§3.2]{2018-venieris-toolflows-mapping-convolutional-neural-networks}.
+\ifcomplete Tous sont détaillés en section~\ref{sec:cl-mcu}.\else Tous sont détaillés dans la version complète de l'état de l'art.\fi{}
+La rétropropagation en précision réduite n'existe donc dans le corpus que sur MCU et sur
+ASIC.
 
-\paragraph{Ce qui manque.} Toutes les fiches d'apprentissage continu font de la
-classification ou du clustering ; \texttt{benchmarks.csv} n'a aucune ligne qui croise
-détection et apprentissage continu. Deux questions restent ouvertes dans le corpus :
+\paragraph{Ce qui manque.} Toutes les fiches d'apprentissage sur FPGA font de la
+classification, du clustering ou de l'anomalie non visuelle. La détection incrémentale
+existe, mais sans FPGA :
 \begin{itemize}
-  \item une rétropropagation de la queue d'un réseau sur SoC FPGA, avec l'étage figé en
-    logique programmable ;
-  \item l'incrémental de classes en détection.
+  \item \glslink{rilod}{RILOD} \citep{arxiv-1904.00781-rilod-near-real-time-incremental}\pp{} ajoute une
+    classe à un RetinaNet par distillation, sans les anciennes données. Sur Pascal VOC
+    (19+1), la \glslink{map}{mAP} est de 65,0 contre 74,7 avec toutes les données \src{Table~1, reconstruite}.
+    Sur \glslink{tx2}{Jetson TX2}, l'apprentissage prend 233\,\glslink{u-s}{s}, sans puissance rapportée \src{Table~7,
+    reconstruite} ;
+  \item la Latent Distillation de \citet{arxiv-2409.01872-latent-distillation-continual-object-detection}\pp{}
+    fige le backbone d'un NanoDet partagé entre maître et élève. Elle annonce 56\,\% de \glslink{flops}{FLOPs}
+    en moins par mise à jour que les méthodes de distillation \src{§5.1}, mais aucune mesure
+    sur cible : le portage tinyML est renvoyé aux travaux futurs \src{§6}.
+\end{itemize}
+\texttt{benchmarks.csv} n'a toujours aucune ligne qui croise détection d'objets et
+apprentissage continu. Trois questions restent ouvertes dans le corpus :
+\begin{itemize}
+  \item une rétropropagation de la queue d'un réseau en précision réduite (INT8, sparse
+    update) sur SoC FPGA, l'étage figé sur la \glslink{dpu}{DPU} ou en logique programmable, avec l'énergie
+    mesurée ;
+  \item l'incrémental de classes en détection (tête \glslink{yolo}{YOLO} ou NanoDet) sur FPGA, avec la
+    latence et l'énergie de mise à jour ;
+  \item un apprentissage en ligne compatible avec la certification : aucune fiche
+    d'apprentissage continu ne traite la non-régression, le versionnage ou le retour arrière.
 \end{itemize}

@@ -10,35 +10,35 @@
 \toprule
 Gap & Statut & Piste \\
 \midrule
-Pas de synthèse quantitative FPGA / Jetson / MCU à NPU, ni de synthèse sûreté ×
+Pas de synthèse quantitative FPGA / \glslink{jetson}{Jetson} / MCU à NPU, ni de synthèse sûreté ×
   accélérateur FPGA de détection & étayé (16 surveys) & argument de positionnement pour
   l'état de l'art d'un pré-projet \\
 Aucune passerelle MCU--FPGA pour la détection & hypothèse (8 fiches) & porter
-  TinyissimoYOLO, ou le LP-YOLO Slim w2a4 de
+  \glslink{tinyissimoyolo}{TinyissimoYOLO}, ou le \glslink{lp-yolo}{LP-YOLO Slim} w2a4 de
   \citet{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp, sur petit FPGA et sur
   MCU, et mesurer l'énergie par inférence à portée égale \\
-Aucune comparaison MCU / FPGA / Jetson pour un même algorithme d'apprentissage continu &
-  étayé (9 fiches) & porter SLDA ou QLR-CL (étage figé INT8) sur KV260, sur Orin et sur
-  GAP9, avec la même mesure de puissance \\
-Baseline Jetson Orin mesurée face à une FPGA dans les mêmes conditions & étayé (27 fiches) ;
-  partiellement comblé sur AGX Xavier
+Aucune comparaison MCU / FPGA / \glslink{jetson}{Jetson} pour un même algorithme d'apprentissage continu &
+  étayé (9 fiches) & porter \glslink{slda}{SLDA} ou \glslink{qlr-cl}{QLR-CL} (étage figé INT8) sur \glslink{kv260}{KV260}, sur \glslink{orin}{Orin} et sur
+  \glslink{gap9}{GAP9}, avec la même mesure de puissance \\
+Baseline \glslink{orin}{Jetson Orin} mesurée face à une FPGA dans les mêmes conditions & étayé (27 fiches) ;
+  partiellement comblé sur \glslink{agx-xavier}{AGX Xavier}
   \citep{arxiv-2304.11580-framework-benchmarking-real-time-embedded} & même modèle, même
-  précision numérique, même méthode de puissance sur KV260 et Orin Nano \\
-Anomalie par AE hors FPGA & 2 lignes sur Xavier NX
+  précision numérique, même méthode de puissance sur \glslink{kv260}{KV260} et \glslink{orin-nano}{Orin Nano} \\
+Anomalie par \glslink{ae}{AE} hors FPGA & 2 lignes sur \glslink{xavier-nx}{Xavier NX}
   \citep{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator}, aucune sur
   MCU & baseline MCU pour
-  tout AE d'anomalie porté sur FPGA \\
+  tout \glslink{ae}{AE} d'anomalie porté sur FPGA \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 La passerelle MCU--FPGA est un sujet à part entière. Côté MCU, les accélérateurs intégrés
-(MAX78000, GAP9, STM32N6) atteignent des énergies de l'ordre de la centaine de
+(MAX78000, \glslink{gap9}{GAP9}, \glslink{stm32n6}{STM32N6}) atteignent des énergies de l'ordre de la centaine de
 microjoules par inférence pour de très petits détecteurs
 \citep[§III]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}. Côté FPGA,
-les détecteurs compressés du DAC-SDC ont des tailles comparables : 64\,Ko de poids pour
+les détecteurs compressés du \glslink{dac-sdc}{DAC-SDC} ont des tailles comparables : 64\,\glslink{u-ko}{Ko} de poids pour
 SystemsETHZ \citep[§4.2]{2021-xu-dac-sdc-low-power-object}. Le premier détecteur dataflow
-de la base de taille proche d'un MCU est un YOLOv3-tiny allégé en w2a4 par FINN sur XC7Z020, à 2,91\,W au rail 12\,V
+de la base de taille proche d'un MCU est un \glslink{yolov3-tiny}{YOLOv3-tiny} allégé en w2a4 par FINN sur \glslink{xc7z020}{XC7Z020}, à 2,91\,\glslink{u-w}{W} au rail 12\,V
 \citep[§V-VI]{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp, mais il n'est pas
 porté sur MCU. Aucun travail du corpus ne mesure un même réseau sur les deux. Un MCU à NPU
 est pourtant le concurrent le plus direct d'un petit FPGA en détection à très basse consommation \deduit.

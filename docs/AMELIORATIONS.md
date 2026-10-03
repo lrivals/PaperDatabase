@@ -4,7 +4,8 @@ Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot C 
 `/paper-extract` en place (03/10/2026, sauf l'indexation des claims) ; lot D en place
 (03/10/2026) ; lot E-a, E-c, E-d en place (03/10/2026, acceptation E-c non atteinte) ; lot G en grande partie fait (route unique, RAG.md §13) ; lot I en place
 (03/10/2026, journal des sous-agents, calage sur le cost-state et économie estimée de la
-délégation, expérience appariée I-6 faite, sauf la révision chiffrée I-5e) ; autres lots non commencés. Elle décrit comment mettre en place les
+délégation, expérience appariée I-6 faite, sauf la révision chiffrée I-5e) ; lot K
+spécifié (03/10/2026), non commencé ; autres lots non commencés. Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
 cinq nouveaux skills. Chaque chantier part d'un constat mesuré dans le dépôt, puis donne la
@@ -26,9 +27,10 @@ Banc d'évaluation : [EVAL.md](EVAL.md). Schémas : [DATA_MODEL.md](../DATA_MODE
 8. [Lot H — Provenance des réponses](#lot-h--provenance-des-réponses)
 9. [Lot I — Journal et coût des sous-agents](#lot-i--journal-et-coût-des-sous-agents)
 10. [Lot J — Outil de comparaison `pdb compare`](#lot-j--outil-de-comparaison-pdb-compare)
-11. [Nouveaux skills](#9-nouveaux-skills)
-12. [Ordre de mise en œuvre](#10-ordre-de-mise-en-œuvre)
-13. [Hors périmètre](#11-hors-périmètre)
+11. [Lot K — Bancs à l'échelle des bases](#lot-k--bancs-à-léchelle-des-bases)
+12. [Nouveaux skills](#9-nouveaux-skills)
+13. [Ordre de mise en œuvre](#10-ordre-de-mise-en-œuvre)
+14. [Hors périmètre](#11-hors-périmètre)
 
 ---
 
@@ -845,6 +847,80 @@ sa sortie actuelle.
 
 ---
 
+## Lot K — Bancs à l'échelle des bases
+
+**Constat.** Les jeux de questions n'ont pas suivi la croissance ni la diversité des bases
+(chiffres du 03/10/2026) :
+
+| Base | Papiers | Jeux d'évaluation | Écrits pour |
+|---|---|---|---|
+| fpga | 101 | `tests/fixtures/` du code : 20 dev, 25 holdout, 8 FR, 20 hors corpus ; 12 + 12 réponses (lot A) | 45 papiers ; ~40 papiers interrogés |
+| drone | 87 | `bases/drone/eval/fixtures/` : 20 dev, 20 holdout, 8 FR, 20 hors corpus ; pas de jeu de réponses | 73 papiers |
+| stage | 56 | aucun : repli sur les questions fpga, rappel sans valeur (EVAL.md §9) | — |
+
+- **Le holdout fpga passe sous son seuil.** recall@5 hybride + rerank : 0,80
+  (`bases/fpga/eval/results/2026-09-28T1039-76dc85e.json`) → **0,72**
+  (`2026-10-03T2258-f9a07d3.json`), pour un plancher de 0,8 ; dev 1,00 → 0,90, FR 0,50 → 0,38.
+  La cause n'est pas établie : corpus plus grand (plus de voisins proches), passages tableaux
+  indexés par les lots C et E-c, ou `lib/rag.py` modifié.
+- **Granularité.** Une question vaut 0,04 à 0,05 : aucun écart de ce banc n'est lisible
+  au-dessous de deux questions.
+- **Couverture.** ~60 % du corpus fpga actuel n'est interrogé par aucune question ; les
+  8-9 axes de chaque `base.json` ne sont pas suivis séparément.
+- **Emplacement.** Les jeux fpga sont dans le code (`tests/fixtures/`) et servent de repli
+  silencieux à toute base sans jeux.
+- Le banc synthétique ([BENCHMARK.md](BENCHMARK.md), `pdb synth`, 200 papiers figés) sait
+  générer et valider des questions ancrées sur une citation, mais reste séparé des bases
+  réelles.
+
+**Conception.**
+
+1. **K-0 Diagnostic de la baisse fpga**, avant tout nouveau jeu. Rejouer les jeux actuels
+   (a) sur l'index restreint aux 45 papiers du run de référence (filtre sur les `paper_id`),
+   (b) au commit 76dc85e sur le corpus actuel. (a) sépare l'effet du code, (b) celui du
+   corpus. Si c'est le corpus : relire les 5 passages des questions manquées, comme au §9
+   d'EVAL.md ; une attente n'est élargie que si un nouveau papier répond vraiment. Le seuil
+   n'est pas abaissé.
+2. **K-1 Jeux dans chaque base.** Les jeux fpga passent dans `bases/fpga/eval/fixtures/` ;
+   `tests/fixtures/` ne garde qu'un petit jeu pour les tests unitaires. `evaluation.paths`
+   ne replie plus en silence : une base sans jeux reçoit un avertissement et `--compare`
+   refuse de comparer son rappel.
+3. **K-2 Taille proportionnelle au corpus.** Par base : holdout ≥ max(40, 0,5 × papiers),
+   dev ≥ 30, hors corpus ≥ 20 dont ≥ 30 % `ambiguous` proches du thème ; réponses (lot A)
+   40 dev / 60 holdout, objectif déjà posé ; le français relève du lot F. Cible : un
+   intervalle de confiance à 95 % d'environ ±0,10 sur recall@5 du holdout.
+4. **K-3 Stratification par axe et par type.** Champs optionnels dans chaque ligne :
+   `axis` (un axe de `base.json`) et `kind` (`fact`, `table`, `multi`, `numeric`). Quotas
+   du holdout : ≥ 3 questions par axe, ≥ 20 % sur tableaux, ≥ 15 % multi-papiers.
+   `pdb eval` rapporte recall@5 et MRR par axe et par type, et la part du corpus interrogée
+   (papiers cités par au moins une question / papiers).
+5. **K-4 Questions proposées, relecture humaine.** La chaîne de `pdb synth` (question ancrée
+   sur une citation, double validation) propose des questions sur les papiers non couverts
+   d'une base réelle, en respectant les quotas K-3. Sortie : `eval/fixtures/proposed_*.jsonl` ;
+   une question n'entre dans un jeu qu'après relecture (principe 0). Le holdout est écrit
+   ou relu, quand c'est possible, par quelqu'un d'autre que l'auteur du code.
+6. **K-5 Croissance du corpus.** Chaque run enregistre la liste des `paper_id` et le nombre
+   de passages. `--compare` signale un changement de corpus et, dans ce cas, rejoue sur le
+   sous-corpus commun pour séparer l'écart dû au corpus de l'écart dû au code. Un nouveau
+   run de référence est fait à chaque +25 % de papiers.
+7. **K-6 Base stage.** Premier jeu complet (5 jeux du §3 d'EVAL.md + réponses), seuils
+   copiés avant le premier run, run de référence consigné dans EVAL.md §9.
+8. **K-7 Intervalles.** `pdb eval` affiche un intervalle de confiance (bootstrap sur les
+   questions) à côté de recall@5 et MRR ; `--compare` ne signale un écart que s'il sort de
+   l'intervalle ou franchit un seuil.
+
+**Fichiers.** `lib/evaluation.py` (`paths`, filtre de sous-corpus, rapport par `axis` et
+`kind`, intervalles, corpus dans le run), `bin/bench_cli.py` (propositions K-4),
+`bases/*/eval/fixtures/`, `bases/stage/eval/`, `tests/fixtures/`, tests de l'évaluation,
+[EVAL.md](EVAL.md) §7 et §9, `DATA_MODEL.md` (champs `axis`, `kind`), SETUP §9.
+
+**Acceptation.** Chaque base a ses propres jeux, sans repli ; tailles K-2 atteintes ; chaque
+axe a au moins 3 questions holdout ; la cause de la baisse fpga est établie et le holdout
+fpga tient de nouveau 0,8 sans réglage sur le holdout ; les intervalles sont affichés ;
+stage a un run de référence.
+
+---
+
 ## 9. Nouveaux skills
 
 Format commun : `.claude/commands/<nom>.md`, front-matter `description`, `argument-hint`,
@@ -932,6 +1008,7 @@ de preuve et de citation comptent le plus), ensuite `/paper-compare`, `/table-re
 | 3 | **Lot D-1 à D-3** (`chunk_id`, colonnes optionnelles, `bench --check`) | traçabilité des nombres |
 | 4 | **Lot C** + `/paper-extract` | prépare comparaison et rédaction ; en place le 03/10/2026 (reste : lecture des claims par `/paper-ask`) |
 | 5 | **Lot E-a, E-c, E-d** (localisation, index, qualité) | rend les tableaux trouvables et contrôlables ; en place le 03/10/2026 (reste : questions holdout sur tableaux, vocabulaire) |
+| 5 bis | **Lot K-0, K-1, K-6** (diagnostic de la baisse fpga, jeux dans chaque base, jeu stage), puis **K-2 à K-5** et **K-7** avec K-2 | les gains des étapes suivantes (E-b, F, G, H) se prouvent sur ces bancs ; le holdout fpga est sous son seuil |
 | 6 | `/table-review`, puis **E-e** (vérité terrain) et **E-b** (OCR par zone) | E-b se juge sur E-e |
 | 7 | **Lot J-1 à J-3** (`pdb compare` tabulaire), puis `/paper-compare`, `/state-of-art` | J donne au skill une entrée déterministe ; le tout s'appuie sur C et D |
 | 7 bis | **Lot J-4, J-5** (figures, colonnes `clock_mhz`, `latency_scope`) | au fil des besoins |

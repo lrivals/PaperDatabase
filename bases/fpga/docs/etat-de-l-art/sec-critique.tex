@@ -2,31 +2,48 @@
 \section{Analyse critique : ce que les chiffres publiés permettent de conclure}
 \label{sec:critique}
 
-\subsection{La puissance : rarement mesurée sur la carte, jamais sur la puce FPGA}
+\subsection{La puissance : rarement mesurée sur la carte, presque jamais sur la puce FPGA}
 
-Recompte de \texttt{benchmarks.csv} sur les 101 lignes mesurées sur FPGA :
+Recompte de \texttt{benchmarks.csv} sur les 216 lignes mesurées sur FPGA (44 articles) :
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Portée de la puissance dans les lignes FPGA de \texttt{benchmarks.csv}.}
+\caption{Portée de la puissance dans les lignes FPGA de \texttt{benchmarks.csv}
+(01/10/2026).}
 \label{tab:portee}
-\begin{tabular}{@{}lrl@{}}
+\begin{tabularx}{\textwidth}{@{}lrL@{}}
 \toprule
 Portée & Lignes & Origine \\
 \midrule
-\emph{board} (carte au wattmètre) & 18 & FINN 8, FINN-R 8, Zhang 2015 1, ONLAD 1 \\
-\emph{chip} & 0 & --- \\
+\emph{board} (carte au wattmètre) & 46 & 9 articles : Zhang 2024 10, FINN 8, FINN-R 8,
+  Elastic-DF 8, \glslink{lp-yolo}{LP-YOLO} 6, Schlosser 3, Zhang 2015, \glslink{onlad}{ONLAD} et \glslink{codenet}{CoDeNet} 1 chacun \\
+\emph{chip} & 1 & Castelino (rails PMBus de la \glslink{zcu104}{ZCU104}) \\
 \emph{board-dynamic} & 0 & --- \\
-\emph{estimated} (outil) & 8 & Manjunath, Que 2024, ImageHD \\
-\emph{unspecified} & 31 & dont SATAY, Zhai, REQ-YOLO, Malviya \\
-puissance non rapportée (\nr) & 44 & --- \\
+\emph{estimated} (outil) & 16 & \glslink{ef-train}{EF-Train} 6, Manjunath 4, \glslink{imagehd}{ImageHD} 3, Karki 2, Que 2024 1 \\
+\emph{unspecified} & 52 & dont SATAY 14, Piyasena 16 (deux articles), Zhai 8 \\
+puissance non rapportée (\nr) & 101 & --- \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
-Les 17 lignes \emph{chip} de la base viennent toutes de Jetson, du Raspberry~Pi~5 ou d'un
-ASIC. Les 18 lignes \emph{board} FPGA viennent de quatre articles, dont trois antérieurs
-à 2019. Plusieurs comparaisons publiées mettent face à face des portées différentes :
+Un peu plus de la moitié des lignes FPGA (115 sur 216) ont une puissance, et 47
+seulement une puissance mesurée, issues de 10 articles. Les 18 lignes \emph{chip} de la base viennent,
+sauf une, de \glslink{orin}{Jetson Orin} (12, \citealp{arxiv-2502.15737-performance-analysis-you-only-look}),
+du Raspberry~Pi~5 (2) et de l'ASIC \glslink{vega}{VEGA} (3). La seule ligne \emph{chip} FPGA est celle de
+\citet[§IV-B]{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator} : 5,38\,\glslink{u-w}{W}
+actifs pour 4,6\,\glslink{u-w}{W} au repos. Les lignes \emph{board} ne sont plus surtout anciennes : à
+côté de FINN, FINN-R, Zhang 2015 et \glslink{onlad}{ONLAD}, elles viennent de
+\citet{2024-zhang-end-end-acceleration-yolo-object},
+\citet{2021-alonso-elastic-df-scaling-performance-dnn} (deux Alveo, hors embarqué),
+\citet{arxiv-2304.11580-framework-benchmarking-real-time-embedded} et
+\citet{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp. Une seule paire puce /
+carte existe sur une même FPGA, et la puce y est estimée : 7,8\,\glslink{u-w}{W} par Vivado contre
+12,3\,\glslink{u-w}{W} au wattmètre sur KC705 \citep[Table~3]{2024-zhang-end-end-acceleration-yolo-object}.
+Seuls Schlosser et al. donnent aussi la puissance relative, repos soustrait, que le CSV
+ne reprend pas faute de ligne \emph{board-dynamic} : 7,0\,\glslink{u-w}{W} sur \glslink{zcu104}{ZCU104} pour 23\,\glslink{u-w}{W} absolus
+\src{Table~1}.
+
+Plusieurs comparaisons publiées mettent face à face des portées différentes :
 \begin{itemize}
   \item une puissance dynamique de quelques mW contre des puissances totales
     \citep[Table~16]{2019-coutinho-deep-neural-network-hardware-implementation} ;
@@ -35,7 +52,11 @@ ASIC. Les 18 lignes \emph{board} FPGA viennent de quatre articles, dont trois an
   \item le TDP d'un Xeon pris comme puissance mesurée
     \citep[§5.2]{2015-zhang-optimizing-fpga-accelerator-design-deep} ;
   \item une estimation de l'outil contre des mesures par nvidia-smi
-    \citep[§VII-D]{arxiv-2604.21280-imagehd-energy-efficient-device-continual}.
+    \citep[§VII-D]{arxiv-2604.21280-imagehd-energy-efficient-device-continual} ;
+  \item les rails PMBus de la puce contre jtop sur une \glslink{xavier-nx}{Xavier NX} bridée à 10\,\glslink{u-w}{W}
+    \citep[Table~VI]{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator} ;
+  \item une puissance estimée par Vivado présentée comme \enquote{3x moins} que celle de
+    SATAY \citep[Résumé, Table~III]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.
 \end{itemize}
 Le survey de \citet{2023-shuvo-efficient-acceleration-deep-learning-inference} rappelle,
 dans sa partie sur les conditions de test, qu'un processeur peut afficher une très faible
@@ -47,78 +68,174 @@ simulés et mesurés \src{§IX-I}.
 \begin{itemize}
   \item \textbf{Latence amortie} : un débit inverse présenté comme une latence
     \citep[§IV-E]{2024-que-low-latency-variational-autoencoder-fpgas}.
-  \item \textbf{GOp/s par DSP} : cette métrique efface les écarts de précision (de W1A8 à
+  \item \textbf{GOp/s par \glslink{dsp}{DSP}} : cette métrique efface les écarts de précision (de W1A8 à
     W32A32) et de carte
     \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating}.
     Venieris et al. la jugeaient valable seulement dans une même famille de FPGA
-    \citep[§3.1]{2018-venieris-toolflows-mapping-convolutional-neural-networks}.
-  \item \textbf{GOPS/W dynamiques} face à des GOPS/W totaux
+    \citep[§3.1]{2018-venieris-toolflows-mapping-convolutional-neural-networks}. Le
+    \enquote{+29\,\% face à Vitis AI} de \citet{2024-yan-fpga-yolov5-accelerator-real-time}
+    est un \glslink{gopsdsp}{GOPS/DSP} face à un \glslink{yolov3}{YOLOv3} d'un autre travail, pas une mesure de Vitis AI sur la
+    même carte \src{Table~2}.
+  \item \textbf{Gains de surface face à des designs plus rapides} : \enquote{$-26$\,\% de
+    \glslink{ff}{FF}, $-15$\,\% de \glslink{dsp}{DSP}} face à des accélérateurs de 10,5 à 62,9\,\glslink{gops}{GOPS}, pour 2,33\,\glslink{gops}{GOPS} et
+    un autre modèle \citep[Table~9]{2025-kim-design-implementation-yolov2-accelerator-zynq}.
+  \item \textbf{\glslink{gopsw}{GOPS/W} dynamiques} face à des \glslink{gopsw}{GOPS/W} totaux
     \citep[Table~8]{2023-zhai-fpga-vehicle-detection-tracking-accelerator}.
-  \item \textbf{GOPS projetés} sur un FPGA hypothétique, comparés à des GOPS mesurés
+  \item \textbf{\glslink{gops}{GOPS} projetés} sur un FPGA hypothétique, comparés à des \glslink{gops}{GOPS} mesurés
     \citep[Tables~16--17]{2019-coutinho-deep-neural-network-hardware-implementation}.
-  \item \textbf{GOp/s seul}, sans FPS, pour un détecteur
-    \citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep}.
-  \item \textbf{Précisions non comparables} : IoU d'un seul objet (DAC-SDC), AP à une
-    classe (Zhai), \enquote{accuracy} sur 72 images (Al Amin), \enquote{accuracy} non
-    définie d'un débruiteur (arxiv-2301.07050\pp).
+  \item \textbf{GOp/s seul}, sans \glslink{fps}{FPS}, pour un détecteur
+    \citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep} ; \enquote{10,65x} en GOp/s
+    entre des UNet de tailles différentes, à \glslink{fps}{FPS} voisins
+    \citep[§V-D]{arxiv-2403.18921-smof-streaming-modern-cnns-fpgas}\pp.
+  \item \textbf{Gains face à un CPU ou un GPU de bureau}, de portée de puissance non dite :
+    \enquote{70x / 37x}, alors que le GPU fait 44,64\,\glslink{fps}{FPS} contre 24,3 sur la \glslink{kv260}{KV260}
+    \citep[Table~10]{2026-fata-low-cost-fpga-enhanced-cnn} ; gains d'énergie de 258 à
+    383 fois qui mêlent une estimation FPGA et des mesures CPU et GPU
+    \citep[Table~VII]{arxiv-2604.21280-imagehd-energy-efficient-device-continual}.
+  \item \textbf{Conclusion contredite par son propre tableau} : 2,6\,\glslink{fpsw}{FPS/W} présentés comme
+    efficaces, moins que quatre des cinq travaux cités
+    \citep[§IV-B, Table~I]{arxiv-2507.18174-real-time-object-detection-classification}.
+  \item \textbf{Chiffres incohérents entre résumé et texte} : 35x contre 58x
+    \citep[§I-B, §IV-C]{arxiv-2402.09780-tinycl-efficient-hardware-architecture-continual}\pp ;
+    perte de précision de $\approx$\,5\,\% contre $\approx$\,7\,\%
+    \citep[Résumé, §IV-B]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.
+  \item \textbf{Précisions non comparables} : \glslink{iou}{IoU} d'un seul objet (\glslink{dac-sdc}{DAC-SDC}, \glslink{skynet}{SkyNet}\pp), \glslink{ap}{AP}
+    à une classe (Zhai), \enquote{accuracy} sur 72 images (Al Amin), \enquote{accuracy}
+    non définie d'un débruiteur (arxiv-2301.07050\pp, seule ligne en confiance \emph{low}),
+    \glslink{map}{mAP} sur des véhicules filtrés de VOC (\glslink{lp-yolo}{LP-YOLO}\pp), \glslink{map}{mAP} sur un jeu privé à une cible
+    \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.
 \end{itemize}
-Shuvo et al. le formulent ainsi : \enquote{EI requires a universal and comprehensive set of
-quality metrics to execute meaningful comparisons of DL models, optimization algorithms,
-and hardware platforms} \src{§XIV-C}. La grille de Venieris et al. (débit, latence à
-batch~1, ressources, puissance, précision, mémoire) existe depuis 2018 ; aucune fiche du
-corpus ne la reprend en entier.
+Le recompte confirme cette dispersion. Les 87 lignes FPGA de détection (17 articles)
+emploient 14 libellés de précision différents, et 12 n'ont aucune précision. Seules 22
+portent une précision sur COCO, dont 14 pour SATAY, quantification simulée par ONNX
+Runtime ; six d'entre elles seulement (Schlosser, Karki\pp) sont mesurées sur la carte de
+façon établie. Sur les 216 lignes FPGA, le \glslink{fps}{FPS} manque 132 fois, la latence 88 fois, la
+puissance 101 fois et la précision 48 fois. Shuvo et al. le formulent ainsi : \enquote{EI requires a universal and
+comprehensive set of quality metrics to execute meaningful comparisons of DL models,
+optimization algorithms, and hardware platforms} \src{§XIV-C}. La grille de Venieris et al.
+(débit, latence à batch~1, ressources, puissance, précision, mémoire) existe depuis 2018 ;
+aucune fiche du corpus ne la reprend en entier.
 
-\subsection{La précision n'est presque jamais remesurée sur la cible}
+\subsection{La précision est rarement remesurée sur la cible}
 
 Quantifier et compiler un réseau change sa précision, et la plupart des articles ne la
 remesurent pas sur la carte :
 \begin{itemize}
-  \item AP identique en FP32 et en INT16 à trois décimales
+  \item \glslink{ap}{AP} identique en FP32 et en INT16 à trois décimales
     \citep[Table~8]{2023-zhai-fpga-vehicle-detection-tracking-accelerator} ;
   \item quantification simulée par ONNX Runtime
     \citep[§IV-A]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} ;
   \item comparaison au C++ généré, pas au FPGA
     \citep[§8]{arxiv-2101.05108-fast-convolutional-neural-networks-fpgas} ;
-  \item AUC mesurées en TensorFlow
+  \item \glslink{auroc}{AUC} mesurées en TensorFlow
     \citep[§5]{2019-tsukada-neural-network-device-learning-anomaly} ;
-  \item seules des pertes relatives de mAP sont données
-    \citep[§6.2]{2019-ding-req-yolo-resource-aware-efficient}.
+  \item seules des pertes relatives de \glslink{map}{mAP} sont données
+    \citep[§6.2]{2019-ding-req-yolo-resource-aware-efficient} ;
+  \item $-1,5$\,point de \glslink{map}{mAP} VOC, sans dire si la mesure est faite sur la carte
+    \citep[Table~2]{2024-yan-fpga-yolov5-accelerator-real-time} ;
+  \item écart entre le modèle QAT et le modèle flottant non rapporté
+    \citep{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp ;
+  \item \glslink{map}{mAP} identiques sur \glslink{jetson-nano}{Jetson Nano} et \glslink{orin-nano}{Orin Nano}, sans preuve d'une mesure par carte
+    \citep[§IV-C]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.
 \end{itemize}
-Quand la mesure sur cible est faite, elle révèle une perte :
+Quand la mesure sur cible est faite, elle révèle une perte, parfois forte et imprévisible
+(table~\ref{tab:precision-cible}).
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Pertes de précision mesurées après quantification ou compilation. La mesure est
+faite sur la cible chez Schlosser, Karki, Rey, Feng, Malviya et Coutinho ; pour Castelino,
+SkyNet et SMOF, le texte extrait ne le précise pas.}
+\label{tab:precision-cible}
+\begin{tabularx}{\textwidth}{@{}P{3.1cm}P{2.6cm}LP{2.2cm}@{}}
+\toprule
+Travail & Modèle, jeu & Avant $\rightarrow$ après & Source \\
+\midrule
+Schlosser & \glslink{yolov4}{YOLOv4}, COCO & Vitis AI Quantizer : $-2,2$\,\% de \glslink{map}{mAP}, la compilation \glslink{dpu}{DPU} en
+  retire encore ; TensorRT INT8 38,6 contre \glslink{dpu}{DPU} INT8 37,5 (\glslink{map5095}{mAP@0.5:0.95}) & §4.3, Table~1 \\
+Karki\pp & \glslink{yolov8n}{YOLOv8n}, KITTI / VOC & 0,64 $\rightarrow$ 0,34 ; 0,60 $\rightarrow$ 0,45
+  (CPU contre FPGA INT8) & Table~II \\
+Karki\pp & \glslink{yolov11n}{YOLOv11n}, VOC / COCO / personnes & 0,59 $\rightarrow$ 0,57 ; 0,31
+  $\rightarrow$ 0,29 ; 0,75 $\rightarrow$ 0,71 & Table~II \\
+Rey (\glslink{jetson}{Jetson}, hors FPGA) & \glslink{yolov8n}{YOLOv8n} / v8s, jeu privé & TensorRT INT8 : 84,2 $\rightarrow$
+  71,9 ; 86,1 $\rightarrow$ 79,7 (\glslink{map5095}{mAP50-95}) & Table~4 \\
+Feng (\glslink{ncs2}{NCS2}, hors FPGA) & \glslink{yolov3-tiny}{YOLOv3-tiny}, vidéo & OpenVINO : confiance moyenne 0\,\% contre
+  59,7\,\% sur \glslink{jetson}{Jetson} & Table~3 \\
+Castelino & \glslink{cae}{CAE} d'anomalies & INT8 en PTQ seule : \glslink{f1}{F1} 0 ; après fine-tuning 92,77 (FP32
+  94,05) & Table~III \\
+\glslink{skynet}{SkyNet}\pp & \glslink{skynet}{SkyNet}, \glslink{dac-sdc}{DAC-SDC} & \glslink{iou}{IoU} 0,741 $\rightarrow$ 0,727 (FM9/W11) $\rightarrow$
+  0,680 (FM8/W10) & Table~7 \\
+SMOF\pp & \glslink{yolov8n}{YOLOv8n}, COCO & 37,10 $\rightarrow$ 35,10 (bfp8) & Table~III \\
+Malviya & \glslink{cae}{CAE} de vibrations & 88,8\,\% sur CPU $\rightarrow$ 85,02\,\% sur FPGA & §IV-B \\
+Coutinho & \glslink{ssae}{SSAE}, MNIST & 93,4\,\% $\rightarrow$ 93,38\,\% & §V-D1 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Sources : \citet{arxiv-2304.11580-framework-benchmarking-real-time-embedded},
+\citet{arxiv-2607.13106-no-attention-no-problem-dpu}\pp,
+\citet{arxiv-2502.15737-performance-analysis-you-only-look},
+\citet{2022-feng-benchmark-analysis-yolo-performance-edge},
+\citet{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator},
+\citet{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp,
+\citet{arxiv-2403.18921-smof-streaming-modern-cnns-fpgas}\pp,
+\citet{2022-malviya-edge-compatible-convolutional-autoencoder-implemented} et
+\citet{2019-coutinho-deep-neural-network-hardware-implementation}. Trois constats :
 \begin{itemize}
-  \item 85,02\,\% sur FPGA contre 88,8\,\% sur CPU
-    \citep[§IV-B]{2022-malviya-edge-compatible-convolutional-autoencoder-implemented} ;
-  \item 93,38\,\% contre 93,4\,\%
-    \citep[§V-D1]{2019-coutinho-deep-neural-network-hardware-implementation}.
+  \item les deux seuls détecteurs mesurés sur une carte FPGA (Schlosser, Karki\pp) perdent
+    jusqu'à 30 points de \glslink{map5095}{mAP@0.5:0.95} selon le modèle et le jeu. Chez Karki et al., les
+    écarts ne s'expliquent pas : \glslink{yolov11n}{YOLOv11n} perd 2 points sur VOC, \glslink{yolov8n}{YOLOv8n} en perd 15 sur VOC
+    et 30 sur KITTI. Les modifications pour le \glslink{dpu}{DPU} (\glslink{relu}{ReLU}, attention approchée) coûtent
+    en plus $\approx$\,3 points en moyenne \src{§IV-B, Table~I} ;
+  \item les auteurs minimisent parfois la perte qu'ils mesurent : Rey et al. concluent
+    \enquote{without a significant loss of accuracy} \src{§6} malgré 12,3 points perdus
+    par \glslink{yolov8n}{YOLOv8n} en INT8 ;
+  \item la perte dépend de la chaîne autant que du réseau : la PTQ seule effondre
+    l'\glslink{ae}{autoencodeur} de Castelino et al., et TensorRT garde une meilleure \glslink{map}{mAP} que Vitis AI
+    sur le même \glslink{yolov4}{YOLOv4}.
 \end{itemize}
-Hors FPGA, la conversion peut être catastrophique : OpenVINO fait tomber YOLOv3-tiny à 0\,\%
-de confiance moyenne sur NCS2
-\citep[Table~3]{2022-feng-benchmark-analysis-yolo-performance-edge}. La PTQ INT8 de
-TensorRT coûte de 6,4 à 12,3 points de mAP50-95
-\citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.
+Pour un détecteur de personnes certifiable, cet écart entre le modèle évalué et le modèle
+déployé est aussi un problème de preuve \deduit\ifcsname r@sec:surete\endcsname{} (voir la
+section~\ref{sec:surete})\fi.
 
 \subsection{Baselines GPU embarqué faibles ou absentes}
 
-Quand un article FPGA se compare à un GPU embarqué, la baseline est ancienne ou
-sous-optimisée :
+Quand un article FPGA se compare à un GPU embarqué, la baseline est souvent ancienne,
+bridée ou sous-optimisée :
 \begin{itemize}
-  \item TX2 sans TensorRT mentionné
+  \item \glslink{tx2}{TX2} sans TensorRT mentionné
     \citep[Table~2]{2019-ding-req-yolo-resource-aware-efficient} ;
-  \item TX2 de 2017, framework \nr{}
+  \item \glslink{tx2}{TX2} de 2017, framework \nr{}
     \citep[Table~IV]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} ;
-  \item Jetson Nano reprise d'un autre article, avec un autre modèle
+  \item \glslink{jetson-nano}{Jetson Nano} reprise d'un autre article, avec un autre modèle
     \citep[Table~7]{2023-zhai-fpga-vehicle-detection-tracking-accelerator} ;
-  \item Jetson AGX Orin exécutée en PyTorch à batch~1
-    \citep[§VII-C]{arxiv-2604.21280-imagehd-energy-efficient-device-continual}.
+  \item \glslink{jetson-nano}{Jetson Nano} en FP32
+    \citep[§5.3]{2024-zhang-end-end-acceleration-yolo-object} ;
+  \item \glslink{xavier-nx}{Xavier NX} bridée à 10\,\glslink{u-w}{W}, puissance par jtop
+    \citep[§IV, Table~VI]{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator} ;
+  \item \glslink{jetson-nano}{Jetson Nano} à batch~8 contre \glslink{zcu102}{ZCU102} à batch~1
+    \citep[Table~VI]{2024-aggarwal-chameleon-dual-memory-replay-online} ;
+  \item \glslink{agx-orin}{Jetson AGX Orin} exécutée en PyTorch à batch~1
+    \citep[§VII-C]{arxiv-2604.21280-imagehd-energy-efficient-device-continual} ;
+  \item aucune baseline GPU embarqué : Kim et al., Karki et al.\pp, \glslink{lp-yolo}{LP-YOLO}\pp, SMOF\pp.
 \end{itemize}
-Les deux protocoles équitables du corpus sont anciens : fpgaConvNet face au Tegra~X1
-(2017), à budget de puissance égal, et DAC-SDC (2018), mesuré par les organisateurs.
-Aucune source du corpus ne compare une FPGA embarquée à une Jetson Orin.
+Les protocoles équitables du corpus restent rares. fpgaConvNet face au Tegra~X1 (2017), à
+budget de puissance égal, et \glslink{dac-sdc}{DAC-SDC} (2018), mesuré par les organisateurs, sont anciens.
+Le seul protocole récent est celui de
+\citet{arxiv-2304.11580-framework-benchmarking-real-time-embedded} (\glslink{zcu104}{ZCU104} contre AGX
+Xavier, 2023), et la \glslink{jetson}{Jetson} y gagne en latence, en précision et en \glslink{fpsw}{FPS/W} \src{Table~1}.
+Aucune source du corpus ne compare une FPGA embarquée à une \glslink{orin}{Jetson Orin}.
 
 \subsection{Reproductibilité}
 
-Sur les 33 fiches expérimentales, aucune ne publie explicitement de bitstream. Sept
-publient ou annoncent un code propre : Magalhães, FINN-R en partie, la branche hls4ml de
-l'AE du LHC, REQ-YOLO (probablement la partie entraînement), DAC-SDC (code des meilleures
-équipes), le streamer de FCMP et l'extension HAWQ de Campos. Réserve : la lecture se
-limite au texte extrait, et les liens en note de bas de page sont souvent perdus.
+Aucune des 101 fiches ne mentionne de bitstream publié. Parmi la cinquantaine de fiches
+expérimentales, une dizaine publient ou annoncent un code propre lié au FPGA :
+Magalhães, FINN-R en partie, la branche hls4ml de l'\glslink{ae}{AE} du LHC, \glslink{req-yolo}{REQ-YOLO} (probablement la
+partie entraînement), \glslink{dac-sdc}{DAC-SDC} (code des meilleures équipes), le streamer de FCMP,
+l'extension HAWQ de Campos, SMOF\pp{} (GitHub,
+\citealp{arxiv-2403.18921-smof-streaming-modern-cnns-fpgas}), \glslink{chameleon}{Chameleon} (GitHub annoncé,
+\citealp{2024-aggarwal-chameleon-dual-memory-replay-online}) et \glslink{skynet}{SkyNet}\pp{} (lien annoncé,
+absent du texte extrait). Les détecteurs les plus proches du cas d'application ne
+publient rien : Schlosser et al., Karki et al.\pp, \glslink{lp-yolo}{LP-YOLO}\pp, ni Yan, Zhang 2024, Kim ou
+Fata. Réserve : la lecture se limite au texte extrait, et les liens en note de bas de page
+sont souvent perdus.

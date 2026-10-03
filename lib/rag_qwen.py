@@ -164,7 +164,7 @@ def build(root, mode="hybrid", download=False):
         bench_hash = file_hash(bench_path)
         with bench_path.open(newline="") as f:
             reader = csv.DictReader(f)
-            if tuple(reader.fieldnames or ()) != schema.BENCHMARK_COLUMNS:
+            if schema.check_header(reader.fieldnames):
                 raise ValueError("benchmark columns differ from the corpus schema")
             for line_no, row in enumerate(reader, start=2):
                 errs = schema.validate_benchmark_row(row)
@@ -313,7 +313,7 @@ def benchmarks(root, filters=None):
     if not isinstance(filters, list) or any(not isinstance(f, dict) for f in filters):
         raise ValueError("benchmark filters must be a JSON list of objects")
     for f in filters:
-        if f.get("field") not in schema.BENCHMARK_COLUMNS or f.get("op") not in ("eq", "gte", "lte"):
+        if f.get("field") not in schema.ALL_COLUMNS or f.get("op") not in ("eq", "gte", "lte"):
             raise ValueError("unsupported benchmark filter")
         if f["op"] != "eq":
             if f["field"] not in schema.NUMERIC_COLUMNS:
@@ -329,7 +329,7 @@ def benchmarks(root, filters=None):
         for r in db.execute("SELECT * FROM benchmarks ORDER BY row_number"):
             row = json.loads(r["data"])
             def match(f):
-                value = row[f["field"]]
+                value = row.get(f["field"], schema.NR)
                 target = f.get("value")
                 if f["op"] == "eq":
                     return str(value).casefold() == str(target).casefold()

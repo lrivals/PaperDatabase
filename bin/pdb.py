@@ -268,9 +268,31 @@ def cmd_bench(args):
     p.add_argument("-n", type=int, help="nombre maximal de lignes")
     p.add_argument("--format", choices=("tsv", "md", "json"), default="tsv")
     p.add_argument("--max-chars", type=int)
+    p.add_argument("--check", action="store_true", help=(
+        "lignes filtrées qui ont un chunk_id : chaque valeur numérique est-elle dans le passage "
+        "cité ? code 1 si une valeur manque (sans original_value lu) ou si un chunk_id est introuvable"))
+    p.add_argument("--comparable", nargs="?", const="accuracy", choices=("accuracy", "power"),
+                   help=("regroupe les lignes filtrées par conditions de comparaison (task, dataset, "
+                         "dataset_split, métrique ; + power_scope en mode power) et signale les "
+                         "comparaisons impossibles ; accuracy par défaut"))
+    p.add_argument("--add-columns", metavar="COL,…|all", help=(
+        "ajoute à l'en-tête ces colonnes optionnelles (n/r dans les lignes existantes) : "
+        + ", ".join(schema.OPTIONAL_COLUMNS)))
     a = p.parse_args(args)
 
+    if a.add_columns:
+        cols = (list(schema.OPTIONAL_COLUMNS) if a.add_columns.strip() == "all"
+                else [c.strip() for c in a.add_columns.split(",") if c.strip()])
+        try:
+            added = query.add_columns(ROOT, cols)
+        except ValueError as e:
+            print(f"pdb bench : {e}", file=sys.stderr)
+            return 2
+        print(f"colonnes ajoutées : {', '.join(added)}" if added else "rien à ajouter")
+        return 0
+
     header, rows = query.load_benchmarks(ROOT)
+    line_of = {id(r): i for i, r in enumerate(rows, start=2)}
     metas = query.load_papers(ROOT)
     short = query.short_ids(metas)
     try:
@@ -300,11 +322,25 @@ def cmd_bench(args):
     rows = query.filter_rows(rows, contains, minimum, maximum, a.has)
     if a.sort:
         rows = query.sort_rows(rows, a.sort, desc=a.desc)
-    if a.n:
+    if a.n and not a.comparable:  # avec --comparable, -n porte sur les groupes
         rows = rows[:a.n]
     if not rows:
         print("# aucune ligne", file=sys.stderr)
         return 1
+    if a.check:
+        results = query.check_rows(ROOT, [(line_of[id(r)], r) for r in rows])
+        if not results:
+            print("# aucune ligne filtrée n'a de chunk_id", file=sys.stderr)
+            return 0
+        print(query.render_check(results, short))
+        return int(any(x["status"] in ("absent", "introuvable") for x in results))
+    if a.comparable:
+        groups = query.comparable_groups(rows, a.comparable)
+        if not groups:
+            print(f"# aucune ligne filtrée n'a de {query.COMPARE_VALUE[a.comparable]}", file=sys.stderr)
+            return 1
+        print(query.render_comparable(groups, short, a.comparable, a.format, a.max_chars, a.n))
+        return 0
     if count_cols:
         print(query.count_rows(rows, count_cols, short))
         return 0
@@ -644,7 +680,8 @@ def _print_eval(res):
               f"\tarXiv {_fmt(h['arxiv_id'])}\tauteurs F1 {_fmt(h['authors_f1'])}")
         print(f"valeurs de benchmarks.csv\tdans le tableau cité {_fmt(t['in_cited_table'])}\t"
               f"dans le texte {_fmt(t['in_text'])}\t({t['values']} valeurs)\t"
-              f"lignes « tableaux seuls » : {_fmt(t.get('table_only_in_cited_table'))} ({t.get('table_only_values')} valeurs)")
+              f"lignes « tableaux seuls » : {_fmt(t.get('table_only_in_cited_table'))} ({t.get('table_only_values')} valeurs)\t"
+              f"dans le passage cité (chunk_id) : {_fmt(t.get('in_cited_chunk'))} ({t.get('cited_chunk_values', 0)} valeurs)")
         print()
     rg = res.get("rag")
     if rg:

@@ -56,6 +56,19 @@ class RagTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "nonempty claims"):
             rag.check_answer(self.root, {"snapshot": hit["snapshot"], "claims": []})
 
+    def test_optional_columns_accepted(self):
+        path = self.root / "benchmarks.csv"
+        with path.open(newline="") as f:
+            rows = list(csv.DictReader(f))
+        fields = [*schema.BENCHMARK_COLUMNS, "dataset_split"]
+        with path.open("w", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=fields)
+            w.writeheader()
+            w.writerows({**r, "dataset_split": "val"} for r in rows)
+        rag.build(self.root, mode="lexical")
+        got = rag.benchmarks(self.root, [{"field": "dataset_split", "op": "eq", "value": "val"}])
+        self.assertEqual(got["total_matches"], len(rows))
+
     def test_stale_snapshot_and_rebuild(self):
         first = rag.build(self.root, mode="lexical")["snapshot"]
         self.assertTrue(rag.build(self.root, mode="lexical")["unchanged"])

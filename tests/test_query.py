@@ -167,6 +167,135 @@ class TestCitationLines(unittest.TestCase):
                                      "ext\t1\t2015\tRare\tdoi:10.1/r"])
 
 
+def _write_csv(root, rows, fields=schema.BENCHMARK_COLUMNS):
+    with open(Path(root) / "benchmarks.csv", "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
+        w.writeheader()
+        w.writerows(rows)
+
+
+class TestOptionalColumns(unittest.TestCase):
+    PID = "arxiv-1612.07119-finn"
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        d = self.root / "papers" / self.PID
+        d.mkdir(parents=True)
+        (d / "metadata.json").write_text(json.dumps(PAPERS[0]))
+        # section 001 : coupée en passages (rag.split_text au-delà de 250 mots) ; 002 : autre section
+        long = " ".join(["filler"] * 400)
+        secs = [("001", f"Table 1: CNV reaches 21,900 FPS at 11.7 W. {long} 283 GOPS"),
+                ("002", "The board idles at 7 W.")]
+        (d / "sections.jsonl").write_text("".join(json.dumps({
+            "id": f"{self.PID}#{sid}", "paper_id": self.PID, "kind": "table", "section": "5",
+            "subsection": None, "order": int(sid), "page": 1, "text": text}) + "\n"
+            for sid, text in secs))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_add_columns(self):
+        _write_csv(self.root, ROWS[:2])
+        self.assertEqual(query.add_columns(self.root, ["batch", "chunk_id"]), ["chunk_id", "batch"])
+        header, rows = query.load_benchmarks(self.root)
+        self.assertEqual(header, [*schema.BENCHMARK_COLUMNS, "chunk_id", "batch"])
+        self.assertEqual({r["batch"] for r in rows}, {"n/r"})
+        self.assertEqual(rows[0]["dataset"], "CIFAR-10")
+        self.assertEqual(query.add_columns(self.root, ["batch"]), [])
+        query.add_columns(self.root, list(schema.OPTIONAL_COLUMNS))
+        self.assertEqual(query.load_benchmarks(self.root)[0], list(schema.ALL_COLUMNS))
+        with self.assertRaises(ValueError):
+            query.add_columns(self.root, ["notes"])
+
+    def test_check_rows(self):
+        base = dict(ROWS[0], gops="283")
+        rows = [
+            (2, {**base, "chunk_id": "1612.07119#001.0"}),          # id court : 21900, 11.7 ici, 283 plus loin
+            (3, {**base, "chunk_id": f"{self.PID}#002", "fps": "21900"}),  # autre section : absent
+            (4, {**base, "chunk_id": f"{self.PID}#009.0"}),          # introuvable
+            (5, {**base, "chunk_id": "n/r"}),                        # ignorée
+            (6, dict(ROWS[0])),                                      # sans colonne chunk_id
+            (7, {**base, "chunk_id": f"{self.PID}#002", "power_w": "7000",
+                 "original_value": "7 W"}),                          # converti en mW
+        ]
+        out = query.check_rows(self.root, rows)
+        got = {(x["line"], x["column"]): x["status"] for x in out}
+        self.assertEqual(got[(2, "fps")], "passage")
+        self.assertEqual(got[(2, "power_w")], "passage")
+        self.assertEqual(got[(2, "gops")], "section")
+        self.assertEqual(got[(3, "fps")], "absent")
+        self.assertEqual(got[(4, None)], "introuvable")
+        self.assertEqual(got[(7, "power_w")], "converti")
+        self.assertEqual(got[(7, "fps")], "converti")   # original_value ne dit pas quelle colonne
+        self.assertFalse({line for line, _ in got} & {5, 6})
+        text = query.render_check(out, {self.PID: "1612.07119"})
+        self.assertIn("4 ligne(s) avec chunk_id", text)
+        self.assertNotIn("\tpassage", text)
+
+    def test_check_rows_without_chunk_ids(self):
+        self.assertEqual(query.check_rows(self.root, [(2, ROWS[0])]), [])
+
+
+def _acc(pid, value, metric="mAP@0.5", dataset="COCO", task="detection", scope="n/r", power="n/r", **kw):
+    r = _row(pid, "m", "n/r", power, scope, dataset=dataset)
+    r.update(task=task, accuracy_metric=metric, accuracy_value=value, **kw)
+    return r
+
+
+class TestComparable(unittest.TestCase):
+    def test_grouping_and_metric_fallback(self):
+        rows = [_acc("p1", "40"), _acc("p2", "41", metric=" map@0.5 ", dataset="coco"),
+                _acc("p3", "n/r"),                                   # sans valeur : exclue
+                _acc("p4", "39", metric_def="mAP@0.5, COCO protocol")]
+        groups = query.comparable_groups(rows)
+        self.assertEqual([len(g["rows"]) for g in groups], [2, 1])
+        self.assertEqual(groups[0]["display"]["metric"], "~mAP@0.5")
+        self.assertEqual(groups[0]["papers"], ["p1", "p2"])
+        self.assertEqual(groups[1]["display"]["metric"], "mAP@0.5, COCO protocol")
+        self.assertIn("dataset_split", groups[0]["unknown"])          # colonne absente : n/r
+        self.assertIn("metric_def", groups[0]["unknown"])
+
+    def test_power_scope_only_in_power_mode(self):
+        rows = [_acc("p1", "40", power="2", scope="board"), _acc("p2", "41", power="3", scope="chip")]
+        acc = query.comparable_groups(rows)
+        self.assertEqual(len(acc), 1)
+        self.assertEqual(acc[0]["scopes"], ["board", "chip"])
+        power = query.comparable_groups(rows, "power")
+        self.assertEqual(len(power), 2)
+        self.assertNotIn("metric", power[0]["display"])
+        imp = query.impossible_comparisons(power)
+        self.assertEqual(imp[0]["differ"], {"power_scope": ["board", "chip"]})
+
+    def test_varies_and_impossible(self):
+        rows = [_acc("p1", "40", input_res="416x416"), _acc("p2", "41", input_res="640x640"),
+                _acc("p3", "50", dataset_split="val2017"), _acc("p4", "51", dataset_split="test-dev")]
+        groups = query.comparable_groups(rows)
+        first = groups[0]
+        self.assertEqual(first["papers"], ["p1", "p2"])
+        self.assertEqual(first["varies"], ["input_res"])
+        imp = query.impossible_comparisons(groups)
+        self.assertEqual(len(imp), 1)
+        self.assertEqual(imp[0]["groups"], 3)
+        self.assertEqual(set(imp[0]["differ"]), {"dataset_split"})
+        same_paper = [_acc("p1", "40"), _acc("p1", "41", metric="mAP@0.5:0.95")]
+        self.assertEqual(query.impossible_comparisons(query.comparable_groups(same_paper)), [])
+
+    def test_render(self):
+        rows = [_acc("p1", "40"), _acc("p2", "41"), _acc("p3", "50", metric="mAP@0.5:0.95")]
+        groups = query.comparable_groups(rows)
+        text = query.render_comparable(groups, {})
+        lines = text.splitlines()
+        self.assertEqual(lines[0].split("\t")[:3], ["g", "n", "papers"])
+        self.assertTrue(lines[1].startswith("1\t2\t2\tdetection\tCOCO"))
+        self.assertIn("comparaisons impossibles", text)
+        self.assertIn("1 groupe(s) d'un seul papier omis", text)
+        data = json.loads(query.render_comparable(groups, {}, fmt="json"))
+        self.assertEqual(len(data["groups"]), 2)                      # json : tous les groupes
+        alone = query.render_comparable(query.comparable_groups(rows[2:]), {})
+        self.assertIn("aucun groupe ne réunit deux papiers", alone)
+
+
 class TestLoad(unittest.TestCase):
     def test_load_from_disk(self):
         with tempfile.TemporaryDirectory() as d:

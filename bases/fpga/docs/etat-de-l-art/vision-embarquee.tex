@@ -6,30 +6,31 @@
   \large FPGA, GPU embarqués, NPU et microcontrôleurs\\
   État de l'art établi à partir du corpus PaperDatabase}
 \author{Léonard Rivals}
-\date{26 septembre 2026 --- brouillon}
+\date{1\textsuperscript{er} octobre 2026 --- brouillon}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 Ce document fait l'état de l'art de la vision embarquée par réseaux de neurones sur quatre
-familles de plateformes : SoC FPGA, GPU embarqués (Jetson), NPU et VPU en coprocesseur, et
-microcontrôleurs. Il couvre la détection d'objets, les autoencodeurs et l'apprentissage
-continu. Ses sections thématiques s'appuient sur les 41 fiches de lecture et les 172
-lignes de mesures d'une base de 45 articles (26 septembre 2026) ; ses gaps, sur les 101
-fiches et 299 lignes de la base du 1\textsuperscript{er} octobre 2026. Chaque chiffre
-porte sa source et chaque puissance sa portée.
+familles de plateformes : SoC FPGA, GPU embarqués (\glslink{jetson}{Jetson}), NPU et VPU en coprocesseur, et
+microcontrôleurs. Il couvre la détection d'objets, les \glslink{ae}{autoencodeurs} et l'apprentissage
+continu. Il s'appuie sur les 101 fiches de lecture et les 299 lignes de mesures de la
+base du 1\textsuperscript{er} octobre 2026. Chaque chiffre porte sa source et chaque
+puissance sa portée.
 Il en ressort trois constats :
 \begin{itemize}
   \item chaque famille de plateformes a ses outils et ses métriques, et les surveys du
     corpus traitent soit l'embarqué sans FPGA, soit le FPGA sans comparaison chiffrée ;
   \item les rares comparaisons à tâche égale ne montrent pas d'avantage énergétique net du
-    FPGA sur un GPU embarqué, et les protocoles équitables datent de 2017--2018 ;
+    FPGA sur un GPU embarqué pour la détection ; la seule exception, un \glslink{ae}{autoencodeur}, compare
+    des puissances de portées différentes, et un seul protocole récent mesure les deux
+    cibles à la carte ;
   \item la précision est rarement remesurée sur la cible, alors que la quantification et
-    la compilation la dégradent (de 6 à 12 points de mAP50-95 en INT8 sur Jetson, et une
+    la compilation la dégradent (de 6 à 12 points de \glslink{map5095}{mAP50-95} en INT8 sur \glslink{jetson}{Jetson}, et une
     chute à zéro après conversion OpenVINO dans un cas).
 \end{itemize}
-Les zones non couvertes (anomalie visuelle par autoencodeur sur FPGA, passerelle
+Les zones non couvertes (anomalie visuelle RGB par \glslink{ae}{autoencodeur} sur FPGA, passerelle
 MCU--FPGA, apprentissage continu en détection) sont rassemblées en fin de document.
 \end{abstract}
 
@@ -53,7 +54,7 @@ Ce document répond à trois questions, à partir du corpus seulement :
 \begin{itemize}
   \item quelles plateformes et quels outils existent, et que disent les surveys
     (section~\ref{sec:plateformes}) ?
-  \item où en sont la détection d'objets, les autoencodeurs et l'apprentissage continu sur
+  \item où en sont la détection d'objets, les \glslink{ae}{autoencodeurs} et l'apprentissage continu sur
     chacune (sections~\ref{sec:architectures} à~\ref{sec:cl-mcu}) ?
   \item que permettent de conclure les chiffres publiés, et que reste-t-il à faire
     (sections~\ref{sec:comparaison}, \ref{sec:critique} et~\ref{sec:gaps}) ?
@@ -82,8 +83,8 @@ Chaque famille de plateformes occupe une niche :
 \begin{itemize}
   \item le MCU à accélérateur pour les très petits modèles, à quelques centaines de
     microjoules par inférence ;
-  \item le GPU embarqué pour la facilité de déploiement, à quelques dizaines de FPS pour
-    7 à 15\,W de télémétrie ;
+  \item le GPU embarqué pour la facilité de déploiement, à quelques dizaines de \glslink{fps}{FPS} pour
+    7 à 15\,\glslink{u-w}{W} de télémétrie ;
   \item le FPGA pour la latence déterministe et la précision arbitraire.
 \end{itemize}
 Le corpus ne permet pas de les départager sur un même réseau : les mesures ne partagent ni
@@ -95,19 +96,30 @@ résultat, et une opportunité de recherche.
 \begin{enumerate}
   \item \textbf{Lire en priorité} les quatre articles de la base sans fiche. Le survey
     d'anomalie visuelle de \citet{2023-cui-survey-unsupervised-anomaly-detection-algorithms}
-    oriente l'axe autoencodeurs ; \citet{arxiv-2206.15472-device-training-256kb-memory}\pp{}
+    oriente l'axe \glslink{ae}{autoencodeurs} ; \citet{arxiv-2206.15472-device-training-256kb-memory}\pp{}
     et \citet{arxiv-2409.07114-continual-incremental-learning-tinyml-device} complètent
     l'apprentissage embarqué sur MCU.
   \item \textbf{Expérience à reproduire} : le protocole
-    d'\citet{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp{} (mAP COCO
-    val, service à une requête, repos soustrait), étendu à une KV260 par Vitis~AI et à un
+    d'\citet{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp{} (\glslink{map}{mAP} COCO
+    val, service à une requête, repos soustrait), étendu à une \glslink{kv260}{KV260} par Vitis~AI et à un
     MCU à NPU, avec en plus la télémétrie de la puce et la précision numérique déclarée.
   \item \textbf{Gap à creuser} : la passerelle MCU--FPGA pour la détection. Porter
-    TinyissimoYOLO
+    \glslink{tinyissimoyolo}{TinyissimoYOLO}
     \citep{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint} sur petit FPGA
     (FINN ou hls4ml) et mesurer l'énergie par inférence en portée puce, comme sur le
     MAX78000.
 \end{enumerate}
+
+\appendix
+\section*{Glossaires}
+\addcontentsline{toc}{section}{Glossaires}
+Chaque entrée renvoie aux sections où le terme apparaît ; dans le texte, chaque apparition
+est un lien vers son entrée. Une valeur suivie de \constr{} vient de la documentation du
+constructeur, \horscorpus{} de connaissances générales : ni l'une ni l'autre n'est tirée du
+corpus.
+\printglossary[type=plateformes]
+\printglossary[type=modeles]
+\printglossary[type=metriques]
 
 \bibliographystyle{plainnat}
 \bibliography{refs}

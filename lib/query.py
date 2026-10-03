@@ -6,6 +6,7 @@ chaque ligne de benchmark garde sa source (source_section, confidence, power_sco
 """
 import csv
 import json
+import math
 from pathlib import Path
 
 from slugify import slugify
@@ -133,6 +134,235 @@ def count_rows(rows, cols, short):
     lines = ["n\t" + "\t".join("paper" if c == "paper_id" else c for c in cols)]
     lines += [f"{n}\t" + "\t".join(k) for k, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))]
     return "\n".join(lines)
+
+
+# ------------------------------------------------- colonnes optionnelles, --check
+
+def add_columns(root, cols):
+    """Ajoute à l'en-tête de benchmarks.csv les colonnes optionnelles `cols` (n/r dans les
+    lignes existantes), dans l'ordre de schema.OPTIONAL_COLUMNS. Renvoie les colonnes ajoutées."""
+    unknown = [c for c in cols if c not in schema.OPTIONAL_COLUMNS]
+    if unknown:
+        raise ValueError(f"colonne(s) optionnelle(s) inconnue(s) : {', '.join(unknown)}. "
+                         f"Valides : {', '.join(schema.OPTIONAL_COLUMNS)}")
+    header, rows = load_benchmarks(root)
+    errs = schema.check_header(header)
+    if errs:
+        raise ValueError("; ".join(errs))
+    new = [c for c in schema.OPTIONAL_COLUMNS if c in cols and c not in header]
+    if not new:
+        return []
+    present = [c for c in schema.OPTIONAL_COLUMNS if c in header or c in new]
+    fields = list(schema.BENCHMARK_COLUMNS) + present
+    with open(Path(root) / "benchmarks.csv", "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
+        w.writeheader()
+        w.writerows({c: r.get(c) or NR for c in fields} for r in rows)
+    return new
+
+
+def _same_number(value, tokens):
+    v = to_float(value)
+    return v is not None and any(
+        (x := to_float(t)) is not None and math.isclose(v, x, rel_tol=1e-9, abs_tol=1e-9)
+        for t in tokens)
+
+
+def check_rows(root, numbered):
+    """Valeurs numériques des lignes qui ont un chunk_id, cherchées dans le passage cité
+    (rag.number_tokens). numbered : [(n° de ligne du CSV, ligne)].
+
+    Renvoie une liste de dicts {line, paper_id, chunk_id, column, value, status}, un par
+    valeur, status : passage | section (autre passage de la même section : tableau coupé en
+    fenêtres) | converti (valeur absente, mais les nombres de original_value sont lus) | absent ; une ligne dont le chunk_id est introuvable donne une entrée
+    column=None, status=introuvable."""
+    numbered = [(n, r) for n, r in numbered if (r.get("chunk_id") or NR).strip() != NR]
+    if not numbered:
+        return []
+    from lib import rag  # import paresseux : pdb bench reste instantané sans --check
+    chunks = rag.load_chunks(root)
+    by_id = {c["chunk_id"]: c for c in chunks}
+    by_section = {}
+    for c in chunks:
+        by_section.setdefault(c["section_id"], []).append(c)
+    short = short_ids(load_papers(root))
+    out = []
+    for n, r in numbered:
+        base = {"line": n, "paper_id": r["paper_id"], "chunk_id": r["chunk_id"].strip()}
+        cid = rag.resolve_chunk_id(base["chunk_id"], by_id, short)
+        if cid is None or by_id[cid]["paper_id"] != r["paper_id"]:
+            out.append({**base, "column": None, "value": None, "status": "introuvable"})
+            continue
+        chunk = by_id[cid]
+        here = rag.number_tokens(chunk["text"])
+        around = [t for c in by_section[chunk["section_id"]] if c is not chunk
+                  for t in rag.number_tokens(c["text"])]
+        # valeur convertie (unités, moyenne) : original_value, telle qu'écrite, doit être lue
+        original = rag.number_tokens((r.get("original_value") or NR).replace(NR, ""))
+        converted = bool(original) and all(_same_number(t, here + around) for t in original)
+        for col in schema.NUMERIC_COLUMNS:
+            value = (r.get(col) or NR).strip()
+            if value == NR:
+                continue
+            status = ("passage" if _same_number(value, here)
+                      else "section" if _same_number(value, around)
+                      else "converti" if converted else "absent")
+            out.append({**base, "column": col, "value": value, "status": status})
+    return out
+
+
+def render_check(results, short):
+    """Sortie de pdb bench --check : valeurs hors du passage cité, puis un résumé."""
+    lines = ["line\tpaper\tchunk_id\tcolumn\tvalue\tstatus"]
+    for x in results:
+        if x["status"] != "passage":
+            lines.append("\t".join(str(v) for v in (
+                x["line"], short.get(x["paper_id"], x["paper_id"]), x["chunk_id"],
+                x["column"] or "-", x["value"] or "-", x["status"])))
+    values = [x for x in results if x["column"]]
+    ok = sum(x["status"] == "passage" for x in values)
+    n_lines = len({x["line"] for x in results})
+    pct = f"{100 * ok / len(values):.0f} %" if values else "-"
+    lines.append(f"# {n_lines} ligne(s) avec chunk_id, {len(values)} valeur(s) vérifiée(s), "
+                 f"{ok} dans le passage cité ({pct})")
+    return "\n".join(lines)
+
+
+# ------------------------------------------------------------------ --comparable
+
+# Valeur comparée par mode ; clé : task, dataset, dataset_split, puis la métrique (accuracy) ou
+# power_scope (power).
+COMPARE_VALUE = {"accuracy": "accuracy_value", "power": "power_w"}
+KEY_COLUMNS = ("task", "dataset", "dataset_split", "metric")
+# Conditions qui peuvent changer dans un groupe : des réserves, pas des interdictions. La
+# plateforme n'y est pas : c'est en général ce qu'on compare.
+VARYING = ("quantization", "input_res", "batch", "measure_protocol")
+
+
+def _norm(v):
+    return " ".join((v or NR).split()).casefold()
+
+
+def _metric(r):
+    """metric_def si renseignée, sinon accuracy_metric préfixée de ~ (définition non vérifiée)."""
+    d = (r.get("metric_def") or NR).strip()
+    return d if d != NR else "~" + (r.get("accuracy_metric") or NR).strip()
+
+
+def comparable_groups(rows, mode="accuracy"):
+    """Lignes dont la valeur comparée est renseignée, groupées par conditions de comparaison
+    (DATA_MODEL §7) : task, dataset, dataset_split, métrique, et power_scope en mode power.
+    Casse et espaces ignorés. Groupes triés par nombre de papiers puis de lignes."""
+    value = COMPARE_VALUE[mode]
+    # mode power : la métrique de précision ne change rien à une puissance, power_scope si
+    cols = KEY_COLUMNS if mode == "accuracy" else KEY_COLUMNS[:-1] + ("power_scope",)
+    groups = {}
+    for r in rows:
+        if (r.get(value) or NR).strip() == NR:
+            continue
+        shown = {c: _metric(r) if c == "metric" else (r.get(c) or NR).strip() for c in cols}
+        g = groups.setdefault(tuple(_norm(shown[c]) for c in cols),
+                              {"display": shown, "rows": []})
+        g["rows"].append(r)
+    out = []
+    for g in groups.values():
+        rs = g["rows"]
+        out.append({
+            "display": g["display"], "rows": rs,
+            "papers": sorted({r["paper_id"] for r in rs}),
+            "scopes": sorted({(r.get("power_scope") or NR) for r in rs}),
+            "varies": [c for c in VARYING if len({_norm(r.get(c)) for r in rs}) > 1],
+            "unknown": [c for c in cols if c != "metric" and _norm(g["display"][c]) == NR]
+                       + (["metric_def"] if g["display"].get("metric", "").startswith("~") else []),
+        })
+    out.sort(key=lambda g: (-len(g["papers"]), -len(g["rows"]),
+                            tuple(_norm(v) for v in g["display"].values())))
+    return out
+
+
+def impossible_comparisons(groups):
+    """(task, dataset) répartis sur plusieurs groupes et plusieurs papiers : colonnes de la clé qui les séparent,
+    avec leurs valeurs. Une comparaison entre ces groupes n'est pas valable."""
+    by_pair = {}
+    for g in groups:
+        d = g["display"]
+        by_pair.setdefault((_norm(d["task"]), _norm(d["dataset"])), []).append(g)
+    out = []
+    for gs in by_pair.values():
+        # plusieurs groupes et plusieurs papiers : deux métriques d'un même papier ne trompent personne
+        if len(gs) < 2 or len({p for g in gs for p in g["papers"]}) < 2:
+            continue
+        d = gs[0]["display"]
+        differ = {}
+        for c in d:
+            if c in ("task", "dataset"):
+                continue
+            values = []
+            for g in gs:
+                if g["display"][c] not in values:
+                    values.append(g["display"][c])
+            if len({_norm(v) for v in values}) > 1:
+                differ[c] = values
+        out.append({"task": d["task"], "dataset": d["dataset"], "groups": len(gs),
+                    "papers": len({p for g in gs for p in g["papers"]}), "differ": differ})
+    out.sort(key=lambda x: (-x["papers"], _norm(x["task"]), _norm(x["dataset"])))
+    return out
+
+
+def render_comparable(groups, short, mode="accuracy", fmt="tsv", max_chars=None, n=None):
+    """Sortie de pdb bench --comparable : groupes d'au moins 2 papiers, puis le pied (définitions
+    non vérifiées, n/r dans la clé, comparaisons impossibles, groupes d'un seul papier)."""
+    value = COMPARE_VALUE[mode]
+    if fmt == "json":
+        return json.dumps({"mode": mode, "groups": [
+            {**g["display"], "papers": [short.get(p, p) for p in g["papers"]],
+             "power_scopes": g["scopes"], "varies": g["varies"], "unknown": g["unknown"],
+             "rows": [{"paper": short.get(r["paper_id"], r["paper_id"]), "model": r.get("model"),
+                       "platform": r.get("platform"), value: r.get(value)} for r in g["rows"]]}
+            for g in groups], "impossible": impossible_comparisons(groups)},
+            ensure_ascii=False, indent=1)
+    cols = list(groups[0]["display"]) if groups else list(KEY_COLUMNS)
+    head = ["g", "n", "papers", *cols] + (["power_scope"] if mode == "accuracy" else []) + ["varie"]
+    multi = [g for g in groups if len(g["papers"]) > 1]
+    shown = multi[:n] if n else multi
+    lines = ["\t".join(head)]
+    for i, g in enumerate(shown, start=1):
+        cell = [str(i), str(len(g["rows"])), str(len(g["papers"])),
+                *(g["display"][c].replace("\t", " ") for c in cols)]
+        if mode == "accuracy":
+            cell.append(",".join(g["scopes"]))
+        cell.append(",".join(g["varies"]) or "-")
+        lines.append("\t".join(cell))
+    foot = []
+    if not shown:
+        foot.append("# aucun groupe ne réunit deux papiers : pas de comparaison valable entre papiers")
+    if any(g["display"].get("metric", "").startswith("~") for g in shown):
+        foot.append("# ~ : accuracy_metric, metric_def non renseignée (définition non vérifiée)")
+    unknown = sum(1 for g in shown if [c for c in g["unknown"] if c != "metric_def"])
+    if unknown:
+        foot.append(f"# n/r dans la clé (dataset_split…) : comparabilité non établie, {unknown} groupe(s)")
+    imp = impossible_comparisons(groups)
+    if imp:
+        foot.append("# comparaisons impossibles (même tâche et même jeu, autres conditions) :")
+        for x in imp:
+            why = "; ".join(f"{c} : " + " | ".join(v[:4]) + (" | …" if len(v) > 4 else "")
+                            for c, v in x["differ"].items())
+            foot.append(f"#   {x['task']} / {x['dataset']} : {x['groups']} groupes, "
+                        f"{x['papers']} papier(s) ({why})")
+    single = len(groups) - len(multi)
+    if single:
+        foot.append(f"# {single} groupe(s) d'un seul papier omis (--format json pour tout voir)")
+    if n and len(multi) > n:
+        foot.append(f"# {len(multi) - n} groupe(s) de plusieurs papiers au-delà de -n {n}")
+    out = "\n".join(lines + foot)
+    if max_chars and len(out) > max_chars:
+        kept = []
+        for line in lines + foot:
+            if len("\n".join(kept + [line, "# tronqué"])) > max_chars:
+                break
+            kept.append(line)
+        out = "\n".join(kept + ["# tronqué"])
+    return out
 
 
 # -------------------------------------------------------------------- rendu

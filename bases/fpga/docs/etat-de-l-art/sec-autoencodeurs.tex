@@ -2,97 +2,152 @@
 \section{Autoencodeurs sur FPGA}
 \label{sec:autoencodeurs}
 
-La bibliographie de départ supposait que les autoencodeurs (AE) sur FPGA étaient surtout
+La bibliographie de départ supposait que les \glslink{ae}{autoencodeurs} (\glslink{ae}{AE}) sur FPGA étaient surtout
 étudiés sur des séries temporelles et en physique des particules, et peu sur des images.
-Les 11 fiches de l'axe permettent de préciser ce constat.
+Les 15 fiches de l'axe, complétées par l'\glslink{ae}{AE} d'anomalie audio de MLPerf Tiny, permettent de
+préciser ce constat : l'image est désormais traitée, mais surtout en compression, et la
+détection d'anomalies visuelles sur FPGA se réduit à un seul cas, hyperspectral.
 
 \subsection{Physique des particules et signaux : la très faible latence}
 
-\citet{arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised} placent des AE et VAE
+\citet{arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised} placent des \glslink{ae}{AE} et \glslink{vae}{VAE}
 au déclenchement de premier niveau du LHC, pour sélectionner des collisions anormales sans
 hypothèse sur la nouvelle physique. Trois choix sont transposables à d'autres domaines :
 \begin{itemize}
   \item le score d'anomalie (erreur quadratique) est calculé sur la puce, par une couche
     ajoutée à hls4ml \src{§IV} ;
-  \item le VAE est réduit à son encodeur : le score s'obtient à partir de la divergence de
+  \item le \glslink{vae}{VAE} est réduit à son encodeur : le score s'obtient à partir de la divergence de
     Kullback-Leibler ($D_{KL}$) calculée sur $(\mu, \sigma)$, ce qui supprime
     l'échantillonnage et le décodeur \src{§IV} ;
   \item le choix entre QAT et PTQ se fait selon la stabilité du score d'anomalie, et non
     selon la perte d'entraînement \src{§VI}.
 \end{itemize}
-Le VAE dense (encodeur seul) tient en 80\,ns sur VU9P ; le seul AE convolutif, sur une
-entrée de 19$\times$3 valeurs, prend 47\,\% des LUT et est rejeté \src{Table~III}. Ces
+Le \glslink{vae}{VAE} dense (encodeur seul) tient en 80\,\glslink{u-ns}{ns} sur VU9P ; le seul \glslink{ae}{AE} convolutif, sur une
+entrée de 19$\times$3 valeurs, prend 47\,\% des \glslink{lut}{LUT} et est rejeté \src{Table~III}. Ces
 chiffres sont des estimations de Vivado HLS ; une seule validation sur carte est faite, et
 elle est qualitative \src{§VII}.
 
-Deux autres travaux restent sur des signaux :
+Trois autres travaux restent sur des signaux :
 \begin{itemize}
   \item \citet{arxiv-2602.15751-enabling-low-latency-machine-learning} compressent des
-    impulsions de calorimètre (32 échantillons en 2 valeurs) sur un PolarFire durci : 25\,ns
+    impulsions de calorimètre (32 échantillons en 2 valeurs) sur un \glslink{polarfire}{PolarFire} durci : 25\,\glslink{u-ns}{ns}
     de latence en version \enquote{nano}, sans bloc mathématique \src{§5.2}$^{m}$. La
     puissance est estimée par l'outil ;
   \item \citet{2024-que-low-latency-variational-autoencoder-fpgas} sont les seuls à
     échantillonner en matériel (générateur Mersenne Twister suivi d'une transformée de
     Box-Muller), avec un latent de dimension~1, sur des séries d'ondes gravitationnelles
-    \src{§III}. Une inférence dure 17 cycles (85\,ns) ; les \enquote{5,6\,ns} mis en avant
+    \src{§III}. Une inférence dure 17 cycles (85\,\glslink{u-ns}{ns}) ; les \enquote{5,6\,\glslink{u-ns}{ns}} mis en avant
     sont un débit inverse amorti sur 10\,000 inférences \src{§IV-E}. La puissance est
-    estimée par Vivado \src{§IV-E}.
+    estimée par Vivado \src{§IV-E} ;
+  \item \citet{arxiv-2411.01118-variational-autoencoders-source-data-reduction} demandent au
+    même \glslink{vae}{VAE} de compresser à la source les traces d'un détecteur à pixels et de signaler les
+    défauts du capteur. Comme au LHC, seul l'encodeur (latent~8) est embarqué, et le score
+    d'anomalie est une KLD \enquote{clipée}, sans échantillonnage \src{§2--3}. La synthèse
+    hls4ml donne 15\,\glslink{u-ns}{ns} de latence \src{Table~1}, sans FPGA identifié ni puissance
+    \src{§1, Conclusion}. Les données sont simulées et la détection reste faible sur les
+    pixels morts : 10\,\% de sensibilité pour 90\,\% de rejet du fond \src{Table~2}.
 \end{itemize}
 Enfin, \citet{2024-campos-end-end-codesign-hessian-aware} quantifient un encodeur de
-compression de données de calorimètre (ECON-AE), dont seul l'encodeur est synthétisé
+compression de données de calorimètre (\glslink{econ-ae}{ECON-AE}), dont seul l'encodeur est synthétisé
 \src{§7, Table~3}.
 
 \subsection{Images : compression apprise et encodeurs}
 
-\paragraph{Compression apprise sur grosse FPGA.} F-LIC
-\citep{2022-sun-f-lic-fpga-learned-image} implante un codec d'images appris (VAE avec
-hyper-prior) en virgule fixe 8~bits sur VCU118. Il encode du 720p à 40,69\,FPS et du 1080p
-à 19,15\,FPS, avec un PSNR de 29,94\,dB à 0,2542\,bpp \src{Fig.~6}$^{m}$. Deux techniques
+\paragraph{Compression apprise sur grosse FPGA.} \glslink{f-lic}{F-LIC}
+\citep{2022-sun-f-lic-fpga-learned-image} implante un codec d'images appris (\glslink{vae}{VAE} avec
+hyper-prior) en virgule fixe 8~bits sur \glslink{vcu118}{VCU118}. Il encode du 720p à 40,69\,\glslink{fps}{FPS} et du 1080p
+à 19,15\,\glslink{fps}{FPS}, avec un \glslink{psnr}{PSNR} de 29,94\,dB à 0,2542\,\glslink{bpp}{bpp} \src{Fig.~6}$^{m}$. Deux techniques
 sont réutilisables pour un décodeur :
 \begin{itemize}
-  \item deux poids partagent un même DSP (\enquote{casDSP}) ;
+  \item deux poids partagent un même \glslink{dsp}{DSP} (\enquote{casDSP}) ;
   \item la déconvolution saute les zéros insérés par le stride.
 \end{itemize}
 Deux limites : le codage entropique tourne sur le PC hôte \src{Fig.~1}, et l'encodeur 720p
-occupe 4\,146 DSP. L'énergie par image est comparable à celle d'une Jetson Xavier NX (1,41
-contre 1,43\,J en encodage 720p), pas meilleure, et la méthode de mesure n'est pas décrite
+occupe 4\,146 \glslink{dsp}{DSP}. L'énergie par image est comparable à celle d'une \glslink{xavier-nx}{Jetson Xavier NX} (1,41
+contre 1,43\,\glslink{u-j}{J} en encodage 720p), pas meilleure, et la méthode de mesure n'est pas décrite
 \src{Fig.~6}.
+
+\paragraph{Compression apprise sur SoC, via la DPU.}
+\citet{arxiv-2503.04832-lightweight-embedded-fpga-deployment-learned}\pp{} portent un \glslink{lic}{LIC}
+(\glslink{ae}{AE} convolutif avec hyperprior) sur trois \glslink{dpu}{DPU} \glslink{dpu}{B4096} d'une \glslink{zcu102}{ZCU102}. Un élève distillé à
+160 canaux, élagué de 30\,\% et quantifié en précision mixte 8/32~bits, encode du 720p à
+43,63\,\glslink{fps}{FPS} \src{§III-A--D, Table~VII} ; le décodage tombe à 30,5\,\glslink{fps}{FPS} \src{Table~X}. La couche \glslink{gdn}{GDN}, qu'un \glslink{relu}{ReLU} remplace d'habitude, est gardée en
+virgule fixe 32~bits comme opérateur XIR personnalisé \src{§III-B, §III-D}. C'est le
+premier encodeur-décodeur d'images complet sur SoC du corpus, mais l'énergie annoncée
+(2,88\,\glslink{u-j}{J} par image à 43,6\,\glslink{fps}{FPS}, soit environ 125\,\glslink{u-w}{W} \deduit) est incompatible avec une
+\glslink{zcu102}{ZCU102}, et la méthode de mesure n'est pas décrite \src{Table~VII}. En amont,
+\citet{arxiv-2511.17135-multi-stage-optimization-framework-deploying}\pp{} ramènent la
+perte de \glslink{bd-rate}{BD-rate} d'un Ballé2018 à \glslink{gdn}{GDN} quantifié en INT8 de 30,0 à 6,30\,\% \src{Table~I},
+mais en simulation seulement : aucune mesure FPGA n'apparaît dans le texte.
 
 \paragraph{Compression à bord, sur VPU.} La mission Φ-Sat-2
 \citep{2023-guerrisi-artificial-intelligence-board-image-compression} compresse les images
-par un AE convolutif d'un facteur 8 fixe, sans codage entropique \src{§II-A}. L'encodeur
-tourne à bord sur une VPU Myriad~2, pas sur un FPGA : 10,92\,s par acquisition pour
-1,4\,W, contre 0,95\,s sur un GPU GTX~1650 \src{Table~V}$^{m}$. Le passage à la VPU ne
-coûte presque rien en qualité : SSIM de 0,9647 contre 0,9651 \src{§III-B--C}.
+par un \glslink{ae}{AE} convolutif d'un facteur 8 fixe, sans codage entropique \src{§II-A}. L'encodeur
+tourne à bord sur une VPU \glslink{ncs2}{Myriad}~2, pas sur un FPGA : 10,92\,\glslink{u-s}{s} par acquisition pour
+1,4\,\glslink{u-w}{W}, contre 0,95\,\glslink{u-s}{s} sur un GPU GTX~1650 \src{Table~V}$^{m}$. Le passage à la VPU ne
+coûte presque rien en qualité : \glslink{ssim}{SSIM} de 0,9647 contre 0,9651 \src{§III-B--C}.
 
 \paragraph{Encodeurs d'images sur petite FPGA.}
 \citet{2021-manjunath-energy-efficient-edgeai-autoencoder-accelerator} ternarisent
 l'encodeur convolutif d'un agent d'apprentissage par renforcement (entrée 120$\times$120
-RGB, simulateur) et l'implantent en Verilog sur Artix-7. En 32~bits et 64~PE, une image
-coûte 0,8\,ms et 0,25\,mJ \src{Table~5}. La puissance est estimée par Vivado
+RGB, simulateur) et l'implantent en Verilog sur \glslink{artix7}{Artix-7}. En 32~bits et 64~PE, une image
+coûte 0,8\,\glslink{u-ms}{ms} et 0,25\,\glslink{u-mj}{mJ} \src{Table~5}. La puissance est estimée par Vivado
 \src{§VIII-A}, et le décodeur n'est pas implanté.
 \citet{arxiv-2301.07050-energy-efficient-reconfigurable-autoencoder-implementation}\pp{}
-débruitent MNIST sur XCZU7EV (2,91\,ms, 5,93\,W \enquote{on-chip}). C'est la seule ligne
+débruitent MNIST sur \glslink{xczu7ev}{XCZU7EV} (2,91\,\glslink{u-ms}{ms}, 5,93\,\glslink{u-w}{W} \enquote{on-chip}). C'est la seule ligne
 de \texttt{benchmarks.csv} en confiance \emph{low} : l'\enquote{accuracy} d'un débruiteur
 n'est pas définie, et le tableau comparatif est physiquement incohérent \src{Table~II}.
 
-\subsection{Détection d'anomalies sur petite FPGA : des signaux, pas des images}
+\subsection{Détection d'anomalies sur SoC FPGA : surtout des signaux}
 
+\paragraph{Le seul cas d'images : artefacts hyperspectraux.}
+\citet{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator} détectent les
+artefacts d'images hyperspectrales de CubeSat par un seuil sur l'erreur de reconstruction
+d'un \glslink{cae}{CAE} de 2,95\,M de paramètres (entrée 144$\times$144) \src{§III-B--D}. Encodeur et
+décodeur tournent en INT8 sur la \glslink{dpu}{DPU} \glslink{dpu}{B4096} d'une \glslink{zcu104}{ZCU104} : 4,0\,\glslink{u-ms}{ms} et 21,52\,\glslink{u-mj}{mJ} par
+inférence, 5,38\,\glslink{u-w}{W} lus sur les rails PMBus \src{§IV-B, Table~VI}. La \glslink{xavier-nx}{Jetson Xavier NX}
+(mode 10\,\glslink{u-w}{W}, INT8) met 10,36\,\glslink{u-ms}{ms} pour 7,6\,\glslink{u-w}{W} \src{Table~VI}, avec une puissance lue par
+jtop, de portée différente. Trois réserves limitent la portée du résultat :
+\begin{itemize}
+  \item le seuil est choisi sur les données de test \src{§III-C} ;
+  \item le jeu de test est très déséquilibré (837 anomalies pour 79 à 89 images normales)
+    \src{Table~IV} ;
+  \item la PTQ seule donne un \glslink{f1}{F1} nul ; il faut 50 epochs de fine-tuning pour revenir à
+    92,77\,\% \src{Table~III, §IV}.
+\end{itemize}
+
+\paragraph{Les autres AE d'anomalie portent sur des signaux.}
 \begin{itemize}
   \item \citet{2022-malviya-edge-compatible-convolutional-autoencoder-implemented}
     détectent des anomalies de vibrations d'hélicoptère, encodées en scalogrammes
-    64$\times$64, avec un AE convolutif de 8\,755 paramètres sur PYNQ-Z2. Encodeur et
-    décodeur sont dans deux bitstreams séparés (40\,403 et 38\,169 LUT), pour 2,1 + 3,8\,ms
+    64$\times$64, avec un \glslink{ae}{AE} convolutif de 8\,755 paramètres sur \glslink{pynq-z2}{PYNQ-Z2}. Encodeur et
+    décodeur sont dans deux bitstreams séparés (40\,403 et 38\,169 \glslink{lut}{LUT}), pour 2,1 + 3,8\,\glslink{u-ms}{ms}
     \src{Table~4, §IV-B}$^{m}$. La précision est remesurée sur le FPGA et baisse (85,02\,\%
     contre 88,8\,\% sur CPU) en virgule fixe 23~bits \src{§IV-B}.
-  \item \citet{2019-tsukada-neural-network-device-learning-anomaly} (ONLAD) apprennent en
-    ligne un AE à une couche cachée par OS-ELM (voir
+  \item \citet{2019-tsukada-neural-network-device-learning-anomaly} (\glslink{onlad}{ONLAD}) apprennent en
+    ligne un \glslink{ae}{AE} à une couche cachée par \glslink{os-elm}{OS-ELM} (voir
     section~\ref{sec:cl-fpga}). Leurs données sont tabulaires ou des images aplaties.
   \item \citet{2019-coutinho-deep-neural-network-hardware-implementation} : malgré le
-    titre, l'\enquote{autoencodeur empilé} n'est qu'un classifieur MLP sur MNIST, sans
+    titre, l'\enquote{\glslink{ae}{autoencodeur} empilé} n'est qu'un classifieur MLP sur MNIST, sans
     reconstruction \src{§III-A, §V-D}. Leur comparaison met une puissance dynamique de
     quelques mW face à des puissances totales \src{Tables~16--17}.
+  \item Dans MLPerf Tiny, \citet{arxiv-2206.11791-open-source-fpga-ml-codesign}\pp{}
+    implantent avec hls4ml l'\glslink{ae}{AE} dense de la tâche \enquote{anomaly detection}, sur
+    données audio sous-échantillonnées (128 entrées) \src{§3.3}. Sur \glslink{pynq-z2}{Pynq-Z2}, une inférence prend 0,019\,\glslink{u-ms}{ms} et
+    30,1\,$\mu$J, mesurés au Joulescope sur l'appareil \src{Table~5, §4.4.2} ; l'\glslink{auroc}{AUC}
+    n'est pas dans le texte extrait.
 \end{itemize}
+
+\paragraph{Côté algorithmes d'anomalie visuelle.} Le survey de
+\citet{2023-cui-survey-unsupervised-anomaly-detection-algorithms} classe les méthodes non
+supervisées d'inspection industrielle en cinq familles \src{§III, Table~2}. Sur MVTec AD,
+les méthodes à banque de caractéristiques ou à flots dominent : \glslink{auroc}{AUROC} image de 99,1 pour
+\glslink{patchcore}{PatchCore} et de 99,4 pour \glslink{fastflow}{FastFlow} \src{Table~10, reconstruite par Docling}. Ce sont aussi
+les plus coûteuses en mémoire, alors que les méthodes par reconstruction (\glslink{ae}{AE}) sont rapides
+en inférence \src{§IV}. Le survey ne chiffre aucun coût matériel, ne traite ni le réglage du
+seuil ni le compromis entre fausses alarmes et alarmes manquées au-delà de son énoncé
+\src{§VI-B}, et exclut les scènes avec personnes \src{§II-A}. Sur un jeu réel (huile
+alimentaire), \glslink{patchcore}{PatchCore} tombe à 92,2 d'\glslink{auroc}{AUROC} \src{Table~12}.
 
 \subsection{Bilan}
 
@@ -104,17 +159,22 @@ n'est pas définie, et le tableau comparatif est physiquement incohérent \src{T
 \toprule
 Travail & Donnée & Partie en matériel & Puce & Puissance \\
 \midrule
-AE du LHC\,\textsuperscript{a} & tabulaire 19$\times$3 & AE complet ; VAE encodeur seul & VU9P & non mesurée \\
-PicoCal\,\textsuperscript{b} & impulsions 1D & encodeur & PolarFire & estimée \\
-VAE de Que\,\textsuperscript{c} & séries temporelles & VAE complet (latent 1) & U250, Z7045 & estimée \\
-ECON-AE\,\textsuperscript{d} & calorimètre & encodeur & \nr{} (voir fiche) & non mesurée \\
-F-LIC\,\textsuperscript{e} & images 720p et 1080p & VAE hyper-prior, sans codage entropique & VCU118 & méthode non décrite \\
-Φ-Sat-2\,\textsuperscript{f} & images satellite & encodeur & VPU (pas de FPGA) & méthode non décrite \\
-Manjunath\,\textsuperscript{g} & images 120$\times$120 (simulateur) & encodeur & Artix-7 & estimée \\
-CAE débruiteur\,\textsuperscript{h} & MNIST bruité & AE complet & XCZU7EV & méthode non décrite \\
-Malviya\,\textsuperscript{i} & vibrations en scalogrammes & AE, 2 bitstreams & XC7Z020 & méthode non décrite \\
-ONLAD\,\textsuperscript{j} & tabulaire, MNIST aplati & AE OS-ELM + apprentissage & XC7Z020 & carte (3,1\,W) \\
-SSAE\,\textsuperscript{k} & MNIST & MLP (encodeurs empilés) & XC6VLX240T & dynamique \\
+\glslink{ae}{AE} du LHC\,\textsuperscript{a} & tabulaire 19$\times$3 & \glslink{ae}{AE} complet ; \glslink{vae}{VAE} encodeur seul & VU9P & non mesurée \\
+PicoCal\,\textsuperscript{b} & impulsions 1D & encodeur & \glslink{polarfire}{PolarFire} & estimée \\
+\glslink{vae}{VAE} de Que\,\textsuperscript{c} & séries temporelles & \glslink{vae}{VAE} complet (latent 1) & U250, Z7045 & estimée \\
+\glslink{econ-ae}{ECON-AE}\,\textsuperscript{d} & calorimètre & encodeur & \nr{} (voir fiche) & non mesurée \\
+\glslink{vae}{VAE} smart pixel\,\textsuperscript{e} & traces simulées (105 valeurs) & encodeur (synthèse hls4ml) & \nr{} & non mesurée \\
+\glslink{f-lic}{F-LIC}\,\textsuperscript{f} & images 720p et 1080p & \glslink{vae}{VAE} hyper-prior, sans codage entropique & \glslink{vcu118}{VCU118} & méthode non décrite \\
+\glslink{lic}{LIC} distillé\,\textsuperscript{g} & images 720p (Kodak tuilé) & encodeur et décodeur, 3 \glslink{dpu}{DPU} & \glslink{xczu9eg}{XCZU9EG} (\glslink{zcu102}{ZCU102}) & méthode non décrite, incohérente \\
+DRAQ\,\textsuperscript{h} & images (Kodak) & aucune (quantification simulée) & --- & --- \\
+Φ-Sat-2\,\textsuperscript{i} & images satellite & encodeur & VPU (pas de FPGA) & méthode non décrite \\
+Manjunath\,\textsuperscript{j} & images 120$\times$120 (simulateur) & encodeur & \glslink{artix7}{Artix-7} & estimée \\
+\glslink{cae}{CAE} débruiteur\,\textsuperscript{k} & MNIST bruité & \glslink{ae}{AE} complet & \glslink{xczu7ev}{XCZU7EV} & méthode non décrite \\
+\glslink{cae}{CAE} d'artefacts\,\textsuperscript{l} & images hyperspectrales 144$\times$144 & \glslink{ae}{AE} complet sur \glslink{dpu}{DPU} & \glslink{xczu7ev}{XCZU7EV} (\glslink{zcu104}{ZCU104}) & rails PMBus (5,38\,\glslink{u-w}{W}) \\
+Malviya\,\textsuperscript{m} & vibrations en scalogrammes & \glslink{ae}{AE}, 2 bitstreams & \glslink{xc7z020}{XC7Z020} & méthode non décrite \\
+MLPerf Tiny AD\,\textsuperscript{n} & audio (ToyADMOS) & \glslink{ae}{AE} dense complet & \glslink{xc7z020}{XC7Z020}, \glslink{artix7}{Artix-7} & énergie de l'appareil (Joulescope) \\
+\glslink{onlad}{ONLAD}\,\textsuperscript{o} & tabulaire, MNIST aplati & \glslink{ae}{AE} \glslink{os-elm}{OS-ELM} + apprentissage & \glslink{xc7z020}{XC7Z020} & carte (3,1\,\glslink{u-w}{W}) \\
+\glslink{ssae}{SSAE}\,\textsuperscript{p} & MNIST & MLP (encodeurs empilés) & \glslink{xc6vlx240t}{XC6VLX240T} & dynamique \\
 \bottomrule
 \end{tabularx}
 
@@ -123,30 +183,38 @@ SSAE\,\textsuperscript{k} & MNIST & MLP (encodeurs empilés) & XC6VLX240T & dyna
 \textsuperscript{b}\,\citet{arxiv-2602.15751-enabling-low-latency-machine-learning} ;
 \textsuperscript{c}\,\citet{2024-que-low-latency-variational-autoencoder-fpgas} ;
 \textsuperscript{d}\,\citet{2024-campos-end-end-codesign-hessian-aware} ;
-\textsuperscript{e}\,\citet{2022-sun-f-lic-fpga-learned-image} ;
-\textsuperscript{f}\,\citet{2023-guerrisi-artificial-intelligence-board-image-compression} ;
-\textsuperscript{g}\,\citet{2021-manjunath-energy-efficient-edgeai-autoencoder-accelerator} ;
-\textsuperscript{h}\,\citet{arxiv-2301.07050-energy-efficient-reconfigurable-autoencoder-implementation}\pp ;
-\textsuperscript{i}\,\citet{2022-malviya-edge-compatible-convolutional-autoencoder-implemented} ;
-\textsuperscript{j}\,\citet{2019-tsukada-neural-network-device-learning-anomaly} ;
-\textsuperscript{k}\,\citet{2019-coutinho-deep-neural-network-hardware-implementation}.
+\textsuperscript{e}\,\citet{arxiv-2411.01118-variational-autoencoders-source-data-reduction} ;
+\textsuperscript{f}\,\citet{2022-sun-f-lic-fpga-learned-image} ;
+\textsuperscript{g}\,\citet{arxiv-2503.04832-lightweight-embedded-fpga-deployment-learned}\pp ;
+\textsuperscript{h}\,\citet{arxiv-2511.17135-multi-stage-optimization-framework-deploying}\pp ;
+\textsuperscript{i}\,\citet{2023-guerrisi-artificial-intelligence-board-image-compression} ;
+\textsuperscript{j}\,\citet{2021-manjunath-energy-efficient-edgeai-autoencoder-accelerator} ;
+\textsuperscript{k}\,\citet{arxiv-2301.07050-energy-efficient-reconfigurable-autoencoder-implementation}\pp ;
+\textsuperscript{l}\,\citet{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator} ;
+\textsuperscript{m}\,\citet{2022-malviya-edge-compatible-convolutional-autoencoder-implemented} ;
+\textsuperscript{n}\,\citet{arxiv-2206.11791-open-source-fpga-ml-codesign}\pp ;
+\textsuperscript{o}\,\citet{2019-tsukada-neural-network-device-learning-anomaly} ;
+\textsuperscript{p}\,\citet{2019-coutinho-deep-neural-network-hardware-implementation}.
 \end{table}
 
 Trois constats se dégagent du tableau~\ref{tab:ae} :
 \begin{itemize}
-  \item \textbf{l'image est traitée}, mais par la compression sur grosse FPGA (F-LIC), sur
-    VPU (Φ-Sat-2), ou à petite échelle sur petite FPGA (Manjunath,
-    arxiv-2301.07050\pp) ;
-  \item \textbf{aucun article ne détecte d'anomalies visuelles par AE sur FPGA} : les AE
-    d'anomalie portent sur des signaux ou des données tabulaires ;
-  \item \textbf{l'AE complet sur une petite puce reste coûteux} : au 26/09, on implantait
-    l'encodeur seul, ou l'on coupait le réseau en deux bitstreams. Depuis, deux articles
-    implantent encodeur et décodeur sur une UltraScale+ (CAE d'artefacts hyperspectraux sur
-    la DPU d'une ZCU104, \citealp{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator} ;
-    compression apprise sur ZCU102,
-    \citealp{arxiv-2503.04832-lightweight-embedded-fpga-deployment-learned}). Le coût des
-    déconvolutions sur une puce de la taille d'une KV260 reste non mesuré.
+  \item \textbf{l'image est traitée, surtout en compression} : sur grosse FPGA (\glslink{f-lic}{F-LIC}), sur
+    SoC via la \glslink{dpu}{DPU} (\glslink{lic}{LIC} distillé, arxiv-2503.04832\pp), sur VPU (Φ-Sat-2), ou à petite
+    échelle sur petite FPGA (Manjunath, arxiv-2301.07050\pp) ;
+  \item \textbf{la détection d'anomalies visuelles par \glslink{ae}{AE} sur FPGA se réduit à un cas} :
+    le \glslink{cae}{CAE} d'artefacts hyperspectraux sur \glslink{zcu104}{ZCU104}, avec un seuil réglé sur le test. Aucun
+    travail ne la fait sur des images RGB réelles ou sur un benchmark standard comme
+    MVTec AD ; les autres \glslink{ae}{AE} d'anomalie portent sur des signaux, de l'audio ou des données
+    tabulaires. Sur les 19 lignes \enquote{anomalie} de \texttt{benchmarks.csv}, 8 portent
+    sur un SoC ou une petite FPGA (\glslink{zynq7000}{Zynq-7000}, \glslink{zynqmp}{Zynq UltraScale+}, \glslink{artix7}{Artix-7}), et une seule sur
+    des images de caméra ;
+  \item \textbf{l'\glslink{ae}{AE} complet tient désormais sur un SoC \glslink{zynqmp}{UltraScale+}}, encodeur et décodeur
+    compris, via la \glslink{dpu}{DPU} (\glslink{zcu104}{ZCU104}, \glslink{zcu102}{ZCU102}). Les travaux plus anciens implantaient l'encodeur
+    seul, ou coupaient le réseau en deux bitstreams (Malviya). Le coût des déconvolutions
+    sur une puce plus petite (\glslink{kv260}{KV260}) ou en dataflow (hls4ml, FINN) reste non mesuré.
 \end{itemize}
-Le survey d'anomalie visuelle industrielle de
-\citet{2023-cui-survey-unsupervised-anomaly-detection-algorithms}, pas encore fiché, dira
-quels modèles d'anomalie visuelle seraient les candidats à porter.
+Le survey de \citet{2023-cui-survey-unsupervised-anomaly-detection-algorithms} désigne les
+candidats à porter : les méthodes par reconstruction sont les moins chères en inférence,
+celles à banque de caractéristiques les plus précises sur MVTec AD, mais aussi les plus
+gourmandes en mémoire \src{§IV, Table~10}.

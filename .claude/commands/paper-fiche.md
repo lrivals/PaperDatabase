@@ -61,6 +61,15 @@ dire dans la fiche). Colonnes et vocabulaires : `DATA_MODEL.md` §7.
 - `power_scope` : `chip`, `board`, `board-dynamic`, `estimated` ou `unspecified` d'après la
   méthode décrite par les auteurs (DATA_MODEL §7) ; `n/r` si `power_w` vaut `n/r`. Ne jamais
   deviner la portée : une puissance sans méthode décrite est `unspecified`.
+- Colonnes optionnelles (DATA_MODEL §7), à remplir pour chaque nouvelle ligne : `chunk_id`
+  (passage qui porte les valeurs, tel que `bin/pdb search` / `bin/pdb show` l'affiche, forme
+  courte acceptée), `metric_def` (définition exacte de la métrique), `dataset_split`,
+  `input_res`, `batch` (entier), `measure_protocol` (comment FPS et puissance sont mesurés),
+  `original_value` (valeur telle qu'écrite quand tu convertis une unité). `n/r` si le papier
+  ne le dit pas. Si l'en-tête ne les a pas encore : `bin/pdb bench --add-columns all` (les
+  anciennes lignes passent à `n/r`, pas de migration en masse). Après l'ajout :
+  `bin/pdb bench --check --paper <paper_id>` ; une valeur `absent` est à corriger (mauvais
+  passage, ou conversion non notée dans `original_value`).
 - Échappe par des guillemets toute cellule contenant une virgule.
 - Reporte dans la section « Résultats » de la fiche la liste des lignes ajoutées.
 - Aucune ligne justifiable (hors survey) : dis pourquoi dans « Résultats » et ajoute

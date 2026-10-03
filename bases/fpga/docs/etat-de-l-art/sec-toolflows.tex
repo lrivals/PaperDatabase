@@ -5,18 +5,19 @@
 Un toolflow traduit un réseau décrit dans un framework d'apprentissage en une architecture
 matérielle, sous les contraintes de ressources d'une puce donnée
 \citep[§1]{2018-venieris-toolflows-mapping-convolutional-neural-networks}. Le corpus couvre
-quatre lignées dataflow (FINN, fpgaConvNet, hls4ml, SATAY) et le flot industriel
-d'AMD, Vitis~AI, qui exécute le réseau sur un moteur unique (la DPU).
+quatre lignées dataflow (FINN, fpgaConvNet, hls4ml, SATAY), leurs extensions pour les
+réseaux qui débordent de la puce (SMOF, Elastic-DF), un format d'échange commun (QONNX) et le
+flot industriel d'AMD, Vitis~AI, qui exécute le réseau sur un moteur unique (la \glslink{dpu}{DPU}).
 
 \subsection{FINN et FINN-R : réseaux binaires puis quantifiés}
 
 \citet{arxiv-1612.07119-finn-framework-fast-scalable-binarized} partent d'un constat : sur
-une Zynq UltraScale+ ZU19EG, le pic binaire (66\,TOPS) vaut environ 16 fois le pic 8~bits,
-et un AlexNet binarisé tiendrait on-chip \src{§3.1}. FINN génère une architecture
+une \glslink{zynqmp}{Zynq UltraScale+} ZU19EG, le pic binaire (66\,\glslink{tops}{TOPS}) vaut environ 16 fois le pic 8~bits,
+et un \glslink{alexnet}{AlexNet} binarisé tiendrait on-chip \src{§3.1}. FINN génère une architecture
 streaming, un moteur par couche, tous les poids en mémoire on-chip \src{§4.1}. Trois idées
 de ce papier sont reprises partout ensuite :
 \begin{itemize}
-  \item l'accumulation par \emph{popcount}, qui coûte à peu près moitié moins de LUT
+  \item l'accumulation par \emph{popcount}, qui coûte à peu près moitié moins de \glslink{lut}{LUT}
     qu'une accumulation signée \src{§4.2.1} ;
   \item le remplacement de la batch normalization suivie du signe par un simple seuil
     \src{§4.2.2} ;
@@ -24,27 +25,58 @@ de ce papier sont reprises partout ensuite :
     des couches \src{§4.4}.
 \end{itemize}
 La mesure est soignée : puissance de la puce ($P_{chip}$, lue par PMBus) et de la carte
-($P_{wall}$, au wattmètre), moyennées sur 10\,s \src{§5.1}. Les réseaux sont petits :
-MLP sur MNIST, et un CNN (CNV) sur CIFAR-10 à 80,1\,\% de précision. CNV-max atteint
-21\,900\,images/s pour 3,6\,W de puce et 11,7\,W de carte sur une ZC706
-\src{Tables~3--4}. La carte consomme environ 7\,W au repos \src{§5.2.2} : un FPS/W
+($P_{wall}$, au wattmètre), moyennées sur 10\,\glslink{u-s}{s} \src{§5.1}. Les réseaux sont petits :
+MLP sur MNIST, et un CNN (\glslink{cnv}{CNV}) sur CIFAR-10 à 80,1\,\% de précision. CNV-max atteint
+21\,900\,images/s pour 3,6\,\glslink{u-w}{W} de puce et 11,7\,\glslink{u-w}{W} de carte sur une \glslink{zc706}{ZC706}
+\src{Tables~3--4}. La carte consomme environ 7\,\glslink{u-w}{W} au repos \src{§5.2.2} : un \glslink{fpsw}{FPS/W}
 calculé sur la carte ne se transpose donc pas à une carte plus sobre \deduit.
 
 \citet{arxiv-1809.04570-finn-r-end-end-deep} étendent FINN aux précisions multiples. FINN-R
 est structuré comme un compilateur, avec une représentation intermédiaire qui connaît la
 quantification de chaque nœud \src{§4}. Il apporte :
 \begin{itemize}
-  \item des modèles de coût : les LUT d'un produit scalaire sont proportionnelles au
+  \item des modèles de coût : les \glslink{lut}{LUT} d'un produit scalaire sont proportionnelles au
     produit (nombre d'éléments $\times$ bits de poids $\times$ bits d'activation), et le
     modèle prédit la synthèse à $\pm$30\,\% près \src{§3.1--3.2} ;
   \item deux architectures : \emph{dataflow} (un moteur par couche) et \emph{multilayer
     offload} (MO), qui réutilise une partie du pipeline en boucle avec les cartes
     d'activation en mémoire externe, pour les réseaux trop gros \src{§3.3}.
 \end{itemize}
-Sur petite cible, le MO fonctionne mal. Tincy YOLO (W1A3) n'atteint que 133\,GOp/s sur
-PYNQ-Z1 et 288\,GOp/s sur Ultra96, avec une prédiction juste à 66--68\,\% seulement
-\src{Table~5}. Le papier ne donne aucun FPS pour ce détecteur. L'outil ne gère que les
+Sur petite cible, le MO fonctionne mal. \glslink{tincy-yolo}{Tincy YOLO} (W1A3) n'atteint que 133\,GOp/s sur
+\glslink{pynq-z1}{PYNQ-Z1} et 288\,GOp/s sur \glslink{ultra96}{Ultra96}, avec une prédiction juste à 66--68\,\% seulement
+\src{Table~5}. Le papier ne donne aucun \glslink{fps}{FPS} pour ce détecteur. L'outil ne gère que les
 ressources et le débit : latence et puissance ne sont pas modélisées \src{§4}.
+
+\paragraph{FINN sur un détecteur et une petite puce.}
+\citet{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp{} sont les seuls du
+corpus à faire tourner un détecteur en dataflow FINN sur un \glslink{xc7z020}{Zynq-7020} (\glslink{pynq-z1}{PYNQ-Z1}). Un
+\glslink{yolov3-tiny}{YOLOv3-tiny} complet ne tenant pas en \glslink{bram}{BRAM} (section~\ref{sec:architectures}), ils
+l'allègent (\glslink{lp-yolo}{LP-YOLO}, environ 0,35\,M paramètres) et le quantifient par QAT avec Brevitas,
+puis compilent via QONNX \src{§III-A, §IV}. Trois constats :
+\begin{itemize}
+  \item la configuration retenue, w2a4 en 256$\times$256 à 142,86\,\glslink{u-mhz}{MHz}, fait 35,66\,\glslink{fps}{FPS}
+    pour 2,91\,\glslink{u-w}{W} mesurés sur le rail 12\,V de la carte, avec 0,594 de \glslink{map50}{mAP@0,5} sur les
+    classes de véhicules de VOC \src{§V-D, §VI, Table~II} ;
+  \item sur le \glslink{yolov3-tiny}{YOLOv3-tiny} de référence en 4~bits, la QAT reste à environ 0,006 de \glslink{map}{mAP} du
+    flottant, la PTQ en perd environ 0,17 \src{§IV-B} ;
+  \item l'estimation analytique de FINN annonçait 38\,\glslink{fps}{FPS} pour un folding qui en mesure
+    environ 22, et le dimensionnement automatique des FIFO porte la mesure à 35\,\glslink{fps}{FPS}
+    \src{§III-B, §V-A--B}.
+\end{itemize}
+Les ressources ne sont pas chiffrées (tableau absent de l'extraction), le débit est mesuré
+sur un lot de 100~images, et la tâche (véhicules, VOC filtré) ne se compare pas à une \glslink{map}{mAP}
+COCO à 80~classes. Le résultat montre néanmoins que le dataflow quantifié sur petite puce
+existe pour la détection, au prix d'un réseau taillé pour la \glslink{bram}{BRAM}.
+
+\paragraph{Elastic-DF : FINN au-delà d'une puce.}
+\citet{2021-alonso-elastic-df-scaling-performance-dnn} partitionnent un accélérateur FINN
+déjà replié sur plusieurs SLR ou plusieurs Alveo, par programmation linéaire en nombres
+entiers sous contraintes de congestion \src{§4}. Le partitionnement relève la fréquence
+maximale de 20\,\% en moyenne face aux builds monolithiques \src{Table~5}, et deux U280
+divisent presque par deux la latence noyau de \glslink{resnet}{ResNet-50} (1,52 à 1,55\,\glslink{u-ms}{ms} contre 2,72\,\glslink{u-ms}{ms})
+\src{Table~4}. Les puissances (100 à 134\,\glslink{u-w}{W} pour deux cartes, \src{Table~4}) situent ce
+travail hors de l'embarqué : il montre la limite de l'approche « tout on-chip » plus qu'il
+n'offre une solution pour un SoC.
 
 \subsection{fpgaConvNet : partitionner ou recharger les poids}
 
@@ -59,14 +91,36 @@ réseau en \emph{synchronous dataflow} et explorent quatre transformations
   \item le rechargement des poids sur une architecture unique, sans reconfiguration, qui
     vise la latence.
 \end{itemize}
-C'est la seule lignée du corpus conçue pour des réseaux qui ne tiennent pas on-chip. Elle
+C'est la lignée du corpus conçue d'emblée pour des réseaux qui ne tiennent pas on-chip
+(FINN n'y vient qu'avec le MO de FINN-R et le multi-FPGA d'Elastic-DF). Elle
 calcule en virgule fixe 16~bits et ne descend pas plus bas ; FINN-R le relève
 \citep[§2.2]{arxiv-1809.04570-finn-r-end-end-deep}. La comparaison au Tegra~X1 est l'une
-des rares du corpus à budget de puissance égal (5\,W) et avec la même méthode de mesure
+des rares du corpus à budget de puissance égal (5\,\glslink{u-w}{W}) et avec la même méthode de mesure
 des deux côtés : jusqu'à 5,53$\times$ le débit du GPU, et jusqu'à 6,65$\times$ en mode
-latence \src{§3.1}. Deux réserves : le GPU est bridé à 76,8\,MHz, et les valeurs absolues
+latence \src{§3.1}. Deux réserves : le GPU est bridé à 76,8\,\glslink{u-mhz}{MHz}, et les valeurs absolues
 ne figurent que dans une figure. Le papier, un article de workshop, ne donne ni
 ressources ni précision.
+
+\paragraph{SMOF : évincer vers la DDR.}
+\citet{arxiv-2403.18921-smof-streaming-modern-cnns-fpgas}\pp{} ajoutent à fpgaConvNet
+trois leviers pour les réseaux à longues connexions résiduelles (UNet, \glslink{yolo}{YOLO}, X3D) : éviction
+des activations vers la DDR par DMA, chargement dynamique d'une fraction des poids, et
+partitionnement avec reconfiguration ; les flux DMA peuvent être compressés sans perte
+\src{§III, §IV-A}. Les poids passent en \emph{block floating-point} 8~bits sans
+fine-tuning \src{§V-A} : \glslink{yolov8n}{YOLOv8n} perd 2~points de \glslink{map}{mAP} (35,10 contre 37,10 en flottant,
+\src{Table~III}). Les
+résultats appellent trois réserves :
+\begin{itemize}
+  \item le gain est modeste à batch~1 : jusqu'à 1,3$\times$ sur UNet, 1,1$\times$ sur
+    UNet3D \src{Fig.~6} ;
+  \item la reconfiguration pèse 31\,\% de la latence à batch~1 sur UNet3D \src{Table~IV},
+    et le débit dépend du taux de compression, donc de l'image \src{Fig.~8} ;
+  \item \glslink{yolov8n}{YOLOv8n} atteint 184\,\glslink{fps}{FPS}, mais sur \glslink{vcu118}{VCU118}, pas sur un SoC embarqué
+    \src{Table~V, reconstruite par Docling}. Les 23$\times$ de \glslink{fps}{FPS} revendiqués face à
+    SATAY comparent \glslink{yolov8n}{YOLOv8n} à \glslink{yolov8s}{YOLOv8s}, et l'efficacité par \glslink{dsp}{DSP} est légèrement inférieure
+    (0,16 contre 0,18\,\glslink{gop}{GOP}/s/DSP, \src{§V-D}).
+\end{itemize}
+Aucune puissance n'est mesurée. Le code est publié \src{Résumé}.
 
 \subsection{hls4ml : la très faible latence, venue de la physique des particules}
 
@@ -80,49 +134,133 @@ flux, avec une fenêtre glissante \src{§3}. Sur un petit classifieur SVHN (12\,
   \item en quantification post-entraînement (PTQ), la précision s'effondre sous 14~bits ;
   \item en quantification pendant l'entraînement (QAT, avec QKeras), elle tient jusqu'à 3
     à 4~bits \src{§7--8} ;
-  \item le modèle QAT élagué sur 7~bits prend 174 DSP au lieu de 6\,377 sur VU9P, pour une
-    latence d'environ 5\,µs \src{Table~3} ;
-  \item sur XC7Z020, il atteint 2\,831\,images/s pour 171\,µs de latence \src{Table~4}.
+  \item le modèle QAT élagué sur 7~bits prend 174 \glslink{dsp}{DSP} au lieu de 6\,377 sur VU9P, pour une
+    latence d'environ 5\,\glslink{u-us}{µs} \src{Table~3} ;
+  \item sur \glslink{xc7z020}{XC7Z020}, il atteint 2\,831\,images/s pour 171\,\glslink{u-us}{µs} de latence \src{Table~4}.
 \end{itemize}
 Aucune puissance FPGA n'est mesurée : l'énergie citée est une estimation ASIC 45\,nm.
 
 La version 2025 \citep{arxiv-2512.01463-hls4ml-flexible-open-source-platform}\pp{} ajoute
-l'arithmétique distribuée sans DSP et la quantification par paramètre (HGQ). Elle s'évalue
+l'arithmétique distribuée sans \glslink{dsp}{DSP} et la quantification par paramètre (HGQ). Elle s'évalue
 en placement-routage hors contexte, sur de petits modèles, sans puissance, et ses auteurs
 reconnaissent que les gros modèles échouent en synthèse \src{§9, §11}.
 \citet{2024-campos-end-end-codesign-hessian-aware} relient la quantification mixte guidée
 par la Hessienne (HAWQ, largeurs choisies par programmation linéaire en nombres entiers
-sous budget de BOPs) à hls4ml via QONNX. Sur un MLP, ils obtiennent $-$95,7\,\% de DSP
+sous budget de BOPs) à hls4ml via QONNX. Sur un MLP, ils obtiennent $-$95,7\,\% de \glslink{dsp}{DSP}
 pour $-$1,07 point de précision \src{Table~2}. Mais les latences sont estimées par Vivado
 HLS, aucun design ne tourne sur carte \src{§6.2}, et la puce cible est ambiguë (voir la
 fiche). Enfin, \citet{arxiv-2602.15751-enabling-low-latency-machine-learning} ajoutent un
-backend pour les FPGA flash durcis Microchip PolarFire, limité aux couches denses et ReLU
+backend pour les FPGA flash durcis Microchip \glslink{polarfire}{PolarFire}, limité aux couches denses et \glslink{relu}{ReLU}
 \src{§5.1}.
+
+\subsection{QONNX et MLPerf Tiny : un format commun, une première comparaison}
+
+\citet{arxiv-2206.07527-qonnx-representing-arbitrary-precision-quantized}\pp{} partent du
+constat que les formats ONNX quantifiés existants s'arrêtent à 8~bits \src{§III}. QONNX
+ajoute trois opérateurs (Quant, BipolarQuant, Trunc) qui décrivent une quantification
+uniforme de largeur arbitraire, par tenseur ou par canal \src{§V, Table~II}. Brevitas et
+QKeras exportent vers QONNX ; FINN et hls4ml l'importent \src{§VI}. L'ingestion reste
+partielle : FINN ne gère que \glslink{relu}{ReLU}, hardtanh et l'identité comme activations \src{§VI-D}, ce
+qui exclut \glslink{silu}{SiLU} et LeakyReLU, présents dans la plupart des \glslink{yolo}{YOLO} \deduit. Le papier est une
+spécification, sans mesure, et la représentation entière est laissée à chaque outil
+\src{§V} : rien ne garantit que FINN et hls4ml arrondissent et saturent de la même façon
+\deduit.
+
+\citet{arxiv-2206.11791-open-source-fpga-ml-codesign}\pp{} fournissent la seule
+comparaison mesurée de deux toolflows FPGA du corpus. Pour MLPerf Tiny, hls4ml et FINN sont
+déployés sur les mêmes cartes (\glslink{pynq-z2}{Pynq-Z2} et Arty A7-100T) et mesurés avec le même harnais
+EEMBC, énergie au Joulescope \src{§4.4}. Sur la classification CIFAR-10 et la \glslink{pynq-z2}{Pynq-Z2}
+\src{Table~5} :
+\begin{itemize}
+  \item hls4ml : 27,3\,\glslink{u-ms}{ms} et 44\,330\,\glslink{u-uj}{µJ} par inférence (28\,544 \glslink{lut}{LUT}, 42 \glslink{bram}{BRAM}, 4 \glslink{dsp}{DSP}) ;
+  \item FINN : 1,5\,\glslink{u-ms}{ms} et 2\,535\,\glslink{u-uj}{µJ} (24\,502 \glslink{lut}{LUT}, 100 \glslink{bram}{BRAM}, 0 \glslink{dsp}{DSP}).
+\end{itemize}
+FINN est 18,2 fois plus rapide, hls4ml prend 58\,\% de \glslink{bram}{BRAM} en moins \src{§4.2.2}. Mais les
+modèles diffèrent : un \glslink{resnet}{ResNet-8} trouvé par NAS bayésienne, 58\,k paramètres sur 8 à 12~bits,
+à 83,5\,\% contre 87,0\,\% pour la référence \src{§3.1}, face à un \glslink{cnv}{CNV} binaire de 1,5\,M
+paramètres. La comparaison mesure donc deux couples modèle-flot, pas deux flots. C'est aussi
+la seule mesure d'énergie de hls4ml dans le corpus, sans puissance en watts et avec une
+portée (carte ou puce) non précisée. Aucune tâche n'est une détection, et Vitis~AI est
+absent.
 
 \subsection{SATAY : un toolflow streaming pour YOLO}
 
 \citet{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} sont
 les premiers du corpus à automatiser une architecture streaming pour la détection
-(YOLOv3-tiny, YOLOv5, YOLOv8), de l'ONNX au bitstream \src{§IV}. Leurs réponses aux
-opérations propres à YOLO :
+(\glslink{yolov3-tiny}{YOLOv3-tiny}, \glslink{yolov5}{YOLOv5}, \glslink{yolov8}{YOLOv8}), de l'ONNX au bitstream \src{§IV}. Leurs réponses aux
+opérations propres à \glslink{yolo}{YOLO} :
 \begin{itemize}
-  \item HardSwish en remplacement de SiLU \src{§III-B} ;
+  \item HardSwish en remplacement de \glslink{silu}{SiLU} \src{§III-B} ;
   \item redimensionnement (\emph{resize}) calculé à la volée \src{§III-B} ;
   \item FIFO logicielle en DDR pour les longues connexions résiduelles. Déporter les 5 plus
     gros tampons réduit la mémoire on-chip totale de 17\,\% \src{§V, Fig.~9}.
 \end{itemize}
-Tous les poids restent on-chip (jusqu'à 26\,MB, \src{§IV-C}). La seule carte embarquée
-testée est la ZCU104, avec YOLOv5n (section~\ref{sec:detection}).
+Tous les poids restent on-chip (jusqu'à 26\,\glslink{u-mo}{MB}, \src{§IV-C}). La seule carte embarquée
+testée est la \glslink{zcu104}{ZCU104}, avec \glslink{yolov5n}{YOLOv5n} (section~\ref{sec:detection}).
 
-\subsection{Vitis AI et la DPU : le flot par défaut, peu documenté}
+\subsection{Vitis AI et la DPU : le flot par défaut, contraint par ses opérateurs}
 
-Dans le corpus, Vitis~AI n'apparaît que comme flot utilisateur : YOLOv5 INT8 sur Kria KV260
-\citep{arxiv-2507.18174-real-time-object-detection-classification} et RetinaNet ResNet-50
-INT8 sur ZCU104 et KV260
-\citep{arxiv-2211.11647-benchmarking-edge-computing-devices-grape}. Ce dernier papier montre
-le coût d'adaptation du modèle : il faut dupliquer une convolution du FPN pour que tout le
-réseau tienne sur la DPU sans repli sur le CPU \src{§2.3}. Vitis~AI n'a que 2 lignes dans
-\texttt{benchmarks.csv}, alors que c'est le flot par défaut du KV260.
+Dans le corpus, Vitis~AI n'apparaît que comme flot utilisateur. Il porte aujourd'hui
+38~lignes de \texttt{benchmarks.csv}, venues de 9~papiers, dont 23 d'un seul
+(arxiv-2607.13106) ; 29 sont des lignes de détection. Quatre constats en ressortent.
+
+\paragraph{Le modèle s'adapte à la DPU, pas l'inverse.} La \glslink{dpu}{DPU} n'accepte que de l'INT8
+obtenu depuis un modèle FP32
+\citep[§V-A]{arxiv-2509.04153-real-time-fpga-cnns-detection}\pp{}, et ses opérateurs
+sont fixés. Pour RetinaNet \glslink{resnet}{ResNet-50}, il faut dupliquer une convolution du FPN pour que tout
+le réseau tienne sur la \glslink{dpu}{DPU} sans repli sur le CPU
+\citep[§2.3]{arxiv-2211.11647-benchmarking-edge-computing-devices-grape}. Pour les \glslink{yolo}{YOLO}
+récents, \citet{arxiv-2607.13106-no-attention-no-problem-dpu}\pp{} remplacent \glslink{silu}{SiLU} par \glslink{relu}{ReLU},
+le \emph{split} du bloc C2f par deux convolutions 1$\times$1, et approchent l'attention
+C2PSA par des convolutions et une hard-sigmoid \src{§III-B}. Ces modifications coûtent
+environ 3~points de \glslink{map}{mAP} en moyenne \src{§IV-B}, et le réseau est réentraîné : le modèle
+déployé n'est plus le modèle de référence, ce que devra tracer une démarche de
+certification \deduit. Les contraintes d'opérateurs du \glslink{dpu}{DPU}
+(\glslink{relu}{ReLU}) et celles de FINN via QONNX (\glslink{relu}{ReLU}, hardtanh, identité) se recoupent, mais un même
+\glslink{yolo}{YOLO} n'a encore été porté sur les deux dans aucun article \deduit.
+
+\paragraph{La quantification coûte de la précision.} Sur \glslink{zcu104}{ZCU104},
+\citet{arxiv-2304.11580-framework-benchmarking-real-time-embedded} mesurent une perte de
+2,2~points de \glslink{map}{mAP} due au quantificateur Vitis~AI, la compilation \glslink{dpu}{DPU} en retirant encore ;
+tous les modèles TensorRT de la \glslink{agx-xavier}{Jetson AGX Xavier} font mieux en \glslink{map}{mAP} \src{§4.3--4.4}. La
+calibration reste en PTQ dans arxiv-2607.13106, avec des chutes fortes sur certains couples
+(\glslink{yolov8n}{YOLOv8n} sur KITTI : 0,64 → 0,34 de \glslink{map5095}{mAP@0.5:0.95}, \src{Table~II}).
+
+\paragraph{Une comparaison mesurée face au GPU existe.} Le même papier mesure la \glslink{zcu104}{ZCU104} et
+la \glslink{jetson}{Jetson} au multimètre en série avec la carte, repos soustrait ou non \src{§4.1}. Pour
+\glslink{yolov4}{YOLOv4} en INT8, la \glslink{dpu}{DPU} fait 54,42\,\glslink{u-ms}{ms} pour 23\,\glslink{u-w}{W} de carte, la \glslink{jetson}{Jetson} 22,0\,\glslink{u-ms}{ms} pour
+16,5\,\glslink{u-w}{W}, à puissance dynamique égale (7,0\,\glslink{u-w}{W}) \src{Table~1} : la \glslink{dpu}{DPU} n'y gagne pas. Le
+seul autre papier du corpus qui mesure Vitis~AI et un GPU embarqué de la même façon
+(multimètre à l'entrée de la carte) voit l'inverse : RetinaNet sur \glslink{zcu104}{ZCU104} à 2 \glslink{dpu}{DPU} fait
+25\,\glslink{fps}{FPS}, contre 3 à 5\,\glslink{fps}{FPS} sur \glslink{tx2}{Jetson TX2}, mais ses puissances ne sont données qu'en figure
+\citep[§2.5, §3, Fig.~12]{arxiv-2211.11647-benchmarking-edge-computing-devices-grape}.
+Le sens de l'écart dépend donc du GPU (\glslink{tx2}{TX2} ou \glslink{agx-xavier}{AGX Xavier}) et du modèle \deduit.
+
+\paragraph{Le flot est fermé au niveau mémoire.} Pour garder les poids hors DDR sur \glslink{kv260}{KV260},
+\citet{2026-fata-low-cost-fpga-enhanced-cnn} ajoutent un contrôleur mémoire RTL et
+modifient le fichier \texttt{arch.json} du compilateur, ce qui n'est décrit que
+qualitativement \src{§IV-E--F}. Ailleurs, la puissance est une estimation Vivado
+\citep[Table~III]{arxiv-2607.13106-no-attention-no-problem-dpu} ou n'a pas de portée
+précisée \citep[§V-B]{2026-fata-low-cost-fpga-enhanced-cnn}. Enfin, le débit de bout en bout
+plafonne à environ 34\,\glslink{fps}{FPS} pour \glslink{yolov26n}{YOLOv26n} sur \glslink{zcu104}{ZCU104}, limité par le post-traitement sur
+l'ARM et non par la \glslink{dpu}{DPU} \citep[§IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}.
+
+\subsection{Co-design et NAS guidés par le matériel}
+
+Trois travaux du corpus adaptent le réseau au matériel plutôt que l'inverse :
+\begin{itemize}
+  \item \glslink{skynet}{SkyNet} \citep{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp{}
+    construit un détecteur \emph{bottom-up} à partir de blocs évalués sur la cible, par
+    une recherche PSO dont la fitness combine précision et latence estimée par l'outil HLS
+    \src{§4, Éq.~1}. Sur \glslink{ultra96}{Ultra96}, il gagne \glslink{dac-sdc}{DAC-SDC} 2019 avec 0,716 d'\glslink{iou}{IoU} à 25,05\,\glslink{fps}{FPS}
+    \src{Table~6}, mais en lot de 4~images et sans ressources FPGA rapportées ;
+  \item la NAS bayésienne de MLPerf Tiny cherche un \glslink{resnet}{ResNet-8} pour hls4ml, au prix de
+    3,5~points de précision \citep[§3.1]{arxiv-2206.11791-open-source-fpga-ml-codesign}\pp{} ;
+  \item HAWQ choisit les largeurs de bits par couche sous budget de BOPs, vers hls4ml
+    \citep[Table~2]{2024-campos-end-end-codesign-hessian-aware}.
+\end{itemize}
+Dans les trois cas, le coût matériel guidant la recherche est estimé (HLS, BOPs) ou
+indirect, jamais mesuré sur carte. Aucun ne vise un \glslink{yolo}{YOLO} récent.
 
 \subsection{Synthèse}
 
@@ -135,23 +273,34 @@ sur carte dans les articles du corpus ?}
 \toprule
 Toolflow & Architecture & Précisions & Tâches démontrées & Puissance mesurée \\
 \midrule
-FINN / FINN-R & streaming ; MO pour gros réseaux & binaire à 8 bits & classification ;
-  Tincy YOLO en MO & oui (puce et carte, FINN ; carte, FINN-R) \\
-fpgaConvNet & SDF ; partitionnement ou rechargement des poids & FXP16 & classification
-  (AlexNet à DenseNet) & dynamique de carte, repos soustrait \\
+FINN / FINN-R & streaming ; MO pour gros réseaux ; multi-FPGA (Elastic-DF) & binaire à
+  8 bits & classification ; \glslink{tincy-yolo}{Tincy YOLO} en MO ; \glslink{lp-yolo}{LP-YOLO} w2a4 sur \glslink{xc7z020}{Zynq-7020} & oui (puce et
+  carte, FINN ; carte, FINN-R, Elastic-DF, arxiv-2609.24757) \\
+fpgaConvNet / SMOF & SDF ; partitionnement ou rechargement des poids ; éviction DDR (SMOF)
+  & FXP16 ; BFP8 (SMOF) & classification ; UNet, X3D, \glslink{yolov8n}{YOLOv8n} (SMOF, hors SoC pour
+  \glslink{yolov8n}{YOLOv8n}) & dynamique de carte, repos soustrait ; aucune pour SMOF \\
 hls4ml & un bloc par couche, reuse factor & virgule fixe arbitraire, HGQ & MLP, petits CNN,
-  AE et VAE (physique) & non (estimations seulement) \\
-SATAY & streaming, FIFO logicielle DDR & W8A16 (PTQ) & YOLOv3-tiny à v8 & méthode non
+  \glslink{ae}{AE} et \glslink{vae}{VAE} (physique), MLPerf Tiny ; aucune détection & énergie par inférence (EEMBC,
+  MLPerf Tiny), sans W ; sinon estimations \\
+SATAY & streaming, FIFO logicielle DDR & W8A16 (PTQ) & \glslink{yolov3-tiny}{YOLOv3-tiny} à v8 & méthode non
   décrite \\
-Vitis AI (DPU) & moteur unique & INT8 & YOLOv5, RetinaNet & méthode non décrite ou valeurs en
-  figure \\
+Vitis AI (\glslink{dpu}{DPU}) & moteur unique & INT8 & \glslink{yolov3-tiny}{YOLOv3-tiny} à v26, RetinaNet, compression
+  d'image, apprentissage continu & carte au multimètre (arxiv-2304.11580 ; arxiv-2211.11647,
+  en figure) ; ailleurs estimée ou portée non précisée \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 Aucun article du corpus ne compare deux de ces flots, mesurés, sur un même réseau et une
-même carte. Les papiers d'outil comparent des chiffres publiés
+même carte. Le cas le plus proche, MLPerf Tiny, mesure hls4ml et FINN sur la même carte
+avec la même méthode, mais avec des modèles différents et en classification
+\citep[Table~5]{arxiv-2206.11791-open-source-fpga-ml-codesign}\pp{}. Les papiers d'outil,
+eux, comparent des chiffres publiés
 \citep[§2.6]{2018-venieris-toolflows-mapping-convolutional-neural-networks} ou ne comparent
 pas \citep{arxiv-2512.01463-hls4ml-flexible-open-source-platform,arxiv-2103.05579-hls4ml-open-source-codesign-workflow}.
-QONNX, lisible par FINN et par hls4ml, rend cette comparaison techniquement faisable
-\citep[§2.3]{2024-campos-end-end-codesign-hessian-aware}.
+Dans \texttt{benchmarks.csv}, hls4ml n'a aucune ligne de détection (34 lignes, toutes
+variantes de backend), FINN en a 9 (dont 6 de arxiv-2609.24757), Vitis~AI 29 et SATAY 14.
+QONNX, lisible par FINN et par hls4ml
+\citep[§VI]{arxiv-2206.07527-qonnx-representing-arbitrary-precision-quantized}\pp{}, rend
+la comparaison techniquement faisable pour un \glslink{yolo}{YOLO} à activations \glslink{relu}{ReLU} ; le \glslink{dpu}{DPU} accepte les
+mêmes opérateurs \citep[§III-B]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp{}.

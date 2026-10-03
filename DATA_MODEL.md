@@ -269,6 +269,34 @@ prend la mesure `board` et la fiche donne les autres.
 `source_section` et `confidence` ne sont pas décoratifs : ils permettent de rouvrir le bon
 passage en cas de doute et de repérer d'un coup d'œil les chiffres fragiles.
 
+### Colonnes optionnelles
+
+Après les 20 colonnes obligatoires (en tête et dans cet ordre), l'en-tête peut porter un
+sous-ensemble des colonnes suivantes, dans n'importe quel ordre (`schema.OPTIONAL_COLUMNS`,
+contrôle `schema.check_header`). Une colonne inconnue ou en double est une erreur de
+`reindex`. Absente, une colonne optionnelle vaut `n/r`. Présente, elle suit les mêmes règles
+(`n/r` plutôt que vide). Elles fixent les conditions sans lesquelles deux lignes ne se
+comparent pas.
+
+| Colonne | Exemple | Notes |
+|---|---|---|
+| `chunk_id` | `2108.03986#041.0` | passage qui contient les valeurs (`pdb show`) ; forme `<paper_id ou id court>#<section>.<k>` |
+| `metric_def` | `mAP@0.5:0.95, COCO protocol` | définition exacte de `accuracy_metric` |
+| `dataset_split` | `val2017` | split évalué |
+| `input_res` | `416x416` | résolution d'entrée |
+| `batch` | `1` | entier |
+| `measure_protocol` | `wattmètre carte, moyenne 60 s` | comment FPS et puissance sont mesurés |
+| `original_value` | `12.3 mJ/frame` | valeur telle qu'écrite, quand une colonne est convertie |
+
+`bin/pdb bench --add-columns all` ajoute ces colonnes à une base (les lignes existantes passent à
+`n/r`) ; `reindex` ne modifie jamais le CSV. `/paper-fiche` les remplit pour les nouvelles
+lignes, et les anciennes sont complétées au fil des relectures. `bin/pdb bench --check` vérifie
+que chaque valeur numérique d'une ligne qui a un `chunk_id` figure dans ce passage
+([docs/RAG.md](docs/RAG.md) §5.1) ; le banc `table_values` en donne la part (`in_cited_chunk`). `bin/pdb bench --comparable`
+regroupe les lignes par `task`, `dataset`, `dataset_split` et métrique (`metric_def`, à
+défaut `accuracy_metric`), ou `power_scope` pour les puissances, et signale les comparaisons
+impossibles.
+
 ---
 
 ## 8. Template de `fiche.md`

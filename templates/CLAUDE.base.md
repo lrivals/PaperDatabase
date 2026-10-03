@@ -47,7 +47,7 @@ vérifier avant de les citer.
 | `bin/pdb base list` / `info` / `check` | bases enregistrées ; profil et axes de celle-ci ; effet des règles de `base.json` |
 | `bin/pdb base scan [--from NOM]` / `base import NOM:<paper_id>` | articles utiles présents ou cités dans les autres bases ; copie d'un article |
 | `/base-profile [texte]` | le LLM propose d'affiner le profil (axes, règles, périmètre) ; rien n'est écrit sans accord |
-| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM |
+| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; `--check` : valeurs retrouvées dans leur passage (`chunk_id`) ; `--comparable` : groupes de lignes comparables, avant toute comparaison entre papiers |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM |
 | `/paper-ask <question>` | réponse sourcée et vérifiée |
 | `/paper-research <question>` | route GPU, sur demande seulement (Qwen3, GPU CUDA, `bin/pdb gpu`) : recherche et acquisition open access ; sinon `/paper-ask` |

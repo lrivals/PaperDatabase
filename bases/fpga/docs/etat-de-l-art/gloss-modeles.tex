@@ -1,0 +1,479 @@
+% Glossaire des modèles (type=modeles) : détecteurs, backbones, autoencodeurs,
+% apprentissage continu, opérateurs et réseaux quantifiés.
+% Chiffres : \citep[§]{paper_id} s'ils viennent d'une fiche ou de benchmarks.csv,
+% sinon \horscorpus. Les parents sont définis avant leurs enfants.
+
+% ---------------------------------------------------------------- Famille YOLO
+\newglossaryentry{yolo}{type=modeles, name={YOLO}, sort={YOLO},
+  description={\emph{You Only Look Once} : famille de détecteurs en une étape, qui prédisent
+  en une seule passe, sur une grille, des boîtes, un score d'objet et des scores de classe,
+  puis filtrent les doublons par NMS. Depuis YOLOv3, l'architecture se découpe en backbone
+  (extraction de caractéristiques), neck (fusion multi-échelle) et tête de détection. C'est
+  le détecteur dominant du corpus : de Tiny YOLO sur Virtex-7 (REQ-YOLO) à YOLOv26n sur DPU,
+  et le cas d'application visé par la thèse (détection de personnes).}}
+
+\newglossaryentry{yolov2}{type=modeles, name={YOLOv2}, sort={YOLO 02}, parent=yolo,
+  description={Deuxième version (YOLO9000) : backbone Darknet-19, boîtes d'ancrage
+  (\emph{anchors}) obtenues par k-means, normalisation par lot, couche \emph{passthrough}
+  (reorg) qui ramène des caractéristiques fines, une seule échelle de sortie ; entrée usuelle
+  416$\times$416. Face à YOLOv1, elle ajoute les ancres et supprime les couches denses. Dans le
+  corpus, cible d'accélérateurs HLS sur Zynq : Zhang 2024 (YOLOv2 et v2-tiny) et Kim 2025, dont
+  le YOLOv2 compte 29,5\,GFLOPs mais ne tient que 2,33\,GOPS sur XC7Z020
+  \citep[Table~9]{2025-kim-design-implementation-yolov2-accelerator-zynq}.}}
+
+\newglossaryentry{yolov2-tiny}{type=modeles, name={YOLOv2-tiny}, sort={YOLO 02 tiny},
+  parent=yolov2,
+  description={Version réduite de YOLOv2 (\enquote{Tiny YOLO}) : pile de convolutions
+  3$\times$3 et de max-pooling sans Darknet-19, sans passthrough, une seule échelle. REQ-YOLO
+  la compresse (9 couches de convolution, entrée 416$\times$416)
+  \citep[§2.1]{2019-ding-req-yolo-resource-aware-efficient} ; FINN-R en dérive Tincy YOLO, et
+  CoDeNet la prend comme référence (57,1 d'AP50 VOC en FP32)
+  \citep[Table~3]{arxiv-2006.08357-codenet-efficient-deployment-input-adaptive}.}}
+
+\newglossaryentry{yolov3}{type=modeles, name={YOLOv3}, sort={YOLO 03}, parent=yolo,
+  description={Troisième version : backbone Darknet-53 (blocs résiduels), prédiction à trois
+  échelles par un neck de type FPN, trois ancres par échelle, classes en sigmoïdes
+  indépendantes. Face à YOLOv2 : multi-échelle et backbone plus profond, d'où de meilleurs
+  petits objets. Dans le corpus : version élaguée sur Zynq XC7Z035 avec suivi Deepsort (Zhai
+  2023), tête de MCUNetV2 sur MCU, base de Gaussian YOLOv3, mesures sur GPU embarqué (Feng
+  2022).}}
+
+\newglossaryentry{yolov3-tiny}{type=modeles, name={YOLOv3-tiny}, sort={YOLO 03 tiny},
+  parent=yolov3,
+  description={Version réduite de YOLOv3 : backbone de convolutions 3$\times$3 et de
+  max-pooling, deux échelles de sortie au lieu de trois. Détecteur le plus porté sur FPGA dans
+  le corpus : SATAY, Zhang 2024, Zhai 2023, la référence w4a4 de LP-YOLO (0,761 de mAP@0,5 VOC
+  à 12,35\,FPS sur PYNQ-Z1 \citep[§V]{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp),
+  Fata 2026 (élagué à 70\,\%, 2,54\,MB en INT8 sur DPU
+  \citep[Table~5]{2026-fata-low-cost-fpga-enhanced-cnn}), et le détecteur certifiable sur GPU
+  de \citet{arxiv-2406.12362-certified-ml-object-detection-surveillance}.}}
+
+\newglossaryentry{yolov4}{type=modeles, name={YOLOv4}, sort={YOLO 04}, parent=yolo,
+  description={Quatrième version (2020) : backbone CSPDarknet53, module SPP et neck PANet,
+  tête de YOLOv3 à ancres ; ajoute des techniques d'entraînement (Mosaic, CIoU) et
+  l'activation Mish. Dans le corpus, Schlosser et al. la portent en INT8 sur DPU (ZCU104) et
+  sur AGX Xavier : mAP COCO 37,5 contre 38,6, 1,31 contre 2,05\,FPS/W
+  \citep[Table~1]{arxiv-2304.11580-framework-benchmarking-real-time-embedded} ; Feng 2022 la
+  mesure sur GPU embarqués.}}
+
+\newglossaryentry{yolov5}{type=modeles, name={YOLOv5}, sort={YOLO 05}, parent=yolo,
+  description={Version d'Ultralytics (2020), sans article : réimplémentation en PyTorch, à
+  ancres, backbone CSP, neck PANet, activation SiLU, déclinée en cinq tailles (n, s, m, l, x)
+  par des multiplicateurs de profondeur et de largeur. Face à YOLOv4 : écosystème
+  (entraînement, export ONNX) plus que rupture d'architecture. Dans le corpus : SATAY, Yan
+  2024, et un YOLOv5 de taille non rapportée sur KV260 (Vitis AI).}}
+
+\newglossaryentry{yolov5n}{type=modeles, name={YOLOv5n}, sort={YOLO 05 1n}, parent=yolov5,
+  description={Taille \emph{nano}, la plus petite de YOLOv5. SATAY la déploie sur ZCU104 en
+  640$\times$640 : 26,7 de mAP50 COCO, 21,41\,ms
+  \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating},
+  seul résultat de SATAY sur SoC embarqué.}}
+
+\newglossaryentry{yolov5s}{type=modeles, name={YOLOv5s}, sort={YOLO 05 2s}, parent=yolov5,
+  description={Taille \emph{small} de YOLOv5. \citet{2024-yan-fpga-yolov5-accelerator-real-time}
+  la quantifient entièrement en 4~bits (SiLU remplacée par OPReLU) sur ZCU102 : 79,1\,FPS à
+  512$\times$512 pour 12,3\,W \citep[§7.4, Table~3]{2024-yan-fpga-yolov5-accelerator-real-time} ;
+  SATAY la couvre aussi.}}
+
+\newglossaryentry{yolov5m}{type=modeles, name={YOLOv5m}, sort={YOLO 05 3m}, parent=yolov5,
+  description={Taille \emph{medium} de YOLOv5. N'apparaît dans le corpus que sur GPU de bureau,
+  dans l'étude de prédiction conforme sur signaux ferroviaires
+  \citep[§5.1.1]{arxiv-2304.06052-confident-object-detection-conformal-prediction}\pp, aux côtés
+  de DETR.}}
+
+\newglossaryentry{yolov8}{type=modeles, name={YOLOv8}, sort={YOLO 08}, parent=yolo,
+  description={Version d'Ultralytics (2023) : tête découplée (classification et régression
+  séparées) et \emph{sans ancres}, blocs C2f (avec une opération \emph{split}), activation
+  SiLU, régression par Distribution Focal Loss ; tailles n à x. Face à YOLOv5 : abandon des
+  ancres et tête découplée. Dans le corpus : SATAY, SMOF, Karki (sur DPU) et les mesures sur
+  Jetson Orin de Rey et Alqahtani.}}
+
+\newglossaryentry{yolov8n}{type=modeles, name={YOLOv8n}, sort={YOLO 08 1n}, parent=yolov8,
+  description={Taille \emph{nano} de YOLOv8. Sur DPU, Karki et al. doivent remplacer SiLU par
+  ReLU et le \emph{split} par des convolutions 1$\times$1 ; la mAP50-95 passe de 0,64 à 0,34 sur
+  KITTI et de 0,60 à 0,45 sur VOC après PTQ INT8
+  \citep[Table~II]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp. SMOF la traite en bfp8 sur
+  VCU118 ; Rey la mesure sur Orin Nano
+  \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.}}
+
+\newglossaryentry{yolov8s}{type=modeles, name={YOLOv8s}, sort={YOLO 08 2s}, parent=yolov8,
+  description={Taille \emph{small} de YOLOv8. Plus gros modèle couvert par SATAY, mais sur
+  VCU118 (W8A16) et non sur un SoC embarqué
+  \citep[Table~III]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating} ;
+  aussi mesurée sur Jetson Orin
+  \citep[Table~4]{arxiv-2502.15737-performance-analysis-you-only-look}.}}
+
+\newglossaryentry{yolov11n}{type=modeles, name={YOLOv11n}, sort={YOLO 11n}, parent=yolo,
+  description={Taille \emph{nano} de YOLO11 (Ultralytics, 2024), qui succède à YOLOv8 : blocs
+  C3k2 et module d'attention C2PSA dans le backbone, tête sans ancres. L'attention et SiLU ne
+  passent pas sur la DPU : Karki et al. approchent C2PSA par des convolutions 1$\times$1 et un
+  hard-sigmoid \citep[§III-B]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp. Le modèle perd
+  2 points de mAP50-95 sur VOC (0,59 à 0,57) après INT8
+  \citep[Table~II]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.}}
+
+\newglossaryentry{yolov26n}{type=modeles, name={YOLOv26n}, sort={YOLO 26n}, parent=yolo,
+  description={Taille \emph{nano} de YOLO26 (Ultralytics), présentée comme détecteur de bout
+  en bout sans NMS et sans Distribution Focal Loss, pour faciliter l'export vers l'embarqué.
+  Seul détecteur récent mesuré sur FPGA dans le corpus : sur DPU B4096 (ZCU104), après les
+  mêmes adaptations que YOLOv11n, 34,05\,FPS de bout en bout sur une vidéo de personnes
+  \citep[§IV-C]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp ; le NMS y est conservé
+  \citep[§III-B]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp.}}
+
+\newglossaryentry{gaussian-yolov3}{type=modeles, name={Gaussian YOLOv3}, sort={YOLO z Gaussian},
+  parent=yolo,
+  description={YOLOv3 dont chaque coordonnée de boîte est modélisée par une gaussienne
+  (moyenne et variance) : la tête sort 8 valeurs au lieu de 4, la perte de boîte devient une
+  log-vraisemblance négative, et l'incertitude de localisation pondère le score de détection
+  \citep[§3.1--3.3]{arxiv-1904.04620-gaussian-yolov3-accurate-fast-object}\pp. Surcoût de
+  0,04\,\% de FLOPs, +3,09 de mAP sur KITTI
+  \citep[§3.1, Table~2]{arxiv-1904.04620-gaussian-yolov3-accurate-fast-object}\pp. Seule
+  estimation d'incertitude de détecteur du corpus, mesurée sur GPU de bureau seulement.}}
+
+\newglossaryentry{lp-yolo}{type=modeles, name={LP-YOLO}, sort={YOLO z LP}, parent=yolo,
+  description={Détecteur YOLO allégé à une seule échelle (environ 0,35\,M paramètres,
+  0,091\,GMAC), entraîné en QAT avec Brevitas (w4a4 ; w2a4 pour la variante Slim en
+  256$\times$256) et compilé par FINN sur PYNQ-Z1
+  \citep[§III-A, §IV-B]{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp. LP-YOLO Slim
+  tient 35,66\,FPS pour 2,91\,W de carte avec 0,594 de mAP@0,5 VOC
+  \citep[§V]{arxiv-2609.24757-npu-accelerator-quantized-real-time}\pp : seul détecteur FPGA du
+  corpus mesuré sous 3\,W.}}
+
+\newglossaryentry{req-yolo}{type=modeles, name={REQ-YOLO}, sort={YOLO z REQ}, parent=yolo,
+  description={Cadre de compression de Tiny YOLO (YOLOv2-tiny) : matrices bloc-circulantes
+  (convolution par FFT) et quantification hétérogène par ADMM, choisie couche par couche pour
+  équilibrer DSP et LUT ; tous les poids tiennent en BRAM
+  \citep[§3--5]{2019-ding-req-yolo-resource-aware-efficient}. Sur Virtex-7 XC7VX690T :
+  314,2\,FPS pour 21\,W, latence de 3,18\,ms hors transferts et NMS
+  \citep[Tables~1--2]{2019-ding-req-yolo-resource-aware-efficient}. Plateforme PCIe, non
+  embarquée.}}
+
+\newglossaryentry{tincy-yolo}{type=modeles, name={Tincy YOLO}, sort={YOLO z Tincy}, parent=yolo,
+  description={Tiny YOLO modifié par FINN-R : poids binaires et activations 3~bits (W1A3) sauf
+  première et dernière couches (8~bits), leaky-ReLU remplacé par ReLU ; 36\,\% d'opérations en
+  moins pour une mAP VOC qui passe de 57,1 à 50,1
+  \citep[§5.1]{arxiv-1809.04570-finn-r-end-end-deep}. Premier YOLO quantifié sur SoC Zynq du
+  corpus, rapporté en GOp/s seulement (133 sur PYNQ-Z1, 288 sur Ultra96), sans FPS ni latence
+  \citep[Table~5]{arxiv-1809.04570-finn-r-end-end-deep}.}}
+
+\newglossaryentry{tinyissimoyolo}{type=modeles, name={TinyissimoYOLO}, sort={YOLO z Tinyissimo},
+  parent=yolo,
+  description={Détecteur pour microcontrôleur inspiré de YOLOv1 : entrée 88$\times$88,
+  convolutions 3$\times$3 uniquement, une couche dense, sortie en grille 4$\times$4, INT8 par
+  QAT, dimensionné pour les 442\,kB de poids du MAX78000
+  \citep[§II-A]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}. 58,5\,\% de mAP
+  sur VOC réduit à 3 classes et 196\,µJ par inférence sur MAX78000, MCU seul
+  \citep[§III, Table~II]{arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint}. Point
+  de comparaison MCU des détecteurs FPGA.}}
+
+% ---------------------------------------------------------- Autres détecteurs
+\newglossaryentry{ssd}{type=modeles, name={SSD}, sort={SSD},
+  description={\emph{Single Shot MultiBox Detector} : détecteur en une étape à ancres
+  (\emph{default boxes}), qui prédit boîtes et classes sur plusieurs cartes de caractéristiques
+  de résolutions décroissantes, puis applique un NMS. Dans le corpus : TGIIF, un SSD élagué en
+  8~bits, gagne le volet FPGA de DAC-SDC'18 (IoU 0,62 à 11,96\,FPS sur XC7Z020)
+  \citep[§5.2.1]{2021-xu-dac-sdc-low-power-object} ; SSD MobileNet V1 est mesuré sur cartes
+  embarquées \citep[§IV]{arxiv-2409.16808-comprehensive-evaluation-deep-learning-object}\pp.}}
+
+\newglossaryentry{centernet}{type=modeles, name={CenterNet}, sort={CenterNet},
+  description={Détecteur \emph{sans ancres} (\enquote{Objects as Points}) : chaque objet est
+  représenté par le pic de son centre sur une carte de chaleur par classe, la tête régressant
+  taille et décalage ; les détections sont les maxima locaux, ce qui supprime le NMS. Dans le
+  corpus, sa tête est reprise par CoDeNet, précisément pour éviter un NMS coûteux sur FPGA
+  \citep[§4.1]{arxiv-2006.08357-codenet-efficient-deployment-input-adaptive}.}}
+
+\newglossaryentry{codenet}{type=modeles, name={CoDeNet}, sort={CoDeNet}, parent=centernet,
+  description={Détecteur co-conçu avec son accélérateur : backbone ShuffleNetV2, convolution
+  déformable adaptée au matériel (depthwise, offsets bornés, carrés et entiers), tête CenterNet
+  sans NMS, W4A8 \citep[§3.1, §4.1]{arxiv-2006.08357-codenet-efficient-deployment-input-adaptive}.
+  Sur Ultra96 en 256$\times$256 : 51,1 d'AP50 VOC07 à 32,2\,FPS pour 5,6\,W de carte, modèle de
+  0,76\,MB \citep[Table~3, §5]{arxiv-2006.08357-codenet-efficient-deployment-input-adaptive}.}}
+
+\newglossaryentry{skynet}{type=modeles, name={SkyNet}, sort={SkyNet},
+  description={Réseau de détection mono-objet conçu de bas en haut : un \enquote{Bundle}
+  (DW-Conv3, PW-Conv1, BN, ReLU6) empilé 6 fois, choisi et dimensionné par recherche PSO
+  contrainte par la latence GPU et FPGA, avec bypass et réordonnancement des cartes pour les
+  petits objets, tête YOLO à 2 ancres
+  \citep[§4--5]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp. Vainqueur de
+  DAC-SDC'19 sur TX2 et sur Ultra96 (IoU 0,716, 25,05\,FPS, 7,26\,W)
+  \citep[Tables~5--6]{arxiv-1909.09709-skynet-hardware-efficient-method-object}\pp.}}
+
+\newglossaryentry{detr}{type=modeles, name={DETR}, sort={DETR},
+  description={\emph{DEtection TRansformer} : backbone CNN suivi d'un encodeur-décodeur
+  transformer qui produit directement un ensemble fixe de boîtes à partir de requêtes apprises ;
+  l'appariement hongrois de la perte supprime ancres et NMS. Dans le corpus, seulement sur GPU,
+  comme l'un des trois détecteurs de l'étude de prédiction conforme ferroviaire
+  \citep[§5.1.1]{arxiv-2304.06052-confident-object-detection-conformal-prediction}\pp. Ses
+  opérations d'attention ne passent pas telles quelles sur une DPU.}}
+
+% -------------------------------------------------------------- Backbones
+\newglossaryentry{alexnet}{type=modeles, name={AlexNet}, sort={AlexNet},
+  description={Classifieur ImageNet de 2012 : 5 couches de convolution (noyaux hétérogènes,
+  jusqu'à 11$\times$11) puis 3 couches denses, ReLU. Banc d'essai historique des accélérateurs :
+  \citet{2015-zhang-optimizing-fpga-accelerator-design-deep} atteignent 61,62\,GFLOPS sur ses
+  convolutions en FP32 sur Virtex-7
+  \citep[Tables~7--8]{2015-zhang-optimizing-fpga-accelerator-design-deep} ; EF-Train l'entraîne
+  sur ZCU102.}}
+
+\newglossaryentry{vgg16}{type=modeles, name={VGG16}, sort={VGG16},
+  description={Classifieur de 2014 à 13 couches de convolution 3$\times$3 et 3 couches denses,
+  très régulier mais lourd. Sa régularité convient aux moteurs de calcul uniques, à l'inverse
+  d'AlexNet \citep[§2.7]{2018-venieris-toolflows-mapping-convolutional-neural-networks} ;
+  EF-Train l'entraîne sur ZCU102 (46,99\,GFLOPS)
+  \citep[Table~8]{arxiv-2202.10935-ef-train-enable-efficient-device}\pp.}}
+
+\newglossaryentry{resnet}{type=modeles, name={ResNet}, sort={ResNet},
+  description={Famille de réseaux à connexions résiduelles (ResNet-18, -50…), qui permettent
+  d'entraîner des réseaux profonds ; les connexions longues imposent des tampons en dataflow.
+  Dans le corpus : ResNet-50 W1A2 en dataflow FINN sur Alveo
+  \citep[Table~IV]{arxiv-2011.07317-memory-efficient-dataflow-inference-deep} et Elastic-DF ;
+  ResNet18 figé sur DPU comme extracteur de SLDA
+  \citep[§III-A]{2021-piyasena-accelerating-continual-learning-edge-fpga} ; un ResNet-8 dérivé
+  dans hls4ml.}}
+
+\newglossaryentry{mobilenet}{type=modeles, name={MobileNet}, sort={MobileNet},
+  description={Famille de backbones légers fondés sur la convolution séparable en profondeur
+  (depthwise puis pointwise 1$\times$1) ; V2 ajoute les blocs résiduels inversés à goulot
+  linéaire. Extracteur figé de plusieurs travaux d'apprentissage continu : MobileNetV1 dans
+  Chameleon et QLR-CL, MobileNetV2 INT8 dans ImageHD
+  \citep[§IV-A]{arxiv-2604.21280-imagehd-energy-efficient-device-continual} ; MobileNetV1 sert
+  aussi de cas d'Elastic-DF.}}
+
+\newglossaryentry{squeezenet}{type=modeles, name={SqueezeNet}, sort={SqueezeNet},
+  description={Classifieur compact fondé sur des modules \enquote{fire} (compression 1$\times$1
+  puis expansion 1$\times$1 et 3$\times$3). Dans le corpus, l'équipe SystemsETHZ de DAC-SDC le
+  binarise et lui ajoute une tête YOLO : IoU de 0,49 à 25,97\,FPS sur XC7Z020
+  \citep[§5.2.1]{2021-xu-dac-sdc-low-power-object}.}}
+
+\newglossaryentry{mcunetv2}{type=modeles, name={MCUNetV2}, sort={MCUNetV2},
+  description={Réseaux pour MCU obtenus par recherche conjointe d'architecture et
+  d'ordonnancement : les premiers blocs sont exécutés par patchs pour abaisser le pic de SRAM,
+  le champ récepteur est redistribué, déploiement INT8 avec TinyEngine
+  \citep[§3]{arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference}. Avec une tête YOLOv3,
+  MCUNetV2-M4 atteint 64,6\,\% de mAP VOC en 247\,kB de SRAM
+  \citep[Table~3]{arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference}, sans latence ni
+  énergie publiées.}}
+
+% ------------------------------------------------------ Réseaux quantifiés
+\newglossaryentry{qnn}{type=modeles, name={QNN}, sort={QNN},
+  description={\emph{Quantized Neural Network} : réseau dont poids et activations sont en
+  entiers de faible largeur (8~bits et moins), souvent entraîné en QAT. C'est la forme visée par
+  FINN, FINN-R et hls4ml. Dans le corpus, la vérification formelle bit-exacte d'un QNN
+  (encodage SMT) existe mais ne passe pas encore à l'échelle
+  \citep{arxiv-2012.08185-scalable-verification-quantized-neural-networks}, et des fautes
+  \enquote{stuck-at} sont injectées dans des QNN FINN sur ZCU104
+  \citep{arxiv-1912.07394-efficient-error-tolerant-quantized-neural}.}}
+
+\newglossaryentry{bnn}{type=modeles, name={BNN}, sort={BNN}, parent=qnn,
+  description={\emph{Binarized Neural Network} : cas limite du QNN, poids et activations sur
+  1~bit ($\pm 1$) ; le produit scalaire devient XNOR et comptage de bits (\emph{popcount}),
+  la BN suivie du signe un simple seuil, ce qui convient aux LUT d'un FPGA. Base de FINN
+  \citep{arxiv-1612.07119-finn-framework-fast-scalable-binarized} ; un BNN s'encode aussi
+  exactement en SAT pour la vérification
+  \citep[§4]{arxiv-1709.06662-verifying-properties-binarized-deep-neural}\pp.}}
+
+\newglossaryentry{cnv}{type=modeles, name={CNV}, sort={CNV}, parent=bnn,
+  description={Classifieur binaire de référence de FINN pour CIFAR-10 et SVHN : 3 fois (conv
+  3$\times$3, conv 3$\times$3, max-pooling) avec 64, 128 et 256 canaux, puis 2 couches denses de
+  512 \citep[§5.1]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}. 80,1\,\% sur
+  CIFAR-10 ; CNV-max tient 21\,900 images/s sur ZC706
+  \citep[Tables~3--4]{arxiv-1612.07119-finn-framework-fast-scalable-binarized}. Réutilisé par
+  FCMP et pour l'injection de fautes.}}
+
+% ------------------------------------------------------------ Autoencodeurs
+\newglossaryentry{ae}{type=modeles, name={AE (autoencodeur)}, sort={AE},
+  description={Réseau entraîné à reconstruire son entrée au travers d'un goulot : l'encodeur
+  la comprime en un code latent, le décodeur la reconstruit, avec une perte de reconstruction
+  (MSE). Deux usages dans le corpus : la compression (seul l'encodeur est embarqué) et la
+  détection d'anomalies (le score est l'erreur de reconstruction). Sur FPGA, il traite surtout
+  des données non visuelles ou de petites images.}}
+
+\newglossaryentry{cae}{type=modeles, name={CAE}, sort={CAE}, parent=ae,
+  description={Autoencodeur convolutif : convolutions et sous-échantillonnage à l'encodeur,
+  suréchantillonnage ou déconvolution au décodeur. Dans le corpus : détection d'artefacts
+  d'images hyperspectrales par un CAE de 2,95\,M paramètres sur DPU (ZCU104)
+  \citep[§III-B--D]{arxiv-2407.17647-energy-efficient-artefact-detection-accelerator}, CAE de
+  vibrations de 8\,755 paramètres (Malviya), encodeurs de compression embarquée (Manjunath,
+  Guerrisi), CAE débruiteur.}}
+
+\newglossaryentry{vae}{type=modeles, name={VAE}, sort={VAE}, parent=ae,
+  description={Autoencodeur variationnel : l'encodeur sort une moyenne $\mu$ et un écart-type
+  $\sigma$, le latent est tiré par reparamétrisation, et la perte ajoute à la reconstruction une
+  divergence de Kullback-Leibler vers une loi normale. Au déclenchement du LHC, seul l'encodeur
+  est implanté et le score d'anomalie est la $D_{KL}$, en 80\,ns sur VU9P
+  \citep{arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised} ; Que 2024 implante un VAE
+  complet avec générateur gaussien.}}
+
+\newglossaryentry{ssae}{type=modeles, name={SSAE}, sort={SSAE}, parent=ae,
+  description={\emph{Stacked Sparse Autoencoder} : encodeurs d'autoencodeurs parcimonieux
+  pré-entraînés sans supervision puis empilés, terminés par un softmax supervisé. Coutinho et
+  al. implantent un SSAE 784-100-50-10 en réseau systolique virgule fixe sur Virtex-6 : 93,38\,\%
+  sur MNIST contre 93,4\,\% sous Matlab
+  \citep[§V-D]{2019-coutinho-deep-neural-network-hardware-implementation}.}}
+
+\newglossaryentry{econ-ae}{type=modeles, name={ECON-AE}, sort={ECON-AE}, parent=ae,
+  description={Autoencodeur de compression des données du calorimètre HGCAL de CMS (ECON-T) ;
+  seul l'encodeur (convolution et couche dense) est embarqué, évalué par l'EMD. Campos et al.
+  le quantifient en précision mixte guidée par la Hessienne puis le synthétisent avec hls4ml,
+  sans mesure sur carte \citep[§7]{2024-campos-end-end-codesign-hessian-aware}.}}
+
+\newglossaryentry{onlad}{type=modeles, name={ONLAD}, sort={ONLAD}, parent=ae,
+  description={Détecteur d'anomalies en ligne : autoencodeur à une couche cachée entraîné par
+  OS-ELM, avec un mécanisme d'oubli léger pour suivre la dérive, et implanté en virgule fixe
+  32~bits sur XC7Z020 (ONLAD Core)
+  \citep[§2--4]{2019-tsukada-neural-network-device-learning-anomaly}. Apprentissage continu en
+  3,1\,W de carte \citep[§6.4]{2019-tsukada-neural-network-device-learning-anomaly}, sur des
+  données tabulaires ou des images aplaties.}}
+
+% ------------------------------------------------- Compression apprise d'images
+\newglossaryentry{lic}{type=modeles, name={LIC}, sort={LIC},
+  description={\emph{Learned Image Compression} : codec d'images appris, de type VAE avec
+  hyper-prior (Ballé et al.) : transformée d'analyse vers un latent quantifié, hyper-analyse qui
+  estime $\mu$ et $\sigma$ du latent pour le codage entropique, transformée de synthèse au
+  décodage ; activations GDN. Sur SoC, \citet{arxiv-2503.04832-lightweight-embedded-fpga-deployment-learned}\pp{}
+  distillent, élaguent et quantifient un LIC pour trois DPU B4096 (ZCU102) : 43,63\,FPS en
+  encodage \citep[Table~VII]{arxiv-2503.04832-lightweight-embedded-fpga-deployment-learned}\pp.}}
+
+\newglossaryentry{f-lic}{type=modeles, name={F-LIC}, sort={F-LIC}, parent=lic,
+  description={Codec LIC à hyper-prior en virgule fixe 8~bits sur VCU118, en pipeline couche
+  par couche ; deux poids partagent un DSP (casDSP) et la déconvolution saute les zéros ; le
+  codage entropique reste sur l'hôte \citep{2022-sun-f-lic-fpga-learned-image}. Il encode du
+  720p à 40,69\,FPS \citep[Fig.~6]{2022-sun-f-lic-fpga-learned-image} : premier codec appris
+  temps réel sur FPGA du corpus, mais sur une grosse puce.}}
+
+\newglossaryentry{gdn}{type=modeles, name={GDN}, sort={GDN}, parent=lic,
+  description={\emph{Generalized Divisive Normalization} : activation des LIC qui divise chaque
+  canal par la racine d'une combinaison pondérée des carrés des autres canaux ; l'inverse (iGDN)
+  sert au décodeur. Non supportée par la DPU, elle est implantée comme opérateur XIR
+  personnalisé en virgule fixe 32~bits
+  \citep[§III-B, §III-D]{arxiv-2503.04832-lightweight-embedded-fpga-deployment-learned}\pp ; la
+  remplacer par ReLU coûte 0,5 à 0,7\,dB de BD-PSNR
+  \citep[Fig.~15]{arxiv-2503.04832-lightweight-embedded-fpga-deployment-learned}\pp.}}
+
+% -------------------------------------------------- Détection d'anomalies (image)
+\newglossaryentry{patchcore}{type=modeles, name={PatchCore}, sort={PatchCore},
+  description={Détection d'anomalies industrielles par banque de caractéristiques : les
+  descripteurs de patchs d'images normales, extraits par un CNN pré-entraîné, sont réduits en
+  un \emph{coreset} ; le score est la distance au plus proche voisin. 99,1 d'AUROC image sur
+  MVTec AD mais 92,2 sur un jeu réel d'huile alimentaire
+  \citep[Tables~10, 12]{2023-cui-survey-unsupervised-anomaly-detection-algorithms}
+  (Table~10 reconstruite par Docling) ; coûteux en mémoire, non porté sur FPGA dans le corpus.}}
+
+\newglossaryentry{fastflow}{type=modeles, name={FastFlow}, sort={FastFlow},
+  description={Détection d'anomalies par flot normalisant (\emph{normalizing flow}) 2D appris
+  sur les caractéristiques d'un CNN figé : il estime la densité des images normales, et une
+  faible vraisemblance signale l'anomalie. 99,4 d'AUROC image sur MVTec AD
+  \citep[Table~10]{2023-cui-survey-unsupervised-anomaly-detection-algorithms} (reconstruite par
+  Docling) ; comme PatchCore, absent des FPGA du corpus.}}
+
+% ------------------------------------------------------- Apprentissage continu
+\newglossaryentry{os-elm}{type=modeles, name={OS-ELM}, sort={OS-ELM},
+  description={\emph{Online Sequential Extreme Learning Machine} : réseau à une couche cachée
+  dont les poids d'entrée sont aléatoires et figés ; seuls les poids de sortie sont mis à jour
+  en ligne par moindres carrés récursifs, sans rétropropagation. Avec un lot de 1, l'inversion
+  matricielle devient une division scalaire
+  \citep[§3.1]{2019-tsukada-neural-network-device-learning-anomaly}, ce qui rend l'apprentissage
+  sur FPGA bon marché (ONLAD).}}
+
+\newglossaryentry{slda}{type=modeles, name={SLDA}, sort={SLDA},
+  description={\emph{Streaming Linear Discriminant Analysis} (Deep SLDA) : la dernière couche
+  d'un CNN figé est remplacée par un classifieur linéaire qui met à jour en flux une moyenne
+  par classe et une covariance partagée, sans rétropropagation ni replay
+  \citep[§III-A]{2021-piyasena-accelerating-continual-learning-edge-fpga}. Piyasena et al.
+  l'accélèrent en PL derrière un ResNet18 sur DPU : apprentissage à 168,67\,FPS contre 170,20
+  en inférence seule \citep[Table~V]{2021-piyasena-accelerating-continual-learning-edge-fpga}
+  (tableau reconstruit par Docling).}}
+
+\newglossaryentry{chameleon}{type=modeles, name={Chameleon}, sort={Chameleon},
+  description={Apprentissage continu en ligne par replay d'activations latentes (couche 21 de
+  MobileNetV1) depuis deux tampons, court terme sur la puce et long terme hors puce ; seule la
+  partie haute est rétropropagée, en FP16
+  \citep[§III, §V-A]{2024-aggarwal-chameleon-dual-memory-replay-online}. Sur ZCU102 : 413\,ms et
+  1,22\,J par image, 7 fois moins d'énergie que le Latent Replay, mais plus lent qu'une Jetson
+  Nano \citep[Table~VI]{2024-aggarwal-chameleon-dual-memory-replay-online}.}}
+
+\newglossaryentry{ef-train}{type=modeles, name={EF-Train}, sort={EF-Train},
+  description={Accélérateur d'entraînement complet de CNN sur FPGA : un même noyau de
+  convolution exécute propagation avant, rétropropagation et mise à jour, en FP32, avec une
+  réorganisation des données en DRAM (\emph{data reshaping})
+  \citep[§3--4]{arxiv-2202.10935-ef-train-enable-efficient-device}\pp. 2,08\,ms par image
+  (batch 128) et 6,89\,W estimés sur ZCU102
+  \citep[Table~7]{arxiv-2202.10935-ef-train-enable-efficient-device}\pp ; aucune stratégie
+  contre l'oubli.}}
+
+\newglossaryentry{qlr-cl}{type=modeles, name={QLR-CL}, sort={QLR-CL},
+  description={\emph{Quantized Latent Replay} : un MobileNet-V1 est coupé en un étage figé
+  quantifié en INT8 et un étage adaptatif réentraîné en FP32, nourri d'un mélange de nouvelles
+  images et de \emph{latent replays} stockés quantifiés
+  \citep[§III-C]{arxiv-2110.10486-tinyml-platform-device-continual-learning}. Sur l'ASIC PULP
+  VEGA (22\,nm), 65 fois plus rapide et 37 fois plus économe qu'un STM32L4
+  \citep[§V-E]{arxiv-2110.10486-tinyml-platform-device-continual-learning}.}}
+
+\newglossaryentry{gdumb}{type=modeles, name={GDumb}, sort={GDumb},
+  description={Méthode d'apprentissage continu \enquote{naïve} : un tampon équilibré par classe
+  est rempli avidement, et le modèle est réentraîné sur ce seul tampon au moment de
+  l'inférence. Il sert de référence de replay : 19,8\,\% sur CIFAR-100 en 10 tâches
+  \citep[Table~S2]{arxiv-2010.15277-class-incremental-learning-survey-performance}\pp, et de
+  politique de mémoire à TinyCL.}}
+
+\newglossaryentry{tinycl}{type=modeles, name={TinyCL}, sort={TinyCL}, parent=gdumb,
+  description={Accélérateur d'apprentissage continu en RTL : une unité de 9 blocs MAC
+  réutilisée pour propagation avant, rétropropagation et mise à jour, en virgule fixe 16~bits,
+  avec une mémoire de replay gérée selon GDumb
+  \citep[§III-A, §III-C--F]{arxiv-2402.09780-tinycl-efficient-hardware-architecture-continual}\pp.
+  Synthétisé en 65\,nm : 86\,mW d'après la synthèse, sans silicium
+  \citep[Table~I]{arxiv-2402.09780-tinycl-efficient-hardware-architecture-continual}\pp.}}
+
+\newglossaryentry{hdc}{type=modeles, name={HDC}, sort={HDC},
+  description={\emph{Hyperdimensional Computing} : les données sont encodées en hypervecteurs
+  de très grande dimension (souvent binaires), manipulés par liaison, superposition et
+  permutation ; l'apprentissage se réduit à accumuler des prototypes et l'inférence à une
+  recherche de similarité (distance de Hamming). Opérations de bits sans rétropropagation,
+  adaptées au FPGA.}}
+
+\newglossaryentry{imagehd}{type=modeles, name={ImageHD}, sort={ImageHD}, parent=hdc,
+  description={Apprentissage continu non supervisé : un MobileNetV2 INT8 figé alimente un
+  encodeur HDC binaire, les hypervecteurs sont regroupés en clusters dans une mémoire bornée,
+  fusionnés par un kMeans++ simplifié ; accélérateur dataflow en Vitis HLS sur ZCU104
+  \citep[§IV, §VI]{arxiv-2604.21280-imagehd-energy-efficient-device-continual}. 0,27\,ms et
+  0,97\,mJ par image sur CIFAR-10, puissance estimée
+  \citep[Table~VII]{arxiv-2604.21280-imagehd-energy-efficient-device-continual}.}}
+
+\newglossaryentry{lwf}{type=modeles, name={LwF}, sort={LwF},
+  description={\emph{Learning without Forgetting} : régularisation par distillation, sans
+  exemplaires ; pendant l'apprentissage d'une nouvelle tâche, les sorties de l'ancien modèle
+  sur les nouvelles données servent de cibles douces. Meilleure méthode sans exemplaires du
+  banc de \citet{arxiv-2010.15277-class-incremental-learning-survey-performance}\pp{} (30,2\,\%
+  sur CIFAR-100 en 10 tâches, Table~2), mais en dessous du simple fine-tuning avec 2\,000
+  exemplaires (37,9\,\%) ; baseline de Chameleon.}}
+
+\newglossaryentry{rilod}{type=modeles, name={RILOD}, sort={RILOD}, parent=lwf,
+  description={Apprentissage incrémental pour détecteur en une étape (RetinaNet) : une nouvelle
+  classe est ajoutée avec ses seules données, en distillant depuis l'ancien modèle figé les
+  sorties de classification, les boîtes et des caractéristiques intermédiaires
+  \citep[§4.2]{arxiv-1904.00781-rilod-near-real-time-incremental}\pp. Exécuté sur Jetson TX2
+  ou en mode edge-cloud, sans FPGA : seul travail de détection incrémentale du corpus.}}
+
+% ------------------------------------------------------ Opérateurs
+\newglossaryentry{nms}{type=modeles, name={NMS}, sort={NMS},
+  description={\emph{Non-Maximum Suppression} : post-traitement des détecteurs à ancres ou à
+  grille, qui trie les boîtes par score et supprime celles dont l'IoU avec une boîte mieux
+  notée dépasse un seuil. Séquentiel et dépendant des données, il tourne presque toujours sur
+  le cœur ARM, hors des chiffres de l'accélérateur : REQ-YOLO l'exclut de sa latence
+  \citep[Table~1]{2019-ding-req-yolo-resource-aware-efficient}, et il devient le goulot de
+  bout en bout chez \citet{arxiv-2607.13106-no-attention-no-problem-dpu}\pp{} (§IV-C).}}
+
+\newglossaryentry{relu}{type=modeles, name={ReLU}, sort={ReLU},
+  description={\emph{Rectified Linear Unit}, $\max(0,x)$ ; variantes ReLU6 (écrêtée à 6) et
+  leaky-ReLU (pente faible pour $x<0$, utilisée par YOLOv2 à v4). Linéaire par morceaux, elle
+  coûte une comparaison et se fusionne avec la quantification ; c'est l'activation de repli des
+  toolflows : FINN-R remplace le leaky-ReLU de Tincy YOLO par ReLU
+  \citep[§5.1]{arxiv-1809.04570-finn-r-end-end-deep}, Karki et al. y ramènent SiLU pour la DPU.}}
+
+\newglossaryentry{silu}{type=modeles, name={SiLU}, sort={SiLU},
+  description={\emph{Sigmoid Linear Unit} (ou Swish), $x\cdot\sigma(x)$ : activation lisse de
+  YOLOv5, v8 et suivants. Elle exige une sigmoïde, absente des opérateurs natifs de la DPU et
+  de FINN \citep[§VI-D]{arxiv-2206.07527-qonnx-representing-arbitrary-precision-quantized} ; d'où
+  des remplacements : ReLU chez Karki et al.
+  \citep[§III-B]{arxiv-2607.13106-no-attention-no-problem-dpu}\pp, HardSwish dans SATAY
+  \citep[§III-B]{2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating},
+  OPReLU chez Yan et al. \citep[§4]{2024-yan-fpga-yolov5-accelerator-real-time}.}}

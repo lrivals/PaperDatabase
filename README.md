@@ -99,7 +99,7 @@ colonnes de source toujours affichées) :
 
 | Commande | Effet |
 |---|---|
-| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (plateforme, colonne renseignée, tri, `--count`) |
+| `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (plateforme, colonne renseignée, tri, `--count`) ; `--check` : chaque valeur est-elle dans son passage cité (`chunk_id`) ? ; `--comparable` : quelles lignes se comparent vraiment (tâche, jeu, split, métrique) |
 | `bin/pdb paper <id \| mot>` | fiche d'identité d'un papier : métadonnées, preprint, statut de fiche, benchmarks |
 | `bin/pdb search "<question>"` | passages classés (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option), avec `chunk_id`, section et page ; modèles Qwen sur GPU si la route GPU est active (`bin/pdb gpu`) |
 | `bin/pdb show <chunk_id>` / `verify <chunk_id> "<citation>"` | texte exact d'un passage / contrôle qu'une citation y figure, nombres compris (`NOMBRES` si un chiffre diffère) |
@@ -373,7 +373,7 @@ Au 01/10/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-
   thèse « IA embarquée sécuritaire certifiable sur FPGA » (axes `safety-certification` et
   `person-detection`). 101 articles, tous fichés ; 299 lignes dans `benchmarks.csv` (216 sur
   FPGA) ; 36 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md), dont 29 étayés (8ᵉ passage,
-  avec sections sûreté et détection de personnes). Un état de l'art LaTeX (sources et PDF) est dans
+  avec sections sûreté et détection de personnes). Un état de l'art LaTeX (sources et PDF, avec trois glossaires : plateformes, modèles, métriques) est dans
   [bases/fpga/docs/etat-de-l-art/](bases/fpga/docs/etat-de-l-art/).
 - `drone` : 73 articles, tous fichés ; 324 lignes dans `benchmarks.csv` ; 19 gaps dans
   [bases/drone/gaps.md](bases/drone/gaps.md), dont 17 étayés. Les 24 derniers articles ont
@@ -384,7 +384,7 @@ Au 01/10/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-
   [bases/stage/gaps.md](bases/stage/gaps.md), dont 12 étayés. Les références sans version
   téléchargeable automatiquement restantes sont à déposer à la main (liste dans [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire)).
 
-### Ce qui marche (testé : 218 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
+### Ce qui marche (testé : 230 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 
 - acquisition arXiv, DOI (via OpenAlex), PDF local, par lot ; exports `.bib` / `.ris`
   éditeur prioritaires sur l'en-tête GROBID (vérifié sur 6 exports IEEE, ACM, MDPI,

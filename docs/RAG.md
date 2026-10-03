@@ -197,7 +197,8 @@ options. Conventions communes :
 bin/pdb bench [--platform S] [--model S] [--task S] [--quant S] [--toolflow S] [--dataset S]
               [--paper ID] [--where COL=S]… [--min COL=X]… [--max COL=X]… [--has COL]…
               [--cols a,b,c | --count a,b] [--sort COL [--desc]] [-n N]
-              [--format tsv|md|json] [--max-chars N]
+              [--format tsv|md|json] [--max-chars N] [--check]
+bin/pdb bench --add-columns COL,…|all
 ```
 
 - Les filtres texte portent sur une sous-chaîne, insensible à la casse. Les raccourcis
@@ -232,6 +233,64 @@ paper	model	quantization	fps	power_w	power_scope	source_section	confidence
 ```
 
 Coût : ~40 tokens par ligne, contre ~10 000 pour lire `benchmarks.csv` en entier (38 Ko).
+
+**Colonnes optionnelles et `--check`** (DATA_MODEL §7). `--add-columns all` ajoute à l'en-tête
+les colonnes optionnelles (`chunk_id`, `metric_def`, `dataset_split`, `input_res`, `batch`,
+`measure_protocol`, `original_value`), à `n/r` dans les lignes existantes. Ensuite, filtres et
+`--cols` les acceptent comme les autres. `--check` prend les lignes filtrées qui ont un
+`chunk_id` et cherche chaque valeur numérique dans le passage cité (`rag.number_tokens`).
+Seules les valeurs qui n'y sont pas sont listées, avec l'un de ces statuts :
+
+| Statut | Signification |
+|---|---|
+| `section` | la valeur est dans un autre passage de la même section (tableau coupé en fenêtres) |
+| `converti` | la valeur manque, mais les nombres de `original_value` sont lus dans la section |
+| `absent` | la valeur n'est pas trouvée |
+| `introuvable` | le `chunk_id` ne correspond à aucun passage de ce papier |
+
+Code 1 si une valeur est `absent` ou un `chunk_id` `introuvable`.
+
+**`--comparable [accuracy|power]`** regroupe les lignes filtrées dont la valeur comparée est
+renseignée (`accuracy_value`, ou `power_w` en mode `power`) par conditions de comparaison :
+`task`, `dataset`, `dataset_split`, puis la métrique (mode `accuracy`) ou `power_scope` (mode
+`power`). La métrique est `metric_def`, à défaut `accuracy_metric` préfixée de `~`
+(définition non vérifiée). Une colonne optionnelle absente vaut `n/r`. Les valeurs sont
+comparées sans casse ni espaces multiples, sans autre normalisation : « top-1 » et « top-1
+accuracy » restent deux groupes, signalés.
+
+- Seuls les groupes d'au moins deux papiers sont listés ; `-n` et `--max-chars` portent sur
+  eux, et `--format json` donne tous les groupes avec leurs lignes.
+- `power_scope` (mode `accuracy`) liste les portées du groupe, pour information. `varie`
+  liste les conditions qui changent dans le groupe (`quantization`, `input_res`, `batch`,
+  `measure_protocol`) : des réserves, pas des interdictions.
+- Le pied signale les définitions non vérifiées (`~`), les groupes dont la clé contient
+  `n/r` (comparabilité non établie) et les **comparaisons impossibles** : même tâche et même
+  jeu, répartis sur plusieurs groupes, avec la colonne qui les sépare.
+
+```
+$ bin/pdb bench --comparable power
+g	n	papers	task	dataset	dataset_split	power_scope	varie
+1	9	2	classification	ImageNet	n/r	board	quantization
+2	9	2	detection	UA-DETRAC	n/r	unspecified	quantization
+3	7	2	detection	COCO	n/r	unspecified	quantization
+# n/r dans la clé (dataset_split…) : comparabilité non établie, 3 groupe(s)
+# comparaisons impossibles (même tâche et même jeu, autres conditions) :
+#   classification / ImageNet : 2 groupes, 3 papier(s) (power_scope : board | unspecified)
+…
+# 43 groupe(s) d'un seul papier omis (--format json pour tout voir)
+```
+
+Sur fpga (03/10/2026), `--task detection --dataset coco --comparable` donne 56 lignes de 7
+papiers en 9 groupes, dont aucun ne réunit deux papiers : chaque papier nomme sa mAP à sa
+façon (`mAP@0.5:0.95`, `mAP50 COCO`, `mAP*`…), ou son jeu (`COCO val (5000 images)`,
+`COCO (split n/r)`).
+
+```
+$ bin/pdb bench --check --paper 2110.10486
+line	paper	chunk_id	column	value	status
+2	2110.10486	2110.10486#033.0	latency_ms	2070	absent
+# 1 ligne(s) avec chunk_id, 3 valeur(s) vérifiée(s), 1 dans le passage cité (33 %)
+```
 
 ### 5.2 `pdb search` — N1, recherche de passages
 

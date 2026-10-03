@@ -2,44 +2,54 @@
 \section{Méthode et conventions}
 \label{sec:methode}
 
-\paragraph{Corpus.} Ce document ne s'appuie que sur la base PaperDatabase. Il a été écrit
-en deux temps. Les sections thématiques (architectures, toolflows, détection, autoencodeurs,
-apprentissage continu, comparaisons et critique) décrivent la base du 26 septembre 2026 :
-45 articles, 41 fiches de lecture complètes et 172 lignes de mesures dans
-\texttt{benchmarks.csv} (31 articles, dont 101 lignes mesurées sur FPGA) ; leurs comptes
-sont ceux de cette date. La section sur la sûreté et les sections de gaps reposent sur la
-base du 1\textsuperscript{er} octobre 2026 : 101 articles, tous fichés, et 299 lignes de
-mesures (54 articles, dont 216 lignes sur FPGA). Les 60 articles ajoutés entre-temps
-(surtout sûreté et certification, détection de personnes, quelques détecteurs sur FPGA) ne
-sont donc repris dans les sections thématiques que lorsqu'ils contredisent un constat.
-Aucune référence extérieure à la base n'est citée comme source.
+\paragraph{Corpus.} Ce document ne s'appuie que sur la base PaperDatabase, dans son état du
+1\textsuperscript{er} octobre 2026 : 101 articles, tous fichés, et 299 lignes de mesures
+dans \texttt{benchmarks.csv}, issues de 54 articles. Parmi ces lignes, 216 sont mesurées
+sur FPGA (44 articles) et 83 sur d'autres plateformes (GPU \glslink{jetson}{Jetson}, NPU, VPU, CPU,
+microcontrôleurs, ASIC ; 15 articles). Les 47 articles sans ligne sont surtout des surveys et
+des travaux de sûreté, de vérification et de certification (37 sur 47, guides de l'EASA
+compris), dont les résultats ne tiennent pas dans les colonnes du fichier. Tous les comptes du
+document sont faits sur cet état. Aucune référence extérieure à la base n'est citée comme
+source.
 
 \paragraph{Origine des chiffres.} Chaque valeur est reprise de la fiche ou de
 \texttt{benchmarks.csv}, avec la section ou le tableau de l'article entre crochets, par
 exemple \src{Table 8}. Une valeur que les auteurs ne donnent pas s'écrit \nr{} : elle n'est
 jamais estimée. Les chiffres d'un survey sont ceux des travaux qu'il cite. Ils ne sont pas
-vérifiés à la source et servent à orienter la lecture, pas à comparer. Les lignes de
-\texttt{benchmarks.csv} en confiance \emph{medium} viennent de tableaux reconstruits
-automatiquement (Docling, PyMuPDF) ou de valeurs lues dans le texte qui commente une
-figure. Elles sont signalées par~$^{m}$ dans les tableaux. Une seule ligne est en confiance
-\emph{low} ; elle est signalée dans le texte.
+vérifiés à la source et servent à orienter la lecture, pas à comparer. La colonne
+\texttt{confidence} vaut \emph{high} pour 158 lignes, \emph{medium} pour 140 (dont 101 des
+216 lignes FPGA) et \emph{low} pour une seule. Les lignes \emph{medium} viennent de
+tableaux reconstruits automatiquement (Docling, PyMuPDF) ou de valeurs lues dans le texte
+qui commente une figure ; elles sont signalées par~$^{m}$ dans les tableaux. La ligne
+\emph{low} (un \glslink{ae}{autoencodeur} de débruitage, arxiv-2301.07050\pp) est signalée dans le texte.
 
 \paragraph{Portée de la puissance.} Une puissance n'a de sens qu'avec sa portée. La base
 distingue \emph{board} (carte entière, au wattmètre), \emph{chip} (rails de la puce ou
 télémétrie embarquée), \emph{board-dynamic} (carte, repos soustrait), \emph{estimated}
 (outil de conception, par exemple le rapport de Vivado) et \emph{unspecified} (méthode non
-décrite). Les tableaux donnent cette portée à côté de chaque valeur. Deux puissances de
-portées différentes ne se comparent pas.
+décrite). Sur les 299 lignes, 49 sont \emph{board}, 18 \emph{chip}, 17 \emph{estimated},
+73 \emph{unspecified}, aucune \emph{board-dynamic}, et 142 n'ont pas de puissance. Les
+tableaux donnent cette portée à côté de chaque valeur. Deux puissances de portées
+différentes ne se comparent pas.
 
 \paragraph{Lu contre déduit.} Sauf mention, une affirmation résume ce que disent les
 auteurs. Une inférence de la fiche ou de ce document est marquée \deduit. Un article marqué
 \pp{} est un preprint non relu par les pairs (au moins dans la version ingérée).
 
-\paragraph{Limites de la méthode.} Le corpus est petit (45 articles) et vient d'une
-bibliographie de départ constituée à partir de résumés. Les effectifs par axe sont
-déséquilibrés : 24 fiches sur les plateformes, 14 sur les toolflows, 11 sur les
-autoencodeurs, 8 sur YOLO sur FPGA, 8 surveys et 5 sur l'apprentissage continu. Un
-\enquote{gap} signifie donc qu'un sujet est absent \emph{de ce corpus}. Son absence de la
-littérature reste une hypothèse tant qu'une recherche ciblée ne l'a pas confirmée. Enfin,
-les fiches ont été rédigées à partir du texte extrait des PDF : les valeurs données
-uniquement dans des figures sont souvent \nr.
+\paragraph{Limites de la méthode.} Le corpus reste petit (101 articles) et biaisé par sa
+construction. Les 41 premières fiches (24 et 26 septembre 2026) viennent d'une
+bibliographie de départ constituée à partir de résumés, centrée sur les plateformes, les
+toolflows et les \glslink{ae}{autoencodeurs}. Les 60 suivantes (29 septembre) ont été ajoutées avec le
+thème de thèse : le volet sûreté et certification (29 articles) et la détection de
+personnes (5), ainsi que des détecteurs sur FPGA et des travaux d'apprentissage continu.
+Les effectifs par axe (un article peut en porter plusieurs) restent déséquilibrés :
+44 articles sur les plateformes, 29 sur la sûreté et la certification, 23 sur les
+toolflows, 18 sur \glslink{yolo}{YOLO} sur FPGA, 18 surveys, 15 sur les \glslink{ae}{autoencodeurs}, 15 sur
+l'apprentissage continu (dont 7 sans FPGA) et 5 sur la détection de personnes.
+\texttt{benchmarks.csv} est lui aussi déséquilibré : cinq articles fournissent 90 des
+299 lignes, et les 29 fiches de sûreté n'en donnent que 4, faute de colonnes pour les
+métriques de fiabilité. Enfin, 34 des 101 articles sont des preprints. Un \enquote{gap}
+signifie donc qu'un sujet est absent \emph{de ce corpus}. Son absence de la littérature
+reste une hypothèse tant qu'une recherche ciblée ne l'a pas confirmée. Les fiches ont été
+rédigées à partir du texte extrait des PDF : les valeurs données uniquement dans des
+figures sont souvent \nr, et les liens en note de bas de page sont souvent perdus.

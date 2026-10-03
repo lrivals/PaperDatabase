@@ -108,8 +108,8 @@ def load_benchmarks(problems, root=ROOT):
         return []
     with open(bench, newline="") as f:
         reader = csv.DictReader(f)
-        if tuple(reader.fieldnames or ()) != schema.BENCHMARK_COLUMNS:
-            problems.append("benchmarks.csv : en-tête différent de schema.BENCHMARK_COLUMNS")
+        for err in schema.check_header(reader.fieldnames):
+            problems.append(f"benchmarks.csv : {err}")
         rows = list(reader)
     for i, row in enumerate(rows, start=2):
         for err in schema.validate_benchmark_row(row):

@@ -3,7 +3,7 @@
 \label{sec:cl-mcu}
 
 \paragraph{Replay latent quantifié sur ASIC PULP (QLR-CL).}
-\citet{arxiv-2110.10486-tinyml-platform-device-continual-learning} découpent un MobileNet-V1
+\citet{arxiv-2110.10486-tinyml-platform-device-continual-learning} découpent un \glslink{mobilenet}{MobileNet-V1}
 (entrée 128$\times$128) en deux étages \src{§III-C} :
 \begin{itemize}
   \item un \emph{étage figé}, quantifié en INT8 ;
@@ -12,36 +12,86 @@
     replays}).
 \end{itemize}
 Sur Core50, stocker ces activations en UINT-8 ne coûte que 0,26 point face au FP32
-\src{§V-B}. En dessous de 6~bits, l'apprentissage ne converge plus. Sur VEGA (ASIC 22\,nm,
-62\,mW mesurés sur la puce), un événement d'apprentissage coûte 2,07\,s et 0,13\,J si seule
-la dernière couche est réentraînée. Si l'on remonte à la couche~23, il faut 877\,s et
-54,3\,J \src{Table~IV}. Avec le même code, VEGA est en moyenne 65 fois plus rapide et 37
-fois plus économe qu'un STM32L4 \src{§V-E}. La comparaison au Snapdragon~845, elle, suppose
-une enveloppe de 4\,W non mesurée \src{§V-E}.
+\src{§V-B}. En dessous de 6~bits, l'apprentissage ne converge plus. Sur \glslink{vega}{VEGA} (ASIC 22\,nm,
+62\,\glslink{u-mw}{mW} mesurés sur la puce), un événement d'apprentissage coûte 2,07\,\glslink{u-s}{s} et 0,13\,\glslink{u-j}{J} si seule
+la dernière couche est réentraînée. Si l'on remonte à la couche~23, il faut 877\,\glslink{u-s}{s} et
+54,3\,\glslink{u-j}{J} \src{Table~IV}. Avec le même code, \glslink{vega}{VEGA} est en moyenne 65 fois plus rapide et 37
+fois plus économe qu'un \glslink{stm32l4}{STM32L4} \src{§V-E}. La comparaison au Snapdragon~845, elle, suppose
+une enveloppe de 4\,\glslink{u-w}{W} non mesurée \src{§V-E}.
 
 \paragraph{Apprentissage incrémental de classes à partir de peu d'exemples, sur GAP9
-(O-FSCIL).} \citet{arxiv-2403.07851-12-mj-per-class-device} figent un MobileNetV2 et
+(O-FSCIL).} \citet{arxiv-2403.07851-12-mj-per-class-device} figent un \glslink{mobilenet}{MobileNetV2} et
 ajoutent chaque nouvelle classe sous la forme d'un prototype : la moyenne des
-caractéristiques de ses 5 exemples, sans rétropropagation \src{§IV, §V-B}. Sur GAP9, en
-INT8, ajouter une classe coûte 11,35\,mJ pour 62,44\,\% de précision moyenne sur
-CIFAR-100. Le plus gros backbone atteint 66,51\,\% pour 22,75\,mJ \src{Tables~II et IV}.
+caractéristiques de ses 5 exemples, sans rétropropagation \src{§IV, §V-B}. Sur \glslink{gap9}{GAP9}, en
+INT8, ajouter une classe coûte 11,35\,\glslink{u-mj}{mJ} pour 62,44\,\% de précision moyenne sur
+CIFAR-100. Le plus gros backbone atteint 66,51\,\% pour 22,75\,\glslink{u-mj}{mJ} \src{Tables~II et IV}.
 Le titre combine deux configurations : les 68,62\,\% viennent d'un ResNet-12 FP32 sur GPU,
-les 12\,mJ du plus petit modèle déployé \src{Table~II}.
+les 12\,\glslink{u-mj}{mJ} du plus petit modèle déployé \src{Table~II}.
 
-\paragraph{Non encore fichés.} L'entraînement sous 256\,KB de mémoire
-\citep{arxiv-2206.15472-device-training-256kb-memory}\pp{} et l'apprentissage continu sur MCU
-par distillation de données \citep{arxiv-2409.07114-continual-incremental-learning-tinyml-device}
-sont dans la base, mais sans fiche : ils ne sont pas exploités ici. Le survey de
+\paragraph{Entraînement sous 256\,KB (MCU).}
+\citet{arxiv-2206.15472-device-training-256kb-memory} rendent possible le fine-tuning d'un
+CNN réellement quantifié en INT8 sur un \glslink{stm32f746}{STM32F746} (320\,\glslink{u-ko}{KB} de SRAM) \src{§2, §3.1}. La
+méthode combine trois éléments :
+\begin{itemize}
+  \item une mise à l'échelle des gradients (QAS), qui rattrape le FP32 : 73,5 contre
+    73,3\,\% de précision moyenne \src{Table~1} ;
+  \item une mise à jour creuse, qui n'apprend que des biais et des sous-ensembles de couches
+    ou de canaux, choisis hors ligne sous budget mémoire \src{§2} ;
+  \item un graphe de rétropropagation compilé et élagué à la compilation.
+\end{itemize}
+Sur Visual Wake Words, le MCU atteint 89,1\,\% avec 206\,\glslink{u-ko}{KB} de SRAM mesurés \src{§3.2}.
+C'est du transfert d'apprentissage sur un jeu fixe, sans mesure d'oubli ; l'énergie n'est
+pas rapportée, et les précisions sur les autres jeux sont simulées sur GPU \src{§3.1}.
+
+\paragraph{Distillation de données et croissance du modèle.}
+\citet{arxiv-2409.07114-continual-incremental-learning-tinyml-device} remplacent le tampon de
+replay par un jeu distillé (environ 1\,\% des données) et agrandissent le réseau quand la
+précision passe sous un seuil \src{§III-B, §V-G}. Rien n'est déployé : les coûts sont des
+\glslink{flops}{FLOPs} relatifs. La \enquote{perte de 1\,\%} du résumé compare le modèle adaptatif au plus
+grand modèle, tous deux sous distillation. Face à l'entraînement cumulatif, la perte est
+forte : 58,2 contre 85,4\,\% en fin de séquence sur CIFAR-10 \src{§V-B}. Un réseau dont
+l'architecture croît se prête mal à un FPGA à architecture fixe \deduit.
+
+\paragraph{Accélérateur de CL en ASIC (TinyCL).}
+\citet{arxiv-2402.09780-tinycl-efficient-hardware-architecture-continual}\pp{} exécutent
+propagation avant, rétropropagation et mise à jour sur une même unité de \glslink{mac}{MAC}, en virgule fixe
+16~bits, avec un replay \glslink{gdumb}{GDumb} \src{§III-A, §III-C--F}. Synthétisé en 65\,nm, l'ASIC consomme
+86\,\glslink{u-mw}{mW} d'après la synthèse, sans mesure sur silicium ; la mémoire de replay prend 80\,\% de
+la surface et 76\,\% de la puissance \src{§IV-B, Fig.~7}. Une epoch dure 1,76\,\glslink{u-s}{s} contre
+103\,\glslink{u-s}{s} sur une Tesla P100 à batch~1, une baseline sous-utilisée \src{§IV-C}. Le modèle reste
+un jouet (deux convolutions et une couche dense, CIFAR-10) \src{§IV-A}.
+
+\paragraph{Algorithmes et surveys.} Le survey de
+\citet{arxiv-2010.15277-class-incremental-learning-survey-performance}\pp{} compare treize
+méthodes de class-IL sur GPU, en classification. Sur CIFAR-100 en 10 tâches
+\src{Tables~2 et S2} :
+\begin{itemize}
+  \item la meilleure méthode sans exemplaires, \glslink{lwf}{LwF}, atteint 30,2\,\% ;
+  \item le simple fine-tuning avec 2\,000 exemplaires atteint 37,9\,\% ;
+  \item l'entraînement joint, borne haute, atteint 66,3\,\%.
+\end{itemize}
+Il exclut par construction les méthodes online, à architecture croissante ou
+pré-entraînées, celles qu'utilise le matériel contraint \src{§2.3}. Le survey de
 \citet{arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded} traite
 l'apprentissage continu embarqué en une page, sans aucun chiffre système \src{§5.2}.
 
-\paragraph{Bilan transversal.} Les cinq fiches d'apprentissage continu couvrent au plus
-deux familles de plateformes chacune :
+\paragraph{Bilan transversal.} Chaque travail d'apprentissage sur cible ne mesure qu'une
+partie des familles de plateformes :
 \begin{itemize}
-  \item QLR-CL : ASIC et MCU ;
-  \item O-FSCIL : MCU ;
-  \item ImageHD : FPGA, face au CPU, au GPU et à une Jetson non optimisée ;
-  \item ONLAD : FPGA, face au CPU et au GPU.
+  \item \glslink{qlr-cl}{QLR-CL} : ASIC et MCU ;
+  \item O-FSCIL et l'entraînement sous 256\,\glslink{u-ko}{KB} : MCU ;
+  \item \glslink{tinycl}{TinyCL} : ASIC (synthèse), face à un GPU ;
+  \item \glslink{imagehd}{ImageHD} : FPGA, face au CPU, au GPU et à une \glslink{jetson}{Jetson} non optimisée ;
+  \item \glslink{onlad}{ONLAD} : FPGA, face au CPU et au GPU ;
+  \item \glslink{slda}{SLDA} : FPGA, face à l'ARM A53 et à une \glslink{xavier-nx}{Jetson Xavier NX}
+    \citep[Table~IV]{2021-piyasena-accelerating-continual-learning-edge-fpga} ;
+  \item \glslink{chameleon}{Chameleon} : FPGA, \glslink{jetson-nano}{Jetson Nano} et EdgeTPU simulé
+    \citep[Table~VI]{2024-aggarwal-chameleon-dual-memory-replay-online} ;
+  \item \glslink{ef-train}{EF-Train} : FPGA seul ; le V100 ne sert qu'à vérifier la convergence.
 \end{itemize}
-Aucun algorithme d'apprentissage continu n'est mesuré à la fois sur MCU, FPGA et Jetson.
-\texttt{benchmarks.csv} n'a aucune ligne d'apprentissage continu sur Jetson.
+Aucun algorithme d'apprentissage continu n'est mesuré à la fois sur MCU, FPGA et \glslink{jetson}{Jetson}, et
+aucun papier n'a à la fois une FPGA et un MCU. \texttt{benchmarks.csv} compte 36 lignes
+d'apprentissage sur cible (continu, entraînement ou fine-tuning, \glslink{onlad}{ONLAD} compris) : 26 sur
+FPGA, 5 sur MCU, 3 sur ASIC et 2 sur \glslink{jetson}{Jetson}, ces dernières venant toutes de \glslink{chameleon}{Chameleon}
+(\glslink{jetson-nano}{Jetson Nano}). Les mesures de \glslink{slda}{SLDA} sur \glslink{xavier-nx}{Xavier NX} ne figurent que dans la colonne
+\texttt{baseline}.

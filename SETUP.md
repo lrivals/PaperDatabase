@@ -748,8 +748,21 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 02/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 03/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 03/10/2026 (lot D, état de l'art fpga).**
+- Lot D en place (D-5 : `pdb bench --comparable`) : colonnes optionnelles de `benchmarks.csv` (DATA_MODEL §7),
+  `pdb bench --add-columns` et `--check`, mesure `in_cited_chunk`, `/paper-fiche`. Les trois
+  bases réindexent sans changer leur CSV. 230 tests.
+- `pdb eval --compare` (fpga) : recall@5 du holdout en hybride + rerank à 0,72, sous le
+  plancher de 0,8 ; même valeur sur `main` sans le lot, donc baisse antérieure (EVAL.md §11).
+- État de l'art LaTeX fpga : trois glossaires (plateformes, modèles, métriques et unités,
+  `gloss-*.tex`), liés depuis le texte, compilés par `makeglossaries` dans le Makefile ;
+  figures `pdb plot` régénérées sur les 299 lignes (nouvelle `bench_accuracy_latency`).
+
+- [ ] **Recherche : recall@5 du holdout fpga 0,80 → 0,72** entre le 28/09 et le 02/10
+  (corpus 45 → 101 papiers, lot G) : isoler la cause (EVAL.md §11) avant tout réglage.
 
 **Bilan du 02/10/2026 (fiabilité des réponses, route de recherche).**
 - Feuille de route [docs/AMELIORATIONS.md](docs/AMELIORATIONS.md) : 8 lots (A à H) et 5
@@ -1223,9 +1236,14 @@ Défauts mis au jour, à corriger (tâche 12) :
     hors corpus 6/6, 0 faux `absent`, citations 1,00, 22 verdicts sur 24 stables
     (EVAL.md §10) ;
   - [ ] lot C, preuves atomiques `claims.jsonl` et skill `/paper-extract` ;
-  - [ ] lot D, colonnes optionnelles de `benchmarks.csv` (`chunk_id`, split, résolution,
-    batch, définition de métrique, protocole) et `pdb bench --check` : reprend la piste 1
-    ci-dessous ;
+  - [x] lot D-1 à D-4 (03/10/2026) : colonnes optionnelles de `benchmarks.csv` (`chunk_id`,
+    `metric_def`, `dataset_split`, `input_res`, `batch`, `measure_protocol`,
+    `original_value` ; `schema.check_header`), `pdb bench --add-columns` et `--check`
+    (valeur dans le passage cité), mesure `in_cited_chunk` du banc `table_values`,
+    `/paper-fiche` qui les remplit. Les trois bases réindexent sans changer leur CSV ;
+  - [x] lot D-5 (03/10/2026), `pdb bench --comparable [accuracy|power]` : groupes par tâche,
+    jeu, split, métrique (ou portée de puissance), comparaisons impossibles signalées ;
+    consigne dans `/paper-ask` ;
   - [ ] lot E, tableaux : bbox dans `sections.jsonl`, OCR par zone, index ligne par ligne
     avec légende et en-tête, indicateurs de qualité, vérité terrain annotée ;
   - [ ] lot F, recherche en français (requêtes multiples, modèle multilingue évalué, jeu
@@ -1241,8 +1259,8 @@ Défauts mis au jour, à corriger (tâche 12) :
   - [ ] skills `/paper-compare`, `/state-of-art`, `/table-review`, `/research-question`.
 - [ ] **Pistes d'amélioration du 26/09/2026, non commencées** (analyse de la doc et du
   corpus ; ordre proposé) :
-  1. traçabilité : colonne `chunk_id` dans `benchmarks.csv` et `pdb bench --check`, qui
-     vérifie que chaque valeur numérique apparaît dans son passage source ;
+  1. ~~traçabilité : colonne `chunk_id` dans `benchmarks.csv` et `pdb bench --check`~~ :
+     fait le 03/10/2026 (lot D) ;
   2. économie de tokens : `pdb outline <id>`, `pdb digest <id>` (abstract, contributions,
      résultats, conclusion, tableaux) et `pdb numbers <id>` (nombres + unités avec
      `chunk_id`). Réécrire ensuite `/paper-fiche` pour partir de ces sorties au lieu de lire

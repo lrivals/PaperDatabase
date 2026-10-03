@@ -84,6 +84,45 @@ class TestRag(unittest.TestCase):
         self.assertEqual(parts[0].split()[160], parts[1].split()[0])  # recouvrement de 40 mots
         self.assertEqual(rag.split_text("court"), ["court"])
 
+    def test_split_table_by_rows(self):
+        rows = [f"M{i} | {i}.5 | {i * 10} | " + " ".join(f"x{i}y{j}" for j in range(17))
+                for i in range(20)]
+        caption = "Table 3: Resources of each prototype. " + " ".join(["measured"] * 45)
+        text = "\n\n".join([caption,
+                            "Name | LUT | Power", "| (k) | (W)", *rows])
+        parts = rag.split_table(text)
+        self.assertGreater(len(parts), 1)
+        for k, p in enumerate(parts):
+            self.assertLessEqual(len(p.split()), rag.WINDOW)
+            lines = p.split("\n\n")
+            # légende (abrégée à sa 1re phrase après la 1re fenêtre), en-tête et unités en tête
+            self.assertEqual(lines[0], caption if k == 0 else "Table 3: Resources of each prototype.")
+            self.assertEqual(lines[1:3], ["Name | LUT | Power", "| (k) | (W)"])
+        body = [line for p in parts for line in p.split("\n\n")[3:]]
+        self.assertEqual(body, rows)  # rangées entières, sans perte ni doublon
+        self.assertEqual(rag.split_table("Table 1: court.\n\na | b"), ["Table 1: court.\n\na | b"])
+        self.assertEqual(rag.split_table(LONG), rag.split_text(LONG))  # sans rangées
+
+    def test_split_table_long_caption(self):
+        caption = " ".join(f"c{i}" for i in range(450))
+        rows = [f"r{i} | " + " ".join(f"v{i}x{j}" for j in range(20)) for i in range(12)]
+        parts = rag.split_table("\n\n".join([caption, "Name | Val", *rows]))
+        self.assertTrue(all(len(p.split()) <= rag.WINDOW for p in parts))
+        windows = [p for p in parts if "Name | Val" in p]
+        self.assertEqual([line for p in windows for line in p.split("\n\n")[2:]], rows)
+        self.assertTrue(all(p.startswith("c0 ") for p in windows))
+
+    def test_table_chunks(self):
+        rows = "\n\n".join(f"SFC{i} | {i} | " + " ".join(["lut"] * 30) for i in range(12))
+        d = self.root / "papers" / "2021-lin-mcunet" / "sections.jsonl"
+        d.write_text(d.read_text() + json.dumps({
+            "id": "2021-lin-mcunet#002", "paper_id": "2021-lin-mcunet", "kind": "table",
+            "section": "Figures et tableaux", "subsection": None, "order": 2, "page": 3,
+            "text": "Table 2: Results.\n\nName | Value\n\n" + rows}) + "\n")
+        tab = [c for c in rag.load_chunks(self.root) if c["section_id"] == "2021-lin-mcunet#002"]
+        self.assertGreater(len(tab), 1)
+        self.assertTrue(all(c["text"].startswith("Table 2: Results.\n\nName | Value") for c in tab))
+
     def test_chunk_ids(self):
         ids = [c["chunk_id"] for c in rag.load_chunks(self.root)]
         self.assertIn("arxiv-1612.07119-finn#002.1", ids)

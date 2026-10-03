@@ -2,7 +2,7 @@
 
 Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot C et
 `/paper-extract` en place (03/10/2026, sauf l'indexation des claims) ; lot D en place
-(03/10/2026) ; lot G en grande partie fait (route unique, RAG.md §13) ; lot I en place
+(03/10/2026) ; lot E-a, E-c, E-d en place (03/10/2026, acceptation E-c non atteinte) ; lot G en grande partie fait (route unique, RAG.md §13) ; lot I en place
 (03/10/2026, journal des sous-agents, calage sur le cost-state et économie estimée de la
 délégation, expérience appariée I-6 faite, sauf la révision chiffrée I-5e) ; autres lots non commencés. Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
@@ -283,6 +283,35 @@ colonnes optionnelles passe `reindex`, `pdb bench`, `pdb rag benchmarks` et `pdb
 ---
 
 ## Lot E — Tableaux
+
+> **E-a, E-c, E-d en place le 03/10/2026** ([EVAL.md §12](EVAL.md#12-lot-e-a-e-c-e-d-tableaux-03102026)).
+>
+> - **E-a.** `bbox` et `table_source` sont dans `sections.jsonl` (`doc.to_sections`,
+>   `schema.SECTION_TABLE_KEYS`). Les trois bases ont été complétées sans changer le texte. Les
+>   14 papiers de drone sans PDF n'ont pas ces champs.
+> - **E-c.** `rag.split_table` découpe par rangées entières et répète la légende abrégée et
+>   l'en-tête. Écart à la conception : rien n'est ajouté à `encoded_text`. Le cache des
+>   vecteurs est indexé par le sha1 du texte, donc la légende et l'en-tête sont dans le texte
+>   de la fenêtre, et l'unité y vient avec l'en-tête.
+> - **E-d.** `tables.quality` donne les six signaux prévus, plus `lost_columns` : une seule
+>   colonne de valeurs, de moyenne ou de total, comme cui Table 9. `pdb status` met en tête les
+>   papiers aux tableaux signalés, et `pdb status --tables` les détaille. Écart à la
+>   conception : les signaux sont calculés à la lecture depuis `sections.jsonl`, et non rangés
+>   dans `docling_tables.json`. Ils couvrent ainsi aussi les tableaux GROBID, comme FINN
+>   Table 3. `caption_mismatch` se déduit du cache Docling.
+> - **Correction.** `tables.label_number` lit maintenant les légendes sans espace (« TABLE1. »).
+>
+> Ce qui reste :
+> - **Acceptation E-c non atteinte.** Les 2 questions holdout sur tableaux restent manquées.
+>   Leurs tableaux sont courts, et l'échec vient du vocabulaire (LUT / « resource », Thr.put /
+>   « throughput »), pas du découpage. Le préfixe « titre du papier » a été essayé et
+>   n'aide pas. Piste : lot F (requêtes multiples) ou un glossaire d'abréviations par base.
+> - **Acceptation E-d atteinte pour les tableaux présents.** hozhabr Tables 9-10 et
+>   2512.01463 Table 3 n'existent pas dans `sections.jsonl` ; c'est à E-e de les voir.
+> - **Signaux nombreux.** Environ 40 % des tableaux sont signalés, surtout `ragged`. À trier
+>   par `/table-review`, en commençant par les tableaux cités par `benchmarks.csv`.
+> - **Dérive de `ingest --reparse`** sur les ligatures, à corriger avant toute ré-extraction
+>   en masse.
 
 **Constat.**
 
@@ -902,7 +931,7 @@ de preuve et de citation comptent le plus), ensuite `/paper-compare`, `/table-re
 | 2 | **Lot B** (suffisance dans `/paper-ask`) | gain direct de fiabilité, sans code lourd |
 | 3 | **Lot D-1 à D-3** (`chunk_id`, colonnes optionnelles, `bench --check`) | traçabilité des nombres |
 | 4 | **Lot C** + `/paper-extract` | prépare comparaison et rédaction ; en place le 03/10/2026 (reste : lecture des claims par `/paper-ask`) |
-| 5 | **Lot E-a, E-c, E-d** (localisation, index, qualité) | rend les tableaux trouvables et contrôlables |
+| 5 | **Lot E-a, E-c, E-d** (localisation, index, qualité) | rend les tableaux trouvables et contrôlables ; en place le 03/10/2026 (reste : questions holdout sur tableaux, vocabulaire) |
 | 6 | `/table-review`, puis **E-e** (vérité terrain) et **E-b** (OCR par zone) | E-b se juge sur E-e |
 | 7 | **Lot J-1 à J-3** (`pdb compare` tabulaire), puis `/paper-compare`, `/state-of-art` | J donne au skill une entrée déterministe ; le tout s'appuie sur C et D |
 | 7 bis | **Lot J-4, J-5** (figures, colonnes `clock_mhz`, `latency_scope`) | au fil des besoins |

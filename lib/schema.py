@@ -287,6 +287,9 @@ def own_source(pid):
 
 
 SECTION_KEYS = ("id", "paper_id", "kind", "section", "subsection", "order", "page", "text")
+# lignes kind "table" seulement (lot E-a) : zone du tableau sur la page de la ligne, origine du corps
+SECTION_TABLE_KEYS = ("bbox", "table_source")
+TABLE_SOURCES = ("grobid", "pymupdf", "docling", "docling-ocr")
 REF_KEYS = ("paper_id", "raw", "title", "authors", "year", "doi", "arxiv_id")
 
 
@@ -308,9 +311,20 @@ def _no_empty_strings(row, keys):
 
 def validate_section_row(row, paper_id, order):
     """Une ligne de sections.jsonl (DATA_MODEL §5), attendue à la position order."""
-    if tuple(sorted(row)) != tuple(sorted(SECTION_KEYS)):
-        return [f"clés {sorted(row)} ≠ {sorted(SECTION_KEYS)}"]
+    extra = set(row) - set(SECTION_KEYS)
+    if not set(SECTION_KEYS) <= set(row) or not extra <= set(SECTION_TABLE_KEYS):
+        return [f"clés {sorted(row)} ≠ {sorted(SECTION_KEYS)} (+ {', '.join(SECTION_TABLE_KEYS)})"]
     errs = _no_empty_strings(row, ("subsection",))
+    if extra and row["kind"] != "table":
+        errs.append(f"{', '.join(sorted(extra))} : réservé(s) aux lignes kind table")
+    if "table_source" in row and row["table_source"] not in TABLE_SOURCES:
+        errs.append(f"table_source inconnu : {row['table_source']!r} ({' | '.join(TABLE_SOURCES)})")
+    if "bbox" in row:
+        b = row["bbox"]
+        if not (isinstance(b, list) and len(b) == 4
+                and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in b)
+                and b[0] < b[2] and b[1] < b[3]):
+            errs.append(f"bbox = {b!r} : [x0, y0, x1, y1] attendu, x0 < x1 et y0 < y1")
     if row["paper_id"] != paper_id:
         errs.append(f"paper_id = {row['paper_id']!r}")
     if row["order"] != order:

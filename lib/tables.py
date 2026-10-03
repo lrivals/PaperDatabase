@@ -11,6 +11,7 @@ vérifier avant d'entrer dans benchmarks.csv. Les tableaux restés sans corps so
 pour être signalés dans extraction.warnings.
 """
 import re
+from collections import Counter
 
 MIN_BODY_CHARS = 150    # sous ce seuil, le corps TEI d'un tableau est considéré comme perdu
 MAX_GAP = 40            # écart vertical maximal légende ↔ tableau, en points
@@ -44,7 +45,7 @@ def number(s):
 def label_number(text):
     """Numéro du tableau d'après le début d'une légende (« TABLE III. … » → 3)."""
     m = _LABEL.match(text or "")
-    return number(m.group(1).split()[-1]) if m else None
+    return number(re.sub(r"(?i)^\s*table\s*", "", m.group(1))) if m else None
 
 
 def body_chars(block):
@@ -129,5 +130,86 @@ def recover(pdf_path, blocks):
         page = b.paras[0][1]
         b.paras = [(f"{b.paras[0][0]} {RECOVERED_MARK}", page)] + \
                   [(" | ".join(r), page) for r in rows]
+        b.zone, b.table_source = (key[0], *found[key[0]][key[1]].bbox), "pymupdf"
         recovered.append(label(b))
     return recovered, lost
+
+
+# ------------------------------------------------- qualité d'un tableau (lot E-d)
+
+QUALITY_SIGNALS = {
+    "empty_cells": "plus de 30 % de cellules vides",
+    "ragged": "nombre de cellules variable d'une rangée à l'autre",
+    "no_header": "1re rangée surtout numérique",
+    "ocr_suspect": "mots illisibles (OCR, lettres perdues) ou O / l pris pour 0 / 1",
+    "merged_numbers": "plusieurs nombres dans une même cellule (colonnes fusionnées)",
+    "lost_columns": "une seule colonne de valeurs, de moyenne ou de total (colonnes perdues ?)",
+    "caption_mismatch": "corps Docling rattaché par la page, pas par le numéro de légende",
+}
+EMPTY_SHARE = 0.3     # empty_cells : part de cellules vides au-delà de laquelle on signale
+RAGGED_SHARE = 0.2    # ragged : part des rangées de corps hors du nombre de cellules le plus courant
+GIBBERISH_MIN = 3     # ocr_suspect : mots illisibles distincts à partir desquels on signale
+
+_NUM = re.compile(r"[-+±~∼≈<>]?\d[\d,]*(\.\d+)?[kKMGT%x×]?")
+_AGGREGATE = re.compile(r"(?i)(average|avg\.?|mean|total|overall)")
+_OCR_DIGIT = re.compile(r"(?<![A-Za-z])(\d+[OolI]\d*|[OolI]\d+)(?![A-Za-z])")
+_VOWELS = set("aeiouy")
+
+
+def _is_num(cell):
+    return bool(_NUM.fullmatch(cell.replace(" ", "")))
+
+
+def _gibberish(word):
+    """Mot illisible : presque sans voyelles ou presque que des voyelles, ou 5 consonnes de
+    suite (« arcths », « aoees ») ; aussi les mots amputés de leur 1re lettre (« bject »)."""
+    share = sum(c in _VOWELS for c in word) / len(word)
+    return share <= 0.2 or share >= 0.7 or re.search(r"[^aeiouy]{5}", word) is not None
+
+
+def quality(text, vocab=None, docling_caption=None):
+    """Signaux de QUALITY_SIGNALS levés par un tableau de sections.jsonl (légende, puis une
+    rangée par paragraphe, cellules séparées par « | »). Liste vide : rien à signaler.
+
+    vocab : mots connus du corpus (ligatures.corpus_vocabulary), pour ocr_suspect ; sans
+    lui, seule la confusion O / l avec 0 / 1 est cherchée. docling_caption : légende du
+    tableau Docling qui a fourni le corps (docling_tables.matched_caption), None sinon."""
+    paras = [p for p in text.split("\n\n") if p.strip()]
+    rows = [[c.strip() for c in p.split("|")] for p in paras[1:]]
+    out = []
+    if docling_caption is not None:
+        mine, theirs = label_number(paras[0] if paras else ""), label_number(docling_caption)
+        if (mine != theirs or mine is None) and docling_caption[:30] != (paras[0] if paras else "")[:30]:
+            out.append("caption_mismatch")
+    if len(rows) < 2:
+        return out
+    cells = [c for r in rows for c in r]
+    if sum(1 for c in cells if not c) > EMPTY_SHARE * len(cells):
+        out.append("empty_cells")
+    n_head = 2 if len(rows) > 2 and units_row(rows[1]) else 1
+    body = rows[n_head:]
+    if body:
+        counts = Counter(len(r) for r in body)
+        usual = counts.most_common(1)[0][0]
+        if sum(n for k, n in counts.items() if k != usual) > RAGGED_SHARE * len(body):
+            out.append("ragged")
+    head = [c for c in rows[0] if c]
+    if head and sum(_is_num(c) for c in head) > 0.5 * len(head):
+        out.append("no_header")
+    words = re.findall(r"[a-z]+", " ".join(cells))
+    unreadable = {w for w in words if len(w) >= 4 and w not in vocab and _gibberish(w)} if vocab else set()
+    if len(unreadable) >= GIBBERISH_MIN or _OCR_DIGIT.search(" ".join(cells)):
+        out.append("ocr_suspect")
+    if any(sum(_is_num(t) for t in c.split()) >= 2 and all(_is_num(t) or t in "kKMG" for t in c.split())
+           for c in cells):
+        out.append("merged_numbers")
+    values = [c for c in rows[0][1:] if c]
+    if len(values) == 1 and _AGGREGATE.fullmatch(values[0]):
+        out.append("lost_columns")
+    return out
+
+
+def units_row(cells):
+    """Rangée d'unités sous l'en-tête : cellules non vides toutes entre parenthèses ou crochets."""
+    cells = [c for c in cells if c]
+    return bool(cells) and all(c[0] in "([" and c[-1] in ")]" for c in cells)

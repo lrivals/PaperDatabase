@@ -3,7 +3,7 @@
   "file": "bench_accuracy_latency.png",
   "group": "bench",
   "description": "précision vs latence, un panneau par métrique",
-  "generated": "2026-10-03T21:02:19",
+  "generated": "2026-10-03T23:13:56",
   "config_hash": "e8a082de77",
   "sources": [
    "benchmarks.csv"
@@ -31,7 +31,7 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-10-03T21:02:20",
+  "generated": "2026-10-03T23:13:56",
   "config_hash": "e8a082de77",
   "sources": [
    "papers/*/metadata.json"
@@ -42,7 +42,7 @@
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-10-03T21:02:20",
+  "generated": "2026-10-03T23:13:56",
   "config_hash": "e8a082de77",
   "sources": [
    "papers/*/metadata.json"
@@ -53,7 +53,7 @@
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-10-03T21:02:20",
+  "generated": "2026-10-03T23:13:57",
   "config_hash": "e8a082de77",
   "sources": [
    "benchmarks.csv"
@@ -64,7 +64,7 @@
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-10-03T21:02:22",
+  "generated": "2026-10-03T23:13:59",
   "config_hash": "e8a082de77",
   "sources": [
    "papers/*/refs.jsonl",
@@ -77,7 +77,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-10-03T21:02:22",
+  "generated": "2026-10-03T23:14:00",
   "config_hash": "e8a082de77",
   "sources": [
    "benchmarks.csv",
@@ -196,21 +196,21 @@
   "group": "bench",
   "description": "débit vs puissance, détection / autres tâches",
   "skipped": "aucune ligne de benchmarks.csv avec fps et power_w chiffrés",
-  "checked": 1791054139.2710714,
+  "checked": 1791062035.857582,
   "config_hash": "e8a082de77"
  },
  "bench_gops_per_watt": {
   "group": "bench",
   "description": "GOPS/W par précision de calcul",
   "skipped": "aucune ligne de benchmarks.csv avec gops et power_w chiffrés",
-  "checked": 1791054139.2712579,
+  "checked": 1791062035.8577833,
   "config_hash": "e8a082de77"
  },
  "bench_accuracy_fps": {
   "group": "bench",
   "description": "précision vs débit, un panneau par métrique",
   "skipped": "aucune ligne de benchmarks.csv avec accuracy_value et fps chiffrés pour une même métrique (4 lignes au moins)",
-  "checked": 1791054139.2724922,
+  "checked": 1791062035.8589845,
   "config_hash": "e8a082de77"
  },
  "eval_retrieval": {

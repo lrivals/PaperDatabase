@@ -14,7 +14,7 @@ from pathlib import Path
 
 import requests
 
-from lib import schema
+from lib import docling_tables, ligatures, schema, tables
 
 GROBID_ALIVE = "http://localhost:8070/api/isalive"
 THIN_AXIS = 3          # un axe sous ce nombre de papiers est signalé comme maigre
@@ -56,6 +56,32 @@ def _count_tables(paper, prefix):
     return 0
 
 
+def flagged_tables(root):
+    """Tableaux de sections.jsonl qui lèvent un signal de qualité (tables.quality, lot E-d) :
+    [(paper_id, section_id, libellé, [signaux])], dans l'ordre des papiers."""
+    root = Path(root)
+    vocab = ligatures.corpus_vocabulary(root)
+    out = []
+    for path in sorted((root / "papers").glob("*/sections.jsonl")):
+        cache = None
+        for line in path.read_text().splitlines():
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            if row["kind"] != "table":
+                continue
+            caption = None
+            if (row.get("table_source") or "").startswith("docling"):
+                cache = cache or docling_tables.load(path.parent) or {}
+                caption = docling_tables.matched_caption(cache, row["text"])
+            signals = tables.quality(row["text"], vocab, caption)
+            if signals:
+                m = tables._LABEL.match(row["text"])
+                label = m.group(1) if m else row["text"][:30].split("\n")[0].strip()
+                out.append((row["paper_id"], row["id"], label, signals))
+    return out
+
+
 def collect(root, check_services=True):
     root = Path(root)
     papers = []
@@ -76,6 +102,13 @@ def collect(root, check_services=True):
                           if (root / "papers" / p["id"] / "fiche.md").exists()
                           and (root / "papers" / p["id"] / "fiche.md").stat().st_mtime > gaps_mtime)
     n_gaps, n_backed = read_gaps(gaps)
+    flagged = flagged_tables(root)
+    n_flagged = {}
+    for pid, *_ in flagged:
+        n_flagged[pid] = n_flagged.get(pid, 0) + 1
+    by_warning = {p["id"]: (_count_tables(p, schema.WARN_TABLES_LOST),
+                            _count_tables(p, schema.WARN_TABLES_RECOVERED)
+                            + _count_tables(p, schema.WARN_TABLES_DOCLING)) for p in papers}
     return {
         "venv": (root / ".venv" / "bin" / "python").exists(),
         "viz_deps": importlib.util.find_spec("dash") is not None,
@@ -91,12 +124,12 @@ def collect(root, check_services=True):
             (p["id"], len((p.get("extraction") or {}).get("warnings") or []))
             for p in papers
             if p.get("broken") or not (p.get("extraction") or {}).get("ok", True)),
+        # tableaux signalés en tête (lot E-d), puis papiers aux tableaux perdus ou reconstruits
         "tables": sorted(
-            (p["id"], _count_tables(p, schema.WARN_TABLES_LOST),
-             _count_tables(p, schema.WARN_TABLES_RECOVERED) + _count_tables(p, schema.WARN_TABLES_DOCLING))
-            for p in papers
-            if _count_tables(p, schema.WARN_TABLES_LOST) or _count_tables(p, schema.WARN_TABLES_RECOVERED)
-            or _count_tables(p, schema.WARN_TABLES_DOCLING)),
+            ((pid, *by_warning.get(pid, (0, 0)), n_flagged.get(pid, 0))
+             for pid in set(n_flagged) | {p for p, c in by_warning.items() if any(c)}),
+            key=lambda t: (-t[3], t[0])),
+        "flagged_tables": flagged,
         "n_bench": n_bench,
         "n_gaps": n_gaps,
         "n_gaps_backed": n_backed,
@@ -152,16 +185,33 @@ def render(s):
         out.append(f"  fiche à faire         {pid}")
     for pid, n in s["extraction_issues"]:
         out.append(f"  extraction à vérifier {pid} ({n} avertissement(s))")
-    for pid, lost, rec in s.get("tables", []):
-        detail = ", ".join(x for x in (f"{lost} sans corps" if lost else "",
+    for pid, lost, rec, flagged in s.get("tables", []):
+        detail = ", ".join(x for x in (f"{flagged} signalé(s)" if flagged else "",
+                                       f"{lost} sans corps" if lost else "",
                                        f"{rec} reconstruit(s)" if rec else "") if x)
         out.append(f"  tableaux à vérifier   {pid} ({detail})")
     if s["git_dirty"]:
         out.append(f"  git                   {s['git_dirty']} fichier(s) non commité(s)")
+    if s.get("flagged_tables"):
+        out.append("                        détail des signaux : bin/pdb status --tables")
     acts = next_actions(s)
     out += ["", "À faire ensuite"]
     for i, (cmd, why) in enumerate(acts, 1):
         out += [f"  {i}. {cmd}", f"     {why}"]
     if not acts:
         out.append("  rien d'urgent")
+    return "\n".join(out)
+
+
+def render_tables(s):
+    """Liste des tableaux signalés (pdb status --tables) : un tableau par ligne, puis la
+    légende des signaux."""
+    rows = s.get("flagged_tables") or []
+    if not rows:
+        return "aucun tableau signalé"
+    out = [f"{len(rows)} tableau(x) signalé(s) (tables.quality, docs/AMELIORATIONS.md lot E-d)"]
+    for _pid, sid, label, signals in rows:
+        out.append(f"  {sid}\t{label}\t{', '.join(signals)}")
+    used = sorted({x for *_, sig in rows for x in sig})
+    out += ["", "Signaux"] + [f"  {k:17} {tables.QUALITY_SIGNALS[k]}" for k in used]
     return "\n".join(out)

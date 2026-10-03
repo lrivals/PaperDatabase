@@ -763,3 +763,43 @@ Le lot ne touche pas à la recherche : la seule modification de `lib/rag.py` ext
   (plus de passages concurrents pour les mêmes questions), et la route de recherche a changé
   (lot G). À isoler avant tout réglage : rejouer le run du 28/09 sur le corpus actuel avec
   l'ancien code, puis l'inverse. Rien n'est réglé sur le holdout.
+
+## 12. Lot E-a, E-c, E-d, tableaux (03/10/2026)
+
+`pdb eval --compare` sur fpga avant (`2026-10-03T2258-f9a07d3.json`) et après les trois
+volets ([AMELIORATIONS.md](AMELIORATIONS.md#lot-e--tableaux)). Volet extraction inchangé ;
+seuil holdout hybride + rerank toujours non atteint (0,72), comme avant le lot (§11).
+
+- **E-c, index des tableaux par rangées.** 181 tableaux des trois bases dépassent 250 mots ;
+  ils donnent 610 fenêtres (médiane 186 mots, une seule au-delà de 300), aucun mot perdu. Sur
+  fpga : 8585 → 8601 passages, 240 réencodés. Dev et holdout inchangés (recall@5 hybride
+  0,80 / 0,68 ; + rerank 0,90 / 0,72). Jeu FR : recall@10 hybride 0,75 → 0,62, soit une
+  question sur 8 qui passe du top 10 au rang 12 (« Suivi multi-objets ») ; les fenêtres qui la
+  dépassent sont de la prose de survey ou des biographies captées comme « tableaux »
+  (`#076.1` d'un survey d'apprentissage incrémental), redécoupées.
+- **Acceptation E-c non atteinte : les 2 questions holdout sur tableaux restent manquées.**
+  Le constat de §5 (« texte réduit à la légende ») ne vaut plus depuis Docling : les
+  tableaux attendus (2108.03986 Tables III-IV, FINN Tables 2-3) ont un corps et font moins de
+  250 mots, le découpage ne les touche donc pas. L'échec vient du vocabulaire : la question
+  dit « resource utilization », « throughput », « autoencoder » ; le tableau dit « LUT »,
+  « Thr.put », « AE ». Essai en mémoire, non retenu : titre du papier en préfixe des passages
+  de tableau → aucune des 2 retrouvée, dev lexical 0,85 → 0,80, FR hybride 0,50 → 0,38.
+- **E-d, signaux de qualité** (`pdb status --tables`) : 255 tableaux signalés sur 584 (fpga),
+  144 sur 428 (drone), 116 sur 254 (stage). Sur fpga : `ragged` 163, `merged_numbers` 107,
+  `empty_cells` 82, `ocr_suspect` 14, `no_header` 8, `caption_mismatch` 4, `lost_columns` 1.
+  Les échantillons relus de `merged_numbers` et `ocr_suspect` sont de vrais défauts (colonnes
+  GROBID fusionnées, « 0.586 0.331 0.643 » dans une cellule ; premières lettres perdues,
+  « ayesian », « bject »). Défauts connus : cui Table 9 → `lost_columns`, hozhabr Table 5 →
+  `ocr_suspect`, FINN Table 3 → `ragged`, `merged_numbers`. hozhabr Tables 9-10 et
+  2512.01463 Table 3 n'ont aucune ligne dans `sections.jsonl` (légende non détectée) : un
+  signal par tableau ne peut pas les voir, c'est l'affaire de E-e.
+- **`caption_mismatch` et correction de `tables.label_number`.** Les légendes Docling sans
+  espace (« TABLE1. ») ne donnaient pas de numéro : 34 appariements sur 206 passaient pour
+  « par la page ». Après correction, il en reste 8 réels, dont un probablement faux (drone,
+  `…detection-method-unmanned-aerial#045` : corps de la « Table 4 » de Docling sur la Table 5).
+- **Dérive de `ingest --reparse`, non retenue.** Relancé pour remplir `bbox` et
+  `table_source`, il change aussi le texte de 5 papiers fpga : des ligatures réparées à
+  l'ingestion ne le sont plus (« power-efficient » → « power-e cient »). Il change aussi les
+  avertissements de 51 `metadata.json`. Seuls les deux nouveaux champs ont été gardés, ajoutés
+  aux lignes de HEAD et contrôlés ligne à ligne. La dérive des ligatures reste à corriger
+  avant tout `--reparse` en masse.

@@ -197,9 +197,18 @@ Une ligne JSON par section ou sous-section, dans l'ordre du papier.
 | `order` | position dans le papier, à partir de 0 |
 | `page` | page du PDF, pour retrouver le passage à l'œil |
 | `text` | texte nettoyé |
+| `bbox` | lignes `table` seulement, optionnel : `[x0, y0, x1, y1]` en points, origine en haut à gauche, sur la page `page` ; zone du corps reconstruit (PyMuPDF, Docling), sinon zone TEI ; absent si la zone est sur une autre page que la légende |
+| `table_source` | lignes `table` seulement : origine du corps, `grobid` \| `pymupdf` \| `docling` \| `docling-ocr` (`grobid` aussi pour un tableau resté sans corps) |
 
 Une section dépassant ~6000 caractères est découpée en plusieurs lignes qui partagent le
 même `section` — le découpage suit les paragraphes, jamais un compte de tokens aveugle.
+
+Un tableau est écrit légende d'abord, puis une rangée par paragraphe, cellules séparées par
+` | `. Dans l'index de passages (`lib/rag.py`), un tableau de plus de 250 mots est découpé
+par rangées entières, la légende (abrégée à sa première phrase) et l'en-tête répétés en tête
+de chaque fenêtre (`rag.split_table`). Les signaux de qualité d'un tableau
+(`tables.quality` : cellules vides, rangées irrégulières, nombres fusionnés, OCR…) se
+calculent à la lecture et ne sont pas stockés : `bin/pdb status --tables`.
 
 ---
 

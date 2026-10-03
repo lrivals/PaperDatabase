@@ -4,7 +4,8 @@ Aucun LLM : la recherche est déterministe (même index, même requête, même c
 chaque passage renvoyé porte son chunk_id, sa section, sa page et le sha1 de son texte.
 
 - Passages : une entrée de sections.jsonl ; au-delà de SPLIT_OVER mots, fenêtres de
-  WINDOW mots avec OVERLAP mots de recouvrement. chunk_id = <id de section>.<k>.
+  WINDOW mots avec OVERLAP mots de recouvrement. chunk_id = <id de section>.<k>. Un tableau
+  est découpé par rangées entières, légende et en-tête répétés (split_table).
 - Lexical : BM25 recalculé à chaque chargement (moins d'une seconde pour le corpus).
 - Dense : lib/embed._encode (sentence-transformers, optionnel). Vecteurs en cache dans
   .cache/rag/<modèle>.npz, indexés par chunk_id:sha1 : seuls les passages nouveaux ou
@@ -27,7 +28,7 @@ import unicodedata
 from collections import Counter
 from pathlib import Path
 
-from lib import embed, query, rag_models
+from lib import embed, query, rag_models, tables
 
 DEFAULT_MODEL = "BAAI/bge-small-en-v1.5"
 GPU_MODEL, GPU_RERANK_MODEL = rag_models.EMBED, rag_models.RERANK
@@ -113,6 +114,51 @@ def split_text(text, window=WINDOW, overlap=OVERLAP, split_over=SPLIT_OVER):
     return out
 
 
+CAPTION_REPEAT = 40  # mots de légende répétés en tête des fenêtres suivantes d'un tableau
+
+
+def split_table(text, window=WINDOW, split_over=SPLIT_OVER):
+    """Tableau (légende, puis une rangée par paragraphe) : fenêtres de rangées entières, la
+    légende (abrégée) et l'en-tête répétés en tête de chaque fenêtre suivante, sauts de
+    ligne gardés. Sans rangées, ou court : comme split_text.
+
+    Une légende plus longue qu'une fenêtre (prose captée avec le tableau) a ses propres
+    fenêtres de mots ; l'en-tête répété est abrégé à une demi-fenêtre."""
+    if len(text.split()) <= split_over:
+        return [text]
+    caption, *rows = [p for p in text.split("\n\n") if p.strip()]
+    if len(rows) < 2:
+        return split_text(text)
+    n_head = 2 if len(rows) > 2 and tables.units_row([c.strip() for c in rows[1].split("|")]) else 1
+    header = rows[:n_head]
+    rows = [p for r in rows[n_head:] for p in split_text(r, window=window, split_over=window)]
+    short = caption.split()[:CAPTION_REPEAT]
+    if len(short) < len(caption.split()):
+        # couper à la fin de la première phrase si elle tient dans la limite
+        ends = [i for i, w in enumerate(short) if w.endswith(".")]
+        short = short[:ends[0] + 1] if ends else short
+    rep_header = header
+    if len(" ".join(header).split()) > window // 2 - len(short):
+        rep_header = [" ".join(" ".join(header).split()[:max(0, window // 2 - len(short))])]
+    first = "\n\n".join([caption, *header])
+    out = []
+    if len(caption.split()) > window:
+        out = split_text(caption, window=window, split_over=window)
+        first = "\n\n".join([" ".join(short), *header])
+    heads = [first, "\n\n".join([" ".join(short), *rep_header])]
+    windows, cur = [], []
+    for row in rows:
+        head = heads[1 if windows else 0]
+        size = len(head.split()) + sum(len(r.split()) for r in cur)
+        if cur and size + len(row.split()) > window:
+            windows.append("\n\n".join([head, *cur]))
+            cur = []
+        cur.append(row)
+    if cur:
+        windows.append("\n\n".join([heads[1 if windows else 0], *cur]))
+    return out + windows
+
+
 def load_chunks(root):
     """Passages du corpus, dans l'ordre des papiers puis des sections."""
     chunks = []
@@ -121,7 +167,8 @@ def load_chunks(root):
             if not line.strip():
                 continue
             s = json.loads(line)
-            for k, text in enumerate(split_text(s["text"])):
+            split = split_table if s["kind"] == "table" else split_text
+            for k, text in enumerate(split(s["text"])):
                 chunks.append({
                     "chunk_id": f"{s['id']}.{k}", "section_id": s["id"],
                     "paper_id": s["paper_id"], "kind": s["kind"], "section": s["section"],

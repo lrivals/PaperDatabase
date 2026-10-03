@@ -68,8 +68,28 @@ class TestCollect(unittest.TestCase):
                     f"{schema.WARN_TABLES_RECOVERED} : TABLE I"]}}))
             (root / "inbox").mkdir()
             s = status.collect(root, check_services=False)
-        self.assertEqual(s["tables"], [("p1", 2, 1)])
+        self.assertEqual(s["tables"], [("p1", 2, 1, 0)])
         self.assertIn("p1 (2 sans corps, 1 reconstruit(s))", status.render(s))
+
+    def test_flagged_tables_first(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "inbox").mkdir()
+            for pid, warns, text in (
+                    ("p1", [f"{schema.WARN_TABLES_LOST} : Table 3"], "Table 3: lost."),
+                    ("p2", [], "Table 1: Results.\n\nMethods | Average\n\nA | 0.5\n\nB | 0.7")):
+                (root / "papers" / pid).mkdir(parents=True)
+                (root / "papers" / pid / "metadata.json").write_text(json.dumps(
+                    {"id": pid, "axes": [], "status": {"fiche": "done"},
+                     "extraction": {"ok": True, "warnings": warns}}))
+                (root / "papers" / pid / "sections.jsonl").write_text(json.dumps(
+                    {"id": f"{pid}#000", "paper_id": pid, "kind": "table", "section": "Figures et tableaux",
+                     "subsection": None, "order": 0, "page": 1, "text": text}) + "\n")
+            s = status.collect(root, check_services=False)
+        self.assertEqual(s["tables"], [("p2", 0, 0, 1), ("p1", 1, 0, 0)])
+        self.assertEqual(s["flagged_tables"], [("p2", "p2#000", "Table 1", ["lost_columns"])])
+        self.assertIn("p2 (1 signalé(s))", status.render(s))
+        self.assertIn("p2#000\tTable 1\tlost_columns", status.render_tables(s))
 
 
 if __name__ == "__main__":

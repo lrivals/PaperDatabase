@@ -6,7 +6,7 @@
 
   base <command>            gère les bases : list, new, register, forget, use, info, check,
                             scan (articles utiles dans les autres bases), import ; base -h
-  status                    état de la base et prochaines actions
+  status [--tables]         état de la base et prochaines actions ; --tables : tableaux signalés
   add <id|doi|pdf>… [--from liste.txt] [--start-grobid]
                             ajoute des articles (arXiv, DOI, PDF local), ingère, réindexe
   ingest [--force] [pdf…]   ingère inbox/ (ou les PDF donnés), réindexe
@@ -110,6 +110,12 @@ def cmd_base(args):
 
 def cmd_status(args):
     from lib import bases, registry, status
+    if args == ["--tables"]:
+        print(status.render_tables({"flagged_tables": status.flagged_tables(ROOT)}))
+        return 0
+    if args:
+        print("usage : pdb status [--tables]", file=sys.stderr)
+        return 2
     name = registry.name_of(ROOT)
     print(f"Base : {base.CONFIG['name']}" + (f" ({name})" if name else " (non enregistrée)")
           + f"\n  {ROOT}")

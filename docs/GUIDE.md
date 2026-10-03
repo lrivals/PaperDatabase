@@ -336,7 +336,11 @@ L'extraction et la rédaction des fiches sont automatiques, donc faillibles. Cin
    marqués « à vérifier » dans `fulltext.md` : colonnes décalées ou perdues, fragments d'OCR
    possibles). Pour les tableaux encore sans corps, `bin/pdb ingest --reparse --tables
    docling <id>` essaie Docling, et `--ocr` s'ils sont en image (plusieurs minutes par
-   papier).
+   papier). Elle compte aussi les tableaux « signalés » par un contrôle de forme : cellules
+   vides, rangées irrégulières, plusieurs nombres dans une cellule, mots illisibles,
+   légende Docling mal rattachée. Les papiers qui en ont le plus viennent en tête ;
+   `bin/pdb status --tables` donne le détail, tableau par tableau, avant de recopier un
+   chiffre dans `benchmarks.csv`.
 2. **Recouper une fiche sur cinq** avec le PDF : chaque chiffre de `benchmarks.csv` doit
    exister dans le papier, à la section indiquée.
 3. **`bin/pdb reindex`** doit finir sans `erreur`. Une `note` est une remarque, pas un

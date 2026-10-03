@@ -82,14 +82,15 @@ def usable(rows):
     return sum(1 for c in cells if c) >= 0.5 * len(cells)
 
 
-def recover(blocks, found):
+def recover(blocks, found, ocr=False):
     """Complète en place les tableaux encore sans corps avec ceux de Docling.
 
     Rapprochement : même numéro de légende (Table 3 = TABLE III), à une page près ; sinon,
     parmi les tableaux sans numéro de la même page, le seul, ou celui de même rang vertical
     quand la page compte autant de tableaux Docling sans numéro que de blocs vides sans
     correspondant. Les grilles inexploitables (usable) sont écartées. Retourne
-    (reconstruits, perdus) : listes de libellés."""
+    (reconstruits, perdus) : listes de libellés. ocr : le cache vient d'un passage avec OCR
+    (table_source docling-ocr)."""
     empty = [b for b in blocks if b.kind == "table" and tables.body_chars(b) < tables.MIN_BODY_CHARS]
     found = [{**t, "n": tables.label_number(t.get("caption")), "rows": _clean(t["rows"])} for t in found or []]
     used, recovered, lost = set(), [], []
@@ -132,5 +133,18 @@ def recover(blocks, found):
         used.add(pick)
         pg = b.paras[0][1]
         b.paras = [(f"{b.paras[0][0]} {MARK}", pg)] + [(" | ".join(r), pg) for r in found[pick]["rows"]]
+        t = found[pick]
+        b.zone = (t["page"], *t["bbox"]) if t["page"] and t["bbox"] else None
+        b.table_source = "docling-ocr" if ocr else "docling"
         recovered.append(tables.label(b))
     return recovered, lost
+
+
+def matched_caption(cache, text):
+    """Légende (chaîne, éventuellement vide) du tableau Docling dont les rangées forment le
+    corps de ce tableau de sections.jsonl ; None si aucun ne correspond (lot E-d)."""
+    body = [p for p in text.split("\n\n") if p.strip()][1:]
+    for t in (cache or {}).get("tables") or []:
+        if body and [" | ".join(r) for r in _clean(t["rows"])] == body:
+            return t.get("caption") or ""
+    return None

@@ -91,6 +91,16 @@ class TestSectionRow(unittest.TestCase):
         self.assertTrue(schema.validate_section_row(section_row(page=0), PID, 0))
         self.assertTrue(schema.validate_section_row(section_row(text="  "), PID, 0))
 
+    def test_table_fields(self):
+        ok = section_row(kind="table", bbox=[50.0, 110, 300, 200.5], table_source="docling-ocr")
+        self.assertEqual(schema.validate_section_row(ok, PID, 0), [])
+        self.assertEqual(schema.validate_section_row(section_row(kind="table", table_source="grobid"), PID, 0), [])
+        self.assertTrue(schema.validate_section_row(section_row(bbox=[0, 0, 1, 1]), PID, 0))   # kind section
+        self.assertTrue(schema.validate_section_row(section_row(kind="table", table_source="ocr"), PID, 0))
+        for bad in ([50, 110, 300], [300, 110, 50, 200], [50, 110, 300, "200"], None):
+            self.assertTrue(schema.validate_section_row(section_row(kind="table", bbox=bad), PID, 0))
+        self.assertTrue(schema.validate_section_row(section_row(kind="table", quality={}), PID, 0))
+
 
 class TestRefRow(unittest.TestCase):
     def test_valid(self):

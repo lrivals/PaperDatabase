@@ -321,7 +321,7 @@ def process(pdf, force=False, use_grobid=True, tei_bytes=None, vocab=None, docli
                 cache = {"ocr": ocr, "tables": docling_tables.extract(pdf, ocr=ocr)}
                 docling_found = cache
             if cache:
-                by_docling, lost = docling_tables.recover(blocks, cache["tables"])
+                by_docling, lost = docling_tables.recover(blocks, cache["tables"], ocr=cache.get("ocr", False))
                 if by_docling:
                     warnings.append(f"{schema.WARN_TABLES_DOCLING} : {', '.join(by_docling)}")
         if lost:

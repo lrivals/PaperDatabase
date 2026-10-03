@@ -1316,8 +1316,12 @@ Défauts mis au jour, à corriger (tâche 12) :
   - [x] lot D-5 (03/10/2026), `pdb bench --comparable [accuracy|power]` : groupes par tâche,
     jeu, split, métrique (ou portée de puissance), comparaisons impossibles signalées ;
     consigne dans `/paper-ask` ;
-  - [ ] lot E, tableaux : bbox dans `sections.jsonl`, OCR par zone, index ligne par ligne
-    avec légende et en-tête, indicateurs de qualité, vérité terrain annotée ;
+  - [x] lot E-a, E-c, E-d (03/10/2026) : `bbox` et `table_source` dans `sections.jsonl`
+    (trois bases complétées sans changer le texte), index des grands tableaux par rangées
+    avec légende et en-tête répétés (`rag.split_table`), signaux de qualité par tableau
+    (`tables.quality`, `pdb status --tables`), `tables.label_number` corrigé pour les
+    légendes sans espace (« TABLE1. ») ;
+  - [ ] lot E-b et E-e : OCR par zone, vérité terrain annotée (`tables_gold.jsonl`) ;
   - [ ] lot F, recherche en français (requêtes multiples, modèle multilingue évalué, jeu
     ≥ 30 questions) ;
   - [ ] lot G, `pdb search` route de référence : en grande partie fait le 02/10/2026 (route CPU par défaut,

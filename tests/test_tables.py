@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT))
 import pymupdf  # noqa: E402
 
 from lib import tables  # noqa: E402
-from lib.doc import Block  # noqa: E402
+from lib.doc import Block, to_sections  # noqa: E402
 
 CAPTION = (50, 100, 300, 108)   # zone de la légende, comme GROBID la localise
 ROWS = [["Model", "FPS", "Power (W)"], ["YOLOv3-tiny", "55", "2.13"], ["YOLOv5n", "31", "4.8"]]
@@ -57,6 +57,20 @@ class RecoverTest(unittest.TestCase):
         body = [t for t, _ in b.paras[1:]]
         self.assertEqual(body[0], "Model | FPS | Power (W)")
         self.assertEqual(body[1], "YOLOv3-tiny | 55 | 2.13")
+        # zone du corps (sous la légende) et origine, reprises dans sections.jsonl (lot E-a)
+        self.assertEqual(b.table_source, "pymupdf")
+        self.assertEqual(b.zone[0], 1)
+        self.assertGreater(b.zone[2], CAPTION[3])
+        row = to_sections("p", [b])[0]
+        self.assertEqual(row["table_source"], "pymupdf")
+        self.assertEqual(row["bbox"], [round(float(x), 1) for x in b.zone[1:]])
+
+    def test_tei_zone_kept_for_grobid_tables(self):
+        row = to_sections("p", [table_block(rows=["Model | FPS"])])[0]
+        self.assertEqual((row["bbox"], row["table_source"]), ([50.0, 100.0, 300.0, 108.0], "grobid"))
+        # zone sur une autre page que la légende, ou absente : pas de bbox
+        self.assertNotIn("bbox", to_sections("p", [table_block(bbox=(2, *CAPTION))])[0])
+        self.assertNotIn("bbox", to_sections("p", [table_block(bbox=None)])[0])
 
     def test_no_table_on_page_is_reported_lost(self):
         make_pdf(self.pdf, with_table=False)
@@ -116,6 +130,12 @@ class DoclingRecoverTest(unittest.TestCase):
         self.assertEqual((rec, lost), (["TABLE III"], []))
         self.assertIn(docling_tables.MARK, b.paras[0][0])
         self.assertEqual([t for t, _ in b.paras[1:]][1], "YOLOv3-tiny | 55 | 2.13")
+        self.assertEqual((b.zone, b.table_source), ((4, 50, 110, 300, 200), "docling"))
+        self.assertNotIn("bbox", to_sections("p", [b])[0])   # corps page 4, légende page 3
+        b = self.block("Table 3: results")
+        docling_tables.recover([b], [self.found("Table 3", 3)], ocr=True)
+        row = to_sections("p", [b])[0]
+        self.assertEqual((row["bbox"], row["table_source"]), ([50.0, 110.0, 300.0, 200.0], "docling-ocr"))
 
     def test_same_page_without_caption(self):
         from lib import docling_tables
@@ -161,3 +181,46 @@ class DoclingRecoverTest(unittest.TestCase):
     def test_number(self):
         self.assertEqual([tables.number(x) for x in ("3", "IV", "xii", "A2", "B")], [3, 4, 12, 2, None])
         self.assertEqual(tables.label_number("TABLE IX: Comparison"), 9)
+        # légendes Docling sans espace
+        self.assertEqual([tables.label_number(x) for x in ("TABLE1. Summary", "Table2 Comparison", "TABLEIV.")],
+                         [1, 2, 4])
+
+
+class QualityTest(unittest.TestCase):
+    """Signaux de qualité d'un tableau (tables.quality, lot E-d)."""
+    VOCAB = {"model", "fps", "power", "methods", "average", "board", "results"}
+
+    def q(self, *rows, caption="Table 3: Results.", **kw):
+        return tables.quality("\n\n".join([caption, *rows]), self.VOCAB, **kw)
+
+    def test_clean_table(self):
+        self.assertEqual(self.q("Model | FPS | Power (W)", "| (fps) | (W)", "A | 55 | 2.1", "B | 31 | 4.8"), [])
+
+    def test_signals(self):
+        # FINN Table 3 : une colonne fusionnée sur deux rangées, deux nombres dans une cellule
+        finn = self.q("Name | Thr.put Latency | LUT", "SFC-max | 12361 k 0.31 | 91131",
+                      "CNV-max | 21.9 k | 283 | 46253", "SFC-fix | 12.2 k | 240 | 5155",
+                      "LFC-fix | 12.2 k | 282 | 5636")
+        self.assertEqual(finn, ["ragged", "merged_numbers"])
+        self.assertEqual(self.q("Methods | Average", "A | 0.5", "B | 0.7"), ["lost_columns"])
+        self.assertIn("no_header", self.q("1 | 2 | 3", "4 | 5 | 6"))
+        self.assertIn("empty_cells", self.q("Model | FPS | Power", "A |  | ", "B |  | 2"))
+        self.assertIn("ocr_suspect", self.q("Model | FPS", "A | 1O5", "B | 31"))
+        self.assertIn("ocr_suspect", self.q("Model | Notes", "A | arcths wvard aoees", "B | ok"))
+        # sans vocabulaire, les mots illisibles ne sont pas cherchés
+        self.assertEqual(tables.quality("Table 3.\n\nModel | Notes\n\nA | arcths wvard aoees\n\nB | ok"), [])
+
+    def test_caption_mismatch(self):
+        rows = ("Model | FPS", "A | 55", "B | 31")
+        self.assertEqual(self.q(*rows, docling_caption="TABLE3. Results"), [])
+        self.assertEqual(self.q(*rows, docling_caption="Table 4. Other"), ["caption_mismatch"])
+        self.assertEqual(self.q(*rows, docling_caption=""), ["caption_mismatch"])
+        self.assertEqual(self.q(*rows, caption="TABLE A: x", docling_caption="TABLE A: x"), [])
+
+    def test_matched_caption(self):
+        from lib import docling_tables
+        cache = {"tables": [{"caption": "T2", "rows": [["0", "1"], ["Model", "FPS"], ["A", "55"]]},
+                            {"caption": None, "rows": [["Model", "FPS"], ["B", "31"]]}]}
+        self.assertEqual(docling_tables.matched_caption(cache, "Table 2.\n\nModel | FPS\n\nA | 55"), "T2")
+        self.assertEqual(docling_tables.matched_caption(cache, "Table 5.\n\nModel | FPS\n\nB | 31"), "")
+        self.assertIsNone(docling_tables.matched_caption(cache, "Table 6.\n\nModel | FPS\n\nC | 1"))

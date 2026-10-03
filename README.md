@@ -161,7 +161,7 @@ Présentation sous forme d'article (principes, RAG, tests, évaluation) :
 ```bash
 bash bin/setup.sh              # crée .venv, installe requirements.txt
 bin/pdb grobid start           # GROBID sur localhost:8070
-bin/pdb status                 # état de la base et prochaines actions
+bin/pdb status                 # état de la base et prochaines actions (--tables : tableaux signalés)
 bin/pdb add 2507.18174         # un article arXiv (ou un DOI, un PDF local, --from liste.txt)
 bin/pdb discover               # papiers candidats à l'ajout (OpenAlex) → candidates.csv
 ```

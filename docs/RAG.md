@@ -95,6 +95,11 @@ pour retrouver un fait.
 - Une entrée de plus de 250 mots est coupée en fenêtres de 200 mots avec 40 mots de
   recouvrement : les modèles d'embeddings tronquent au-delà de 256 à 512 tokens, et une
   entrée non découpée perdrait sa fin.
+- Un tableau de plus de 250 mots est coupé par rangées entières, jusqu'à environ 200 mots,
+  sans recouvrement. Chaque fenêtre suivante reprend la légende, abrégée à sa première
+  phrase, et la ligne d'en-tête, avec la ligne d'unités si elle existe : une valeur reste
+  lisible avec sa colonne (`rag.split_table`, lot E-c, 03/10/2026). Une légende plus longue
+  qu'une fenêtre (de la prose captée avec le tableau) a ses propres fenêtres de mots.
 - Identifiant de passage : `chunk_id = <id de la section>.<k>`, par exemple
   `arxiv-1612.07119-finn-framework-fast-scalable-binarized#019.3`, `1612.07119#019.3` en
   forme courte. `k` commence à 0 ; une section non découpée a le seul passage `.0`. Un id de

@@ -22,6 +22,8 @@ class Block:
     heading: str | None = None                  # titre introduit par ce bloc, s'il y en a un
     page: int | None = None
     bbox: tuple | None = None                   # tableau : (page, x0, y0, x1, y1) de la zone TEI
+    zone: tuple | None = None                   # tableau reconstruit : (page, x0, y0, x1, y1) du corps
+    table_source: str | None = None             # tableau : origine du corps (schema.TABLE_SOURCES)
 
 
 _ROMAN_HEADING = re.compile(r"^([IVX]+)\.\s")
@@ -149,7 +151,7 @@ def to_sections(paper_id, blocks):
         pieces = [b.paras] if b.kind in ("figure", "table") else split_paragraphs(b.paras)
         for chunk in pieces:
             order = len(rows)
-            rows.append({
+            row = {
                 "id": f"{paper_id}#{order:03d}",
                 "paper_id": paper_id,
                 "kind": b.kind,
@@ -158,8 +160,21 @@ def to_sections(paper_id, blocks):
                 "order": order,
                 "page": chunk[0][1] if chunk[0][1] is not None else b.page,
                 "text": "\n\n".join(t for t, _ in chunk),
-            })
+            }
+            if b.kind == "table":
+                row.update(_table_fields(b, row["page"]))
+            rows.append(row)
     return rows
+
+
+def _table_fields(b, page):
+    """bbox (zone du corps reconstruit, sinon zone TEI ; seulement si elle est sur la page de
+    la ligne) et table_source (lot E-a, DATA_MODEL §5)."""
+    out = {"table_source": b.table_source or "grobid"}
+    zone = b.zone or b.bbox
+    if zone and zone[0] == page and zone[1] < zone[3] and zone[2] < zone[4]:
+        out = {"bbox": [round(float(x), 1) for x in zone[1:]], **out}
+    return out
 
 
 def _yaml_str(s):

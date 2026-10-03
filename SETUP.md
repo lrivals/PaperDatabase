@@ -84,6 +84,7 @@ PaperDatabase/
 │   ├── schema.py
 │   ├── refs.py             # rapprochement des références, classement des externes, citations
 │   ├── query.py            # requêtes N0 sans LLM (pdb bench, paper, cites)
+│   ├── claims.py           # claims.jsonl : contrôle des excerpts (reindex, pdb claims)
 │   ├── rag.py              # recherche de passages (pdb search, show, verify) ; moteur CPU
 │   │                       # par défaut, moteur Qwen si la route GPU est active (§10)
 │   ├── rag_models.py       # route GPU : modèles Qwen3 épinglés, détection CUDA, réglage pdb gpu
@@ -114,6 +115,7 @@ PaperDatabase/
 │   ├── test_evaluation.py  # métriques du banc sur de petits cas construits
 │   ├── test_refs.py
 │   ├── test_reindex.py     # notes benchmarks, mesures propres own-…
+│   ├── test_claims.py      # claims.jsonl : excerpts, nombres, passage modifié, reindex
 │   ├── test_query.py
 │   ├── test_rag.py         # encodeur factice
 │   ├── test_graph.py
@@ -127,8 +129,8 @@ PaperDatabase/
 │   ├── test_base.py        # base active, base.json minimal, classement
 │   ├── test_registry.py    # registre, ordre de résolution de la base active
 │   └── test_xbase.py       # scan entre bases, import, création, onglet Bases
-├── .claude/commands/       # /paper-add, /paper-fiche, /paper-gaps, /paper-discover, /paper-ask,
-│                           # /paper-research, /base-profile, /eval-answers
+├── .claude/commands/       # /paper-add, /paper-fiche, /paper-extract, /paper-gaps, /paper-discover,
+│                           # /paper-ask, /paper-research, /base-profile, /eval-answers
 ├── .claude/settings.json   # hook SubagentStop → bin/agent_log.py (journal des sous-agents)
 └── tests/ …
 ```
@@ -163,7 +165,8 @@ bases/<nom>/
         ├── fulltext.md     # texte nettoyé, sections en ## / ###
         ├── sections.jsonl  # une ligne par section, avec page
         ├── refs.jsonl      # références citées
-        └── fiche.md        # fiche de lecture
+        ├── fiche.md        # fiche de lecture
+        └── claims.jsonl    # preuves atomiques, s'il y a lieu (/paper-extract, DATA_MODEL §12)
 ```
 
 Les commandes Claude Code (`/paper-add`, `/paper-fiche`, `/paper-gaps`, `/paper-discover`) vivent dans
@@ -322,6 +325,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `gpu [status\|on\|off\|download]` | `lib/rag_models.py` | route GPU optionnelle : état (torch, CUDA, modèles, vecteurs de la base), activation (réglage de la machine dans `~/.config/pdb/config.json`, ou `PDB_GPU=1`), téléchargement des modèles : §10, [docs/RAG.md](docs/RAG.md) §13 |
 | `eval [--extract\|--rag\|--speed] [--gpu] [--answers DIR…] [--save] [--compare [JSON]]`, `eval --questions [JEU]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; réponses finales enregistrées (`--answers`, jeux `answers*.jsonl`, `--questions` les liste sans les attentes : [docs/EVAL.md](docs/EVAL.md) §10) ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
+| `claims <id>`, `claims [<id>] --check` | `lib/claims.py` | preuves atomiques d'un papier ; `--check` : schéma et excerpts contrôlés par `rag.verify` contre leur passage, comme `reindex` ([DATA_MODEL.md](DATA_MODEL.md) §12) |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
 | `plot [bench\|eval\|corpus\|all] [--only a,b] [--out DIR] [--format png\|pdf\|svg] [--list] [--stale] [--check [--brief]]` | `lib/plotdata.py`, `lib/plotfig.py` | figures statiques, voir ci-dessous |
 | `agents [--scan [--force]] [--report [--by task\|model\|base\|task-model] [--since D] [--worst N]] [--session ID] [--mark ID VERDICT]` | `lib/agentlog.py`, `lib/agentcost.py` | journal et coût des sous-agents Claude Code (`.cache/agents.jsonl` du dépôt), économie estimée de la délégation, calage sur le coût compté par Claude Code ; voir `bin/agent_log.py` ci-dessous |
@@ -1299,7 +1303,11 @@ Défauts mis au jour, à corriger (tâche 12) :
     dans `/paper-research` et les `CLAUDE.md` de base. Second run du banc (lexical seul) :
     hors corpus 6/6, 0 faux `absent`, citations 1,00, 22 verdicts sur 24 stables
     (EVAL.md §10) ;
-  - [ ] lot C, preuves atomiques `claims.jsonl` et skill `/paper-extract` ;
+  - [x] lot C, preuves atomiques `claims.jsonl` et skill `/paper-extract` (03/10/2026) :
+    `schema.validate_claim_row`, `lib/claims.py`, contrôle des excerpts dans `reindex`,
+    `pdb claims <id> [--check]`, DATA_MODEL §12. Essai sur FINN (fpga) : 32 claims, 100 %
+    des excerpts vérifiés. Restent : claims indexées par `lib/rag.py` et lues par
+    `/paper-ask`, extraction des autres papiers ;
   - [x] lot D-1 à D-4 (03/10/2026) : colonnes optionnelles de `benchmarks.csv` (`chunk_id`,
     `metric_def`, `dataset_split`, `input_res`, `batch`, `measure_protocol`,
     `original_value` ; `schema.check_header`), `pdb bench --add-columns` et `--check`

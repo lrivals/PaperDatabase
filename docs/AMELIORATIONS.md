@@ -1,6 +1,7 @@
 # Feuille de route : fiabilité des réponses, tableaux et nouveaux skills
 
-Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot D en place
+Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot C et
+`/paper-extract` en place (03/10/2026, sauf l'indexation des claims) ; lot D en place
 (03/10/2026) ; lot G en grande partie fait (route unique, RAG.md §13) ; lot I en place
 (03/10/2026, journal des sous-agents, calage sur le cost-state et économie estimée de la
 délégation, expérience appariée I-6 faite, sauf la révision chiffrée I-5e) ; autres lots non commencés. Elle décrit comment mettre en place les
@@ -159,6 +160,22 @@ utilisés pour `low_relevance` (`lib/evaluation.py:397`).
 ---
 
 ## Lot C — Preuves atomiques (`claims.jsonl`)
+
+> **En place le 03/10/2026** : `schema.validate_claim_row`, `lib/claims.py` (`check` :
+> schéma, doublons, `rag.verify` de chaque `excerpt` contre `source_chunk`), contrôle dans
+> `bin/reindex.py`, commande `pdb claims <id> [--check]`, skill `/paper-extract`,
+> [DATA_MODEL §12](../DATA_MODEL.md#12-claimsjsonl), `tests/test_claims.py`. Écarts à la
+> conception : champ optionnel `chunk_sha1` (seul moyen de produire `MODIFIÉ`, qui n'est
+> une note que si l'excerpt est encore dans le passage, sinon l'erreur l'emporte) ; un
+> `excerpt` trouvé dans un autre passage que `source_chunk` est une erreur ; note
+> supplémentaire quand un nombre du `text` ne figure pas dans la section du passage (une
+> claim dont l'excerpt est vérifié peut sinon porter des chiffres non sourcés). Premier
+> essai : FINN (fpga), un agent sonnet, 32 claims, 32 excerpts vérifiés, une note
+> légitime (valeur tirée d'un autre passage) ; test négatif (nombre altéré, mauvais
+> passage) → 2 erreurs, `reindex` en code 1. Banc `pdb eval --compare` : 0 écart. Reste :
+> indexation des claims dans `lib/rag.py` (optionnelle) et lecture par `/paper-ask`, sans
+> quoi l'acceptation « couverture des exigences `synthesis` du lot A » ne se mesure pas ;
+> extraction des autres papiers.
 
 **Constat.** La fiche (`fiche.md`) est un résumé de lecture ; les chiffres y portent leur
 source (`(Table 2)`), mais pas les affirmations qualitatives (méthode, limite, hypothèse), ni
@@ -884,7 +901,7 @@ de preuve et de citation comptent le plus), ensuite `/paper-compare`, `/table-re
 | 1 | **Lot A** (jeux et notation des réponses) | mesure commune de tout le reste |
 | 2 | **Lot B** (suffisance dans `/paper-ask`) | gain direct de fiabilité, sans code lourd |
 | 3 | **Lot D-1 à D-3** (`chunk_id`, colonnes optionnelles, `bench --check`) | traçabilité des nombres |
-| 4 | **Lot C** + `/paper-extract` | prépare comparaison et rédaction |
+| 4 | **Lot C** + `/paper-extract` | prépare comparaison et rédaction ; en place le 03/10/2026 (reste : lecture des claims par `/paper-ask`) |
 | 5 | **Lot E-a, E-c, E-d** (localisation, index, qualité) | rend les tableaux trouvables et contrôlables |
 | 6 | `/table-review`, puis **E-e** (vérité terrain) et **E-b** (OCR par zone) | E-b se juge sur E-e |
 | 7 | **Lot J-1 à J-3** (`pdb compare` tabulaire), puis `/paper-compare`, `/state-of-art` | J donne au skill une entrée déterministe ; le tout s'appuie sur C et D |

@@ -31,6 +31,9 @@
                             texte exact d'un passage (id court accepté : 1612.07119#019.0)
   verify <chunk_id> "<citation>" [--sha1 X]
                             la citation figure-t-elle dans le passage ? OK | APPROX | NOMBRES | ABSENT
+  claims <id> | claims [<id>] --check
+                            preuves atomiques d'un papier (claims.jsonl, /paper-extract) ;
+                            --check : excerpts vérifiés contre leur passage
   viz [--port N]            visualisation du corpus (http://127.0.0.1:8050)
   plot [bench|eval|corpus|all] [--only a,b] [--out DIR] [--format png|pdf|svg] [--list] [--stale]
   plot --check [--brief] [--paper ID]
@@ -551,6 +554,44 @@ def cmd_paper(args):
     return 0
 
 
+def cmd_claims(args):
+    import argparse
+    from lib import claims, query
+    p = argparse.ArgumentParser(prog="pdb claims", description=(
+        "Preuves atomiques d'un papier (papers/<id>/claims.jsonl, DATA_MODEL §12, "
+        "/paper-extract). --check : schéma et excerpts vérifiés contre leur passage "
+        "(comme reindex) ; sans papier, toute la base. Code 1 si erreur."))
+    p.add_argument("paper", nargs="?", help="id complet, id court ou mot du titre")
+    p.add_argument("--check", action="store_true")
+    a = p.parse_args(args)
+    metas = query.load_papers(ROOT)
+    short = query.short_ids(metas)
+    meta = None
+    if a.paper:
+        meta = _one_paper("pdb claims", a.paper, query.resolve(a.paper, metas), short)
+        if meta is None:
+            return 1
+    elif not a.check:
+        p.error("papier requis sans --check")
+    if a.check:
+        results, summary = claims.check(ROOT, None if meta is None else {meta["id"]})
+        print(claims.render(results, summary))
+        return 1 if any(r["level"] == claims.ERROR for r in results) else 0
+    path = ROOT / "papers" / meta["id"] / claims.FILENAME
+    if not path.exists():
+        print(f"# {meta['id']} : pas de {claims.FILENAME} (/paper-extract {meta['id']})")
+        return 0
+    print("claim\tkind\tvoice\tsource\ttext")
+    for _, row, err in claims.load(path):
+        if err:
+            continue
+        pid, _, rest = (row.get("source_chunk") or "").partition("#")
+        print("\t".join(str(x) for x in (
+            (row.get("claim_id") or "").rpartition("!")[2], row.get("kind"), row.get("voice"),
+            f"{short.get(pid, pid)}#{rest}", row.get("text"))))
+    return 0
+
+
 def _rag_index(rerank=False, gpu=False):
     from lib import rag
     return rag, rag.Index(ROOT, rerank=rerank, gpu=gpu)
@@ -1001,7 +1042,7 @@ COMMANDS = {
     "base": cmd_base, "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
     "eval": cmd_eval, "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
-    "verify": cmd_verify, "cites": cmd_cites, "cited-by": cmd_cited_by,
+    "verify": cmd_verify, "claims": cmd_claims, "cites": cmd_cites, "cited-by": cmd_cited_by,
     "rag": cmd_rag, "gpu": cmd_gpu, "synth": cmd_synth, "plot": cmd_plot,
 }
 

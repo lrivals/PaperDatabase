@@ -441,6 +441,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb ingest --reparse [id…]` | ré-extrait les papiers déjà ingérés depuis leur TEI, sans GROBID |
 | `bin/pdb ingest --reparse --tables docling [--ocr] [id…]` | idem, et Docling pour les tableaux restés sans corps (lent, optionnel : `requirements-docling.txt`) |
 | `bin/pdb search "<q>"`, `show <id>`, `verify <id> "<cit.>"` | passages, texte exact, contrôle d'une citation |
+| `bin/pdb claims <id>` / `claims [<id>] --check` | preuves atomiques d'un papier / contrôle des excerpts contre leur passage (DATA_MODEL §12) |
 | `bin/pdb gpu [on\|off\|status]` | route GPU optionnelle (Qwen3, CUDA) pour `search` ; `search --gpu\|--cpu` pour une seule requête |
 | `bin/pdb rag …` | outils de la route GPU : index de preuves, `acquire` / `approve` d'articles open access (RAG.md §13) |
 | `bin/pdb eval [--extract\|--rag\|--speed] [--gpu] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
@@ -459,6 +460,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 |---|---|
 | `/paper-add <arxiv \| doi \| pdf>` | ajoute et compare à la note de départ |
 | `/paper-fiche <paper_id>` | fiche de lecture et lignes de benchmark |
+| `/paper-extract <paper_id>` | preuves atomiques `claims.jsonl`, chacune liée à un passage vérifié (après la fiche) |
 | `/paper-gaps` | met à jour `gaps.md` |
 | `/paper-discover [axe \| gap \| mots-clés]` | propose des papiers à ajouter et attend votre accord |
 | `/paper-ask <question>` | réponse sourcée et vérifiée depuis la base (CPU, ou Qwen si la route GPU est active) |
@@ -471,6 +473,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `INDEX.md` | liste des papiers par axe | `reindex` (généré) |
 | `benchmarks.csv` | tous les chiffres, avec section source | `/paper-fiche` |
 | `papers/<id>/fiche.md` | lecture critique | `/paper-fiche` |
+| `papers/<id>/claims.jsonl` | preuves atomiques, contrôlées par `reindex` et `pdb claims --check` (DATA_MODEL §12) | `/paper-extract` |
 | `gaps.md` | zones non couvertes | `/paper-gaps` |
 | `external_refs.csv` | travaux cités mais absents | `reindex` (généré) |
 | `candidates.csv`, `candidates_arxiv.txt` | candidats à l'ajout | `discover` (généré, non versionné) |

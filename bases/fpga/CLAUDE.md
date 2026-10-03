@@ -82,6 +82,7 @@ chiffre à chiffre ([docs/EVAL.md](../../docs/EVAL.md) §6).
 | `bin/pdb cites <id>` / `bin/pdb cited-by <id>` | graphe de citations internes (`--external` : références hors base, avec leur nombre de citants) |
 | `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition + ingestion + réindexation (un DOI est résolu vers sa version arXiv via OpenAlex) |
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |
+| `/paper-extract <paper_id>` | écrit `claims.jsonl` : preuves atomiques liées à leur passage (fiche `done` requise) |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches `done` et `benchmarks.csv` |
 | `/paper-discover [axe \| gap \| mots-clés]` | cherche des candidats (OpenAlex), propose une liste courte, n'ajoute qu'après accord de l'utilisateur |
 | `/paper-research <question>` | **route GPU, sur demande seulement** (Qwen3, GPU CUDA, `bin/pdb gpu`) : recherche `bin/pdb rag` et acquisition d'articles open access, importés seulement après accord ; sans GPU, utiliser `/paper-ask` |

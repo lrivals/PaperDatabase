@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Régénère INDEX.md et external_refs.csv depuis papers/ et vérifie la cohérence de la base.
 
-Ne modifie jamais benchmarks.csv ni les fiches. Code de sortie 1 si une incohérence est trouvée.
+Ne modifie jamais benchmarks.csv, les fiches ni claims.jsonl. Code de sortie 1 si une incohérence est trouvée.
 """
 import csv
 import json
@@ -11,7 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lib import base, refs, schema  # noqa: E402
+from lib import base, claims, refs, schema  # noqa: E402
 
 ROOT = base.ROOT
 
@@ -191,6 +191,18 @@ def bench_notes(papers, rows, fronts):
     return notes
 
 
+def check_claims(root, problems, notes):
+    """claims.jsonl (DATA_MODEL §12) : schéma et excerpts vérifiés contre leur passage.
+    Rien à charger si aucun papier n'en a."""
+    results, summary = claims.check(root)
+    for r in results:
+        msg = f"{r['paper_id']} : claims.jsonl ligne {r['line']} : {r['msg']}"
+        (problems if r["level"] == claims.ERROR else notes).append(msg)
+    if summary["papers"]:
+        print(f"claims.jsonl : {summary['claims']} claims dans {summary['papers']} papier(s), "
+              f"{summary['verified']} excerpts vérifiés.")
+
+
 def gpu_indexes(root):
     """Route GPU (pdb gpu) : vecteurs Qwen de pdb search et index de pdb rag, s'il existe.
     Route désactivée : rien n'est encodé ; un index pdb rag existant est seulement signalé
@@ -255,6 +267,7 @@ def run(root=ROOT):
         path = root / "papers" / p["id"] / "fiche.md"
         fronts[p["id"]] = schema.read_front_matter(path.read_text()) if path.exists() else {}
     notes += bench_notes(papers, rows, fronts)
+    check_claims(root, problems, notes)
 
     (root / "INDEX.md").write_text(render(papers, rows) + "\n")
     ext = refs.external_ranking(refs.load_papers(root))

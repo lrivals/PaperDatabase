@@ -40,7 +40,7 @@ selon la tâche :
 | Tâche | Modèle |
 |---|---|
 | Mécanique : `/paper-add`, ingestion, réindexation, contrôle des métadonnées, recherche de DOI / arXiv, tri de `candidates.csv` | `haiku` |
-| Lecture et extraction : `/paper-fiche` (une fiche par agent), lignes de `benchmarks.csv`, `/paper-ask` factuel, exploration du code (`Explore`) | `sonnet` |
+| Lecture et extraction : `/paper-fiche` (une fiche par agent), `/paper-extract` (un papier par agent), lignes de `benchmarks.csv`, `/paper-ask` factuel, exploration du code (`Explore`) | `sonnet` |
 | Synthèse et jugement : `/paper-gaps`, `/base-profile`, problématique de thèse, comparaison critique d'articles, conception d'un changement du pipeline (`Plan`) | `opus` |
 
 Garder en direct ce qui est court (une commande, un fichier) : un agent démarre sans contexte.
@@ -54,7 +54,7 @@ principal refait les figures une seule fois.
 **Mesurer la délégation.** Un hook `SubagentStop` ([.claude/settings.json](.claude/settings.json),
 lié dans chaque base) journalise chaque sous-agent dans `.cache/agents.jsonl` (tokens, coût,
 durée, outils). Commencer la `description` de chaque agent par sa classe entre crochets :
-`[paper-add]`, `[paper-fiche]`, `[bench-rows]`, `[paper-ask]`, `[explore]`, `[paper-gaps]`,
+`[paper-add]`, `[paper-fiche]`, `[paper-extract]`, `[bench-rows]`, `[paper-ask]`, `[explore]`, `[paper-gaps]`,
 `[base-profile]`, `[compare]`, `[plan]`, `[doi-lookup]`, `[candidates]` (sinon : « autre »).
 Prompt d'agent : partir de [templates/agent-prompt.md](templates/agent-prompt.md). Après
 vérification du rapport : `bin/pdb agents --mark <id> repris|corrigé|refait`. Bilan :

@@ -162,5 +162,47 @@ class TestHeadings(unittest.TestCase):
         self.assertEqual([doc.roman_to_int(r) for r in ("I", "IV", "IX", "XIV")], [1, 4, 9, 14])
 
 
+def claim_row(**kw):
+    row = {"claim_id": f"{PID}!c07", "kind": "résultat",
+           "text": "Le détecteur atteint 45 FPS sur ZCU104.", "voice": "auteurs",
+           "source_chunk": f"{PID}#017.0", "excerpt": "reaches 45 FPS on the ZCU104",
+           "conditions": {"dataset": "COCO", "batch": "1", "power_scope": "board"},
+           "benchmark_row": 2, "caveats": ["mAP mesurée en flottant"], "chunk_sha1": "0123abcd"}
+    row.update(kw)
+    return row
+
+
+class TestClaimRow(unittest.TestCase):
+    def test_valid(self):
+        self.assertEqual(schema.validate_claim_row(claim_row(), PID, n_bench_rows=3), [])
+        minimal = {k: claim_row()[k] for k in schema.CLAIM_REQUIRED}
+        self.assertEqual(schema.validate_claim_row(minimal, PID), [])
+        self.assertEqual(schema.validate_claim_row(claim_row(benchmark_row=None, conditions=None,
+                                                             source_chunk="2507.18174#017.0"), PID), [])
+        self.assertEqual(schema.validate_claim_row(claim_row(conditions={"power_scope": "n/r"}), PID), [])
+
+    def test_keys(self):
+        row = claim_row()
+        del row["excerpt"]
+        self.assertIn("manquante", schema.validate_claim_row(row, PID)[0])
+        self.assertIn("inconnue", schema.validate_claim_row(claim_row(note="x"), PID)[0])
+        self.assertTrue(schema.validate_claim_row(claim_row(text="  "), PID))
+        self.assertTrue(schema.validate_claim_row([], PID))
+
+    def test_invalid_values(self):
+        bad = [
+            dict(claim_id="autre-papier!c07"), dict(claim_id=f"{PID}#c07"), dict(claim_id=f"{PID}!c7"),
+            dict(kind="résultats"), dict(voice="lecteur"), dict(source_chunk="017.0"),
+            dict(conditions=["COCO"]), dict(conditions={"batch": ""}), dict(conditions={"batch": 1}),
+            dict(conditions={"power_scope": "wall"}),
+            dict(benchmark_row=0), dict(benchmark_row=True), dict(benchmark_row="2"),
+            dict(caveats="une réserve"), dict(caveats=[""]),
+            dict(chunk_sha1="xyz"), dict(chunk_sha1="0123"),
+        ]
+        for kw in bad:
+            self.assertTrue(schema.validate_claim_row(claim_row(**kw), PID), kw)
+        self.assertIn("que 1 ligne", schema.validate_claim_row(claim_row(), PID, n_bench_rows=1)[0])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -3,7 +3,7 @@
 Contrat de données de la base. Toute modification de schéma se répercute dans
 `lib/schema.py`, qui est le seul endroit où il est codé. `bin/reindex.py` vérifie chaque
 fichier décrit ici (forme du `paper_id`, `metadata.json`, front-matter de `fulltext.md` et
-`fiche.md`, chaque ligne de `sections.jsonl`, `refs.jsonl` et `benchmarks.csv`) et sort en
+`fiche.md`, chaque ligne de `sections.jsonl`, `refs.jsonl`, `claims.jsonl` et `benchmarks.csv`) et sort en
 erreur au premier écart.
 
 Convention qui prime sur toutes les autres : **une valeur non rapportée par les auteurs
@@ -551,3 +551,50 @@ base seulement. Bases actuelles :
 Dans un clone neuf,
 enregistrer les bases une fois : `bin/pdb base register bases/fpga --name fpga`,
 `bin/pdb base register bases/drone --name drone` et `bin/pdb base register bases/stage --name stage`.
+
+---
+
+## 12. `claims.jsonl`
+
+Preuves atomiques d'un papier (lot C de [docs/AMELIORATIONS.md](docs/AMELIORATIONS.md#lot-c--preuves-atomiques-claimsjsonl)) :
+`papers/<id>/claims.jsonl`, une ligne JSON par affirmation vérifiable, écrit par
+`/paper-extract` à partir d'une fiche `done`. Fichier facultatif : un papier sans
+`claims.jsonl` reste valide. La claim aide à retrouver la preuve ; la citation finale reste
+toujours le passage (`source_chunk`), jamais la claim.
+
+```json
+{"claim_id": "<paper_id>!c07", "kind": "résultat",
+ "text": "Le détecteur atteint 45 FPS sur ZCU104 à 8 W (carte).",
+ "voice": "auteurs",
+ "source_chunk": "<paper_id>#017.0", "chunk_sha1": "3f9a01bc",
+ "excerpt": "…texte exact du passage…",
+ "conditions": {"dataset": "COCO", "split": "val2017", "resolution": "416x416",
+                "batch": "1", "precision": "INT8", "power_scope": "board",
+                "protocol": "n/r"},
+ "benchmark_row": 3, "caveats": ["mAP mesurée en flottant, pas sur la cible"]}
+```
+
+| Clé | Obligatoire | Contenu |
+|---|---|---|
+| `claim_id` | oui | `<paper_id>!c<NN>` (au moins deux chiffres), unique dans le fichier |
+| `kind` | oui | `résultat` \| `méthode` \| `limite` \| `hypothèse` \| `contexte` |
+| `text` | oui | l'affirmation, en français, nombres avec leur unité |
+| `voice` | oui | `auteurs` (le passage l'affirme) \| `déduit` (interprétation du lecteur, appuyée sur le passage) |
+| `source_chunk` | oui | passage qui l'établit, du même papier ; id complet ou court (`pdb show`) |
+| `excerpt` | oui | extrait copié du passage, vérifié par `rag.verify` |
+| `chunk_sha1` | non | 8 à 40 caractères du sha1 du passage lors de l'extraction (`sha1:` de `pdb show`) |
+| `conditions` | non | objet texte → texte : `dataset`, `split`, `resolution`, `batch`, `precision`, `platform`, `power_scope`, `protocol`… ; `n/r` plutôt que vide, jamais d'estimation ; `power_scope` selon §7 ou `n/r` |
+| `benchmark_row` | non | rang (1, 2, …) de la ligne de `benchmarks.csv` que la claim transcrit, parmi les lignes du papier dans l'ordre du fichier ; `null` sinon. Même preuve, pas une confirmation |
+| `caveats` | non | liste de réserves (textes non vides) |
+
+Toute autre clé est une erreur. `bin/reindex.py` contrôle chaque fichier
+(`schema.validate_claim_row`, `lib/claims.check`) et ne le modifie jamais :
+
+- **erreurs** : schéma, `claim_id` en double, ligne JSON illisible, `benchmark_row` au-delà
+  des lignes du papier, `source_chunk` introuvable ou d'un autre papier, `excerpt` `ABSENT`
+  ou `NOMBRES`, `excerpt` trouvé dans un autre passage que `source_chunk` (à corriger) ;
+- **note** : `MODIFIÉ`, le passage a changé depuis l'extraction (`chunk_sha1`, papier
+  ré-extrait) ; relancer `/paper-extract`.
+
+`bin/pdb claims <id>` liste les claims d'un papier ; `bin/pdb claims [<id>] --check` fait le
+même contrôle que `reindex`, sans réindexer.

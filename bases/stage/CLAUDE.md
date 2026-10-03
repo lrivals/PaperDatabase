@@ -55,6 +55,7 @@ vérifier avant de les citer.
 | `bin/pdb cites <id>` / `bin/pdb cited-by <id>` | graphe de citations internes |
 | `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition + ingestion + réindexation |
 | `/paper-fiche <paper_id>` | remplit `fiche.md` et les lignes de `benchmarks.csv` |
+| `/paper-extract <paper_id>` | écrit `claims.jsonl` : preuves atomiques liées à leur passage (fiche `done` requise) |
 | `/paper-gaps` | met à jour `gaps.md` |
 | `/paper-discover [axe \| gap \| mots-clés]` | candidats (autres bases, puis OpenAlex) ; ajoute après accord |
 | `bin/pdb viz` | visualisation (graphe 3D, généalogie, onglet Bases) |

@@ -64,48 +64,53 @@
   "file": "eval_retrieval.png",
   "group": "eval",
   "description": "recall@5/@10 et MRR par mode et jeu de questions",
-  "generated": "2026-09-28T10:43:41",
+  "generated": "2026-10-03T22:08:21",
+  "config_hash": "06b5f07886",
   "sources": [
-   "eval/results/2026-09-28T1039-76dc85e.json"
+   "eval/results/2026-10-03T2208-1d8ea51.json"
   ],
-  "run": "2026-09-28T1039 · 76dc85e"
+  "run": "2026-10-03T2208 · 1d8ea51"
  },
  "eval_verify": {
   "file": "eval_verify.png",
   "group": "eval",
   "description": "verdicts de pdb verify par perturbation",
-  "generated": "2026-09-28T10:43:41",
+  "generated": "2026-10-03T22:08:21",
+  "config_hash": "06b5f07886",
   "sources": [
-   "eval/results/2026-09-28T1039-76dc85e.json"
+   "eval/results/2026-10-03T2208-1d8ea51.json"
   ],
-  "run": "2026-09-28T1039 · 76dc85e"
+  "run": "2026-10-03T2208 · 1d8ea51"
  },
  "eval_extraction": {
   "file": "eval_extraction.png",
   "group": "eval",
   "description": "couverture du texte et tableaux, par papier",
-  "generated": "2026-09-28T10:43:42",
+  "generated": "2026-10-03T22:08:23",
+  "config_hash": "06b5f07886",
   "sources": [
-   "eval/results/2026-09-28T1039-76dc85e.json"
+   "eval/results/2026-10-03T2208-1d8ea51.json"
   ],
-  "run": "2026-09-28T1039 · 76dc85e",
-  "n": 45
+  "run": "2026-10-03T2208 · 1d8ea51",
+  "n": 101
  },
  "eval_latency": {
   "file": "eval_latency.png",
   "group": "eval",
   "description": "temps d'exécution (recherche, verify, CLI)",
-  "generated": "2026-09-28T10:43:42",
+  "generated": "2026-10-03T22:08:23",
+  "config_hash": "06b5f07886",
   "sources": [
-   "eval/results/2026-09-28T1039-76dc85e.json"
+   "eval/results/2026-10-03T2208-1d8ea51.json"
   ],
-  "run": "2026-09-28T1039 · 76dc85e"
+  "run": "2026-10-03T2208 · 1d8ea51"
  },
  "eval_history": {
   "file": "eval_history.png",
   "group": "eval",
   "description": "évolution des métriques au fil des runs",
-  "generated": "2026-09-28T10:43:42",
+  "generated": "2026-10-03T22:08:23",
+  "config_hash": "06b5f07886",
   "sources": [
    "eval/results/2026-09-26T0051-80aa05e-dirty.json",
    "eval/results/2026-09-26T0100-80aa05e-dirty.json",
@@ -116,7 +121,10 @@
    "eval/results/2026-09-26T0136-80aa05e-dirty.json",
    "eval/results/2026-09-26T0140-80aa05e-dirty.json",
    "eval/results/2026-09-26T2044-65074b7.json",
-   "eval/results/2026-09-28T1039-76dc85e.json"
+   "eval/results/2026-09-28T1039-76dc85e.json",
+   "eval/results/2026-10-02T1111-353e788-dirty.json",
+   "eval/results/2026-10-02T1358-c90d749.json",
+   "eval/results/2026-10-03T2208-1d8ea51.json"
   ]
  },
  "corpus_years": {

@@ -75,6 +75,7 @@ Chaque article devient un dossier `papers/<paper_id>/` :
 | `sections.jsonl` | une ligne par section avec son type (abstract, section, figure, table) et sa **page** |
 | `refs.jsonl` | références citées : titre, auteurs, année, DOI, arXiv id |
 | `fiche.md` | fiche de lecture : problème, méthode, résultats, limites, pertinence, lu vs déduit |
+| `claims.jsonl` | preuves atomiques (facultatif) : une affirmation par ligne, avec son passage et un extrait vérifié à la réindexation |
 | `paper.pdf`, `grobid.tei.xml` | preuve et trace d'extraction, non versionnés |
 | `docling_tables.json` | tableaux lus par Docling, s'il a été lancé (trace, relue par `--reparse`) |
 
@@ -133,6 +134,7 @@ distinguer le lu du déduit, relever les comparaisons biaisées. Cinq commandes 
 |---|---|
 | `/paper-add <arxiv-id \| url \| doi \| chemin.pdf>` | acquisition, ingestion et réindexation |
 | `/paper-fiche <paper_id>` | remplit la fiche et ajoute les lignes de `benchmarks.csv`, chaque chiffre avec sa section source |
+| `/paper-extract <paper_id>` | écrit `claims.jsonl` : 10 à 40 preuves atomiques, chacune liée à un passage vérifié (fiche `done` requise) |
 | `/paper-ask <question>` | réponse sourcée : `bench`, puis `search`, `show`, `verify` ; chaque citation vérifiée |
 | `/paper-discover [axe \| gap \| mots-clés]` | candidats via OpenAlex (citations du corpus, recherche), liste courte, ajout après accord |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches terminées et les benchmarks |
@@ -436,7 +438,7 @@ protocole d'expérience ([docs/experiences/](bases/fpga/docs/experiences/)). L'a
 | [SETUP.md](SETUP.md) | installation, rôle de chaque script, flux de travail, vérification, tâches |
 | [docs/RAG.md](docs/RAG.md) | requêtes sans LLM et recherche de passages : spécification, évaluation, essai réel |
 | [docs/EVAL.md](docs/EVAL.md) | banc d'évaluation du logiciel (`pdb eval`) : protocole, résultats de référence, corrections mesurées |
-| [DATA_MODEL.md](DATA_MODEL.md) | schémas : `paper_id`, `metadata.json`, `sections.jsonl`, `refs.jsonl`, `benchmarks.csv`, fiche |
+| [DATA_MODEL.md](DATA_MODEL.md) | schémas : `paper_id`, `metadata.json`, `sections.jsonl`, `refs.jsonl`, `benchmarks.csv`, fiche, `claims.jsonl` |
 | [CLAUDE.md](CLAUDE.md), [bases/fpga/CLAUDE.md](bases/fpga/CLAUDE.md), [bases/drone/CLAUDE.md](bases/drone/CLAUDE.md), [bases/stage/CLAUDE.md](bases/stage/CLAUDE.md) | pour l'agent : dépôt du code ; mode d'emploi et règles de travail de chaque base |
 | [bases/fpga/INDEX.md](bases/fpga/INDEX.md), [bases/drone/INDEX.md](bases/drone/INDEX.md), [bases/stage/INDEX.md](bases/stage/INDEX.md) | index des articles, par base |
 | [bases/fpga/gaps.md](bases/fpga/gaps.md), [bases/drone/gaps.md](bases/drone/gaps.md), [bases/stage/gaps.md](bases/stage/gaps.md) | cartes des gaps, par base |

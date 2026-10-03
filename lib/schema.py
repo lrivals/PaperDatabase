@@ -199,6 +199,69 @@ def validate_benchmark_row(row):
     return errs
 
 
+# --- claims.jsonl (DATA_MODEL §12) : preuves atomiques, chacune liée à un passage ----------
+
+CLAIM_KINDS = ("résultat", "méthode", "limite", "hypothèse", "contexte")
+CLAIM_VOICES = ("auteurs", "déduit")
+CLAIM_REQUIRED = ("claim_id", "kind", "text", "voice", "source_chunk", "excerpt")
+CLAIM_OPTIONAL = ("conditions", "benchmark_row", "caveats", "chunk_sha1")
+CLAIM_ID_RE = re.compile(r"^(?P<pid>[^!\s]+)!c\d{2,}$")
+SHA_PREFIX_RE = re.compile(r"^[0-9a-f]{8,40}$")
+
+
+def validate_claim_row(row, paper_id, n_bench_rows=None):
+    """Une ligne de claims.jsonl (schéma seul : l'excerpt est contrôlé par lib/claims.check).
+    n_bench_rows : nombre de lignes du papier dans benchmarks.csv, borne de benchmark_row."""
+    if not isinstance(row, dict):
+        return ["objet JSON attendu"]
+    missing = [k for k in CLAIM_REQUIRED if k not in row]
+    if missing:
+        return [f"clé(s) manquante(s) : {', '.join(missing)}"]
+    errs = []
+    unknown = sorted(k for k in row if k not in CLAIM_REQUIRED + CLAIM_OPTIONAL)
+    if unknown:
+        errs.append(f"clé(s) inconnue(s) : {', '.join(unknown)}")
+    for k in CLAIM_REQUIRED:
+        if not isinstance(row[k], str) or not row[k].strip():
+            errs.append(f"{k} vide ou non textuel")
+    if errs:
+        return errs
+    m = CLAIM_ID_RE.match(row["claim_id"])
+    if not m or m.group("pid") != paper_id:
+        errs.append(f"claim_id = {row['claim_id']!r} : {paper_id}!c<NN> attendu")
+    if row["kind"] not in CLAIM_KINDS:
+        errs.append(f"kind = {row['kind']!r} : {' | '.join(CLAIM_KINDS)}")
+    if row["voice"] not in CLAIM_VOICES:
+        errs.append(f"voice = {row['voice']!r} : {' | '.join(CLAIM_VOICES)}")
+    if not CHUNK_ID_RE.match(row["source_chunk"]):
+        errs.append(f"source_chunk = {row['source_chunk']!r} : forme <paper_id>#<section>.<k> attendue")
+    cond = row.get("conditions")
+    if cond is not None:
+        if not isinstance(cond, dict):
+            errs.append("conditions doit être un objet")
+        else:
+            for k, v in cond.items():
+                if not isinstance(v, str) or not v.strip():
+                    errs.append(f"conditions.{k} vide ou non textuel : écrire n/r")
+            scope = cond.get("power_scope")
+            if isinstance(scope, str) and scope not in (NR, *POWER_SCOPES):
+                errs.append(f"conditions.power_scope = {scope!r} : {' | '.join(POWER_SCOPES)} | n/r")
+    br = row.get("benchmark_row")
+    if br is not None:
+        if not isinstance(br, int) or isinstance(br, bool) or br < 1:
+            errs.append(f"benchmark_row = {br!r} : entier ≥ 1 ou null")
+        elif n_bench_rows is not None and br > n_bench_rows:
+            errs.append(f"benchmark_row = {br} : le papier n'a que {n_bench_rows} ligne(s) dans benchmarks.csv")
+    cav = row.get("caveats")
+    if cav is not None and (not isinstance(cav, list)
+                            or not all(isinstance(c, str) and c.strip() for c in cav)):
+        errs.append("caveats doit être une liste de textes non vides")
+    sha = row.get("chunk_sha1")
+    if sha is not None and not (isinstance(sha, str) and SHA_PREFIX_RE.match(sha)):
+        errs.append(f"chunk_sha1 = {sha!r} : 8 à 40 caractères hexadécimaux")
+    return errs
+
+
 # --- paper_id, sections.jsonl, refs.jsonl, front-matter -------------------------------
 
 _SLUG = r"[a-z0-9]+(?:-[a-z0-9]+)*"

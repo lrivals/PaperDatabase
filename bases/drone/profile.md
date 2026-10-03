@@ -86,3 +86,4 @@ avions, drone racing, vol agile, VIO, MPC, sim-to-real.
 - 2026-09-28 — « AAV » ajouté à topic_re / title_topic_re ; détection applicative (feux) incluse, tag wildfire — YOLOX FPGA feux de forêt.
 - 2026-09-28 — localisation non visuelle exclue ; LAND gardé comme contexte (tag hors-perimetre).
 - 2026-09-28 — règles de tags resserrées (ground-to-air, air-to-air, bird-rejection, drone-racing) ; pénalité regex « fixed camera » écartée (faux positifs, ex. UAVDT).
+- 2026-10-03 — bloc `plot` de `base.json` : classes de tâches propres (suivi, navigation / odométrie, pose, segmentation, VLM) et famille « neuromorphique » (Loihi) — 17 % des lignes de `benchmarks.csv` avaient une tâche « autre » (`pdb plot --check`), ramenées à 2 %.

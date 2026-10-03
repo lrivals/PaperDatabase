@@ -28,7 +28,26 @@ REQUIRED = ("name", "axes")
 # Clés facultatives : une base neuve n'a que son nom et ses axes ; /base-profile complète
 # le reste. topic_re et title_topic_re vides : tout candidat est « dans le sujet ».
 DEFAULTS = {"axis_rules": {}, "axis_queries": {}, "hardware_axes": [], "topic_re": "",
-            "title_topic_re": "", "topic_min_hits": 2, "tag_rules": [], "plot_tasks": []}
+            "title_topic_re": "", "topic_min_hits": 2, "tag_rules": [], "plot_tasks": [],
+            "plot": {}}
+
+# Bloc `plot` (DATA_MODEL §11.2.1) : réglages de pdb plot propres à la base. Les noms de
+# figures et les classes de tâches par défaut vivent ici (pas dans lib/plotdata, qui importe
+# schema, qui importe ce module) ; lib/plotfig vérifie que ses FIGURES y correspondent.
+PLOT_KEYS = ("tasks", "families", "split_task", "skip", "min_rows", "max_other", "auto")
+PLOT_FIGURES = (
+    "bench_fps_power", "bench_gops_per_watt", "bench_fpga_resources", "bench_accuracy_fps",
+    "bench_accuracy_latency", "bench_quantization", "eval_retrieval", "eval_verify",
+    "eval_extraction", "eval_latency", "eval_history", "corpus_years", "corpus_axes",
+    "corpus_bench_coverage", "corpus_citations", "corpus_gaps")
+# Ordre des règles : la première qui correspond l'emporte (« anomaly detection » → anomalie).
+DEFAULT_PLOT_TASKS = (
+    ("apprentissage continu", r"continual|incremental"),
+    ("anomalie", r"anomaly"),
+    ("compression / AE", r"compression|autoencoder"),
+    ("détection", r"detection"),
+    ("classification", r"classification"),
+)
 
 
 def data_root(env=None, cwd=None):
@@ -61,13 +80,50 @@ def load_config(root, path=None):
     if unknown:
         raise ValueError(f"{path} : axes non déclarés dans \"axes\" : {sorted(unknown)}")
     rules = [*cfg["axis_rules"].values(), cfg["topic_re"], cfg["title_topic_re"],
-             *(r[0] for r in cfg["tag_rules"]), *(r[1] for r in cfg["plot_tasks"])]
+             *(r[0] for r in cfg["tag_rules"])]
     for rx in rules:
         try:
             re.compile(rx)
         except re.error as e:
             raise ValueError(f"{path} : regex invalide {rx!r} : {e}") from None
+    cfg["plot"] = _plot_config(path, cfg)
     return cfg
+
+
+def _plot_config(path, cfg):
+    """Bloc `plot` validé ; l'ancienne clé plot_tasks tient lieu de plot.tasks."""
+    plot = {} if cfg.get("plot") is None else cfg["plot"]
+    if not isinstance(plot, dict):
+        raise ValueError(f"{path} : plot doit être un objet")
+    plot = dict(plot)
+    unknown = set(plot) - set(PLOT_KEYS)
+    if unknown:
+        raise ValueError(f"{path} : clés inconnues dans plot : {sorted(unknown)} "
+                         f"(attendues : {', '.join(PLOT_KEYS)})")
+    if not plot.get("tasks") and cfg.get("plot_tasks"):
+        plot["tasks"] = cfg["plot_tasks"]
+    for key in ("tasks", "families"):
+        for rule in plot.get(key) or ():
+            if not (isinstance(rule, (list, tuple)) and len(rule) == 2):
+                raise ValueError(f"{path} : plot.{key} : [libellé, regex] attendu, pas {rule!r}")
+            try:
+                re.compile(rule[1])
+            except re.error as e:
+                raise ValueError(f"{path} : plot.{key} : regex invalide {rule[1]!r} : {e}") from None
+    figs = [*(plot.get("skip") or ()), *(plot.get("min_rows") or {})]
+    bad = [f for f in figs if f not in PLOT_FIGURES]
+    if bad:
+        raise ValueError(f"{path} : plot : figure(s) inconnue(s) {bad} (pdb plot --list)")
+    labels = [label for label, _ in plot.get("tasks") or DEFAULT_PLOT_TASKS]
+    if "split_task" in plot and plot["split_task"] not in labels:
+        raise ValueError(f"{path} : plot.split_task {plot['split_task']!r} n'est pas une classe "
+                         f"de tâche ({', '.join(labels)})")
+    if not isinstance(plot.get("auto", True), bool):
+        raise ValueError(f"{path} : plot.auto doit valoir true ou false")
+    mo = plot.get("max_other", 0.10)
+    if not isinstance(mo, (int, float)) or not 0 <= mo <= 1:
+        raise ValueError(f"{path} : plot.max_other doit être une part entre 0 et 1")
+    return plot
 
 
 # --- classement d'un texte selon les règles d'une base --------------------------------

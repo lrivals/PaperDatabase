@@ -13,7 +13,8 @@
   ingest --reparse [--tables docling [--ocr]] [id…]
                             ré-extrait les papiers déjà ingérés depuis leur TEI (sans GROBID) ;
                             --tables docling : Docling sur les tableaux restés sans corps
-  reindex                   régénère INDEX.md et external_refs.csv, vérifie la cohérence
+  reindex [--no-plot]       régénère INDEX.md et external_refs.csv, vérifie la cohérence,
+                            refait les figures périmées (add, ingest : --no-plot aussi)
   discover [options]        cherche des papiers candidats (OpenAlex) → candidates.csv
   grobid start|stop|status  pilote le conteneur GROBID
   bench [filtres] [--cols a,b] [--sort col [--desc]] [-n N] [--format tsv|md|json]
@@ -31,7 +32,8 @@
   verify <chunk_id> "<citation>" [--sha1 X]
                             la citation figure-t-elle dans le passage ? OK | APPROX | NOMBRES | ABSENT
   viz [--port N]            visualisation du corpus (http://127.0.0.1:8050)
-  plot [bench|eval|corpus|all] [--only a,b] [--out DIR] [--format png|pdf|svg] [--list]
+  plot [bench|eval|corpus|all] [--only a,b] [--out DIR] [--format png|pdf|svg] [--list] [--stale]
+  plot --check [--brief] [--paper ID]
                             figures statiques : benchmarks, évaluation, statistiques du corpus
   eval [--extract|--rag|--speed] [--gpu] [--save] [--compare [JSON]]
                             banc d'évaluation du logiciel (docs/EVAL.md)
@@ -111,9 +113,26 @@ def cmd_status(args):
     return 0
 
 
+def _refresh_figures(groups):
+    """Fin d'une commande qui change les sources des figures sans passer par reindex
+    (pdb eval --save, pdb bench --add-columns) : figures périmées refaites ou signalées."""
+    from lib import plotrun
+    lines, notes = plotrun.auto_refresh(ROOT, groups=groups)
+    for line in [*lines, *(f"note    {n}" for n in notes)]:
+        print(line)
+
+
+def _no_plot(args):
+    """--no-plot : la réindexation finale ne régénère pas les figures (PDB_NO_PLOT)."""
+    if "--no-plot" in args:
+        os.environ["PDB_NO_PLOT"] = "1"
+    return [a for a in args if a != "--no-plot"]
+
+
 def cmd_add(args):
     import add
     import reindex
+    args = _no_plot(args)
     start = "--start-grobid" in args
     args = [a for a in args if a != "--start-grobid"]
     if not args or args[0] in ("-h", "--help"):
@@ -128,6 +147,7 @@ def cmd_add(args):
 def cmd_ingest(args):
     import ingest
     import reindex
+    args = _no_plot(args)
     if args and args[0] in ("-h", "--help"):
         print(ingest.__doc__)
         return 0
@@ -147,6 +167,7 @@ def cmd_ingest(args):
 
 def cmd_reindex(args):
     import reindex
+    _no_plot(args)
     return reindex.run()
 
 
@@ -165,68 +186,115 @@ def cmd_viz(args):
 
 def cmd_plot(args):
     import argparse
-    from datetime import datetime
     p = argparse.ArgumentParser(prog="pdb plot", description=(
         "Figures statiques (matplotlib) : benchmarks.csv, eval/results, statistiques du "
-        "corpus. Écrit aussi manifest.json (sources et effectifs de chaque figure)."))
+        "corpus. Écrit aussi manifest.json (sources et effectifs de chaque figure). "
+        "Réglages par base : bloc plot de base.json (DATA_MODEL §11.2.1)."))
     p.add_argument("group", nargs="?", default="all", choices=("bench", "eval", "corpus", "all"))
-    p.add_argument("--only", help="noms de figures séparés par des virgules (voir --list)")
+    p.add_argument("--only", help="noms de figures séparés par des virgules (voir --list) ; "
+                                  "passe outre plot.skip")
     p.add_argument("--out", default=str(ROOT / "figures"), help="dossier de sortie (figures/)")
-    p.add_argument("--format", default="png", choices=("png", "pdf", "svg"))
+    p.add_argument("--format", choices=("png", "pdf", "svg"),
+                   help="png par défaut ; sans --format, une figure garde son format du manifest")
     p.add_argument("--list", action="store_true", help="liste les figures sans rien générer")
+    p.add_argument("--stale", action="store_true",
+                   help="ne régénère que les figures périmées (source ou réglages plus récents)")
+    p.add_argument("--check", action="store_true",
+                   help="classement des plateformes et tâches pour les figures, bloc plot proposé "
+                        "(sans matplotlib, n'écrit rien)")
+    p.add_argument("--brief", action="store_true", help="avec --check : alertes seulement")
+    p.add_argument("--paper", help="avec --check : seulement les lignes de ce papier")
     a = p.parse_args(args)
+    from lib import base, plotdata, plotrun
     try:
-        from lib import plotfig
-    except ImportError as e:
-        print(f"pdb plot : {e}. Installer : .venv/bin/pip install -r requirements-plot.txt",
-              file=sys.stderr)
+        cfg = base.load_config(ROOT)
+    except ValueError as e:
+        print(f"pdb plot : {e}", file=sys.stderr)
         return 1
-    import matplotlib.pyplot as plt
+    if a.check:
+        return _plot_check(cfg, a.brief, a.paper)
 
-    names = [n for n, (g, _, _) in plotfig.FIGURES.items() if a.group in ("all", g)]
+    group_of = {n: plotrun.group_of(n) for n in base.PLOT_FIGURES}
+    names = [n for n in base.PLOT_FIGURES if a.group in ("all", group_of[n])]
+    skip = set(cfg["plot"].get("skip") or ())
     if a.only:
         wanted = [n.strip() for n in a.only.split(",") if n.strip()]
-        unknown = [n for n in wanted if n not in plotfig.FIGURES]
+        unknown = [n for n in wanted if n not in group_of]
         if unknown:
             print(f"pdb plot : figure(s) inconnue(s) : {', '.join(unknown)} (voir --list)",
                   file=sys.stderr)
             return 2
-        names = wanted
+        names, skip = wanted, set()
     if a.list:
+        try:
+            from lib import plotfig
+            desc = {n: d for n, (_, _, d) in plotfig.FIGURES.items()}
+        except ImportError:
+            desc = {}
         for n in names:
-            g, _, desc = plotfig.FIGURES[n]
-            print(f"{g}\t{n}\t{desc}")
+            print(f"{group_of[n]}\t{n}\t{desc.get(n, '')}" + ("\t(plot.skip)" if n in skip else ""))
         return 0
 
-    out = Path(a.out)
-    out.mkdir(parents=True, exist_ok=True)
-    manifest_path = out / "manifest.json"
-    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
-    ctx = plotfig.Context(ROOT)
-    failed = 0
-    for n in names:
-        g, fn, desc = plotfig.FIGURES[n]
-        try:
-            fig, info = fn(ctx)
-        except LookupError as e:
-            print(f"-  {n} : ignorée ({e})")
-            continue
-        except Exception as e:  # une figure cassée n'empêche pas les autres
-            print(f"!  {n} : échec ({type(e).__name__}: {e})", file=sys.stderr)
-            failed += 1
-            continue
-        path = out / f"{n}.{a.format}"
-        fig.savefig(path, dpi=200 if a.format == "png" else None, bbox_inches="tight")
-        plt.close(fig)
-        manifest[n] = {"file": path.name, "group": g, "description": desc,
-                       "generated": datetime.now().isoformat(timespec="seconds"), **info}
-        try:
-            shown = path.relative_to(ROOT)
-        except ValueError:
-            shown = path
-        print(f"ok {shown}")
-    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=1) + "\n")
-    return 1 if failed else 0
+    for n in [n for n in names if n in skip]:
+        print(f"-  {n} : écartée par base.json (plot.skip)")
+    names = [n for n in names if n not in skip]
+    if a.stale:
+        stale = plotdata.stale_figures(ROOT, Path(a.out), plotrun.load_manifest(a.out),
+                                       {n: group_of[n] for n in names}, cfg)
+        names = [n for n in names if n in stale]
+        if not names:
+            print("figures à jour")
+            return 0
+    try:
+        res = plotrun.render(ROOT, names, out=a.out, fmt=a.format,
+                             err=lambda m: print(m, file=sys.stderr))
+    except ImportError as e:
+        print(f"pdb plot : {e}. Installer : .venv/bin/pip install -r requirements-plot.txt",
+              file=sys.stderr)
+        return 1
+    return 1 if res["failed"] else 0
+
+
+def _plot_check(cfg, brief=False, paper=None):
+    """pdb plot --check : classement des lignes de benchmarks.csv pour les figures."""
+    from lib import plotdata, query
+    _, rows = query.load_benchmarks(ROOT)
+    r = plotdata.plot_check(rows, cfg, paper)
+    if brief:
+        for line in r["alerts"]:
+            print(f"plot : {line}")
+        if r["alerts"]:
+            print("plot : à proposer dans profile.md (Suggestions en attente), "
+                  "détail : bin/pdb plot --check")
+        return 0
+    n = r["rows"]
+    rates = r["rates"]
+    print(f"{n} lignes de benchmarks.csv" + (f" (papier {paper})" if paper else ""))
+    print(f"  plateforme « autre » : {rates['platform_other']:.0%}   plateforme n/r : "
+          f"{rates['platform_nr']:.0%}   tâche « autre » : {rates['task_other']:.0%}   "
+          f"(seuil plot.max_other {r['max_other']:.0%})")
+    print("  familles : " + ", ".join(f"{f} {c}" for f, c in
+                                      sorted(r["families"].items(), key=lambda kv: -kv[1])))
+    for title, key in (("Plateformes « autre »", "platform_other"), ("Tâches « autre »", "task_other")):
+        if r[key]:
+            print(f"\n{title} :")
+            for label, c in list(r[key].items())[:15]:
+                print(f"  {c:>3}  {label}")
+    print("\nFigures de benchmarks (lignes tracées ; 0 = ignorée faute de données) :")
+    for name, c in r["bench_figures"].items():
+        print(f"  {name:<24} {c:>4}" + ("  écartée (plot.skip)" if name in r["skip"] else ""))
+    for line in r["alerts"]:
+        print(f"\nALERTE {line}")
+    if r["unmatched_platforms"]:
+        print("\nPlateformes sans indice de famille (à nommer) : "
+              + ", ".join(r["unmatched_platforms"]))
+    if r["proposed"] != cfg["plot"]:
+        print("\nBloc plot proposé (règles déduites des libellés « autre » : à relire, regrouper "
+              "et renommer avant de l'éprouver par bin/pdb base check --config) :")
+        print(plotdata.plot_json(r["proposed"]))
+    else:
+        print("\nAucun changement à proposer.")
+    return 0
 
 
 def _pairs(items, number):
@@ -289,6 +357,8 @@ def cmd_bench(args):
             print(f"pdb bench : {e}", file=sys.stderr)
             return 2
         print(f"colonnes ajoutées : {', '.join(added)}" if added else "rien à ajouter")
+        if added:
+            _refresh_figures(("bench", "corpus"))
         return 0
 
     header, rows = query.load_benchmarks(ROOT)
@@ -849,6 +919,7 @@ def cmd_eval(args):
                                    "base": base.CONFIG["name"], "volets": sorted(res), "results": res},
                                   ensure_ascii=False, indent=1, default=str) + "\n")
         print(f"\nenregistré : {out.relative_to(ROOT)}")
+        _refresh_figures(("eval",))
     return 1 if (a.compare and fails) else 0
 
 

@@ -67,11 +67,14 @@
     ["autoencoder", "autoencoder"],
     ["energy|power consumption", "energy"]
   ],
-  "plot_tasks": [
-    ["apprentissage continu", "continual|incremental|lifelong|on-device (?:online )?training|transfer learning"],
-    ["RUL / pronostic", "\\bRUL\\b|remaining useful|prognos"],
-    ["anomalie / dérive", "anomal|drift|change[- ]point|novelty"],
-    ["classification", "classification|keyword spotting|wake words"],
-    ["détection", "detection"]
-  ]
+  "plot": {
+    "tasks": [
+      ["apprentissage continu", "continual|incremental|lifelong|on-device (?:online )?training|transfer learning"],
+      ["RUL / pronostic", "\\bRUL\\b|remaining useful|prognos"],
+      ["anomalie / dérive", "anomal|drift|change[- ]point|novelty"],
+      ["classification", "classification|keyword spotting|wake words"],
+      ["détection", "detection"]
+    ],
+    "skip": ["bench_fpga_resources"]
+  }
 }

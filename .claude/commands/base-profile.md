@@ -1,7 +1,7 @@
 ---
 description: Précise le profil thématique de la base (profile.md, axes et règles de base.json) ; propose, n'applique qu'après accord
 argument-hint: [thème ou consigne] (vide : traiter les suggestions en attente)
-allowed-tools: Read, Write, Edit, Grep, Glob, Bash(bin/pdb base info:*), Bash(bin/pdb base check:*), Bash(bin/pdb base list), Bash(bin/pdb reindex), Bash(bin/pdb paper:*), Bash(mkdir -p .cache)
+allowed-tools: Read, Write, Edit, Grep, Glob, Bash(bin/pdb base info:*), Bash(bin/pdb base check:*), Bash(bin/pdb plot --check:*), Bash(bin/pdb base list), Bash(bin/pdb reindex), Bash(bin/pdb paper:*), Bash(mkdir -p .cache)
 ---
 
 Précise le profil thématique de la base courante. Argument : `$ARGUMENTS`.
@@ -12,7 +12,8 @@ Le profil a deux faces (DATA_MODEL §11) :
 - `base.json`, pour le code : `axes` ({id: titre}), `axis_rules` ({axe: regex}, axes devinés à
   l'ingestion), `axis_queries` ({axe: requête OpenAlex}), `hardware_axes`, `topic_re`,
   `title_topic_re`, `topic_min_hits` (critère « dans le sujet » de `discover` et de
-  `pdb base scan`), `tag_rules` ([[regex, tag], …]).
+  `pdb base scan`), `tag_rules` ([[regex, tag], …]), `plot` (figures de `pdb plot` :
+  classes de tâches, familles de plateformes, figures écartées ; DATA_MODEL §11.2.1).
 
 **Règle absolue : tu proposes, l'utilisateur décide.** Rien n'est écrit dans `profile.md` ni
 dans `base.json` avant son accord explicite. La section « Thème (utilisateur) » n'est jamais
@@ -35,6 +36,9 @@ Trois situations :
 - **Base en cours** : traite les « Suggestions en attente », les papiers sans axe, les axes
   sans règle ou vides, et `$ARGUMENTS` s'il demande un changement.
 
+Si `benchmarks.csv` a des lignes, lance aussi `bin/pdb plot --check` : parts « autre » des
+plateformes et des tâches, figures sans données, bloc `plot` proposé.
+
 ## 2. Proposition
 
 Construis :
@@ -50,6 +54,14 @@ Construis :
   obligatoire (ex. « sur matériel embarqué »). Sinon laisse-les vides : tout candidat est alors
   dans le sujet.
 - **`tag_rules`** : étiquettes utiles au filtrage (plateformes, méthodes, datasets).
+- **`plot`** (si `benchmarks.csv` a des lignes) : pars du bloc proposé par `pdb plot --check`,
+  sans le recopier. `tasks` : 4 à 8 classes qui ont un sens pour le thème (pas une classe par
+  libellé), la plus spécifique d'abord (« anomaly detection » avant « detection ») ; `families` :
+  seulement une famille matérielle réellement distincte (neuromorphique…) ou un mot-clé
+  qu'une famille du code rate ; un modèle de PC ou un service cloud va dans « GPU bureau » ou
+  « CPU », pas dans une famille à lui ; `skip` : figures structurellement hors sujet (LUT/DSP
+  pour une base sans FPGA), pas celles qui manquent seulement de données aujourd'hui. But :
+  part « autre » sous `max_other` (10 % par défaut).
 - **`profile.md`** : « Précisions » (périmètre, questions de recherche), « Inclus »,
   « Exclus », « Vocabulaire ». Chaque suggestion traitée sort de « Suggestions en attente ».
 
@@ -64,7 +76,9 @@ Un « ATTENTION axe non déclaré » bloque : corrige la proposition.
 Montre :
 1. un tableau des axes : id, titre, règle, effectif actuel → effectif estimé (d'après `check`) ;
 2. le diff de `profile.md` (sections modifiées seulement) ;
-3. les autres changements de `base.json` (topic, tags, requêtes) ;
+3. les autres changements de `base.json` (topic, tags, requêtes, bloc `plot` avec les parts
+   « autre » avant → après d'après `check`, et les lignes déjà classées qu'il déplace d'une
+   classe de tâche à une autre — à justifier) ;
 4. pour chaque suggestion en attente : retenue, écartée ou reportée, avec la raison.
 
 Puis demande l'accord. L'utilisateur peut tout accepter, accepter en partie ou corriger.
@@ -75,6 +89,7 @@ Puis demande l'accord. L'utilisateur peut tout accepter, accepter en partie ou c
 - Mets à jour `profile.md` et ajoute sous « Historique » une ligne datée par changement :
   `- AAAA-MM-JJ — <changement> — <raison>`.
 - `bin/pdb base check`, puis `bin/pdb reindex` : les deux doivent passer sans erreur.
+  Si le bloc `plot` a changé, propose `bin/pdb plot --stale`.
 - Supprime `.cache/base.proposed.json`.
 
 Les axes des papiers existants ne sont pas recalculés automatiquement. Liste les papiers `todo`

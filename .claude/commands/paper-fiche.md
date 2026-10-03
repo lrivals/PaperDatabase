@@ -1,7 +1,7 @@
 ---
 description: Remplit la fiche de lecture d'un article et ses lignes dans benchmarks.csv
 argument-hint: <paper_id>
-allowed-tools: Read, Edit, Write, Grep, Glob, Bash(.venv/bin/python bin/reindex.py)
+allowed-tools: Read, Edit, Write, Grep, Glob, Bash(.venv/bin/python bin/reindex.py), Bash(bin/pdb plot --check:*)
 ---
 
 Rédige la fiche de lecture de `papers/$ARGUMENTS/`. Respecte les règles de `CLAUDE.md` et
@@ -91,6 +91,12 @@ sous « ## Suggestions en attente » de `profile.md` :
 `- AAAA-MM-JJ (<paper_id>) — <proposition> — <raison>`. Ne modifie jamais `base.json` ni les
 autres sections du profil : `/base-profile` les traite avec l'utilisateur.
 
-`.venv/bin/python bin/reindex.py` : il doit terminer sans erreur. Puis résume la fiche en
+**Figures.** Si tu as ajouté des lignes à `benchmarks.csv` : `bin/pdb plot --check --brief
+--paper <paper_id>`. Si une plateforme ou une tâche de ces lignes est classée « autre »,
+ajoute une ligne sous « ## Suggestions en attente » (même format) : `plot : classer
+« <libellé> » (<n> lignes)` avec la famille ou la classe de tâche qui conviendrait.
+
+`.venv/bin/python bin/reindex.py` : il doit terminer sans erreur. Il refait aussi les figures
+que tes lignes de `benchmarks.csv` ont rendues périmées : ne lance pas `pdb plot` en plus. Puis résume la fiche en
 5 lignes (problème, méthode, résultat principal avec source, limite principale, pertinence)
 et propose 2-3 pistes : papier à lire, expérience à reproduire, gap pour `gaps.md`.

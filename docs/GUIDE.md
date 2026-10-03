@@ -23,9 +23,9 @@ fichiers, [DATA_MODEL.md](../DATA_MODEL.md).
           │  /paper-fiche         (Claude lit fulltext.md, écrit la fiche et les chiffres)
           ▼
   fiche.md + lignes de benchmarks.csv
-          │  bin/pdb reindex      (automatique après add / ingest)
+          │  bin/pdb reindex      (automatique après add / ingest / fiche)
           ▼
-  INDEX.md · external_refs.csv          /paper-gaps → gaps.md
+  INDEX.md · external_refs.csv · figures/ périmées refaites     /paper-gaps → gaps.md
           │
           ▼
   vos questions à Claude, et bin/pdb discover / /paper-discover pour trouver la suite
@@ -250,6 +250,17 @@ démarrer, PDF en attente, fiche à rédiger, gaps à mettre à jour, axe à ét
 - `bin/pdb plot` : régénérer les figures dans `figures/` (benchmarks, évaluation, statistiques
   du corpus). La carte `corpus_gaps` montre les cases vides famille de plateforme × axe ou
   tâche, à confronter à `gaps.md`.
+- `bin/pdb plot --check` : vérifier que les figures sont adaptées à la base. Il dit quelle
+  part des lignes tombe en « autre » (plateforme ou tâche non classée) et propose des règles ;
+  `/base-profile` les reprend, les éprouve et ne les écrit qu'avec votre accord (bloc `plot`
+  de `base.json` : classes de tâches, familles de plateformes, figures à écarter,
+  DATA_MODEL §11.2.1). `bin/pdb plot --stale` ne régénère que les figures périmées.
+- Les figures suivent la base : une fois `bin/pdb plot` lancé une première fois, chaque
+  `reindex` (donc chaque ajout d'article et chaque fiche) refait les figures que le
+  changement a rendues périmées ; de même à la fin d'un banc `bin/pdb eval --save` pour
+  les figures d'évaluation. Pour un lot de plusieurs articles, `--no-plot` (ou
+  `PDB_NO_PLOT=1`) sur les étapes intermédiaires, puis un dernier `bin/pdb reindex` ;
+  `"plot": {"auto": false}` dans `base.json` coupe la régénération pour la base.
 
 **Interroger la base sans passer par Claude**
 
@@ -423,7 +434,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb add --from liste.txt` | ajout par lot (un identifiant par ligne, `#` pour commenter) |
 | `bin/pdb ingest [--force] [pdf…]` | ingère `inbox/` et réindexe |
 | `bin/pdb discover [--forward] [--backward] [--related] [--axis A] [--query "…"] [--since AAAA]` | candidats → `candidates.csv`, `candidates_arxiv.txt` |
-| `bin/pdb reindex` | régénère `INDEX.md`, `external_refs.csv`, vérifie |
+| `bin/pdb reindex [--no-plot]` | régénère `INDEX.md`, `external_refs.csv`, vérifie, refait les figures périmées |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (`-h` pour les filtres) |
 | `bin/pdb paper <id \| mot>…` | identité d'un ou plusieurs papiers (`--bench` : ses lignes) |
 | `bin/pdb cites <id>` / `cited-by <id>` | références dans la base (`--external` : hors base aussi) / papiers qui le citent |
@@ -437,6 +448,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb grobid start\|stop\|status` | GROBID |
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |
 | `bin/pdb plot [bench\|eval\|corpus] [--format pdf]` | figures statiques (PNG par défaut) dans `figures/` (`--list` : noms) |
+| `bin/pdb plot --check` / `--stale` | classement des plateformes et tâches pour les figures, règles proposées / régénérer les seules figures périmées |
 | `bin/pdb test` | tests |
 | `bin/pdb base list \| new \| use \| info \| check` | gérer les bases (§8) |
 | `bin/pdb base scan [--from NOM]` / `base import NOM:<id>` | articles utiles dans les autres bases / copie |

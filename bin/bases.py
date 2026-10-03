@@ -144,6 +144,20 @@ def cmd_check(a):
     print(f"\nHors sujet selon topic_re/title_topic_re : {len(r['out_of_topic'])} papier(s)")
     for pid in r["out_of_topic"][:20]:
         print(f"  {pid}")
+    if r["plot"]:
+        b, f = r["plot"]["before"], r["plot"]["after"]
+        print(f"\nFigures (pdb plot, {f['rows']} lignes de benchmarks.csv ; seuil "
+              f"plot.max_other {f['max_other']:.0%}) :")
+        for key, label in (("platform_other", "plateforme « autre »"),
+                           ("task_other", "tâche « autre »"), ("platform_nr", "plateforme n/r")):
+            change = "" if b is f else f"{b['rates'][key]:.0%} → "
+            print(f"  {label:<22} {change}{f['rates'][key]:.0%}")
+        for (x, y), n in sorted(r["plot"]["moved"].items(), key=lambda kv: -kv[1]):
+            print(f"  {n:>3} ligne(s) de tâche déplacée(s) : « {x} » → « {y} »")
+        if f["skip"]:
+            print("  écartées (plot.skip) : " + ", ".join(f["skip"]))
+        for line in f["alerts"]:
+            print(f"  ALERTE {line} — détail : bin/pdb plot --check")
     return 0
 
 

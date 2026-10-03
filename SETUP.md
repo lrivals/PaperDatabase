@@ -314,7 +314,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `add …` | `add.run` | propose de démarrer GROBID s'il est arrêté (`--start-grobid` : sans question), puis `reindex.run` |
 | `ingest [--force] [pdf…]` | `ingest.run` | idem |
 | `ingest --reparse [--tables docling [--ocr]] [id…]` | `ingest.reparse` | ré-extraction depuis `grobid.tei.xml`, sans GROBID (Docling pour les tableaux sans corps si demandé), puis `reindex.run` |
-| `reindex` | `reindex.run` | |
+| `reindex [--no-plot]` | `reindex.run`, `lib/plotrun.py` | régénère aussi les figures périmées (§ `bin/pdb plot`) ; `add` et `ingest` acceptent `--no-plot` |
 | `discover …` | `discover.run` | |
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
 | `search`, `show`, `verify` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option ; Qwen3 sur GPU si la route GPU est active, `--gpu`/`--cpu` pour forcer), texte exact, contrôle de citation (statut `NOMBRES` si un nombre diffère) ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5, §13 |
@@ -322,7 +322,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `eval [--extract\|--rag\|--speed] [--gpu] [--answers DIR…] [--save] [--compare [JSON]]`, `eval --questions [JEU]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; réponses finales enregistrées (`--answers`, jeux `answers*.jsonl`, `--questions` les liste sans les attentes : [docs/EVAL.md](docs/EVAL.md) §10) ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
-| `plot [bench\|eval\|corpus\|all] [--only a,b] [--out DIR] [--format png\|pdf\|svg] [--list]` | `lib/plotdata.py`, `lib/plotfig.py` | figures statiques, voir ci-dessous |
+| `plot [bench\|eval\|corpus\|all] [--only a,b] [--out DIR] [--format png\|pdf\|svg] [--list] [--stale] [--check [--brief]]` | `lib/plotdata.py`, `lib/plotfig.py` | figures statiques, voir ci-dessous |
 
 ### `bin/pdb plot`
 
@@ -343,11 +343,39 @@ effectifs et le run d'évaluation utilisé. Les plateformes (texte libre) sont r
 familles et les quantifications en classes de précision par des heuristiques
 (`lib/plotdata.platform_family`, `quant_bucket`) ; une plateforme `n/r` forme sa propre famille
 (« plateforme non rapportée », papiers algorithmiques), distincte de « autre » (nommée mais non
-classée) ; `tests/test_plot.py` vérifie que chaque plateforme des bases fpga et stage a une
-famille. Les tâches sont regroupées selon `plot_tasks` de `base.json` (à défaut
-`lib/plotdata.DEFAULT_TASKS`), les axes sont ceux de la base. Une figure sans données (aucune
-ligne chiffrée, aucun run d'évaluation) est ignorée, avec sa raison, au lieu d'être tracée à
-vide. Palette : celle de `viz.py`.
+classée) ; `tests/test_plot.py` vérifie que chaque plateforme des bases livrées a une
+famille et que la part de tâches « autre » reste sous le seuil de la base. Les axes sont ceux
+de la base. Une figure sans données (aucune ligne chiffrée, aucun run d'évaluation) est
+ignorée, avec sa raison, au lieu d'être tracée à vide. Palette : celle de `viz.py`.
+
+**Personnalisation par base** : bloc `plot` de `base.json` (DATA_MODEL §11.2.1) — classes de
+tâches (`tasks`), familles de plateformes propres à la base (`families`, essayées après celles
+du code), tâche isolée dans `bench_fps_power` (`split_task`), figures écartées (`skip`, dites
+« écartée par base.json »), seuils des panneaux de précision (`min_rows`), part « autre »
+tolérée (`max_other`). Sans bloc, les réglages par défaut (ceux de la base fpga).
+
+- `pdb plot --check` (sans matplotlib) : parts de lignes en « autre » (plateforme, tâche) et
+  en `n/r`, libellés les plus fréquents restés non classés, figures qui seraient ignorées ou
+  écartées, puis un bloc `plot` **proposé** (règles déduites des libellés « autre » :
+  mot-clé dominant de chaque tâche, famille du code reconnue par un mot-clé de plateforme),
+  à relire avant de le coller dans `.cache/base.proposed.json`. `--brief` : une ligne par
+  alerte (pour `/paper-fiche`). Code de retour 1 seulement si `base.json` est invalide.
+- `pdb base check [--config F]` montre la même mesure, avant → après, pour une proposition :
+  `/base-profile` éprouve un bloc `plot` comme il éprouve des `axis_rules`.
+- `pdb plot --stale` ne régénère que les figures périmées : source plus récente que la figure
+  (`benchmarks.csv`, `base.json`, `eval/results/`, `papers/`) ou réglages changés
+  (`config_hash` du manifest : empreinte du bloc `plot` et des axes).
+- **Les figures suivent la base.** `reindex` — donc la fin de `pdb add`, `pdb ingest` et de
+  `/paper-fiche` — régénère les figures `bench_*` et `corpus_*` périmées
+  (`lib/plotrun.auto_refresh`) ; à la fin d'un banc, `pdb eval --save` (dont
+  `--answers … --save`, `/eval-answers`) refait celles du groupe `eval`, et
+  `pdb bench --add-columns` les `bench_*` / `corpus_*`. Une ligne
+  `Figures : N régénérée(s) …` le dit ; une figure à jour n'est pas retracée (quelques
+  secondes par figure). Conditions : la base a déjà un `figures/manifest.json` (premier tracé
+  par `bin/pdb plot` : une base neuve ne trace rien d'elle-même), `plot.auto` n'est pas
+  `false`, ni `--no-plot` (`reindex`, `add`, `ingest`) ni `PDB_NO_PLOT=1`, et matplotlib est
+  installé. Sinon une `note` donne les figures périmées et `bin/pdb plot --stale`. Une
+  figure en échec n'est qu'une `note` : la réindexation réussit quand même.
 
 ### `bin/setup.sh`
 
@@ -469,6 +497,10 @@ Régénère aussi `external_refs.csv` ([DATA_MODEL.md](DATA_MODEL.md) §9) : les
 de la base cités par au moins deux papiers, du plus cité au moins cité. Les variantes d'une
 même référence (ligature perdue, coquille, titre tronqué par GROBID) y sont fusionnées par
 `lib/refs.py`.
+
+Enfin, sur la base active (pas sur un corpus isolé), régénère les figures `pdb plot`
+périmées par le changement, ou les signale (§ `bin/pdb plot`, « Les figures suivent la
+base »).
 
 Ne modifie jamais `benchmarks.csv` ni les fiches — il ne fait que lire et régénérer l'index.
 
@@ -750,6 +782,14 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 Point au 03/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 03/10/2026 (figures par base).** Bloc `plot` de `base.json` (DATA_MODEL
+§11.2.1 ; `plot_tasks` reste lu), `pdb plot --check` (diagnostic et proposition de règles),
+`--stale`, `config_hash` dans le manifest, mesure « Figures » de `pdb base check`, avis de
+régénération automatique des figures périmées par `reindex` et `pdb eval --save`
+(`lib/plotrun.py`, `plot.auto`, `--no-plot` / `PDB_NO_PLOT`) ; branché dans `/base-profile`
+et `/paper-fiche`. Base drone :
+tâches et famille neuromorphique propres ; base stage : figures matérielles écartées.
 
 **Bilan du 03/10/2026 (lot D, état de l'art fpga).**
 - Lot D en place (D-5 : `pdb bench --comparable`) : colonnes optionnelles de `benchmarks.csv` (DATA_MODEL §7),
@@ -1256,6 +1296,10 @@ Défauts mis au jour, à corriger (tâche 12) :
   - [ ] lot I, journal et coût des sous-agents : hook `PostToolUse`/`SubagentStop` vers
     `.cache/agents.jsonl`, convention `[task_class]`, `pdb agents --report`, révision chiffrée
     de la table de délégation du `CLAUDE.md` ;
+  - [ ] lot J, `pdb compare` (`lib/compare.py`) : deux axes avec clé de précision et
+    `power_scope` ensemble, trois blocs (retenues traçables, conditions qui varient ou
+    manquent, exclusions motivées), confiance de la comparaison, JSON ; puis figures et
+    colonnes `clock_mhz` / `latency_scope` ;
   - [ ] skills `/paper-compare`, `/state-of-art`, `/table-review`, `/research-question`.
 - [ ] **Pistes d'amélioration du 26/09/2026, non commencées** (analyse de la doc et du
   corpus ; ordre proposé) :

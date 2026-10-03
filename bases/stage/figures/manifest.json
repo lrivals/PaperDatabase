@@ -3,7 +3,8 @@
   "file": "bench_accuracy_latency.png",
   "group": "bench",
   "description": "précision vs latence, un panneau par métrique",
-  "generated": "2026-09-29T14:59:51",
+  "generated": "2026-10-03T21:02:19",
+  "config_hash": "e8a082de77",
   "sources": [
    "benchmarks.csv"
   ],
@@ -18,7 +19,8 @@
   "file": "bench_quantization.png",
   "group": "bench",
   "description": "précision de calcul par famille de plateforme",
-  "generated": "2026-09-29T14:59:51",
+  "generated": "2026-10-03T21:02:19",
+  "config_hash": "e8a082de77",
   "sources": [
    "benchmarks.csv"
   ],
@@ -29,7 +31,8 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-09-29T14:59:51",
+  "generated": "2026-10-03T21:02:20",
+  "config_hash": "e8a082de77",
   "sources": [
    "papers/*/metadata.json"
   ],
@@ -39,7 +42,8 @@
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-09-29T14:59:51",
+  "generated": "2026-10-03T21:02:20",
+  "config_hash": "e8a082de77",
   "sources": [
    "papers/*/metadata.json"
   ],
@@ -49,7 +53,8 @@
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-09-29T14:59:52",
+  "generated": "2026-10-03T21:02:20",
+  "config_hash": "e8a082de77",
   "sources": [
    "benchmarks.csv"
   ],
@@ -59,7 +64,8 @@
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-09-29T14:59:54",
+  "generated": "2026-10-03T21:02:22",
+  "config_hash": "e8a082de77",
   "sources": [
    "papers/*/refs.jsonl",
    "external_refs.csv"
@@ -71,7 +77,8 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-09-29T14:59:54",
+  "generated": "2026-10-03T21:02:22",
+  "config_hash": "e8a082de77",
   "sources": [
    "benchmarks.csv",
    "papers/*/metadata.json"
@@ -184,5 +191,61 @@
     "anomalie / dérive"
    ]
   ]
+ },
+ "bench_fps_power": {
+  "group": "bench",
+  "description": "débit vs puissance, détection / autres tâches",
+  "skipped": "aucune ligne de benchmarks.csv avec fps et power_w chiffrés",
+  "checked": 1791054139.2710714,
+  "config_hash": "e8a082de77"
+ },
+ "bench_gops_per_watt": {
+  "group": "bench",
+  "description": "GOPS/W par précision de calcul",
+  "skipped": "aucune ligne de benchmarks.csv avec gops et power_w chiffrés",
+  "checked": 1791054139.2712579,
+  "config_hash": "e8a082de77"
+ },
+ "bench_accuracy_fps": {
+  "group": "bench",
+  "description": "précision vs débit, un panneau par métrique",
+  "skipped": "aucune ligne de benchmarks.csv avec accuracy_value et fps chiffrés pour une même métrique (4 lignes au moins)",
+  "checked": 1791054139.2724922,
+  "config_hash": "e8a082de77"
+ },
+ "eval_retrieval": {
+  "group": "eval",
+  "description": "recall@5/@10 et MRR par mode et jeu de questions",
+  "skipped": "aucun run de pdb eval ne contient le volet rag (lancer bin/pdb eval --save)",
+  "checked": 1791054139.7859936,
+  "config_hash": "e8a082de77"
+ },
+ "eval_verify": {
+  "group": "eval",
+  "description": "verdicts de pdb verify par perturbation",
+  "skipped": "aucun run de pdb eval ne contient le volet rag (lancer bin/pdb eval --save)",
+  "checked": 1791054139.7859979,
+  "config_hash": "e8a082de77"
+ },
+ "eval_extraction": {
+  "group": "eval",
+  "description": "couverture du texte et tableaux, par papier",
+  "skipped": "aucun run de pdb eval ne contient le volet extraction (lancer bin/pdb eval --save)",
+  "checked": 1791054139.7860012,
+  "config_hash": "e8a082de77"
+ },
+ "eval_latency": {
+  "group": "eval",
+  "description": "temps d'exécution (recherche, verify, CLI)",
+  "skipped": "aucun run de pdb eval ne contient le volet speed (lancer bin/pdb eval --save)",
+  "checked": 1791054139.7860034,
+  "config_hash": "e8a082de77"
+ },
+ "eval_history": {
+  "group": "eval",
+  "description": "évolution des métriques au fil des runs",
+  "skipped": "moins de deux runs de pdb eval : pas d'historique à tracer",
+  "checked": 1791054139.7860148,
+  "config_hash": "e8a082de77"
  }
 }

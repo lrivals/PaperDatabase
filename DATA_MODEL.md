@@ -453,7 +453,39 @@ les notes humaines), versionnées avec la base ([docs/EVAL.md §10](docs/EVAL.md
 | `axis_queries` | non | `{axe: requête}` : `discover --axis` |
 | `hardware_axes`, `topic_re`, `title_topic_re`, `topic_min_hits` | non | critère « dans le sujet » de `discover` et de `pdb base scan` (`base.in_topic`) ; tous vides : tout est dans le sujet |
 | `tag_rules` | non | `[[regex, tag], …]` : étiquettes ; la version de YOLO est détectée pour toutes les bases |
-| `plot_tasks` | non | `[[libellé, regex], …]` : classes de tâches de `benchmarks.csv` pour `pdb plot` (carte des gaps), la première règle qui correspond l'emporte ; vide : classes par défaut (`lib/plotdata.DEFAULT_TASKS`) |
+| `plot` | non | personnalisation de `pdb plot` pour la base (§11.2.1) ; vide : réglages par défaut |
+
+#### 11.2.1 Bloc `plot`
+
+Toutes les clés sont facultatives. Exemple :
+
+```json
+"plot": {
+  "tasks":      [["tracking", "track|\\bSOT\\b"], ["navigation", "navigation|odometry"]],
+  "families":   [["neuromorphique", "loihi|spinnaker|\\bdynap"]],
+  "split_task": "détection",
+  "skip":       ["bench_fpga_resources"],
+  "min_rows":   {"bench_accuracy_fps": 4, "bench_accuracy_latency": 3},
+  "max_other":  0.10
+}
+```
+
+| Clé | Effet | Défaut |
+|---|---|---|
+| `tasks` | `[[libellé, regex], …]` : classes de tâches de `benchmarks.csv` (carte des gaps, découpe de `bench_fps_power`) ; la première règle qui correspond l'emporte | `lib/plotdata.DEFAULT_TASKS` |
+| `families` | `[[libellé, regex], …]` : familles de plateformes essayées **après** celles du code (`lib/plotdata._FAMILY_RULES`) : elles ne classent que ce que le code laisse en « autre », sans jamais reclasser une plateforme déjà reconnue ; un libellé du code (« GPU bureau ») élargit cette famille, un libellé nouveau crée une famille, placée après celles du code dans les légendes (couleurs des familles du code inchangées) | aucune |
+| `split_task` | classe de tâche isolée dans le panneau gauche de `bench_fps_power` | `"détection"` |
+| `skip` | figures à ne pas générer pour cette base (noms de `pdb plot --list`) ; `--only` passe outre | `[]` |
+| `min_rows` | `{figure: n}` : lignes minimales par panneau des figures précision vs coût | 4 (`bench_accuracy_fps`), 3 (`bench_accuracy_latency`) |
+| `max_other` | part maximale de lignes classées « autre » (plateforme ou tâche) au-delà de laquelle `pdb plot --check` alerte | `0.10` |
+| `auto` | `false` : `reindex`, `pdb eval --save` et `pdb bench --add-columns` ne régénèrent pas les figures périmées, ils les signalent seulement | `true` |
+
+L'ancienne clé `plot_tasks` (racine de `base.json`) reste lue : elle vaut `plot.tasks` quand
+celle-ci est absente. Une clé inconnue sous `plot`, un nom de figure inconnu, une
+`split_task` qui n'est pas un libellé de tâche ou une regex invalide arrêtent le chargement.
+`pdb plot --check` mesure le classement (parts « autre », plateformes `n/r`, figures sans
+données) et propose un bloc `plot` ; `pdb base check --config` en montre l'effet avant
+écriture (`/base-profile`).
 
 Les regex sont compilées au chargement : une regex invalide arrête toute commande avec le nom
 de la clé fautive. `pdb base check [--config proposition.json]` montre, sans rien écrire, comment

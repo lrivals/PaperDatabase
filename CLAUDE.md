@@ -47,6 +47,8 @@ Garder en direct ce qui est court (une commande, un fichier) : un agent démarre
 Donner à chaque agent la base visée (`bases/<nom>/`) et ses règles (son `CLAUDE.md`), un
 périmètre sans recoupement (deux agents n'écrivent jamais le même fichier ; `benchmarks.csv`,
 `INDEX.md` et la réindexation restent à l'agent principal, après les autres), et vérifier
-ce qu'ils rapportent avant de le présenter.
+ce qu'ils rapportent avant de le présenter. Un sous-agent qui doit réindexer quand même
+(`/paper-add` en lot) le fait avec `PDB_NO_PLOT=1` : la réindexation finale de l'agent
+principal refait les figures une seule fois.
 
 **Langue.** Français par défaut. Termes techniques et titres d'articles en anglais.

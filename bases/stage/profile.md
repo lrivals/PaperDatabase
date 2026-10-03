@@ -50,3 +50,4 @@ Apprentissage continu embarqué sur microcontrôleur pour la maintenance prédic
 
 - 2026-09-29 — base créée (`pdb base new`) ; axes et règles écrits d'après les sections de la
   bibliographie du stage.
+- 2026-10-03 — `plot_tasks` devient `plot.tasks` (bloc `plot`, DATA_MODEL §11.2.1) ; figure `bench_fpga_resources` écartée (`plot.skip`) — aucune plateforme FPGA dans le thème.

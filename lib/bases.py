@@ -201,7 +201,7 @@ def check(root, config=None):
         cfg = base.load_config(root, config)
     except (ValueError, json.JSONDecodeError) as e:
         return {"errors": [str(e)], "changes": [], "axes_without_rule": [], "out_of_topic": [],
-                "undeclared": {}}
+                "undeclared": {}, "plot": {}}
     changes, out, undeclared = [], [], {}
     for m in _metas(root):
         text = " ".join(filter(None, (m.get("title"), xbase.abstract_of(root / "papers" / m["id"]))))
@@ -216,4 +216,29 @@ def check(root, config=None):
             out.append(m["id"])
     no_rule = [a for a in cfg["axes"] if a != "surveys" and a not in cfg["axis_rules"]]
     return {"errors": [], "changes": changes, "axes_without_rule": no_rule, "out_of_topic": out,
-            "undeclared": undeclared}
+            "undeclared": undeclared, "plot": _plot_effect(root, cfg, config)}
+
+
+def _plot_effect(root, cfg, config):
+    """Parts « autre » des figures (plotdata.plot_check) avec base.json, et avec la
+    proposition `config` s'il y en a une : {"before": …, "after": …, "moved": …} ; moved :
+    {(classe avant, classe après): lignes} des tâches déjà classées que la proposition
+    déplace (les lignes sorties de « autre » n'y sont pas)."""
+    from lib import plotdata, query
+    if not (root / "benchmarks.csv").is_file():
+        return {}
+    _, rows = query.load_benchmarks(root)
+    after = plotdata.plot_check(rows, cfg)
+    if not config:
+        return {"before": after, "after": after, "moved": {}}
+    try:
+        old = base.load_config(root)
+    except ValueError:
+        return {"before": after, "after": after, "moved": {}}
+    t0, t1 = plotdata.task_rules(old), plotdata.task_rules(cfg)
+    moved = {}
+    for r in rows:
+        a, b = plotdata.task_bucket(r.get("task"), t0), plotdata.task_bucket(r.get("task"), t1)
+        if a != b and a != plotdata.OTHER:
+            moved[(a, b)] = moved.get((a, b), 0) + 1
+    return {"before": plotdata.plot_check(rows, old), "after": after, "moved": moved}

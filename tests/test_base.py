@@ -67,5 +67,38 @@ class ConfigTest(unittest.TestCase):
                 base.load_config(d)
 
 
+
+class PlotConfigTest(unittest.TestCase):
+    def _load(self, extra):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.json").write_text(json.dumps({"name": "x", "axes": {"a": "A"}, **extra}))
+            return base.load_config(d)
+
+    def test_plot_tasks_is_read_as_plot_tasks(self):
+        cfg = self._load({"plot_tasks": [["RUL", "\\bRUL\\b"]]})
+        self.assertEqual(cfg["plot"]["tasks"], [["RUL", "\\bRUL\\b"]])
+        cfg = self._load({"plot_tasks": [["old", "x"]], "plot": {"tasks": [["new", "y"]]}})
+        self.assertEqual(cfg["plot"]["tasks"], [["new", "y"]])
+
+    def test_plot_block_validated(self):
+        bad = ({"plot": {"colours": {}}},                               # clé inconnue
+               {"plot": {"tasks": [["t", "(unclosed"]]}},               # regex
+               {"plot": {"families": [["f"]]}},                         # pas une paire
+               {"plot": {"skip": ["bench_inexistante"]}},               # figure inconnue
+               {"plot": {"min_rows": {"nope": 3}}},
+               {"plot": {"split_task": "tracking"}},                    # pas une classe
+               {"plot": {"max_other": 2}},
+               {"plot": []})
+        for extra in bad:
+            with self.subTest(extra=extra), self.assertRaises(ValueError):
+                self._load(extra)
+        cfg = self._load({"plot": {"tasks": [["tracking", "track"]], "split_task": "tracking",
+                                   "skip": ["bench_fpga_resources"], "max_other": 0.2}})
+        self.assertEqual(cfg["plot"]["split_task"], "tracking")
+
+    def test_reference_base_has_no_plot_settings(self):
+        self.assertEqual(base.load_config(base.REFERENCE)["plot"], {})
+
+
 if __name__ == "__main__":
     unittest.main()

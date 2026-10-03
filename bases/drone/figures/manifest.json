@@ -3,37 +3,41 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-09-28T10:43:51",
+  "generated": "2026-10-03T21:10:49",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "papers/*/metadata.json"
   ],
-  "n": 73
+  "n": 87
  },
  "corpus_axes": {
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-09-28T10:43:51",
+  "generated": "2026-10-03T21:10:49",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "papers/*/metadata.json"
   ],
-  "n": 73
+  "n": 87
  },
  "corpus_bench_coverage": {
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-09-28T10:43:52",
+  "generated": "2026-10-03T21:10:49",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 324
+  "n": 352
  },
  "corpus_citations": {
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-09-28T10:43:55",
+  "generated": "2026-10-03T21:10:52",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "papers/*/refs.jsonl",
    "external_refs.csv"
@@ -45,7 +49,8 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-09-28T10:43:55",
+  "generated": "2026-10-03T21:10:53",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "benchmarks.csv",
    "papers/*/metadata.json"
@@ -97,10 +102,6 @@
    ],
    [
     "CPU",
-    "datasets-benchmarks"
-   ],
-   [
-    "CPU",
     "drone-fpga"
    ],
    [
@@ -114,10 +115,6 @@
    [
     "CPU",
     "reliability"
-   ],
-   [
-    "CPU",
-    "tracking-navigation"
    ],
    [
     "GPU bureau",
@@ -144,26 +141,62 @@
     "reliability"
    ],
    [
-    "autre",
+    "neuromorphique",
+    "datasets-benchmarks"
+   ],
+   [
+    "neuromorphique",
+    "drone-detection"
+   ],
+   [
+    "neuromorphique",
     "drone-fpga"
    ],
    [
-    "autre",
+    "neuromorphique",
+    "counter-uav"
+   ],
+   [
+    "neuromorphique",
+    "reliability"
+   ],
+   [
+    "plateforme non rapportée",
+    "drone-fpga"
+   ],
+   [
+    "plateforme non rapportée",
+    "nano-drone"
+   ],
+   [
+    "plateforme non rapportée",
+    "system-codesign"
+   ],
+   [
+    "plateforme non rapportée",
     "reliability"
    ]
   ],
   "zeros_task": [
    [
     "FPGA",
-    "anomalie"
+    "suivi (tracking)"
    ],
    [
     "FPGA",
-    "compression / AE"
+    "navigation / odométrie"
    ],
    [
     "FPGA",
-    "apprentissage continu"
+    "estimation de pose"
+   ],
+   [
+    "FPGA",
+    "segmentation"
+   ],
+   [
+    "FPGA",
+    "vision-langage (VLM)"
    ],
    [
     "FPGA",
@@ -171,63 +204,67 @@
    ],
    [
     "GPU embarqué",
-    "classification"
+    "estimation de pose"
    ],
    [
     "GPU embarqué",
-    "anomalie"
-   ],
-   [
-    "GPU embarqué",
-    "compression / AE"
-   ],
-   [
-    "GPU embarqué",
-    "apprentissage continu"
-   ],
-   [
-    "NPU / VPU",
     "classification"
    ],
    [
     "NPU / VPU",
-    "anomalie"
+    "suivi (tracking)"
    ],
    [
     "NPU / VPU",
-    "compression / AE"
+    "estimation de pose"
    ],
    [
     "NPU / VPU",
-    "apprentissage continu"
+    "segmentation"
+   ],
+   [
+    "NPU / VPU",
+    "vision-langage (VLM)"
+   ],
+   [
+    "NPU / VPU",
+    "classification"
+   ],
+   [
+    "NPU / VPU",
+    "autre"
    ],
    [
     "MCU",
-    "anomalie"
+    "suivi (tracking)"
    ],
    [
     "MCU",
-    "compression / AE"
+    "segmentation"
    ],
    [
     "MCU",
-    "apprentissage continu"
+    "vision-langage (VLM)"
+   ],
+   [
+    "CPU",
+    "navigation / odométrie"
+   ],
+   [
+    "CPU",
+    "estimation de pose"
+   ],
+   [
+    "CPU",
+    "segmentation"
+   ],
+   [
+    "CPU",
+    "vision-langage (VLM)"
    ],
    [
     "CPU",
     "classification"
-   ],
-   [
-    "CPU",
-    "anomalie"
-   ],
-   [
-    "CPU",
-    "compression / AE"
-   ],
-   [
-    "CPU",
-    "apprentissage continu"
    ],
    [
     "CPU",
@@ -235,19 +272,31 @@
    ],
    [
     "GPU bureau",
-    "classification"
+    "estimation de pose"
    ],
    [
     "GPU bureau",
-    "anomalie"
+    "segmentation"
    ],
    [
     "GPU bureau",
-    "compression / AE"
+    "autre"
    ],
    [
-    "GPU bureau",
-    "apprentissage continu"
+    "ASIC",
+    "suivi (tracking)"
+   ],
+   [
+    "ASIC",
+    "estimation de pose"
+   ],
+   [
+    "ASIC",
+    "segmentation"
+   ],
+   [
+    "ASIC",
+    "vision-langage (VLM)"
    ],
    [
     "ASIC",
@@ -259,27 +308,55 @@
    ],
    [
     "ASIC",
-    "anomalie"
+    "autre"
    ],
    [
-    "ASIC",
-    "compression / AE"
+    "neuromorphique",
+    "estimation de pose"
    ],
    [
-    "ASIC",
-    "apprentissage continu"
+    "neuromorphique",
+    "segmentation"
    ],
    [
-    "autre",
-    "anomalie"
+    "neuromorphique",
+    "vision-langage (VLM)"
    ],
    [
-    "autre",
-    "compression / AE"
+    "neuromorphique",
+    "détection"
    ],
    [
-    "autre",
-    "apprentissage continu"
+    "neuromorphique",
+    "classification"
+   ],
+   [
+    "neuromorphique",
+    "autre"
+   ],
+   [
+    "plateforme non rapportée",
+    "navigation / odométrie"
+   ],
+   [
+    "plateforme non rapportée",
+    "estimation de pose"
+   ],
+   [
+    "plateforme non rapportée",
+    "segmentation"
+   ],
+   [
+    "plateforme non rapportée",
+    "vision-langage (VLM)"
+   ],
+   [
+    "plateforme non rapportée",
+    "classification"
+   ],
+   [
+    "plateforme non rapportée",
+    "autre"
    ]
   ]
  },
@@ -287,45 +364,49 @@
   "file": "bench_fps_power.png",
   "group": "bench",
   "description": "débit vs puissance, détection / autres tâches",
-  "generated": "2026-09-28T10:43:48",
+  "generated": "2026-10-03T21:10:47",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 79,
-  "total": 324
+  "total": 352
  },
  "bench_gops_per_watt": {
   "file": "bench_gops_per_watt.png",
   "group": "bench",
   "description": "GOPS/W par précision de calcul",
-  "generated": "2026-09-28T10:43:48",
+  "generated": "2026-10-03T21:10:47",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 34,
-  "total": 324
+  "total": 352
  },
  "bench_fpga_resources": {
   "file": "bench_fpga_resources.png",
   "group": "bench",
   "description": "LUT vs DSP des FPGA, par toolflow",
-  "generated": "2026-09-28T10:43:48",
+  "generated": "2026-10-03T21:10:47",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 29,
-  "total": 324
+  "total": 352
  },
  "bench_accuracy_fps": {
   "file": "bench_accuracy_fps.png",
   "group": "bench",
   "description": "précision vs débit, un panneau par métrique",
-  "generated": "2026-09-28T10:43:49",
+  "generated": "2026-10-03T21:10:48",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 68,
-  "total": 324,
+  "total": 352,
   "metrics": [
    "AP50 COCO",
    "mean IoU % (DAC-SDC, 1 objet/image)",
@@ -337,18 +418,20 @@
   "file": "bench_quantization.png",
   "group": "bench",
   "description": "précision de calcul par famille de plateforme",
-  "generated": "2026-09-28T10:43:49",
+  "generated": "2026-10-03T21:10:49",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 324,
-  "total": 324
+  "n": 352,
+  "total": 352
  },
  "eval_retrieval": {
   "file": "eval_retrieval.png",
   "group": "eval",
   "description": "recall@5/@10 et MRR par mode et jeu de questions",
-  "generated": "2026-09-28T10:43:50",
+  "generated": "2026-10-03T21:02:26",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "eval/results/2026-09-28T1043-76dc85e.json"
   ],
@@ -358,7 +441,8 @@
   "file": "eval_verify.png",
   "group": "eval",
   "description": "verdicts de pdb verify par perturbation",
-  "generated": "2026-09-28T10:43:50",
+  "generated": "2026-10-03T21:02:26",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "eval/results/2026-09-28T1043-76dc85e.json"
   ],
@@ -368,7 +452,8 @@
   "file": "eval_extraction.png",
   "group": "eval",
   "description": "couverture du texte et tableaux, par papier",
-  "generated": "2026-09-28T10:43:51",
+  "generated": "2026-10-03T21:02:27",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "eval/results/2026-09-28T1043-76dc85e.json"
   ],
@@ -379,7 +464,8 @@
   "file": "eval_latency.png",
   "group": "eval",
   "description": "temps d'exécution (recherche, verify, CLI)",
-  "generated": "2026-09-28T10:43:51",
+  "generated": "2026-10-03T21:02:27",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "eval/results/2026-09-28T1043-76dc85e.json"
   ],
@@ -389,11 +475,30 @@
   "file": "eval_history.png",
   "group": "eval",
   "description": "évolution des métriques au fil des runs",
-  "generated": "2026-09-28T10:43:51",
+  "generated": "2026-10-03T21:02:27",
+  "config_hash": "79f48ce3d9",
   "sources": [
    "eval/results/2026-09-28T1011-78b56a9-dirty.json",
    "eval/results/2026-09-28T1016-78b56a9-dirty.json",
    "eval/results/2026-09-28T1043-76dc85e.json"
+  ]
+ },
+ "bench_accuracy_latency": {
+  "file": "bench_accuracy_latency.png",
+  "group": "bench",
+  "description": "précision vs latence, un panneau par métrique",
+  "generated": "2026-10-03T21:10:48",
+  "config_hash": "79f48ce3d9",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 35,
+  "total": 352,
+  "metrics": [
+   "mAP50-95 (jeu propre, 1 cible)",
+   "mAP COCO val (FiftyOne, IoU non précisée)",
+   "mAP50 COCO",
+   "mAP@0.5"
   ]
  }
 }

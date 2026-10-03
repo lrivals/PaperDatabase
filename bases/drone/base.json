@@ -162,5 +162,20 @@
       "(?:drones?|UAVs?)[^.]{0,80}\\bbirds?\\b|\\bbirds?\\b[^.]{0,80}(?:drones?|UAVs?)|drone-vs-bird",
       "bird-rejection"
     ]
-  ]
+  ],
+  "plot": {
+    "tasks": [
+      ["suivi (tracking)", "\\btrack|\\bSOT\\b"],
+      ["navigation / odométrie", "navig|odometry|\\bSLAM\\b|optical flow|collision"],
+      ["estimation de pose", "pose estimation"],
+      ["segmentation", "segment"],
+      ["vision-langage (VLM)", "\\bVLM\\b|\\bVQA\\b|language|caption"],
+      ["détection", "detection"],
+      ["classification", "classification"]
+    ],
+    "families": [
+      ["neuromorphique", "loihi|neuromorph|spinnaker|akida|truenorth"],
+      ["GPU bureau", "\\bpc\\b.*gpu"]
+    ]
+  }
 }

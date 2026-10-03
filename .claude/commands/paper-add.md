@@ -24,6 +24,7 @@ thème est dans `profile.md`).
    - si `basicStart.txt` existe et que l'article y figure, les écarts entre la note de départ (titre,
      auteurs, année, venue, chiffres annoncés) et ce que dit le PDF. Un écart signale une
      référence approximative : le dire explicitement.
-4. `.venv/bin/python bin/reindex.py` et rapporte le compteur.
+4. `.venv/bin/python bin/reindex.py` et rapporte le compteur. Il refait aussi les figures
+   périmées (ligne `Figures : …`) : ne lance pas `pdb plot` en plus.
 
 Réponds en français, brièvement. Termine en proposant `/paper-fiche <paper_id>`.

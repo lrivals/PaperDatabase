@@ -5,6 +5,7 @@ Ne modifie jamais benchmarks.csv ni les fiches. Code de sortie 1 si une incohér
 """
 import csv
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -224,6 +225,17 @@ def gpu_indexes(root):
     return notes
 
 
+def refresh_figures(root):
+    """Figures de pdb plot périmées par ce changement (groupes bench et corpus) : régénérées
+    si la base les utilise déjà et que plot.auto / PDB_NO_PLOT le permettent, signalées
+    sinon (lib/plotrun.auto_refresh). Jamais bloquant."""
+    from lib import plotrun
+    lines, notes = plotrun.auto_refresh(root, groups=("bench", "corpus"))
+    for line in lines:
+        print(line)
+    return notes
+
+
 def run(root=ROOT):
     """Régénère INDEX.md et external_refs.csv. Retourne 1 si une incohérence est trouvée."""
     root = Path(root).resolve()
@@ -262,6 +274,8 @@ def run(root=ROOT):
         except Exception as e:  # l'index est dérivé : son échec ne bloque pas le reste
             notes.append(f"index de passages non reconstruit : {e}")
         notes += gpu_indexes(ROOT)
+    if root == ROOT:  # pas les corpus isolés (pdb synth, tests)
+        notes += refresh_figures(root)
     for n in notes:
         print(f"note    {n}")
     for pb in problems:
@@ -270,6 +284,8 @@ def run(root=ROOT):
 
 
 def main():
+    if "--no-plot" in sys.argv[1:]:          # figures non régénérées (lots, sous-agents)
+        os.environ["PDB_NO_PLOT"] = "1"
     sys.exit(run())
 
 

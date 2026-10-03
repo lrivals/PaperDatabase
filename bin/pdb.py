@@ -271,6 +271,10 @@ def cmd_bench(args):
     p.add_argument("--check", action="store_true", help=(
         "lignes filtrées qui ont un chunk_id : chaque valeur numérique est-elle dans le passage "
         "cité ? code 1 si une valeur manque (sans original_value lu) ou si un chunk_id est introuvable"))
+    p.add_argument("--comparable", nargs="?", const="accuracy", choices=("accuracy", "power"),
+                   help=("regroupe les lignes filtrées par conditions de comparaison (task, dataset, "
+                         "dataset_split, métrique ; + power_scope en mode power) et signale les "
+                         "comparaisons impossibles ; accuracy par défaut"))
     p.add_argument("--add-columns", metavar="COL,…|all", help=(
         "ajoute à l'en-tête ces colonnes optionnelles (n/r dans les lignes existantes) : "
         + ", ".join(schema.OPTIONAL_COLUMNS)))
@@ -318,7 +322,7 @@ def cmd_bench(args):
     rows = query.filter_rows(rows, contains, minimum, maximum, a.has)
     if a.sort:
         rows = query.sort_rows(rows, a.sort, desc=a.desc)
-    if a.n:
+    if a.n and not a.comparable:  # avec --comparable, -n porte sur les groupes
         rows = rows[:a.n]
     if not rows:
         print("# aucune ligne", file=sys.stderr)
@@ -330,6 +334,13 @@ def cmd_bench(args):
             return 0
         print(query.render_check(results, short))
         return int(any(x["status"] in ("absent", "introuvable") for x in results))
+    if a.comparable:
+        groups = query.comparable_groups(rows, a.comparable)
+        if not groups:
+            print(f"# aucune ligne filtrée n'a de {query.COMPARE_VALUE[a.comparable]}", file=sys.stderr)
+            return 1
+        print(query.render_comparable(groups, short, a.comparable, a.format, a.max_chars, a.n))
+        return 0
     if count_cols:
         print(query.count_rows(rows, count_cols, short))
         return 0

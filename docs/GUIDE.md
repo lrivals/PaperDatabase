@@ -269,6 +269,7 @@ bin/pdb cited-by 1612.07119         # papiers de la base qui citent FINN
 bin/pdb bench --own                 # vos propres mesures (paper_id own-…, DATA_MODEL §1)
 bin/pdb bench --check --paper 2110.10486   # chaque valeur est-elle dans le passage cité (chunk_id) ?
 bin/pdb bench --add-columns all     # une fois par base : colonnes optionnelles (chunk_id, split, batch…)
+bin/pdb bench --task detection --comparable   # quelles lignes se comparent vraiment ?
 ```
 
 Dans la sortie, `!` marque une ligne de confiance `low`, et les ids courts sont expliqués en

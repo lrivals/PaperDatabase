@@ -250,6 +250,41 @@ Seules les valeurs qui n'y sont pas sont listées, avec l'un de ces statuts :
 
 Code 1 si une valeur est `absent` ou un `chunk_id` `introuvable`.
 
+**`--comparable [accuracy|power]`** regroupe les lignes filtrées dont la valeur comparée est
+renseignée (`accuracy_value`, ou `power_w` en mode `power`) par conditions de comparaison :
+`task`, `dataset`, `dataset_split`, puis la métrique (mode `accuracy`) ou `power_scope` (mode
+`power`). La métrique est `metric_def`, à défaut `accuracy_metric` préfixée de `~`
+(définition non vérifiée). Une colonne optionnelle absente vaut `n/r`. Les valeurs sont
+comparées sans casse ni espaces multiples, sans autre normalisation : « top-1 » et « top-1
+accuracy » restent deux groupes, signalés.
+
+- Seuls les groupes d'au moins deux papiers sont listés ; `-n` et `--max-chars` portent sur
+  eux, et `--format json` donne tous les groupes avec leurs lignes.
+- `power_scope` (mode `accuracy`) liste les portées du groupe, pour information. `varie`
+  liste les conditions qui changent dans le groupe (`quantization`, `input_res`, `batch`,
+  `measure_protocol`) : des réserves, pas des interdictions.
+- Le pied signale les définitions non vérifiées (`~`), les groupes dont la clé contient
+  `n/r` (comparabilité non établie) et les **comparaisons impossibles** : même tâche et même
+  jeu, répartis sur plusieurs groupes, avec la colonne qui les sépare.
+
+```
+$ bin/pdb bench --comparable power
+g	n	papers	task	dataset	dataset_split	power_scope	varie
+1	9	2	classification	ImageNet	n/r	board	quantization
+2	9	2	detection	UA-DETRAC	n/r	unspecified	quantization
+3	7	2	detection	COCO	n/r	unspecified	quantization
+# n/r dans la clé (dataset_split…) : comparabilité non établie, 3 groupe(s)
+# comparaisons impossibles (même tâche et même jeu, autres conditions) :
+#   classification / ImageNet : 2 groupes, 3 papier(s) (power_scope : board | unspecified)
+…
+# 43 groupe(s) d'un seul papier omis (--format json pour tout voir)
+```
+
+Sur fpga (03/10/2026), `--task detection --dataset coco --comparable` donne 56 lignes de 7
+papiers en 9 groupes, dont aucun ne réunit deux papiers : chaque papier nomme sa mAP à sa
+façon (`mAP@0.5:0.95`, `mAP50 COCO`, `mAP*`…), ou son jeu (`COCO val (5000 images)`,
+`COCO (split n/r)`).
+
 ```
 $ bin/pdb bench --check --paper 2110.10486
 line	paper	chunk_id	column	value	status

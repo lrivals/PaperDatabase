@@ -292,7 +292,10 @@ comparent pas.
 `n/r`) ; `reindex` ne modifie jamais le CSV. `/paper-fiche` les remplit pour les nouvelles
 lignes, et les anciennes sont complétées au fil des relectures. `bin/pdb bench --check` vérifie
 que chaque valeur numérique d'une ligne qui a un `chunk_id` figure dans ce passage
-([docs/RAG.md](docs/RAG.md) §5.1) ; le banc `table_values` en donne la part (`in_cited_chunk`).
+([docs/RAG.md](docs/RAG.md) §5.1) ; le banc `table_values` en donne la part (`in_cited_chunk`). `bin/pdb bench --comparable`
+regroupe les lignes par `task`, `dataset`, `dataset_split` et métrique (`metric_def`, à
+défaut `accuracy_metric`), ou `power_scope` pour les puissances, et signale les comparaisons
+impossibles.
 
 ---
 

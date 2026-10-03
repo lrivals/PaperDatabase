@@ -752,9 +752,9 @@ Point au 03/10/2026. À mettre à jour à chaque étape franchie (cocher, dater,
 « En place »).
 
 **Bilan du 03/10/2026 (lot D, état de l'art fpga).**
-- Lot D-1 à D-4 en place : colonnes optionnelles de `benchmarks.csv` (DATA_MODEL §7),
+- Lot D en place (D-5 : `pdb bench --comparable`) : colonnes optionnelles de `benchmarks.csv` (DATA_MODEL §7),
   `pdb bench --add-columns` et `--check`, mesure `in_cited_chunk`, `/paper-fiche`. Les trois
-  bases réindexent sans changer leur CSV. 226 tests.
+  bases réindexent sans changer leur CSV. 230 tests.
 - `pdb eval --compare` (fpga) : recall@5 du holdout en hybride + rerank à 0,72, sous le
   plancher de 0,8 ; même valeur sur `main` sans le lot, donc baisse antérieure (EVAL.md §11).
 - État de l'art LaTeX fpga : trois glossaires (plateformes, modèles, métriques et unités,
@@ -1241,8 +1241,9 @@ Défauts mis au jour, à corriger (tâche 12) :
     `original_value` ; `schema.check_header`), `pdb bench --add-columns` et `--check`
     (valeur dans le passage cité), mesure `in_cited_chunk` du banc `table_values`,
     `/paper-fiche` qui les remplit. Les trois bases réindexent sans changer leur CSV ;
-  - [ ] lot D-5, `pdb bench --comparable` (regroupement par tâche, jeu, split, métrique,
-    portée de puissance) ;
+  - [x] lot D-5 (03/10/2026), `pdb bench --comparable [accuracy|power]` : groupes par tâche,
+    jeu, split, métrique (ou portée de puissance), comparaisons impossibles signalées ;
+    consigne dans `/paper-ask` ;
   - [ ] lot E, tableaux : bbox dans `sections.jsonl`, OCR par zone, index ligne par ligne
     avec légende et en-tête, indicateurs de qualité, vérité terrain annotée ;
   - [ ] lot F, recherche en français (requêtes multiples, modèle multilingue évalué, jeu

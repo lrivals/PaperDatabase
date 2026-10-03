@@ -1,6 +1,6 @@
 # Feuille de route : fiabilité des réponses, tableaux et nouveaux skills
 
-Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot D-1 à D-4 en place
+Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot D en place
 (03/10/2026) ; lot G en grande partie fait (route unique, RAG.md §13) ; autres lots non commencés (lot I, journal des
 sous-agents, spécifié le 02/10/2026). Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
@@ -206,7 +206,13 @@ original, ce qui coûte une recherche par affirmation.
 > statuts `passage` / `section` / `converti` (lu via `original_value`) / `absent` /
 > `introuvable` ; mesure `in_cited_chunk` du banc `table_values` ; `/paper-fiche`. Les trois
 > bases réindexent sans erreur avec leur CSV inchangé. `pdb synth` écrit ses propres CSV à
-> 20 colonnes, toujours valides. Reste D-5 (`--comparable`).
+> 20 colonnes, toujours valides.
+>
+> **D-5 en place le 03/10/2026** : `pdb bench --comparable [accuracy|power]`
+> (`query.comparable_groups`, `impossible_comparisons`) ; consigne dans `/paper-ask` avant
+> toute comparaison entre papiers. Écarts à la conception : la métrique est `metric_def` à
+> défaut `accuracy_metric` (marquée `~`), et `power_scope` n'entre dans la clé qu'en mode
+> `power`, où la métrique en sort ; normalisation limitée à la casse et aux espaces.
 
 **Constat.** `benchmarks.csv` a 20 colonnes fixes (`lib/schema.py:22`). Le jeu de données y
 figure, mais pas le split, la résolution, le batch, la définition exacte de la métrique ni

@@ -237,6 +237,65 @@ class TestOptionalColumns(unittest.TestCase):
         self.assertEqual(query.check_rows(self.root, [(2, ROWS[0])]), [])
 
 
+def _acc(pid, value, metric="mAP@0.5", dataset="COCO", task="detection", scope="n/r", power="n/r", **kw):
+    r = _row(pid, "m", "n/r", power, scope, dataset=dataset)
+    r.update(task=task, accuracy_metric=metric, accuracy_value=value, **kw)
+    return r
+
+
+class TestComparable(unittest.TestCase):
+    def test_grouping_and_metric_fallback(self):
+        rows = [_acc("p1", "40"), _acc("p2", "41", metric=" map@0.5 ", dataset="coco"),
+                _acc("p3", "n/r"),                                   # sans valeur : exclue
+                _acc("p4", "39", metric_def="mAP@0.5, COCO protocol")]
+        groups = query.comparable_groups(rows)
+        self.assertEqual([len(g["rows"]) for g in groups], [2, 1])
+        self.assertEqual(groups[0]["display"]["metric"], "~mAP@0.5")
+        self.assertEqual(groups[0]["papers"], ["p1", "p2"])
+        self.assertEqual(groups[1]["display"]["metric"], "mAP@0.5, COCO protocol")
+        self.assertIn("dataset_split", groups[0]["unknown"])          # colonne absente : n/r
+        self.assertIn("metric_def", groups[0]["unknown"])
+
+    def test_power_scope_only_in_power_mode(self):
+        rows = [_acc("p1", "40", power="2", scope="board"), _acc("p2", "41", power="3", scope="chip")]
+        acc = query.comparable_groups(rows)
+        self.assertEqual(len(acc), 1)
+        self.assertEqual(acc[0]["scopes"], ["board", "chip"])
+        power = query.comparable_groups(rows, "power")
+        self.assertEqual(len(power), 2)
+        self.assertNotIn("metric", power[0]["display"])
+        imp = query.impossible_comparisons(power)
+        self.assertEqual(imp[0]["differ"], {"power_scope": ["board", "chip"]})
+
+    def test_varies_and_impossible(self):
+        rows = [_acc("p1", "40", input_res="416x416"), _acc("p2", "41", input_res="640x640"),
+                _acc("p3", "50", dataset_split="val2017"), _acc("p4", "51", dataset_split="test-dev")]
+        groups = query.comparable_groups(rows)
+        first = groups[0]
+        self.assertEqual(first["papers"], ["p1", "p2"])
+        self.assertEqual(first["varies"], ["input_res"])
+        imp = query.impossible_comparisons(groups)
+        self.assertEqual(len(imp), 1)
+        self.assertEqual(imp[0]["groups"], 3)
+        self.assertEqual(set(imp[0]["differ"]), {"dataset_split"})
+        same_paper = [_acc("p1", "40"), _acc("p1", "41", metric="mAP@0.5:0.95")]
+        self.assertEqual(query.impossible_comparisons(query.comparable_groups(same_paper)), [])
+
+    def test_render(self):
+        rows = [_acc("p1", "40"), _acc("p2", "41"), _acc("p3", "50", metric="mAP@0.5:0.95")]
+        groups = query.comparable_groups(rows)
+        text = query.render_comparable(groups, {})
+        lines = text.splitlines()
+        self.assertEqual(lines[0].split("\t")[:3], ["g", "n", "papers"])
+        self.assertTrue(lines[1].startswith("1\t2\t2\tdetection\tCOCO"))
+        self.assertIn("comparaisons impossibles", text)
+        self.assertIn("1 groupe(s) d'un seul papier omis", text)
+        data = json.loads(query.render_comparable(groups, {}, fmt="json"))
+        self.assertEqual(len(data["groups"]), 2)                      # json : tous les groupes
+        alone = query.render_comparable(query.comparable_groups(rows[2:]), {})
+        self.assertIn("aucun groupe ne réunit deux papiers", alone)
+
+
 class TestLoad(unittest.TestCase):
     def test_load_from_disk(self):
         with tempfile.TemporaryDirectory() as d:

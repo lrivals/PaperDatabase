@@ -17,7 +17,12 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
    ressources, précision), commence par `bin/pdb bench` avec des filtres et `--cols` ciblés.
    Une sortie de `bench` qui répond déjà se transmet telle quelle, en tableau. Pour une vue
    d'ensemble (qui mesure quoi, avec quelle portée), `--count paper_id,power_scope` résume
-   sans lister les lignes.
+   sans lister les lignes. Avant de **comparer des chiffres de plusieurs papiers**, lance les
+   mêmes filtres avec `--comparable` (`--comparable power` pour des puissances) : ne compare
+   qu'à l'intérieur d'un groupe ; des lignes de groupes différents (« comparaisons
+   impossibles » : autre métrique, autre split, autre portée) se citent côte à côte en disant
+   pourquoi elles ne se comparent pas, et une métrique marquée `~` a une définition non
+   vérifiée (limite à signaler).
 2. **Passages (N1).** Sinon, ou en complément, lance `bin/pdb search "<question>" -k 8 --rerank`.
    - Le moteur est choisi par `search` : CPU par défaut, Qwen sur GPU si l'utilisateur a
      activé la route GPU (`bin/pdb gpu on`). Ne force pas `--gpu` ; une ligne

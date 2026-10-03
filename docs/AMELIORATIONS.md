@@ -23,9 +23,10 @@ Banc d'évaluation : [EVAL.md](EVAL.md). Schémas : [DATA_MODEL.md](../DATA_MODE
 7. [Lot G — Une route de recherche de référence](#lot-g--une-route-de-recherche-de-référence)
 8. [Lot H — Provenance des réponses](#lot-h--provenance-des-réponses)
 9. [Lot I — Journal et coût des sous-agents](#lot-i--journal-et-coût-des-sous-agents)
-10. [Nouveaux skills](#9-nouveaux-skills)
-11. [Ordre de mise en œuvre](#10-ordre-de-mise-en-œuvre)
-12. [Hors périmètre](#11-hors-périmètre)
+10. [Lot J — Outil de comparaison `pdb compare`](#lot-j--outil-de-comparaison-pdb-compare)
+11. [Nouveaux skills](#9-nouveaux-skills)
+12. [Ordre de mise en œuvre](#10-ordre-de-mise-en-œuvre)
+13. [Hors périmètre](#11-hors-périmètre)
 
 ---
 
@@ -554,6 +555,108 @@ surcoût de démarrage et taux de reprise par tâche × modèle ; la table de d�
 
 ---
 
+## Lot J — Outil de comparaison `pdb compare`
+
+**Constat.** `benchmarks.csv` est le bon point de départ : une ligne par configuration, la
+source de chaque mesure. `pdb bench --comparable` (D-5) regroupe déjà les lignes par tâche,
+jeu, split et métrique (plus `power_scope` en mode `power`). Il signale aussi les conditions
+qui varient (`query.VARYING`), celles en `n/r` et les comparaisons impossibles
+(`lib/query.py:252-365`). Il reste sept manques :
+
+1. **Pas de comparaison sur deux axes.** On choisit soit le mode `accuracy`, soit le mode
+   `power`. On ne peut donc pas demander « FPS contre puissance, à métrique et jeu égaux »,
+   qui demande d'appliquer à la fois la clé de précision et `power_scope`.
+2. **Les lignes du JSON ne sont pas traçables.** Elles ne gardent que paper, model,
+   platform et la valeur. `source_section`, `confidence`, `chunk_id` et les conditions de
+   la ligne en sont absents.
+3. **Les lignes exclues ne sont pas expliquées.** Une valeur en `n/r` disparaît sans
+   message. Un groupe d'un seul papier n'apparaît que dans un compte.
+4. **La comparaison n'a pas de niveau de confiance.** `varies` et `unknown` sont listés,
+   mais n'en tirent aucun degré. Rien ne distingue non plus `confidence`, qui mesure la
+   qualité de transcription, de la validité de la comparaison.
+5. **La sélection est limitée.** `--paper` n'est pas répétable : on ne peut pas comparer
+   les papiers A et B. Il n'y a pas de filtre par famille de plateformes.
+6. **Les figures mélangent les portées.** `bench_fps_power` (`lib/plotfig.py:204`)
+   sépare les puissances mesurées des puissances estimées, mais met `chip` et `board` dans
+   le même nuage. Elle ne s'appuie pas sur les groupes comparables.
+7. **Des conditions ne sont pas dans le schéma.** La fréquence d'horloge et la portée
+   de la latence (bout en bout, ou inférence seule) n'ont pas de colonne.
+
+**Conception.**
+
+1. **J-1. Commande.** `lib/compare.py` contient une fonction déterministe, sans modèle de
+   langage. Elle charge et filtre avec `query.load_benchmarks` et `query.filter_rows`, et
+   groupe avec `query.comparable_groups`, à étendre plutôt qu'à dupliquer.
+   `bin/pdb.py` reçoit la sous-commande `compare` :
+
+   ```bash
+   bin/pdb compare --task detection --metric mAP@0.5 --dataset COCO --x fps --y power_w
+   bin/pdb compare --paper A --paper B --platform zynq --x accuracy_value --y luts
+   ```
+
+   Options : `--task`, `--metric`, `--dataset`, `--x`, `--y` (colonnes numériques de
+   `schema.NUMERIC_COLUMNS`), `--paper` répétable, `--platform`, `--format tsv|md|json`
+   et `--max-chars`.
+
+2. **J-2. Règles.**
+   - Clé de groupe : `task`, `dataset`, `dataset_split` et la métrique (`metric_def`, à
+     défaut `~accuracy_metric`), dès qu'un axe ou un filtre porte sur la précision.
+     `power_scope` entre dans la clé dès qu'un axe est `power_w` ou une valeur qui en
+     dépend : une puissance `chip` ne se mélange jamais à une puissance `board`.
+   - Aucune valeur n'est devinée. Un `n/r` sur un axe exclut la ligne. Un `n/r` dans la
+     clé laisse la ligne dans son groupe, marquée « comparabilité non établie ».
+   - Confiance de la comparaison, par groupe :
+     - `forte` quand la clé est complète et qu'aucune condition de `VARYING` ne varie ;
+     - `réservée` quand une condition varie (résolution, quantification, batch,
+       protocole) ;
+     - `faible` quand une condition est inconnue (`n/r`) ou que la métrique n'est pas
+       vérifiée (`~`).
+   - `confidence` (`high` / `medium` / `low`) est affichée ligne par ligne comme un
+     **indicateur de qualité de transcription**. Elle ne garantit pas la validité
+     scientifique et n'entre pas dans la confiance de la comparaison.
+
+3. **J-3. Sortie en trois blocs.**
+   1. *Configurations retenues*, par groupe : valeurs des axes, `paper_id`, `model`,
+      `platform`, `source_section`, `confidence` et `chunk_id`.
+   2. *Conditions qui varient ou manquent*, avec leur nombre, par exemple « input_res
+      non renseignée pour 2 lignes » ou « quantization : INT8 | FP16 ».
+   3. *Lignes exclues* : une ligne par exclusion, avec son motif (`métrique différente`,
+      `power_scope incompatible`, `x en n/r`, `seul papier du groupe`…).
+
+   Le format `--format json` reprend ces trois blocs avec un schéma stable, documenté dans
+   `DATA_MODEL.md`. `/paper-compare` le lit, et les skills de synthèse ou de rédaction
+   peuvent le réutiliser.
+
+4. **J-4. Figures.** `pdb compare … --plot [png|svg]`, ou une figure `pdb plot`, construite
+   à partir des groupes de J-1 : FPS contre puissance, précision contre ressources. Chaque
+   `power_scope` forme une série. Une légende signale les groupes `réservée` ou `faible`.
+   On corrige au passage `bench_fps_power`, qui mélange les portées.
+
+5. **J-5. Schéma enrichi à la demande.** Les colonnes optionnelles `clock_mhz` et
+   `latency_scope` s'ajoutent à `schema.OPTIONAL_COLUMNS`, puis `pdb bench --add-columns`
+   les ajoute aux bases qui en ont besoin. Elles ne deviennent pas obligatoires. Une
+   colonne optionnelle présente rejoint `VARYING`.
+
+Principe : l'outil ne classe pas les meilleurs chiffres. Il montre **quelles lignes sont
+comparées, pourquoi elles le sont, et quelles différences empêchent une comparaison
+fiable**.
+
+**Ordre.** D'abord un MVP tabulaire (J-1 à J-3), puis les figures (J-4), puis
+l'enrichissement du schéma au fil des besoins (J-5).
+
+**Fichiers.** `lib/compare.py`, `bin/pdb.py`, `lib/query.py` (`comparable_groups`
+réutilisé et étendu), `lib/plotdata.py` et `lib/plotfig.py` (J-4), `lib/schema.py` (J-5),
+`DATA_MODEL.md` §7, `docs/GUIDE.md`, `.claude/commands/paper-ask.md` (consigne de
+comparaison), `tests/test_compare.py`.
+
+**Acceptation.** Sur la base fpga, `pdb compare --task detection --dataset COCO --x fps
+--y power_w` ne place jamais `chip` et `board` dans le même groupe. Chaque ligne filtrée
+est soit retenue, soit exclue avec un motif, sans perte silencieuse. Le JSON donne
+`source_section` et `confidence` pour chaque ligne retenue. `pdb bench --comparable` garde
+sa sortie actuelle.
+
+---
+
 ## 9. Nouveaux skills
 
 Format commun : `.claude/commands/<nom>.md`, front-matter `description`, `argument-hint`,
@@ -587,7 +690,7 @@ Workflow cible :
 | | |
 |---|---|
 | Rôle | Matrice comparant méthodes, plateformes, tâches, métriques, conditions de mesure et limites, puis accords, désaccords et **comparaisons impossibles** (conditions incompatibles ou `n/r`). |
-| Entrées | `pdb bench --comparable` (lot D), `claims.jsonl`, fiches, passages originaux. |
+| Entrées | `pdb compare --format json` (lot J), à défaut `pdb bench --comparable` (lot D) ; `claims.jsonl`, fiches, passages originaux des configurations retenues. |
 | Sortie | Réponse dans la conversation ; si demandé, `docs/comparaisons/<slug>.md` dans la base. |
 | Outils | `Read`, `Grep`, `Bash(bin/pdb bench:*)`, `search`, `show`, `verify`, `paper`. |
 | Garde-fous | Remonte au passage original derrière chaque fiche ou ligne CSV. Pas de classement entre mesures de portées, splits ou batchs différents : elles vont dans « comparaisons impossibles » avec la raison. Verdict de suffisance (lot B). |
@@ -642,7 +745,8 @@ de preuve et de citation comptent le plus), ensuite `/paper-compare`, `/table-re
 | 4 | **Lot C** + `/paper-extract` | prépare comparaison et rédaction |
 | 5 | **Lot E-a, E-c, E-d** (localisation, index, qualité) | rend les tableaux trouvables et contrôlables |
 | 6 | `/table-review`, puis **E-e** (vérité terrain) et **E-b** (OCR par zone) | E-b se juge sur E-e |
-| 7 | `/paper-compare`, `/state-of-art` | s'appuient sur C et D |
+| 7 | **Lot J-1 à J-3** (`pdb compare` tabulaire), puis `/paper-compare`, `/state-of-art` | J donne au skill une entrée déterministe ; le tout s'appuie sur C et D |
+| 7 bis | **Lot J-4, J-5** (figures, colonnes `clock_mhz`, `latency_scope`) | au fil des besoins |
 | 8 | **Lots G et H** (route de référence, provenance) | décisions éclairées par le lot A |
 | 9 | **Lot F** (français), `/research-question` | gains moins prioritaires |
 | à part | **Lot I** (journal et coût des sous-agents) | indépendant du pipeline : peut commencer à tout moment, utile dès qu'on délègue |

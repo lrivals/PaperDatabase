@@ -1,0 +1,20 @@
+{"id": "ho-y2", "q": "Comment hls4ml et FINN règlent-ils le parallélisme des couches pour équilibrer débit et ressources ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Paramètre de parallélisme d'hls4ml et son effet sur débit/ressources", "status": "couvert"},
+  {"text": "Paramètres de parallélisme de FINN (PE, SIMD, folding) et leur effet", "status": "couvert"},
+  {"text": "Comment l'équilibre entre couches / débit-ressources est obtenu dans chaque outil", "status": "couvert"}],
+ "claims": [
+  {"text": "Dans hls4ml, le parallélisme est réglé par le reuse factor, qui fixe le nombre de fois qu'un multiplieur est réutilisé pour calculer la sortie d'une couche ; reuse factor = 1 correspond à un design entièrement parallèle.", "kind": "lu",
+   "citations": [{"id": "2024-campos#020.1", "excerpt": "parallelization is configured with a \"reuse factor\" that sets the number of times a multiplier is used to compute the layer output"}, {"id": "2024-campos#020.1", "excerpt": "A fully parallel design corresponds to a reuse factor of one"}]},
+  {"text": "Dans hls4ml, un reuse factor plus grand allonge la latence et l'II du noyau matrice-vecteur mais consomme moins de ressources on-chip.", "kind": "lu",
+   "citations": [{"id": "2103.05579#011.1", "excerpt": "For larger reuse factors, the matrix-vector multiplication kernel has longer latency and II, but uses less on-chip resources"}]},
+  {"text": "hls4ml implémente chaque couche indépendamment et séquentiellement.", "kind": "lu",
+   "citations": [{"id": "2103.05579#011.1", "excerpt": "we implement each layer calculation independently and sequentially"}]},
+  {"text": "Dans FINN, l'ajustement passe par le folding (multiplexage temporel) : replier deux opérations sur une même unité divise par deux les ressources et le débit (II=2).", "kind": "lu",
+   "citations": [{"id": "2021-alonso#006.0", "excerpt": "time-multiplexing two operations onto a single compute unit will require half the hardware resources, but it will also yield half the throughput (II=2)"}]},
+  {"text": "Dans FINN, PE et SIMD déterminent le folding de chaque couche et donc le taux d'initiation du pipeline (preprint).", "kind": "lu",
+   "citations": [{"id": "2609.24757#024.0", "excerpt": "PE and SIMD choices determine the folding of each layer and therefore the initiation rate of the pipeline"}]},
+  {"text": "FINN-R règle des paramètres de concurrence P (duplication de PE), Q (scaling SIMD) et M (parallélisation multi-vecteurs) et équilibre le pipeline dataflow en élargissant les goulots d'étranglement les plus pressants.", "kind": "lu",
+   "citations": [{"id": "1809.04570#018.0", "excerpt": "concurrency parameters P (PE duplication), Q (SIMD scaling), and M (multi-vector parallelization)"}, {"id": "1809.04570#018.0", "excerpt": "it systematically widens the most pressing bottlenecks"}]},
+  {"text": "Contraste : hls4ml règle un seul paramètre (reuse factor) par couche sur un enchaînement séquentiel de couches, alors que FINN équilibre un pipeline dataflow en dimensionnant PE/SIMD de chaque couche pour égaliser les II.", "kind": "déduit", "citations": []}
+ ]}

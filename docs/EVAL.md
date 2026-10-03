@@ -688,7 +688,52 @@ Lecture :
   (« Table 3 ; Table 4 ») était refusée ; chaque partie est maintenant contrôlée.
 
 Notes humaines : `grades.csv` créés, vides. Aucun seuil fixé : il faut un second run complet
-(variance d'un run à l'autre) et la configuration hybride + rerank. Pour ce run de
+(variance d'un run à l'autre) et la configuration hybride + rerank.
+
+### Second run, lot B (02/10/2026)
+
+`bases/fpga/eval/results/2026-10-02T1358-c90d749.json` ; réponses dans
+`bases/fpga/eval/answers/2026-10-02-lotB-answers{,_holdout}/`. Même protocole et même
+configuration dégradée que le premier run (lexical seul, sans rerank : HuggingFace toujours
+bloqué par le réseau du conteneur), mais avec `/paper-ask` modifié par le lot B
+([AMELIORATIONS.md](AMELIORATIONS.md#lot-b--suffisance-des-preuves)) : exigences posées avant
+la recherche « sans plus que ce que la question demande », verdict `suffisant` seulement si
+toutes sont couvertes, verdict en tête de chaque réponse.
+
+| Jeu | n | verdict juste | citations acceptées | affirmations non soutenues | sources attendues | valeurs attendues |
+|---|---|---|---|---|---|---|
+| dev | 12 | 0,75 (0,83) | 1,00 (0,96) | 0,00 (0,02) | 0,87 (0,91) | 1,00 (1,00) |
+| holdout | 12 | 0,83 (0,92) | 1,00 (1,00) | 0,00 (0,00) | 0,50 (0,67) | 1,00 (1,00) |
+
+Entre parenthèses : premier run. Hors corpus : 6/6 reconnus `absent`, aucun faux `absent`
+(critère du lot B : ≥ 80 % et ≤ 10 %, **atteint**, comme au premier run).
+
+Lecture :
+- **Variance d'un run à l'autre.** 22 verdicts sur 24 identiques entre les deux runs ; les
+  `simple`, `numeric` et `absent` ne bougent pas, sauf dev-s2. Le banc est donc assez stable
+  pour comparer des changements de skill sur les verdicts, pas encore sur
+  `gold_source_recall` (−0,17 en holdout sans changement de la recherche).
+- **dev-s2** passe de `suffisant` à `partiel` : c'est la règle du lot B appliquée (au
+  premier run, une exigence `partiel` coexistait avec `suffisant`). Le verdict est
+  maintenant cohérent avec les exigences, mais diffère du jeu : l'exigence « argument
+  explicite FPGA plutôt que CPU/GPU » n'est pas établie par un passage. Frontière à préciser
+  dans le jeu, pas dans le skill.
+- **Synthèse** : 2/6 justes (3/6 au premier run). dev-y1, dev-y2 et ho-y3 restent
+  `partiel` : leurs exigences partielles (budgets mémoire de chaque approche, comparabilité
+  des mesures, tenue sur MCU) sont dans la question, donc la consigne « pas d'exigence plus
+  fine que la question » ne les concerne pas. Ce sont des réponses défendables : le corpus
+  ne couvre qu'en partie. ho-y1 passe à `partiel` avec une exigence non demandée
+  (« efficacité comparée sous radiation réelle ») : la consigne n'a pas été suivie là
+  (holdout : constat, aucun réglage).
+- **Citations** : toutes acceptées, aucune affirmation `lu` sans citation (la synthèse avait
+  0,92 et 0,05 au premier run).
+- Les écarts de `gold_source_recall` viennent encore surtout de sources équivalentes
+  (ligne `bench` ou passage tableau à la place de la section attendue) : même lecture qu'au
+  premier run.
+
+Notes humaines : `grades.csv` créés, vides. Seuils : toujours aucun ; deux runs existent
+désormais pour la variance, reste le run hybride + rerank et la frontière
+suffisant / partiel des questions de synthèse et de dev-s2 dans le jeu. Pour ce run de
 référence : `requirements-embed.txt` installé et `huggingface.co` joignable (bge-small et le
 cross-encoder se téléchargent au premier `pdb search`), puis `/eval-answers` sous un nouveau
-nom de run et `pdb eval --answers <dev> <holdout> --save --compare` contre ce premier run.
+nom de run et `pdb eval --answers <dev> <holdout> --save --compare` contre ce second run.

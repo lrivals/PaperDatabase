@@ -1,0 +1,17 @@
+{"id": "ho-n3", "q": "Quel débit et quelle puissance pour YOLOv8n en INT8 sur Jetson Orin Nano dans l'étude de Rey et al., et à quoi correspond cette puissance ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Débit (FPS) de YOLOv8n INT8 sur Jetson Orin Nano dans Rey et al.", "status": "couvert"},
+  {"text": "Puissance de YOLOv8n INT8 sur Jetson Orin Nano dans Rey et al.", "status": "couvert"},
+  {"text": "Ce que mesure cette puissance (méthode de mesure et portée)", "status": "couvert"}],
+ "claims": [
+  {"text": "YOLOv8n INT8 (PTQ TensorRT, 640×640) sur Jetson Orin Nano 8 GB : 44.9 FPS", "kind": "lu",
+   "citations": [{"paper": "2502.15737", "source_section": "Table 4, §4 (Fig. 4)"}]},
+  {"text": "YOLOv8n INT8 sur Jetson Orin Nano 8 GB : 7.483 W (power_scope chip, confidence high)", "kind": "lu",
+   "citations": [{"paper": "2502.15737", "source_section": "Table 4, §4 (Fig. 4)"}]},
+  {"text": "La puissance est la puissance moyenne mesurée en temps réel avec tegrastats sur Jetson, moyennée sur la durée du test (5000 images), puis utilisée pour calculer l'énergie (W·s) et l'énergie par inférence (J/inférence)", "kind": "lu",
+   "citations": [{"id": "2502.15737#013.0", "excerpt": "Real-time power usage was monitored using tegrastats for Jetson devices"},
+                 {"id": "2502.15737#013.0", "excerpt": "Power data, averaged over the duration, were used to calculate the energy consumption (W•s)"}]},
+  {"text": "Le temps d'itération moyen de YOLOv8n INT8 sur Orin Nano est de 23.16 ms", "kind": "lu",
+   "citations": [{"id": "2502.15737#016.0", "excerpt": "the YOLOv8n_INT8 model excelled with an average iteration time of 23.16 ms"}]},
+  {"text": "Le papier ne précise pas quel rail ou périmètre exact (puce, module ou carte) tegrastats rapporte : le power_scope chip de la base est une classification de la base, pas une déclaration des auteurs", "kind": "déduit", "citations": []}
+ ]}

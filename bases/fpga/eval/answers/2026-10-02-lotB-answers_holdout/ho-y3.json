@@ -1,0 +1,19 @@
+{"id": "ho-y3", "q": "Quelles méthodes du corpus limitent l'oubli catastrophique en apprentissage incrémental de classes, et lesquelles tiennent sur microcontrôleur ?", "verdict": "partiel",
+ "requirements": [
+  {"text": "Méthodes du corpus qui limitent l'oubli catastrophique en class-incremental learning", "status": "couvert"},
+  {"text": "Lesquelles de ces méthodes tiennent sur microcontrôleur (mémoire, latence, plateforme MCU)", "status": "partiel"}],
+ "claims": [
+  {"text": "Les techniques de continual learning se rangent en trois familles : régularisation des paramètres, architectures dynamiques à isolation de paramètres, et replay d'échantillons passés.", "kind": "lu",
+   "citations": [{"id": "2021-piyasena-accelerating-continual-learning-edge-fpga#002.0", "excerpt": "regularization of model parameters"}]},
+  {"text": "En scénario class/domain-incremental, les approches par mémoire (replay) font mieux que la régularisation, qui contraint la mise à jour des paramètres à faible coût mémoire ; leur défaut est la mémoire nécessaire au stockage des échantillons.", "kind": "lu",
+   "citations": [{"id": "2110.10486#001.3", "excerpt": "memory-based approaches, which preserve samples from previous tasks for replaying, perform better than regularization techniques"}]},
+  {"text": "QLR-CL (latent replay quantifié, UINT-8) atteint 69.2 % d'accuracy sur Core50 NICv2-391 (1500 LR) en INT8/UINT-8/FP32, mais sur STM32L476RG (Cortex-M4 @ 80 MHz) la latence par événement d'apprentissage est de 139000 ms ; la puissance est n/r.", "kind": "lu",
+   "citations": [{"paper": "2110.10486", "source_section": "Table IV, §V-E"}]},
+  {"text": "Les auteurs jugent la latence trop grande pour être réaliste sur STM32L4 (de l'ordre d'une journée par événement avec l = 23).", "kind": "lu",
+   "citations": [{"id": "2110.10486#020.2", "excerpt": "too large a latency to be realistic on STM32L4"}]},
+  {"text": "O-FSCIL apprend une nouvelle classe en étendant une mémoire explicite de prototypes, le reste du réseau restant figé (ce qui évite l'oubli) ; il est implémenté sur le MCU GAP9 (60 mW) pour 12 mJ par nouvelle classe.", "kind": "lu",
+   "citations": [{"id": "2403.07851#000.0", "excerpt": "the remaining architecture is kept frozen"}, {"id": "2403.07851#000.0", "excerpt": "60 mW GAP9 microcontroller, demonstrating online learning capabilities within just 12 mJ per new class"}]},
+  {"text": "ImageHD (HDC + CNN quantifié, FPGA) borne le nombre d'exemplaires de classes via une mémoire d'exemplaires unifiée ; c'est un accélérateur FPGA, pas un MCU.", "kind": "lu",
+   "citations": [{"id": "2604.21280#000.0", "excerpt": "bounds total class exemplars through a unified exemplar memory"}]},
+  {"text": "Parmi les méthodes du corpus, O-FSCIL sur GAP9 est la seule dont une exécution pratique sur MCU est démontrée ici ; QLR-CL ne tient sur Cortex-M4 qu'en mémoire/code, pas en temps réaliste (déduit des passages lus).", "kind": "déduit", "citations": []}
+ ]}

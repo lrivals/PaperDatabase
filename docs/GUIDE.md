@@ -104,6 +104,9 @@ Claude lit `fulltext.md` en entier et produit deux choses :
 
 **3. Interroger.** Dans Claude Code, lancez `/paper-ask <question>`. Claude recherche des
 passages dans le corpus, lit les sources originales et vérifie les comparaisons chiffrées.
+La réponse s'ouvre par un verdict (`suffisant`, `partiel` ou `absent`) et la liste de ce
+qu'une réponse complète doit établir, chaque point marqué couvert, partiel ou absent : vous
+voyez d'emblée si la base suffit.
 Il peut ajouter un article libre d'accès pertinent si la base ne suffit pas. Sans l'index
 RAG facultatif, l'ordre manuel reste `INDEX.md`, `benchmarks.csv`, fiches, puis
 `fulltext.md`. Il n'ouvre jamais le PDF. Exemples de questions :

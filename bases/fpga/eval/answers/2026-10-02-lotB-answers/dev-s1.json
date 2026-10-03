@@ -1,0 +1,13 @@
+{"id": "dev-s1", "q": "Comment FINN mesure-t-il la consommation électrique : au mur ou sur les rails d'alimentation du FPGA ?", "verdict": "suffisant",
+ "requirements": [
+  {"text": "Méthode de mesure de puissance de FINN (au mur, sur les rails FPGA, ou les deux)", "status": "couvert"},
+  {"text": "Portée de chaque mesure (puce/FPGA vs carte entière) et instrument utilisé", "status": "couvert"}],
+ "claims": [
+  {"text": "Le FINN original rapporte deux mesures par expérience : P chip, via l'interface PMBus qui surveille les rails d'alimentation du FPGA, et P wall, via un wattmètre au mur pour la consommation totale de la carte.", "kind": "lu",
+   "citations": [{"id": "1612.07119#019.3", "excerpt": "P chip using the PMBus interface to monitor the FPGA power supply rails, and P wall using a wall power meter for the total board power consumption"}]},
+  {"text": "Les mesures sont moyennées sur 10 s pendant l'exécution de l'accélérateur.", "kind": "lu",
+   "citations": [{"id": "1612.07119#019.3", "excerpt": "The measurements are averaged over a period of 10 seconds while the accelerator is running"}]},
+  {"text": "FINN-R (Table 5) note que certaines puissances ne sont pas des puissances carte complète, mais seulement celles des rails PMBus disponibles.", "kind": "lu",
+   "citations": [{"id": "1809.04570#038.0", "excerpt": "no full board power, only as measured by PMBUS available rails"}]},
+  {"text": "La réponse à la question n'est donc pas l'un ou l'autre : FINN rapporte les deux, et il faut préciser P chip ou P wall pour comparer avec d'autres travaux.", "kind": "déduit", "citations": []}
+ ]}

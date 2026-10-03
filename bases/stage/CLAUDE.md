@@ -92,5 +92,9 @@ les signaler plutôt que de les combler par des suppositions.
 ## Format des réponses
 
 - Structurées et concises, tableaux pour toute comparaison.
+- Une réponse sur le corpus s'ouvre par son verdict de suffisance (`suffisant | partiel |
+  absent`) et la liste de ses exigences avec leur statut (`couvert | partiel | absent`), puis
+  **Lu / Déduit / Non trouvé dans la base** (règle de `/paper-ask`). Un verdict `absent`
+  dit que la base ne couvre pas le sujet, pas que la littérature l'ignore.
 - Une synthèse d'article suit : problème, méthode, résultats, limites, pertinence pour le thème.
 - Terminer par 2-3 pistes concrètes : papier à lire, expérience à reproduire, gap à creuser.

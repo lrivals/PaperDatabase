@@ -1,0 +1,12 @@
+{"id": "dev-n1", "q": "Quel débit et quelle latence d'inférence TinyissimoYOLO atteint-il sur le MAX78000 ?", "verdict": "suffisant",
+ "requirements": [{"text": "Débit (FPS) de TinyissimoYOLO sur MAX78000", "status": "couvert"},
+                  {"text": "Latence d'inférence de TinyissimoYOLO sur MAX78000", "status": "couvert"}],
+ "claims": [
+  {"text": "TinyissimoYOLO atteint un débit allant jusqu'à 180 fps sur le MAX78000 (accélérateur CNN, 1,2 V, 50 MHz), quantifié 8 bits, entrée 88×88.", "kind": "lu",
+   "citations": [{"id": "2306.00001#000.0", "excerpt": "achieving high frame-rate of up to 180 fps and an ultra-low energy consumption of only 196 µJ per inference"},
+                 {"paper": "2306.00001", "source_section": "Abstract, §III (Fig. 2), Table II"}]},
+  {"text": "Le MAX78000 exécute une inférence en 5,5 ms, contre 359 ms pour le STM32H7A3, deuxième plus rapide.", "kind": "lu",
+   "citations": [{"id": "2306.00001#006.2", "excerpt": "MAX78000 runs one inference within 5.5 ms"},
+                 {"paper": "2306.00001", "source_section": "§III (Fig. 2a), Table II"}]},
+  {"text": "180 fps et 5,5 ms par inférence sont cohérents entre eux (1/5,5 ms ≈ 182 fps), ce qui suggère un débit mesuré en inférences successives de batch 1.", "kind": "déduit", "citations": []}
+ ]}

@@ -1,0 +1,14 @@
+{"id": "dev-n3", "q": "Quel mAP de détection sur VOC MCUNetV2 obtient-il sous 256 kB et sous 512 kB de SRAM ?", "verdict": "suffisant",
+ "requirements": [{"text": "mAP VOC de MCUNetV2 sous 256 kB de SRAM", "status": "couvert"},
+                  {"text": "mAP VOC de MCUNetV2 sous 512 kB de SRAM", "status": "couvert"}],
+ "claims": [
+  {"text": "MCUNetV2-M4 (STM32F412, 256 kB SRAM, pic SRAM 247 kB) obtient 64.6 % de mAP sur Pascal VOC (YOLOv3, INT8)", "kind": "lu",
+   "citations": [{"paper": "2110.15352", "source_section": "Table 3"},
+                 {"id": "2110.15352#030.0", "excerpt": "MCUNetV2-M4 | 0.47M 172M | 247kB | 64.6% | +13.2%"}]},
+  {"text": "MCUNetV2-H7 (STM32H743, 512 kB SRAM, pic SRAM 438 kB) obtient 68.3 % de mAP sur Pascal VOC (YOLOv3, INT8)", "kind": "lu",
+   "citations": [{"paper": "2110.15352", "source_section": "Table 3"},
+                 {"id": "2110.15352#030.0", "excerpt": "MCUNetV2-H7 | 0.67M 343M | 438kB | 68.3% | +16.9%"}]},
+  {"text": "Les deux configurations sont celles rapportées par l'article : M4 avec 256 kB SRAM et H7 avec 512 kB SRAM", "kind": "lu",
+   "citations": [{"id": "2110.15352#009.0", "excerpt": "We provide MCUNetV2 results for M4 MCU with 256kB SRAM and H7 MCU with 512kB SRAM"}]},
+  {"text": "Le gain face à MCUNet (51.4 %) est de +16.9 points sous 512 kB (68.3 - 51.4) ; le texte du §4.3 écrit 16.7 %, la Table 3 et sa légende 16.9 %", "kind": "déduit", "citations": []}
+ ]}

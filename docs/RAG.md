@@ -398,13 +398,19 @@ identifiants courts en fin de réponse.
 Fichier [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md). Outils autorisés :
 `Read`, `bin/pdb bench|search|show|paper|verify`. Déroulé demandé à Claude :
 
+0. Avant la recherche : 2 à 5 **exigences** tirées de la question (ce qu'une réponse
+   complète doit établir).
 1. Question chiffrée : `pdb bench` d'abord (N0).
 2. Sinon, ou en complément : `pdb search --rerank` avec une ou deux formulations **en anglais**, `-k 8` ;
-   si aucun extrait ne répond → le dire, ne pas combler.
+   aucun score ne détecte le hors-corpus, c'est le contenu des extraits qui décide → ne pas combler.
 3. `pdb show` sur les 2 ou 3 passages les plus prometteurs seulement ; jamais `fulltext.md`.
 4. Réponse avec citations `[chunk_id]` ; `pdb verify` sur chaque citation textuelle ; toute
    citation `ABSENT` est retirée, et un `chunk_id` faux est corrigé.
-5. Structure : **Lu** (sourcé), puis **Déduit**, puis **Non trouvé dans la base**.
+5. Suffisance (lot B, 02/10/2026) : chaque exigence `couvert` (passage vérifié), `partiel`
+   (passage voisin : autre plateforme, batch, portée de puissance) ou `absent` ; verdict
+   `suffisant` (toutes couvertes), `absent` (toutes absentes) ou `partiel`. La réponse
+   s'ouvre par le verdict et les exigences, puis **Lu** (sourcé), **Déduit**, **Non trouvé
+   dans la base** (exigences absentes). Un verdict `absent` renvoie à `/paper-discover`.
    Signalements obligatoires : `confidence: low`, `preprint`, `power_scope` hétérogènes.
 6. 2 ou 3 pistes (règle de `CLAUDE.md`).
 

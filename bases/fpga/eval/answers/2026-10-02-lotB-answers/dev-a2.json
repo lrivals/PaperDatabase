@@ -1,0 +1,6 @@
+{"id": "dev-a2", "q": "Quels accélérateurs FPGA reconnaissent la langue des signes en temps réel, et avec quelle précision ?", "verdict": "absent",
+ "requirements": [
+  {"text": "Accélérateurs FPGA de reconnaissance de la langue des signes", "status": "absent"},
+  {"text": "Fonctionnement en temps réel (FPS / latence) de ces accélérateurs", "status": "absent"},
+  {"text": "Précision rapportée (jeu de données, métrique)", "status": "absent"}],
+ "claims": []}

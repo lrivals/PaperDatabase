@@ -386,7 +386,7 @@ Au 01/10/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-
   [bases/stage/gaps.md](bases/stage/gaps.md), dont 12 étayés. Les références sans version
   téléchargeable automatiquement restantes sont à déposer à la main (liste dans [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire)).
 
-### Ce qui marche (testé : 230 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
+### Ce qui marche (testé : 288 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 
 - acquisition arXiv, DOI (via OpenAlex), PDF local, par lot ; exports `.bib` / `.ris`
   éditeur prioritaires sur l'en-tête GROBID (vérifié sur 6 exports IEEE, ACM, MDPI,
@@ -402,7 +402,8 @@ Au 01/10/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-
   tableaux reconstruits, marqués « à vérifier » ; 0,87 et 0,90 des tableaux ont un corps) ;
 - banc d'évaluation `bin/pdb eval` : qualité d'extraction, recherche, `verify`, temps ;
   comparaison entre deux runs et seuils, avec un jeu de questions et des runs propres à chaque
-  base ([docs/EVAL.md](docs/EVAL.md), §9) ; réponses finales de `/paper-ask` notées sans LLM
+  base ([docs/EVAL.md](docs/EVAL.md), §9), rejeu sur un sous-corpus (`--papers`) pour séparer
+  l'effet du corpus de celui du code ; réponses finales de `/paper-ask` notées sans LLM
   (`pdb eval --answers`, skill `/eval-answers`, EVAL.md §10), premier run sur fpga : hors
   corpus reconnu 6/6, verdict juste 0,83 (dev) et 0,92 (holdout) ;
 - plusieurs bases séparées : registre, `pdb --base`, `pdb base new|scan|import`, profil

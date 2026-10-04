@@ -447,7 +447,11 @@ sans `base.json` (corpus de test, `pdb synth`) prend la configuration de `bases/
 `bin/pdb test` porte toujours sur le dépôt du code. `bin/pdb eval` suit la base active : ses
 questions dans `eval/fixtures/` (à défaut celles du code, `tests/fixtures/`, écrites pour la base
 fpga), ses seuils `eval/thresholds.json` et ses runs dans `eval/results/`
-([docs/EVAL.md §9](docs/EVAL.md#9-banc-par-base)). Les jeux de réponses finales
+([docs/EVAL.md §9](docs/EVAL.md#9-banc-par-base)). Depuis le 04/10/2026, le volet `rag` d'un run
+enregistre son corpus (`corpus` : `n_papers`, `papers`, `subset`). Un run sur sous-corpus
+(`pdb eval --papers`) se termine par `-sub.json` ; ses jeux portent `skipped` (questions sans
+papier attendu dans le sous-corpus). Les questions élargies après lecture portent `revised`,
+et `pattern_added` quand le motif appliqué aux papiers ajoutés diffère de `pattern`. Les jeux de réponses finales
 (`answers.jsonl`, `answers_holdout.jsonl`) suivent la même règle ; les réponses enregistrées
 d'un run vont dans `eval/answers/<run>/` (un `<id>.json` par question, `grades.csv` pour
 les notes humaines), versionnées avec la base ([docs/EVAL.md §10](docs/EVAL.md#10-réponses-finales-pdb-eval---answers-02102026)).

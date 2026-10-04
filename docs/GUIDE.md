@@ -449,6 +449,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb gpu [on\|off\|status]` | route GPU optionnelle (Qwen3, CUDA) pour `search` ; `search --gpu\|--cpu` pour une seule requête |
 | `bin/pdb rag …` | outils de la route GPU : index de preuves, `acquire` / `approve` d'articles open access (RAG.md §13) |
 | `bin/pdb eval [--extract\|--rag\|--speed] [--gpu] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
+| `bin/pdb eval --papers <liste\|run.json>` | recherche rejouée sur un sous-corpus (liste de `paper_id`, ou papiers d'un run enregistré) : sépare un écart dû au corpus d'un écart dû au code ; runs `-sub`, hors figures ([EVAL.md §9](EVAL.md#lot-k-0--cause-de-la-baisse-du-holdout-fpga-04102026-commit-84c0eac)) |
 | `bin/pdb eval --answers <run>…` | note les réponses enregistrées d'un run (EVAL.md §10) |
 | `bin/pdb grobid start\|stop\|status` | GROBID |
 | `bin/pdb viz` | visualisation (http://127.0.0.1:8050) |

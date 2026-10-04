@@ -468,7 +468,7 @@ def fig_eval_extraction(ctx):
     ext, run = _eval(ctx, "extraction")
     q = ext.get("quality", {})
     per = q.get("per_paper", {})
-    ids = sorted(per, key=lambda p: per[p].get("coverage", 0))
+    ids = sorted(per, key=lambda p: per[p].get("coverage") or 0)
     short = ctx.short
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(11, max(4, 0.2 * len(ids) + 1.8)), sharey=True,
                                  gridspec_kw={"width_ratios": (3, 2)})
@@ -476,13 +476,13 @@ def fig_eval_extraction(ctx):
            f"Couverture moyenne {q.get('coverage_mean', 0):.3f} ; tableaux avec corps "
            f"{q.get('tables_with_body_rate', 0):.0%} ({q.get('tables', '?')} tableaux).")
     y = range(len(ids))
-    a1.barh(y, [per[p].get("coverage", 0) for p in ids], color=PALETTE[0], height=0.7, zorder=3)
+    a1.barh(y, [per[p].get("coverage") or 0 for p in ids], color=PALETTE[0], height=0.7, zorder=3)
     thr = ctx.thresholds.get("extraction.quality.coverage_mean", {}).get("min")
     if thr is not None:
         a1.axvline(thr, color=INK_MUTED, lw=1, ls="--", zorder=4)
         a1.text(thr, -0.9, f"seuil moyenne {thr:g} ", fontsize=7, color=INK_MUTED, ha="right")
     a1.axvline(q.get("coverage_mean", 0), color=INK, lw=1.2, zorder=4)
-    a1.set_xlim(min(0.7, min((per[p].get("coverage", 1) for p in ids), default=0.7) - 0.02), 1)
+    a1.set_xlim(min(0.7, min((per[p].get("coverage") or 1 for p in ids), default=0.7) - 0.02), 1)
     a1.set_xlabel("couverture (texte extrait / texte du PDF)")
     a1.set_yticks(list(y), [short.get(p, p) for p in ids], fontsize=7)
     a1.set_title("Couverture", fontsize=9)

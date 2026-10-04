@@ -38,7 +38,7 @@
   plot [bench|eval|corpus|all] [--only a,b] [--out DIR] [--format png|pdf|svg] [--list] [--stale]
   plot --check [--brief] [--paper ID]
                             figures statiques : benchmarks, évaluation, statistiques du corpus
-  eval [--extract|--rag|--speed] [--gpu] [--save] [--compare [JSON]]
+  eval [--extract|--rag|--speed] [--gpu] [--papers FICHIER] [--save] [--compare [JSON]]
                             banc d'évaluation du logiciel (docs/EVAL.md)
   eval --answers DIR… | --questions [JEU]
                             note les réponses enregistrées d'un run / liste les questions
@@ -807,11 +807,16 @@ def _print_eval(res):
         print()
     rg = res.get("rag")
     if rg:
-        print(f"## Recherche de passages ({rg['passages']} passages, {rg['model']})")
+        corpus = rg.get("corpus") or {}
+        sub = " ; sous-corpus" if corpus.get("subset") else ""
+        print(f"## Recherche de passages ({rg['passages']} passages, "
+              f"{corpus.get('n_papers', '?')} papiers{sub}, {rg['model']})")
         print("jeu\tmode\trecall@5\trecall@10\tMRR\tnDCG@10\tpaper@5")
         for name, st in rg["sets"].items():
+            if st.get("skipped"):
+                print(f"{name}\t{st['skipped']} question(s) hors du sous-corpus, ignorée(s)")
             for mode, m in st.items():
-                if mode == "n":
+                if not isinstance(m, dict):
                     continue
                 print(f"{name} ({st['n']} q.)\t{mode}\t{m['recall@5']:.2f}\t{m['recall@10']:.2f}\t"
                       f"{m['mrr']:.2f}\t{m['ndcg@10']:.2f}\t{m['paper@5']:.2f}")
@@ -898,6 +903,10 @@ def cmd_eval(args):
     p.add_argument("--questions", nargs="?", const="answers", metavar="JEU",
                    help="affiche id et question d'un jeu de réponses (answers, answers_holdout), "
                         "sans les attentes, puis s'arrête")
+    p.add_argument("--papers", metavar="FICHIER",
+                   help="volet --rag sur un sous-corpus : liste de paper_id (un par ligne) ou run "
+                        "enregistré (sa liste corpus.papers) ; diagnostic d'écart corpus / code "
+                        "(docs/EVAL.md §9, lot K)")
     p.add_argument("--save", action="store_true", help="enregistre eval/results/<date>-<commit>.json")
     p.add_argument("--compare", nargs="?", const="last", metavar="JSON",
                    help="écarts avec un run enregistré (défaut : le dernier) ; code 1 si un seuil n'est pas atteint")
@@ -921,6 +930,16 @@ def cmd_eval(args):
         if not path.exists():
             p.error(f"--answers : introuvable : {d}")
         records.append(path)
+    paper_ids = None
+    if a.papers:
+        path = Path(a.papers).expanduser()
+        if not path.exists() and (ROOT / a.papers).exists():
+            path = ROOT / a.papers
+        try:
+            paper_ids = ev.read_paper_ids(path)
+        except (OSError, ValueError) as e:
+            p.error(f"--papers : {e}")
+        a.rag = True
     if not (a.extract or a.rag or a.speed or a.answers):
         a.extract = a.rag = a.speed = True
     # le banc porte sur la base active : ses questions (eval/fixtures/, à défaut celles du
@@ -932,9 +951,9 @@ def cmd_eval(args):
                              "tables": ev.table_values(ROOT)}
     if a.rag:
         try:
-            res["rag"] = ev.rag_quality(ROOT, fixtures, gpu=a.gpu)
-        except RuntimeError as e:
-            print(f"pdb eval --gpu : {e}", file=sys.stderr)
+            res["rag"] = ev.rag_quality(ROOT, fixtures, gpu=a.gpu, paper_ids=paper_ids)
+        except (RuntimeError, ValueError) as e:
+            print(f"pdb eval : {e}", file=sys.stderr)
             return 1
     if a.speed:
         res["speed"] = ev.speed(ROOT, fixtures, cli=not a.no_cli)
@@ -946,7 +965,7 @@ def cmd_eval(args):
     thresholds = json.loads(thresholds_path.read_text())
     fails = [f for f in ev.check_thresholds(flat, thresholds) if f[0].split(".")[0] in res]
     if a.compare:
-        runs = sorted(results.glob("*.json"))
+        runs = sorted(r for r in results.glob("*.json") if not r.stem.endswith("-sub"))
         ref = Path(a.compare) if a.compare != "last" else (runs[-1] if runs else None)
         if ref is None:
             print("\n# aucun run enregistré à comparer (pdb eval --save)")
@@ -966,7 +985,7 @@ def cmd_eval(args):
                                capture_output=True, text=True).stdout.strip()
         stamp = datetime.datetime.now().strftime("%Y-%m-%dT%H%M")
         results.mkdir(parents=True, exist_ok=True)
-        out = results / f"{stamp}-{sha}{'-dirty' if dirty else ''}{'-gpu' if a.gpu else ''}.json"
+        out = results / f"{stamp}-{sha}{'-dirty' if dirty else ''}{'-gpu' if a.gpu else ''}{'-sub' if paper_ids else ''}.json"
         out.write_text(json.dumps({"date": stamp, "commit": sha, "dirty": bool(dirty),
                                    "base": base.CONFIG["name"], "volets": sorted(res), "results": res},
                                   ensure_ascii=False, indent=1, default=str) + "\n")

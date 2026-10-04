@@ -498,16 +498,50 @@ def verify_accuracy(index, n=40, seed=0):
             for case, d in by_case.items()}
 
 
-def rag_quality(root, fixtures, modes=None, verify_n=40, gpu=False):
+def read_paper_ids(path):
+    """Liste de paper_id pour pdb eval --papers : un run enregistré (corpus.papers de son
+    volet rag) ou un fichier texte, un id par ligne (# commentaires ignorés)."""
+    path = Path(path)
+    if path.suffix == ".json":
+        run = json.loads(path.read_text())
+        ids = (run.get("results", run).get("rag", {}).get("corpus") or {}).get("papers")
+        if not ids:
+            raise ValueError(f"{path.name} : pas de liste corpus.papers (run antérieur au lot K)")
+        return list(ids)
+    return [ln.split("#")[0].strip() for ln in path.read_text().splitlines()
+            if ln.split("#")[0].strip()]
+
+
+def in_subcorpus(question, paper_ids):
+    """Vrai si au moins une section attendue appartient au sous-corpus."""
+    return any(e.split("#")[0] in paper_ids for e in question["expect"])
+
+
+def rag_quality(root, fixtures, modes=None, verify_n=40, gpu=False, paper_ids=None):
     """gpu=True : mêmes jeux et mêmes clés avec le moteur Qwen (route GPU), pour que
-    pdb eval --rag --gpu --compare <run CPU> compare les deux moteurs."""
+    pdb eval --rag --gpu --compare <run CPU> compare les deux moteurs.
+
+    paper_ids : sous-corpus (lot K-0/K-5). L'index n'est construit que sur ces papiers
+    (BM25 compris) ; une question sans section attendue dans le sous-corpus est ignorée et
+    comptée dans `skipped`."""
     from lib import rag
     modes = modes or rag.MODES + ("hybrid+rerank",)
-    index = rag.Index(root, rerank="hybrid+rerank" in modes, gpu=gpu)
+    chunks = None
+    if paper_ids is not None:
+        paper_ids = set(paper_ids)
+        chunks = [c for c in rag.load_chunks(root) if c["paper_id"] in paper_ids]
+        missing = paper_ids - {c["paper_id"] for c in chunks}
+        if missing:
+            raise ValueError(f"--papers : {len(missing)} papier(s) absent(s) de la base : "
+                             + ", ".join(sorted(missing)[:5]))
+    index = rag.Index(root, chunks=chunks, rerank="hybrid+rerank" in modes, gpu=gpu)
     if gpu and not index.gpu:
         raise RuntimeError(index.note.removesuffix(" ; moteur CPU"))
+    papers = sorted({c["paper_id"] for c in index.chunks})
     out = {"passages": len(index.chunks), "model": index.model, "dense": index.dense,
-           "gpu": index.gpu, "sets": {}}
+           "gpu": index.gpu, "corpus": {"n_papers": len(papers), "papers": papers,
+                                        "subset": paper_ids is not None},
+           "sets": {}}
     sets = {}
     for name in RAG_SETS + NEG_SETS:
         path = Path(fixtures) / f"{name}.jsonl"
@@ -515,7 +549,13 @@ def rag_quality(root, fixtures, modes=None, verify_n=40, gpu=False):
             sets[name] = load_jsonl(path)
     for name in RAG_SETS:
         if name in sets:
-            out["sets"][name] = {"n": len(sets[name]), **evaluate_set(index, sets[name], modes)}
+            qs = sets[name]
+            if paper_ids is not None:
+                qs = [q for q in qs if in_subcorpus(q, paper_ids)]
+            out["sets"][name] = {"n": len(qs), **evaluate_set(index, qs, modes)}
+            if len(qs) < len(sets[name]):
+                out["sets"][name]["skipped"] = len(sets[name]) - len(qs)
+            sets[name] = qs
     if all(name in sets for name in ("rag_eval", "rag_eval_holdout") + NEG_SETS):
         out["low_relevance"] = low_relevance(index, sets["rag_eval"], sets[NEG_SETS[0]],
                                              sets["rag_eval_holdout"], sets[NEG_SETS[1]])

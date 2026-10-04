@@ -432,14 +432,15 @@ VOLETS = ("extraction", "rag", "speed")
 
 
 def load_eval_runs(results_dir):
-    """Runs de pdb eval --save, du plus ancien au plus récent (tri sur date puis nom)."""
+    """Runs de pdb eval --save, du plus ancien au plus récent (tri sur date puis nom).
+    Les runs sur sous-corpus (pdb eval --papers, diagnostic) ne font pas partie de l'historique."""
     runs = []
     for p in sorted(Path(results_dir).glob("*.json")):
         try:
             d = json.loads(p.read_text())
         except (OSError, json.JSONDecodeError):
             continue
-        if isinstance(d.get("results"), dict):
+        if isinstance(d.get("results"), dict) and not dig(d["results"], "rag.corpus.subset"):
             d["_file"] = p.name
             runs.append(d)
     return sorted(runs, key=lambda d: (d.get("date") or "", d["_file"]))

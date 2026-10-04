@@ -150,6 +150,39 @@ class TestRagMetrics(unittest.TestCase):
         self.assertEqual(out["lexical"]["recall@5"], 0.5)
         self.assertEqual(out["lexical"]["misses"], ["unrelated zzz"])
 
+    def test_rag_quality_subcorpus(self):
+        fx = self.root / "fixtures"
+        fx.mkdir()
+        qs = [{"q": "wall power meter", "expect": ["arxiv-1612.07119-finn#001"]},
+              {"q": "tiny memory", "expect": ["2021-lin-mcunet#000"]}]
+        (fx / "rag_eval.jsonl").write_text("\n".join(json.dumps(q) for q in qs) + "\n")
+        modes = ("lexical",)
+        full = ev.rag_quality(self.root, fx, modes=modes, verify_n=2)
+        self.assertEqual(full["corpus"], {"n_papers": 2, "subset": False,
+                                          "papers": ["2021-lin-mcunet", "arxiv-1612.07119-finn"]})
+        self.assertNotIn("skipped", full["sets"]["rag_eval"])
+        sub = ev.rag_quality(self.root, fx, modes=modes, verify_n=2,
+                             paper_ids=["arxiv-1612.07119-finn"])
+        self.assertTrue(sub["corpus"]["subset"])
+        self.assertEqual(sub["corpus"]["papers"], ["arxiv-1612.07119-finn"])
+        self.assertLess(sub["passages"], full["passages"])
+        self.assertEqual((sub["sets"]["rag_eval"]["n"], sub["sets"]["rag_eval"]["skipped"]), (1, 1))
+        # la liste des papiers n'entre pas dans les métriques comparées
+        self.assertNotIn("rag.corpus.papers", ev.flatten({"rag": sub}))
+        with self.assertRaises(ValueError):
+            ev.rag_quality(self.root, fx, modes=modes, paper_ids=["absent-paper"])
+
+    def test_read_paper_ids(self):
+        txt = self.root / "ids.txt"
+        txt.write_text("a-1  # commentaire\n\n# ligne vide\nb-2\n")
+        self.assertEqual(ev.read_paper_ids(txt), ["a-1", "b-2"])
+        run = self.root / "run.json"
+        run.write_text(json.dumps({"results": {"rag": {"corpus": {"papers": ["x"]}}}}))
+        self.assertEqual(ev.read_paper_ids(run), ["x"])
+        run.write_text(json.dumps({"results": {"rag": {}}}))
+        with self.assertRaises(ValueError):
+            ev.read_paper_ids(run)
+
     def test_best_threshold(self):
         self.assertEqual(ev.best_threshold([0.8, 0.9], [0.1, 0.3]), 0.55)
         self.assertIn(ev.best_threshold([0.5], [0.5]), (0.5 - 1e-6, 0.5 + 1e-6))  # inséparables

@@ -3,7 +3,7 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-10-03T23:13:04",
+  "generated": "2026-10-04T01:26:38",
   "config_hash": "79f48ce3d9",
   "sources": [
    "papers/*/metadata.json"
@@ -14,7 +14,7 @@
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-10-03T23:13:04",
+  "generated": "2026-10-04T01:26:39",
   "config_hash": "79f48ce3d9",
   "sources": [
    "papers/*/metadata.json"
@@ -25,7 +25,7 @@
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-10-03T23:13:05",
+  "generated": "2026-10-04T01:26:39",
   "config_hash": "79f48ce3d9",
   "sources": [
    "benchmarks.csv"
@@ -36,7 +36,7 @@
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-10-03T23:13:08",
+  "generated": "2026-10-04T01:26:42",
   "config_hash": "79f48ce3d9",
   "sources": [
    "papers/*/refs.jsonl",
@@ -49,7 +49,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-10-03T23:13:09",
+  "generated": "2026-10-04T01:26:42",
   "config_hash": "79f48ce3d9",
   "sources": [
    "benchmarks.csv",
@@ -430,23 +430,23 @@
   "file": "eval_retrieval.png",
   "group": "eval",
   "description": "recall@5/@10 et MRR par mode et jeu de questions",
-  "generated": "2026-10-03T21:02:26",
+  "generated": "2026-10-04T01:26:38",
   "config_hash": "79f48ce3d9",
   "sources": [
-   "eval/results/2026-09-28T1043-76dc85e.json"
+   "eval/results/2026-10-03T2343-3925690.json"
   ],
-  "run": "2026-09-28T1043 · 76dc85e"
+  "run": "2026-10-03T2343 · 3925690"
  },
  "eval_verify": {
   "file": "eval_verify.png",
   "group": "eval",
   "description": "verdicts de pdb verify par perturbation",
-  "generated": "2026-10-03T21:02:26",
+  "generated": "2026-10-04T01:26:38",
   "config_hash": "79f48ce3d9",
   "sources": [
-   "eval/results/2026-09-28T1043-76dc85e.json"
+   "eval/results/2026-10-03T2343-3925690.json"
   ],
-  "run": "2026-09-28T1043 · 76dc85e"
+  "run": "2026-10-03T2343 · 3925690"
  },
  "eval_extraction": {
   "file": "eval_extraction.png",
@@ -464,23 +464,24 @@
   "file": "eval_latency.png",
   "group": "eval",
   "description": "temps d'exécution (recherche, verify, CLI)",
-  "generated": "2026-10-03T21:02:27",
+  "generated": "2026-10-04T01:26:38",
   "config_hash": "79f48ce3d9",
   "sources": [
-   "eval/results/2026-09-28T1043-76dc85e.json"
+   "eval/results/2026-10-03T2343-3925690.json"
   ],
-  "run": "2026-09-28T1043 · 76dc85e"
+  "run": "2026-10-03T2343 · 3925690"
  },
  "eval_history": {
   "file": "eval_history.png",
   "group": "eval",
   "description": "évolution des métriques au fil des runs",
-  "generated": "2026-10-03T21:02:27",
+  "generated": "2026-10-04T01:26:38",
   "config_hash": "79f48ce3d9",
   "sources": [
    "eval/results/2026-09-28T1011-78b56a9-dirty.json",
    "eval/results/2026-09-28T1016-78b56a9-dirty.json",
-   "eval/results/2026-09-28T1043-76dc85e.json"
+   "eval/results/2026-09-28T1043-76dc85e.json",
+   "eval/results/2026-10-03T2343-3925690.json"
   ]
  },
  "bench_accuracy_latency": {

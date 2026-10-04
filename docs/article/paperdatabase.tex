@@ -43,7 +43,7 @@
 \title{\textbf{PaperDatabase} : une base de connaissance textuelle et vérifiable\\
   pour la lecture assistée d'articles scientifiques}
 \author{Léonard Rivals \and Maksym Lytvynenko}
-\date{28 septembre 2026}
+\date{3 octobre 2026}
 
 \begin{document}
 \maketitle
@@ -60,21 +60,24 @@ de recherche de \gl{passage}{passages}, de type \gl{RAG}{RAG}, s'y ajoute : \gl{
 couche ne génère rien. Elle renvoie des passages identifiés, paginés et rejouables, ainsi
 qu'une commande qui contrôle qu'une citation, et en particulier ses nombres, figure bien
 dans le passage invoqué. La rédaction reste à l'agent, encadrée par des règles de sourçage.
-Un banc d'évaluation reproductible, sans LLM ni réseau, mesure l'extraction, la recherche,
-la vérification et les temps. Sur un corpus de 45 articles (3\,479 passages), la recherche
-hybride avec reranking obtient un \gl{recall}{recall@5} de 0,80 sur un jeu de questions réservé, qui n'a
-servi à aucun réglage, contre 1,00 sur le jeu qui a guidé la conception, et de 0,50 en
-français. Passer de 28 à 45 articles, à questions constantes, fait baisser le mode hybride
-sans reranking de 0,80 à 0,72 sur le jeu réservé. Un second moteur, optionnel, sur \gl{GPU}{GPU}
-(Qwen3-Embedding-4B et Qwen3-Reranker-4B) retrouve les 8 questions françaises, contre 5 pour
-le meilleur mode sur \gl{CPU}{CPU}. La vérification refuse toutes les citations dont un chiffre a été
-modifié, qu'elle acceptait auparavant. Aucun signal simple ne s'est montré fiable pour
-détecter qu'une question sort du corpus. Un essai réel de réponse sourcée a consommé environ
-2\,500 tokens, alors qu'un seul texte intégral en représente environ 13\,000 en médiane.
-Le même code sert une seconde base, sur la vision embarquée sur drone (73 articles,
-4\,525 passages), avec ses propres jeux de questions : le reranking y obtient 1,00 sur le
-jeu de développement et 0,95 sur le jeu réservé, et les mêmes faiblesses (tableaux,
-français, questions hors corpus) s'y retrouvent.
+Chaque réponse de l'agent s'ouvre par un verdict de suffisance, qui confronte les exigences
+de la question aux passages lus. Un banc d'évaluation reproductible, sans LLM ni réseau,
+mesure l'extraction, la recherche, la vérification, les temps et, depuis peu, les réponses
+rédigées. Sur 101 articles (8\,601 passages), la recherche hybride avec reranking obtient
+un \gl{recall}{recall@5} de 0,72 sur un jeu de questions réservé, qui n'a servi à aucun réglage : c'était
+0,80 sur 45 articles, et la cause de cette baisse, corpus ou code, n'est pas encore établie.
+En français, le meilleur mode sur \gl{CPU}{CPU} retrouve 4 questions sur 8 ; un moteur optionnel sur
+\gl{GPU}{GPU} (Qwen3) les retrouvait toutes sur un corpus plus petit. La vérification refuse les
+citations dont un chiffre a été modifié, à une exception près, documentée. Aucun score de
+recherche ne détecte de façon fiable qu'une question sort du corpus, mais l'agent, guidé par
+le verdict de suffisance, reconnaît les 6 questions hors corpus de l'évaluation des réponses
+sans en déclarer aucune autre absente à tort, et au second run toutes ses citations sont
+acceptées. Un
+essai réel de réponse sourcée a consommé environ 2\,500 tokens, alors qu'un seul texte
+intégral en représente environ 12\,000 en médiane, et déléguer trois fiches de lecture à des
+sous-agents a coûté 41~\% de moins que de les rédiger en direct (un seul essai). Le même code
+sert deux autres bases, sur la vision embarquée sur drone (87 articles), où la recherche
+tient son seuil, et sur l'apprentissage continu pour la maintenance prédictive (56 articles).
 \end{abstract}
 
 \clearpage
@@ -88,13 +91,14 @@ sur la vision embarquée sur \gl{FPGA}{FPGA} (détecteurs \gl{YOLO}{YOLO}, autoe
 Le domaine publie beaucoup de chiffres (images par seconde, \gl{GOPS}{GOPS}, watts, ressources \gl{LUT}{LUT}, \gl{DSP}{DSP}
 et \gl{BRAM}{BRAM}), mesurés dans des conditions hétérogènes. Les comparer demande de savoir d'où vient
 chaque valeur. Le corpus de ce cas d'usage sert de banc d'essai, mais l'outil ne dépend pas
-du domaine : le même code sert aujourd'hui une seconde base, sur la vision embarquée sur
-drone, et ce qui dépend du sujet (axes, règles de classement, tags, périmètre) est déclaré
-dans les fichiers de chaque base.
+du domaine : le même code sert aujourd'hui deux autres bases, l'une sur la vision embarquée
+sur drone, l'autre sur l'apprentissage continu embarqué sur microcontrôleur pour la
+maintenance prédictive. Ce qui dépend du sujet (axes, règles de classement, tags, périmètre)
+est déclaré dans les fichiers de chaque base.
 
 \paragraph{Problème.} Un \gl{agent}{agent} \gl{LLM}{LLM} à qui l'on donne des \gl{PDF}{PDF} a trois défauts :
 \begin{enumerate}
-  \item \emph{coût} : il relit des textes intégraux (environ 13\,000 tokens en médiane) pour
+  \item \emph{coût} : il relit des textes intégraux (environ 12\,000 tokens en médiane) pour
     répondre à une question qui tient en trois phrases ;
   \item \emph{traçabilité} : un chiffre ou une citation ne porte pas l'endroit exact d'où
     il vient, et une citation reformulée passe pour textuelle ;
@@ -121,13 +125,22 @@ demandent une synthèse, et elle se fait à partir de sorties déjà sourcées.
     l'extraction, de la recherche et de la vérification des citations, ainsi que les temps,
     avec un jeu de questions réservé qui n'a servi à régler aucun paramètre ; et une suite
     de tests unitaires qui s'exécute sans modèle (section~\ref{sec:tests}).
-  \item Un second moteur de recherche, optionnel, sur \gl{GPU}{GPU} (Qwen3), et une acquisition
-    d'articles open access validée par l'utilisateur (section~\ref{sec:qwen}), comparés au
-    premier sur les mêmes jeux de questions.
+  \item Un protocole de réponse qui pose les \gl{exigence}{exigences} d'une question avant de chercher et
+    ouvre chaque réponse par un \gl{verdict}{verdict de suffisance} (\cmd{suffisant}, \cmd{partiel},
+    \cmd{absent}), et une évaluation des réponses rédigées elles-mêmes, notées sans LLM
+    (sections~\ref{sec:paperask} et~\ref{sec:answers}).
+  \item Des preuves atomiques (\cmd{claims.jsonl}), chacune liée à un passage et contrôlée à
+    la réindexation, et des conditions de comparaison explicites dans le tableau de
+    benchmarks (section~\ref{sec:data}).
+  \item Un moteur de recherche optionnel sur \gl{GPU}{GPU} (Qwen3), intégré à la même commande, et une
+    acquisition d'articles open access validée par l'utilisateur (section~\ref{sec:qwen}).
   \item Une séparation du code et des données qui permet de tenir plusieurs bases isolées,
     chacune avec son profil, ses règles et son banc d'évaluation, et d'échanger des articles
     entre elles (section~\ref{sec:bases}) ; le banc est reproduit sur un second corpus
     (section~\ref{sec:drone}).
+  \item Un journal du coût des \gl{sousagent}{sous-agents} auxquels l'agent principal délègue
+    des tâches, et une première mesure appariée de ce que la délégation fait gagner
+    (section~\ref{sec:delegation}).
 \end{itemize}
 
 \section{Principes de conception}
@@ -164,8 +177,9 @@ main. Quatre règles en découlent.
 Couche & Fichier ou commande & Sert à \\
 \midrule
 1 & \cmd{INDEX.md} (généré) & savoir quels articles existent, par axe, fichés ou non \\
-2 & \cmd{benchmarks.csv} via \cmd{pdb bench} & trouver un chiffre, avec sa section source \\
+2 & \cmd{benchmarks.csv} via \cmd{pdb bench} & trouver un chiffre, avec sa section source ; \cmd{--comparable} : savoir quelles lignes se comparent \\
 3 & \cmd{papers/<id>/fiche.md} & lire l'analyse critique d'un article \\
+3 bis & \cmd{papers/<id>/claims.jsonl} & retrouver une affirmation de l'article, déjà liée à son passage \\
 4 & \cmd{pdb search}, \cmd{show}, \cmd{verify} & trouver et citer les 2 ou 3 passages qui répondent \\
 -- & \cmd{fulltext.md} & texte intégral, en dernier recours \\
 \bottomrule
@@ -192,14 +206,14 @@ ce qui est déduit, signaler les \gl{preprint}{preprints} et les métriques non 
   \node[box, right=of add] (ingest) {\cmd{ingest}\\GROBID\\(repli PyMuPDF)};
   \node[store, right=of ingest, text width=34mm] (papers)
     {\cmd{papers/<id>/}\\\cmd{metadata.json}\\\cmd{fulltext.md}\\\cmd{sections.jsonl}
-     \\\cmd{refs.jsonl}\\\cmd{fiche.md}};
+     \\\cmd{refs.jsonl}\\\cmd{fiche.md}, \cmd{claims.jsonl}};
   \node[box, below=10mm of papers] (reindex) {\cmd{reindex}\\validation du schéma};
   \node[store, left=of reindex, text width=36mm] (derived)
     {\cmd{INDEX.md}, \cmd{external\_refs.csv}\\index de passages\\(\cmd{.cache/rag/})};
   \node[box, left=of derived] (pdb) {\cmd{bin/pdb}\\bench, paper, search,\\show, verify, cites};
   \node[box, below=10mm of pdb] (agent) {Agent LLM\\(Claude Code)\\skills \cmd{/paper-*}};
   \node[store, below=10mm of derived, text width=36mm] (bench)
-    {\cmd{benchmarks.csv}\\\cmd{fiche.md}, \cmd{gaps.md}};
+    {\cmd{benchmarks.csv}\\\cmd{fiche.md}, \cmd{claims.jsonl}\\\cmd{gaps.md}};
   \draw[arr] (src) -- (add);
   \draw[arr] (add) -- (ingest);
   \draw[arr] (ingest) -- (papers);
@@ -207,12 +221,13 @@ ce qui est déduit, signaler les \gl{preprint}{preprints} et les métriques non 
   \draw[arr] (reindex) -- (derived);
   \draw[arr] (derived) -- (pdb);
   \draw[arr] (pdb) -- (agent);
-  \draw[arr, dashed] (agent) -- node[below, font=\scriptsize]{\cmd{/paper-fiche}} (bench);
+  \draw[arr, dashed] (agent) -- (bench);
+  \node[below=1mm of bench, font=\scriptsize] {via \cmd{/paper-fiche}, \cmd{/paper-extract}};
   \draw[arr, dashed] (bench.east) -| (reindex.south);
 \end{tikzpicture}
 \caption{Flux de données. Les flèches pleines sont automatiques ; les flèches en tirets
-passent par l'agent, qui rédige les fiches et les lignes de benchmark à partir du texte
-extrait.}
+passent par l'agent, qui rédige les fiches, les preuves atomiques et les lignes de benchmark
+à partir du texte extrait.}
 \label{fig:pipeline}
 \end{figure}
 
@@ -239,7 +254,12 @@ dans les métadonnées. Le pipeline applique ensuite, dans l'ordre :
     \citep{auer2024docling} vient ensuite, sur demande (\cmd{ingest --reparse --tables
     docling}), avec une reconnaissance optique (\gl{OCR}{OCR}) en option pour les tableaux publiés
     en image. Un corps reconstruit est marqué «~reconstruit par PyMuPDF / Docling : à
-    vérifier~», et un tableau resté vide est signalé par \cmd{pdb status} ;
+    vérifier~», et un tableau resté vide est signalé par \cmd{pdb status}. Chaque tableau
+    garde sa page, son cadre sur la page (\cmd{bbox}) et l'extracteur qui l'a produit
+    (\cmd{table\_source}). Sept signaux de qualité, calculés à la lecture, repèrent les
+    tableaux suspects : cellules vides, nombre de cellules variable d'une ligne à l'autre,
+    absence d'en-tête, caractères douteux d'OCR, nombres collés, colonnes perdues, légende
+    appariée par rang plutôt que par numéro (\cmd{pdb status --tables}) ;
   \item \emph{paragraphes mal classés} : un paragraphe que GROBID a pris pour une figure est
     rendu au corps quand il ressemble à de la prose.
 \end{itemize}
@@ -269,34 +289,67 @@ plateforme, quantification, \gl{FPS}{FPS}, \gl{GOPS}{GOPS}, latence, puissance, 
     différentes ne se comparent pas : une carte peut consommer plusieurs watts au repos,
     qu'une mesure «~carte~» inclut et qu'une mesure «~puce~» exclut.
 \end{itemize}
+Ces vingt colonnes ne disent pas tout des conditions d'une mesure. Sept colonnes
+\emph{optionnelles}, ajoutées à la demande (\cmd{pdb bench --add-columns}), les complètent :
+le passage qui contient la valeur (\cmd{chunk\_id}), la définition exacte de la métrique, le
+split évalué, la résolution d'entrée, le batch, le protocole de mesure et la valeur telle
+qu'écrite quand elle a été convertie. Absente, une colonne optionnelle vaut \nr{} : une base
+existante reste valide sans migration, et aucune ligne actuelle ne les renseigne encore.
+\cmd{pdb bench --check} vérifie que chaque nombre d'une ligne qui cite un passage figure bien
+dans ce passage, et \cmd{pdb bench --comparable} regroupe les lignes par tâche, jeu de
+données, split et métrique (ou portée de la puissance) avant toute comparaison entre
+articles. Il signale les conditions qui varient dans un groupe, celles qui manquent, et les
+comparaisons impossibles. Sur la base fpga, les 56 lignes de détection sur COCO, issues de
+7 articles, forment 9 groupes, dont aucun ne réunit deux articles : aucune de ces valeurs
+n'est directement comparable à une autre.
 
 Les fiches de lecture (\cmd{fiche.md}) suivent un gabarit fixe (problème, méthode,
 résultats, limites, pertinence) avec une section «~statut de lecture~» obligatoire qui
 sépare le lu du déduit. Elles sont rédigées par l'\gl{agent}{agent} (commande \cmd{/paper-fiche}) et
 relues par l'utilisateur.
 
+Une fiche résume ; ses chiffres portent leur source, mais pas ses affirmations
+qualitatives (méthode, limite, hypothèse). Le fichier \cmd{claims.jsonl} d'un article
+contient ses \gl{claim}{preuves atomiques} : une affirmation par ligne, avec son type (résultat,
+méthode, limite, hypothèse, contexte), sa voix (les auteurs, ou une déduction du lecteur), le
+passage source, l'extrait exact qui la porte, et en option ses conditions et la ligne de
+benchmark qui la transcrit. La skill \cmd{/paper-extract} les rédige. À chaque
+réindexation, chaque extrait est contrôlé par \cmd{verify} contre son passage : un extrait
+absent ou aux nombres faux est une erreur, et la réindexation échoue. Un nombre de
+l'affirmation absent de la section source est signalé. Premier essai, sur l'article FINN :
+32 preuves, 32 extraits vérifiés, une seule note, légitime (valeur tirée d'un passage
+voisin) ; une erreur introduite exprès (nombre altéré, mauvais passage) est refusée. Les
+autres articles n'ont pas encore été traités, et la recherche ne lit pas encore ces preuves.
+
 \subsection{Plusieurs bases}
 \label{sec:bases}
 
 Le même code sert plusieurs bases de connaissance, une par sujet. Le dépôt en contient
-deux : la base \emph{fpga} du cas d'usage, qui sert de référence, et une base \emph{drone}
-(vision embarquée sur drone : détection, accélérateurs, co-design calcul, énergie et vol),
-créée ensuite sur un sujet voisin (tableau~\ref{tab:bases}). La racine du dépôt ne contient
+trois (tableau~\ref{tab:bases}) : la base \emph{fpga} du cas d'usage, qui sert de référence
+et porte désormais sur une thèse en \gl{AI}{IA} embarquée sûre et certifiable sur FPGA ; une base
+\emph{drone} (vision embarquée sur drone : détection, accélérateurs, co-design calcul,
+énergie et vol), créée ensuite sur un sujet voisin ; et une base \emph{stage}, sur
+l'apprentissage continu embarqué sur microcontrôleur (\gl{MCU}{MCU}) pour la maintenance prédictive,
+construite à partir de la bibliographie d'un stage. Cette dernière est la plus éloignée du
+domaine d'origine : ses articles fondateurs (Mahalanobis, 1936, numérisé et passé par l'\gl{OCR}{OCR})
+n'ont aucune mesure matérielle, et ses benchmarks portent sur des jeux de données de
+roulements et de turbines plutôt que sur des accélérateurs. La racine du dépôt ne contient
 que le code. Chaque base est un dossier \cmd{bases/<nom>/} qui a ses articles, son
 \cmd{benchmarks.csv}, sa carte des lacunes, son index de \gl{passage}{passages} et ses caches ; les
 commandes, l'environnement Python et les skills de l'\gl{agent}{agent} y sont des liens vers le code.
 
 \begin{table}[ht]
 \centering
-\caption{Les deux bases au 28/09/2026.}
+\caption{Les trois bases au 03/10/2026 (sortie de \cmd{pdb base list} et \cmd{pdb status}).}
 \label{tab:bases}
 \small
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
 Base & Articles & Fiches faites & Lignes de benchmark & Passages indexés \\
 \midrule
-fpga (référence) & 45 & 41 & 172 & 3\,479 \\
-drone & 73 & 73 & 324 & 4\,525 \\
+fpga (référence) & 101 & 101 & 299 & 8\,601 \\
+drone & 87 & 86 & 352 & 5\,361 \\
+stage & 56 & 56 & 100 & 3\,640 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -309,7 +362,12 @@ skill \cmd{/base-profile} propose de l'affiner à partir des fiches, et n'écrit
 accord. Chaque base a aussi son \cmd{CLAUDE.md}, qui porte les règles de travail propres au
 domaine : pour la base drone, préciser la gamme de puissance d'un résultat, ou distinguer une
 détection sol $\rightarrow$ air d'une détection air $\rightarrow$ air. Les colonnes de
-\cmd{benchmarks.csv} restent communes à toutes les bases.
+\cmd{benchmarks.csv} restent communes à toutes les bases ; les colonnes optionnelles
+(section~\ref{sec:data}) s'ajoutent base par base. Les figures de \cmd{pdb plot} s'adaptent
+aussi : un bloc \cmd{plot} de \cmd{base.json} déclare les tâches et familles de plateformes
+à distinguer et les figures à omettre. La base stage, sans mesures matérielles ni jeux de
+questions, a 8 figures, contre 16 pour fpga. \cmd{pdb plot --check} propose ce bloc d'après le contenu de la base, et
+\cmd{reindex} régénère les figures devenues périmées.
 
 La base active se déduit du contexte : la variable \cmd{\$PDB\_ROOT} (fixée par
 \cmd{pdb --base <nom>}), sinon \cmd{\$PDB\_BASE}, sinon le premier dossier contenant
@@ -336,19 +394,21 @@ recherche dense, le moteur GPU, les figures et la visualisation ont des dépenda
 Module & Rôle \\
 \midrule
 \cmd{tei.py}, \cmd{doc.py}, \cmd{pdftext.py} & lecture de la sortie GROBID, représentation commune, repli PyMuPDF \\
-\cmd{ligatures.py}, \cmd{tables.py}, \cmd{docling\_tables.py} & réparation des ligatures, reconstruction des tableaux (PyMuPDF, puis Docling) \\
+\cmd{ligatures.py}, \cmd{tables.py}, \cmd{docling\_tables.py} & réparation des ligatures, reconstruction des tableaux (PyMuPDF, puis Docling), signaux de qualité \\
 \cmd{citation.py}, \cmd{openalex.py} & exports \cmd{.bib}/\cmd{.ris}, client OpenAlex avec cache \\
 \cmd{schema.py} & validateurs du modèle de données, seul endroit où il est codé \\
 \cmd{refs.py} & rapprochement des références (arXiv, DOI, titre normalisé), citations internes \\
-\cmd{query.py} & requêtes structurées sans LLM (\cmd{bench}, \cmd{paper}, \cmd{cites}) \\
-\cmd{rag.py} & passages, BM25, index dense, fusion, reranking, vérification des citations \\
-\cmd{rag\_qwen.py}, \cmd{rag\_models.py} & second moteur sur GPU : FTS5, Qwen3-Embedding-4B, Qwen3-Reranker-4B \\
+\cmd{query.py} & requêtes structurées sans LLM (\cmd{bench}, \cmd{paper}, \cmd{cites}), \cmd{--check}, groupes comparables \\
+\cmd{rag.py} & passages (tableaux découpés par rangées), BM25, index dense, fusion, reranking, vérification des citations ; moteur Qwen optionnel \\
+\cmd{claims.py} & contrôle des preuves atomiques (\cmd{claims.jsonl}) contre leur passage \\
+\cmd{rag\_qwen.py}, \cmd{rag\_models.py} & moteur GPU : modèles Qwen3 épinglés (partagés avec \cmd{pdb search}), index de preuves FTS5 de \cmd{pdb rag} \\
 \cmd{rag\_external.py} & acquisition open access par étapes (OpenAlex, arXiv), import après accord \\
-\cmd{evaluation.py} & banc d'évaluation (\cmd{pdb eval}) : extraction, recherche, \cmd{verify}, temps \\
+\cmd{evaluation.py} & banc d'évaluation (\cmd{pdb eval}) : extraction, recherche, \cmd{verify}, temps, réponses finales \\
+\cmd{agentlog.py}, \cmd{agentcost.py} & journal des sous-agents, coût calé sur Claude Code, économie de la délégation \\
 \cmd{status.py} & état de la base et prochaines actions \\
 \cmd{base.py}, \cmd{registry.py} & base active, lecture de \cmd{base.json}, classement selon ses règles ; registre des bases \\
 \cmd{bases.py}, \cmd{xbase.py}, \cmd{vizbases.py} & création et contrôle des bases, scan et import entre bases, onglet Bases de la visualisation \\
-\cmd{plotdata.py}, \cmd{plotfig.py} & figures statiques (\cmd{pdb plot}) : benchmarks, évaluation, corpus \\
+\cmd{plotdata.py}, \cmd{plotfig.py}, \cmd{plotrun.py} & figures statiques (\cmd{pdb plot}) : benchmarks, évaluation, corpus ; régénération des figures périmées \\
 \cmd{graph.py}, \cmd{lineage.py}, \cmd{vizfig.py}, \cmd{embed.py} & visualisation 3D et généalogie (outil secondaire) \\
 \bottomrule
 \end{tabularx}
@@ -407,7 +467,11 @@ de recouvrement, parce que les modèles d'\gl{embedding}{embeddings} tronquent a
 Chaque passage reçoit un identifiant rejouable, \cmd{<section>.<k>} (par exemple
 \cmd{1612.07119\#019.3}), et garde son article, sa section, sa page et l'empreinte \gl{SHA}{SHA-1} de
 son texte. Le texte indexé est préfixé du titre de section, ce qui donne du contexte sans
-modifier le texte renvoyé. Le corpus actuel compte 3\,479 passages.
+modifier le texte renvoyé. Un tableau de plus de 250 mots est découpé autrement : par
+rangées entières, chaque fenêtre répétant la légende abrégée et la ligne d'en-tête, pour
+qu'une valeur ne soit jamais séparée de son unité ni de sa colonne. Sur les trois bases,
+181 tableaux sont concernés ; ils donnent 610 fenêtres (médiane 186 mots) sans perte de
+mot. La base fpga compte aujourd'hui 8\,601 passages.
 
 \subsection{Deux index et une fusion}
 
@@ -450,8 +514,9 @@ données en section~\ref{sec:eval}.
 
 \paragraph{Stockage.} Les vecteurs sont rangés dans \cmd{.cache/rag/<modèle>.npz}, indexés
 par la clé \cmd{chunk\_id:sha1}. La mise à jour est incrémentale : seuls les passages
-nouveaux ou modifiés sont encodés (environ 3~min 40 pour une construction complète sur
-\gl{CPU}{CPU}, soit 16 passages par seconde ; 0,2\,s sans changement). Les passages et le BM25 sont recalculés à chaque commande en
+nouveaux ou modifiés sont encodés (environ 8~min pour une construction complète des
+8\,601 passages de la base fpga sur \gl{CPU}{CPU}, soit 18 passages par seconde ; 0,2\,s sans
+changement). Les passages et le BM25 sont recalculés à chaque commande en
 moins d'une seconde. Sans sentence-transformers, ou si l'index est périmé, \cmd{search}
 passe en lexical seul et le signale. À cette échelle, une recherche exhaustive en numpy
 prend quelques millisecondes : une base vectorielle dédiée n'apporterait rien avant de
@@ -520,11 +585,16 @@ internes au corpus, reconstruit en rapprochant les références par identifiant 
 titre normalisé.
 
 \subsection{Protocole de réponse : la skill \cmd{/paper-ask}}
+\label{sec:paperask}
 
 La \gl{skill}{skill} \cmd{/paper-ask} fixe à l'agent un déroulé, et ne l'autorise qu'à utiliser les
 commandes \cmd{bin/pdb} et la lecture de fichiers :
 \begin{enumerate}
-  \item question chiffrée : \cmd{pdb bench} d'abord (N0) ;
+  \item avant toute recherche, poser 2 à 5 \gl{exigence}{exigences}, ce qu'une réponse complète doit
+    établir (une valeur, une plateforme, une condition, une comparaison), sans aller plus
+    loin que ce que la question demande ;
+  \item question chiffrée : \cmd{pdb bench} d'abord (N0), et \cmd{bench --comparable} avant
+    de comparer deux articles ;
   \item sinon, ou en complément : \cmd{pdb search --rerank} avec une ou deux formulations
     en anglais ; si aucun extrait ne répond, dire que la base ne traite probablement pas
     le sujet, au lieu de combler le manque ;
@@ -533,27 +603,45 @@ commandes \cmd{bin/pdb} et la lecture de fichiers :
     textuelle : une citation \cmd{ABSENT} est retirée, une citation \cmd{NOMBRES} est
     corrigée d'après le texte exact ou retirée, un identifiant faux est corrigé, et une
     citation \cmd{APPROX} n'est gardée que présentée comme une paraphrase ;
-  \item structure imposée : \textbf{Lu} (sourcé), \textbf{Déduit}, \textbf{Non trouvé
-    dans la base}, avec signalement des valeurs de confiance basse, des preprints et des
-    \gl{scope}{portées de puissance} hétérogènes.
+  \item marquer chaque exigence \cmd{couvert} (passage vérifié), \cmd{partiel} (passage
+    voisin : autre plateforme, autre batch, autre portée de puissance) ou \cmd{absent}, et en
+    tirer le \gl{verdict}{verdict} : \cmd{suffisant} si toutes sont couvertes, \cmd{absent} si aucune,
+    \cmd{partiel} sinon ;
+  \item structure imposée : le verdict et les exigences en tête, puis \textbf{Lu} (sourcé),
+    \textbf{Déduit}, \textbf{Non trouvé dans la base}, avec signalement des valeurs de
+    confiance basse, des preprints et des \gl{scope}{portées de puissance} hétérogènes.
 \end{enumerate}
+Le verdict déplace la question «~la base traite-t-elle ce sujet ?~» d'un score de recherche,
+qui ne la tranche pas (section~\ref{sec:horscorpus}), vers le contenu des passages lus. Un
+verdict \cmd{absent} porte sur la base, pas sur la littérature : la réponse le rappelle et
+propose \cmd{/paper-discover}. Un mode \cmd{--record} écrit la réponse en \gl{JSON}{JSON}, sous forme
+d'affirmations citées, pour l'évaluation des réponses (section~\ref{sec:answers}).
 
-\subsection{Un second moteur sur GPU et l'acquisition open access}
+\subsection{Un moteur optionnel sur GPU et l'acquisition open access}
 \label{sec:qwen}
 
-\paragraph{Moteur.} \cmd{bin/pdb rag} propose une seconde chaîne de recherche, indépendante
-de la première et réservée à une machine équipée d'un \gl{GPU}{GPU} (mesures faites sur une RTX 5090 de
-32~Go) : un \gl{index}{index lexical} SQLite \gl{FTS5}{FTS5}, un index dense \cmd{Qwen3-Embedding-4B}, la même
-fusion RRF, puis un \gl{reranking}{reranking} par \cmd{Qwen3-Reranker-4B}, en \gl{BF16}{BF16} et à révisions de modèle
-épinglées. L'index, rangé lui aussi dans \cmd{.cache/rag/}, contient des preuves
-\emph{typées} : résumés, sections, tableaux et figures du texte original, mais aussi fiches
-terminées et lignes de \cmd{benchmarks.csv}, chacune marquée comme transcription ou note. Les
-résultats en tiennent compte : une fiche ou une \gl{benchmark}{ligne de benchmark} sert à s'orienter, et
-l'agent doit remonter au passage original (\cmd{rag evidence ID --parent}) avant de citer.
-\cmd{rag benchmarks} filtre les chiffres sans plafond de résultats et conserve \nr{}, les
-unités et la portée de la puissance ; \cmd{rag check-answer} vérifie, pour une réponse
-enregistrée en \gl{JSON}{JSON}, que chaque extrait cité figure dans la preuve invoquée. La skill
-\cmd{/paper-research} encadre l'usage de ce moteur comme \cmd{/paper-ask} celui du premier.
+\paragraph{Moteur.} Une seconde chaîne de recherche a été développée en parallèle, pour une
+machine équipée d'un \gl{GPU}{GPU} (mesures faites sur une RTX 5090 de 32~Go) : \cmd{Qwen3-Embedding-4B}
+pour l'index dense et \cmd{Qwen3-Reranker-4B} pour le \gl{reranking}{reranking}, en \gl{BF16}{BF16} et à révisions de
+modèle épinglées. Elle est aujourd'hui un \emph{moteur optionnel de \cmd{pdb search}} : il
+encode exactement les mêmes passages, avec les mêmes identifiants, de sorte que \cmd{show},
+\cmd{verify}, \cmd{/paper-ask} et l'évaluation des réponses ne changent pas. Le moteur
+\gl{CPU}{CPU} reste celui par défaut. \cmd{pdb gpu on} active le moteur GPU pour la machine (réglage
+hors des bases), télécharge les modèles et réindexe ; \cmd{--gpu} ou \cmd{--cpu} le force
+pour une recherche. Sans CUDA, sans les bibliothèques nécessaires ou sans vecteurs Qwen
+pour la base, \cmd{search} reste sur le CPU et l'écrit : une question n'échoue jamais faute
+de GPU. \cmd{pdb eval --rag --gpu} écrit un rapport aux mêmes clés que le moteur CPU, ce qui
+permet de comparer les deux moteurs avec \cmd{--compare}.
+
+La commande \cmd{bin/pdb rag} garde ce qui reste propre à la chaîne d'origine : un index
+SQLite (\gl{FTS5}{FTS5} et vecteurs Qwen) de preuves \emph{typées}, où figurent, à côté des résumés,
+sections, tableaux et figures du texte original, les fiches terminées et les lignes de
+\cmd{benchmarks.csv}, chacune marquée comme transcription ou note. Une fiche ou une
+\gl{benchmark}{ligne de benchmark} sert à s'orienter, et l'agent doit remonter au passage original
+(\cmd{rag evidence ID --parent}) avant de citer. \cmd{rag benchmarks} filtre les chiffres sans
+plafond de résultats ; \cmd{rag check-answer} vérifie, pour une réponse enregistrée en
+\gl{JSON}{JSON}, que chaque extrait cité figure dans la preuve invoquée, sans encore contrôler les
+nombres comme \cmd{verify}. La skill \cmd{/paper-research} encadre cette route.
 
 \paragraph{Acquisition.} Quand le corpus ne suffit pas, \cmd{rag acquire} cherche des textes
 intégraux en accès ouvert (OpenAlex, arXiv), les télécharge dans un répertoire privé,
@@ -567,8 +655,10 @@ d'absence.
 
 \paragraph{Mesure.} Les deux moteurs ont été comparés sur les jeux de questions de la
 section~\ref{sec:eval}, avec les mêmes attentes et les mêmes métriques
-(tableau~\ref{tab:qwen}). Cette comparaison date du 26/09/2026, sur le corpus de 28 articles :
-elle n'a pas été refaite sur 45 articles, faute de GPU sur la machine de la seconde mesure.
+(tableau~\ref{tab:qwen}). Cette comparaison date du 26/09/2026, sur le corpus de 28
+articles, avec la chaîne \cmd{pdb rag} d'origine : elle n'a été refaite ni sur le corpus
+actuel ni avec le moteur intégré à \cmd{pdb search}, faute de GPU sur la machine des mesures
+suivantes.
 
 \begin{table}[ht]
 \centering
@@ -599,9 +689,9 @@ anglais. Sur le \gl{holdout}{holdout}, il gagne 2 questions sur 25 au \gl{recall
 jeu dev, il fait moins bien, ce qui est en partie attendu puisque ce jeu a servi à régler le
 premier moteur. Son canal lexical (FTS5) est plus faible que le BM25 du premier moteur (dev
 0,80 contre 0,95 ; français 0,00). Le reranker Qwen est aussi le meilleur signal «~hors
-corpus~» mesuré (section~\ref{sec:horscorpus}). Il a un coût : un GPU de 32~Go, et des
-modèles rechargés à chaque requête, soit 3 à 4\,s par question avec reranking. Le premier
-moteur reste donc le moteur par défaut ; le second est une aide pour les questions en
+corpus~» mesuré (section~\ref{sec:horscorpus}). Il a un coût : un GPU (chaque modèle occupe environ 8~Go), et des
+modèles rechargés à chaque requête, soit 3 à 4\,s par question avec reranking. Le moteur
+CPU reste donc celui par défaut ; le moteur GPU est une aide pour les questions en
 français et les écarts de vocabulaire.
 
 \section{Ce que le logiciel apporte}
@@ -620,9 +710,9 @@ grandeur sont relevés sur le corpus actuel (taille des fichiers divisée par qu
 \toprule
 Tâche & Sans la couche de recherche & Avec \\
 \midrule
-Un chiffre sur une plateforme & lire \cmd{benchmarks.csv} en entier : $\sim$15\,000 & \cmd{bench} filtré : 100--400 \\
+Un chiffre sur une plateforme & lire \cmd{benchmarks.csv} en entier : $\sim$27\,000 & \cmd{bench} filtré : 100--400 \\
 Trouver où un sujet est traité & \cmd{grep} sur les sections, qui échoue sur les synonymes & \cmd{search -k 8} : $\sim$600 \\
-Lire la preuve d'une affirmation & ouvrir \cmd{fulltext.md} : $\sim$13\,000 (médiane) & \cmd{show} sur 1 à 3 passages : 300--900 \\
+Lire la preuve d'une affirmation & ouvrir \cmd{fulltext.md} : $\sim$12\,000 (médiane) & \cmd{show} sur 1 à 3 passages : 300--900 \\
 Vérifier une citation & relire le passage & \cmd{verify} : $\sim$20 \\
 \bottomrule
 \end{tabularx}
@@ -646,13 +736,16 @@ de thèse :
     l'accord de l'utilisateur ;
   \item \cmd{/paper-gaps} tient une carte des zones non couvertes (\cmd{gaps.md}), chaque
     entrée étant appuyée par des identifiants d'articles ;
+  \item des états de l'art en \LaTeX{} ont été rédigés par l'agent à partir des fiches des
+    bases fpga et drone (sections par axe, glossaires, liens vers les articles), puis relus ;
+    chaque affirmation y renvoie à un article de la base ;
   \item une application de visualisation locale (graphe 3D du corpus, frise des citations)
     donne une vue d'ensemble à l'utilisateur ; l'agent ne s'en sert pas ;
   \item \cmd{pdb plot} produit des figures statiques (PNG, PDF ou SVG) à partir de
     \cmd{benchmarks.csv}, du dernier rapport de \cmd{pdb eval} et des métadonnées du corpus :
     débit contre puissance, \gl{GOPS}{GOPS}/W par précision, ressources \gl{FPGA}{FPGA}, précision contre débit,
     qualité de la recherche, années, axes, citations, lacunes. Chaque figure indique en pied
-    sa source et son effectif (par exemple 52 lignes sur 172, les \nr{} étant exclues), et
+    sa source et son effectif (par exemple 82 lignes sur 299, les \nr{} étant exclues), et
     \cmd{figures/manifest.json} les recense. La figure~\ref{fig:fpspower} en est un
     exemple ; les \gl{scope}{portées de puissance} hétérogènes y sont distinguées plutôt que mélangées.
 \end{itemize}
@@ -660,26 +753,76 @@ de thèse :
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\linewidth]{bench_fps_power.png}
-\caption{Sortie de \cmd{pdb plot bench} : débit et puissance rapportés, une configuration par
-point (52 lignes de \cmd{benchmarks.csv} sur 172). Symboles pleins : puissance mesurée ;
-creux : estimée ou portée non précisée. Les points ne sont pas comparables entre eux sans
-lire la portée de la mesure.}
+\caption{Sortie de \cmd{pdb plot bench} sur la base fpga : débit et puissance rapportés, une
+configuration par point (82 lignes de \cmd{benchmarks.csv} sur 299), la détection à gauche,
+les autres tâches à droite. Symboles pleins : puissance mesurée ; creux : estimée ou portée
+non précisée. Les points ne sont pas comparables entre eux sans lire la portée de la mesure
+(section~\ref{sec:data}, \cmd{bench --comparable}).}
 \label{fig:fpspower}
 \end{figure}
 
-\paragraph{État du corpus.} Au 26 septembre 2026 : 45 articles, dont 41 avec une \gl{fiche}{fiche}
-terminée, 172 \gl{benchmark}{lignes de benchmark}, 3\,479 passages indexés, et 25 lacunes recensées, dont 10
-appuyées par des articles du corpus (sortie de \cmd{pdb status}). Le corpus a grossi de 17
-articles depuis la première version de ce texte (28 articles, 2\,414 passages) ; les fiches
-et lignes de benchmark des nouveaux articles ont été rédigées par l'agent.
+\paragraph{Déléguer à des sous-agents.}
+\label{sec:delegation}
+L'agent principal peut confier une tâche à un \gl{sousagent}{sous-agent} qui démarre sans son contexte :
+une fiche par agent, un article à extraire, une recherche de \gl{DOI}{DOI}. Les règles du dépôt fixent le
+modèle selon la tâche : le plus léger pour la mécanique (ajout, réindexation, contrôle des
+métadonnées), un modèle intermédiaire pour la lecture et l'extraction, le plus capable pour
+la synthèse et le jugement. Deux agents n'écrivent jamais le même fichier, et
+\cmd{benchmarks.csv}, \cmd{INDEX.md} et la réindexation restent à l'agent principal, qui
+vérifie ce qu'on lui rapporte. Pour savoir si cela paie, un \gl{hook}{hook} \cmd{SubagentStop} de Claude
+Code journalise chaque sous-agent (tokens, coût, durée, outils) dans \cmd{.cache/agents.jsonl},
+et \cmd{pdb agents --report} en fait le bilan. Le coût tiré des transcriptions sous-estimait
+les tokens de sortie ; il est calé sur le coût que Claude Code compte pour la session. Sur
+72 sous-agents journalisés (126~M tokens, 81~\$), la délégation aurait fait économiser
+environ 59~\% du coût d'un travail fait en direct. Ce chiffre est une \emph{estimation} :
+mêmes tours au tarif de l'agent principal, plus la relecture du travail à chaque tour
+suivant.
+
+Pour la caler, une même tâche (trois fiches de lecture de détecteurs YOLO de la base drone)
+a été faite deux fois dans des sessions neuves, en direct puis déléguée à trois sous-agents
+en parallèle (tableau~\ref{tab:delegation}). Le modèle prédit 2,21~\$ pour la session
+directe, qui a coûté 2,30~\$ (écart de 4~\%). La délégation a coûté 41~\% de moins et pris
+59~\% de temps en moins. L'essai est unique, et les deux sessions n'ont pas produit le même
+travail : en direct, les fiches sont plus longues et comptent 9 lignes de benchmark de plus.
+Une part de l'écart vient donc du travail, pas seulement du tarif, et la qualité n'a pas été
+notée. L'expérience a aussi fait apparaître un défaut du journal : le hook passait avant
+l'écriture du dernier tour du sous-agent, qui manquait au décompte ; il relit désormais la
+transcription jusqu'à ce qu'elle soit complète.
+
+\begin{table}[ht]
+\centering
+\caption{Expérience appariée : trois fiches de lecture, en direct et déléguées (03/10/2026,
+un seul essai).}
+\label{tab:delegation}
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+ & Direct & Délégué \\
+\midrule
+Coût compté par Claude Code & 2,30~\$ & 1,35~\$ (0,46 + 0,89 pour les sous-agents) \\
+Durée & 324\,s & 133\,s \\
+Tours de l'agent principal & 29 & 6 (+ 24 pour les 3 sous-agents) \\
+Contexte principal en fin de session & 139k tokens & 54k tokens \\
+Lignes de \cmd{benchmarks.csv} / taille des fiches & 24 / 23,5k car. & 15 / 17,8k car. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{État du corpus.} Au 3 octobre 2026, la base fpga compte 101 articles, tous avec
+une \gl{fiche}{fiche} terminée, 299 \gl{benchmark}{lignes de benchmark}, 8\,601 passages indexés et 37 lacunes
+recensées, dont 29 appuyées par des articles du corpus (sortie de \cmd{pdb status}). Le
+corpus a plus que doublé depuis la version précédente de ce texte (45 articles, 3\,479
+passages), en grande partie avec des articles sur la sûreté et la certification de l'IA embarquée ;
+les fiches et lignes de benchmark des nouveaux articles ont été rédigées par des
+sous-agents, puis vérifiées par l'agent principal.
 
 \section{Tests et évaluation}
 \label{sec:tests}
 
 \subsection{Tests unitaires}
 
-La suite (\cmd{bin/pdb test}) compte 205 tests répartis en 23 fichiers. Elle s'exécute en
-une dizaine de secondes, sans
+La suite (\cmd{bin/pdb test}) compte 286 tests répartis en 26 fichiers. Elle s'exécute en
+moins de 30 secondes, sans
 \gl{GROBID}{GROBID} et sans modèle d'\gl{embedding}{embeddings}, grâce à des substituts déterministes
 (tableau~\ref{tab:tests}) :
 \begin{itemize}
@@ -693,13 +836,14 @@ une dizaine de secondes, sans
   \item de petits corpus synthétiques (dont une chaîne de citations datée) pour le graphe et
     la généalogie ;
   \item des bases et un registre temporaires pour la résolution de la base active, la
-    création d'une base, le scan et l'import entre bases.
+    création d'une base, le scan et l'import entre bases ;
+  \item des transcriptions de sous-agents construites à la main, pour le journal et le calcul
+    du coût de la délégation.
 \end{itemize}
 Les tests de la visualisation et des figures sont ignorés si leurs dépendances optionnelles
-ne sont pas installées. Un test fait exception à l'isolement : celui de l'acquisition open
-access (\cmd{test\_rag\_qwen.py}) charge le tokenizer Qwen pour découper l'article importé,
-et échoue sur une machine sans réseau où ce tokenizer n'est pas en cache. C'est le seul échec
-du dernier run (204 tests sur 205) ; le rendre indépendant du modèle est à faire.
+ne sont pas installées. Le dernier run (03/10/2026) réussit les 286 tests, y compris celui de
+l'acquisition open access, qui échouait au run précédent faute de pouvoir charger le
+tokenizer Qwen sans réseau.
 
 \begin{table}[ht]
 \centering
@@ -710,28 +854,31 @@ du dernier run (204 tests sur 205) ; le rendre indépendant du modèle est à fa
 \toprule
 Fichier & Tests & Ce qui est vérifié \\
 \midrule
-\cmd{test\_query.py} & 16 & filtres, tri et agrégation de \cmd{bench}, colonnes de source forcées, identifiants courts, \cmd{paper} \\
-\cmd{test\_tables.py} & 14 & reconstruction des tableaux (PDF synthétique), filtres et appariement des tableaux Docling \\
-\cmd{test\_schema.py} & 13 & validateurs du modèle de données, hiérarchie des titres \\
+\cmd{test\_plot.py} & 29 & familles de plateformes, classes de précision, exclusion des \nr{}, bloc \cmd{plot} par base, figures périmées, rendu sur la base réelle \\
+\cmd{test\_query.py} & 23 & filtres, tri et agrégation de \cmd{bench}, colonnes de source forcées, \cmd{--check}, groupes comparables, identifiants courts, \cmd{paper} \\
+\cmd{test\_tables.py} & 19 & reconstruction des tableaux (PDF synthétique), appariement Docling, signaux de qualité, numéros de légende \\
+\cmd{test\_schema.py} & 19 & validateurs du modèle de données, colonnes optionnelles, hiérarchie des titres \\
+\cmd{test\_rag.py} & 18 & découpage (tableaux par rangées), BM25, fusion, reranking, index incrémental, moteur Qwen simulé, \cmd{verify} et contrôle des nombres \\
+\cmd{test\_evaluation.py} & 18 & métriques du banc sur de petits cas construits, notation des réponses finales, emplacements du banc par base \\
 \cmd{test\_tei.py} & 12 & parsing d'une sortie GROBID réelle \\
 \cmd{test\_openalex.py} & 12 & découverte, ajout par DOI et par liste (réponses simulées) \\
-\cmd{test\_citation.py} & 11 & exports \cmd{.bib}/\cmd{.ris} : lecture, appariement, priorité \\
+\cmd{test\_base.py} & 12 & base active, \cmd{base.json} minimal, règles invalides, classement, bloc \cmd{plot} \\
 \cmd{test\_refs.py} & 11 & rapprochement des références, \cmd{external\_refs.csv}, citations internes \\
-\cmd{test\_rag.py} & 12 & découpage, BM25, fusion, reranking, index incrémental, \cmd{verify} et contrôle des nombres \\
-\cmd{test\_evaluation.py} & 13 & métriques du banc sur de petits cas construits : couverture, valeurs de tableaux, rangs, seuils, cas de \cmd{verify} ; emplacements du banc par base \\
-\cmd{test\_plot.py} & 10 & familles de plateformes, classes de précision, exclusion des \nr{}, rendu de toutes les figures sur la base réelle \\
+\cmd{test\_citation.py} & 11 & exports \cmd{.bib}/\cmd{.ris} : lecture, appariement, priorité \\
+\cmd{test\_xbase.py} & 10 & scan entre bases, import (en-tête de la base cible), création d'une base, onglet Bases \\
+\cmd{test\_agentlog.py} & 10 & journal des sous-agents : dédoublonnage, réponse incomplète, hook trop précoce relu, issue notée (\cmd{--mark}) \\
+\cmd{test\_agentcost.py} & 10 & coût par modèle, calage sur Claude Code, vérification, lectures dupliquées, compaction, économie estimée \\
 \cmd{test\_lineage.py} & 9 & généalogie sur une chaîne de citations datée \\
-\cmd{test\_base.py} & 9 & base active, \cmd{base.json} minimal, règles invalides, classement \\
-\cmd{test\_xbase.py} & 9 & scan entre bases, import, création d'une base, onglet Bases \\
-\cmd{test\_bench.py} & 7 & banc synthétique : corpus isolé, localisation des preuves, sortie structurée de \cmd{claude -p}, contrôle du modèle générateur \\
 \cmd{test\_graph.py} & 8 & graphe du corpus sur mini-corpus \\
+\cmd{test\_bench.py} & 8 & banc synthétique : corpus isolé, localisation des preuves, sortie structurée de \cmd{claude -p}, contrôle du modèle générateur \\
 \cmd{test\_ligatures.py} & 7 & réparation des ligatures perdues \\
-\cmd{test\_ingest.py} & 6 & conservation des axes, tags et avertissements à la ré-extraction \\
 \cmd{test\_viz.py} & 6 & figures et panneau de détail, sans serveur \\
-\cmd{test\_status.py} & 5 & état de la base et prochaines actions \\
-\cmd{test\_embed.py} & 4 & cache d'embeddings, branchement dans le graphe \\
-\cmd{test\_rag\_qwen.py} & 4 & moteur GPU en mode lexical : sources, conditions numériques, instantané périmé, acquisition isolée \\
+\cmd{test\_status.py} & 6 & état de la base, tableaux signalés, prochaines actions \\
+\cmd{test\_ingest.py} & 6 & conservation des axes, tags et avertissements à la ré-extraction \\
+\cmd{test\_claims.py} & 6 & preuves atomiques : schéma, doublons, extrait absent, nombre altéré, mauvais passage \\
+\cmd{test\_rag\_qwen.py} & 5 & moteur GPU en mode lexical : sources, conditions numériques, instantané périmé, acquisition isolée \\
 \cmd{test\_reindex.py} & 4 & notes sur les benchmarks, mesures propres \\
+\cmd{test\_embed.py} & 4 & cache d'embeddings, branchement dans le graphe \\
 \cmd{test\_registry.py} & 3 & registre des bases, ordre de résolution de la base active \\
 \bottomrule
 \end{tabularx}
@@ -749,7 +896,8 @@ technique.
 Les tests unitaires vérifient que le code fait ce qu'il annonce. Ils ne disent pas si
 l'extraction est bonne ni si la recherche trouve les bons \gl{passage}{passages}. \cmd{bin/pdb eval} le
 mesure sur le corpus réel, sans \gl{LLM}{LLM} ni réseau, et sans rien écrire dans la base. Il couvre
-quatre volets : l'extraction, la recherche, la vérification des citations et les temps.
+quatre volets : l'extraction, la recherche, la vérification des citations et les temps ; un
+cinquième, les réponses rédigées, est décrit en section~\ref{sec:answers}.
 Un run complet prend quelques minutes sur \gl{CPU}{CPU}. \cmd{--save} enregistre le rapport en \gl{JSON}{JSON}
 (daté, avec le commit mesuré), et \cmd{--compare} signale les écarts avec le dernier rapport,
 avec un code d'erreur si un seuil de \cmd{eval/thresholds.json} n'est plus atteint. La
@@ -757,13 +905,12 @@ démarche est la suivante : enregistrer avant un changement (extraction, découp
 fusion), le faire, puis comparer. Le banc porte sur la base active : une base peut avoir ses
 propres jeux de questions et ses seuils, et ses rapports sont enregistrés dans son dossier
 (section~\ref{sec:drone}). Les chiffres ci-dessous portent sur la base fpga et proviennent
-d'un run du 26/09/2026 sur 45 articles et 3\,479 passages
-(\cmd{bases/fpga/eval/results/2026-09-26T2044-65074b7.json}). Ils ont été reproduits à
-l'identique le 28/09, après la séparation du code et des données (run
-\cmd{2026-09-28T1039-76dc85e}, aucun écart) ; les temps du tableau~\ref{tab:temps} viennent
-de ce second run. Quand c'est utile, les chiffres sont comparés au
-run précédent, fait le même jour sur 28 articles et 2\,414 passages : les jeux de questions
-n'ont pas changé, seul le corpus a grossi.
+d'un run du 03/10/2026 sur 101 articles et 8\,601 passages
+(\cmd{bases/fpga/eval/results/2026-10-03T2340-3925690.json}). Ils sont comparés, entre
+parenthèses, au run de référence du 28/09 sur 45 articles et 3\,479 passages
+(\cmd{2026-09-28T1039-76dc85e}) : les jeux de questions n'ont pas changé, mais le corpus a
+plus que doublé et le code a évolué (découpage des tableaux, moteur de recherche
+restructuré). Un écart entre les deux runs mêle donc ces deux causes.
 
 \subsection{Qualité de l'extraction}
 
@@ -774,22 +921,22 @@ vérifiées à la main et les valeurs relevées dans \cmd{benchmarks.csv}
 
 \begin{table}[ht]
 \centering
-\caption{Qualité de l'extraction (45 articles, tous extraits par GROBID ; entre parenthèses, le run sur 28 articles).}
+\caption{Qualité de l'extraction (101 articles, tous extraits par GROBID ; entre parenthèses, le run sur 45 articles).}
 \label{tab:extraction}
 \small
 \begin{tabularx}{\linewidth}{@{}Ll@{}}
 \toprule
 Métrique & Valeur \\
 \midrule
-Couverture du texte : part des mots du PDF (bibliographie exclue) retrouvés dans \cmd{fulltext.md} & moy. 0,91 ; min. 0,81 \\
-Tableaux dont le corps a été extrait (233 tableaux, dont 75 reconstruits par Docling et 4 par PyMuPDF) & 0,88 (0,90) \\
+Couverture du texte : part des mots du PDF (bibliographie exclue) retrouvés dans \cmd{fulltext.md} & moy. 0,90 ; min. 0,57 (0,91 ; 0,81) \\
+Tableaux dont le corps a été extrait (584 tableaux, dont 110 reconstruits par Docling et 11 par PyMuPDF) & 0,78 (0,88) \\
 Ligatures restantes, pour 10\,000 mots & 0,00 \\
-Articles dont des sections numérotées n'ont pas été détectées & 13 / 45 (7 / 28) \\
-En-tête GROBID seul contre \cmd{metadata.json} : titre / année / DOI / arXiv & 0,91 / 0,42 / 0,62 / 0,72 \\
-En-tête GROBID seul : F1 sur les noms d'auteurs & 0,86 \\
-Valeurs de \cmd{benchmarks.csv} retrouvées dans le tableau cité (588 valeurs) & 0,65 (0,74) \\
-\quad idem, lignes qui ne citent que des tableaux (359 valeurs) & 0,71 (0,80) \\
-Valeurs de \cmd{benchmarks.csv} retrouvées n'importe où dans le texte & 0,76 (0,86) \\
+Articles dont des sections numérotées n'ont pas été détectées & 31 / 101 (13 / 45) \\
+En-tête GROBID seul contre \cmd{metadata.json} : titre / année / DOI / arXiv & 0,87 / 0,47 / 0,65 / 0,82 \\
+En-tête GROBID seul : F1 sur les noms d'auteurs & 0,84 (0,86) \\
+Valeurs de \cmd{benchmarks.csv} retrouvées dans le tableau cité (1\,044 valeurs) & 0,70 (0,65) \\
+\quad idem, lignes qui ne citent que des tableaux (682 valeurs) & 0,74 (0,71) \\
+Valeurs de \cmd{benchmarks.csv} retrouvées n'importe où dans le texte & 0,79 (0,76) \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -797,26 +944,32 @@ Valeurs de \cmd{benchmarks.csv} retrouvées n'importe où dans le texte & 0,76 (
 \begin{itemize}
   \item \emph{La couverture} ne peut pas atteindre 1 : en-têtes, affiliations, texte des
     figures vectorielles et mots coupés par une césure sont exclus volontairement. Elle se
-    lit en relatif, d'un run ou d'un article à l'autre.
+    lit en relatif, d'un run ou d'un article à l'autre. Le minimum (0,57) est une thèse de
+    103 pages ; les deux suivants sont des documents réglementaires de l'agence européenne
+    de la sécurité aérienne (EASA), entrés avec l'axe sûreté et certification.
   \item \emph{L'année et le DOI} sont bas surtout par construction : le PDF arXiv ne porte
     souvent ni date ni DOI de la version publiée. C'est pour cela que l'ingestion les
     complète depuis arXiv et depuis les exports de citation. Le banc a aussi révélé un vrai
     défaut, encore ouvert : un DOI gabarit d'éditeur (MDPI) n'est pas rejeté.
-  \item \emph{Docling} faisait passer, sur 28 articles, la part des tableaux avec corps de 0,66
-    à 0,90 (41 tableaux reconstruits, avec \gl{OCR}{OCR} pour trois articles dont les tableaux sont des
-    images) ; sur 45 articles, 75 tableaux sont reconstruits par Docling et la part atteint
-    0,88. Il ne changeait ni les valeurs retrouvées ni la recherche : les tableaux cités par les
-    fiches avaient déjà un corps, et les valeurs manquantes viennent de cellules fusionnées
-    par l'extraction, de la prose citée dans la même section source, ou d'une écriture
-    différente. La qualité des tableaux passés par l'OCR est inégale : un contrôle à l'œil de
-    trois tableaux en trouve un propre, un incomplet et un en partie illisible. D'où la
-    mention «~à vérifier~» et la règle de ne pas en tirer de chiffre sans relecture du PDF.
-  \item \emph{Les valeurs retrouvées baissent} (0,74 $\rightarrow$ 0,65 dans le tableau
-    cité, 0,86 $\rightarrow$ 0,76 dans le texte). Les 249 valeurs ajoutées viennent des 17
-    nouveaux articles, dont plusieurs ont des tableaux reconstruits par Docling ou OCR. Le banc
-    ne dit pas si l'écart vient de l'extraction de ces tableaux ou de la transcription faite
-    par l'\gl{agent}{agent} ; les deux restent à contrôler article par article, et c'est ce que ce
-    volet du banc sert à cibler.
+  \item \emph{Tableaux.} La part des tableaux avec corps baisse (0,88 $\rightarrow$ 0,78), et
+    la baisse vient entièrement des 56 nouveaux articles : les 45 anciens gardent 25 tableaux
+    sans corps sur 233, les nouveaux en ont 103 sur 351, dont 29 dans les deux documents de
+    l'EASA. Docling avait
+    fait passer cette part de 0,66 à 0,90 sur 28 articles, avec \gl{OCR}{OCR} pour les tableaux publiés
+    en image ; mais la qualité des tableaux passés par l'OCR est inégale (un contrôle à l'œil
+    de trois tableaux en trouve un propre, un incomplet et un en partie illisible), d'où la
+    mention «~à vérifier~». Les signaux de qualité (section~\ref{sec:archi}) signalent 255
+    tableaux sur 584 : 163 au nombre de cellules irrégulier, 107 aux nombres collés, 82 aux
+    cellules vides, 14 aux caractères d'OCR douteux. Les échantillons relus de ces deux
+    dernières catégories sont de vrais défauts (trois valeurs dans une cellule, premières
+    lettres perdues). Le taux «~avec corps~» mesure la présence d'un corps, pas l'exactitude
+    des cellules : une vérité terrain par tableau reste à construire.
+  \item \emph{Les valeurs retrouvées remontent} (0,65 $\rightarrow$ 0,70 dans le tableau cité)
+    après une baisse au passage de 28 à 45 articles. Les lignes de benchmark des nouveaux
+    articles sont donc, en moyenne, mieux ancrées dans leur tableau. Le banc ne dit pas si
+    une valeur manquante vient de l'extraction ou de la transcription faite par l'\gl{agent}{agent} ;
+    c'est ce que \cmd{bench --check} contrôlera ligne par ligne, quand les lignes porteront
+    leur passage (\cmd{chunk\_id}) : aucune ne le fait encore.
 \end{itemize}
 
 \subsection{Recherche de passages}
@@ -832,13 +985,15 @@ non-maximum suppression. Il y a trois jeux :
   \item \emph{dev} : 20 questions en anglais, qui ont servi aux choix de conception (modèle,
     fusion, reranking) ;
   \item \emph{\gl{holdout}{holdout}} : 25 questions en anglais, écrites ensuite et jamais utilisées pour
-    régler quoi que ce soit. Elles couvrent les 12 articles absents du jeu dev et
+    régler quoi que ce soit. Elles couvraient les 12 articles absents du jeu dev et
     comprennent 2 questions sur des tableaux et 3 questions qui portent sur plusieurs
     articles. Trois attentes ont été élargies après lecture des passages renvoyés, parce que
     ces passages répondaient bien à la question (avant cela : \gl{recall}{recall@5} de 0,68 avec
     reranking) ;
   \item \emph{FR} : 8 questions du jeu dev traduites à la main en français.
 \end{itemize}
+Ces jeux ont été écrits pour un corpus de 28 à 45 articles. Sur les 101 actuels, environ
+60~\% des articles ne sont visés par aucune question.
 
 \paragraph{Métriques.} recall@5 et recall@10 (au moins une section attendue parmi les 5 ou
 10 premiers passages), \gl{MRR}{MRR} (inverse du rang de la première bonne section), \gl{nDCG}{nDCG}@10 à gain
@@ -848,28 +1003,29 @@ premiers).
 
 \begin{table}[ht]
 \centering
-\caption{Recherche de passages sur 3\,479 passages (45 articles, modèle bge-small-en-v1.5),
-le 26/09/2026. En gras : meilleure valeur par jeu.}
+\caption{Recherche de passages sur 8\,601 passages (101 articles, modèle bge-small-en-v1.5),
+le 03/10/2026 ; entre parenthèses, le recall@5 du run sur 45 articles. En gras : meilleure
+valeur par jeu.}
 \label{tab:eval}
 \small
 \begin{tabular}{@{}llccccc@{}}
 \toprule
 Jeu & Mode & recall@5 & recall@10 & MRR & nDCG@10 & paper@5 \\
 \midrule
-dev (20)     & lexical (BM25)      & 0,95 & 0,95 & 0,75 & 0,37 & \textbf{1,00} \\
-             & dense               & 0,90 & 0,90 & 0,70 & 0,36 & 0,95 \\
-             & hybride (défaut)    & 0,90 & 0,95 & 0,76 & 0,39 & 0,95 \\
-             & hybride + reranking & \textbf{1,00} & \textbf{1,00} & \textbf{0,85} & \textbf{0,44} & \textbf{1,00} \\
+dev (20)     & lexical (BM25)      & 0,85 (0,95) & 0,90 & 0,66 & 0,32 & 0,90 \\
+             & dense               & \textbf{0,90} (0,90) & 0,90 & 0,69 & 0,34 & 0,90 \\
+             & hybride (défaut)    & 0,80 (0,90) & 0,90 & 0,67 & 0,34 & 0,90 \\
+             & hybride + reranking & \textbf{0,90} (1,00) & \textbf{0,95} & \textbf{0,76} & \textbf{0,38} & \textbf{0,95} \\
 \midrule
-holdout (25) & lexical (BM25)      & 0,60 & 0,76 & 0,57 & 0,27 & 0,68 \\
-             & dense               & 0,64 & 0,72 & 0,56 & 0,32 & 0,76 \\
-             & hybride (défaut)    & 0,72 & \textbf{0,80} & 0,60 & 0,31 & 0,80 \\
-             & hybride + reranking & \textbf{0,80} & \textbf{0,80} & \textbf{0,71} & \textbf{0,38} & \textbf{0,88} \\
+holdout (25) & lexical (BM25)      & 0,56 (0,60) & 0,64 & 0,50 & 0,23 & 0,60 \\
+             & dense               & 0,64 (0,64) & 0,64 & 0,49 & 0,29 & 0,76 \\
+             & hybride (défaut)    & 0,68 (0,72) & 0,68 & 0,56 & 0,26 & 0,72 \\
+             & hybride + reranking & \textbf{0,72} (0,80) & \textbf{0,72} & \textbf{0,62} & \textbf{0,31} & \textbf{0,80} \\
 \midrule
-FR (8)       & lexical (BM25)      & 0,12 & 0,38 & 0,06 & 0,04 & 0,25 \\
-             & dense               & \textbf{0,62} & \textbf{0,75} & \textbf{0,38} & \textbf{0,17} & \textbf{0,75} \\
-             & hybride (défaut)    & 0,50 & \textbf{0,75} & 0,37 & 0,15 & \textbf{0,75} \\
-             & hybride + reranking & 0,50 & 0,50 & 0,32 & 0,12 & 0,62 \\
+FR (8)       & lexical (BM25)      & 0,00 (0,12) & 0,38 & 0,05 & 0,03 & 0,25 \\
+             & dense               & \textbf{0,50} (0,62) & 0,50 & 0,26 & 0,12 & \textbf{0,62} \\
+             & hybride (défaut)    & \textbf{0,50} (0,50) & \textbf{0,62} & \textbf{0,29} & \textbf{0,13} & \textbf{0,62} \\
+             & hybride + reranking & 0,38 (0,50) & 0,50 & \textbf{0,29} & 0,10 & \textbf{0,62} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -884,42 +1040,45 @@ rapport JSON du banc. La ligne pointillée est le seuil d'acceptation (recall@5 
 
 \paragraph{Lecture des résultats.}
 \begin{itemize}
-  \item \emph{Le jeu dev était optimiste.} Sur le holdout, le recall@5 perd 18 à 35 points
-    selon le mode. Le lexical passe de premier à dernier (0,95 $\rightarrow$ 0,60). Cela
-    confirme le biais attendu : sur le jeu dev, les sections attendues avaient été choisies
-    par mots-clés, ce qui avantageait \gl{BM25}{BM25}.
-  \item \emph{Plus d'articles, plus de concurrents.} À questions identiques, passer de 28 à
-    45 articles ne change presque rien sur le jeu dev, mais fait baisser le holdout dans les
-    trois modes sans reranking : hybride 0,80 $\rightarrow$ 0,72, dense 0,76 $\rightarrow$
-    0,64, lexical 0,68 $\rightarrow$ 0,60. Les nouveaux articles apportent des passages
-    proches du sujet qui passent devant les passages attendus. Le reranking absorbe cette
-    concurrence au recall@5 (0,80 dans les deux runs) mais pas entièrement au rang (MRR
-    0,78 $\rightarrow$ 0,71). Les attentes n'ont pas été revues : un passage d'un nouvel
-    article qui répondrait aussi bien est compté comme un échec.
-  \item \emph{Le reranking devient nécessaire en anglais.} Sur 28 articles, l'hybride seul
-    atteignait le seuil sur le holdout ; sur 45, seul l'hybride avec reranking l'atteint
-    (0,80). Sur le jeu dev, il récupère les deux questions manquées, dont celle sur la
-    suppression des boîtes en double, qui ne contient ni «~\gl{NMS}{NMS}~» ni «~non-maximum
-    suppression~».
-  \item \emph{Échecs réels du holdout} (avec reranking) : la tolérance aux radiations,
-    l'entraînement quantifié, la distillation de jeu de données, et les deux questions sur
-    des tableaux (ressources des autoencodeurs d'un article hls4ml, prototypes de FINN). Le
-    texte d'un tableau est court, souvent réduit à sa légende, et se retrouve mal.
-  \item \emph{En français, le lexical s'effondre} (recall@5 de 0,12), et l'\gl{index}{index dense}
-    résiste mieux (0,62), alors que le modèle n'est pas conçu comme multilingue. Le
+  \item \emph{Le holdout passe sous le seuil.} Avec 101 articles, plus aucun mode n'atteint
+    un recall@5 de 0,8 sur le holdout : le meilleur, l'hybride avec reranking, tombe de 0,80
+    à 0,72, soit deux questions de moins. Le jeu dev perd aussi (1,00 $\rightarrow$ 0,90),
+    comme le français (0,50 $\rightarrow$ 0,38). C'est le résultat le plus important de ce
+    run, et sa cause n'est pas établie : le corpus a plus que doublé, ce qui ajoute des
+    passages voisins des passages attendus ; les tableaux sont désormais indexés par
+    rangées ; et le code de recherche a été restructuré. Le seul changement mesuré isolément,
+    le découpage des tableaux, ne modifie ni le dev ni le holdout. Le diagnostic prévu rejoue
+    les jeux sur l'index restreint aux 45 articles du run de référence, puis l'ancien code sur
+    le corpus actuel, pour séparer l'effet du corpus de celui du code. Le seuil n'est pas
+    abaissé, et rien n'est réglé sur le holdout.
+  \item \emph{Le jeu dev était optimiste.} Sur le holdout, le recall@5 perd 12 à 29 points
+    selon le mode, et le lexical est le plus faible. Cela confirme le biais attendu : sur le jeu dev, les sections attendues
+    avaient été choisies par mots-clés, ce qui avantageait \gl{BM25}{BM25}.
+  \item \emph{Le reranking reste le meilleur mode en anglais}, sur les deux jeux. Il ne
+    compense plus, à lui seul, la concurrence des nouveaux articles.
+  \item \emph{Échecs réels du holdout} (avec reranking) : la tolérance aux radiations (deux
+    questions), l'entraînement quantifié, la mémoire
+    d'exemples passés, la distillation de jeu de données, et les deux questions sur des
+    tableaux (ressources des autoencodeurs d'un article hls4ml, prototypes de FINN). Pour ces
+    deux dernières, le constat initial («~le texte d'un tableau se réduit à sa légende~») ne
+    tient plus : depuis Docling, ces tableaux ont un corps et sont assez courts pour ne pas
+    être découpés. L'échec vient du vocabulaire : la question dit «~resource utilization~»,
+    «~throughput~», «~autoencoder~» ; le tableau dit «~LUT~», «~Thr.put~», «~AE~». Préfixer
+    les passages de tableau du titre de l'article a été essayé, et n'aide pas.
+  \item \emph{En français, le lexical s'effondre} (recall@5 de 0,00), et l'\gl{index}{index dense}
+    résiste mieux, alors que le modèle n'est pas conçu comme multilingue. Le
     reranking, entraîné sur \gl{MSMARCO}{MS MARCO} en anglais, dégrade le classement. Le moteur \gl{GPU}{GPU}
-    (section~\ref{sec:qwen}) fait nettement mieux sur ce jeu.
+    (section~\ref{sec:qwen}) faisait nettement mieux sur ce jeu.
   \item \emph{Décisions.} L'hybride reste le mode par défaut de \cmd{pdb search}, parce que le
     reranking dégrade le français, selon une règle fixée avant la mesure. \cmd{/paper-ask}
     l'active, parce qu'il formule toujours ses requêtes en anglais et que le rang de la
-    première bonne réponse compte quand on n'ouvre que 2 ou 3 passages. Le nouveau run
-    renforce ce choix.
+    première bonne réponse compte quand on n'ouvre que 2 ou 3 passages.
 \end{itemize}
 
 Lors d'une mesure antérieure (25/09/2026, jeu dev), le modèle \cmd{all-MiniLM-L6-v2}
 obtenait un recall@5 de 0,75 en mode dense contre 0,90 pour bge-small, ce qui a motivé le
 choix de ce dernier. Le seuil d'acceptation retenu est un recall@5 d'au moins 0,8 en
-anglais : sur 45 articles, le holdout ne l'atteint plus qu'avec le reranking.
+anglais.
 
 \subsection{Détecter qu'une question sort du corpus}
 \label{sec:horscorpus}
@@ -938,7 +1097,7 @@ hors corpus signalées, et au plus 5~\% des questions du corpus.
 \begin{table}[ht]
 \centering
 \caption{Signal «~hors corpus~» : part des questions signalées sur la validation (10
-questions hors corpus, 25 questions du holdout).}
+questions hors corpus, 25 questions du holdout), base fpga, 101 articles.}
 \label{tab:horscorpus}
 \small
 \begin{tabular}{@{}lcccc@{}}
@@ -947,7 +1106,7 @@ Signal & Seuil & Hors corpus signalées & Corpus signalées à tort & Adopté \\
 \midrule
 cosinus, seuil initial fixé à la main & 0,60 & 0,00 & 0,00 & -- \\
 cosinus, seuil calibré & 0,78 & 0,80 & 0,20 & non \\
-cross-encoder, seuil calibré & 2,41 & 0,90 & 0,40 & non \\
+cross-encoder, seuil calibré & 2,12 & 0,90 & 0,32 & non \\
 \midrule
 Qwen3-Reranker-4B, 28 articles (section~\ref{sec:qwen}) & 0,96 & 1,00 & 0,16 & non \\
 \bottomrule
@@ -958,11 +1117,12 @@ Aucun signal ne remplit la règle. Avec bge-small, une question hors sujet obtie
 cosinus aussi élevé qu'une question pertinente : le calibrage initial, fait sur quelques
 requêtes, ne tenait pas, et l'alerte ne se déclenchait jamais. Le cross-encoder sépare mieux
 les médianes, mais certaines questions du corpus tombent très bas, souvent celles où la
-recherche échoue déjà. L'alerte a donc été retirée de \cmd{pdb search}. Le banc continue de
-mesurer les deux signaux, pour un essai futur à valider sur un nouveau jeu hors corpus. Le
-reranker du moteur GPU est le signal le plus proche de la règle : il signale les 10
-questions hors corpus, mais aussi 4 des 25 questions du holdout (16~\%, pour 5~\% tolérés).
-Il n'est pas adopté non plus.
+recherche échoue déjà. L'alerte a donc été retirée de \cmd{pdb search}. Le reranker du
+moteur GPU est le signal le plus proche de la règle : il signale les 10 questions hors
+corpus, mais aussi 4 des 25 questions du holdout (16~\%, pour 5~\% tolérés). Il n'est pas
+adopté non plus. La réponse est venue d'ailleurs : quand c'est l'agent qui juge, sur le
+contenu des passages lus, il reconnaît les questions hors corpus
+(section~\ref{sec:answers}).
 
 \subsection{Vérification des citations}
 \label{sec:evalverify}
@@ -976,8 +1136,8 @@ indiqué).
 \begin{table}[ht]
 \centering
 \caption{Taux d'acceptation de \cmd{pdb verify}, avant et après le contrôle des nombres. «~Avant~» :
-run sur 28 articles ; «~Après~» : run sur 45 articles, dont le tirage aléatoire diffère (35
-phrases à chiffre modifiable au lieu de 38).}
+run sur 28 articles ; «~Après~» : run du 03/10 sur 101 articles, dont le tirage aléatoire
+diffère (33 phrases à chiffre modifiable au lieu de 38).}
 \label{tab:verify}
 \small
 \begin{tabular}{@{}lccl@{}}
@@ -985,8 +1145,8 @@ phrases à chiffre modifiable au lieu de 38).}
 Citation & Avant & Après & Statuts après \\
 \midrule
 exacte (40)            & 1,00 & 1,00 & 40 \cmd{OK} \\
-chiffre modifié (35)   & \textbf{1,00} & \textbf{0,00} & 35 \cmd{NOMBRES} \\
-mot remplacé (40)      & 0,97 & 0,88 & 35 \cmd{APPROX}, 3 \cmd{NOMBRES}, 2 \cmd{ABSENT} \\
+chiffre modifié (33)   & \textbf{1,00} & \textbf{0,00} & 33 \cmd{NOMBRES} \\
+mot remplacé (40)      & 0,97 & 0,97 & 39 \cmd{APPROX}, 1 \cmd{NOMBRES} \\
 d'un autre article (40) & 0,00 & 0,00 & 40 \cmd{ABSENT} \\
 \bottomrule
 \end{tabular}
@@ -996,114 +1156,211 @@ Avant le contrôle, \cmd{verify} acceptait toutes les citations dont un chiffre 
 modifié, alors que les règles de travail de l'agent comptent sur lui pour garantir les
 nombres cités. Une première version du contrôle en laissait encore passer 6 (un «~4~»
 reconnu dans «~6.4~», un «~2~» trouvé ailleurs dans le passage). L'exigence des mots
-voisins règle les deux cas. Reste non traité : un \emph{mot} remplacé loin de tout nombre
-donne toujours \cmd{APPROX}. C'est pourquoi \cmd{/paper-ask} ne garde une citation
-\cmd{APPROX} que présentée comme une paraphrase.
+voisins règle ces deux cas, mais pas tous. Sur la base drone (section~\ref{sec:drone}), le
+run du 03/10 accepte, pour la première fois, une citation au chiffre modifié : «~before
+step~2~» au lieu de «~before step~4~», dans un passage qui contient ailleurs «~in step~2
+and~3~». Le nombre modifié et son mot voisin existent bien dans le passage, mais pas à cet
+endroit. Ce cas n'est pas corrigé ; il montre que le contrôle garantit la présence de chaque
+nombre avec son contexte immédiat, pas sa position dans la phrase. Reste aussi non traité :
+un \emph{mot} remplacé loin de tout nombre donne toujours \cmd{APPROX}. C'est pourquoi
+\cmd{/paper-ask} ne garde une citation \cmd{APPROX} que présentée comme une paraphrase.
 
 \subsection{Temps d'exécution}
 
 \begin{table}[ht]
 \centering
-\caption{Temps mesurés (médianes de 3 répétitions, CPU sans GPU).}
+\caption{Temps mesurés sur la base fpga (8\,601 passages ; médianes de 3 répétitions, CPU sans GPU).}
 \label{tab:temps}
 \small
 \begin{tabularx}{\linewidth}{@{}Ll@{}}
 \toprule
 Mesure & Valeur \\
 \midrule
-Extraction hors GROBID, par article (TEI $\rightarrow$ texte, ligatures, tableaux) & 0,01 à 0,14\,s \\
-Chargement de l'index (3\,479 passages, 7\,Mo) & 0,29\,s \\
-Encodage bge-small & 13 passages/s ; index complet $\approx$ 276\,s \\
-\cmd{search} à chaud, p50 / p95 : lexical & 12 / 24\,ms \\
-\quad dense & 117 / 166\,ms \\
-\quad hybride & 126 / 215\,ms \\
-\quad hybride + reranking & 1\,390 / 1\,717\,ms \\
-\cmd{verify} à chaud & 246\,ms \\
-Commandes à froid, démarrage de Python compris : \cmd{status} & 0,19\,s \\
+Extraction hors GROBID, par article (TEI $\rightarrow$ texte, ligatures, tableaux) & 0,01 à 0,13\,s \\
+Chargement de l'index (8\,601 passages, 17\,Mo) & 0,52\,s \\
+Encodage bge-small & 18 passages/s ; index complet $\approx$ 491\,s \\
+\cmd{search} à chaud, p50 / p95 : lexical & 25 / 31\,ms \\
+\quad dense & 117 / 146\,ms \\
+\quad hybride & 115 / 168\,ms \\
+\quad hybride + reranking & 1\,430 / 1\,782\,ms \\
+\cmd{verify} à chaud & 2\,ms \\
+Commandes à froid, démarrage de Python compris : \cmd{status} & 0,61\,s \\
 \quad \cmd{bench}, \cmd{paper} & 0,09 et 0,08\,s \\
-\quad \cmd{show} & 0,50\,s \\
-\quad \cmd{search} & 6,9\,s \\
+\quad \cmd{show} & 0,75\,s \\
+\quad \cmd{search} & 6,6\,s \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 Le coût d'une recherche vient presque entièrement du démarrage (import de PyTorch,
-chargement du modèle) : 6,9\,s à froid contre 0,1\,s à chaud. C'est le coût réel d'un appel
-par l'agent, qui lance une commande à chaque fois. Avec 44~\% de passages en plus, les temps à
-chaud restent du même ordre, sauf \cmd{verify} (4 $\rightarrow$ 246\,ms). Cet écart n'a
-pas encore été analysé ; il reste faible devant le coût d'une commande lancée à froid.
+chargement du modèle) : 6,6\,s à froid contre 0,1\,s à chaud. C'est le coût réel d'un appel
+par l'agent, qui lance une commande à chaque fois. Avec 2,5 fois plus de passages qu'au
+run du 28/09, les temps de recherche à chaud n'ont presque pas bougé, et le chargement de
+l'index passe de 0,29 à 0,52\,s. Le temps de \cmd{verify}, qui était passé de 4 à 246\,ms
+sans explication, est revenu à 2\,ms.
 
 \subsection{Essai réel de bout en bout}
 
-Question posée à \cmd{/paper-ask} : «~comment les papiers mesurent-ils la puissance, et
-est-ce comparable ?~». L'agent a enchaîné une requête \cmd{bench} (57 lignes, 8 articles),
-une recherche de 10 passages, la lecture de 3 d'entre eux, 7 vérifications de citations et
-8 requêtes d'identité. L'ensemble représente environ 9\,Ko lus, soit environ 2\,500 tokens,
-sans ouvrir de texte intégral. Les 7 citations textuelles sont revenues \cmd{OK} au premier
-essai. La recherche a retrouvé en une requête les quatre protocoles de mesure du corpus
-(PMBus et prise murale, multimètre à l'entrée de la carte, \cmd{tegrastats}, puissance au
-repos mesurée avant les tests). La structure Lu / Déduit / Non trouvé a fait ressortir deux
-points à vérifier dans la base elle-même, dont un article qui décrit une mesure soignée sans
-qu'aucune ligne de puissance n'ait été saisie.
-
+Question posée à \cmd{/paper-ask}, sur le corpus de 28 articles : «~comment les papiers
+mesurent-ils la puissance, et est-ce comparable ?~». L'agent a enchaîné une requête
+\cmd{bench} (57 lignes, 8 articles), une recherche de 10 passages, la lecture de 3 d'entre
+eux, 7 vérifications de citations et 8 requêtes d'identité. L'ensemble représente environ
+9\,Ko lus, soit environ 2\,500 tokens, sans ouvrir de texte intégral. Les 7 citations
+textuelles sont revenues \cmd{OK} au premier essai. La recherche a retrouvé en une requête
+les quatre protocoles de mesure du corpus (PMBus et prise murale, multimètre à l'entrée de la
+carte, \cmd{tegrastats}, puissance au repos mesurée avant les tests). La structure Lu /
+Déduit / Non trouvé a fait ressortir deux points à vérifier dans la base elle-même, dont un
+article qui décrit une mesure soignée sans qu'aucune ligne de puissance n'ait été saisie.
 L'essai a aussi révélé deux défauts, corrigés depuis et couverts par un test chacun : un
 identifiant court tronqué pour un nom d'auteur composé, et une agrégation qui demandait un
-script externe (d'où \cmd{bench --count}).
+script externe (d'où \cmd{bench --count}). Cet essai était unique et jugé par l'agent qui
+l'avait exécuté ; la section suivante le remplace par une évaluation répétable.
+
+\subsection{Évaluer la réponse rédigée}
+\label{sec:answers}
+
+Les volets précédents mesurent le classement des passages. Ils ne disent pas si la réponse
+finale reconnaît une question hors corpus, si ses citations tiennent, ni si elle retrouve
+les sources et les valeurs attendues. \cmd{pdb eval --answers} le mesure, toujours sans LLM :
+les réponses sont produites à part, puis notées.
+
+\paragraph{Protocole.} Chaque question d'un jeu de réponses porte une catégorie, les
+\gl{exigence}{exigences} d'une réponse complète, les sources attendues (sections ou articles), les
+valeurs attendues avec leur unité, et le verdict attendu. Il y a quatre catégories : un fait
+sourcé dans un article (\emph{simple}), des valeurs avec leurs conditions
+(\emph{numérique}), une synthèse sur plusieurs articles (\emph{synthèse}), et une question
+proche du thème mais que le corpus ne couvre pas (\emph{absent} : polypes en endoscopie,
+langue des signes, sonar, EEG\ldots, vérifiés absents par recherche plein texte). La skill
+\cmd{/eval-answers} confie chaque question à un sous-agent qui ne reçoit que son texte, ni
+catégorie, ni sources, ni verdict attendu, et qui répond par \cmd{/paper-ask --record}. La
+réponse enregistrée est une liste d'affirmations marquées lues ou déduites, chacune avec ses
+citations et leurs extraits. Le banc calcule l'exactitude du verdict, la part des citations
+acceptées (\cmd{verify} renvoie \cmd{OK} ou \cmd{APPROX} dans le passage indiqué, ou la
+section citée figure parmi les sources des lignes de \cmd{bench} de l'article), la part des
+affirmations «~lues~» sans aucune citation acceptée, et le rappel des sources et des valeurs
+attendues. Une grille de notes humaines (exigences, soutien, conditions, limites, de 0 à 2)
+est prévue : les contrôles automatiques vérifient que les extraits existent, pas qu'ils
+soutiennent la phrase.
+
+\paragraph{Premiers runs.} Les jeux de départ de la base fpga comptent 12 questions de
+développement et 12 réservées, 3 par catégorie, écrites par l'auteur du code. Deux runs ont
+été faits le 02/10/2026, une réponse par question, par des sous-agents Sonnet ; le second
+avec la version de \cmd{/paper-ask} qui pose les exigences et le verdict de suffisance
+(section~\ref{sec:paperask}). Les deux runs ont été faits dans une configuration dégradée :
+les modèles de la recherche dense et du reranking n'étaient pas téléchargeables depuis le
+conteneur, et la recherche était donc lexicale seule (tableau~\ref{tab:answers}).
+
+\begin{table}[ht]
+\centering
+\caption{Réponses rédigées, base fpga (12 + 12 questions, recherche lexicale seule). Entre
+parenthèses : premier run, avant le verdict de suffisance.}
+\label{tab:answers}
+\small
+\begin{tabularx}{\linewidth}{@{}l*{5}{>{\centering\arraybackslash}X}@{}}
+\toprule
+Jeu & Verdict juste & Citations acceptées & Affirmations non soutenues & Sources attendues & Valeurs attendues \\
+\midrule
+dev (12)     & 0,75 (0,83) & 1,00 (0,96) & 0,00 (0,02) & 0,87 (0,91) & 1,00 (1,00) \\
+holdout (12) & 0,83 (0,92) & 1,00 (1,00) & 0,00 (0,00) & 0,50 (0,67) & 1,00 (1,00) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{itemize}
+  \item \emph{Hors corpus.} Aux deux runs, les 6 questions \emph{absent} sont reconnues comme
+    telles, et aucune question du corpus n'est déclarée absente à tort. Les réponses disent
+    que la base ne traite pas le sujet, sans le combler par des connaissances générales.
+    C'est ce qu'aucun score de recherche ne permettait d'obtenir
+    (section~\ref{sec:horscorpus}). Avec 6 questions, c'est un signal, pas une mesure.
+  \item \emph{Citations.} Au second run, toutes les citations sont acceptées et toute
+    affirmation «~lue~» en porte au moins une.
+  \item \emph{Synthèse.} C'est la catégorie faible : 3 verdicts justes sur 6 au premier run,
+    2 au second. L'agent répond \cmd{partiel} là où le jeu attend \cmd{suffisant}, parce
+    qu'une exigence de la question (budget mémoire de chaque méthode, comparabilité des
+    mesures) n'est couverte qu'en partie par le corpus. Ces réponses sont défendables ; la
+    frontière entre suffisant et partiel est à préciser dans le jeu plutôt que dans la skill.
+    La baisse du verdict juste au second run vient de là, et d'une réponse où la règle
+    nouvelle (un verdict \cmd{suffisant} exige que toutes les exigences soient couvertes)
+    corrige une incohérence du premier run.
+  \item \emph{Variance.} 22 verdicts sur 24 sont identiques d'un run à l'autre : le banc
+    est assez stable pour comparer des versions de la skill sur les verdicts. Il ne l'est
+    pas encore sur le rappel des sources (0,67 $\rightarrow$ 0,50 sur le holdout sans
+    changement de la recherche). Ce rappel sous-estime d'ailleurs les réponses : la plupart
+    des écarts viennent d'une source équivalente (la ligne de \cmd{bench} ou le passage du
+    tableau plutôt que la section de texte attendue).
+\end{itemize}
+Aucun seuil n'est encore fixé : il manque un run en recherche hybride avec reranking, des
+jeux plus grands (40 questions de développement et 60 réservées par base, écrites ou relues
+par un tiers) et les notes humaines.
 
 \subsection{Un second corpus : la base drone}
 \label{sec:drone}
 
 La base drone (section~\ref{sec:bases}) a ses propres jeux de questions, écrits selon le même
-protocole sur ses 73 articles : 20 questions de développement, 20 réservées, 8 en français
-et deux jeux de 10 questions hors corpus. Les seuils sont ceux de la base fpga, fixés avant
-le premier run. Le tableau~\ref{tab:drone} compare les deux bases (runs du 28/09/2026 au
-commit 76dc85e).
+protocole sur ses 73 premiers articles : 20 questions de développement, 20 réservées, 8 en
+français et deux jeux de 10 questions hors corpus. Les seuils sont ceux de la base fpga,
+fixés avant le premier run. Le tableau~\ref{tab:drone} compare les deux bases (runs du
+03/10/2026 au commit 3925690).
 
 \begin{table}[ht]
 \centering
-\caption{Banc d'évaluation sur les deux bases (recall@5 sauf mention).}
+\caption{Banc d'évaluation sur les deux bases qui ont des jeux de questions, le 03/10/2026
+(recall@5 sauf mention).}
 \label{tab:drone}
 \small
 \begin{tabularx}{\linewidth}{@{}Lll@{}}
 \toprule
-Mesure & fpga (45 articles) & drone (73 articles) \\
+Mesure & fpga (101 articles) & drone (87 articles) \\
 \midrule
-Couverture du texte : moyenne / minimum & 0,91 / 0,81 & 0,90 / 0,70 \\
-Tableaux avec corps & 0,88 & 0,71 \\
-En-tête : titre / année / DOI & 0,91 / 0,42 / 0,62 & 0,92 / 0,64 / 0,70 \\
-Valeurs de \cmd{benchmarks.csv} retrouvées dans le tableau cité & 0,65 (588) & 0,60 (716) \\
-Dev, hybride / hybride + reranking & 0,90 / 1,00 & 0,95 / 1,00 \\
-Réservé, hybride / hybride + reranking & 0,72 / 0,80 (25 q.) & 0,95 / 0,95 (20 q.) \\
-Réservé, MRR hybride + reranking & 0,71 & 0,92 \\
-Français, hybride + reranking & 0,50 & 0,62 \\
+Passages & 8\,601 & 5\,361 \\
+Couverture du texte : moyenne / minimum & 0,90 / 0,57 & 0,91 / 0,77 \\
+Tableaux avec corps & 0,78 & 0,79 (0,90 sur les 73 articles GROBID) \\
+En-tête : titre / année / DOI & 0,87 / 0,47 / 0,65 & 0,92 / 0,64 / 0,70 \\
+Valeurs de \cmd{benchmarks.csv} retrouvées dans le tableau cité & 0,70 (1\,044) & 0,62 (739) \\
+Dev, hybride / hybride + reranking & 0,80 / 0,90 & 0,90 / 1,00 \\
+Réservé, hybride / hybride + reranking & 0,68 / 0,72 (25 q.) & 0,90 / 0,95 (20 q.) \\
+Réservé, MRR hybride + reranking & 0,62 & 0,89 \\
+Français, hybride + reranking & 0,38 & 0,50 \\
 Pertinence faible (\cmd{cos}) : hors corpus / corpus signalés & 0,80 / 0,20 & 1,00 / 0,10 \\
-\cmd{verify} : exacte / mot remplacé / chiffre modifié / autre article & 1,00 / 0,88 / 0,00 / 0,00 & 1,00 / 0,85 / 0,00 / 0,00 \\
+\cmd{verify} : exacte / mot remplacé / chiffre modifié / autre article & 1,00 / 0,97 / 0,00 / 0,00 & 1,00 / 0,82 / 0,03 / 0,00 \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Tous les seuils sont atteints. La lecture demande de la prudence :
+La lecture demande de la prudence :
 \begin{itemize}
-  \item \textbf{Le jeu réservé drone est plus facile}, et l'on ne peut pas en conclure que la
-    recherche y marche mieux. Le corpus drone est plus hétérogène (détection, suivi,
+  \item \textbf{Le jeu réservé drone tient son seuil}, mais l'on ne peut pas en conclure que
+    la recherche y marche mieux. Le corpus drone est plus hétérogène (détection, suivi,
     neuromorphique, course de drones) : un fait distinctif y a moins de voisins proches que
     dans un corpus centré sur les accélérateurs. Deux attentes ont en outre été élargies
-    après lecture des passages renvoyés ; sans elles, le reranking obtient 0,85. Sur 20
-    questions, 0,05 correspond à une question.
+    après lecture des passages renvoyés. Sur 20 questions, 0,05 correspond à une question.
+    Entre le 28/09 et le 03/10, avec 14 articles et 836 passages de plus, l'hybride perd une
+    question sur chaque jeu anglais, et le reranking n'en perd aucune.
   \item \textbf{Les échecs sont de même nature} que sur la base fpga : un tableau (puissance
-    au repos de plusieurs cartes) manqué par tous les modes, et 3 questions françaises sur 8.
+    au repos de plusieurs cartes) manqué par tous les modes, et la moitié des questions
+    françaises.
   \item \textbf{La pertinence faible reste inutilisable} : le cosinus signale toutes les
-    questions hors corpus non ambiguës de validation, mais aussi 2 des 20 questions
-    réservées, au-delà des 5~\% de fausses alertes tolérés.
-  \item \textbf{L'extraction des tableaux est plus faible} (71~\% avec corps contre 88~\%).
-    La cause est connue : le repli Docling n'a pas été lancé sur cette base. Sur les 41
-    articles qui gardent un tableau sans corps, 40 ne sont jamais passés par Docling (5 sur
-    14 pour fpga), et seuls 10 tableaux y ont été reconstruits par Docling, contre 75. C'est
-    une action à faire, pas une limite de l'outil.
+    questions hors corpus de validation, mais aussi 2 des 20 questions réservées, au-delà des
+    5~\% de fausses alertes tolérés.
+  \item \textbf{Les tableaux.} Le passage de Docling sur cette base (29/09) a fait monter la
+    part des tableaux avec corps de 0,71 à 0,90 et les valeurs retrouvées dans leur tableau
+    de 3 points, à corpus constant : c'est le premier gain de Docling mesuré sur ces valeurs.
+    La part retombe à 0,79 sur 87 articles parce que les 14 articles ajoutés depuis l'ont été
+    sans leur PDF : extraits par PyMuPDF sans GROBID, ils n'ont aucun tableau avec corps
+    (0 sur 50) et ne peuvent pas passer par Docling.
+  \item \textbf{\cmd{verify}} accepte une citation au chiffre modifié sur 30, et le seuil
+    correspondant n'est plus atteint (section~\ref{sec:evalverify}).
 \end{itemize}
-Le comportement de \cmd{verify} est le même sur les deux corpus : il accepte toutes les
-citations exactes et refuse tous les chiffres modifiés et toutes les citations d'un autre
-article.
+
+\paragraph{La base stage.} Elle n'a pas encore de jeux de questions : le banc ne mesure que
+son extraction (56 articles, 3\,640 passages, run \cmd{bases/stage/eval/results/2026-10-03T2344-3925690.json}).
+La couverture moyenne est de 0,91 (minimum 0,61 pour le reprint numérisé de Mahalanobis,
+1936), mais seuls 71~\% des 254 tableaux ont un corps, aucun n'ayant été repris par Docling,
+et seules 42~\% des 112 valeurs de \cmd{benchmarks.csv} sont retrouvées dans le tableau cité
+(57~\% n'importe où dans le texte) : ces lignes sont les premières à relire. C'est
+aussi la seule base où restent des ligatures non réparées (0,37 pour 10\,000 mots).
+Sans jeux propres, le banc retombait jusqu'ici en silence sur les questions de la base fpga,
+dont le rappel n'a aucun sens ici : ce repli doit devenir un avertissement.
 
 \subsection{Banc synthétique (\cmd{pdb synth})}
 \label{sec:synth}
@@ -1139,21 +1396,28 @@ sont donc pas rapportés ici.
 
 \begin{itemize}
   \item Les jeux sont petits : sur 25 questions, un écart de 0,04 correspond à une seule
-    question. Le holdout n'a servi à régler aucun paramètre, mais il a été écrit, comme le
-    jeu dev, par l'auteur du système. Des questions écrites par un tiers sont nécessaires
-    pour confirmer les écarts. Le second corpus (section~\ref{sec:drone}) montre que les
-    tendances ne tiennent pas à un seul corpus, mais ses questions ont été écrites par le
-    même auteur.
+    question, et aucun écart n'est lisible en dessous de deux questions. Le holdout n'a servi
+    à régler aucun paramètre, mais il a été écrit, comme le jeu dev, par l'auteur du système.
+    Des questions écrites par un tiers sont nécessaires pour confirmer les écarts. Le second
+    corpus (section~\ref{sec:drone}) montre que les tendances ne tiennent pas à un seul
+    corpus, mais ses questions ont été écrites par le même auteur.
+  \item Les jeux n'ont pas suivi la croissance des bases : écrits pour 45 et 73 articles,
+    ils interrogent aujourd'hui moins de la moitié du corpus fpga, et la base stage n'en a
+    aucun.
   \item Les sections attendues sont choisies par motif textuel. C'est une approximation : une
-    bonne réponse formulée autrement est comptée comme un échec (trois attentes du holdout
-    ont dû être élargies pour cette raison).
+    bonne réponse formulée autrement, ou trouvée dans un article ajouté après l'écriture du
+    jeu, est comptée comme un échec.
   \item La vérité terrain des tableaux ne couvre que les valeurs reprises dans
-    \cmd{benchmarks.csv}.
-  \item La qualité des réponses rédigées par l'agent n'est pas évaluée : l'essai de bout en
-    bout est unique, et il a été jugé par l'agent qui l'a exécuté. Une évaluation
-    indépendante demanderait un jugement humain.
-  \item La comparaison des deux moteurs porte sur le corpus de 28 articles ; elle n'a pas
-    été refaite après l'ajout de 17 articles, qui a fait baisser le moteur CPU.
+    \cmd{benchmarks.csv}, et le taux de tableaux «~avec corps~» ne dit rien de l'exactitude
+    des cellules.
+  \item Les réponses rédigées sont notées automatiquement sur 24 questions, en recherche
+    lexicale seule, et les notes humaines n'ont pas encore été attribuées : la validité des
+    citations est contrôlée, pas le fait qu'elles soutiennent la phrase.
+  \item La comparaison des deux moteurs porte sur le corpus de 28 articles et sur la chaîne
+    \cmd{pdb rag} d'origine ; elle n'a pas été refaite avec le moteur intégré à
+    \cmd{pdb search}, ni sur le corpus actuel.
+  \item L'économie de la délégation repose sur une estimation, calée par un seul essai
+    apparié, sur une seule tâche, sans notation de la qualité.
   \item Le banc synthétique aura ses propres biais : questions générées par un LLM, validées
     et notées par d'autres LLM. Il mesurera ce corpus gelé et cette distribution de tâches,
     pas le travail de recherche en général.
@@ -1162,44 +1426,69 @@ sont donc pas rapportés ici.
 \section{Limites et perspectives}
 
 \begin{itemize}
-  \item \textbf{Tableaux.} Ils restent la partie la plus fragile de l'extraction. Docling
-    porte à 90~\% la part des tableaux avec corps, mais les tableaux passés par l'\gl{OCR}{OCR} sont de
-    qualité inégale et restent marqués «~à vérifier~». Les tableaux se retrouvent mal par
-    la recherche, et un chiffre absent de \cmd{benchmarks.csv} et pris dans une table mal
-    extraite ne sera pas retrouvé de façon fiable : \cmd{bench} reste la référence pour les
-    chiffres.
-  \item \textbf{Questions hors corpus.} \cmd{search} renvoie toujours des \gl{passage}{passages}, et aucun
-    score testé ne dit de façon fiable que la base ne traite pas le sujet. Ce jugement
-    revient à l'\gl{agent}{agent}. Le reranker Qwen s'approche de la règle (16~\% de fausses alertes
-    pour 5~\% tolérés). Pistes : combiner le cosinus et le \gl{crossenc}{cross-encoder}, puis valider sur un
-    nouveau jeu hors corpus.
-  \item \textbf{Vérification.} \cmd{verify} garantit les nombres, mais un mot remplacé loin
-    de tout nombre passe encore pour une paraphrase (\cmd{APPROX}).
+  \item \textbf{Passage à l'échelle.} De 45 à 101 articles, le \gl{recall}{recall@5} du \gl{holdout}{holdout} avec
+    \gl{reranking}{reranking} passe de 0,80 à 0,72, sous le seuil. Avant tout réglage, il faut séparer
+    l'effet du corpus de celui du code, en rejouant les jeux sur le sous-corpus commun et
+    l'ancien code sur le corpus actuel. Le plan suivant est spécifié : des jeux propres à
+    chaque base, sans repli silencieux ; une taille proportionnelle au corpus (holdout d'au
+    moins 40 questions ou la moitié du nombre d'articles) ; des quotas par axe de la base et
+    par type de question (tableaux, plusieurs articles) ; des questions proposées par la
+    chaîne du banc synthétique et relues par un humain ; un nouveau run de référence à chaque
+    croissance de 25~\% du corpus ; et des intervalles de confiance par bootstrap, pour ne
+    signaler un écart que s'il en sort.
+  \item \textbf{Tableaux.} Ils restent la partie la plus fragile de l'extraction : 22~\% des
+    tableaux de la base fpga n'ont pas de corps, environ 40~\% de ceux qui en ont un sont
+    signalés par un indicateur de qualité, et les tableaux passés par l'\gl{OCR}{OCR} sont de qualité
+    inégale. Les tableaux se retrouvent mal par la recherche, maintenant pour une raison de
+    vocabulaire (abréviations des en-têtes) plus que de découpage ; un glossaire
+    d'abréviations par base ou des requêtes multiples sont les pistes. Restent à faire : une
+    skill de relecture des tableaux signalés, en commençant par ceux que cite
+    \cmd{benchmarks.csv}, une vérité terrain d'une vingtaine de tableaux annotés à la main,
+    et une OCR ciblée sur la zone du tableau plutôt que sur tout le PDF. Une ré-extraction
+    (\cmd{ingest --reparse}) défait aussi certaines réparations de ligatures : à corriger
+    avant toute ré-extraction en masse.
+  \item \textbf{Comparaisons.} \cmd{bench --comparable} dit quelles lignes se comparent sur un
+    axe. Une commande \cmd{pdb compare}, spécifiée, comparera sur deux axes (débit contre
+    puissance, à métrique et jeu égaux), donnera un niveau de confiance par groupe et
+    expliquera chaque ligne exclue. Les colonnes optionnelles restent à remplir : aucune
+    ligne ne porte encore son passage.
+  \item \textbf{Preuves atomiques.} Un seul article a ses \cmd{claims.jsonl}. Il reste à les
+    produire pour les autres, à les indexer comme renvois vers leur passage, et à les faire
+    lire par \cmd{/paper-ask}, qui devrait y gagner sur les questions de synthèse.
+  \item \textbf{Réponses.} Il manque un run des réponses en recherche hybride avec reranking,
+    des jeux plus grands relus par un tiers, des jeux pour les bases drone et stage, et les
+    notes humaines.
+  \item \textbf{Questions hors corpus.} Aucun score de recherche ne dit de façon fiable que la
+    base ne traite pas le sujet ; le verdict de suffisance de l'agent y parvient sur les 6
+    questions testées, ce qui reste à confirmer sur un jeu plus grand.
+  \item \textbf{Vérification.} \cmd{verify} refuse les chiffres modifiés quand le nombre et ses
+    voisins ne se retrouvent pas ailleurs dans le passage, mais pas dans le cas contraire
+    (section~\ref{sec:evalverify}), et un mot remplacé loin de tout nombre passe encore pour
+    une paraphrase (\cmd{APPROX}). Le contrôle de \cmd{rag check-answer}, sur la route GPU,
+    ne vérifie pas encore les nombres.
   \item \textbf{Métadonnées.} Un \gl{DOI}{DOI} gabarit d'éditeur (MDPI) n'est pas encore rejeté à
     l'extraction ; il est corrigé à la main dans la base, mais un nouvel article du même
     éditeur en hériterait.
   \item \textbf{Langue.} Corpus et modèle par défaut sont en anglais, et la recherche sur
-    \gl{CPU}{CPU} perd beaucoup en français. Le moteur \gl{GPU}{GPU} (Qwen3) retrouve les 8 questions
-    françaises, mais au prix d'un GPU de 32~Go. Piste : un petit modèle multilingue sur CPU,
-    à comparer avec la même évaluation.
-  \item \textbf{Passage à l'échelle.} De 28 à 45 articles, le \gl{recall}{recall@5} du \gl{holdout}{holdout} en hybride
-    passe de 0,80 à 0,72 ; seul le \gl{reranking}{reranking} tient le seuil. La tendance est à suivre à
-    chaque croissance du corpus, avec \cmd{pdb eval --compare}, et les attentes des jeux de
-    questions devront être revues quand un nouvel article répond aussi bien.
-  \item \textbf{Tests.} Un test de l'acquisition dépend encore du tokenizer Qwen en cache.
+    \gl{CPU}{CPU} perd beaucoup en français (recall@5 de 0,38 avec reranking). Le moteur \gl{GPU}{GPU}
+    retrouvait les 8 questions françaises, au prix d'un GPU. Pistes spécifiées : traduire
+    systématiquement la requête et fusionner les résultats, évaluer un modèle multilingue à
+    côté du modèle actuel, et porter le jeu français à 30 questions par base.
+  \item \textbf{Provenance.} Rien ne garde trace de l'état du corpus sur lequel une réponse a
+    été rédigée : après une réindexation, on ne peut pas savoir sur quoi elle reposait. Une
+    empreinte du corpus et un journal des réponses sont prévus.
   \item \textbf{Latence.} Environ 7\,s par \cmd{search} à froid, contre 0,1\,s à chaud,
     dues pour l'essentiel à l'import de PyTorch et au chargement du modèle ; \cmd{show} et
-    \cmd{verify}, qui s'en passent, répondent en moins de 0,5\,s. Un processus résident, par exemple
+    \cmd{verify}, qui s'en passent, répondent en moins d'une seconde. Un processus résident, par exemple
     un serveur \gl{MCP}{MCP} exposant les mêmes commandes, ne paierait ce coût qu'une fois, et
     permettrait d'utiliser la base depuis d'autres applications. Le même argument vaut pour
     le moteur GPU, qui recharge ses modèles à chaque requête (3 à 4\,s).
-  \item \textbf{Généricité.} Le même code sert deux bases (section~\ref{sec:bases}), et une
-    nouvelle se crée par \cmd{pdb base new} ; ses axes, ses règles et son périmètre se
-    déclarent dans \cmd{base.json} et \cmd{profile.md}. Restent communs à toutes les bases,
-    et donc marqués par le domaine d'origine : les colonnes de \cmd{benchmarks.csv}
-    (\gl{FPS}{FPS}, \gl{GOPS}{GOPS}, ressources \gl{FPGA}{FPGA}) et les raccourcis de filtre de \cmd{bench}.
-    Un sujet sans mesures de performance matérielle demanderait un schéma de benchmark
-    configurable par base.
+  \item \textbf{Généricité.} Le même code sert trois bases (section~\ref{sec:bases}), dont une
+    sans aucune mesure matérielle, et une nouvelle se crée par \cmd{pdb base new}. Les
+    colonnes obligatoires de \cmd{benchmarks.csv} (\gl{FPS}{FPS}, \gl{GOPS}{GOPS}, ressources \gl{FPGA}{FPGA}) restent
+    marquées par le domaine d'origine : sur 100 lignes, la base stage n'a aucune ressource FPGA et
+    deux débits ; elle rapporte ses résultats en précision ou en erreur de prédiction. Les colonnes optionnelles et le bloc
+    \cmd{plot} par base ont assoupli le schéma sans le rendre configurable.
 \end{itemize}
 
 \section{Conclusion}
@@ -1209,18 +1498,20 @@ exploitable par un \gl{agent}{agent} \gl{LLM}{LLM} sans base de données ni serv
 bien structurés, un tableau de chiffres sourcés et une recherche hybride déterministe
 suffisent. La génération reste à l'agent, mais tout ce qu'il cite peut être rejoué et
 vérifié par une commande. Le coût d'une réponse sourcée baisse d'un ordre de grandeur par
-rapport à la lecture des textes intégraux. Le banc d'évaluation a aussi montré l'intérêt de
-mesurer ce que l'on croit acquis : il a fait apparaître un jeu de questions optimiste, une
-alerte qui ne se déclenchait jamais et une vérification qui laissait passer des chiffres
-faux. Les deux derniers défauts ont conduit à retirer l'alerte et à corriger la
-vérification. En remesurant après l'ajout de 17 articles, il a aussi montré que la recherche
-sans \gl{reranking}{reranking} perd du rappel quand le corpus grossit. Un second moteur sur \gl{GPU}{GPU} règle
-l'essentiel du problème du français, sans remplacer le premier. Le même code sert enfin une
-seconde base, isolée de la première, sur laquelle le banc retrouve les mêmes forces et les
-mêmes faiblesses. Les prochaines étapes sont
-les résultats du banc synthétique, des questions écrites par un tiers, une meilleure
-recherche dans les tableaux, la détection des questions hors corpus et un moteur résident
-qui évite de recharger les modèles à chaque requête.
+rapport à la lecture des textes intégraux, et déléguer la lecture à des sous-agents moins
+coûteux réduit encore la facture, de 41~\% sur le seul essai apparié.
+
+Le banc d'évaluation a montré l'intérêt de mesurer ce que l'on croit acquis : un jeu de
+questions optimiste, une alerte qui ne se déclenchait jamais, une vérification qui laissait
+passer des chiffres faux, puis, en remesurant, une recherche qui perd du rappel quand le
+corpus double. Ce dernier point est le principal problème ouvert. L'évaluation des réponses
+rédigées a apporté le résultat inverse : là où aucun score ne savait dire qu'une question
+sort du corpus, l'agent le dit quand on l'oblige à confronter chaque exigence de la question
+aux passages lus. Le même code sert trois bases isolées, sur lesquelles le banc retrouve les
+mêmes forces et les mêmes faiblesses. Les prochaines étapes sont le diagnostic de la baisse
+du rappel et des jeux à l'échelle des bases, des questions écrites par un tiers, les notes
+humaines des réponses, une meilleure recherche dans les tableaux, la comparaison sur deux
+axes et un moteur résident qui évite de recharger les modèles à chaque requête.
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
@@ -1254,6 +1545,7 @@ Acronyme & Signification \\
 \hypertarget{gl:JSON}{JSON} & \emph{JavaScript Object Notation}, format de données texte \\
 \hypertarget{gl:LLM}{LLM} & \emph{Large Language Model}, grand modèle de langage \\
 \hypertarget{gl:LUT}{LUT} & \emph{Look-Up Table}, cellule logique élémentaire d'un FPGA \\
+\hypertarget{gl:MCU}{MCU} & \emph{Microcontroller Unit}, microcontrôleur \\
 \hypertarget{gl:MCP}{MCP} & \emph{Model Context Protocol}, protocole d'exposition d'outils à un agent LLM \\
 \hypertarget{gl:MRR}{MRR} & \emph{Mean Reciprocal Rank}, moyenne de l'inverse du rang de la première bonne réponse \\
 \hypertarget{gl:MSMARCO}{MS MARCO} & \emph{Microsoft MAchine Reading COmprehension}, jeu de données de recherche de passages \\
@@ -1283,19 +1575,24 @@ Terme & Sens dans ce document \\
 \hypertarget{gl:benchmark}{benchmark (ligne de)} & une configuration rapportée par un article (modèle, plateforme, précision, débit, puissance\ldots), avec sa section source, dans \cmd{benchmarks.csv} \\
 \hypertarget{gl:passage}{chunk, passage} & fragment de section indexé pour la recherche, identifié par \cmd{<article>\#<section>.<k>} \\
 \hypertarget{gl:crossenc}{cross-encoder} & modèle qui note ensemble une requête et un passage ; sert au reranking \\
+\hypertarget{gl:exigence}{exigence} & ce qu'une réponse complète doit établir (valeur, plateforme, condition\ldots) ; statut \cmd{couvert}, \cmd{partiel} ou \cmd{absent} \\
 \hypertarget{gl:embedding}{embedding} & vecteur qui représente le sens d'un texte ; deux textes proches ont des vecteurs proches \\
 \hypertarget{gl:fiche}{fiche} & lecture critique d'un article (\cmd{fiche.md}) : problème, méthode, résultats, limites, pertinence \\
+\hypertarget{gl:hook}{hook} & commande que Claude Code lance d'elle-même à un moment donné (ici, à la fin de chaque sous-agent) \\
 \hypertarget{gl:holdout}{holdout} & jeu de questions réservé, qui n'a servi à régler aucun paramètre \\
 \hypertarget{gl:index}{index dense / lexical} & index par embeddings (sens) / par mots exacts (BM25, FTS5) \\
 \hypertarget{gl:gap}{lacune (gap)} & zone que le corpus ne couvre pas, consignée dans \cmd{gaps.md} \\
 \hypertarget{gl:nr}{\texttt{n/r}} & «~non rapporté~» : valeur absente de l'article, jamais estimée \\
 \hypertarget{gl:scope}{portée de puissance} & ce que couvre une mesure de puissance (puce, carte, estimation), colonne \cmd{power\_scope} \\
+\hypertarget{gl:claim}{preuve atomique (claim)} & une affirmation d'un article, avec son passage source et l'extrait exact qui la porte, dans \cmd{claims.jsonl} \\
 \hypertarget{gl:preprint}{preprint} & article diffusé sans relecture par les pairs (arXiv) \\
 \hypertarget{gl:recall}{recall@$k$} & part des questions dont une section attendue figure parmi les $k$ premiers passages \\
 \hypertarget{gl:paperk}{paper@$k$} & part des questions dont un article attendu figure parmi les $k$ premiers passages \\
 \hypertarget{gl:reranking}{reranking} & reclassement des premiers résultats par un modèle plus coûteux \\
 \hypertarget{gl:skill}{skill} & procédure écrite que l'agent suit pour une tâche (\cmd{/paper-ask}, \cmd{/paper-fiche}\ldots) \\
+\hypertarget{gl:sousagent}{sous-agent} & agent lancé par l'agent principal pour une tâche délimitée, sans son contexte, souvent sur un modèle moins coûteux \\
 \hypertarget{gl:toolflow}{toolflow} & chaîne d'outils qui transforme un réseau de neurones en accélérateur matériel (FINN, hls4ml\ldots) \\
+\hypertarget{gl:verdict}{verdict de suffisance} & en tête d'une réponse : \cmd{suffisant} (toutes les exigences couvertes), \cmd{partiel} ou \cmd{absent} (aucune) \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -1308,19 +1605,23 @@ Terme & Sens dans ce document \\
 \toprule
 Commande & Effet \\
 \midrule
-\cmd{bin/pdb status} & état de la base et prochaines actions \\
+\cmd{bin/pdb status [--tables]} & état de la base et prochaines actions ; signaux de qualité des tableaux \\
 \cmd{bin/pdb add <arxiv | doi | pdf>} & acquisition, ingestion et réindexation \\
 \cmd{bin/pdb ingest [--force | --reparse]} & (ré)extraction des PDF de \cmd{inbox/} \\
 \cmd{bin/pdb ingest --reparse --tables docling [--ocr]} & tableaux sans corps repris par Docling \\
 \cmd{bin/pdb reindex} & \cmd{INDEX.md}, \cmd{external\_refs.csv}, index de passages \\
 \cmd{bin/pdb bench [filtres]} & filtre \cmd{benchmarks.csv}, colonnes de source toujours affichées \\
+\cmd{bin/pdb bench --check | --comparable | --add-columns} & valeurs retrouvées dans leur passage ; groupes comparables ; colonnes optionnelles \\
+\cmd{bin/pdb claims <id> [--check]} & preuves atomiques d'un article et leur contrôle \\
 \cmd{bin/pdb paper <id | mot>…} & identité d'un ou plusieurs articles \\
-\cmd{bin/pdb search "<q>"} & passages classés (hybride, \cmd{--rerank} en option) \\
+\cmd{bin/pdb search "<q>"} & passages classés (hybride, \cmd{--rerank} en option ; \cmd{--gpu} / \cmd{--cpu}) \\
+\cmd{bin/pdb gpu [on | off]} & état du moteur GPU ; activation pour la machine, retour au CPU \\
 \cmd{bin/pdb show <chunk\_id>} & texte exact d'un passage \\
 \cmd{bin/pdb verify <chunk\_id> "<cit.>"} & contrôle d'une citation \\
 \cmd{bin/pdb cites | cited-by <id>} & graphe de citations internes \\
 \cmd{bin/pdb discover} & candidats à l'ajout via OpenAlex \\
 \cmd{bin/pdb plot [bench | eval | corpus | all]} & figures statiques et \cmd{figures/manifest.json} \\
+\cmd{bin/pdb plot --check | --stale} & bloc \cmd{plot} proposé pour la base ; figures périmées seulement \\
 \cmd{bin/pdb viz} & visualisation locale du corpus \\
 \cmd{bin/pdb rag index | search | evidence | benchmarks} & moteur GPU (Qwen3) : index, recherche, preuves, chiffres \\
 \cmd{bin/pdb rag acquire | approve | check-answer} & acquisition open access, import après accord, contrôle d'une réponse \\
@@ -1332,9 +1633,14 @@ Commande & Effet \\
 \cmd{bin/pdb test} & tests unitaires \\
 \cmd{bin/pdb eval [--extract | --rag | --speed]} & banc d'évaluation, par volet ou complet \\
 \cmd{bin/pdb eval --save | --compare} & enregistre un rapport ; compare au dernier et aux seuils \\
+\cmd{bin/pdb eval --rag --gpu} & recherche évaluée avec le moteur GPU, mêmes clés \\
+\cmd{bin/pdb eval --questions | --answers <run>…} & questions seules ; notation des réponses rédigées \\
+\cmd{bin/pdb agents [--report | --scan | --mark]} & journal et coût des sous-agents, économie de la délégation \\
 \midrule
 \cmd{/paper-add}, \cmd{/paper-fiche} & skills de l'agent : ajout ; fiche et lignes de benchmark \\
-\cmd{/paper-ask}, \cmd{/paper-gaps}, \cmd{/paper-discover} & réponse sourcée ; carte des lacunes ; découverte \\
+\cmd{/paper-extract} & preuves atomiques d'un article (\cmd{claims.jsonl}) \\
+\cmd{/paper-ask}, \cmd{/paper-gaps}, \cmd{/paper-discover} & réponse sourcée avec verdict de suffisance ; carte des lacunes ; découverte \\
+\cmd{/eval-answers} & produit à l'aveugle les réponses d'un jeu, puis les fait noter \\
 \cmd{/paper-research} & réponse sourcée avec le moteur GPU et l'acquisition open access \\
 \cmd{/base-profile} & proposition d'affinage du profil et des règles de la base \\
 \bottomrule

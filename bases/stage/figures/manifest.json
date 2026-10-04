@@ -31,7 +31,7 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-10-03T23:13:56",
+  "generated": "2026-10-04T01:26:43",
   "config_hash": "e8a082de77",
   "sources": [
    "papers/*/metadata.json"
@@ -42,7 +42,7 @@
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-10-03T23:13:56",
+  "generated": "2026-10-04T01:26:44",
   "config_hash": "e8a082de77",
   "sources": [
    "papers/*/metadata.json"
@@ -53,7 +53,7 @@
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-10-03T23:13:57",
+  "generated": "2026-10-04T01:26:44",
   "config_hash": "e8a082de77",
   "sources": [
    "benchmarks.csv"
@@ -64,7 +64,7 @@
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-10-03T23:13:59",
+  "generated": "2026-10-04T01:26:46",
   "config_hash": "e8a082de77",
   "sources": [
    "papers/*/refs.jsonl",
@@ -77,7 +77,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-10-03T23:14:00",
+  "generated": "2026-10-04T01:26:46",
   "config_hash": "e8a082de77",
   "sources": [
    "benchmarks.csv",
@@ -217,35 +217,40 @@
   "group": "eval",
   "description": "recall@5/@10 et MRR par mode et jeu de questions",
   "skipped": "aucun run de pdb eval ne contient le volet rag (lancer bin/pdb eval --save)",
-  "checked": 1791054139.7859936,
+  "checked": 1791070003.1353004,
   "config_hash": "e8a082de77"
  },
  "eval_verify": {
   "group": "eval",
   "description": "verdicts de pdb verify par perturbation",
   "skipped": "aucun run de pdb eval ne contient le volet rag (lancer bin/pdb eval --save)",
-  "checked": 1791054139.7859979,
+  "checked": 1791070003.1353064,
   "config_hash": "e8a082de77"
  },
  "eval_extraction": {
+  "file": "eval_extraction.png",
   "group": "eval",
   "description": "couverture du texte et tableaux, par papier",
-  "skipped": "aucun run de pdb eval ne contient le volet extraction (lancer bin/pdb eval --save)",
-  "checked": 1791054139.7860012,
-  "config_hash": "e8a082de77"
+  "generated": "2026-10-04T01:26:43",
+  "config_hash": "e8a082de77",
+  "sources": [
+   "eval/results/2026-10-03T2344-3925690.json"
+  ],
+  "run": "2026-10-03T2344 · 3925690",
+  "n": 56
  },
  "eval_latency": {
   "group": "eval",
   "description": "temps d'exécution (recherche, verify, CLI)",
   "skipped": "aucun run de pdb eval ne contient le volet speed (lancer bin/pdb eval --save)",
-  "checked": 1791054139.7860034,
+  "checked": 1791070003.7677934,
   "config_hash": "e8a082de77"
  },
  "eval_history": {
   "group": "eval",
   "description": "évolution des métriques au fil des runs",
   "skipped": "moins de deux runs de pdb eval : pas d'historique à tracer",
-  "checked": 1791054139.7860148,
+  "checked": 1791070003.7678144,
   "config_hash": "e8a082de77"
  }
 }

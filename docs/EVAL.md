@@ -552,6 +552,35 @@ Lecture :
   échoue parce qu'il ne peut pas charger un modèle depuis huggingface.co ; aucun code n'a
   changé.
 
+### Runs des trois bases (03/10/2026, commit 3925690)
+
+`pdb eval --save --compare` dans fpga et drone, `pdb eval --extract --save` dans stage (pas
+de jeux de questions). Chiffres repris par l'article (`docs/article/`). `pdb test` : 286 tests,
+tous réussis (y compris `test_rag_qwen`).
+
+| Base | Run | Papiers / passages | Seuils |
+|---|---|---|---|
+| fpga | `bases/fpga/eval/results/2026-10-03T2340-3925690.json` | 101 / 8601 | holdout hybride + rerank 0,72 < 0,8 (comme §11-12) |
+| drone | `bases/drone/eval/results/2026-10-03T2343-3925690.json` | 87 / 5361 | `verify`, chiffre modifié accepté 0,03 > 0 (nouveau) |
+| stage | `bases/stage/eval/results/2026-10-03T2344-3925690.json` | 56 / 3640 | extraction seule |
+
+- **fpga** : identique au run f9a07d3 à une question FR près (recall@10 hybride 0,75 → 0,62,
+  §12). Tableaux avec corps 0,78 (584) : les 45 papiers du 28/09 gardent 25 tableaux sans
+  corps sur 233, les 56 nouveaux en ont 103 sur 351, dont 29 dans les deux documents EASA.
+  Valeurs dans le tableau cité 0,70 (1044 valeurs). `verify` à chaud : 2 ms (246 ms le 28/09,
+  écart non expliqué à l'époque).
+- **drone** (contre le 28/09, 73 → 87 papiers, 4525 → 5361 passages) : hybride −1 question sur
+  dev et holdout (0,95 → 0,90), hybride + rerank inchangé (1,00 / 0,95) ; FR hybride + rerank
+  0,62 → 0,50. Tableaux avec corps 0,79 : 340/378 (0,90) pour les 73 papiers GROBID, 0/50 pour
+  les 14 papiers ajoutés sans PDF (backend `pymupdf`, pas de Docling possible).
+- **`verify` accepte un chiffre modifié** (drone) : citation « …before step 2. » dans
+  `arxiv-1909.09709-…#001.3`, dont l'original dit « step 4 » et qui contient ailleurs
+  « in step 2 and 3 ». Le contrôle des mots voisins trouve « step 2 » ailleurs dans le passage :
+  il garantit la présence de chaque nombre avec son contexte immédiat, pas sa position. Non
+  corrigé.
+- **stage** : couverture 0,91 (min. 0,61, Mahalanobis 1936), tableaux avec corps 0,71 (254,
+  aucun Docling), valeurs dans le tableau cité 0,42 (112), ligatures restantes 0,37 / 10k mots.
+
 ## 10. Réponses finales (`pdb eval --answers`, 02/10/2026)
 
 Lot A de [AMELIORATIONS.md](AMELIORATIONS.md). Les §3-8 mesurent le classement des passages ;

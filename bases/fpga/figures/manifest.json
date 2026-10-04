@@ -69,52 +69,52 @@
   "file": "eval_retrieval.png",
   "group": "eval",
   "description": "recall@5/@10 et MRR par mode et jeu de questions",
-  "generated": "2026-10-03T22:58:33",
+  "generated": "2026-10-04T01:26:28",
   "config_hash": "06b5f07886",
   "sources": [
-   "eval/results/2026-10-03T2258-f9a07d3.json"
+   "eval/results/2026-10-03T2340-3925690.json"
   ],
-  "run": "2026-10-03T2258 · f9a07d3"
+  "run": "2026-10-03T2340 · 3925690"
  },
  "eval_verify": {
   "file": "eval_verify.png",
   "group": "eval",
   "description": "verdicts de pdb verify par perturbation",
-  "generated": "2026-10-03T22:58:33",
+  "generated": "2026-10-04T01:26:29",
   "config_hash": "06b5f07886",
   "sources": [
-   "eval/results/2026-10-03T2258-f9a07d3.json"
+   "eval/results/2026-10-03T2340-3925690.json"
   ],
-  "run": "2026-10-03T2258 · f9a07d3"
+  "run": "2026-10-03T2340 · 3925690"
  },
  "eval_extraction": {
   "file": "eval_extraction.png",
   "group": "eval",
   "description": "couverture du texte et tableaux, par papier",
-  "generated": "2026-10-03T22:58:34",
+  "generated": "2026-10-04T01:26:29",
   "config_hash": "06b5f07886",
   "sources": [
-   "eval/results/2026-10-03T2258-f9a07d3.json"
+   "eval/results/2026-10-03T2340-3925690.json"
   ],
-  "run": "2026-10-03T2258 · f9a07d3",
+  "run": "2026-10-03T2340 · 3925690",
   "n": 101
  },
  "eval_latency": {
   "file": "eval_latency.png",
   "group": "eval",
   "description": "temps d'exécution (recherche, verify, CLI)",
-  "generated": "2026-10-03T22:58:34",
+  "generated": "2026-10-04T01:26:30",
   "config_hash": "06b5f07886",
   "sources": [
-   "eval/results/2026-10-03T2258-f9a07d3.json"
+   "eval/results/2026-10-03T2340-3925690.json"
   ],
-  "run": "2026-10-03T2258 · f9a07d3"
+  "run": "2026-10-03T2340 · 3925690"
  },
  "eval_history": {
   "file": "eval_history.png",
   "group": "eval",
   "description": "évolution des métriques au fil des runs",
-  "generated": "2026-10-03T22:58:35",
+  "generated": "2026-10-04T01:26:30",
   "config_hash": "06b5f07886",
   "sources": [
    "eval/results/2026-09-26T0051-80aa05e-dirty.json",
@@ -130,14 +130,15 @@
    "eval/results/2026-10-02T1111-353e788-dirty.json",
    "eval/results/2026-10-02T1358-c90d749.json",
    "eval/results/2026-10-03T2208-1d8ea51.json",
-   "eval/results/2026-10-03T2258-f9a07d3.json"
+   "eval/results/2026-10-03T2258-f9a07d3.json",
+   "eval/results/2026-10-03T2340-3925690.json"
   ]
  },
  "corpus_years": {
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-10-03T23:11:12",
+  "generated": "2026-10-04T01:26:30",
   "config_hash": "06b5f07886",
   "sources": [
    "papers/*/metadata.json"
@@ -148,7 +149,7 @@
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-10-03T23:11:12",
+  "generated": "2026-10-04T01:26:30",
   "config_hash": "06b5f07886",
   "sources": [
    "papers/*/metadata.json"
@@ -159,7 +160,7 @@
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-10-03T23:11:12",
+  "generated": "2026-10-04T01:26:30",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv"
@@ -170,7 +171,7 @@
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-10-03T23:11:19",
+  "generated": "2026-10-04T01:26:37",
   "config_hash": "06b5f07886",
   "sources": [
    "papers/*/refs.jsonl",
@@ -183,7 +184,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-10-03T23:11:20",
+  "generated": "2026-10-04T01:26:37",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv",

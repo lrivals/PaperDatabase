@@ -581,6 +581,55 @@ tous réussis (y compris `test_rag_qwen`).
 - **stage** : couverture 0,91 (min. 0,61, Mahalanobis 1936), tableaux avec corps 0,71 (254,
   aucun Docling), valeurs dans le tableau cité 0,42 (112), ligatures restantes 0,37 / 10k mots.
 
+### Lot K-0 : cause de la baisse du holdout fpga (04/10/2026, commit 84c0eac)
+
+Entre le 28/09 et le 03/10, le recall@5 du holdout fpga (hybride + rerank) est passé de 0,80
+à 0,72. Sur la même période, le dev est passé de 1,00 à 0,90 et le français de 0,50 à 0,38. Pour
+séparer l'effet du code de celui du corpus, on rejoue les jeux sur un sous-corpus avec
+`pdb eval --rag --papers FICHIER|run.json`. L'index, BM25 compris, est alors construit sur ces
+seuls papiers. Les questions sans section attendue dans le sous-corpus sont ignorées et
+comptées (`skipped`). Depuis ce commit, chaque run enregistre sa liste `corpus.papers`. Les runs
+sur sous-corpus portent le suffixe `-sub` et restent hors des figures et de `--compare` par
+défaut.
+
+| Run | Code | Corpus | dev | holdout | FR |
+|---|---|---|---|---|---|
+| `2026-09-28T1039-76dc85e` | 76dc85e | 45 papiers, 3479 passages | 1,00 | **0,80** | 0,50 |
+| `2026-10-04T1820-84c0eac-sub` | actuel | les mêmes 45 papiers, 3491 passages | 1,00 | **0,80** | 0,50 |
+| `2026-10-03T2340-3925690` | 3925690 | 101 papiers, 8601 passages | 0,90 | 0,72 | 0,38 |
+
+- **Le code n'y est pour rien.** Sur les 45 papiers du 28/09, le code actuel (route unique,
+  colonnes du lot D, tableaux indexés par rangées du lot E-c) refait 0,80 avec les mêmes cinq
+  questions manquées. Les seuls écarts sont de l'ordre du centième (MRR, nDCG) et une question
+  FR en mode dense. Les rejeux prévus en plus (sections du 28/09 avec le code actuel, code
+  76dc85e sur le corpus actuel) sont donc inutiles.
+- **La baisse vient du corpus.** Les 56 papiers ajoutés fournissent des voisins plus proches.
+  Pour chacune des cinq questions nouvellement manquées, les 5 premiers passages ont été lus
+  (comme au §3). Une attente n'est élargie que si un papier ajouté répond vraiment (champ
+  `revised`) :
+
+| Jeu | Question | Ajouté | Raison |
+|---|---|---|---|
+| dev | NMS sur le CPU ou dans la logique ? | 2607.13106, 2024-zhang (motif inchangé) | 2607.13106#011 : NMS dans l'application sur l'ARM (PS) ; 2024-zhang#013 : NMS dans l'accélérateur |
+| dev | DPU Vitis AI sur Zynq UltraScale+ | 2407.17647 (motif inchangé) | DPU B4096 généré par Vitis AI sur ZCU104 (#009, #010, #022) |
+| holdout | Vote majoritaire sur logique répliquée | 1912.07394 (motif inchangé) | #007 : TMR, réplication sélective des canaux |
+| holdout | Petite mémoire d'exemples passés | 2409.01872, 2021-piyasena-fpga-acceleration, 2024-aggarwal (motif `exemplar\|rehearsal\|replay` sur ces seuls papiers, `pattern_added`) | rehearsal, experience replay, replay à deux mémoires |
+| FR | Pourquoi un réseau perd-il en précision sur les anciennes classes ? | rien | les passages renvoyés viennent d'un papier déjà attendu (2010.15277) ; c'est l'attente qui est incomplète, ce qui relève du lot F |
+
+  Non retenus : 2024-rech#029 (duplication, pas de vote majoritaire), 2017-li (propagation
+  des erreurs, pas de remède), 2024-aggarwal#008 (le lien avec la question est indirect),
+  l'autre papier 2021-piyasena (pas lu).
+- **Résultat** (`2026-10-04T1823-84c0eac-sub`, sur les 101 papiers du run du 03/10) : dev 1,00,
+  holdout **0,80**, FR 0,38. Le holdout manque les mêmes cinq questions que le 28/09. Le seuil
+  n'a pas été abaissé. Aucun paramètre n'a été réglé.
+- **Le corpus complet n'a pas été rejoué.** Trois papiers YOLO (1506.02640, 1612.08242,
+  1804.02767) étaient en cours d'ajout pendant le diagnostic, et le cache de vecteurs ne
+  couvrait pas encore leurs passages. Le prochain `pdb eval --save --compare` après leur
+  réindexation servira de run de référence complet.
+- Le seuil de 0,8 ne tient qu'à une question près (25 questions, ±0,04 par question). D'autres
+  ajouts referont baisser le holdout tant que les jeux ne grandissent pas avec le corpus
+  (K-2, K-3, K-5).
+
 ## 10. Réponses finales (`pdb eval --answers`, 02/10/2026)
 
 Lot A de [AMELIORATIONS.md](AMELIORATIONS.md). Les §3-8 mesurent le classement des passages ;

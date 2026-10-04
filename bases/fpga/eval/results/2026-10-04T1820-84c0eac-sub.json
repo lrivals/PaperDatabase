@@ -1,0 +1,338 @@
+{
+ "date": "2026-10-04T1820",
+ "commit": "84c0eac",
+ "dirty": false,
+ "base": "Vision embarquée sur FPGA — IA sûre et certifiable (YOLO, autoencodeurs, apprentissage continu)",
+ "volets": [
+  "rag"
+ ],
+ "results": {
+  "rag": {
+   "passages": 3491,
+   "model": "BAAI/bge-small-en-v1.5",
+   "dense": true,
+   "gpu": false,
+   "corpus": {
+    "n_papers": 45,
+    "papers": [
+     "2015-zhang-optimizing-fpga-accelerator-design-deep",
+     "2018-venieris-toolflows-mapping-convolutional-neural-networks",
+     "2019-coutinho-deep-neural-network-hardware-implementation",
+     "2019-ding-req-yolo-resource-aware-efficient",
+     "2019-tsukada-neural-network-device-learning-anomaly",
+     "2021-manjunath-energy-efficient-edgeai-autoencoder-accelerator",
+     "2021-xu-dac-sdc-low-power-object",
+     "2022-feng-benchmark-analysis-yolo-performance-edge",
+     "2022-malviya-edge-compatible-convolutional-autoencoder-implemented",
+     "2022-sun-f-lic-fpga-learned-image",
+     "2023-cui-survey-unsupervised-anomaly-detection-algorithms",
+     "2023-guerrisi-artificial-intelligence-board-image-compression",
+     "2023-montgomerie-corcoran-satay-streaming-architecture-toolflow-accelerating",
+     "2023-shuvo-efficient-acceleration-deep-learning-inference",
+     "2023-zhai-fpga-vehicle-detection-tracking-accelerator",
+     "2024-campos-end-end-codesign-hessian-aware",
+     "2024-mittal-comprehensive-survey-deep-learning-lightweight",
+     "2024-que-low-latency-variational-autoencoder-fpgas",
+     "2025-el-zeinaty-designing-object-detection-models-tinyml",
+     "2025-hozhabr-survey-real-time-object-detection",
+     "arxiv-1612.07119-finn-framework-fast-scalable-binarized",
+     "arxiv-1711.08740-fpgaconvnet-toolflow-mapping-diverse-convolutional",
+     "arxiv-1806.01683-accelerating-cnn-inference-fpgas-survey",
+     "arxiv-1809.04570-finn-r-end-end-deep",
+     "arxiv-2010.15277-class-incremental-learning-survey-performance",
+     "arxiv-2011.07317-memory-efficient-dataflow-inference-deep",
+     "arxiv-2101.05108-fast-convolutional-neural-networks-fpgas",
+     "arxiv-2103.05579-hls4ml-open-source-codesign-workflow",
+     "arxiv-2108.03986-autoencoders-fpgas-real-time-unsupervised",
+     "arxiv-2110.10486-tinyml-platform-device-continual-learning",
+     "arxiv-2110.15352-mcunetv2-memory-efficient-patch-inference",
+     "arxiv-2206.15472-device-training-256kb-memory",
+     "arxiv-2211.11647-benchmarking-edge-computing-devices-grape",
+     "arxiv-2301.07050-energy-efficient-reconfigurable-autoencoder-implementation",
+     "arxiv-2306.00001-tinyissimoyolo-quantized-low-memory-footprint",
+     "arxiv-2403.07851-12-mj-per-class-device",
+     "arxiv-2409.07114-continual-incremental-learning-tinyml-device",
+     "arxiv-2409.16808-comprehensive-evaluation-deep-learning-object",
+     "arxiv-2411.01431-efficient-deep-learning-infrastructures-embedded",
+     "arxiv-2502.15737-performance-analysis-you-only-look",
+     "arxiv-2507.18174-real-time-object-detection-classification",
+     "arxiv-2509.04153-real-time-fpga-cnns-detection",
+     "arxiv-2512.01463-hls4ml-flexible-open-source-platform",
+     "arxiv-2602.15751-enabling-low-latency-machine-learning",
+     "arxiv-2604.21280-imagehd-energy-efficient-device-continual"
+    ],
+    "subset": true
+   },
+   "sets": {
+    "rag_eval": {
+     "n": 20,
+     "hybrid": {
+      "recall@5": 0.9,
+      "recall@10": 0.95,
+      "mrr": 0.74375,
+      "ndcg@10": 0.3860300671523455,
+      "paper@5": 0.95,
+      "misses": [
+       "Is the post-processing step that removes duplicate bounding boxes run on the CPU or in programmable logic?",
+       "How are layers mapped onto processing elements and SIMD lanes to balance throughput?"
+      ]
+     },
+     "dense": {
+      "recall@5": 0.9,
+      "recall@10": 0.9,
+      "mrr": 0.6958333333333333,
+      "ndcg@10": 0.3630911510651203,
+      "paper@5": 0.95,
+      "misses": [
+       "Is the post-processing step that removes duplicate bounding boxes run on the CPU or in programmable logic?",
+       "How are layers mapped onto processing elements and SIMD lanes to balance throughput?"
+      ]
+     },
+     "lexical": {
+      "recall@5": 0.95,
+      "recall@10": 0.95,
+      "mrr": 0.7516666666666667,
+      "ndcg@10": 0.37028657695191425,
+      "paper@5": 1.0,
+      "misses": [
+       "Is the post-processing step that removes duplicate bounding boxes run on the CPU or in programmable logic?"
+      ]
+     },
+     "hybrid+rerank": {
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.8541666666666666,
+      "ndcg@10": 0.4304275192799786,
+      "paper@5": 1.0,
+      "misses": []
+     }
+    },
+    "rag_eval_holdout": {
+     "n": 25,
+     "hybrid": {
+      "recall@5": 0.72,
+      "recall@10": 0.8,
+      "mrr": 0.5804444444444444,
+      "ndcg@10": 0.29786703801010606,
+      "paper@5": 0.8,
+      "misses": [
+       "Protecting neural network inference from particle-induced bit flips in space",
+       "Which space-grade FPGA device family is targeted?",
+       "Training with low-precision weights before porting the anomaly detector to hardware",
+       "Keeping a small memory of past samples to mitigate forgetting",
+       "Condensing a training set into a few synthetic samples for continual learning on microcontrollers",
+       "FPGA resource usage of the anomaly-detection autoencoder models",
+       "Resource utilization and throughput of each binarized prototype"
+      ]
+     },
+     "dense": {
+      "recall@5": 0.64,
+      "recall@10": 0.72,
+      "mrr": 0.5580952380952381,
+      "ndcg@10": 0.3209234960090784,
+      "paper@5": 0.76,
+      "misses": [
+       "Protecting neural network inference from particle-induced bit flips in space",
+       "Majority voting over replicated logic to tolerate soft errors",
+       "Fast convolution algorithms that reduce the number of multiplications",
+       "Training with low-precision weights before porting the anomaly detector to hardware",
+       "Keeping a small memory of past samples to mitigate forgetting",
+       "Condensing a training set into a few synthetic samples for continual learning on microcontrollers",
+       "Processing element arrays where data flows rhythmically between neighbours",
+       "FPGA resource usage of the anomaly-detection autoencoder models",
+       "Resource utilization and throughput of each binarized prototype"
+      ]
+     },
+     "lexical": {
+      "recall@5": 0.64,
+      "recall@10": 0.76,
+      "mrr": 0.5754920634920635,
+      "ndcg@10": 0.27182644620340435,
+      "paper@5": 0.72,
+      "misses": [
+       "Protecting neural network inference from particle-induced bit flips in space",
+       "Majority voting over replicated logic to tolerate soft errors",
+       "Detecting fruit clusters and vine stems in vineyards with edge devices",
+       "Recognising road signs with a YOLO model on an FPGA",
+       "Training with low-precision weights before porting the anomaly detector to hardware",
+       "Condensing a training set into a few synthetic samples for continual learning on microcontrollers",
+       "Physics use case used to demonstrate the codesign workflow",
+       "FPGA resource usage of the anomaly-detection autoencoder models",
+       "Resource utilization and throughput of each binarized prototype"
+      ]
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.8,
+      "recall@10": 0.8,
+      "mrr": 0.7146666666666667,
+      "ndcg@10": 0.3733874614977158,
+      "paper@5": 0.88,
+      "misses": [
+       "Protecting neural network inference from particle-induced bit flips in space",
+       "Training with low-precision weights before porting the anomaly detector to hardware",
+       "Condensing a training set into a few synthetic samples for continual learning on microcontrollers",
+       "FPGA resource usage of the anomaly-detection autoencoder models",
+       "Resource utilization and throughput of each binarized prototype"
+      ]
+     }
+    },
+    "rag_eval_fr": {
+     "n": 8,
+     "hybrid": {
+      "recall@5": 0.5,
+      "recall@10": 0.75,
+      "mrr": 0.37395833333333334,
+      "ndcg@10": 0.1592009568684565,
+      "paper@5": 0.625,
+      "misses": [
+       "Comment la consommation a-t-elle été mesurée, à la prise murale ou sur les rails d'alimentation du FPGA ?",
+       "Apprentissage continu non supervisé embarqué avec des vecteurs binaires de grande dimension",
+       "Entraîner un réseau de neurones avec 256 Ko de mémoire sur un microcontrôleur",
+       "Suivi multi-objets de véhicules pour des statistiques de trafic routier"
+      ]
+     },
+     "dense": {
+      "recall@5": 0.5,
+      "recall@10": 0.75,
+      "mrr": 0.3802083333333333,
+      "ndcg@10": 0.16762280375803262,
+      "paper@5": 0.75,
+      "misses": [
+       "Comment la consommation a-t-elle été mesurée, à la prise murale ou sur les rails d'alimentation du FPGA ?",
+       "Apprentissage continu non supervisé embarqué avec des vecteurs binaires de grande dimension",
+       "Pourquoi un réseau perd-il en précision sur les anciennes classes quand il apprend les nouvelles ?",
+       "Stratégies de déroulage et de tuilage de boucles pour les accélérateurs de convolution sur FPGA"
+      ]
+     },
+     "lexical": {
+      "recall@5": 0.125,
+      "recall@10": 0.375,
+      "mrr": 0.05848214285714286,
+      "ndcg@10": 0.03677406064151842,
+      "paper@5": 0.25,
+      "misses": [
+       "Comment la consommation a-t-elle été mesurée, à la prise murale ou sur les rails d'alimentation du FPGA ?",
+       "Apprentissage continu non supervisé embarqué avec des vecteurs binaires de grande dimension",
+       "Réduire le pic de mémoire SRAM des premières couches d'un CNN sur microcontrôleur",
+       "Pourquoi un réseau perd-il en précision sur les anciennes classes quand il apprend les nouvelles ?",
+       "Entraîner un réseau de neurones avec 256 Ko de mémoire sur un microcontrôleur",
+       "Suivi multi-objets de véhicules pour des statistiques de trafic routier",
+       "Stratégies de déroulage et de tuilage de boucles pour les accélérateurs de convolution sur FPGA"
+      ]
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.5,
+      "recall@10": 0.5,
+      "mrr": 0.3229166666666667,
+      "ndcg@10": 0.10715551826095822,
+      "paper@5": 0.625,
+      "misses": [
+       "Comment la consommation a-t-elle été mesurée, à la prise murale ou sur les rails d'alimentation du FPGA ?",
+       "Apprentissage continu non supervisé embarqué avec des vecteurs binaires de grande dimension",
+       "Suivi multi-objets de véhicules pour des statistiques de trafic routier",
+       "Stratégies de déroulage et de tuilage de boucles pour les accélérateurs de convolution sur FPGA"
+      ]
+     }
+    }
+   },
+   "low_relevance": {
+    "n": {
+     "cal_pos": 20,
+     "cal_neg": 9,
+     "val_pos": 25,
+     "val_neg": 10
+    },
+    "cos": {
+     "threshold": 0.779,
+     "calibration": {
+      "flagged_negatives": 1.0,
+      "flagged_positives": 0.05
+     },
+     "validation": {
+      "flagged_negatives": 0.8,
+      "flagged_positives": 0.2
+     },
+     "adopted": false,
+     "neg_max": 0.795,
+     "pos_min": 0.694,
+     "pos_median": 0.827,
+     "neg_median": 0.726,
+     "val_negatives_missed": [
+      "Machine translation between low-resource languages",
+      "Code generation benchmarks for large language models"
+     ],
+     "val_positives_flagged": [
+      "Majority voting over replicated logic to tolerate soft errors",
+      "Which space-grade FPGA device family is targeted?",
+      "Which vendor high-level synthesis back ends besides Vivado are supported?",
+      "Processing element arrays where data flows rhythmically between neighbours",
+      "Physics use case used to demonstrate the codesign workflow"
+     ]
+    },
+    "rerank": {
+     "threshold": 2.4090930819511414,
+     "calibration": {
+      "flagged_negatives": 1.0,
+      "flagged_positives": 0.15
+     },
+     "validation": {
+      "flagged_negatives": 0.9,
+      "flagged_positives": 0.4
+     },
+     "adopted": false,
+     "neg_max": 3.4823851585388184,
+     "pos_min": -11.14246940612793,
+     "pos_median": 3.9793760776519775,
+     "neg_median": -5.969101905822754,
+     "val_negatives_missed": [
+      "Code generation benchmarks for large language models"
+     ],
+     "val_positives_flagged": [
+      "Protecting neural network inference from particle-induced bit flips in space",
+      "Majority voting over replicated logic to tolerate soft errors",
+      "Which space-grade FPGA device family is targeted?",
+      "Detecting fruit clusters and vine stems in vineyards with edge devices",
+      "Recognising road signs with a YOLO model on an FPGA",
+      "Training with low-precision weights before porting the anomaly detector to hardware",
+      "Keeping a small memory of past samples to mitigate forgetting",
+      "Condensing a training set into a few synthetic samples for continual learning on microcontrollers",
+      "Physics use case used to demonstrate the codesign workflow",
+      "Resource utilization and throughput of each binarized prototype"
+     ]
+    }
+   },
+   "verify": {
+    "exact": {
+     "n": 40,
+     "accepted_rate": 1.0,
+     "status": {
+      "OK": 40
+     }
+    },
+    "mot remplacé": {
+     "n": 40,
+     "accepted_rate": 0.875,
+     "status": {
+      "APPROX": 35,
+      "NOMBRES": 3,
+      "ABSENT": 2
+     }
+    },
+    "chiffre modifié": {
+     "n": 35,
+     "accepted_rate": 0.0,
+     "status": {
+      "NOMBRES": 35
+     }
+    },
+    "autre papier": {
+     "n": 40,
+     "accepted_rate": 0.0,
+     "status": {
+      "ABSENT": 40
+     }
+    }
+   }
+  }
+ }
+}

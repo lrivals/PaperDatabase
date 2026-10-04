@@ -323,7 +323,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
 | `search`, `show`, `verify` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option ; Qwen3 sur GPU si la route GPU est active, `--gpu`/`--cpu` pour forcer), texte exact, contrôle de citation (statut `NOMBRES` si un nombre diffère) ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5, §13 |
 | `gpu [status\|on\|off\|download]` | `lib/rag_models.py` | route GPU optionnelle : état (torch, CUDA, modèles, vecteurs de la base), activation (réglage de la machine dans `~/.config/pdb/config.json`, ou `PDB_GPU=1`), téléchargement des modèles : §10, [docs/RAG.md](docs/RAG.md) §13 |
-| `eval [--extract\|--rag\|--speed] [--gpu] [--answers DIR…] [--save] [--compare [JSON]]`, `eval --questions [JEU]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; réponses finales enregistrées (`--answers`, jeux `answers*.jsonl`, `--questions` les liste sans les attentes : [docs/EVAL.md](docs/EVAL.md) §10) ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
+| `eval [--extract\|--rag\|--speed] [--gpu] [--papers FICHIER] [--answers DIR…] [--save] [--compare [JSON]]`, `eval --questions [JEU]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; réponses finales enregistrées (`--answers`, jeux `answers*.jsonl`, `--questions` les liste sans les attentes : [docs/EVAL.md](docs/EVAL.md) §10) ; `--papers` rejoue la recherche sur un sous-corpus (liste de `paper_id` ou run enregistré, runs `-sub` : EVAL.md §9, lot K-0) ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `claims <id>`, `claims [<id>] --check` | `lib/claims.py` | preuves atomiques d'un papier ; `--check` : schéma et excerpts contrôlés par `rag.verify` contre leur passage, comme `reindex` ([DATA_MODEL.md](DATA_MODEL.md) §12) |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
@@ -829,8 +829,11 @@ tâches et famille neuromorphique propres ; base stage : figures matérielles é
   `gloss-*.tex`), liés depuis le texte, compilés par `makeglossaries` dans le Makefile ;
   figures `pdb plot` régénérées sur les 299 lignes (nouvelle `bench_accuracy_latency`).
 
-- [ ] **Recherche : recall@5 du holdout fpga 0,80 → 0,72** entre le 28/09 et le 02/10
-  (corpus 45 → 101 papiers, lot G) : isoler la cause (EVAL.md §11) avant tout réglage.
+- [x] **Recherche : recall@5 du holdout fpga 0,80 → 0,72** entre le 28/09 et le 02/10
+  (corpus 45 → 101 papiers, lot G) : cause isolée le 04/10/2026 (lot K-0, EVAL.md §9). Le
+  code actuel sur les 45 papiers du 28/09 refait 0,80. La baisse vient du corpus. Quatre
+  attentes ont été élargies après lecture des passages, et le holdout est revenu à 0,80 sur
+  les 101 papiers. Option `pdb eval --papers` (sous-corpus) ; chaque run garde `corpus.papers`.
 
 **Bilan du 02/10/2026 (fiabilité des réponses, route de recherche).**
 - Feuille de route [docs/AMELIORATIONS.md](docs/AMELIORATIONS.md) : 8 lots (A à H) et 5

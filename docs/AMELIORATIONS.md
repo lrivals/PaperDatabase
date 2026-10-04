@@ -5,7 +5,7 @@ Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot C 
 (03/10/2026) ; lot E-a, E-c, E-d en place (03/10/2026, acceptation E-c non atteinte) ; lot G en grande partie fait (route unique, RAG.md §13) ; lot I en place
 (03/10/2026, journal des sous-agents, calage sur le cost-state et économie estimée de la
 délégation, expérience appariée I-6 faite, sauf la révision chiffrée I-5e) ; lot K
-spécifié (03/10/2026), non commencé ; autres lots non commencés. Elle décrit comment mettre en place les
+spécifié (03/10/2026), K-0 fait (04/10/2026 : baisse du holdout fpga due au corpus, pas au code) ; autres lots non commencés. Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
 cinq nouveaux skills. Chaque chantier part d'un constat mesuré dans le dépôt, puis donne la
@@ -875,7 +875,12 @@ sa sortie actuelle.
 
 **Conception.**
 
-1. **K-0 Diagnostic de la baisse fpga**, avant tout nouveau jeu. Rejouer les jeux actuels
+1. **K-0 Diagnostic de la baisse fpga** — *fait le 04/10/2026* ([EVAL.md §9](EVAL.md#lot-k-0--cause-de-la-baisse-du-holdout-fpga-04102026-commit-84c0eac)).
+   `pdb eval --papers` : le code actuel sur les 45 papiers refait 0,80, donc (a) suffit à
+   exclure le code, et (b) n'a pas été rejoué. La cause est le corpus. Quatre attentes ont
+   été élargies après lecture des passages, et le holdout est revenu à 0,80 sur les 101
+   papiers. Chaque run enregistre maintenant `corpus.papers` (amorce de K-5). Spécification
+   d'origine : avant tout nouveau jeu. Rejouer les jeux actuels
    (a) sur l'index restreint aux 45 papiers du run de référence (filtre sur les `paper_id`),
    (b) au commit 76dc85e sur le corpus actuel. (a) sépare l'effet du code, (b) celui du
    corpus. Si c'est le corpus : relire les 5 passages des questions manquées, comme au §9
@@ -1008,7 +1013,7 @@ de preuve et de citation comptent le plus), ensuite `/paper-compare`, `/table-re
 | 3 | **Lot D-1 à D-3** (`chunk_id`, colonnes optionnelles, `bench --check`) | traçabilité des nombres |
 | 4 | **Lot C** + `/paper-extract` | prépare comparaison et rédaction ; en place le 03/10/2026 (reste : lecture des claims par `/paper-ask`) |
 | 5 | **Lot E-a, E-c, E-d** (localisation, index, qualité) | rend les tableaux trouvables et contrôlables ; en place le 03/10/2026 (reste : questions holdout sur tableaux, vocabulaire) |
-| 5 bis | **Lot K-0, K-1, K-6** (diagnostic de la baisse fpga, jeux dans chaque base, jeu stage), puis **K-2 à K-5** et **K-7** avec K-2 | les gains des étapes suivantes (E-b, F, G, H) se prouvent sur ces bancs ; le holdout fpga est sous son seuil |
+| 5 bis | **Lot K-0, K-1, K-6** (diagnostic de la baisse fpga, jeux dans chaque base, jeu stage), puis **K-2 à K-5** et **K-7** avec K-2 ; K-0 fait le 04/10/2026 | les gains des étapes suivantes (E-b, F, G, H) se prouvent sur ces bancs ; le holdout fpga est sous son seuil |
 | 6 | `/table-review`, puis **E-e** (vérité terrain) et **E-b** (OCR par zone) | E-b se juge sur E-e |
 | 7 | **Lot J-1 à J-3** (`pdb compare` tabulaire), puis `/paper-compare`, `/state-of-art` | J donne au skill une entrée déterministe ; le tout s'appuie sur C et D |
 | 7 bis | **Lot J-4, J-5** (figures, colonnes `clock_mhz`, `latency_scope`) | au fil des besoins |

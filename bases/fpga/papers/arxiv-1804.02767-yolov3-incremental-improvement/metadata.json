@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-1804.02767-yolov3-incremental-improvement",
+  "title": "YOLOv3: An Incremental Improvement",
+  "authors": [
+    {
+      "given": "Joseph",
+      "family": "Redmon"
+    },
+    {
+      "given": "Ali",
+      "family": "Farhadi"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1804.02767",
+  "url": "https://arxiv.org/abs/1804.02767",
+  "type": "preprint",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "yolov3",
+    "darknet-53",
+    "coco",
+    "gpu-baseline"
+  ],
+  "added": "2026-10-04",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

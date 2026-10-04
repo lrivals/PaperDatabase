@@ -1,0 +1,50 @@
+{
+  "id": "arxiv-1506.02640-you-only-look-once-unified",
+  "title": "You Only Look Once: Unified, Real-Time Object Detection",
+  "authors": [
+    {
+      "given": "Joseph",
+      "family": "Redmon"
+    },
+    {
+      "given": "Santosh",
+      "family": "Divvala"
+    },
+    {
+      "given": "Ross",
+      "family": "Girshick"
+    },
+    {
+      "given": "Ali",
+      "family": "Farhadi"
+    }
+  ],
+  "year": 2016,
+  "venue": "CVPR 2016",
+  "doi": "10.1109/CVPR.2016.91",
+  "arxiv_id": "1506.02640",
+  "url": "https://arxiv.org/abs/1506.02640",
+  "type": "conference",
+  "axes": [
+    "yolo-fpga"
+  ],
+  "tags": [
+    "object-detection",
+    "real-time",
+    "single-stage",
+    "darknet",
+    "pascal-voc"
+  ],
+  "added": "2026-10-04",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

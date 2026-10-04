@@ -2,7 +2,7 @@
 
 <!-- GÉNÉRÉ par bin/reindex.py — ne pas éditer à la main -->
 
-**101 papiers, 0 fiches à faire.**
+**104 papiers, 0 fiches à faire.**
 
 Un papier peut apparaître sous plusieurs axes.
 
@@ -50,7 +50,10 @@ Un papier peut apparaître sous plusieurs axes.
 | [arxiv-2006.08357-codenet-efficient-deployment-input-adaptive](papers/arxiv-2006.08357-codenet-efficient-deployment-input-adaptive/fiche.md) | CoDeNet: Efficient Deployment of Input-Adaptive Object Detection on Embedded FPGAs | Dong et al. | 2020 | FPGA 2021 | conference | done |
 | [2019-ding-req-yolo-resource-aware-efficient](papers/2019-ding-req-yolo-resource-aware-efficient/fiche.md) | REQ-YOLO: A Resource-Aware, Efficient Quantization Framework for Object Detection on FPGAs | Ding et al. | 2019 | Proceedings of the 2019 ACM/SIGDA International Symposium on Field-Programmable Gate Arrays 33–42 | conference | done |
 | [arxiv-1909.09709-skynet-hardware-efficient-method-object](papers/arxiv-1909.09709-skynet-hardware-efficient-method-object/fiche.md) | SkyNet: a Hardware-Efficient Method for Object Detection and Tracking on Embedded Systems | Zhang et al. | 2019 | arXiv preprint | preprint | done |
+| [arxiv-1804.02767-yolov3-incremental-improvement](papers/arxiv-1804.02767-yolov3-incremental-improvement/fiche.md) | YOLOv3: An Incremental Improvement | Joseph Redmon, Ali Farhadi | 2018 | arXiv preprint | preprint | done |
 | [arxiv-1809.04570-finn-r-end-end-deep](papers/arxiv-1809.04570-finn-r-end-end-deep/fiche.md) | FINN-R: An End-to-End Deep-Learning Framework for Fast Exploration of Quantized Neural Networks | Blott et al. | 2018 | ACM Transactions on Reconfigurable Technology and Systems 11(3) | journal | done |
+| [arxiv-1612.08242-yolo9000-better-faster-stronger](papers/arxiv-1612.08242-yolo9000-better-faster-stronger/fiche.md) | YOLO9000: Better, Faster, Stronger | Joseph Redmon, Ali Farhadi | 2017 | CVPR 2017 | conference | done |
+| [arxiv-1506.02640-you-only-look-once-unified](papers/arxiv-1506.02640-you-only-look-once-unified/fiche.md) | You Only Look Once: Unified, Real-Time Object Detection | Redmon et al. | 2016 | CVPR 2016 | conference | done |
 
 ## Autoencodeurs sur FPGA (`autoencoder-fpga`)
 

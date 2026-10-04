@@ -138,29 +138,29 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-10-04T01:26:30",
+  "generated": "2026-10-04T18:25:48",
   "config_hash": "06b5f07886",
   "sources": [
    "papers/*/metadata.json"
   ],
-  "n": 101
+  "n": 104
  },
  "corpus_axes": {
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-10-04T01:26:30",
+  "generated": "2026-10-04T18:25:49",
   "config_hash": "06b5f07886",
   "sources": [
    "papers/*/metadata.json"
   ],
-  "n": 101
+  "n": 104
  },
  "corpus_bench_coverage": {
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-10-04T01:26:30",
+  "generated": "2026-10-04T18:25:49",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv"
@@ -171,7 +171,7 @@
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-10-04T01:26:37",
+  "generated": "2026-10-04T18:25:55",
   "config_hash": "06b5f07886",
   "sources": [
    "papers/*/refs.jsonl",
@@ -184,7 +184,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-10-04T01:26:37",
+  "generated": "2026-10-04T18:25:56",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv",

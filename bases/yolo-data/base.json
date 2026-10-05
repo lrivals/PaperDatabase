@@ -1,0 +1,180 @@
+{
+  "name": "Datasets pour la détection YOLO : annotation, prétraitement, augmentation",
+  "axes": {
+    "surveys": "Surveys",
+    "datasets": "Jeux de données de détection et méthodologie de constitution",
+    "annotation": "Annotation : formats, outils, consignes, coût",
+    "label-quality": "Qualité et bruit des labels, erreurs dans les benchmarks",
+    "auto-labelling": "Annotation semi-automatique : pseudo-labels, semi-supervisé, modèles fondation",
+    "active-learning": "Active learning : choisir les images à annoter",
+    "preprocessing": "Prétraitement : résolution, letterbox, tiling / découpage",
+    "augmentation": "Augmentation de données (Mosaic, MixUp, CutMix, Copy-Paste…)",
+    "synthetic-da": "Données synthétiques et adaptation de domaine",
+    "imbalance-small": "Déséquilibre de classes, petits objets, ancres et assignation des labels"
+  },
+  "axis_rules": {
+    "datasets": "(?:new|novel|large-scale|public|first) (?:\\w+ ){0,3}(?:dataset|data set|benchmark)|dataset (?:construction|collection|creation|curation)|(?:build|collect|construct)(?:ing|ed)? (?:a |the )?(?:\\w+ ){0,2}dataset",
+    "annotation": "annotat(?:ion|or|ing) (?:tool|protocol|guideline|cost|effort|time|format|process)|crowdsourc|labell?ing (?:tool|cost|effort|process|interface)|bounding box annotation|inter-annotator|human annotators?|extreme clicking|weak(?:ly)? supervis",
+    "label-quality": "(?:noisy|noise in|incorrect|missing|inaccurate) (?:labels?|annotations?|bounding box)|label(?:ing)? (?:noise|errors?|quality)|annotation (?:noise|errors?|quality)",
+    "auto-labelling": "pseudo-?labels?|semi-supervised|self-training|auto(?:matic)?[- ]?(?:labell?ing|annotation)|teacher-student|Segment Anything|\\bSAM\\b|Grounding DINO|open-vocabulary|zero-shot detect|foundation models?",
+    "active-learning": "active learning|query strateg|uncertainty sampling|annotation budget|sample selection for (?:labell?ing|annotation)",
+    "preprocessing": "letterbox|input (?:image )?(?:resolution|size)|image (?:tiling|slicing|cropping|pre-?processing)|tiled (?:inference|images?)|slic(?:e|ing)[- ]aided|\\bSAHI\\b|patch-based inference|high-resolution (?:aerial )?images?",
+    "augmentation": "data augmentation|augmentation (?:polic|strateg|method)|\\bmosaic\\b|\\bmixup\\b|\\bcutmix\\b|copy-?paste|cutout|random erasing|AutoAugment|RandAugment",
+    "synthetic-da": "synthetic (?:data|images?|dataset)|simulat(?:ed|or) (?:data|images?)|sim(?:2|-to-)real|domain (?:adaptation|randomi[sz]ation)|generative (?:data )?augmentation|diffusion[- ]based (?:data|augmentation|generation)",
+    "imbalance-small": "class imbalance|long-tail|imbalanced (?:classes|data|datasets?)|rare classes|small objects?|tiny objects?|anchor (?:boxes|design|clustering|priors?)|anchor-(?:free|based)|label assignment|focal loss"
+  },
+  "axis_queries": {
+    "surveys": "survey data augmentation object detection",
+    "datasets": "object detection dataset benchmark annotation",
+    "annotation": "bounding box annotation cost crowdsourcing object detection",
+    "label-quality": "noisy labels object detection annotation errors",
+    "auto-labelling": "pseudo-labeling semi-supervised object detection",
+    "active-learning": "active learning object detection",
+    "preprocessing": "slicing tiling high-resolution small object detection inference",
+    "augmentation": "data augmentation object detection copy-paste mosaic",
+    "synthetic-da": "synthetic data object detection domain adaptation",
+    "imbalance-small": "small object detection class imbalance anchor assignment"
+  },
+  "tag_rules": [
+    [
+      "\\bYOLO",
+      "yolo"
+    ],
+    [
+      "Ultralytics|YOLOv[5-9]|YOLO11|YOLOv1[0-2]",
+      "ultralytics"
+    ],
+    [
+      "\\bMS ?COCO\\b|\\bCOCO\\b",
+      "coco"
+    ],
+    [
+      "PASCAL VOC|\\bVOC ?20(?:07|12)\\b",
+      "voc"
+    ],
+    [
+      "Objects365",
+      "objects365"
+    ],
+    [
+      "Open Images",
+      "open-images"
+    ],
+    [
+      "\\bLVIS\\b",
+      "lvis"
+    ],
+    [
+      "VisDrone",
+      "visdrone"
+    ],
+    [
+      "\\bUAVDT\\b",
+      "uavdt"
+    ],
+    [
+      "\\bDOTA\\b|oriented bounding|rotated (?:bounding )?box",
+      "obb"
+    ],
+    [
+      "CrowdHuman|crowded",
+      "crowd"
+    ],
+    [
+      "\\bmosaic\\b",
+      "mosaic"
+    ],
+    [
+      "\\bmixup\\b",
+      "mixup"
+    ],
+    [
+      "\\bcutmix\\b",
+      "cutmix"
+    ],
+    [
+      "copy-?paste",
+      "copy-paste"
+    ],
+    [
+      "AutoAugment|RandAugment|augmentation polic",
+      "auto-augment"
+    ],
+    [
+      "\\bSAHI\\b|slic(?:e|ing)[- ]aided|image tiling|tiled (?:inference|images?)",
+      "tiling"
+    ],
+    [
+      "letterbox",
+      "letterbox"
+    ],
+    [
+      "pseudo-?labels?|self-training",
+      "pseudo-label"
+    ],
+    [
+      "teacher-student|mean teacher",
+      "teacher-student"
+    ],
+    [
+      "Segment Anything|\\bSAM\\b",
+      "sam"
+    ],
+    [
+      "Grounding DINO|open-vocabulary",
+      "open-vocab"
+    ],
+    [
+      "active learning",
+      "active-learning"
+    ],
+    [
+      "synthetic",
+      "synthetic"
+    ],
+    [
+      "diffusion",
+      "diffusion"
+    ],
+    [
+      "domain adaptation|domain shift",
+      "domain-adaptation"
+    ],
+    [
+      "small objects?|tiny objects?",
+      "small-objects"
+    ],
+    [
+      "long-tail|class imbalance|imbalanced",
+      "imbalance"
+    ],
+    [
+      "anchor-free",
+      "anchor-free"
+    ],
+    [
+      "anchor (?:boxes|design|clustering|priors?)|anchor-based",
+      "anchors"
+    ],
+    [
+      "focal loss",
+      "focal-loss"
+    ],
+    [
+      "noisy labels?|label noise",
+      "label-noise"
+    ],
+    [
+      "weak(?:ly)? supervis",
+      "weak-supervision"
+    ],
+    [
+      "few-shot",
+      "few-shot"
+    ],
+    [
+      "embedded|edge device|on-device|FPGA|microcontroller",
+      "embedded"
+    ]
+  ]
+}

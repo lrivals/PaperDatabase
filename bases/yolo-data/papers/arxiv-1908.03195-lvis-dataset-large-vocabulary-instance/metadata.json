@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-1908.03195-lvis-dataset-large-vocabulary-instance",
+  "title": "LVIS: A Dataset for Large Vocabulary Instance Segmentation",
+  "authors": [
+    {
+      "given": "Agrim",
+      "family": "Gupta"
+    },
+    {
+      "given": "Piotr",
+      "family": "Dollár"
+    },
+    {
+      "given": "Ross",
+      "family": "Girshick"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1908.03195",
+  "url": "https://arxiv.org/abs/1908.03195",
+  "type": "preprint",
+  "axes": [
+    "datasets"
+  ],
+  "tags": [
+    "lvis"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

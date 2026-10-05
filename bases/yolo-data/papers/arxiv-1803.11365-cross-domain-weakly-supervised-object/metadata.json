@@ -1,0 +1,50 @@
+{
+  "id": "arxiv-1803.11365-cross-domain-weakly-supervised-object",
+  "title": "Cross-Domain Weakly-Supervised Object Detection through Progressive Domain Adaptation",
+  "authors": [
+    {
+      "given": "Naoto",
+      "family": "Inoue"
+    },
+    {
+      "given": "Ryosuke",
+      "family": "Furuta"
+    },
+    {
+      "given": "Toshihiko",
+      "family": "Yamasaki"
+    },
+    {
+      "given": "Kiyoharu",
+      "family": "Aizawa"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1803.11365",
+  "url": "https://arxiv.org/abs/1803.11365",
+  "type": "preprint",
+  "axes": [
+    "datasets",
+    "annotation",
+    "synthetic-da"
+  ],
+  "tags": [
+    "domain-adaptation",
+    "weak-supervision"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

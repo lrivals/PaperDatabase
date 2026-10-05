@@ -1,0 +1,60 @@
+{
+  "id": "arxiv-2003.05176-equalization-loss-long-tailed-object",
+  "title": "Equalization Loss for Long-Tailed Object Recognition",
+  "authors": [
+    {
+      "given": "Jingru",
+      "family": "Tan"
+    },
+    {
+      "given": "Changbao",
+      "family": "Wang"
+    },
+    {
+      "given": "Buyu",
+      "family": "Li"
+    },
+    {
+      "given": "Quanquan",
+      "family": "Li"
+    },
+    {
+      "given": "Wanli",
+      "family": "Ouyang"
+    },
+    {
+      "given": "Changqing",
+      "family": "Yin"
+    },
+    {
+      "given": "Junjie",
+      "family": "Yan"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2003.05176",
+  "url": "https://arxiv.org/abs/2003.05176",
+  "type": "preprint",
+  "axes": [
+    "imbalance-small"
+  ],
+  "tags": [
+    "lvis",
+    "imbalance"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 3, Table 4, Table 5, [figure sans légende identifié, Table 6, Table 10, Table 11, Table 12, Table 12"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,1655 @@
+{
+ "docling": "2.130.0",
+ "ocr": true,
+ "tables": [
+  {
+   "page": 4,
+   "bbox": [
+    29.6,
+    112.2,
+    582.4,
+    321.1
+   ],
+   "caption": "TABLE 1: Comparison of WebUAV-3M with the popular GOT and UAV tracking benchmarks. WebUAV-3M is much larger than other UAV tracking benchmarks. It offers coverage of target classes and motion classes that is magnitudes broader than that of other benchmarks. All the sequences are densely labeled with a SATA method. Furthermore, WebUAV-3M provides natural language specifications and audio descriptions to facilitate the exploration of language features and audio cues for deep UAV tracking. 'n/a' denotes 'Not Applicable'.",
+   "rows": [
+    [
+     "Dataset",
+     "Videos",
+     "Min frame",
+     "Mean frame",
+     "Max",
+     "Total",
+     "Frame rate",
+     "Total duration",
+     "Absent labels",
+     "",
+     "ClassesAttributes",
+     "Data partition",
+     "Lingual feature",
+     "Audio cue",
+     "Annotation"
+    ],
+    [
+     "OTB2013 [21] OTB2015 [22] TC-128 [23] VOT2014 [24] VOT2017 [25] VOT2020 [26] NUS-PRO [27] NfS [28] OxUvA [20] TrackingNet[29] GOT-10k [10] LaSOT [11] TNL2K [15]",
+     "51 100 128 25 60 60 365 100 366 30,643 10,000 1,400 2,000",
+     "71 71 71 164 41 41 146 169 900 - 29 1,000 21",
+     "578 590 429 409 356 332 371 480 149 2,506 622",
+     "frame 3,872 3,872 3,872 1,210 1,500 1,500 5,040 3,83020,665 4,26037,440 - 1418 11,397 18,488",
+     "frames 29K 59K 55K 10K 21K 20K 135K 383K 1.55M 14.43M30fps 1.5M 3.52M 1.24M",
+     "30fps 30fps 30fps 30fps 30fps 30fps 30fps 240fps 30fps 10fps 30fps 30fps",
+     "16.4min 32.9min 30.7min 5.7min 11.9min 11.1min 75.2min 26.6min 14hours 140hours - 32.5hours -",
+     "7 7 7 7 7 7 7 7 7 7 3 3 3",
+     "10 16 27 11 24 - 8 17 22 27 563 70 -",
+     "11 11 11 n/a n/a n/a n/a 9 6 15 6 14 17",
+     "Test Test Test Test Test Test Test Test Test Train/Test Train/Test Train/Test Train/Test",
+     "7 7 7 7 7 7 7 7 7 7 7 3 3",
+     "7 7 7 7 7 7 7 7 7 7 7 7 7",
+     "method Manual Manual Manual Manual Manual Manual Manual Manual Manual Manual Manual Manual Manual"
+    ],
+    [
+     "UAV123 [1] UAV20L [1] DTB70 [4] UAVDT [6] UAVDark135[5] VisDrone [3] WebUAV-3M",
+     "123 20 70 50 135 167 4,500",
+     "109 1,717 68 82 216 90 40",
+     "915 2,934 225 742 929 834 710",
+     "3,085 5,527 699 2,969 18,841",
+     "113K 59K 15.8K 37.1K 4,571125.47K30fps 4,280139.28K30fps 3.3M",
+     "30fps 30fps 30fps 30fps 30fps",
+     "62.5min 32.6min 8.8min 20.6min 69.7min 77.4min 28.9hours",
+     "7 7 7 7 7 7 3",
+     "9 5 - 3 5 10 223",
+     "12 12 11 8 12 12 17",
+     "Test Test Test Test Test Train/Val/Test Train/Val/Test",
+     "7 7 7 7 7 7 3",
+     "7 7 7 7 7 7 3",
+     "Manual Manual Manual Semi-automatic Manual Manual Semi-automatic"
+    ]
+   ]
+  },
+  {
+   "page": 5,
+   "bbox": [
+    312.2,
+    112.3,
+    583.6,
+    209.1
+   ],
+   "caption": "TABLE 2: Quality control process for dataset construction. Data annotation, attribute annotation, and language and audio annotation (marked with *) are conducted by a professional data annotation team (approximately ten people). '×N' denotes that the associated stage is performed N times.",
+   "rows": [
+    [
+     "Stage",
+     "Description",
+     "Executor",
+     "Proportion"
+    ],
+    [
+     "1",
+     "Data collection",
+     "Collectors",
+     "100%"
+    ],
+    [
+     "2",
+     "Data verification",
+     "The authors",
+     "100%"
+    ],
+    [
+     "3*",
+     "Data annotation",
+     "Annotationteam",
+     "100%"
+    ],
+    [
+     "4",
+     "Annotations verification",
+     "Verificationteam",
+     "75%"
+    ],
+    [
+     "5",
+     "Annotations verification ×3",
+     "The authors",
+     "100%"
+    ],
+    [
+     "6*",
+     "Attribute annotation",
+     "Annotationteam",
+     "100%"
+    ],
+    [
+     "7",
+     "Attribute verification ×3",
+     "The authors",
+     "100%"
+    ],
+    [
+     "8*",
+     "Languageandaudioannotation",
+     "Annotationteam",
+     "100%"
+    ],
+    [
+     "9",
+     "Language and audio verification ×3",
+     "The authors",
+     "100%"
+    ],
+    [
+     "10",
+     "Dataset acceptance",
+     "The authors",
+     "100%"
+    ]
+   ]
+  },
+  {
+   "page": 6,
+   "bbox": [
+    28.6,
+    78.0,
+    299.4,
+    141.6
+   ],
+   "caption": "TABLE 3: Comparison between the times spent per bounding box by our SATA method and other annotation tools.",
+   "rows": [
+    [
+     "Annotation tool.",
+     "Type.",
+     "Time per bounding box.Easy",
+     "Time per bounding box.Medium",
+     "Time per bounding box.Hard",
+     "Time per bounding box.Mean"
+    ],
+    [
+     "Labelme [41]",
+     "Manual",
+     "13.23 s",
+     "16.08 s",
+     "18.11s",
+     "15.81s"
+    ],
+    [
+     "VoTT 3",
+     "Manual",
+     "6.87 s",
+     "8.61 s",
+     "8.67 s",
+     "8.05 s"
+    ],
+    [
+     "ViTBAT [42]",
+     "Semi-automatic",
+     "2.50 s",
+     "5.60 s",
+     "5.96 s",
+     "4.68 s"
+    ],
+    [
+     "CVAT4",
+     "Semi-automatic",
+     "1.71 s",
+     "3.76 s",
+     "6.12 s",
+     "3.86 s"
+    ],
+    [
+     "SATA (Ours)",
+     "Semi-automatic",
+     "0.11 s",
+     "2.94 s",
+     "5.91 s",
+     "2.99 s"
+    ]
+   ]
+  },
+  {
+   "page": 9,
+   "bbox": [
+    43.5,
+    336.5,
+    567.8,
+    381.6
+   ],
+   "caption": "TABLE 4: The details of the seven scenario subtest sets. # denotes the number of the corresponding item.",
+   "rows": [
+    [
+     "Scenario",
+     "Lowlight",
+     "Long-termocclusion",
+     "Small targets",
+     "High-speedmotion",
+     "Targetdistortions",
+     "Dual-dynamicdisturbances",
+     "Adversarialexamples"
+    ],
+    [
+     "#Superclass",
+     "11",
+     "10",
+     "10",
+     "11",
+     "12",
+     "11",
+     "10"
+    ],
+    [
+     "#Motion class",
+     "11",
+     "13",
+     "6",
+     "13",
+     "9",
+     "14",
+     "10"
+    ],
+    [
+     "#Target class",
+     "44",
+     "39",
+     "46",
+     "49",
+     "47",
+     "40",
+     "41"
+    ],
+    [
+     "#Videos",
+     "100",
+     "100",
+     "100",
+     "100",
+     "100",
+     "100",
+     "100"
+    ]
+   ]
+  },
+  {
+   "page": 12,
+   "bbox": [
+    26.9,
+    112.3,
+    584.7,
+    567.6
+   ],
+   "caption": "TABLE 5: Overall tracking results of the 43 baseline trackers on WebUAV-3M test set. The trackers are ranked by publication time. The top two results of the performance are indicated in bold and underlined. The 'properties column' denotes the attributes of different trackers: correlation filter (yes/no), Siamese network (yes/no), deep learning (yes/no), feature representation (Transformer, CNN - convolutional neural networks, HOG - histogram of gradients, CN - color names, CH - color histogram and Gray - grayscale features), and pretraining (yes/no).",
+   "rows": [
+    [
+     "Tracker.Tracker",
+     "Publication.Publication",
+     "Performance.Pre",
+     "Performance.nPre AUC",
+     "Performance.cAUC",
+     "Performance.mAcc",
+     "Performance.FPS",
+     "Properties.",
+     "Properties.CFSiameseDL",
+     "Properties.",
+     "Properties.Feature",
+     "Properties.Pretraining"
+    ],
+    [
+     "01. KCF [85]",
+     "TPAMI-2015",
+     "0.457",
+     "0.294 0.272",
+     "0.245",
+     "0.271",
+     "132.9@CPU",
+     "3",
+     "7",
+     "7",
+     "HOG",
+     "7"
+    ],
+    [
+     "02. CF2 [50]",
+     "ICCV-2015",
+     "",
+     "0.5380.3560.343",
+     "0.311",
+     "0.343",
+     "4.3@CPU",
+     "3",
+     "7",
+     "3",
+     "CNN",
+     "7"
+    ],
+    [
+     "03.DeepSRDCF[51]",
+     "ICCVW-2015",
+     "",
+     "0.5860.4670.402",
+     "0.365",
+     "0.405",
+     "3.7@CPU",
+     "3",
+     "7",
+     "3",
+     "CNN,HOG,CN",
+     "7"
+    ],
+    [
+     "04. MDNet [74]",
+     "CVPR-2016",
+     "0.561",
+     "0.446 0.390",
+     "0.347",
+     "0.392",
+     "1.6@GPU",
+     "7",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "05. SiamFC [60]",
+     "ECCVW-2016",
+     "0.534",
+     "0.393 0.351",
+     "0.317",
+     "0.352",
+     "78.2@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "06. GOTURN [75]",
+     "ECCV-2016",
+     "0.375",
+     "0.238 0.215",
+     "0.178",
+     "0.212",
+     "86.9@GPU",
+     "7",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "07. CCOT [52]",
+     "ECCV-2016",
+     "",
+     "0.6140.4880.408",
+     "0.365",
+     "0.411",
+     "2.6@GPU",
+     "3",
+     "7",
+     "3",
+     "CNN",
+     "7"
+    ],
+    [
+     "08. ECO [53]",
+     "CVPR-2017",
+     "",
+     "0.6570.5150.450",
+     "0.412",
+     "0.454",
+     "5.8@GPU",
+     "3",
+     "7",
+     "3",
+     "CNN,HOG,CN",
+     "7"
+    ],
+    [
+     "09. CACF [86]",
+     "CVPR-2017",
+     "0.601",
+     "0.479 0.412",
+     "0.375",
+     "0.414",
+     "34.8@CPU",
+     "3",
+     "7",
+     "7",
+     "HOG,CH",
+     "7"
+    ],
+    [
+     "10. BACF [87]",
+     "ICCV-2017",
+     "0.612",
+     "0.497 0.422",
+     "0.382",
+     "0.426",
+     "38.5@CPU",
+     "3",
+     "7",
+     "7",
+     "HOG",
+     "7"
+    ],
+    [
+     "11. DSiam [61]",
+     "ICCV-2017",
+     "",
+     "0.6140.4890.437",
+     "0.401",
+     "0.440",
+     "25.3@CPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "12. VITAL [76]",
+     "CVPR-2018",
+     "0.519",
+     "0.417 0.361",
+     "0.323",
+     "0.364",
+     "3.2@GPU",
+     "7",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "13. SiamRPN [47]",
+     "CVPR-2018",
+     "0.519",
+     "0.367 0.345",
+     "0.317",
+     "0.346",
+     "142.8@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "14. STRCF [54]",
+     "CVPR-2018",
+     "",
+     "0.6310.5100.447",
+     "0.404",
+     "0.451",
+     "8.3@GPU",
+     "3",
+     "7",
+     "3",
+     "CNN,HOG,CN",
+     "7"
+    ],
+    [
+     "15. MCCT [88]",
+     "CVPR-2018",
+     "0.623",
+     "0.498 0.440",
+     "0.404",
+     "0.444",
+     "44.1@CPU",
+     "3",
+     "7",
+     "7",
+     "HOG,CN",
+     "7"
+    ],
+    [
+     "16.DaSiamRPN[62]",
+     "ECCV-2018",
+     "0.4890.3470.310",
+     "",
+     "0.289",
+     "0.310",
+     "98.4@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "17.MetaTracker[77]",
+     "ECCV-2018",
+     "",
+     "0.6050.4040.376",
+     "0.336",
+     "0.376",
+     "3.6@GPU",
+     "7",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "18. ACT [78]",
+     "ECCV-2018",
+     "0.518",
+     "0.388 0.343",
+     "0.305",
+     "0.344",
+     "28.7@GPU",
+     "7",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "19.SiamMask[63]",
+     "CVPR-2019",
+     "",
+     "0.6150.4970.435",
+     "0.396",
+     "0.438",
+     "50.6@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "20.SiamPRN++[9]",
+     "CVPR-2019",
+     "",
+     "0.6070.4820.433",
+     "0.401",
+     "0.437",
+     "32.5@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "21. ATOM [7]",
+     "CVPR-2019",
+     "",
+     "0.4390.3510.291",
+     "0.261",
+     "0.292",
+     "28.6@GPU",
+     "3",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "22. SiamDW [64]",
+     "CVPR-2019",
+     "",
+     "0.5590.4470.373",
+     "0.327",
+     "0.374",
+     "39.5@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "23. UDT [66]",
+     "CVPR-2019",
+     "",
+     "0.5720.4650.416",
+     "0.379",
+     "0.419",
+     "68.2@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "24. ARCF [89]",
+     "ICCV-2019",
+     "0.613",
+     "0.490 0.405",
+     "0.363",
+     "0.407",
+     "57.6@CPU",
+     "3",
+     "7",
+     "7",
+     "HOG,CN,Gray",
+     "7"
+    ],
+    [
+     "25. LADCF [55]",
+     "TIP-2019",
+     "",
+     "0.4700.3750.339",
+     "0.307",
+     "0.342",
+     "8.6@GPU",
+     "3",
+     "7",
+     "3",
+     "CNN,HOG,CN",
+     "7"
+    ],
+    [
+     "26. UpdateNet [65]",
+     "ICCV-2019",
+     "",
+     "0.5360.3800.360",
+     "0.330",
+     "0.360",
+     "76.3@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "27. DiMP [57]",
+     "ICCV-2019",
+     "",
+     "0.5440.4410.364",
+     "0.336",
+     "0.367",
+     "37.6@GPU",
+     "3",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "28.SiamFC++[67]",
+     "AAAI-2020",
+     "0.5540.4310.388",
+     "",
+     "0.352",
+     "0.391",
+     "86.2@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "29. SiamCAR [68]",
+     "CVPR-2020",
+     "0.6420.5120.412",
+     "",
+     "0.378",
+     "0.415",
+     "46.7@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "30. PrDiMP [58]",
+     "CVPR-2020",
+     "0.6740.5750.514",
+     "",
+     "0.484",
+     "0.521",
+     "32.4@GPU",
+     "3",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "31.AutoTrack[56]",
+     "CVPR-2020",
+     "0.6180.4950.446",
+     "",
+     "0.412",
+     "0.450",
+     "55.8@CPU",
+     "3",
+     "7",
+     "7",
+     "HOG,CN,Gray",
+     "7"
+    ],
+    [
+     "32.SiamBAN[69]",
+     "CVPR-2020",
+     "0.6150.4980.438",
+     "",
+     "0.401",
+     "0.442",
+     "37.1@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "33. UTrack [2]",
+     "ACMMM-2020",
+     "0.540",
+     "0.438 0.362",
+     "0.333",
+     "0.364",
+     "21.6@GPU",
+     "3",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "34. Ocean [70]",
+     "ECCV-2020",
+     "0.5050.4090.369",
+     "",
+     "0.325",
+     "0.366",
+     "65.3@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "35. RPT [71]",
+     "ECCVW-2020",
+     "0.660",
+     "0.546 0.495",
+     "0.462",
+     "0.501",
+     "33.2@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "36. SiamGAT [72]",
+     "CVPR-2021",
+     "",
+     "0.5730.4740.393",
+     "0.349",
+     "0.395",
+     "88.5@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "37.LightTrack[80]",
+     "CVPR-2021",
+     "",
+     "0.6020.4940.458",
+     "0.415",
+     "0.459",
+     "64.9@GPU",
+     "7",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "38. TrDiMP [83]",
+     "CVPR-2021",
+     "",
+     "0.6000.4760.399",
+     "0.370",
+     "0.402",
+     "23.0@GPU3",
+     "",
+     "7",
+     "",
+     "3CNN,Transformer",
+     "3"
+    ],
+    [
+     "39. TransT [82]",
+     "CVPR-2021",
+     "",
+     "0.6180.5090.448",
+     "0.422",
+     "0.453",
+     "53.5@GPU",
+     "7",
+     "3",
+     "",
+     "3CNN,Transformer",
+     "3"
+    ],
+    [
+     "40.AlphaRefine[79]",
+     "CVPR-2021",
+     "0.5150.4130.3600.3140.358122.6@GPU7",
+     "0.7530.6430.593",
+     "0.562",
+     "0.602",
+     "42.3@GPU",
+     "3",
+     "7 3",
+     "3 3CNN,Transformer",
+     "CNN",
+     "3 3"
+    ],
+    [
+     "41. HiFT [84] 42. AutoMatch [73]",
+     "ICCV-2021 ICCV-2021",
+     "0.6180.4960.454",
+     "",
+     "0.416",
+     "0.458",
+     "63.1@GPU",
+     "7",
+     "3",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "43. KeepTrack [59]",
+     "ICCV-2021",
+     "",
+     "0.7100.6030.543",
+     "0.512",
+     "",
+     "33.9@GPU",
+     "3",
+     "7",
+     "3",
+     "CNN",
+     "3"
+    ],
+    [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "0.550",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    28.2,
+    77.9,
+    299.4,
+    171.3
+   ],
+   "caption": "TABLE 6: The results obtained after retraining five deep trackers on WebUAV-3M.",
+   "rows": [
+    [
+     "Tracker",
+     "Training data",
+     "Pre",
+     "nPre",
+     "AUC",
+     "cAUC",
+     "mAcc"
+    ],
+    [
+     "GOTURN",
+     "ALOV++, ImageNet DET",
+     "0.375",
+     "0.238",
+     "0.215",
+     "0.178",
+     "0.212"
+    ],
+    [
+     "MDNet",
+     "ImageNet-VID",
+     "0.561",
+     "0.446",
+     "0.390",
+     "0.347",
+     "0.392"
+    ],
+    [
+     "ATOM",
+     "LaSOT,GOT-10k,TrackingNet,COCO",
+     "0.439",
+     "0.351",
+     "0.291",
+     "0.261",
+     "0.292"
+    ],
+    [
+     "SiamFC",
+     "ImageNet VID",
+     "0.534",
+     "0.393",
+     "0.351",
+     "0.317",
+     "0.352"
+    ],
+    [
+     "SiamRPN",
+     "ImageNetVID,YouTube-BB",
+     "0.519",
+     "0.367",
+     "0.345",
+     "0.317",
+     "0.346"
+    ],
+    [
+     "GOTURN",
+     "",
+     "0.499",
+     "0.355",
+     "0.318",
+     "0.280",
+     "0.318"
+    ],
+    [
+     "MDNet",
+     "",
+     "0.603",
+     "0.506",
+     "0.445",
+     "0.409",
+     "0.450"
+    ],
+    [
+     "ATOM",
+     "WebUAV-3M train set",
+     "0.580",
+     "0.435",
+     "0.390",
+     "0.344",
+     "0.387"
+    ],
+    [
+     "SiamFC",
+     "",
+     "0.629",
+     "0.521",
+     "0.454",
+     "0.417",
+     "0.458"
+    ],
+    [
+     "SiamRPN",
+     "",
+     "0.617",
+     "0.514",
+     "0.453",
+     "0.415",
+     "0.457"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    312.0,
+    123.6,
+    583.3,
+    184.6
+   ],
+   "caption": "",
+   "rows": [
+    [
+     "Test Train",
+     "boxtruck",
+     "hatchback",
+     "minivan",
+     "SUV",
+     "sedan",
+     "Average"
+    ],
+    [
+     "box truck",
+     "0.507",
+     "0.552",
+     "0.558",
+     "0.570",
+     "0.573",
+     "0.552"
+    ],
+    [
+     "hatchback",
+     "0.439",
+     "0.486",
+     "0.528",
+     "0.518",
+     "0.526",
+     "0.499"
+    ],
+    [
+     "minivan",
+     "0.483",
+     "0.493",
+     "0.481",
+     "0.509",
+     "0.496",
+     "0.492"
+    ],
+    [
+     "SUV",
+     "0.484",
+     "0.535",
+     "0.524",
+     "0.511",
+     "0.546",
+     "0.520"
+    ],
+    [
+     "sedan",
+     "0.385",
+     "0.434",
+     "0.419",
+     "0.462",
+     "0.469",
+     "0.434"
+    ]
+   ]
+  },
+  {
+   "page": 14,
+   "bbox": [
+    312.3,
+    262.0,
+    583.0,
+    323.1
+   ],
+   "caption": "TABLE 8: Intraclass domain generalization results (cAUC) of SiamFC on the person superclass. Walking, biking, standing, riding an electric bicycle (i.e., riding) and sitting are the five largest motion classes in person.",
+   "rows": [
+    [
+     "Test Train",
+     "sitting",
+     "riding",
+     "standing",
+     "biking",
+     "walking",
+     "Average"
+    ],
+    [
+     "sitting",
+     "0.290",
+     "0.268",
+     "0.276",
+     "0.322",
+     "0.376",
+     "0.306"
+    ],
+    [
+     "riding",
+     "0.479",
+     "0.601",
+     "0.536",
+     "0.606",
+     "0.592",
+     "0.563"
+    ],
+    [
+     "standing",
+     "0.348",
+     "0.268",
+     "0.320",
+     "0.362",
+     "0.401",
+     "0.340"
+    ],
+    [
+     "biking",
+     "0.217",
+     "0.212",
+     "0.257",
+     "0.345",
+     "0.316",
+     "0.269"
+    ],
+    [
+     "walking",
+     "0.307",
+     "0.305",
+     "0.322",
+     "0.364",
+     "0.393",
+     "0.338"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    27.4,
+    77.7,
+    584.1,
+    194.5
+   ],
+   "caption": "TABLE 9: Interclass domain generalization results (cAUC) of SiamFC on the two largest subclasses of each of the six largest superclasses, i.e., person, vehicle, vessel, building, public transport and animal. The top two results are in bold and underlined.",
+   "rows": [
+    [
+     "Test",
+     "Train.",
+     "sheep",
+     "animal.horse",
+     "animal.coach",
+     "public transport.single-deckerbus",
+     "public transport.",
+     "building.officebuilding",
+     "building.skyscraper",
+     "vessel.bulkcarrier",
+     "vessel.motorboat",
+     "vehicle.SUV",
+     "vehicle.sedan",
+     "person.biking",
+     "person.walking"
+    ],
+    [
+     "animal",
+     "sheep horse",
+     "0.411 0.380",
+     "0.399 0.342",
+     "0.318 0.311",
+     "0.391 0.408",
+     "0.319 0.366",
+     "0.335 0.410",
+     "0.382 0.379",
+     "0.396 0.420",
+     "0.404 0.381",
+     "0.402 0.442",
+     "",
+     "0.425 0.408",
+     "0.423 0.430"
+    ],
+    [
+     "publictransport",
+     "coach",
+     "0.462",
+     "0.442",
+     "0.504",
+     "0.564",
+     "0.518 0.443",
+     "0.379 0.445",
+     "",
+     "0.487 0.446",
+     "0.468 0.469",
+     "0.514 0.454",
+     "0.524",
+     "0.487 0.437",
+     "0.483 0.425"
+    ],
+    [
+     "building",
+     "single-deckerbus",
+     "0.457",
+     "0.418 0.695",
+     "0.521 0.664",
+     "0.494 0.650",
+     "0.715 0.585",
+     "0.758 0.657",
+     "0.722 0.587",
+     "",
+     "0.688 0.621",
+     "0.668 0.651",
+     "0.486 0.687",
+     "0.738 0.603",
+     "0.723 0.651"
+    ],
+    [
+     "",
+     "office building skyscraper bulk carrier",
+     "0.638 0.618 0.542",
+     "0.615 0.481",
+     "0.573 0.516",
+     "0.594 0.510",
+     "0.444",
+     "0.461",
+     "0.522",
+     "0.561",
+     "0.542",
+     "",
+     "0.603 0.560",
+     "0.561",
+     "0.546"
+    ],
+    [
+     "vessel",
+     "motorboat",
+     "0.529",
+     "0.591",
+     "0.595",
+     "0.593",
+     "0.511",
+     "0.519",
+     "0.622",
+     "",
+     "0.623",
+     "0.603",
+     "0.646",
+     "0.660",
+     "0.646"
+    ],
+    [
+     "vehicle",
+     "SUV",
+     "0.523",
+     "0.505",
+     "0.512",
+     "0.529",
+     "0.509",
+     "0.497",
+     "0.494",
+     "",
+     "0.519",
+     "0.548",
+     "0.536",
+     "0.550",
+     "0.560"
+    ],
+    [
+     "",
+     "sedan",
+     "0.434",
+     "0.437",
+     "0.444 0.206",
+     "0.456",
+     "0.434",
+     "0.422",
+     "",
+     "0.451",
+     "0.447",
+     "0.503 0.323",
+     "0.513 0.346",
+     "0.480",
+     "0.488"
+    ],
+    [
+     "person",
+     "biking walking",
+     "0.255 0.284",
+     "0.243 0.296",
+     "0.294",
+     "0.243 0.312",
+     "0.231 0.316",
+     "0.253",
+     "0.293",
+     "0.262 0.315",
+     "0.312 0.330",
+     "0.362",
+     "0.375",
+     "0.356 0.379",
+     "0.370 0.402"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    28.3,
+    262.1,
+    299.7,
+    340.2
+   ],
+   "caption": "TABLE 10: Cross-superclass transfer learning results (cAUC) of SiamFC on the six largest superclasses, i.e., person, vehicle, vessel, building, public transport and animal.",
+   "rows": [
+    [
+     "Test Train",
+     "animal",
+     "publictransport",
+     "building",
+     "vessel",
+     "vehicle",
+     "person"
+    ],
+    [
+     "animal",
+     "0.474",
+     "0.409",
+     "0.418",
+     "0.430",
+     "0.449",
+     "0.454"
+    ],
+    [
+     "publictransport",
+     "0.347",
+     "0.457",
+     "0.363",
+     "0.393",
+     "0.441",
+     "0.355"
+    ],
+    [
+     "building",
+     "0.559",
+     "0.569",
+     "0.609",
+     "0.566",
+     "0.555",
+     "0.569"
+    ],
+    [
+     "vessel",
+     "0.599",
+     "0.589",
+     "0.559",
+     "0.637",
+     "0.619",
+     "0.615"
+    ],
+    [
+     "vehicle",
+     "0.523",
+     "0.534",
+     "0.477",
+     "0.536",
+     "0.551",
+     "0.540"
+    ],
+    [
+     "person",
+     "0.380",
+     "0.358",
+     "0.362",
+     "0.399",
+     "0.398",
+     "0.446"
+    ],
+    [
+     "Average",
+     "0.480",
+     "0.486",
+     "0.465",
+     "0.494",
+     "0.502",
+     "0.497"
+    ]
+   ]
+  },
+  {
+   "page": 15,
+   "bbox": [
+    311.3,
+    285.7,
+    584.2,
+    371.7
+   ],
+   "caption": "TABLE 11: Cross-dataset evaluation results of GOTURN, SiamFC and SiamRPN using AO/SR0.5 (2-4 rows) or cAUC/mAcc (5-10 rows). Three deep trackers are trained on the GOT-10k, VisDrone, and WebUAV-3M training sets and evaluated on the GOT-10k, VisDrone, and WebUAV-3M test sets.",
+   "rows": [
+    [
+     "Tracker",
+     "GOTURN",
+     "SiamFC",
+     "SiamRPN",
+     "Average"
+    ],
+    [
+     "VisDrone→GOT-10k GOT-10k→GOT-10k",
+     "0.152/0.115 0.334/0.355 0.275/0.255 0.356/0.375 0.350/0.389",
+     "0.261/0.250 0.295/0.337 0.310/0.325 0.435/0.474 0.501/0.548",
+     "0.169/0.123 0.386/0.438 0.355/0.400 0.327/0.355 0.532/0.584",
+     "0.194/0.163 0.338/0.377 0.313/0.327"
+    ],
+    [
+     "VisDrone→WebUAV-3M",
+     "",
+     "0.359/0.398 0.355/0.388",
+     "",
+     ""
+    ],
+    [
+     "WebUAV-3M→GOT-10k",
+     "",
+     "",
+     "",
+     ""
+    ],
+    [
+     "VisDrone→VisDrone",
+     "",
+     "",
+     "",
+     "0.373/0.401"
+    ],
+    [
+     "GOT-10k→VisDrone",
+     "",
+     "",
+     "",
+     "0.461/0.507"
+    ],
+    [
+     "WebUAV-3M→VisDrone",
+     "0.404/0.433",
+     "0.553/0.596",
+     "0.562/0.615",
+     "0.506/0.548"
+    ],
+    [
+     "",
+     "0.102/0.133",
+     "",
+     "0.155/0.174",
+     "0.205/0.235"
+    ],
+    [
+     "GOT-10k→WebUAV-3M",
+     "0.203/0.238",
+     "",
+     "0.386/0.431",
+     "0.315/0.352"
+    ],
+    [
+     "WebUAV-3M→WebUAV-3M",
+     "0.280/0.318",
+     "0.417/0.458",
+     "0.415/0.457",
+     "0.371/0.411"
+    ]
+   ]
+  },
+  {
+   "page": 19,
+   "bbox": [
+    313.7,
+    372.0,
+    582.3,
+    588.9
+   ],
+   "caption": "TABLE A: Descriptions of the 17 attributes in WebUAV-3M.",
+   "rows": [
+    [
+     "Attribute",
+     "Definition"
+    ],
+    [
+     "01.LR",
+     "Thetargetboxissmallerthan400pixelsinatleastoneframe."
+    ],
+    [
+     "02.PO",
+     "Thetargetispartiallyoccludedinthesequence."
+    ],
+    [
+     "03.FO",
+     "Thetargetisfullyoccludedinthesequence."
+    ],
+    [
+     "04.OV",
+     "Thetargetcompletelyleavesthevideoframe."
+    ],
+    [
+     "05.FM",
+     "Themotionofthegroundtruthislargerthan20pixels."
+    ],
+    [
+     "06.CM",
+     "Abruptmotionofthecamera."
+    ],
+    [
+     "07.VC",
+     "Viewpointaffectstargetappearancesignificantly."
+    ],
+    [
+     "08.ROT",
+     "Thetargetrotatesintheimage."
+    ],
+    [
+     "09.DEF",
+     "Thetargetisdeformableduringtracking."
+    ],
+    [
+     "10.BC",
+     "Thebackgroundhasasimilarappearanceasthetarget."
+    ],
+    [
+     "11.SV",
+     "Theratiooftheboundingboxisoutsidetherange[0.5,2]."
+    ],
+    [
+     "12.ARV",
+     "Theratioofboundingboxaspectratioisoutsidetherage[0.5,2]."
+    ],
+    [
+     "13.IV",
+     "Theilluminationinthetargetregionchanges."
+    ],
+    [
+     "14.MB",
+     "Thetargetregionisblurredduetotargetorcameramotion."
+    ],
+    [
+     "15.COM",
+     "Thecomplexityof thecurrentvideo(easyormediumorhard)."
+    ],
+    [
+     "16. SIZ",
+     "The size s= √w×h of current video is small (s< √640×480 pixels), or medium (√640×480 pixels≤s≤ √1280×720 pixels), or large (s> √1280×720 pixels)."
+    ],
+    [
+     "17. LEN",
+     "The length (l) of current video is short (l≤600 frames, 20s for 30 fps), or medium (600<l≤1800 frames, 60s for 30 fps), or long(l>1800 frames)."
+    ]
+   ]
+  },
+  {
+   "page": 20,
+   "bbox": [
+    29.8,
+    89.0,
+    581.5,
+    296.0
+   ],
+   "caption": "TABLE B: Co-occurrence distributions of the attributes in WebUAV-3M. The diagonal demonstrates the distribution of the entire dataset, and each row or column represents the distribution of the corresponding attribute subset. The top five co-occurrence attribute pairs are PO and BC, BC and SIZ-M, BC and LEN-S, ROT and BC, and PO and SIZ-M.",
+   "rows": [
+    [
+     "Attribute",
+     "LR",
+     "PO",
+     "FO OV",
+     "FM",
+     "CM",
+     "VC ROT",
+     "DEF BC",
+     "SV",
+     "ARV",
+     "IV",
+     "MB",
+     "COM-E",
+     "COM-M",
+     "COM-H",
+     "SIZ-S",
+     "",
+     "SIZ-M",
+     "SIZ-B",
+     "LEN-S",
+     "LEN-M LEN-L"
+    ],
+    [
+     "LR PO FO OV FM CM VC ROT DEF BC SV ARV IV MB COM-E COM-M COM-H SIZ-S SIZ-M SIZ-B LEN-S LEN-M LEN-L",
+     "1860 1153 273 131 192 964 812 966 503 1522 788 602 334 1028 501 879 480 460 1255 145 1270 551 39",
+     "1153 2674 424 286 461 1198 1040 1370 877 2063 984 960 582 1050 737 1193 744 469 1593 612 1478 1069 127",
+     "273 131 424 286 425 32 32 302 57 89 146 153 126 123 257 183 150 127 372 211 178 134 172 167 104 59 206 133 8 39 132 119 285 144 30 63 235 128 160 111 233 144 178 122 14 36",
+     "192 461 57 89 587 404 393 248 163 363 373 343 135 132 155 260 172 39 479 69 194 302 91",
+     "964 812 1198 1040 146 126 153 123 404 393 2037 1516 1516 1740 816 731 521 432 1340 1141 822 715 654 579 314 290 729 623 714 554 888 774 435 412 520 402 1320 1176 197 162 1179 958 749 674 109 108",
+     "966 1370 257 183 248 816 731 2088 1017 1671 587 797 511 968 582 930 576 378 1165 545 1185 823 80",
+     "503 1522 877 2063 150 372 127 211 163 363 521 1340 432 1141 1017 1671 1273 1059 1059 3242 314 940 471 917 326 728 521 1333 328 1172 553 1374 392 696 180 556 667 1982 426 704 645 1870 565 1242 63 130",
+     "788 984 178 134 373 822 715 587 314 940 1391 639 240 544 427 611 353 308 923 160 760 532 99",
+     "602 960 172 167 343 654 579 797 471 917 639 1241 258 457 325 520 396 198 826 217 549 599 93",
+     "334 1028 582 104 59 135 314 290 511 326 728 240 258 915 406 258 406 251 105 514 296 478 399 38",
+     "501 1050 206 133 132 729 623 968 521 1333 544 457 406 1730 427 805 498 518 856 356 1218 486 26",
+     "879 737 8 39 155 714 554 582 328 1172 427 325 258 427 1848 0 0 651 861 336 1125 633 90",
+     "480 1193 132 119 260 888 774 930 553 1374 611 520 406 805 0 1796 0 333 1119 344 1123 613 60",
+     "460 744 285 144 172 435 412 576 392 696 353 396 251 498 0 0 856 129 479 248 436 366 54",
+     "1255 469 30 63 39 520 402 378 180 556 308 198 105 518 651 333 129 1113 0 0 874 238 1",
+     "145 1593 235 128 479 1320 1176 1165 667 1982 923 826 514 856 861 1119 479 0 2459 0 1338 990 131",
+     "612 160 111 69 197 162 545 426 704 160 217 296 356 336 344 248 0 0 928 472 384 72",
+     "1270",
+     "551 1478 1069 233 178 144 122 194 302 1179 749 958 674 1185 823 645 565 1870 1242 760 532 549 599 478 399 1218 486 1125 633 1123 613 436 366 874 238 1338 990 472 384 2684 0 0 1612 0 0",
+     "39 127 14 36 91 109 108 80 63 130 99 93 38 26 90 60 54 1 131 72 0 0 204"
+    ]
+   ]
+  },
+  {
+   "page": 23,
+   "bbox": [
+    27.5,
+    103.1,
+    583.7,
+    205.2
+   ],
+   "caption": "TABLE C: Performance comparison on WebUAV-3M test set between tracking via joint natural language and bounding box (NL+BBox), and tracking via bounding box only (BBox). We report the results of the latest state-of-the-art vision-language trackers (VLTSCAR and VLTTT) and their corresponding baseline visual trackers (SiamCAR and TransT).",
+   "rows": [
+    [
+     "Type",
+     "Tracker",
+     "Publication",
+     "Pre",
+     "nPre",
+     "AUC",
+     "cAUC",
+     "mAcc"
+    ],
+    [
+     "Tracking via BBox",
+     "SiamCAR [68] TransT [82]",
+     "CVPR-2020 CVPR-2021",
+     "0.642 0.618",
+     "0.512 0.509",
+     "0.412 0.448",
+     "0.378 0.422",
+     "0.415 0.453"
+    ],
+    [
+     "Tracking via NL+BBox",
+     "VLTSCAR-IV-got10k [96] VLTSCAR-III-lasotext [96] VLTSCAR-II-lasot-tnl2k [96] VLTSCAR-I-otb99 [96] VLTTT-IV-lasotext [96] VLTTT-III-got10k [96] VLTTT-II-lasot-otb99 [96] VLTTT-I-tnl2k [96]",
+     "NeurIPS-2022 NeurIPS-2022 NeurIPS-2022 NeurIPS-2022 NeurIPS-2022 NeurIPS-2022 NeurIPS-2022 NeurIPS-2022",
+     "0.501 0.584 0.594 0.600 0.520 0.531 0.620 0.638",
+     "0.386 0.475 0.480 0.490 0.406 0.414 0.503 0.511",
+     "0.358 0.431 0.440 0.449 0.384 0.388 0.466 0.470",
+     "0.345 0.420 0.428 0.438 0.371 0.375 0.457 0.460",
+     "0.361 0.435 0.444 0.453 0.385 0.390 0.472 0.475"
+    ]
+   ]
+  }
+ ]
+}

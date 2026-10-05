@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-1602.08405-we-don-t-need-no",
+  "title": "We don't need no bounding-boxes: Training object class detectors using only human verification",
+  "authors": [
+    {
+      "given": "Dim P",
+      "family": "Papadopoulos"
+    },
+    {
+      "given": "Jasper R R",
+      "family": "Uijlings"
+    },
+    {
+      "given": "Frank",
+      "family": "Keller"
+    },
+    {
+      "given": "Vittorio",
+      "family": "Ferrari"
+    }
+  ],
+  "year": 2016,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1602.08405",
+  "url": "https://arxiv.org/abs/1602.08405",
+  "type": "preprint",
+  "axes": [
+    "annotation"
+  ],
+  "tags": [
+    "voc",
+    "weak-supervision"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

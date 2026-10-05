@@ -1,0 +1,49 @@
+{
+  "id": "arxiv-2103.10374-consistency-active-learning-object-detection",
+  "title": "Consistency-based Active Learning for Object Detection",
+  "authors": [
+    {
+      "given": "Weiping",
+      "family": "Yu"
+    },
+    {
+      "given": "Sijie",
+      "family": "Zhu"
+    },
+    {
+      "given": "Taojiannan",
+      "family": "Yang"
+    },
+    {
+      "given": "Chen",
+      "family": "Chen"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2103.10374",
+  "url": "https://arxiv.org/abs/2103.10374",
+  "type": "preprint",
+  "axes": [
+    "active-learning"
+  ],
+  "tags": [
+    "coco",
+    "voc",
+    "active-learning"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

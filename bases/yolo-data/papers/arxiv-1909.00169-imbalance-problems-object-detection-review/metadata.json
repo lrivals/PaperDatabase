@@ -1,0 +1,45 @@
+{
+  "id": "arxiv-1909.00169-imbalance-problems-object-detection-review",
+  "title": "Imbalance Problems in Object Detection: A Review",
+  "authors": [
+    {
+      "given": "Kemal",
+      "family": "Oksuz"
+    },
+    {
+      "given": "Baris Can",
+      "family": "Cam"
+    },
+    {
+      "given": "Sinan",
+      "family": "Kalkan"
+    },
+    {
+      "given": "Emre",
+      "family": "Akbas"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1909.00169",
+  "url": "https://arxiv.org/abs/1909.00169",
+  "type": "preprint",
+  "axes": [
+    "surveys"
+  ],
+  "tags": [],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE 4, [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

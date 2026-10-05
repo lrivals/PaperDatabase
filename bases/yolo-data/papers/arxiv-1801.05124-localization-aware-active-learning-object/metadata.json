@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-1801.05124-localization-aware-active-learning-object",
+  "title": "Localization-Aware Active Learning for Object Detection",
+  "authors": [
+    {
+      "given": "Chieh-Chi",
+      "family": "Kao"
+    },
+    {
+      "given": "Teng-Yok",
+      "family": "Lee"
+    },
+    {
+      "given": "Pradeep",
+      "family": "Sen"
+    },
+    {
+      "given": "Ming-Yu",
+      "family": "Liu"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1801.05124",
+  "url": "https://arxiv.org/abs/1801.05124",
+  "type": "preprint",
+  "axes": [
+    "active-learning"
+  ],
+  "tags": [
+    "active-learning"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 6",
+      "tableaux sans corps extrait (légende seule) : Table 3, Table 4, Table 7"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

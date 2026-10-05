@@ -1,0 +1,68 @@
+{
+  "id": "arxiv-2012.07177-simple-copy-paste-strong-data",
+  "title": "Simple Copy-Paste is a Strong Data Augmentation Method for Instance Segmentation",
+  "authors": [
+    {
+      "given": "Golnaz",
+      "family": "Ghiasi"
+    },
+    {
+      "given": "Yin",
+      "family": "Cui"
+    },
+    {
+      "given": "Aravind",
+      "family": "Srinivas"
+    },
+    {
+      "given": "Rui",
+      "family": "Qian"
+    },
+    {
+      "given": "Tsung-Yi",
+      "family": "Lin"
+    },
+    {
+      "given": "Ekin D",
+      "family": "Cubuk"
+    },
+    {
+      "given": "Quoc V",
+      "family": "Le"
+    },
+    {
+      "given": "Barret",
+      "family": "Zoph"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2012.07177",
+  "url": "https://arxiv.org/abs/2012.07177",
+  "type": "preprint",
+  "axes": [
+    "auto-labelling",
+    "augmentation"
+  ],
+  "tags": [
+    "coco",
+    "lvis",
+    "copy-paste",
+    "pseudo-label"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 11",
+      "tableaux sans corps extrait (légende seule) : Table 5, Table 8, [figure sans légende identifié, Table 12"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

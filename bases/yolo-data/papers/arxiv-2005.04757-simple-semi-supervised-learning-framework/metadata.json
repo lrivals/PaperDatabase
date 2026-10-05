@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-2005.04757-simple-semi-supervised-learning-framework",
+  "title": "A Simple Semi-Supervised Learning Framework for Object Detection",
+  "authors": [
+    {
+      "given": "Kihyuk",
+      "family": "Sohn"
+    },
+    {
+      "given": "Zizhao",
+      "family": "Zhang"
+    },
+    {
+      "given": "Chun-Liang",
+      "family": "Li"
+    },
+    {
+      "given": "Han",
+      "family": "Zhang"
+    },
+    {
+      "given": "Chen-Yu",
+      "family": "Lee"
+    },
+    {
+      "given": "Tomas",
+      "family": "Pfister"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2005.04757",
+  "url": "https://arxiv.org/abs/2005.04757",
+  "type": "preprint",
+  "axes": [
+    "auto-labelling",
+    "augmentation"
+  ],
+  "tags": [
+    "coco"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

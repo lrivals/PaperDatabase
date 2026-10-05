@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-2211.13993-combating-noisy-labels-object-detection",
+  "title": "Combating noisy labels in object detection datasets",
+  "authors": [
+    {
+      "given": "Krystian",
+      "family": "Chachuła"
+    },
+    {
+      "given": "Jakub",
+      "family": "Łyskawa"
+    },
+    {
+      "given": "Bartłomiej",
+      "family": "Olber"
+    },
+    {
+      "given": "Piotr",
+      "family": "Frątczak"
+    },
+    {
+      "given": "Adam",
+      "family": "Popowicz"
+    },
+    {
+      "given": "Krystian",
+      "family": "Radlak"
+    }
+  ],
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2211.13993",
+  "url": "https://arxiv.org/abs/2211.13993",
+  "type": "preprint",
+  "axes": [
+    "label-quality"
+  ],
+  "tags": [
+    "label-noise"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE VII",
+      "sections numérotées non détectées : II — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

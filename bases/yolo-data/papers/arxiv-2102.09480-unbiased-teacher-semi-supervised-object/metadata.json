@@ -1,0 +1,69 @@
+{
+  "id": "arxiv-2102.09480-unbiased-teacher-semi-supervised-object",
+  "title": "Unbiased Teacher for Semi-Supervised Object Detection",
+  "authors": [
+    {
+      "given": "Yen-Cheng",
+      "family": "Liu"
+    },
+    {
+      "given": "Chih-Yao",
+      "family": "Ma"
+    },
+    {
+      "given": "Zijian",
+      "family": "He"
+    },
+    {
+      "given": "Chia-Wen",
+      "family": "Kuo"
+    },
+    {
+      "given": "Kan",
+      "family": "Chen"
+    },
+    {
+      "given": "Peizhao",
+      "family": "Zhang"
+    },
+    {
+      "given": "Bichen",
+      "family": "Wu"
+    },
+    {
+      "given": "Zsolt",
+      "family": "Kira"
+    },
+    {
+      "given": "Peter",
+      "family": "Vajda"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2102.09480",
+  "url": "https://arxiv.org/abs/2102.09480",
+  "type": "preprint",
+  "axes": [
+    "annotation",
+    "auto-labelling"
+  ],
+  "tags": [
+    "coco",
+    "pseudo-label"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

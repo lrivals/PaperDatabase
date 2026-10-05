@@ -1,0 +1,50 @@
+{
+  "id": "arxiv-2003.01285-noise-resistant-object-detection-noisy",
+  "title": "Towards Noise-resistant Object Detection with Noisy Annotations",
+  "authors": [
+    {
+      "given": "Junnan",
+      "family": "Li"
+    },
+    {
+      "given": "Caiming",
+      "family": "Xiong"
+    },
+    {
+      "given": "Richard",
+      "family": "Socher"
+    },
+    {
+      "given": "Steven",
+      "family": "Hoi"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2003.01285",
+  "url": "https://arxiv.org/abs/2003.01285",
+  "type": "preprint",
+  "axes": [
+    "label-quality"
+  ],
+  "tags": [
+    "coco",
+    "voc",
+    "synthetic",
+    "label-noise"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

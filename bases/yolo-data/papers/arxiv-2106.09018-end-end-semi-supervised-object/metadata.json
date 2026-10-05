@@ -1,0 +1,64 @@
+{
+  "id": "arxiv-2106.09018-end-end-semi-supervised-object",
+  "title": "End-to-End Semi-Supervised Object Detection with Soft Teacher",
+  "authors": [
+    {
+      "given": "Mengde",
+      "family": "Xu"
+    },
+    {
+      "given": "Zheng",
+      "family": "Zhang"
+    },
+    {
+      "given": "Han",
+      "family": "Hu"
+    },
+    {
+      "given": "Jianfeng",
+      "family": "Wang"
+    },
+    {
+      "given": "Lijuan",
+      "family": "Wang"
+    },
+    {
+      "given": "Fangyun",
+      "family": "Wei"
+    },
+    {
+      "given": "Xiang",
+      "family": "Bai"
+    },
+    {
+      "given": "Zicheng",
+      "family": "Liu"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2106.09018",
+  "url": "https://arxiv.org/abs/2106.09018",
+  "type": "preprint",
+  "axes": [
+    "auto-labelling"
+  ],
+  "tags": [
+    "coco"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 7, Table 10",
+      "tableaux sans corps extrait (légende seule) : Table 6, [figure sans légende identifié, Table 8, Table 9, Table 11"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

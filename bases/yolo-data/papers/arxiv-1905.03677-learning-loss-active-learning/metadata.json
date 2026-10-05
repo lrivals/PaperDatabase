@@ -1,0 +1,39 @@
+{
+  "id": "arxiv-1905.03677-learning-loss-active-learning",
+  "title": "Learning Loss for Active Learning",
+  "authors": [
+    {
+      "given": "Donggeun",
+      "family": "Yoo"
+    },
+    {
+      "given": "In So",
+      "family": "Kweon"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1905.03677",
+  "url": "https://arxiv.org/abs/1905.03677",
+  "type": "preprint",
+  "axes": [
+    "active-learning"
+  ],
+  "tags": [
+    "active-learning"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

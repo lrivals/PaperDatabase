@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-1612.08242-yolo9000-better-faster-stronger",
+  "title": "YOLO9000: Better, Faster, Stronger",
+  "authors": [
+    {
+      "given": "Joseph",
+      "family": "Redmon"
+    },
+    {
+      "given": "Ali",
+      "family": "Farhadi"
+    }
+  ],
+  "year": 2017,
+  "venue": "CVPR 2017",
+  "doi": null,
+  "arxiv_id": "1612.08242",
+  "url": "https://arxiv.org/abs/1612.08242",
+  "type": "conference",
+  "axes": [],
+  "tags": [
+    "yolov2",
+    "yolo9000",
+    "darknet-19",
+    "anchor-boxes",
+    "wordtree",
+    "gpu-baseline",
+    "yolov9000",
+    "yolo",
+    "coco",
+    "voc"
+  ],
+  "added": "2026-10-04",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 3, Table 4, Table 6",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "imported_from": {
+    "base": "fpga",
+    "paper_id": "arxiv-1612.08242-yolo9000-better-faster-stronger",
+    "date": "2026-10-05",
+    "fiche": "done",
+    "axes": [
+      "yolo-fpga"
+    ]
+  }
+}

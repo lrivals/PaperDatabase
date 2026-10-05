@@ -1,0 +1,65 @@
+{
+  "id": "2019-shao-objects365-large-scale-high-quality",
+  "title": "Objects365: A Large-Scale, High-Quality Dataset for Object Detection",
+  "authors": [
+    {
+      "given": "Shuai",
+      "family": "Shao"
+    },
+    {
+      "given": "Zeming",
+      "family": "Li"
+    },
+    {
+      "given": "Tianyuan",
+      "family": "Zhang"
+    },
+    {
+      "given": "Chao",
+      "family": "Peng"
+    },
+    {
+      "given": "Gang",
+      "family": "Yu"
+    },
+    {
+      "given": "Xiangyu",
+      "family": "Zhang"
+    },
+    {
+      "given": "Jing",
+      "family": "Li"
+    },
+    {
+      "given": "Jian",
+      "family": "Sun"
+    }
+  ],
+  "year": 2019,
+  "venue": "IEEE/CVF International Conference on Computer Vision (ICCV) 8430-8439",
+  "doi": "10.1109/ICCV.2019.00852",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/ICCV.2019.00852",
+  "type": "conference",
+  "axes": [
+    "datasets"
+  ],
+  "tags": [
+    "coco",
+    "objects365"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 2, Table 3, Table 6",
+      "tableaux sans corps extrait (légende seule) : Boxes Annotation Label Boundin, Table 7, Table 9, Table 10, Table 12"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

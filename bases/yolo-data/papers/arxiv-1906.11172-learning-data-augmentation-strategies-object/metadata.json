@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-1906.11172-learning-data-augmentation-strategies-object",
+  "title": "Learning Data Augmentation Strategies for Object Detection",
+  "authors": [
+    {
+      "given": "Barret",
+      "family": "Zoph"
+    },
+    {
+      "given": "Ekin D",
+      "family": "Cubuk"
+    },
+    {
+      "given": "Golnaz",
+      "family": "Ghiasi"
+    },
+    {
+      "given": "Tsung-Yi",
+      "family": "Lin"
+    },
+    {
+      "given": "Jonathon",
+      "family": "Shlens"
+    },
+    {
+      "given": "Quoc V",
+      "family": "Le"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1906.11172",
+  "url": "https://arxiv.org/abs/1906.11172",
+  "type": "preprint",
+  "axes": [
+    "augmentation"
+  ],
+  "tags": [
+    "coco",
+    "auto-augment"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 2",
+      "tableaux sans corps extrait (légende seule) : Table 3, [figure sans légende identifié, Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

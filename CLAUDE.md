@@ -10,6 +10,7 @@ documentation du logiciel. Les données vivent dans des bases, une par dossier :
 | `fpga` (défaut du registre) | [bases/fpga/](bases/fpga/) | vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) ; thèse « IA embarquée sécuritaire certifiable sur FPGA » |
 | `drone` | [bases/drone/](bases/drone/) | vision embarquée sur drone (détection, accélérateurs, co-design système) |
 | `stage` | [bases/stage/](bases/stage/) | apprentissage continu embarqué sur MCU pour la maintenance prédictive (références du stage ISAE) |
+| `yolo-data` | [bases/yolo-data/](bases/yolo-data/) | préparation des données pour la détection YOLO : datasets, annotation, prétraitement, augmentation |
 
 **Travailler sur une base.** Chaque base a son propre `CLAUDE.md` (mode d'emploi, règles de
 travail, format des réponses) : le lire avant toute question sur le corpus, et de préférence

@@ -1,0 +1,68 @@
+{
+  "id": "arxiv-1805.00123-crowdhuman-benchmark-detecting-human-crowd",
+  "title": "CrowdHuman: A Benchmark for Detecting Human in a Crowd",
+  "authors": [
+    {
+      "given": "Shuai",
+      "family": "Shao"
+    },
+    {
+      "given": "Zijian",
+      "family": "Zhao"
+    },
+    {
+      "given": "Boxun",
+      "family": "Li"
+    },
+    {
+      "given": "Tete",
+      "family": "Xiao"
+    },
+    {
+      "given": "Gang",
+      "family": "Yu"
+    },
+    {
+      "given": "Xiangyu",
+      "family": "Zhang"
+    },
+    {
+      "given": "Jian",
+      "family": "Sun"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1805.00123",
+  "url": "https://arxiv.org/abs/1805.00123",
+  "type": "preprint",
+  "axes": [
+    "datasets"
+  ],
+  "tags": [
+    "crowd"
+  ],
+  "added": "2026-09-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 2, [figure sans légende identifié, Table 3, Table 5, Table 6, Table 7, Table 8, Table 9, Table 12",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "imported_from": {
+    "base": "fpga",
+    "paper_id": "arxiv-1805.00123-crowdhuman-benchmark-detecting-human-crowd",
+    "date": "2026-10-05",
+    "fiche": "done",
+    "axes": [
+      "person-detection"
+    ]
+  }
+}

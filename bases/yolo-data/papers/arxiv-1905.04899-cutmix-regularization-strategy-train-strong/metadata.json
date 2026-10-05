@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-1905.04899-cutmix-regularization-strategy-train-strong",
+  "title": "CutMix: Regularization Strategy to Train Strong Classifiers with Localizable Features",
+  "authors": [
+    {
+      "given": "Sangdoo",
+      "family": "Yun"
+    },
+    {
+      "given": "Dongyoon",
+      "family": "Han"
+    },
+    {
+      "given": "Seong Joon",
+      "family": "Oh"
+    },
+    {
+      "given": "Sanghyuk",
+      "family": "Chun"
+    },
+    {
+      "given": "Junsuk",
+      "family": "Choe"
+    },
+    {
+      "given": "Youngjoon",
+      "family": "Yoo"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1905.04899",
+  "url": "https://arxiv.org/abs/1905.04899",
+  "type": "preprint",
+  "axes": [
+    "augmentation"
+  ],
+  "tags": [
+    "coco",
+    "cutmix"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 4, Table 5, Table 6, Table 7, Table 8, Table 11, Table 12"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

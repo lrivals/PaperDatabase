@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2004.10934-yolov4-optimal-speed-accuracy-object",
+  "title": "YOLOv4: Optimal Speed and Accuracy of Object Detection",
+  "authors": [
+    {
+      "given": "Alexey",
+      "family": "Bochkovskiy"
+    },
+    {
+      "given": "Chien-Yao",
+      "family": "Wang"
+    },
+    {
+      "given": "Hong-Yuan Mark",
+      "family": "Liao"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2004.10934",
+  "url": "https://arxiv.org/abs/2004.10934",
+  "type": "preprint",
+  "axes": [
+    "augmentation"
+  ],
+  "tags": [
+    "yolov4",
+    "yolo",
+    "coco",
+    "mosaic"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

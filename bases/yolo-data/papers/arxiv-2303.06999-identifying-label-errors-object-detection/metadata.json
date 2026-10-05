@@ -1,0 +1,60 @@
+{
+  "id": "arxiv-2303.06999-identifying-label-errors-object-detection",
+  "title": "Identifying Label Errors in Object Detection Datasets by Loss Inspection",
+  "authors": [
+    {
+      "given": "Marius",
+      "family": "Schubert"
+    },
+    {
+      "given": "Tobias",
+      "family": "Riedlinger"
+    },
+    {
+      "given": "Karsten",
+      "family": "Kahl"
+    },
+    {
+      "given": "Daniel",
+      "family": "Kröll"
+    },
+    {
+      "given": "Sebastian",
+      "family": "Schoenen"
+    },
+    {
+      "given": "Siniša",
+      "family": "Šegvić"
+    },
+    {
+      "given": "Matthias",
+      "family": "Rottmann"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2303.06999",
+  "url": "https://arxiv.org/abs/2303.06999",
+  "type": "preprint",
+  "axes": [
+    "datasets",
+    "label-quality"
+  ],
+  "tags": [
+    "label-noise"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 2, Table 3, [figure sans légende identifié, Table 5, Table 6, Table 7"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

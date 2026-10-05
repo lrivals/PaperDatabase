@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2309.11069-dynamic-tiling-model-agnostic-adaptive",
+  "title": "Dynamic Tiling: A Model-Agnostic, Adaptive, Scalable, and Inference-Data-Centric Approach for Efficient and Accurate Small Object Detection",
+  "authors": [
+    {
+      "given": "Son The",
+      "family": "Nguyen"
+    },
+    {
+      "given": "Theja",
+      "family": "Tulabandhula"
+    },
+    {
+      "given": "Duy",
+      "family": "Nguyen"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2309.11069",
+  "url": "https://arxiv.org/abs/2309.11069",
+  "type": "preprint",
+  "axes": [
+    "datasets",
+    "imbalance-small"
+  ],
+  "tags": [
+    "small-objects"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

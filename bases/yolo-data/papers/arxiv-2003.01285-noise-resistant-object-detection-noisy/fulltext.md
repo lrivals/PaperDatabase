@@ -1,0 +1,231 @@
+---
+id: arxiv-2003.01285-noise-resistant-object-detection-noisy
+title: "Towards Noise-resistant Object Detection with Noisy Annotations"
+year: 2020
+backend: grobid
+---
+
+## Abstract
+
+Training deep object detectors requires significant amount of human-annotated images with accurate object labels and bounding box coordinates, which are extremely expensive to acquire. Noisy annotations are much more easily accessible, but they could be detrimental for learning. We address the challenging problem of training object detectors with noisy annotations, where the noise contains a mixture of label noise and bounding box noise. We propose a learning framework which jointly optimizes object labels, bounding box coordinates, and model parameters by performing alternating noise correction and model training. To disentangle label noise and bounding box noise, we propose a two-step noise correction method. The first step performs class-agnostic bounding box correction by minimizing classifier discrepancy and maximizing region objectness. The second step distils knowledge from dual detection heads for soft label correction and class-specific bounding box refinement. We conduct experiments on PASCAL VOC and MS-COCO dataset with both synthetic noise and machine-generated noise. Our method achieves state-of-the-art performance by effectively cleaning both label noise and bounding box noise. Code to reproduce all results will be released.
+
+## 1. Introduction
+
+The remarkable success of modern object detectors largely relies on the collection of large-scale datasets such as ILSVRC [9] and MS-COCO [26] with extensive bounding box annotations. However, it is extremely expensive and time-consuming to acquire high-quality human annotations with accurate object labels and precise bounding box coordinates. For example, annotating each bounding box in ILSVRC requires 42s on Mechanical Turk using a technique specifically developed for efficient annotation [37]. On the other hand, there are ways to acquire bounding box annotations at lower costs, such as limiting the annotation time, reducing the number of crowd-workers, or utilizing machinegenerated annotations. However, these methods would inevitably yield annotations with both label noise (i.e. wrong object classes) and bounding box noise (i.e. inaccurate object locations), which could be detrimental for learning.
+
+Learning with label noise has been an active area of research. Existing methods primarily take a label/loss correction approach. Some methods perform label correction using the predictions from the model and modify the loss accordingly [33,38]. Other methods treat samples with small loss as those with clean labels, and only allow clean samples to contribute to the loss [22,16]. However, most of those methods focus on the image classification task where the existence of an object is guaranteed. Several recent works have studied object detection with noisy annotations. Zhang et al. [48] focus on the weakly-supervised (WS) setting where only imagelevel labels are available, and find reliable bounding box instances as those with low classification loss. Gao et al. [13] study a semi-supervised (SS) setting where the training data contains a small amount of fully-labeled bounding boxes and a large amount of image-level labels, and propose to distil knowledge from a detector pretrained on clean annotations. These WS or SS object detection methods all require some clean annotations to be available.
+
+In this work, we address a more challenging and practical problem, where the annotation contains an unknown mixture of label noise and bounding box noise. Furthermore, we do not assume access to any clean annotations. The entanglement of label noise and bounding box noise increases the difficulty to perform noise correction. A commonly used noise indicator, namely the classification loss, is incapable to distinguish label noise from bounding box noise, because both wrong class labels and inaccurate box locations could cause samples to have larger loss. Furthermore, it is problematic to correct noise directly using the model predictions, because label correction requires accurate bounding box coordinates to crop the object, whereas class-specific bounding box regression requires true class labels to choose the correct regression offset.
+
+To overcome these difficulties, we propose a two-step noise correction procedure. In the first step, we perform class-agnostic bounding box correction (CA-BBC), which seeks to decouple bounding box noise from label noise, and optimize the noisy ground-truth (GT) bounding box regardless of its class label. An illustration of CA-BBC is shown in Figure 1. It is based on the following intuition: if a bounding box tightly covers an object, then two diverged classifiers would agree with each other and produce the same prediction. Furthermore, both classifiers would have low scores for the background class, i.e., high objectness scores. Therefore, we directly regress the noisy GT bounding box to minimize both classifier discrepancy and background scores. CA-BBC also has the option to reject a bounding box as false positive if the objectness score is too low.
+
+In the second step, we leverage the model's output for label noise correction and class-specific bounding box refinement. It has been shown that co-training two models can filter different types of noise and help each other learn [4,16,46,5]. Therefore, we distil knowledge from the ensemble of dual detection heads for noise correction, by generating soft labels and bounding box offsets. We show that soft labels with well-adjusted temperature lead to better performance, even for a clean dataset with no annotation noise.
+
+To summarize, this paper proposes a noise-resistant learning framework to train object detectors with noisy annotations, where label noise and bounding box noise are entangled. The proposed framework jointly optimizes object labels, bounding box coordinates, and model parameters by performing alternating noise correction and model training. We conduct experiments on two popular benchmarks: PASCAL VOC and MS-COCO. The model is trained on different levels of synthetic noise as well as machine-generated noise. The proposed method outperforms state-of-the-art methods by a large margin, achieving significant performance improvement under high noise level. We also provide qualitative results to demonstrate the effectiveness of the proposed two-step noise correction, and ablation studies to examine the effect of each component.
+
+## 2. Related Work
+
+### 2.1. Crowdsourcing for Object Detection
+
+Crowdsourcing platforms such as Amazon Mechanical Turk (AMT) have enabled the collection of large-scale datasets. Due to the formidable cost of human annotation, many efforts have been devoted to effectively leverage the crowd and reduce the annotation cost. However, even an efficient protocol designed to produce high-quality bounding boxes still report 42.4s to annotate one object in an image [37]: 25.5s for drawing box and 16.9s for verification. Other methods have been proposed which trade off annotation quality for lower cost, by using click supervision [31], human-in-the-loop labeling [36,30,23], or exploiting eyetracking data [29]. These methods focus on reducing human effort, rather than combating the annotation noise as our method does.
+
+### 2.2. Learning with Label Noise
+
+It has been shown that Deep Neural Networks (DNNs) can easily overfit to noisy labels in the training data, leading to poor generalization performance [47]. Many works have addressed learning with label noise. Some approaches correct noise by relabeling the noisy samples, where noise is modeled through directed graphical models [44], Conditional Random Fields [42], or DNNs [43,24]. However, these approaches rely on a small set of clean samples for noise correction. Recently, iterative relabeling methods have been proposed [38,45] which predict hard or soft labels using the model predictions. Some approaches seek to correct noise by directly modifying the loss. The bootstrapping method [33] introduces the model prediction into the loss, which is later improved by [27] through exploiting the dimensionality of feature subspaces. Other approaches filter noise by reweighting or selecting training samples [22,34,7,1]. Since DNNs learn clean samples faster than noisy ones, samples with smaller classification loss are usually considered to be clean [2]. To avoid error accumulation during the noise correction process, co-teaching [16] trains two networks simultaneously, where each network selects small-loss samples to train the other. Co-teaching+ [46] further keeps the two networks diverged by training on disagreement data.
+
+### 2.3. Weakly-supervised Object Detection
+
+Weakly-supervised object detection aims to learn object detectors with only image-level labels. Most existing works formulate it as a multiple instance learning (MIL) task [11], where each label is assigned to a bag of object proposals. A common pipeline is to iteratively alternate between mining object instances using a detector and training the detector using the mined instances [10,8]. To address the localization noise in the object proposals, Zhang et al. [48] propose an adaptive sampling method which finds reliable instances as those with high classification scores, and use the reliable instances to impose a similarity loss on noisy images. Different from weakly-supervised object detection which assumes that the correct object label is given, our method deals with label noise and bounding box noise at the same time.
+
+### 2.4. Semi-supervised Object Detection
+
+Semi-supervised methods train object detectors using training data with bounding box annotations for some images and only image-level labels for other images [19,39,41,13]. A recent method also incorporates unlabeled images [20]. Gao et al. [13] proposes an iterative training-mining framework consisting of detector initialization, box mining, and detector retraining. To address the annotation noise of the mined boxes, they use a detector pretrained on clean annotations for knowledge distillation. Different from all semi-supervised learning methods, our method does not need access to any clean annotations.
+
+## 3. Method
+
+### 3.1. Overview
+
+Given a training dataset with images X , noisy object labels Y, and noisy bounding boxes B, our method aims to train an object detector parameterized by Θ, by jointly optimizing Y, B and Θ. We first warm-up Θ where we train the detector in a standard manner using the original noisy annotations. After the warm-up, we perform alternating optimization on the annotations and the model. Specifically, for each mini-batch of data X = {x i }, Y = {y i }, B = {b i }, we first keep Θ fixed and perform noise correction to update Y and B, then we used the corrected annotations to update Θ. An overview of the algorithm is shown in Algorithm 1.
+
+We use a popular two-stage object detector (e.g. Faster-RCNN [35]), which consists of a backbone feature extractor parameterized by θ cnn , a Region Proposal Network (RPN) θ rpn , a classification head θ c , and a bounding box Due to the entanglement of an unknown mixture of label noise and bbox noise, it is difficult to correct both types of annotation noise in a single step. Therefore, we propose a two-step noise correction method. In the first step, we perform class-agnostic bounding box correction (CA-BBC), which disentangles bbox noise and label noise by directly optimizing the noisy GT boxes regardless of their class labels. In the second step, we utilize the outputs from dual detection heads for label noise correction and class-specific bbox refinement. Figure 2 shows an illustration of our framework. Next we delineate the details.
+
+### 3.2. Class-agnostic Bounding Box Correction
+
+We first correct bounding box noise by updating B → B * regardless of the label noise in Y . As illustrated in Figure 1, CA-BBC uses two diverged classification heads to produce two sets of class predictions on the same image region, and updates the bounding box to minimize classifier discrepancy and maximize region objectness. The intuition is: if a bounding box tightly covers an object, then two classifiers would agree with each other and produce the same predictions. Moreover, both predictions would have low scores on the background class.
+
+Specifically, given an image x ∈ X, the backbone first extracts a convolutional feature map. For each noisy GT bounding box b ∈ B, we perform a RoI-Pooling operation on the feature map to extract a fixed-sized feature φ(x, b). Then we give the RoI feature to the two classification heads to produce two sets of softmax predictions over C + 1 classes (including the background class), p 1 (φ(x, b); θ 1 c ) and p 2 (φ(x, b); θ 2 c ). For simplicity we denote them as p 1 and p 2 . The discrepancy between the two predictions is defined as their L2 distance:
+
+D(p 1 , p 2 ) = p 1 -p 2 2 2 .
+
+(1)
+
+Minimizing the classifier discrepancy w.r.t the bounding box will push it to a region where the two classifiers agree on its class label. To prevent the bounding box from simply moving to a background region, we also minimize the classifiers' scores on the background class, p bg 1 and p bg 2 . In other words, we want to maximize the objectness of the region covered by the bounding box.
+
+Therefore, we aim to find the optimal b * that minimizes the following objective function:
+
+L(b) = D(p 1 , p 2 ) + λ(p bg 1 + p bg 2 ),(2)
+
+where λ controls the balance of the two terms and is set to 0.1 in our experiments.
+
+For faster speed, we estimate b * by performing a single step of gradient descent to update b:
+
+b * = b -α ∂L(b) ∂b ,(3)
+
+where α is the step size. Since RoI-Pooling [35] or RoI-Align [17] performs discrete sampling on the feature map to generate φ(x, b), L(b) is not differentiable w.r.t b. Therefore, we adopt the Precise RoI-Pooling method [21], which avoids any quantization of coordinates and has a continuous gradient on b.
+
+We also observe that the entropy of the classifiers' predictions over object classes would decrease after updating b to b * . A lower entropy suggests that the classifiers are more confident of their predicted object class [32], which verifies our assumption that b * contains more representative information for one and only one object.
+
+In order to handle false positive bboxes that do not cover any object, we add a reject option which removes b from the ground-truth if both classifiers give a low objectness score (high background score), p bg 1 > 0.9 and p bg 2 > 0.9.
+
+### 3.3. Dual-Head Distillation for Noise Correction
+
+In the second step of noise correction, we perform class-specific self-distillation for label noise correction and bbox refinement. Inspired by the co-training methods [4,16,46], we simultaneously train two diverged detection heads which can filter different types of noise, and distil knowledge from their ensemble to clean the annotation noise. Using the ensemble of two heads helps alleviate the confirmation bias problem (i.e. a model confirms its own mistakes [40]) that commonly occurs in self-training and achieves better robustness. Soft label correction. Given the RoI feature φ(x, b * ), the two classification heads produce two sets of softmax predictions over object classes, p * 1 and p * 2 . Inspired by the bootstrapping method [33], we use the classifiers' predictions to update the noisy GT label. Let y ∈ {0, 1} C represent the GT label as a one-hot vector over C classes, we create the soft label by first averaging the classifiers' predictions and the GT label:
+
+ȳ = (p * 1 + p * 2 + y) 3. (4
+
+)
+
+Then we apply a sharpening function on the soft label to reduce the entropy of the label distribution. The sharpening operation is defined as:
+
+y * = ȳc 1 T C c=1 ȳc 1 T , c = 1, 2, ..., C,(5)
+
+where ȳc is the score for class c. The temperature T controls the 'softness' of the label and is set to 0.4 in our experiments. A lower temperature decreases the softness and has the implicit effect of entropy minimization, which encourages the model to produce high confidence predictions and allows better decision boundary to be learned [15,3]. Class-specific bounding box refinement. The two bbox regression heads produce two sets of per-class bounding box regression offsets, t 1 and t 2 . Let c * denote the class with the highest score in the soft label, i.e. c * = arg max c y * c , c = 1, 2, ..., C. We refine the bounding box b * by merging the class-specific outputs from both bbox regression heads:
+
+t = (t c * 1 + t c * 2 )/2 b * * = b * + ρt,(6)
+
+where t c * 1 and t c * 2 are the bounding box offsets for class c * , and ρ controls the magnitude of the refinement.
+
+### 3.4. Model Training
+
+Let Y * and B * * denote a mini-batch of soft labels and refined bounding boxes, respectively. We use them as the new GT to train the model. Specifically, we update Θ = {θ cnn , θ rpn , θ 1 d , θ 2 d } to optimize the following losses: (1) the loss function of RPN defined in [35], Lrpn(B * * ); defined as the smooth L1 loss [14].
+
+## 4. Experiments
+
+In this section, we first introduce the benchmark datasets and implementation details. Then, we evaluate the stand-alone effect of CA-BBC. Next, we compare the proposed learning framework with state-of-the-art methods on multiple benchmarks. Finally, we conduct ablation study to dissect the proposed framework and provide qualitative results.
+
+### 4.1. Datasets
+
+Since most available datasets for object detection have been extensively verified by human annotators (an expensive process) and contain little noise, we created noisy annotations using two popular benchmark datasets, PASCAL [12] and MS-COCO [26], First, we generated synthetic noise to simulate human mistakes of different severity, by corrupting the training annotation with a mixture of label noise and bounding box noise. For label noise, we follow previous works [22,1] and generate symmetric label noise. Specifically, we randomly choose N l % of the training samples and change each of their labels to another random label. For bounding box noise, we perturb the coordinates of all bounding boxes by a number of pixels uniformly drawn from [-wN b %, +wN b %] (w is bbox width) for horizontal coordinates or [-hN b %, +hN b %] (h is bbox height) for vertical coordinates. We experiment with multiple combinations of label noise ranging from 0% to 60% and bounding box noise ranging from 0% to 40%. Under 40% bbox noise, the average IoU between a noisy bbox and its corresponding clean bbox is only 0.45. PASCAL VOC contains 20 object classes. We follow previous paper [35] and use the union set of VOC 2007 trainval and VOC 2012 trainval as our training data, and VOC 2007 test as our test data. We report mean average precision (mAP@.5) as the evaluation metric. MS-COCO contains 80 object classes, we use train2017 as training data, and report mAP@.5 and mAP@[.5, .95] on val2017.
+
+We also mined large amounts of free training data with noisy annotations by using a poorly-trained detector to annotate unlabeled images. We first train a Faster R-CNN detector on only 10% of labeled data from COCOtrain2017, which has a validation mAP@.5 of 40.5. Then we use the trained detector to annotate unlabeled2017, which contains 123k unlabeled images. We use COCOunlabeled2017 with machine-generated annotations as our noisy training data.
+
+### 4.2. Implementation Details
+
+The proposed method is applicable to any two-stage detectors that are compatible with Precise RoI-Pooling [21]. In our experiments, we use the common Faster-RCNN [35] architecture with ResNet-50 [18] and FPN [25] as the feature extractor. We train the model using SGD with a learning rate of 0.02, a momentum of 0.9, and a weight decay of 1e -4. The hyper-parameters are set as λ = 0.1, T = 0.4, ρ = 0.5, and α ∈ {0, 100, 200}, which are determined by the validation performance on 10% of training data with clean annotations (only used for validation). We implement our framework based on the mmdetection toolbox [6]. In terms of computation time, our method increases training time by ∼24% compared to vanilla training. During inference, we only use the first detection head unless otherwise specified, which does not increase inference time.
+
+### 4.3. Evaluation on CA-BBC
+
+First, we evaluate the effect of the proposed CA-BBC method by itself. We train a detector following the proposed learning framework, except that we only perform the first step of noise correction (i.e. CA-BBC). Table 1 shows the results on PASCAL VOC with different mixtures of label noise and bounding box noise. Compared to vanilla training without any noise correction [35,6], performing CA-BBC can significantly improve performance, especially for higher level of bbox noise. The improvement in mAP is consistent despite the increase of label noise, which demonstrates the ability of CA-BBC to disentangle the two types of noise and effectively correct bbox noise. We also demonstrate the effect of the proposed discrepancy minimization by removing D(p 1 , p 2 ) from the loss in Eq. 2, and only maximize the objectness of the bbox region, which leads to lower performance.
+
+We show some qualitative examples of CA-BBC in Figure 3. The noisy GT bboxes are shown in red whereas the corrected bboxes are shown in green. CA-BBC can update the bounding boxes to more accurately capture the objects of interest. We also provide some examples in Figure 4 where CA-BBC fails to correct the bbox noise. It could be confused when the GT bboxes cover multiple object instances of the same class.
+
+### 4.4. Comparison with the State-of-the-arts
+
+We evaluate our full learning framework with two-step noise correction and compare it with multiple state-of-the-art methods for learning with noisy annotations. We implement all methods using the same network architecture (i.e. Faster-RCNN with Precise RoI-Pooling). Since previous methods operate in different settings as ours, we adapt them for our problem to construct strong baselines as described in the following:
+
+-Co-teaching [16] simultaneously trains two models where each model acts as a teacher for the other by selecting its small-loss samples within a mini-batch as clean data to train the other. We employ co-teaching into our dual-head network, where each detection head selects box samples with small classification loss to train the other head. Note that the RPN is trained on all boxes. -SD-LocNet [48] proposes an adaptive sampling method that assigns a reliable weight to each box sample. Higher weights are assigned to samples with higher classification scores and lower prediction variance over consecutive training epochs. -NOTE-RCNN [13] uses clean seed box annotations to train the bbox regression head. It also pretrains a teacher detector on the clean annotations for knowledge distillation. Because we do not have clean annotations, we follow previous works [16,1] and consider box samples with smaller classification loss as clean ones. We first train a detector in a standard manner to mine clean samples. Then we utilize the clean samples following NOTE-RCNN [13].
+
+Table 2 shows the comparison results on PASCAL VOC dataset, where the training data contains different mixtures of label noise and bbox noise. Our method significantly outperforms all other methods across all noise settings. For high levels of noise (N b = 40%, N l ∈ {40%, 60%}), our method achieves ∼20% improvement in mAP compared to vanilla training, and >10% improvement compared to the state-of-the-art NOTE-RCNN [13], which demonstrates the advantage of the proposed two-step noise correction method for dealing with entangled annotation noise.
+
+On clean training data with 0% annotation noise, our method can still improve upon vanilla training by +1.9% in mAP. The improvement mostly comes from using the proposed soft labels, for two reasons. First, compared to the onehot GT labels, soft labels contain more information about an image region in cases where multiple objects co-exists in the same bounding box, which often occur in the training data (e.g. the bounding box of a bike would also also cover
+
+### Method
+
+Nb = 20%, Nl = 20% Nb = 40%, Nl = 40% machine-generated mAP@.5 mAP@[.5, .95] mAP@.5 mAP@[.5, .95] mAP@.5 mAP@[. a person if the person is standing in front of the bike). In such scenarios, using hard labels would undesirably penalize the scores for all non-GT classes, even if such classes exist in the box. Moreover, using soft labels has the effect of label smoothing, which could prevent overfitting and improve a model's generalization performance [28].
+
+Table 3 shows the results on MS-COCO dataset. Our method outperforms all state-of-the-art baselines by a large margin. Under 40% of label and bbox noise, vanilla training results in a catastrophic degradation of -24.8% in mAP@.5 compared to training on clean data, whereas the proposed method can reduce the performance drop (from clean) to an acceptable -7.1%. The proposed method also achieves improvement under machine-generated noise, which validates its practical usage to train detectors by utilizing free unlabeled data.
+
+### 4.5. Ablation Study
+
+In this section, we conduct ablation studies to dissect and analyse the proposed framework. We also provide qualitative results to demonstrate the effectiveness of the proposed dual-head noise correction.
+
+Model variants. We add or drop different components in our framework to examine their effects. Table 4 shows the ablation study results on PASCAL VOC datatset. -In the first row, we perform forward noise correction with only one detection head, by using its output to create soft labels and regress bounding boxes.
+
+Compared with the proposed dual-head network where knowledge is distilled from the ensemble, using a single head suffers from the confirmation bias problem where the model's prediction error would accumulate [40,16] and thus degrade the performance. -In the second row, we remove CA-BBC from the proposed framework and only perform the dual-head noise correction (Section 3.3). Compared with the results using the proposed two-step noise correction (the third row), the performance decreases considerably for higher level (40%) of bounding box noise, which validates the importance of the proposed CA-BBC. -The third row shows the results using the proposed method. -In the last row, we use the ensemble of both detection heads during inference by averaging their outputs, which leads to further performance improvement.
+
+Soft label temperature. In Figure 5(a), we vary the sharpening temperature T , which controls the entropy of the soft label distribution (Eq. 5). A lower temperature encourages the model to produce more confident predictions, whereas a higher temperature emphasizes more on the uncertainty of the label. T → 0 produces one-hot labels, which corresponds to the hard bootstrapping method [33], whereas T = 1 corresponds to the soft bootstrapping method [33]. We observe that acceptable values of T ranges around 0.2 ∼ 0.6. We use T = 0.4 in all experiments.
+
+Dual-head divergence analysis. In Figure 5(b), we show that the two detection heads can stay sufficiently diverged during the entire training process, due to different parameter initialization and different region proposal sampling. We measure divergence using classifier discrepancy (Eq. 1). Keeping the two detec- tion heads diverged is important for several reasons. First, the effectiveness of the proposed CA-BBC requires disagreement between the two classifiers. Second, diverged detection heads can filter different kinds of noise, which results in more effective dual-head noise correction. Furthermore, diverged dual heads can lead to better ensemble performance during test.
+
+Noise correction examples. In Figure 6, we show example images with annotations before and after the proposed two-step noise correction method. Noisy GT labels and bounding boxes are shown in red whereas the corrected labels and boxes are shown in green. The proposed method can effectively clean the annotation noise by 1) regressing the bounding boxes to more accurate locations and 2) assigning high soft label values to the correct classes.
+
+## 5. Conclusion
+
+To conclude, this paper addresses a new challenging research problem, which aims to train accurate object detectors from noisy annotations that contain entangled label noise and bounding box noise. We propose a noise-resistant learning framework which jointly optimizes noisy annotations and model parameters.
+
+A two-step noise correction method is proposed, where the first step performs class-agnostic bbox correction to disentangle bbox noise and label noise, and the second step performs dual-head noise correction by self-distillation. Experiments on both synthetic noise and machine-generated noise validate the efficacy of the proposed framework over state-of-the-art methods and variants of itself. We believe that our work is one step forward towards alleviating human from the tedious annotation effort. In the future, we plan to extend the proposed framework to segmentation tasks, as well as conducting human study to examine the effect of noise-resistant training for human-in-the-loop learning.
+
+## Figures et tableaux
+
+**Fig. 1:** Our Class-Agnostic Bounding Box Correction (CA-BBC) disentangles bounding box (bbox) noise from label noise, by directly optimizing the noisy bbox coordinates regardless of its class label. We use two diverged classifiers to predict the same image region, and update the bbox b to b * by minimizing classifier discrepancy and maximizing region objectness. Boxes with very low objectness are rejected as false positives.
+
+**Fig. 2:** The proposed framework towards noise-resistant object detection from noisy annotations, which alternately performs noise correction (with fixed model parameters) and model training (with corrected annotations) for each mini-batch. The noise correction procedure consists of two steps: (1) the class-agnostic bounding box correction (Figure 1) disentangles bbox noise and label noise; (2) the class-specific correction step uses dual detection heads to generate soft labels for label correction and refine bounding boxes using class-specific bbox offsets. The two detection heads are kept diverged by different initialization and different random RoI sampling during training.
+
+[figure sans légende identifiée] (bbox) regression head θ b . Note that θ c and θ b have shared layers. Let detection head with parameters θ d denote the union of the classification head and the bbox regression head. During training, we simultaneously train two detection heads θ 1 d = {θ 1 c , θ 1 b } and θ 2 d = {θ 2 c , θ 2 b }, which are kept diverged from each other by different parameter initializations and different training instance (i.e. RoI) sampling. The dual detection heads are utilized to correct annotation noise.
+
+Algorithm 1: alternating two-step noise correction and model training.
+
+1 Input: model Θ = {θcnn, θrpn, θ 1 d , θ 2 d }, noisy training dataset (X , Y, B). 2 while not MaxIters do 3 Mini-batch X = {xi}, Y = {yi}, B = {bi}. 4 for b in B do 5 Update b → b * with CA-BBC (Eq. 2 & 3).
+
+6 end 7 for (y, b * ) in (Y, B * ) do 8 Update y → y * with dual-head soft label correction (Eq. 4 & 5).
+
+9 Update b * → b * * with class-specific bbox refinement (Eq. 6).
+
+10
+
+end 11 Update Θ by SGD on Lrpn(B * * ), L 1+2 cls (Y * ), L 1+2 loc (B * * , Y * ). 12 end
+
+[figure sans légende identifiée] (2) the classification loss for the two detection heads, L 1 cls (Y * ) and L 2 cls (Y * ), defined as the cross-entropy loss i -y * i log(pi); (3) the localization loss for the two detection heads, L 1 loc (B * * , Y * ) and L 2 loc (B * * , Y * ),
+
+**Fig. 3:** Examples of class-agnostic bounding box correction (CA-BBC) on PASCAL VOC dataset with 40% label noise and 40% bounding box noise. Noisy GT bounding boxes are in red and the corrected bounding boxes are in green.
+
+**Fig. 4:** Examples of imperfect bbox corrections from CA-BBC. Noisy GT bounding boxes are in red and the corrected bounding boxes are in green. CA-BBC could be confused when the GT bboxes cover multiple object instances of the same class. It also sometimes fails to extend the box boundaries to cover the entire object.
+
+**Fig. 5:** (a) Test performance with different sharpening temperature T for soft labels (Eq. 5). T controls the entropy of the label distribution. (b) Divergence between the two detection heads measured by their classifier discrepancy (Eq. 1), averaged over 1000 iterations (mini-batches). The two heads can stay sufficiently diverged due to different initialization and different proposal sampling during training. Training data for both figures is PASCAL VOC with 40% label noise and 40% bbox noise.
+
+**Fig. 6:** Examples of dual-head noise correction on PASCAL VOC dataset with 40% label noise and 40% bounding box noise (best viewed in color with zoom in). Noisy GT labels and GT bounding boxes are shown in red, whereas the corrected labels and bounding boxes are shown in green. Numbers under the class names indicate corresponding values in the soft labels.
+
+**Table 1:** Evaluation of class-agnostic bounding box correction. Numbers are mAP@.5 on PASCAL VOC 2007 test set for models trained with different mixtures of label noise and bbox noise. CA-BBC effectively disentangles bbox noise from label noise and correct it.
+
+    BBox Noise |  | 20% |  | 40%
+    Label Noise | 0% | 20% 40% | 0% | 20% 40%
+    vanilla [35,6] | 75.5 70.7 66.9 59.3 54.2 50.0
+    objectness maximization 75.8 71.1 67.4 63.2 59.6 55.7
+    CA-BBC | 76.8 72.4 68.0 67.8 64.7 61.7
+
+**Table 2:** Comparison with state-of-the-art methods on PASCAL VOC dataset. Numbers indicate mAP@.5 on 2007 test set for models trained with different mixtures of label noise and bbox noise.
+
+    BBox Noise | 0% | 20% | 40%
+    Label Noise | 0% 20% 40% 60% 0% 20% 40% 60% 0% 20% 40% 60%
+    Vanilla [35,6] | 78.2 72.9 69.3 62.1 75.5 70.7 66.9 61.2 59.3 54.2 50.0 45.9
+    Co-teaching [16] | 78.3 76.5 74.1 69.9 75.6 73.2 69.7 65.1 60.6 59.7 55.8 50.4
+    SD-LocNet [48] | 78.0 75.3 73.0 66.2 75.3 72.1 67.5 64.0 59.7 58.7 54.5 49.2
+    NOTE-RCNN [13] 78.6 76.7 74.9 69.9 76.0 73.7 70.1 65.8 63.4 61.5 57.8 53.7
+    Ours | 80.1 79.1 77.7 74.1 77.9 76.7 74.8 71.9 71.9 70.6 69.1 64.5
+
+[figure sans légende identifiée] 5, .95]
+
+    Vanilla [35,6] | 47.9 | 23.9 | 29.7 | 10.3 | 41.5 | 21.5
+    Co-teaching [16] | 49.7 | 24.6 | 35.9 | 14.6 | 41.4 | 21.5
+    SD-LocNet [48] | 49.3 | 24.5 | 35.1 | 13.9 | 42.8 | 21.9
+    NOTE-RCNN [13] 50.4 | 25.1 | 38.5 | 15.2 | 43.1 | 22.0
+    Ours | 53.5 | 27.7 | 47.4 | 21.2 | 46.5 | 23.2
+    Clean | 54.5 | 31.4 | 54.5 | 31.4 | 54.5 | 31.4
+
+**Table 3:** Comparison with state-of-the-art methods on MS-COCO dataset. We report the mAP on val2017 for methods trained with different annotation noise.
+
+    Forward | Dual | CA | Dual | 0% | 20% | 40% | (Nb)
+    Corr. | Heads | BBC | Infer. | 20% 40% 60% 20% 40% 60% 20% 40% 60% (Nl)
+     |  |  |  | 78.9 77.4 73.4 75.9 73.6 68.8 67.2 65.3 59.1 | 
+     |  |  |  | 79.1 77.7 74.1 76.2 74.1 69.8 67.9 66.0 60.3 | 
+     |  |  |  | 79.1 77.7 74.1 76.7 74.8 71.9 70.6 69.1 64.5 | 
+     |  |  |  | 79.6 78.3 74.8 77.3 75.2 72.5 71.3 69.8 65.4 | 
+
+**Table 4:** Ablation study to examine the effect of each component in the proposed framework. Numbers indicate mAP@.5 on PASCAL VOC 2007 test set. The results validate the efficacy of the proposed CA-BBC and dual-head noise correction method. Ensemble of the two detection heads during inference can further boost performance. [corps du tableau reconstruit par PyMuPDF : à vérifier]
+
+    Forward Corr. | Dual Heads | CA BBC | Dual Infer. |  | 0% |  |  | 20% |  |  | 40% |  | 
+     |  |  |  |  | 20% | 40% | 60% | 20% | 40% | 60% | 20% | 40% | 60%
+    ✓ |  |  |  |  | 78.9 | 77.4 | 73.4 | 75.9 | 73.6 | 68.8 | 67.2 | 65.3 | 59.1
+    ✓ | ✓ |  |  |  | 79.1 | 77.7 | 74.1 | 76.2 | 74.1 | 69.8 | 67.9 | 66.0 | 60.3
+    ✓ | ✓ | ✓ |  |  | 79.1 | 77.7 | 74.1 | 76.7 | 74.8 | 71.9 | 70.6 | 69.1 | 64.5
+    ✓ | ✓ | ✓ | ✓ |  | 79.6 | 78.3 | 74.8 | 77.3 | 75.2 | 72.5 | 71.3 | 69.8 | 65.4

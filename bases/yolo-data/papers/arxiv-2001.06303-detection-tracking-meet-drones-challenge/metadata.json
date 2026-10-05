@@ -1,0 +1,75 @@
+{
+  "id": "arxiv-2001.06303-detection-tracking-meet-drones-challenge",
+  "title": "Detection and Tracking Meet Drones Challenge",
+  "authors": [
+    {
+      "given": "Pengfei",
+      "family": "Zhu"
+    },
+    {
+      "given": "Longyin",
+      "family": "Wen"
+    },
+    {
+      "given": "Dawei",
+      "family": "Du"
+    },
+    {
+      "given": "Xiao",
+      "family": "Bian"
+    },
+    {
+      "given": "Heng",
+      "family": "Fan"
+    },
+    {
+      "given": "Qinghua",
+      "family": "Hu"
+    },
+    {
+      "given": "Haibin",
+      "family": "Ling"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2001.06303",
+  "url": "https://arxiv.org/abs/2001.06303",
+  "type": "preprint",
+  "axes": [
+    "datasets"
+  ],
+  "tags": [
+    "visdrone",
+    "small-objects",
+    "video-object-detection",
+    "single-object-tracking",
+    "multi-object-tracking",
+    "cascade-rcnn"
+  ],
+  "added": "2026-09-28",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "warnings": [],
+  "imported_from": {
+    "base": "drone",
+    "paper_id": "arxiv-2001.06303-detection-tracking-meet-drones-challenge",
+    "date": "2026-10-05",
+    "fiche": "done",
+    "axes": [
+      "datasets-benchmarks",
+      "drone-detection",
+      "tracking-navigation"
+    ]
+  }
+}

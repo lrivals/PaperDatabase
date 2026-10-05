@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-1902.04103-bag-freebies-training-object-detection",
+  "title": "Bag of Freebies for Training Object Detection Neural Networks",
+  "authors": [
+    {
+      "given": "Zhi",
+      "family": "Zhang"
+    },
+    {
+      "given": "Tong",
+      "family": "He"
+    },
+    {
+      "given": "Hang",
+      "family": "Zhang"
+    },
+    {
+      "given": "Zhongyue",
+      "family": "Zhang"
+    },
+    {
+      "given": "Junyuan",
+      "family": "Xie"
+    },
+    {
+      "given": "Mu",
+      "family": "Li"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1902.04103",
+  "url": "https://arxiv.org/abs/1902.04103",
+  "type": "preprint",
+  "axes": [],
+  "tags": [
+    "yolov3",
+    "yolo"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 5, Table 6, Table 7"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

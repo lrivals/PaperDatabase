@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-1902.07296-augmentation-small-object-detection",
+  "title": "Augmentation for small object detection",
+  "authors": [
+    {
+      "given": "Mate",
+      "family": "Kisantal"
+    },
+    {
+      "given": "Zbigniew",
+      "family": "Wojna"
+    },
+    {
+      "given": "Jakub",
+      "family": "Murawski"
+    },
+    {
+      "given": "Jacek",
+      "family": "Naruniec"
+    },
+    {
+      "given": "Kyunghyun",
+      "family": "Cho"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1902.07296",
+  "url": "https://arxiv.org/abs/1902.07296",
+  "type": "preprint",
+  "axes": [
+    "augmentation",
+    "imbalance-small"
+  ],
+  "tags": [
+    "coco",
+    "small-objects"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 5, Table 7",
+      "sections numérotées non détectées : 6 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

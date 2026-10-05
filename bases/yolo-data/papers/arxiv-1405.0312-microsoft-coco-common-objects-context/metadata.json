@@ -1,0 +1,71 @@
+{
+  "id": "arxiv-1405.0312-microsoft-coco-common-objects-context",
+  "title": "Microsoft COCO: Common Objects in Context",
+  "authors": [
+    {
+      "given": "Tsung-Yi",
+      "family": "Lin"
+    },
+    {
+      "given": "Michael",
+      "family": "Maire"
+    },
+    {
+      "given": "Serge",
+      "family": "Belongie"
+    },
+    {
+      "given": "Lubomir",
+      "family": "Bourdev"
+    },
+    {
+      "given": "Ross",
+      "family": "Girshick"
+    },
+    {
+      "given": "James",
+      "family": "Hays"
+    },
+    {
+      "given": "Pietro",
+      "family": "Perona"
+    },
+    {
+      "given": "Deva",
+      "family": "Ramanan"
+    },
+    {
+      "given": "C. Lawrence",
+      "family": "Zitnick"
+    },
+    {
+      "given": "Piotr",
+      "family": "Dollár"
+    }
+  ],
+  "year": 2014,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1405.0312",
+  "url": "https://arxiv.org/abs/1405.0312",
+  "type": "preprint",
+  "axes": [
+    "datasets"
+  ],
+  "tags": [
+    "coco"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE 2, TABLE 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

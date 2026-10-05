@@ -4,9 +4,10 @@ PaperDatabase transforme des PDF d'articles scientifiques en une base de connais
 texte que Claude Code sait parcourir : il y retrouve un chiffre, compare des travaux, repère
 les zones non couvertes. Ce guide montre comment s'en servir au quotidien. Le pipeline ne
 dépend pas du domaine, et un même code gère plusieurs bases séparées (§8). Le dépôt en contient
-trois : `fpga` (vision embarquée sur FPGA), qui sert d'exemple dans ce guide, `drone`
-(vision embarquée sur drone, dans `bases/drone/`) et `stage` (apprentissage continu embarqué
-pour la maintenance prédictive, références d'un stage, dans `bases/stage/`).
+quatre : `fpga` (vision embarquée sur FPGA), qui sert d'exemple dans ce guide, `drone`
+(vision embarquée sur drone, dans `bases/drone/`), `stage` (apprentissage continu embarqué
+pour la maintenance prédictive, références d'un stage, dans `bases/stage/`) et `yolo-data`
+(préparation des données pour la détection YOLO, dans `bases/yolo-data/`).
 
 Pour le fonctionnement interne, voir [SETUP.md](../SETUP.md) ; pour les formats de
 fichiers, [DATA_MODEL.md](../DATA_MODEL.md).
@@ -388,6 +389,7 @@ le code (DATA_MODEL §11). Trois bases existent aujourd'hui :
 | `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) | `bases/fpga/` |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` |
+| `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | `bases/yolo-data/` |
 
 Vue d'ensemble et captures de l'interface : [README](../README.md#plusieurs-bases-de-connaissance).
 
@@ -423,7 +425,8 @@ autres bases avec import de la sélection, création d'une base.
 Les bases créées sans `--path` vivent dans `bases/<nom>/` et sont versionnées avec le dépôt
 (sans PDF). Dans un clone neuf, le registre est à refaire une fois :
 `bin/pdb base register bases/fpga --name fpga`, `bin/pdb base register bases/drone --name drone`,
-`bin/pdb base register bases/stage --name stage`.
+`bin/pdb base register bases/stage --name stage`,
+`bin/pdb base register bases/yolo-data --name yolo-data`.
 
 Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 

@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-1912.02424-bridging-gap-between-anchor-anchor",
+  "title": "Bridging the Gap Between Anchor-based and Anchor-free Detection via Adaptive Training Sample Selection",
+  "authors": [
+    {
+      "given": "Shifeng",
+      "family": "Zhang"
+    },
+    {
+      "given": "Cheng",
+      "family": "Chi"
+    },
+    {
+      "given": "Yongqiang",
+      "family": "Yao"
+    },
+    {
+      "given": "Zhen",
+      "family": "Lei"
+    },
+    {
+      "given": "Stan Z",
+      "family": "Li"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1912.02424",
+  "url": "https://arxiv.org/abs/1912.02424",
+  "type": "preprint",
+  "axes": [
+    "imbalance-small"
+  ],
+  "tags": [
+    "coco",
+    "anchor-free",
+    "anchors",
+    "focal-loss"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 3, Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

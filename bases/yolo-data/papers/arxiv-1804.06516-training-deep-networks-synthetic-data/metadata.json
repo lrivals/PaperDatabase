@@ -1,0 +1,71 @@
+{
+  "id": "arxiv-1804.06516-training-deep-networks-synthetic-data",
+  "title": "Training Deep Networks with Synthetic Data: Bridging the Reality Gap by Domain Randomization",
+  "authors": [
+    {
+      "given": "Jonathan",
+      "family": "Tremblay"
+    },
+    {
+      "given": "Aayush",
+      "family": "Prakash"
+    },
+    {
+      "given": "David",
+      "family": "Acuna"
+    },
+    {
+      "given": "Mark",
+      "family": "Brophy"
+    },
+    {
+      "given": "Varun",
+      "family": "Jampani"
+    },
+    {
+      "given": "Cem",
+      "family": "Anil"
+    },
+    {
+      "given": "Thang",
+      "family": "To"
+    },
+    {
+      "given": "Eric",
+      "family": "Cameracci"
+    },
+    {
+      "given": "Shaad",
+      "family": "Boochoon"
+    },
+    {
+      "given": "Stan",
+      "family": "Birchfield"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1804.06516",
+  "url": "https://arxiv.org/abs/1804.06516",
+  "type": "preprint",
+  "axes": [
+    "synthetic-da"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

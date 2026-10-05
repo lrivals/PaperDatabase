@@ -1,0 +1,79 @@
+{
+  "id": "arxiv-1811.00982-open-images-dataset-v4-unified",
+  "title": "The Open Images Dataset V4: Unified image classification, object detection, and visual relationship detection at scale",
+  "authors": [
+    {
+      "given": "Alina",
+      "family": "Kuznetsova"
+    },
+    {
+      "given": "Hassan",
+      "family": "Rom"
+    },
+    {
+      "given": "Neil",
+      "family": "Alldrin"
+    },
+    {
+      "given": "Jasper",
+      "family": "Uijlings"
+    },
+    {
+      "given": "Ivan",
+      "family": "Krasin"
+    },
+    {
+      "given": "Jordi",
+      "family": "Pont-Tuset"
+    },
+    {
+      "given": "Shahab",
+      "family": "Kamali"
+    },
+    {
+      "given": "Stefan",
+      "family": "Popov"
+    },
+    {
+      "given": "Matteo",
+      "family": "Malloci"
+    },
+    {
+      "given": "Alexander",
+      "family": "Kolesnikov"
+    },
+    {
+      "given": "Tom",
+      "family": "Duerig"
+    },
+    {
+      "given": "Vittorio",
+      "family": "Ferrari"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": "10.1007/s11263-020-01316-z",
+  "arxiv_id": "1811.00982",
+  "url": "https://arxiv.org/abs/1811.00982",
+  "type": "preprint",
+  "axes": [],
+  "tags": [
+    "open-images"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 13 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 4, Table5, Table 7, [figure sans légende identifié, Table 9, Table 10, Table 12, Table 14, [figure sans légende identifié, [figure sans légende identifié, Table 17, Table 19",
+      "sections numérotées non détectées : 3, 6 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

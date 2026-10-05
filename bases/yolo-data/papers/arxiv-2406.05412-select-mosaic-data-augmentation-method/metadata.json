@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2406.05412-select-mosaic-data-augmentation-method",
+  "title": "Select-Mosaic: Data Augmentation Method for Dense Small Object Scenes",
+  "authors": [
+    {
+      "given": "Hao",
+      "family": "Zhang"
+    },
+    {
+      "given": "Shuaijie",
+      "family": "Zhang"
+    },
+    {
+      "given": "Renbin",
+      "family": "Zou"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2406.05412",
+  "url": "https://arxiv.org/abs/2406.05412",
+  "type": "preprint",
+  "axes": [
+    "augmentation",
+    "imbalance-small"
+  ],
+  "tags": [
+    "mosaic",
+    "small-objects"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2",
+      "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

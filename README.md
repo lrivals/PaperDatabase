@@ -7,13 +7,14 @@ sans jamais rouvrir un PDF.
 L'outil n'est lié à aucun domaine : il traite n'importe quel corpus d'articles scientifiques,
 et **un même code gère plusieurs bases de connaissance séparées**, une par sujet, utilisables
 en parallèle ([Plusieurs bases de connaissance](#plusieurs-bases-de-connaissance)). Le dépôt en
-contient trois : deux servent à préparer une thèse, la troisième rassemble les références d'un stage :
+contient quatre : deux servent à préparer une thèse, la troisième rassemble les références d'un stage, la quatrième la préparation des données pour la détection YOLO :
 
 | Base | Intitulé | Dossier |
 |---|---|---|
 | `fpga` | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu) ; thèse « IA embarquée sécuritaire certifiable sur FPGA » | [`bases/fpga/`](bases/fpga/) |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | [`bases/drone/`](bases/drone/) |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | [`bases/stage/`](bases/stage/) |
+| `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | [`bases/yolo-data/`](bases/yolo-data/) |
 
 ---
 

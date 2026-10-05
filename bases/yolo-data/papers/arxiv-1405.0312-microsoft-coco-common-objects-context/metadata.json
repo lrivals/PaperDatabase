@@ -50,7 +50,8 @@
   "url": "https://arxiv.org/abs/1405.0312",
   "type": "preprint",
   "axes": [
-    "datasets"
+    "datasets",
+    "annotation"
   ],
   "tags": [
     "coco"
@@ -60,12 +61,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE 2, TABLE 3"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

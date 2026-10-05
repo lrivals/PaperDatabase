@@ -33,10 +33,16 @@
   "arxiv_id": "1902.04103",
   "url": "https://arxiv.org/abs/1902.04103",
   "type": "preprint",
-  "axes": [],
+  "axes": [
+    "augmentation",
+    "preprocessing"
+  ],
   "tags": [
     "yolov3",
-    "yolo"
+    "yolo",
+    "mixup",
+    "voc",
+    "coco"
   ],
   "added": "2026-10-05",
   "extraction": {
@@ -49,6 +55,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

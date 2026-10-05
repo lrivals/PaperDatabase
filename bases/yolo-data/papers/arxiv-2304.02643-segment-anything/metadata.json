@@ -58,7 +58,9 @@
   "url": "https://arxiv.org/abs/2304.02643",
   "type": "preprint",
   "axes": [
-    "auto-labelling"
+    "auto-labelling",
+    "annotation",
+    "datasets"
   ],
   "tags": [
     "sam"
@@ -68,12 +70,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 4, Table 8, [figure sans légende identifié"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

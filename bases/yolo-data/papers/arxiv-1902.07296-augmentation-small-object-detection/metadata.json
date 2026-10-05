@@ -35,20 +35,20 @@
   ],
   "tags": [
     "coco",
-    "small-objects"
+    "small-objects",
+    "copy-paste"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 2, Table 5, Table 7",
       "sections numérotées non détectées : 6 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -46,8 +46,8 @@
   "url": "https://arxiv.org/abs/2102.09480",
   "type": "preprint",
   "axes": [
-    "annotation",
-    "auto-labelling"
+    "auto-labelling",
+    "imbalance-small"
   ],
   "tags": [
     "coco",
@@ -58,12 +58,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 4"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

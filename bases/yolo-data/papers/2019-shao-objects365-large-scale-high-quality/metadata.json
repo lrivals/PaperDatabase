@@ -42,24 +42,25 @@
   "url": "https://doi.org/10.1109/ICCV.2019.00852",
   "type": "conference",
   "axes": [
-    "datasets"
+    "datasets",
+    "annotation"
   ],
   "tags": [
     "coco",
-    "objects365"
+    "objects365",
+    "voc"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 2, Table 3, Table 6",
       "tableaux sans corps extrait (légende seule) : Boxes Annotation Label Boundin, Table 7, Table 9, Table 10, Table 12"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

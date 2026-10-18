@@ -38,23 +38,24 @@
   "url": "https://arxiv.org/abs/2303.06999",
   "type": "preprint",
   "axes": [
-    "datasets",
-    "label-quality"
+    "label-quality",
+    "datasets"
   ],
   "tags": [
-    "label-noise"
+    "label-noise",
+    "coco",
+    "voc"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 2, Table 3, [figure sans légende identifié, Table 5, Table 6, Table 7"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

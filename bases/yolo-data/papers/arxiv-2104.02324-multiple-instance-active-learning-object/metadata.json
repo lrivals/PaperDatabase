@@ -41,19 +41,20 @@
     "active-learning"
   ],
   "tags": [
-    "active-learning"
+    "active-learning",
+    "voc",
+    "coco"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 1, Table, [figure sans légende identifié, Table 4, Table 5"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

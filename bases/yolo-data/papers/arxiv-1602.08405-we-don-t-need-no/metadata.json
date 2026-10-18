@@ -26,7 +26,8 @@
   "url": "https://arxiv.org/abs/1602.08405",
   "type": "preprint",
   "axes": [
-    "annotation"
+    "annotation",
+    "auto-labelling"
   ],
   "tags": [
     "voc",
@@ -37,12 +38,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

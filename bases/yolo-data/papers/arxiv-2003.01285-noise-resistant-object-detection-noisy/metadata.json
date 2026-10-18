@@ -31,7 +31,6 @@
   "tags": [
     "coco",
     "voc",
-    "synthetic",
     "label-noise"
   ],
   "added": "2026-10-05",
@@ -39,12 +38,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 4"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

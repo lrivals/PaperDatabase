@@ -158,6 +158,8 @@ distinguer le lu du déduit, relever les comparaisons biaisées. Cinq commandes 
 Prérequis : Python 3.12, Docker. **Guide d'utilisation pas à pas : [docs/GUIDE.md](docs/GUIDE.md).**
 Présentation sous forme d'article (principes, RAG, tests, évaluation) :
 [docs/article/](docs/article/), à compiler avec `make -C docs/article`.
+Présentation (diapositives Beamer, 19 pages) : [docs/presentation/](docs/presentation/),
+à compiler avec `make -C docs/presentation`.
 
 ```bash
 bash bin/setup.sh              # crée .venv, installe requirements.txt
@@ -357,7 +359,8 @@ PaperDatabase/                # le code seul ; les données sont dans bases/
 │   └── stage/                # base stage (références du stage) : même structure
 ├── templates/                # CLAUDE.md et profile.md d'une nouvelle base (pdb base new)
 ├── docs/                     # GUIDE.md (utilisation), RAG.md (recherche), EVAL.md (banc),
-│                             # images/ (captures de l'interface), article/, research/
+│                             # images/ (captures de l'interface), article/, presentation/
+│                             # (diapositives Beamer), research/
 ├── eval/                     # seuils par défaut du banc (pdb eval)
 ├── bin/                      # pdb (point d'entrée), setup.sh, grobid.sh, add.py, ingest.py,
 │                             # reindex.py, discover.py, bases.py (pdb base), viz.py

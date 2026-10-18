@@ -9,6 +9,13 @@ docs/article/*.blg
 docs/article/*.log
 docs/article/*.out
 docs/article/*.toc
+docs/presentation/*.aux
+docs/presentation/*.log
+docs/presentation/*.nav
+docs/presentation/*.out
+docs/presentation/*.snm
+docs/presentation/*.toc
+docs/presentation/*.vrb
 .claude/settings.local.json
 
 # Fichiers générés par l'extension TS-TeX de l'éditeur

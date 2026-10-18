@@ -48,6 +48,8 @@ vérifier avant de les citer.
 | `bin/pdb base scan [--from NOM]` / `base import NOM:<paper_id>` | articles utiles présents ou cités dans les autres bases ; copie d'un article |
 | `/base-profile [texte]` | le LLM propose d'affiner le profil (axes, règles, périmètre) ; rien n'est écrit sans accord |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; `--check` : valeurs retrouvées dans leur passage (`chunk_id`) ; `--comparable` : groupes de lignes comparables, avant toute comparaison entre papiers |
+| `bin/pdb compare --x COL --y COL [filtres]` / `/paper-compare <question>` | comparaison sur deux axes (FPS contre W, précision contre LUT) : groupes comparables avec leur confiance, lignes exclues avec leur motif ; à préférer à une lecture côte à côte de `bench` ([DATA_MODEL.md §7.2](../../DATA_MODEL.md)) |
+| `bin/pdb table <id> [<tableau>] --png` / `/table-review <id>` | tableaux d'un papier, signaux de qualité, image de la zone dans le PDF ; relecture et corrections proposées dans `tables_review.md` |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM |
 | `/paper-ask <question>` | réponse sourcée et vérifiée |
 | `/paper-research <question>` | route GPU, sur demande seulement (Qwen3, GPU CUDA, `bin/pdb gpu`) : recherche et acquisition open access ; sinon `/paper-ask` |

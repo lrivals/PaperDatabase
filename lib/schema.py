@@ -10,7 +10,7 @@ from lib import base, ids
 NR = "n/r"
 
 AXES = tuple(base.CONFIG["axes"])  # propres à chaque base : base.json (DATA_MODEL §11)
-TYPES = ("preprint", "journal", "conference", "thesis", "repo")
+TYPES = ("preprint", "journal", "conference", "thesis", "repo", "report")
 BACKENDS = ("grobid", "pymupdf")
 FICHE_STATUS = ("todo", "done")
 SECTION_KINDS = ("abstract", "section", "figure", "table")
@@ -52,7 +52,9 @@ OPTIONAL_COLUMNS = (
     "batch",
     "measure_protocol",  # comment FPS et puissance sont mesurés
     "original_value",    # valeur telle qu'écrite, si une colonne est normalisée
+    "platform_class",    # embedded | server : mesure de référence hors cible embarquée
 )
+PLATFORM_CLASSES = ("embedded", "server")
 ALL_COLUMNS = BENCHMARK_COLUMNS + OPTIONAL_COLUMNS
 
 # Colonnes numériques : un nombre ou n/r, rien d'autre.
@@ -193,6 +195,9 @@ def validate_benchmark_row(row):
     batch = (row.get("batch") or "").strip()
     if batch not in ("", NR) and not batch.isdigit():
         errs.append(f"batch = {batch!r} : entier ou n/r attendu")
+    pclass = (row.get("platform_class") or "").strip()
+    if pclass not in ("", NR) and pclass not in PLATFORM_CLASSES:
+        errs.append(f"platform_class = {pclass!r} : {' | '.join(PLATFORM_CLASSES)} | n/r")
     chunk = (row.get("chunk_id") or "").strip()
     if chunk not in ("", NR) and not CHUNK_ID_RE.match(chunk):
         errs.append(f"chunk_id = {chunk!r} : forme <paper_id>#<section>.<k> attendue")
@@ -435,6 +440,7 @@ TYPE_LABELS = {
     "conference": "conférence",
     "thesis": "thèse",
     "repo": "dépôt de code",
+    "report": "rapport (autorité, institution)",
     None: NR,
 }
 

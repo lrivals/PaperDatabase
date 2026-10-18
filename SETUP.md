@@ -323,7 +323,7 @@ Chaque sous-commande délègue aux scripts ci-dessous, sans logique propre :
 | `grobid start\|stop\|status`, `viz`, `test` | `grobid.sh`, `viz.py`, `unittest` | |
 | `search`, `show`, `verify` | `lib/rag.py` | recherche de passages (BM25 + embeddings bge-small, fusion RRF, `--rerank` en option ; Qwen3 sur GPU si la route GPU est active, `--gpu`/`--cpu` pour forcer), texte exact, contrôle de citation (statut `NOMBRES` si un nombre diffère) ; index dans `.cache/rag/`, reconstruit par `reindex` : [docs/RAG.md](docs/RAG.md) §4-5, §13 |
 | `gpu [status\|on\|off\|download]` | `lib/rag_models.py` | route GPU optionnelle : état (torch, CUDA, modèles, vecteurs de la base), activation (réglage de la machine dans `~/.config/pdb/config.json`, ou `PDB_GPU=1`), téléchargement des modèles : §10, [docs/RAG.md](docs/RAG.md) §13 |
-| `eval [--extract\|--rag\|--speed] [--gpu] [--papers FICHIER] [--answers DIR…] [--save] [--compare [JSON]]`, `eval --questions [JEU]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `tests/fixtures/rag_eval*.jsonl`), pertinence, `verify`, temps ; réponses finales enregistrées (`--answers`, jeux `answers*.jsonl`, `--questions` les liste sans les attentes : [docs/EVAL.md](docs/EVAL.md) §10) ; `--papers` rejoue la recherche sur un sous-corpus (liste de `paper_id` ou run enregistré, runs `-sub` : EVAL.md §9, lot K-0) ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
+| `eval [--extract\|--rag\|--speed] [--gpu] [--papers FICHIER] [--answers DIR…] [--save] [--compare [JSON]]`, `eval --questions [JEU]`, `test --rag` | `lib/evaluation.py` | banc d'évaluation : extraction, recherche (jeux `eval/fixtures/rag_eval*.jsonl` de la base, intervalles de confiance, rappel par axe et par type), vérité terrain des tableaux, pertinence, `verify`, temps ; réponses finales enregistrées (`--answers`, jeux `answers*.jsonl`, `--questions` les liste sans les attentes : [docs/EVAL.md](docs/EVAL.md) §10) ; `--papers` rejoue la recherche sur un sous-corpus (liste de `paper_id` ou run enregistré, runs `-sub` : EVAL.md §9, lot K-0) ; runs dans `eval/results/` de la base, seuils dans `eval/thresholds.json` : [docs/EVAL.md](docs/EVAL.md) |
 | `bench [filtres]`, `paper <requête>…` | `lib/query.py` | requêtes N0 sans LLM sur `benchmarks.csv` et `metadata.json`, bibliothèque standard seulement ; `bench --own` pour les mesures propres ; options et format de sortie : [docs/RAG.md](docs/RAG.md) §5.1 et §5.4 |
 | `claims <id>`, `claims [<id>] --check` | `lib/claims.py` | preuves atomiques d'un papier ; `--check` : schéma et excerpts contrôlés par `rag.verify` contre leur passage, comme `reindex` ([DATA_MODEL.md](DATA_MODEL.md) §12) |
 | `cites <id> [--external]`, `cited-by <id>` | `lib/refs.py`, `lib/query.py` | graphe de citations internes, références hors base avec leur nombre de citants : [docs/RAG.md](docs/RAG.md) §5.5 |
@@ -811,6 +811,42 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 Point au 18/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
 
+**Bilan du 18/10/2026 (bancs par base, claims, comparaison, tableaux, provenance).**
+- **Lot K-1** : les jeux fpga quittent `tests/fixtures/` pour `bases/fpga/eval/fixtures/`
+  (seuils dans `bases/fpga/eval/thresholds.json`) ; `evaluation.paths` ne replie plus sur
+  les jeux du code : une base sans jeu reçoit un avertissement et `--compare` ne compare pas
+  son rappel. **K-3** : champs `axis` et `kind` des questions, rappel par axe et par type,
+  part du corpus interrogée. **K-7** : intervalles de confiance à 95 % (bootstrap, graine
+  fixe) sur recall@5 et MRR ; `--compare` ne signale un écart que hors intervalle ou au
+  franchissement d'un seuil. **K-6** : premiers jeux de stage et de yolo-data (30 dev,
+  40 holdout, 8 FR, 20 + 20 hors corpus, 12 + 12 réponses), seuils copiés avant le premier
+  run, écrits par agent : **à relire** (principe 0, relecture humaine du holdout).
+- **Lot C** : 295 claims dans 11 papiers fpga (0 erreur à `pdb claims --check`) ; `pdb
+  search` affiche les claims liées aux passages retenus, `/paper-ask` les lit d'abord.
+- **Lot J-1 à J-3** : `pdb compare` (`lib/compare.py`, DATA_MODEL §7.2) et skill
+  `/paper-compare`. Sur fpga, aucune ligne détection/COCO n'a à la fois FPS et puissance :
+  toutes sont exclues avec leur motif.
+- **Tableaux** : `pdb table <id> [<tableau>] --png` (`lib/tableview.py`), skill
+  `/table-review` ; vérité terrain E-e : 20 tableaux fpga proposés
+  (`bases/fpga/eval/fixtures/tables_gold_proposed_{a,b}.jsonl`, **à relire**), notés par
+  `pdb eval --extract` (`lib/tablegold.py`, DATA_MODEL §7.3).
+- **Lot H** : empreinte du corpus partagée (`lib/snapshot.py`) dans `pdb search --format
+  json` (sortie désormais `{snapshot, index, hits}`), journal des réponses `pdb log-answer`
+  si `"log_answers": true` (`lib/answerlog.py`).
+- **Schéma** : type `report` (3 rapports EASA de fpga) ; colonne optionnelle
+  `platform_class` (`embedded | server`), jamais groupée entre classes par `pdb compare`.
+- fpga : 7 lignes IP DPU de la Table III de `arxiv-2607.13106` ajoutées (B3136 à B512 ; B4096
+  était déjà dans deux lignes).
+- [ ] Base drone : fiche de `arxiv-2607.12801` (guidage terminal vers une cible mobile) non
+  rédigée : la rédaction par agent a été bloquée par le filtre de sécurité du modèle. À
+  faire à la main, ou retirer le papier s'il sort du périmètre.
+- [ ] Relire les jeux de questions stage et yolo-data, puis les 20 tableaux proposés (passer
+  `reviewed` à `true` et renommer en `tables_gold.jsonl`).
+- [ ] Lot K-2 (tailles), K-4 (questions proposées par `pdb synth`), K-5 (sous-corpus commun
+  dans `--compare`) ; lot J-4/J-5 ; E-b ; `/state-of-art`.
+- [ ] fpga : les 32 lignes SATAY de `benchmarks.csv` ont des fins de ligne CRLF (antérieur,
+  sans effet sur la lecture CSV).
+
 **Bilan du 18/10/2026 (base yolo-data).** 4ᵉ base, `bases/yolo-data/` : préparation des
 données pour la détection YOLO, avec pour finalité un guide « quel prétraitement, quel
 labelling selon le besoin ». `base.json` : 9 axes plus `surveys` (`datasets`, `annotation`,
@@ -903,12 +939,12 @@ tâches et famille neuromorphique propres ; base stage : figures matérielles é
   `sec-surete-certification.tex` (34 papiers cités), gaps et cadre de `fpga.tex` repris,
   `refs.bib` complété depuis les `metadata.json`.
 
-- [ ] **Schéma : type « report »** pour les rapports d'autorité (EASA CoDANN 2020 / II,
+- [x] **Schéma : type « report »** (fait le 18/10/2026) pour les rapports d'autorité (EASA CoDANN 2020 / II,
   Concept Paper 2024 ont `type: null`) — suggestion de profil reportée le 01/10/2026.
-- [ ] **Schéma : mesures sans plateforme embarquée** (Re-ID, détection de personnes sur GPU)
+- [x] **Schéma : mesures sans plateforme embarquée** (colonne `platform_class`, 18/10/2026) (Re-ID, détection de personnes sur GPU)
   dans `benchmarks.csv` ou à part — utiles comme référence pour le cas d'application ;
   suggestion reportée le 01/10/2026.
-- [ ] Base fpga : `arxiv-2607.13106` annonce 29 lignes de benchmarks dans sa fiche, 23 dans
+- [x] (18/10/2026, 7 lignes ajoutées) Base fpga : `arxiv-2607.13106` annonce 29 lignes de benchmarks dans sa fiche, 23 dans
   `benchmarks.csv` (lignes IP DPU de la Table III manquantes), relevé au 8ᵉ passage.
 
 **Bilan du 29/09/2026 (figures multi-bases).** `pdb plot` adapté aux bases sans mesures

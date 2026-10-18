@@ -19,6 +19,12 @@
   grobid start|stop|status  pilote le conteneur GROBID
   bench [filtres] [--cols a,b] [--sort col [--desc]] [-n N] [--format tsv|md|json]
                             filtre benchmarks.csv (sans LLM) ; bench -h pour les filtres
+  log-answer <record.json>  journalise une réponse si log_answers est actif (lot H)
+  table <id> [<tableau>] [--png [FICHIER]]
+                            tableaux d'un papier, signaux de qualité, image de la zone (/table-review)
+  compare --x COL --y COL [--task T] [--dataset D] [--metric M] [--paper ID]… [--platform P]
+                            configurations comparables sur deux axes, conditions qui varient,
+                            lignes exclues avec leur motif (lot J ; compare -h)
   paper <id|court|mot>… [--fields a,b] [--bench]
                             fiche d'identité d'un papier (métadonnées, statut, benchmarks) ;
                             plusieurs ids → une ligne par papier
@@ -523,6 +529,94 @@ def cmd_cited_by(args):
     return cmd_cites(args, reverse=True)
 
 
+def cmd_table(args):
+    """Tableaux d'un papier et image de leur zone (lib/tableview.py, skill /table-review)."""
+    import argparse
+    from lib import query, tableview
+    p = argparse.ArgumentParser(prog="pdb table", description=(
+        "Sans tableau : liste des tableaux du papier (libellé, page, source, signaux de qualité). "
+        "Avec un tableau (« Table 3 », « III », ou id de section « #025 ») : sa légende, ses "
+        "cellules extraites et, avec --png, l'image de sa zone dans paper.pdf."))
+    p.add_argument("paper", help="id complet, court, ou mot du titre")
+    p.add_argument("table", nargs="?")
+    p.add_argument("--png", nargs="?", const="", metavar="FICHIER",
+                   help="écrit l'image de la zone (défaut : .cache/tables/<id>/<section>.png)")
+    a = p.parse_args(args)
+    found = query.resolve(a.paper, query.load_papers(ROOT))
+    if len(found) != 1:
+        print(f"pdb table : {len(found)} papier(s) pour {a.paper!r}", file=sys.stderr)
+        return 1
+    pid = found[0]["id"]
+    folder = ROOT / "papers" / pid
+    items = tableview.tables_of(folder, tableview.corpus_vocabulary(ROOT))
+    if not items:
+        print(f"# aucun tableau dans {pid}/sections.jsonl", file=sys.stderr)
+        return 1
+    if not a.table:
+        print("section\ttableau\tpage\tsource\tzone\tsignaux")
+        for t in items:
+            print(f"{t['id'].split('#')[-1]}\t{t['label']}\t{t['page']}\t{t['source'] or 'n/r'}\t"
+                  f"{'oui' if t['bbox'] else 'non'}\t{', '.join(t['signals']) or '-'}")
+        return 0
+    t = tableview.find(items, a.table)
+    if t is None:
+        print(f"pdb table : aucun tableau {a.table!r} ; tableaux : "
+              + ", ".join(x["label"] for x in items), file=sys.stderr)
+        return 1
+    print(f"# {t['id']} — {t['label']}, page {t['page']}, source {t['source'] or 'n/r'}, "
+          f"zone {t['bbox'] or 'absente (page entière)'}")
+    print(f"# signaux : {', '.join(t['signals']) or 'aucun'}\n")
+    print(t["text"])
+    if a.png is not None:
+        pdf = folder / "paper.pdf"
+        if not pdf.exists() or not t["page"]:
+            print("pdb table : paper.pdf ou page absent, pas d'image", file=sys.stderr)
+            return 1
+        out = Path(a.png) if a.png else ROOT / ".cache" / "tables" / pid / f"{t['id'].split('#')[-1]}.png"
+        print(f"\nimage : {tableview.render_png(pdf, t['page'], t['bbox'], out)}")
+    return 0
+
+
+def cmd_compare(args):
+    """Comparaison sur deux axes de benchmarks.csv (lib/compare.py, AMELIORATIONS.md lot J)."""
+    import argparse
+    from lib import compare, query, schema
+    p = argparse.ArgumentParser(prog="pdb compare", description=(
+        "Groupes de configurations comparables sur deux axes numériques (clé : task, dataset, "
+        "dataset_split, + métrique si la précision est en jeu, + power_scope si la puissance l'est). "
+        "Chaque ligne filtrée est retenue ou exclue avec un motif ; aucune valeur n'est devinée."))
+    p.add_argument("--x", required=True, choices=schema.NUMERIC_COLUMNS)
+    p.add_argument("--y", required=True, choices=schema.NUMERIC_COLUMNS)
+    p.add_argument("--task", metavar="TEXTE")
+    p.add_argument("--dataset", metavar="TEXTE")
+    p.add_argument("--metric", metavar="TEXTE", help="sous-chaîne de metric_def ou accuracy_metric")
+    p.add_argument("--platform", metavar="TEXTE")
+    p.add_argument("--paper", action="append", metavar="ID", help="id complet, court ou mot du titre ; répétable")
+    p.add_argument("--min-papers", type=int, default=2, help="papiers par groupe (défaut 2)")
+    p.add_argument("--format", choices=("tsv", "md", "json"), default="tsv")
+    p.add_argument("--max-chars", type=int)
+    a = p.parse_args(args)
+    header, rows = query.load_benchmarks(ROOT)
+    metas = query.load_papers(ROOT)
+    short = query.short_ids(metas)
+    papers = None
+    if a.paper:
+        papers = set()
+        for q in a.paper:
+            found = query.resolve(q, metas)
+            if not found:
+                print(f"pdb compare : aucun papier ne correspond à {q!r}", file=sys.stderr)
+                return 1
+            papers |= {m["id"] for m in found}
+    rows = compare.select(rows, a.task, a.dataset, a.metric, a.platform, papers)
+    if not rows:
+        print("# aucune ligne", file=sys.stderr)
+        return 1
+    res = compare.compare(header, rows, a.x, a.y, metric=a.metric, min_papers=a.min_papers)
+    print(compare.render(res, short, a.format, a.max_chars))
+    return 0
+
+
 def cmd_paper(args):
     import argparse
     from lib import query
@@ -644,11 +738,18 @@ def cmd_search(args):
     if not hits:
         print("# aucun passage", file=sys.stderr)
         return 1
+    from lib import claims
+    linked = claims.linked(ROOT, [h["chunk_id"] for h in hits], ix.short_chunk_id)
     if a.format == "json":
-        print(json.dumps([{**{k: h[k] for k in ("chunk_id", "paper_id", "section", "subsection",
-                                                 "page", "score", "cos", "sha1")},
-                           "model": ix.model if h["mode"] != "lexical" else None} for h in hits],
-                         ensure_ascii=False, indent=1))
+        from lib import snapshot
+        print(json.dumps({
+            "snapshot": snapshot.fingerprint(ROOT),
+            "index": {"model": ix.model if hits[0]["mode"] != "lexical" else None,
+                      "rerank": bool(a.rerank), "mode": hits[0]["mode"]},
+            "hits": [{**{k: h[k] for k in ("chunk_id", "paper_id", "section", "subsection",
+                                            "page", "score", "cos", "sha1")},
+                      "claims": linked.get(h["chunk_id"], [])} for h in hits]},
+            ensure_ascii=False, indent=1))
         return 0
     if hits[0]["mode"] != a.mode:
         print(f"# mode: {hits[0]['mode']} seul (embeddings indisponibles ou index à reconstruire : bin/pdb reindex)")
@@ -661,9 +762,47 @@ def cmd_search(args):
             cos = "n/r" if h["cos"] is None else f"{h['cos']:.2f}"
             print(f"{ix.short_chunk_id(h['chunk_id'])}\t{sec}\t{h['page'] or 'n/r'}\t"
                   f"{cos}\t{rag.snippet(h['text'], a.query, ix.bm25.idf)}")
+    if linked and not a.ids_only:
+        print("# claims vérifiées de ces passages (claims.jsonl, pdb claims <id>) :")
+        for h in hits:
+            for c in linked.get(h["chunk_id"], []):
+                print(f"#   {ix.short_chunk_id(h['chunk_id'])}\t{c['claim_id'].split('!')[-1]}\t{c['kind']}"
+                      f"\t{c['voice']}\t{c['text']}")
     used = sorted({h["paper_id"] for h in hits if ix.short.get(h["paper_id"]) != h["paper_id"]})
     if used:
         print("# ids: " + " ".join(f"{ix.short[p]}={p}" for p in used))
+    if base.CONFIG.get("log_answers"):
+        print("# journal des réponses actif (log_answers) : après la réponse, bin/pdb log-answer <record.json>")
+    return 0
+
+
+def cmd_log_answer(args):
+    """Ajoute une réponse au journal .cache/answers/<AAAA-MM>.jsonl (lib/answerlog.py, lot H)."""
+    import argparse
+    from lib import answerlog
+    p = argparse.ArgumentParser(prog="pdb log-answer", description=(
+        "Journalise une réponse (format d'enregistrement du lot A, docs/EVAL.md §10) avec la date, "
+        "le commit, l'empreinte du corpus et le sha1 des passages cités ; sans effet si "
+        "log_answers n'est pas activé dans base.json."))
+    p.add_argument("record", help="fichier JSON de la réponse (supprimé après journalisation)")
+    p.add_argument("--keep", action="store_true", help="ne supprime pas le fichier")
+    a = p.parse_args(args)
+    if not answerlog.enabled(base.CONFIG):
+        print("# log_answers inactif dans base.json : rien journalisé")
+        return 0
+    path = Path(a.record)
+    try:
+        line = answerlog.entry(ROOT, CODE, json.loads(path.read_text()), base.CONFIG["name"])
+    except (OSError, ValueError) as e:
+        print(f"pdb log-answer : {e}", file=sys.stderr)
+        return 2
+    out = answerlog.append(ROOT, line)
+    missing = [c for c, h in line["passages"].items() if h is None]
+    if missing:
+        print(f"# passage(s) introuvable(s) : {', '.join(missing)}", file=sys.stderr)
+    if not a.keep:
+        path.unlink()
+    print(f"journalisé : {out.relative_to(ROOT)} (snapshot {line['snapshot'][:12]})")
     return 0
 
 
@@ -804,6 +943,11 @@ def _print_eval(res):
               f"dans le texte {_fmt(t['in_text'])}\t({t['values']} valeurs)\t"
               f"lignes « tableaux seuls » : {_fmt(t.get('table_only_in_cited_table'))} ({t.get('table_only_values')} valeurs)\t"
               f"dans le passage cité (chunk_id) : {_fmt(t.get('in_cited_chunk'))} ({t.get('cited_chunk_values', 0)} valeurs)")
+        g = ex.get("tables_gold")
+        if g:
+            print(f"vérité terrain des tableaux ({g['n']} tableaux, {g['source']})\tdétectés {_fmt(g['detected'])}\t"
+                  f"légende juste {_fmt(g['attached'])}\tcellules {_fmt(g['cells'])}\t"
+                  f"nombres retrouvés {_fmt(g['numbers'])}\tunités {_fmt(g['units'])}")
         print()
     rg = res.get("rag")
     if rg:
@@ -818,10 +962,24 @@ def _print_eval(res):
             for mode, m in st.items():
                 if not isinstance(m, dict):
                     continue
-                print(f"{name} ({st['n']} q.)\t{mode}\t{m['recall@5']:.2f}\t{m['recall@10']:.2f}\t"
-                      f"{m['mrr']:.2f}\t{m['ndcg@10']:.2f}\t{m['paper@5']:.2f}")
+                ci = m.get("ci") or {}
+                r5 = f"{m['recall@5']:.2f}" + (f" [{ci['recall@5']['lo']:.2f}-{ci['recall@5']['hi']:.2f}]"
+                                               if ci.get("recall@5") else "")
+                mrr = f"{m['mrr']:.2f}" + (f" [{ci['mrr']['lo']:.2f}-{ci['mrr']['hi']:.2f}]" if ci.get("mrr") else "")
+                print(f"{name} ({st['n']} q.)\t{mode}\t{r5}\t{m['recall@10']:.2f}\t"
+                      f"{mrr}\t{m['ndcg@10']:.2f}\t{m['paper@5']:.2f}")
+                if mode == [k for k, v in st.items() if isinstance(v, dict)][-1]:  # meilleur mode calculé
+                    for field in ("axis", "kind"):
+                        groups = m.get(f"by_{field}") or {}
+                        if groups:
+                            print(f"#   par {field} : " + " ; ".join(
+                                f"{g} {v['recall@5']:.2f} ({v['n']})" for g, v in groups.items()))
                 for q in m["misses"]:
                     print(f"#   manqué : {q}")
+        cov = rg.get("coverage")
+        if cov:
+            print(f"corpus interrogé\t{cov['papers_queried']} papiers sur {corpus.get('n_papers', '?')}"
+                  f"\t({_fmt(cov['share'])})")
         lr = rg.get("low_relevance", {})
         if lr.get("n"):
             n = lr["n"]
@@ -915,7 +1073,7 @@ def cmd_eval(args):
     if a.questions:
         if a.questions not in ev.ANSWER_SETS:
             p.error(f"--questions : {' | '.join(ev.ANSWER_SETS)}")
-        qs = ev.answer_questions(fixtures, a.questions)
+        qs = ev.answer_questions(fixtures, a.questions) if fixtures else []
         if not qs:
             print(f"pdb eval : aucun jeu {a.questions}.jsonl dans {fixtures}", file=sys.stderr)
             return 1
@@ -942,13 +1100,20 @@ def cmd_eval(args):
         a.rag = True
     if not (a.extract or a.rag or a.speed or a.answers):
         a.extract = a.rag = a.speed = True
-    # le banc porte sur la base active : ses questions (eval/fixtures/, à défaut celles du
-    # code, écrites pour la base fpga), ses seuils et ses runs enregistrés (evaluation.paths)
-    print(f"# base : {base.CONFIG['name']} ({ROOT}) ; questions : {fixtures}\n")
+    # le banc porte sur la base active : ses questions (eval/fixtures/, sans repli sur une
+    # autre base, lot K-1), ses seuils et ses runs enregistrés (evaluation.paths)
+    if fixtures is None:
+        print(f"# avertissement : la base {base.CONFIG['name']} n'a aucun jeu de questions "
+              f"({ROOT / 'eval' / 'fixtures'}) ; rappel non mesuré, --compare ne le compare pas "
+              "(docs/EVAL.md §7, lot K)\n", file=sys.stderr)
+    print(f"# base : {base.CONFIG['name']} ({ROOT}) ; questions : {fixtures or 'aucune'}\n")
     res = {}
     if a.extract:
         res["extraction"] = {"quality": ev.extraction_quality(ROOT), "header": ev.header_accuracy(ROOT),
                              "tables": ev.table_values(ROOT)}
+        gold = ev.tables_gold(ROOT)
+        if gold:
+            res["extraction"]["tables_gold"] = gold
     if a.rag:
         try:
             res["rag"] = ev.rag_quality(ROOT, fixtures, gpu=a.gpu, paper_ids=paper_ids)
@@ -957,6 +1122,8 @@ def cmd_eval(args):
             return 1
     if a.speed:
         res["speed"] = ev.speed(ROOT, fixtures, cli=not a.no_cli)
+    if a.answers and fixtures is None:
+        p.error("--answers : la base n'a pas de jeux de réponses (eval/fixtures/answers*.jsonl)")
     if a.answers:
         res["answers"] = {"run": ", ".join(map(str, records)), **ev.answers_quality(ROOT, fixtures, records)}
     _print_eval(res)
@@ -964,6 +1131,8 @@ def cmd_eval(args):
     flat = ev.flatten(res)
     thresholds = json.loads(thresholds_path.read_text())
     fails = [f for f in ev.check_thresholds(flat, thresholds) if f[0].split(".")[0] in res]
+    if fixtures is None:  # pas de jeux : les seuils de rappel ne sont pas mesurés, pas manqués
+        fails = [f for f in fails if not f[0].startswith(("rag.sets.", "answers."))]
     if a.compare:
         runs = sorted(r for r in results.glob("*.json") if not r.stem.endswith("-sub"))
         ref = Path(a.compare) if a.compare != "last" else (runs[-1] if runs else None)
@@ -971,8 +1140,13 @@ def cmd_eval(args):
             print("\n# aucun run enregistré à comparer (pdb eval --save)")
         else:
             old = ev.flatten({k: v for k, v in json.loads(ref.read_text())["results"].items() if k in res})
-            diffs = ev.compare(old, flat)
+            if fixtures is None:  # rappel non mesuré : rien à comparer (lot K-1)
+                old = {k: v for k, v in old.items() if not k.startswith(("rag.sets.", "rag.low_relevance."))}
+            diffs = ev.compare(old, flat, thresholds=thresholds)
+            inside = len(ev.compare(old, flat, intervals=False)) - len(diffs)
             print(f"\n## Écarts avec {ref.name} ({len(diffs)})")
+            if inside:
+                print(f"# {inside} écart(s) dans l'intervalle de confiance du nouveau run, sans seuil franchi : non signalés")
             for key, x, y in diffs:
                 arrow = "" if x is None or y is None else "▲" if y > x else "▼"
                 print(f"{key}\t{_fmt(x)} → {_fmt(y)}\t{arrow}")
@@ -1066,7 +1240,7 @@ COMMANDS = {
     "agents": cmd_agents,
     "base": cmd_base, "status": cmd_status, "add": cmd_add, "ingest": cmd_ingest, "reindex": cmd_reindex,
     "discover": cmd_discover, "grobid": cmd_grobid, "viz": cmd_viz, "test": cmd_test,
-    "eval": cmd_eval, "bench": cmd_bench, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
+    "eval": cmd_eval, "bench": cmd_bench, "compare": cmd_compare, "table": cmd_table, "log-answer": cmd_log_answer, "paper": cmd_paper, "search": cmd_search, "show": cmd_show,
     "verify": cmd_verify, "claims": cmd_claims, "cites": cmd_cites, "cited-by": cmd_cited_by,
     "rag": cmd_rag, "gpu": cmd_gpu, "synth": cmd_synth, "plot": cmd_plot,
 }

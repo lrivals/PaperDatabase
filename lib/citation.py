@@ -15,9 +15,10 @@ EXTENSIONS = (".bib", ".ris")
 TITLE_RATIO = 0.9  # seuil d'appariement par titre (SequenceMatcher, titres normalisés)
 
 BIB_TYPES = {"article": "journal", "inproceedings": "conference", "conference": "conference",
-             "phdthesis": "thesis", "mastersthesis": "thesis"}
+             "phdthesis": "thesis", "mastersthesis": "thesis", "techreport": "report"}
 RIS_TYPES = {"JOUR": "journal", "JFULL": "journal", "EJOUR": "journal", "MGZN": "journal",
-             "CONF": "conference", "CPAPER": "conference", "THES": "thesis"}
+             "CONF": "conference", "CPAPER": "conference", "THES": "thesis",
+             "RPRT": "report"}
 # Accents LaTeX les plus courants : {\'e}, \'{e}, \'e…
 _ACCENTS = {"'": "\u0301", "`": "\u0300", "^": "\u0302", '"': "\u0308", "~": "\u0303", "c": "\u0327"}
 

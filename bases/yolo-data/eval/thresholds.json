@@ -1,0 +1,27 @@
+{
+ "_doc": "Seuils du banc de la base yolo-data, copiés de ceux de la base fpga et fixés avant le premier run (lot K-6, 18/10/2026) ; un seuil non atteint est rapporté, jamais abaissé (docs/EVAL.md).",
+ "rag.sets.rag_eval.hybrid.recall@5": {
+  "min": 0.8
+ },
+ "rag.sets.rag_eval.hybrid+rerank.recall@5": {
+  "min": 0.8
+ },
+ "rag.sets.rag_eval_holdout.hybrid+rerank.recall@5": {
+  "min": 0.8
+ },
+ "rag.verify.exact.accepted_rate": {
+  "min": 1.0
+ },
+ "rag.verify.autre papier.accepted_rate": {
+  "max": 0.0
+ },
+ "extraction.quality.coverage_mean": {
+  "min": 0.85
+ },
+ "extraction.header.title": {
+  "min": 0.8
+ },
+ "rag.verify.chiffre modifié.accepted_rate": {
+  "max": 0.0
+ }
+}

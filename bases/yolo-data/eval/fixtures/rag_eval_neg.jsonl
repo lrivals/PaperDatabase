@@ -1,0 +1,20 @@
+{"q": "Protein structure prediction with deep learning"}
+{"q": "Training large language models on GPU clusters"}
+{"q": "Sentiment analysis of product reviews with transformers"}
+{"q": "Stock price forecasting with recurrent neural networks"}
+{"q": "Speech recognition for low-resource languages"}
+{"q": "Reinforcement learning agents for board games"}
+{"q": "Recommender systems based on collaborative filtering"}
+{"q": "Knowledge distillation of large detectors into small student detectors"}
+{"q": "Annotating 3D LiDAR point clouds for autonomous driving"}
+{"q": "Text recognition datasets and annotation of scene text"}
+{"q": "Federated learning for object detection across devices"}
+{"q": "Self-supervised pre-training of backbones with masked image modelling"}
+{"q": "Post-training quantization of YOLO models for edge deployment", "ambiguous": "passe en revue dans un ou deux papiers seulement (quantization citée en passant)"}
+{"q": "Instance segmentation mask annotation cost per object", "ambiguous": "à moitié couverte par SAM et LVIS (annotation de masques), pas par une étude de coût dédiée"}
+{"q": "Single object tracking benchmark evaluation protocols", "ambiguous": "à moitié couverte par WebUAV-3M et UAVDT (protocoles de suivi)"}
+{"q": "Face detection datasets and hard-face evaluation"}
+{"q": "Medical image segmentation with limited annotations"}
+{"q": "Generating training images with text-to-image diffusion models for detection", "ambiguous": "citée en passant dans un seul papier"}
+{"q": "Neural architecture search for efficient detectors"}
+{"q": "Video anomaly detection in surveillance footage"}

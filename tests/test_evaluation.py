@@ -25,22 +25,61 @@ except ImportError:
 
 
 class TestPaths(unittest.TestCase):
-    def test_base_fixtures_else_code(self):
+    def test_base_fixtures_no_fallback(self):
         with tempfile.TemporaryDirectory() as d:
             code, base = Path(d) / "code", Path(d) / "base"
             (code / "tests" / "fixtures").mkdir(parents=True)
+            (code / "tests" / "fixtures" / "rag_eval.jsonl").write_text("{}\n")
             (code / "eval").mkdir()
             (code / "eval" / "thresholds.json").write_text("{}")
             base.mkdir()
             fx, res, th = ev.paths(base, code)
-            self.assertEqual((fx, th), (code / "tests" / "fixtures", code / "eval" / "thresholds.json"))
+            # lot K-1 : plus de repli sur les jeux du code
+            self.assertEqual((fx, th), (None, code / "eval" / "thresholds.json"))
             self.assertEqual(res, base / "eval" / "results")
+            # un dossier sans jeu de questions (vérité terrain des tableaux seule) ne compte pas
             (base / "eval" / "fixtures").mkdir(parents=True)
+            (base / "eval" / "fixtures" / "tables_gold_proposed_a.jsonl").write_text("{}\n")
+            self.assertIsNone(ev.paths(base, code)[0])
+            (base / "eval" / "fixtures" / "rag_eval.jsonl").write_text("{}\n")
             (base / "eval" / "thresholds.json").write_text("{}")
             fx, _, th = ev.paths(base, code)
             self.assertEqual((fx, th), (base / "eval" / "fixtures", base / "eval" / "thresholds.json"))
-            # base de référence : root == code, jeux de tests/fixtures
-            self.assertEqual(ev.paths(code, code)[0], code / "tests" / "fixtures")
+
+
+class TestIntervals(unittest.TestCase):
+    def test_bootstrap_ci(self):
+        self.assertIsNone(ev.bootstrap_ci([]))
+        ci = ev.bootstrap_ci([1.0] * 10)
+        self.assertEqual((ci["lo"], ci["hi"]), (1.0, 1.0))
+        ci = ev.bootstrap_ci([0.0, 1.0] * 10)
+        self.assertLess(ci["lo"], 0.5)
+        self.assertGreater(ci["hi"], 0.5)
+        self.assertEqual(ci, ev.bootstrap_ci([0.0, 1.0] * 10))  # graine fixe
+
+    def test_compare_inside_interval(self):
+        key = "rag.sets.rag_eval.hybrid.recall@5"
+        new = {key: 0.80, key.replace("recall@5", "ci.recall@5.lo"): 0.65,
+               key.replace("recall@5", "ci.recall@5.hi"): 0.92}
+        self.assertEqual(ev.compare({key: 0.85}, new), [])
+        self.assertEqual(ev.compare({key: 0.95}, new), [(key, 0.95, 0.80)])
+        self.assertEqual(ev.compare({key: 0.85}, new, intervals=False), [(key, 0.85, 0.80)])
+        # seuil franchi : signalé même dans l'intervalle
+        th = {key: {"min": 0.82}}
+        self.assertEqual(ev.compare({key: 0.85}, new, thresholds=th), [(key, 0.85, 0.80)])
+        # bornes et détails jamais comparés
+        self.assertEqual(ev.compare({"x.by_axis.a.mrr": 1.0}, {"x.by_axis.a.mrr": 0.0}), [])
+
+    def test_by_field_and_coverage(self):
+        qs = [{"axis": "a", "kind": "table"}, {"axis": "a"}, {"axis": "b"}, {}]
+        per = [{"recall@5": 1.0, "mrr": 1.0}, {"recall@5": 0.0, "mrr": 0.0},
+               {"recall@5": 1.0, "mrr": 0.5}, {"recall@5": 0.0, "mrr": 0.0}]
+        by = ev._by_field(qs, per, "axis")
+        self.assertEqual(by["a"], {"n": 2, "recall@5": 0.5, "mrr": 0.5})
+        self.assertEqual(list(ev._by_field(qs, per, "kind")), ["table"])
+        cov = ev.query_coverage({"rag_eval": [{"expect": ["p1#001", "p2#003"]}],
+                                 "rag_eval_neg": [{"q": "x"}]}, ["p1", "p2", "p3", "p4"])
+        self.assertEqual(cov, {"papers_queried": 2, "share": 0.5})
 
 
 class TestHelpers(unittest.TestCase):

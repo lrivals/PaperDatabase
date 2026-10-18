@@ -325,6 +325,13 @@ chunk	section	page	cos	snippet
 Coût : ~70 tokens par résultat, soit ~600 pour `-k 8`. `--ids-only` descend à ~15 tokens par
 résultat, utile pour enchaîner avec `show`.
 
+Sous la table, `search` liste les **claims vérifiées** des passages retenus (`claims.jsonl`,
+lot C) : identifiant, type, voix et texte. `--format json` renvoie `{"snapshot", "index",
+"hits"}` (lot H, 18/10/2026) : `snapshot` est l'empreinte du corpus (`lib/snapshot.py`, la
+même que la route GPU), `index` le modèle, le mode et le rerank, et chaque élément de `hits`
+porte ses `claims`. Quand `"log_answers": true` dans `base.json`, la sortie texte se termine
+par un rappel de `bin/pdb log-answer` (journal `.cache/answers/<AAAA-MM>.jsonl`).
+
 ### 5.3 `pdb show` — texte exact d'un passage
 
 ```
@@ -504,7 +511,7 @@ Fichier [.claude/commands/paper-ask.md](../.claude/commands/paper-ask.md). Outil
 
 ## 10. Évaluation
 
-**Jeu** : [tests/fixtures/rag_eval.jsonl](../tests/fixtures/rag_eval.jsonl), 20 questions en
+**Jeu** : [bases/fpga/eval/fixtures/rag_eval.jsonl](../bases/fpga/eval/fixtures/rag_eval.jsonl), 20 questions en
 anglais, chacune avec :
 - `expect` : les sections pertinentes (`paper#order`, indépendant du découpage en fenêtres) ;
 - `papers` et `pattern` : la manière dont elles ont été choisies. Ce sont les sections des
@@ -538,7 +545,7 @@ hybride : 0,79 → 0,75 en anglais ; rerank : 0,87 → 0,85 ; BM25 : 0,82 → 0,
 BM25 en français monte (0,25 → 0,38).
 
 La colonne FR porte sur 8 des questions, traduites à la main en français
-([tests/fixtures/rag_eval_fr.jsonl](../tests/fixtures/rag_eval_fr.jsonl), mêmes `expect`,
+([bases/fpga/eval/fixtures/rag_eval_fr.jsonl](../bases/fpga/eval/fixtures/rag_eval_fr.jsonl), mêmes `expect`,
 question anglaise d'origine dans `en`). `bin/pdb eval --rag` évalue les deux jeux.
 
 Lecture :

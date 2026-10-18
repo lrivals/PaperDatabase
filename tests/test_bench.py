@@ -22,7 +22,7 @@ class BenchTest(unittest.TestCase):
             root = Path(d)
             source = next((ROOT / "bases" / "fpga" / "papers").glob("*/metadata.json")).parent
             shutil.copytree(source, root / "papers" / source.name,
-                            ignore=shutil.ignore_patterns("paper.pdf", "grobid.tei.xml"))
+                            ignore=shutil.ignore_patterns("paper.pdf", "grobid.tei.xml", "claims.jsonl"))
             with (root / "benchmarks.csv").open("w", newline="") as f:
                 csv.writer(f).writerow(schema.BENCHMARK_COLUMNS)
             self.assertEqual(reindex.run(root), 0)
@@ -33,7 +33,7 @@ class BenchTest(unittest.TestCase):
             root = Path(d)
             source = next((ROOT / "bases" / "fpga" / "papers").glob("*/metadata.json")).parent
             shutil.copytree(source, root / "papers" / source.name,
-                            ignore=shutil.ignore_patterns("paper.pdf", "grobid.tei.xml"))
+                            ignore=shutil.ignore_patterns("paper.pdf", "grobid.tei.xml", "claims.jsonl"))
             fields = [*schema.BENCHMARK_COLUMNS, "chunk_id", "input_res"]
             with (root / "benchmarks.csv").open("w", newline="") as f:
                 w = csv.DictWriter(f, fieldnames=fields)

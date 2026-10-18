@@ -443,6 +443,9 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb discover [--forward] [--backward] [--related] [--axis A] [--query "…"] [--since AAAA]` | candidats → `candidates.csv`, `candidates_arxiv.txt` |
 | `bin/pdb reindex [--no-plot]` | régénère `INDEX.md`, `external_refs.csv`, vérifie, refait les figures périmées |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` (`-h` pour les filtres) |
+| `bin/pdb compare --x COL --y COL [--task T] [--dataset D] [--metric M] [--paper A --paper B]` | configurations comparables sur deux axes (FPS contre puissance, précision contre LUT) : groupes avec leur confiance (`forte`, `réservée`, `faible`), conditions qui varient, lignes exclues avec leur motif (DATA_MODEL §7.2) |
+| `bin/pdb table <id> [<tableau>] [--png]` | tableaux d'un papier et leurs signaux de qualité ; texte extrait d'un tableau et image de sa zone dans le PDF (`/table-review`) |
+| `bin/pdb log-answer <record.json>` | journalise une réponse dans `.cache/answers/` si `"log_answers": true` dans `base.json` (empreinte du corpus, commit, sha1 des passages cités) |
 | `bin/pdb paper <id \| mot>…` | identité d'un ou plusieurs papiers (`--bench` : ses lignes) |
 | `bin/pdb cites <id>` / `cited-by <id>` | références dans la base (`--external` : hors base aussi) / papiers qui le citent |
 | `bin/pdb ingest --reparse [id…]` | ré-extrait les papiers déjà ingérés depuis leur TEI, sans GROBID |
@@ -451,7 +454,7 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `bin/pdb claims <id>` / `claims [<id>] --check` | preuves atomiques d'un papier / contrôle des excerpts contre leur passage (DATA_MODEL §12) |
 | `bin/pdb gpu [on\|off\|status]` | route GPU optionnelle (Qwen3, CUDA) pour `search` ; `search --gpu\|--cpu` pour une seule requête |
 | `bin/pdb rag …` | outils de la route GPU : index de preuves, `acquire` / `approve` d'articles open access (RAG.md §13) |
-| `bin/pdb eval [--extract\|--rag\|--speed] [--gpu] [--save] [--compare]` | banc d'évaluation du logiciel : extraction, recherche, `verify`, temps ([EVAL.md](EVAL.md)) ; `test --rag` = `eval --rag` |
+| `bin/pdb eval [--extract\|--rag\|--speed] [--gpu] [--save] [--compare]` | banc d'évaluation du logiciel : extraction (dont la vérité terrain des tableaux), recherche avec intervalles de confiance et rappel par axe et par type, `verify`, temps ([EVAL.md](EVAL.md)) ; chaque base a ses jeux dans `eval/fixtures/`, sans repli ; `test --rag` = `eval --rag` |
 | `bin/pdb eval --papers <liste\|run.json>` | recherche rejouée sur un sous-corpus (liste de `paper_id`, ou papiers d'un run enregistré) : sépare un écart dû au corpus d'un écart dû au code ; runs `-sub`, hors figures ([EVAL.md §9](EVAL.md#lot-k-0--cause-de-la-baisse-du-holdout-fpga-04102026-commit-84c0eac)) |
 | `bin/pdb eval --answers <run>…` | note les réponses enregistrées d'un run (EVAL.md §10) |
 | `bin/pdb grobid start\|stop\|status` | GROBID |
@@ -474,6 +477,8 @@ Les colonnes de benchmark (`lib/schema.py`) sont communes à toutes les bases.
 | `/paper-ask <question>` | réponse sourcée et vérifiée depuis la base (CPU, ou Qwen si la route GPU est active) |
 | `/paper-research <question>` | route GPU seulement : réponse avec boucle de lacunes et acquisition open access, après votre accord |
 | `/base-profile [consigne]` | propose d'affiner le profil de la base (axes, règles, périmètre) ; applique après accord |
+| `/paper-compare <question ou axe>` | matrice de comparaison d'articles à partir de `pdb compare` et des passages sources : accords, désaccords, comparaisons impossibles |
+| `/table-review <paper_id> [tableau]` | relit les tableaux extraits contre l'image de leur zone ; corrections proposées dans `tables_review.md` |
 | `/eval-answers [answers\|answers_holdout]` | fait répondre `/paper-ask` aux questions du banc, à l'aveugle, puis note le run (EVAL.md §10) |
 
 | Fichier | Rôle | Qui l'écrit |

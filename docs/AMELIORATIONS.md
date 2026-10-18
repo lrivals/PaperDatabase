@@ -5,7 +5,7 @@ Spécification du 02/10/2026. État : lots A et B en place (même date) ; lot C 
 (03/10/2026) ; lot E-a, E-c, E-d en place (03/10/2026, acceptation E-c non atteinte) ; lot G en grande partie fait (route unique, RAG.md §13) ; lot I en place
 (03/10/2026, journal des sous-agents, calage sur le cost-state et économie estimée de la
 délégation, expérience appariée I-6 faite, sauf la révision chiffrée I-5e) ; lot K
-spécifié (03/10/2026), K-0 fait (04/10/2026 : baisse du holdout fpga due au corpus, pas au code) ; autres lots non commencés. Elle décrit comment mettre en place les
+spécifié (03/10/2026), K-0 fait (04/10/2026 : baisse du holdout fpga due au corpus, pas au code) ; le 18/10/2026 : K-1, K-3, K-6, K-7 en place, lot C lu par `pdb search` et `/paper-ask` (295 claims fpga), lot J-1 à J-3 (`pdb compare`, `/paper-compare`), `/table-review` et E-e (20 tableaux proposés, à relire), lot H (empreinte, journal des réponses) ; autres lots non commencés. Elle décrit comment mettre en place les
 améliorations issues de l'analyse du système : réponses qui reconnaissent des preuves
 incomplètes, comparaisons numériques qui gardent leurs conditions, tableaux contrôlables, et
 cinq nouveaux skills. Chaque chantier part d'un constat mesuré dans le dépôt, puis donne la
@@ -1013,7 +1013,7 @@ de preuve et de citation comptent le plus), ensuite `/paper-compare`, `/table-re
 | 3 | **Lot D-1 à D-3** (`chunk_id`, colonnes optionnelles, `bench --check`) | traçabilité des nombres |
 | 4 | **Lot C** + `/paper-extract` | prépare comparaison et rédaction ; en place le 03/10/2026 (reste : lecture des claims par `/paper-ask`) |
 | 5 | **Lot E-a, E-c, E-d** (localisation, index, qualité) | rend les tableaux trouvables et contrôlables ; en place le 03/10/2026 (reste : questions holdout sur tableaux, vocabulaire) |
-| 5 bis | **Lot K-0, K-1, K-6** (diagnostic de la baisse fpga, jeux dans chaque base, jeu stage), puis **K-2 à K-5** et **K-7** avec K-2 ; K-0 fait le 04/10/2026 | les gains des étapes suivantes (E-b, F, G, H) se prouvent sur ces bancs ; le holdout fpga est sous son seuil |
+| 5 bis | **Lot K-0, K-1, K-6** (diagnostic de la baisse fpga, jeux dans chaque base, jeu stage), puis **K-2 à K-5** et **K-7** avec K-2 ; K-0 fait le 04/10/2026 ; K-1, K-3, K-6 (stage et yolo-data), K-7 faits le 18/10/2026 (reste K-2, K-4, K-5) | les gains des étapes suivantes (E-b, F, G, H) se prouvent sur ces bancs ; le holdout fpga est sous son seuil |
 | 6 | `/table-review`, puis **E-e** (vérité terrain) et **E-b** (OCR par zone) | E-b se juge sur E-e |
 | 7 | **Lot J-1 à J-3** (`pdb compare` tabulaire), puis `/paper-compare`, `/state-of-art` | J donne au skill une entrée déterministe ; le tout s'appuie sur C et D |
 | 7 bis | **Lot J-4, J-5** (figures, colonnes `clock_mhz`, `latency_scope`) | au fil des besoins |

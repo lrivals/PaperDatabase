@@ -71,6 +71,8 @@ class TestBenchmarkColumns(unittest.TestCase):
         self.assertEqual(schema.validate_benchmark_row(bench_row(chunk_id="2507.18174#041")), [])
         self.assertTrue(schema.validate_benchmark_row(bench_row(input_res="")))  # présente : n/r, pas vide
         self.assertTrue(schema.validate_benchmark_row(bench_row(batch="1.5")))
+        self.assertEqual(schema.validate_benchmark_row(bench_row(platform_class="server")), [])
+        self.assertTrue(schema.validate_benchmark_row(bench_row(platform_class="cloud")))
         self.assertTrue(schema.validate_benchmark_row(bench_row(chunk_id="Table 2")))
         self.assertTrue(schema.validate_benchmark_row(bench_row(chunk_id=f"{PID}#a.0")))
 

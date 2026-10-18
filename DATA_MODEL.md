@@ -80,7 +80,7 @@ Un fichier par article, à la racine de `papers/<paper_id>/`.
 | `doi` | string \| null | sans préfixe URL |
 | `arxiv_id` | string \| null | |
 | `url` | string \| null | lien canonique |
-| `type` | enum | `preprint` \| `journal` \| `conference` \| `thesis` \| `repo` |
+| `type` | enum | `preprint` \| `journal` \| `conference` \| `thesis` \| `repo` \| `report` (rapport d'autorité ou d'institution : EASA, NIST…, ni relu par les pairs ni preprint) |
 | `axes` | array | voir §3 ; plusieurs valeurs possibles |
 | `tags` | array | libre : modèles, plateformes, toolflows cités |
 | `added` | date ISO | date d'ingestion |
@@ -296,6 +296,7 @@ comparent pas.
 | `batch` | `1` | entier |
 | `measure_protocol` | `wattmètre carte, moyenne 60 s` | comment FPS et puissance sont mesurés |
 | `original_value` | `12.3 mJ/frame` | valeur telle qu'écrite, quand une colonne est convertie |
+| `platform_class` | `server` | `embedded` (cible embarquée, défaut implicite) ou `server` (GPU de bureau ou serveur) : une mesure de référence hors cible, par exemple une Re-ID ou une détection de personnes sur GPU, utile au cas d'application ; `pdb bench --where platform_class=server` les liste, et `pdb compare` ne les groupe jamais avec des mesures embarquées |
 
 `bin/pdb bench --add-columns all` ajoute ces colonnes à une base (les lignes existantes passent à
 `n/r`) ; `reindex` ne modifie jamais le CSV. `/paper-fiche` les remplit pour les nouvelles
@@ -305,6 +306,64 @@ que chaque valeur numérique d'une ligne qui a un `chunk_id` figure dans ce pass
 regroupe les lignes par `task`, `dataset`, `dataset_split` et métrique (`metric_def`, à
 défaut `accuracy_metric`), ou `power_scope` pour les puissances, et signale les comparaisons
 impossibles.
+
+### 7.2 Sortie de `pdb compare`
+
+`bin/pdb compare --x COL --y COL [filtres]` (`lib/compare.py`, lot J) compare sur deux axes
+numériques (`schema.NUMERIC_COLUMNS`). Clé de groupe : `task`, `dataset`, `dataset_split`,
+plus la métrique (`metric_def`, à défaut `~accuracy_metric`) dès qu'un axe ou `--metric`
+porte sur la précision, plus `power_scope` dès qu'un axe est `power_w` : une puissance `chip`
+ne rejoint jamais une puissance `board`. Un groupe retient au moins deux papiers
+(`--min-papers`). Aucune valeur n'est devinée : un `n/r` sur un axe exclut la ligne, un `n/r`
+dans la clé rend le groupe `faible`. Chaque ligne filtrée est retenue ou exclue avec un motif.
+
+`--format json`, schéma stable lu par `/paper-compare` :
+
+```json
+{"x": "fps", "y": "power_w", "key": ["task", "dataset", "dataset_split", "power_scope"],
+ "counts": {"filtered": 12, "kept": 4, "excluded": 8},
+ "groups": [{"key": {"task": "detection", "dataset": "COCO", "dataset_split": "val2017",
+                     "power_scope": "board"},
+             "confidence": "réservée", "papers": ["2108.03986", "2023-zhai"],
+             "conditions": [{"column": "input_res", "values": ["416", "640"], "missing": 0}],
+             "rows": [{"paper": "2108.03986", "fps": "30", "power_w": "4.2", "model": "…",
+                       "platform": "…", "source_section": "Table 3", "confidence": "high",
+                       "chunk_id": "2108.03986#041.0"}]}],
+ "excluded": [{"paper": "…", "fps": "n/r", "power_w": "2.1", "model": "…", "platform": "…",
+               "source_section": "…", "confidence": "…", "chunk_id": "n/r",
+               "reason": "x (fps) en n/r"}]}
+```
+
+- `confidence` du groupe : `forte` (clé complète, aucune condition ne varie), `réservée`
+  (une condition de `query.VARYING` varie : quantification, résolution, batch, protocole),
+  `faible` (une condition de la clé ou d'une ligne est `n/r`, ou métrique `~` non vérifiée).
+  Seules les colonnes présentes dans l'en-tête comptent.
+- `confidence` d'une ligne : qualité de la transcription, sans rapport avec la validité de
+  la comparaison.
+- Motifs d'exclusion : `x (<col>) en n/r`, `y (<col>) en n/r`, `métrique différente`,
+  `power_scope incompatible`, `dataset_split différent` (une ligne seule de son groupe qu'un
+  groupe de plusieurs papiers de même tâche et même jeu sépare par cette colonne), sinon
+  `seul papier du groupe`.
+
+### 7.3 Vérité terrain des tableaux (`eval/fixtures/tables_gold.jsonl`)
+
+Lot E-e : tableaux transcrits depuis l'image de leur zone (`bin/pdb table <id> <tableau>
+--png`, skill `/table-review`), une ligne par tableau. Les propositions d'un agent ou de
+`/table-review` vont d'abord dans `tables_gold_proposed*.jsonl` ; une ligne relue par
+l'utilisateur passe dans `tables_gold.jsonl` avec `"reviewed": true`.
+
+| Champ | Exemple | Notes |
+|---|---|---|
+| `paper_id` | `arxiv-2607.13106-no-attention-no-problem-dpu` | id complet |
+| `section_id` | `…#027` | ligne `table` de `sections.jsonl` attendue |
+| `label` | `TABLE III` | libellé imprimé |
+| `page` | `8` | page du PDF (1 = première) |
+| `header` | `["DPU", "Power (W)", "LUTs"]` | une rangée ; deux niveaux concaténés « Parent / Enfant » |
+| `rows` | `[["B512", "4.792", "28.2k (12.4%)"]]` | cellules telles qu'imprimées, même longueur que `header`, `""` si vide |
+| `units` | `{"Power (W)": "W"}` | unités données par l'en-tête ou la légende |
+| `defects` | `["rangée manquante"]` | défauts de l'extraction constatés à la transcription |
+| `reviewed` | `false` | `true` après relecture humaine |
+| `notes` | | partie illisible, zone fausse… |
 
 ---
 
@@ -445,8 +504,8 @@ La racine du dépôt ne contient que le code : aucun `base.json` n'y est trouvé
 sans `base.json` (corpus de test, `pdb synth`) prend la configuration de `bases/fpga/`.
 
 `bin/pdb test` porte toujours sur le dépôt du code. `bin/pdb eval` suit la base active : ses
-questions dans `eval/fixtures/` (à défaut celles du code, `tests/fixtures/`, écrites pour la base
-fpga), ses seuils `eval/thresholds.json` et ses runs dans `eval/results/`
+questions dans `eval/fixtures/` (sans repli depuis le lot K-1 : une base sans jeu n'a pas de
+rappel mesuré), ses seuils `eval/thresholds.json` et ses runs dans `eval/results/`
 ([docs/EVAL.md §9](docs/EVAL.md#9-banc-par-base)). Depuis le 04/10/2026, le volet `rag` d'un run
 enregistre son corpus (`corpus` : `n_papers`, `papers`, `subset`). Un run sur sous-corpus
 (`pdb eval --papers`) se termine par `-sub.json` ; ses jeux portent `skipped` (questions sans

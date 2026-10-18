@@ -75,7 +75,7 @@ n'a été nécessaire.
 
 ## 3. Recherche de passages
 
-**Jeux** (`tests/fixtures/`) :
+**Jeux** de la base fpga (`bases/fpga/eval/fixtures/` depuis le 18/10/2026, `tests/fixtures/` du code auparavant) :
 
 | Jeu | Questions | Rôle |
 |---|---|---|
@@ -400,13 +400,14 @@ Lecture :
 
 | Élément | Chemin dans la base | Repli |
 |---|---|---|
-| questions (5 jeux du §3) | `eval/fixtures/` | `tests/fixtures/` du code, écrits pour la base fpga |
+| questions (5 jeux du §3) | `eval/fixtures/` | aucun depuis le 18/10/2026 (lot K-1) : une base sans jeu reçoit un avertissement, son rappel n'est ni mesuré ni comparé |
 | seuils | `eval/thresholds.json` | celui du code |
 | runs enregistrés, `--compare` | `eval/results/` | aucun : chaque base a ses runs |
 
-La base fpga (`bases/fpga/`) n'a pas de `eval/fixtures/` : elle utilise les jeux de
-`tests/fixtures/` du code et les seuils de `eval/thresholds.json` du code ; ses runs sont dans
-`bases/fpga/eval/results/`. Le commit noté dans un run est celui du code. Le
+La base fpga a ses jeux dans `bases/fpga/eval/fixtures/` et ses seuils dans
+`bases/fpga/eval/thresholds.json` (copiés de `eval/thresholds.json` du code, 18/10/2026,
+lot K-1) ; ses runs sont dans `bases/fpga/eval/results/`. Chaque base a ses propres jeux :
+drone (28/09/2026), stage et yolo-data (18/10/2026, lot K-6, écrits par agent, à relire). Le commit noté dans un run est celui du code. Le
 volet temps chronomètre `bench --cols model,fps,power_w -n 5` et `paper <premier id court>`,
 qui ne dépendent plus du corpus fpga. `bin/pdb test` porte toujours sur le code.
 
@@ -644,7 +645,7 @@ bin/pdb eval --answers eval/answers/<run>… [--save] [--compare]  # plusieurs r
 ```
 
 **Jeux.** `answers.jsonl` (dev) et `answers_holdout.jsonl`, dans `eval/fixtures/` de la base
-ou, pour fpga, dans `tests/fixtures/` (même règle que les autres jeux, `evaluation.paths`).
+(même règle que les autres jeux, `evaluation.paths`).
 Quatre catégories :
 
 | Catégorie | Ce qu'on vérifie | Verdict attendu |

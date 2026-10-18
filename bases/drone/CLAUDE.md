@@ -74,6 +74,8 @@ chiffre à chiffre ([docs/EVAL.md](../../docs/EVAL.md) §6).
 | `bin/pdb base scan [--from fpga]` / `base import fpga:<paper_id>` | articles utiles présents ou cités dans la base fpga → `xbase_candidates.csv` ; copie d'un article (fiche repassée à `todo`) |
 | `/base-profile [consigne]` | le LLM propose d'affiner `profile.md` et `base.json` ; rien n'est écrit sans accord |
 | `bin/pdb bench [filtres]` | filtre `benchmarks.csv` sans LLM ; les colonnes de source restent affichées ; `--check` : valeurs retrouvées dans leur passage (`chunk_id`) ; `--comparable` : groupes de lignes comparables, avant toute comparaison entre papiers ([docs/RAG.md](../../docs/RAG.md) §5.1) |
+| `bin/pdb compare --x COL --y COL [filtres]` / `/paper-compare <question>` | comparaison sur deux axes (FPS contre W, précision contre LUT) : groupes comparables avec leur confiance, lignes exclues avec leur motif ; à préférer à une lecture côte à côte de `bench` ([DATA_MODEL.md §7.2](../../DATA_MODEL.md)) |
+| `bin/pdb table <id> [<tableau>] --png` / `/table-review <id>` | tableaux d'un papier, signaux de qualité, image de la zone dans le PDF ; relecture et corrections proposées dans `tables_review.md` |
 | `bin/pdb search "<q>"`, `show <chunk_id>`, `verify <chunk_id> "<citation>"` | passages sourcés sans LLM, texte exact, contrôle d'une citation ([docs/RAG.md](../../docs/RAG.md) §5) |
 | `/paper-ask <question>` | réponse sourcée et vérifiée : `bench`, puis `search`, `show`, `verify` |
 | `bin/pdb paper <id \| mot>…` | fiche d'identité d'un papier : métadonnées, preprint, statut de la fiche, nombre de benchmarks (`--bench` pour les lignes) ; plusieurs ids → une ligne par papier (`--fields short,type`) |

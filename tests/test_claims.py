@@ -63,6 +63,15 @@ class TestClaims(unittest.TestCase):
         results, summary = claims.check(self.root)
         return {(r["line"], r["level"]): r["msg"] for r in results}, summary
 
+    def test_linked(self):
+        self._write([_claim(1, "1612.07119#001.0", "x"), _claim(2, f"{PID}#002.0", "y"),
+                     _claim(3, f"{PID}#003.0", "z")])
+        short = lambda c: c.replace(PID, "1612.07119")  # noqa: E731
+        out = claims.linked(self.root, [f"{PID}#001.0", f"{PID}#002.0"], short)
+        self.assertEqual({k: [c["claim_id"][-3:] for c in v] for k, v in out.items()},
+                         {f"{PID}#001.0": ["c01"], f"{PID}#002.0": ["c02"]})
+        self.assertEqual(claims.linked(self.root, ["autre#001.0"]), {})
+
     def test_no_claims(self):
         self.assertEqual(claims.check(self.root), ([], {"claims": 0, "papers": 0, "verified": 0}))
 

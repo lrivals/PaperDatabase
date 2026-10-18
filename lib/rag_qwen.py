@@ -15,8 +15,7 @@ from pathlib import Path
 
 from lib import schema
 from lib import rag_models
-
-FILES = ("metadata.json", "sections.jsonl", "fiche.md")
+from lib.snapshot import FILES, fingerprint, paths  # noqa: F401 (API de ce module)
 INDEX_VERSION = "2"
 
 
@@ -28,21 +27,6 @@ def file_hash(path):
     return digest(path.read_bytes())
 
 
-def paths(root):
-    root = Path(root)
-    out = [root / "benchmarks.csv"]
-    for d in sorted((root / "papers").iterdir()):
-        if d.is_dir():
-            out += [d / name for name in FILES]
-    return out
-
-
-def fingerprint(root):
-    h = hashlib.sha256()
-    for p in paths(root):
-        h.update(str(p.relative_to(root)).encode())
-        h.update(p.read_bytes())
-    return h.hexdigest()
 
 
 def index_path(root):

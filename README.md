@@ -128,7 +128,7 @@ que la base ne traite pas une question.
 
 **Mode d'emploi de l'agent :** [CLAUDE.md](CLAUDE.md) donne l'ordre de lecture et les règles
 de travail : ne jamais inventer de référence, écrire `n/r` pour une valeur non rapportée,
-distinguer le lu du déduit, relever les comparaisons biaisées. Cinq commandes Claude Code
+distinguer le lu du déduit, relever les comparaisons biaisées. Des commandes Claude Code
 (`.claude/commands/`) automatisent le travail :
 
 | Commande | Effet |
@@ -139,6 +139,8 @@ distinguer le lu du déduit, relever les comparaisons biaisées. Cinq commandes 
 | `/paper-ask <question>` | réponse sourcée : `bench`, puis `search`, `show`, `verify` ; chaque citation vérifiée |
 | `/paper-discover [axe \| gap \| mots-clés]` | candidats via OpenAlex (citations du corpus, recherche), liste courte, ajout après accord |
 | `/paper-gaps` | met à jour `gaps.md` depuis les fiches terminées et les benchmarks |
+| `/paper-compare <question ou axe>` | matrice de comparaison à partir de `pdb compare` (groupes comparables, confiance, lignes exclues avec leur motif) et des passages sources |
+| `/table-review <paper_id>` | relit les tableaux extraits contre l'image de leur zone dans le PDF, propose des corrections |
 
 ---
 

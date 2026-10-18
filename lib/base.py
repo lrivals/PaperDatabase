@@ -29,7 +29,7 @@ REQUIRED = ("name", "axes")
 # le reste. topic_re et title_topic_re vides : tout candidat est « dans le sujet ».
 DEFAULTS = {"axis_rules": {}, "axis_queries": {}, "hardware_axes": [], "topic_re": "",
             "title_topic_re": "", "topic_min_hits": 2, "tag_rules": [], "plot_tasks": [],
-            "plot": {}}
+            "plot": {}, "log_answers": False}
 
 # Bloc `plot` (DATA_MODEL §11.2.1) : réglages de pdb plot propres à la base. Les noms de
 # figures et les classes de tâches par défaut vivent ici (pas dans lib/plotdata, qui importe

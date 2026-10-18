@@ -51,6 +51,27 @@ def load(path):
     return out
 
 
+def linked(root, chunk_ids, short_chunk_id=lambda c: c):
+    """Claims dont le source_chunk est l'un des passages chunk_ids (lot C : /paper-ask lit
+    les preuves déjà vérifiées des passages qu'il retient). Renvoie {chunk_id: [claim]} ;
+    les ids sont comparés sous leur forme courte (short_chunk_id) comme sous leur forme brute."""
+    want = {}
+    for c in chunk_ids:
+        want[c] = c
+        want[short_chunk_id(c)] = c
+    papers = {c.split("#")[0] for c in chunk_ids}
+    out = {}
+    for path in paths(root, papers):
+        for _, row, err in load(path):
+            if err or not row:
+                continue
+            src = row.get("source_chunk") or ""
+            key = want.get(src) or want.get(short_chunk_id(src))
+            if key:
+                out.setdefault(key, []).append(row)
+    return out
+
+
 def check(root, paper_ids=None):
     """Contrôle les claims.jsonl de la base (ou de paper_ids). Renvoie (résultats, bilan).
 

@@ -1,6 +1,6 @@
 ---
 description: Répond à une question sur le corpus à partir de passages sourcés et vérifiés, sans lire fulltext.md
-allowed-tools: Read, Write, Bash(bin/pdb bench:*), Bash(bin/pdb search:*), Bash(bin/pdb show:*), Bash(bin/pdb paper:*), Bash(bin/pdb verify:*), Bash(bin/pdb cites:*), Bash(bin/pdb cited-by:*)
+allowed-tools: Read, Write, Bash(bin/pdb bench:*), Bash(bin/pdb compare:*), Bash(bin/pdb log-answer:*), Bash(bin/pdb search:*), Bash(bin/pdb show:*), Bash(bin/pdb paper:*), Bash(bin/pdb verify:*), Bash(bin/pdb cites:*), Bash(bin/pdb cited-by:*)
 ---
 
 Question : $ARGUMENTS
@@ -22,7 +22,9 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
    qu'à l'intérieur d'un groupe ; des lignes de groupes différents (« comparaisons
    impossibles » : autre métrique, autre split, autre portée) se citent côte à côte en disant
    pourquoi elles ne se comparent pas, et une métrique marquée `~` a une définition non
-   vérifiée (limite à signaler).
+   vérifiée (limite à signaler). Pour croiser **deux grandeurs** (FPS contre puissance,
+   précision contre LUT), préfère `bin/pdb compare --x <col> --y <col> [filtres]` : groupes
+   avec leur confiance (`forte`, `réservée`, `faible`) et lignes exclues avec leur motif.
 2. **Passages (N1).** Sinon, ou en complément, lance `bin/pdb search "<question>" -k 8 --rerank`.
    - Le moteur est choisi par `search` : CPU par défaut, Qwen sur GPU si l'utilisateur a
      activé la route GPU (`bin/pdb gpu on`). Ne force pas `--gpu` ; une ligne
@@ -34,7 +36,11 @@ et les formats sont décrits dans `docs/RAG.md` ; ne le relis que si une command
      aucun score ne le détecte de façon fiable (docs/EVAL.md §5). C'est le contenu des
      extraits qui décide (étape 6). Ne comble jamais un vide par tes connaissances générales.
 3. **Lecture.** `bin/pdb show` sur 2 ou 3 passages au plus, ceux dont l'extrait répond.
-   N'ouvre jamais `fulltext.md` ni `paper.pdf`.
+   N'ouvre jamais `fulltext.md` ni `paper.pdf`. Quand `search` liste des **claims
+   vérifiées** sous ses passages (`claims.jsonl`, lot C), lis-les d'abord : chacune est une
+   affirmation atomique déjà rattachée à son passage, avec sa voix (`auteurs` ou `déduit`)
+   et ses réserves (`bin/pdb claims <id>`). Cite toujours le passage, pas la claim ; une
+   claim `déduit` va dans **Déduit**, pas dans **Lu**.
 4. **Réponse.** Cite chaque affirmation sous la forme `[chunk_id]` (id court, par exemple
    `[1612.07119#019.3]`). Pour un chiffre de `bench`, cite `[paper, source_section]`.
 5. **Vérification.** Lance `bin/pdb verify <chunk_id> "<citation>"` sur chaque citation
@@ -99,3 +105,9 @@ ce fichier (et aucun autre) :
   et accepté par `pdb verify`, avec le `chunk_id` corrigé si la sortie dit « trouvée dans
   … ») ou ligne de `bench` (`paper` + `source_section`). Une affirmation `déduit` n'en a pas.
 - Les nombres s'écrivent dans `text` avec leur unité, comme dans la réponse.
+
+**Journal des réponses** (lot H). Si `search` a affiché `# journal des réponses actif`, écris
+après la réponse l'enregistrement ci-dessus dans `.cache/answers/pending.json` (l'`id` est
+un horodatage, par exemple `2026-10-18T1430`), puis lance `bin/pdb log-answer
+.cache/answers/pending.json` : la commande ajoute la date, le commit, l'empreinte du corpus
+et le sha1 des passages cités, puis supprime le fichier. Sinon, n'écris rien.

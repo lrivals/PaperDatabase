@@ -1,7 +1,7 @@
 ---
 description: Answer a research question with the GPU (Qwen3) index and open-access acquisition
 argument-hint: <research question>
-allowed-tools: Read, Write, Grep, Glob, Bash(bin/pdb rag *), Bash(bin/pdb gpu), Bash(bin/pdb reindex)
+allowed-tools: Read, Write, Grep, Glob, Bash(bin/pdb rag *), Bash(bin/pdb gpu), Bash(bin/pdb reindex), Bash(bin/pdb log-answer:*)
 ---
 
 Answer: $ARGUMENTS
@@ -19,3 +19,7 @@ Follow `CLAUDE.md` and `DATA_MODEL.md`. Use `bin/pdb rag index` when the index i
 Draft an answer with evidence IDs. Make one prioritized list of at most three unsupported claims, missing conditions, or gaps in paper coverage. For each information gap, search a self-contained follow-up query. When the local corpus is insufficient, call `bin/pdb rag acquire "QUERY" --run RUN_ID` to discover open-access full texts. Validated papers are only staged: show the user each staged paper (title, year, excerpt) and wait for their answer. Run `bin/pdb rag approve RUN_ID PAPER_ID...` only for the papers they accept, then report the new paper IDs. A staged paper is not in the library and must not be cited. Use at most three acquisition/follow-up rounds and respect the command's shared budget. Unavailable PDFs and failed extraction are limitations, not evidence of absence.
 
 Check every final claim against its exact source passage, including claims in the initial draft. Compare task, metric, dataset, platform, precision, timing and power scope before numerical comparisons. A value marked `n/r` stays unknown; a computed FPS/W must name the source inputs and power scope. Record `snapshot`, `verdict`, `requirements: [{text, status}]`, `claims: [{text, citations: [{id, excerpt}]}]` in a JSON answer record (same fields as the `/paper-ask --record` format) and run `bin/pdb rag check-answer RECORD.json` when writing a research artifact. Each excerpt must occur in its cited passage. The checker verifies source identities/excerpts; assess semantic support yourself. Narrow, qualify, or remove unsupported claims. State when the answer is limited to the searched corpus and newly acquired papers.
+
+**Journal des réponses** (lot H). Si `base.json` a `"log_answers": true`, écris après la
+réponse un enregistrement au format du mode `--record` de `/paper-ask` dans
+`.cache/answers/pending.json`, puis lance `bin/pdb log-answer .cache/answers/pending.json`.

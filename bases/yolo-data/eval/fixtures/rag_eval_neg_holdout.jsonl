@@ -1,0 +1,20 @@
+{"q": "Weather forecasting with graph neural networks"}
+{"q": "Machine translation of long documents"}
+{"q": "Drug discovery with generative molecular models"}
+{"q": "Fraud detection in credit card transactions"}
+{"q": "Music generation with transformers"}
+{"q": "Quantum error correction codes"}
+{"q": "Autonomous driving trajectory prediction with transformers"}
+{"q": "Semantic segmentation annotation tools for street scenes in 2D"}
+{"q": "Dataset distillation to compress training sets"}
+{"q": "Crowd counting with density maps"}
+{"q": "Human pose estimation datasets and keypoint annotation"}
+{"q": "Learning rate schedules and optimizers for training YOLO models", "ambiguous": "à moitié couverte : hyperparamètres d'entraînement cités dans YOLOv4 et SAHI sans étude dédiée"}
+{"q": "Contrastive learning for visual representation"}
+{"q": "Licence plate recognition with OCR"}
+{"q": "Open-set recognition and out-of-distribution detection in detectors"}
+{"q": "Transformer-based DETR detectors and their slow convergence"}
+{"q": "Optical character recognition of handwritten forms"}
+{"q": "Image super-resolution to help small object detection", "ambiguous": "à moitié couverte : super-résolution citée dans les papiers sur les petits objets"}
+{"q": "Point cloud object detection on LiDAR with voxel networks"}
+{"q": "Face recognition dataset privacy issues"}

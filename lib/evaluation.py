@@ -39,18 +39,39 @@ BENCH_VALUES = ("accuracy_value", "fps", "gops", "latency_ms", "power_w", "luts"
 
 # ------------------------------------------------------------------ emplacements
 
+def tables_gold(root):
+    """Volet « tables_gold » du banc d'extraction (lot E-e, lib/tablegold.py) : la vérité
+    terrain relue (eval/fixtures/tables_gold.jsonl), à défaut les propositions non relues
+    (tables_gold_proposed*.jsonl), marquées comme telles. None sans aucun fichier."""
+    from lib import tablegold
+    fx = Path(root) / "eval" / "fixtures"
+    gold = fx / "tables_gold.jsonl"
+    files = [gold] if gold.is_file() else sorted(fx.glob("tables_gold_proposed*.jsonl"))
+    rows = [r for f in files for r in load_jsonl(f)]
+    if not rows:
+        return None
+    return {"source": "relue" if gold.is_file() else "proposée, non relue",
+            **tablegold.evaluate(root, rows)}
+
+
+def has_sets(fixtures):
+    """Vrai si le dossier contient au moins un jeu de questions du banc."""
+    return fixtures is not None and any((Path(fixtures) / f"{name}.jsonl").is_file()
+                                        for name in RAG_SETS + NEG_SETS + ANSWER_SETS)
+
+
 def paths(root, code):
     """(fixtures, results, thresholds) du banc pour la base `root`.
 
-    Une base qui a ses propres questions les met dans eval/fixtures/ ; sinon (base fpga) les
-    jeux de tests/fixtures/ du code. Les runs sont enregistrés dans
-    eval/results/ de la base ; les seuils viennent de son eval/thresholds.json, à défaut de
-    celui du code.
+    Chaque base a ses questions dans eval/fixtures/ (lot K-1) ; une base sans jeu reçoit
+    fixtures = None, sans repli sur les jeux d'une autre base (pdb eval l'annonce et
+    --compare ne compare pas son rappel). Les runs sont enregistrés dans eval/results/ de la
+    base ; les seuils viennent de son eval/thresholds.json, à défaut de celui du code.
     """
     root, code = Path(root), Path(code)
     fixtures = root / "eval" / "fixtures"
     thresholds = root / "eval" / "thresholds.json"
-    return (fixtures if fixtures.is_dir() else code / "tests" / "fixtures",
+    return (fixtures if has_sets(fixtures) else None,
             root / "eval" / "results",
             thresholds if thresholds.is_file() else code / "eval" / "thresholds.json")
 
@@ -354,8 +375,35 @@ def ranking_metrics(results, expected, k=K):
     }
 
 
+BOOTSTRAP = 1000  # tirages de l'intervalle de confiance (K-7)
+CI_KEYS = (f"recall@{K}", "mrr")
+STRATA = ("axis", "kind")  # champs optionnels des questions (K-3, DATA_MODEL §13)
+
+
+def bootstrap_ci(values, n=BOOTSTRAP, alpha=0.05, seed=0):
+    """Intervalle de confiance (percentiles) de la moyenne, par rééchantillonnage des
+    questions ; graine fixe : deux runs identiques donnent le même intervalle."""
+    if not values:
+        return None
+    rng = random.Random(seed)
+    m = len(values)
+    means = sorted(sum(rng.choice(values) for _ in range(m)) / m for _ in range(n))
+    return {"lo": means[int(alpha / 2 * n)], "hi": means[min(n - 1, int((1 - alpha / 2) * n))]}
+
+
+def _by_field(questions, per, field, k=K):
+    groups = {}
+    for q, m in zip(questions, per):
+        if q.get(field):
+            groups.setdefault(q[field], []).append(m)
+    return {g: {"n": len(ms), f"recall@{k}": sum(m[f"recall@{k}"] for m in ms) / len(ms),
+                "mrr": sum(m["mrr"] for m in ms) / len(ms)} for g, ms in sorted(groups.items())}
+
+
 def evaluate_set(index, questions, modes, k=K):
-    """Métriques moyennes par mode ; misses = questions sans section attendue dans les k."""
+    """Métriques moyennes par mode ; misses = questions sans section attendue dans les k ;
+    ci = intervalle de confiance à 95 % (bootstrap) de recall@k et MRR ; by_axis / by_kind
+    quand les questions portent les champs axis / kind (lot K-3)."""
     out = {}
     for mode in modes:
         base, _, rr = mode.partition("+")
@@ -372,7 +420,22 @@ def evaluate_set(index, questions, modes, k=K):
         out[mode] = {key: sum(m[key] for m in per) / n
                      for key in (f"recall@{k}", "recall@10", "mrr", "ndcg@10", f"paper@{k}")}
         out[mode]["misses"] = misses
+        ci = {key: bootstrap_ci([m[key] for m in per]) for key in CI_KEYS}
+        if all(ci.values()):
+            out[mode]["ci"] = ci
+        for field in STRATA:
+            groups = _by_field(questions, per, field, k)
+            if groups:
+                out[mode][f"by_{field}"] = groups
     return out
+
+
+def query_coverage(sets, papers):
+    """Part du corpus interrogée : papiers dont au moins une section est attendue par une
+    question des jeux de recherche (lot K-3)."""
+    asked = {e.split("#")[0] for name in RAG_SETS for q in sets.get(name, ()) for e in q.get("expect", ())}
+    asked &= set(papers)
+    return {"papers_queried": len(asked), "share": len(asked) / len(papers) if papers else None}
 
 
 def best_threshold(pos, neg):
@@ -544,9 +607,11 @@ def rag_quality(root, fixtures, modes=None, verify_n=40, gpu=False, paper_ids=No
            "sets": {}}
     sets = {}
     for name in RAG_SETS + NEG_SETS:
-        path = Path(fixtures) / f"{name}.jsonl"
-        if path.exists():
+        path = Path(fixtures) / f"{name}.jsonl" if fixtures else None
+        if path and path.exists():
             sets[name] = load_jsonl(path)
+    if sets:
+        out["coverage"] = query_coverage(sets, papers)
     for name in RAG_SETS:
         if name in sets:
             qs = sets[name]
@@ -619,7 +684,10 @@ def speed(root, fixtures, encode_n=200, cli=True):
         out["encode_passages_per_s"] = len(texts) / dt
         out["full_encode_estimate_s"] = len(index.chunks) * dt / len(texts)
 
-    qs = [q["q"] for q in load_jsonl(Path(fixtures) / "rag_eval.jsonl")]
+    path = Path(fixtures) / "rag_eval.jsonl" if fixtures else None
+    # sans jeu de questions, les temps de recherche se mesurent sur des requêtes génériques
+    qs = ([q["q"] for q in load_jsonl(path)] if path and path.exists()
+          else ["hardware accelerator latency", "dataset annotation", "power consumption measurement"])
     for mode in (rag.MODES + ("hybrid+rerank",) if index.dense else ("lexical",)):
         base, _, rr = mode.partition("+")
         index.search(qs[0], mode=base, rerank=bool(rr))  # préchauffage
@@ -1018,14 +1086,44 @@ def check_thresholds(flat, thresholds):
     return fails
 
 
-def compare(old, new, ignore=("speed.",), tol=1e-9):
+_DETAIL = (".per_paper.", ".per_question.", ".per_table.", ".by_axis.", ".by_kind.", ".ci.")
+
+
+def _interval(new, key):
+    """Intervalle de confiance du nouveau run pour une métrique `….<mode>.<métrique>`."""
+    prefix, _, metric = key.rpartition(".")
+    lo, hi = new.get(f"{prefix}.ci.{metric}.lo"), new.get(f"{prefix}.ci.{metric}.hi")
+    return (lo, hi) if lo is not None and hi is not None else None
+
+
+def _crosses(thresholds, key, a, b):
+    bound = (thresholds or {}).get(key)
+    if not bound:
+        return False
+
+    def ok(v):
+        return ("min" not in bound or v >= bound["min"]) and ("max" not in bound or v <= bound["max"])
+    return ok(a) != ok(b)
+
+
+def compare(old, new, ignore=("speed.",), tol=1e-9, thresholds=None, intervals=True):
     """Écarts entre deux runs aplatis : [(clé, ancien, nouveau)]. Les temps sont ignorés par
-    défaut (bruités) ; les métriques par papier aussi, résumées par les agrégats."""
+    défaut (bruités) ; les détails (par papier, par question, par axe, par type, bornes des
+    intervalles) aussi, résumés par les agrégats. intervals : une métrique qui a un
+    intervalle de confiance (K-7) n'est signalée que si l'ancienne valeur en sort ou si
+    l'écart franchit un seuil."""
     diffs = []
     for key in sorted(set(old) | set(new)):
-        if key.startswith(ignore) or ".per_paper." in key or ".per_question." in key:
+        if key.startswith(ignore) or any(d in key for d in _DETAIL):
             continue
         a, b = old.get(key), new.get(key)
-        if a is None or b is None or abs(a - b) > tol:
+        if a is None or b is None:
             diffs.append((key, a, b))
+            continue
+        if abs(a - b) <= tol:
+            continue
+        ci = _interval(new, key) if intervals else None
+        if ci and ci[0] <= a <= ci[1] and not _crosses(thresholds, key, a, b):
+            continue
+        diffs.append((key, a, b))
     return diffs

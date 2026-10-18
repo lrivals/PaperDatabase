@@ -3,49 +3,49 @@
   "file": "bench_fps_power.png",
   "group": "bench",
   "description": "débit vs puissance, détection / autres tâches",
-  "generated": "2026-10-03T23:03:05",
+  "generated": "2026-10-18T19:09:20",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 82,
-  "total": 299
+  "total": 306
  },
  "bench_gops_per_watt": {
   "file": "bench_gops_per_watt.png",
   "group": "bench",
   "description": "GOPS/W par précision de calcul",
-  "generated": "2026-10-03T23:03:05",
+  "generated": "2026-10-18T19:09:21",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 54,
-  "total": 299
+  "total": 306
  },
  "bench_fpga_resources": {
   "file": "bench_fpga_resources.png",
   "group": "bench",
   "description": "LUT vs DSP des FPGA, par toolflow",
-  "generated": "2026-10-03T23:03:06",
+  "generated": "2026-10-18T19:09:21",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 104,
-  "total": 299
+  "n": 111,
+  "total": 306
  },
  "bench_accuracy_fps": {
   "file": "bench_accuracy_fps.png",
   "group": "bench",
   "description": "précision vs débit, un panneau par métrique",
-  "generated": "2026-10-03T23:03:06",
+  "generated": "2026-10-18T19:09:23",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 41,
-  "total": 299,
+  "total": 306,
   "metrics": [
    "mAP50-95 (jeu propre, 1 cible)",
    "top-1 accuracy",
@@ -57,13 +57,13 @@
   "file": "bench_quantization.png",
   "group": "bench",
   "description": "précision de calcul par famille de plateforme",
-  "generated": "2026-10-03T23:03:07",
+  "generated": "2026-10-18T19:09:25",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 299,
-  "total": 299
+  "n": 306,
+  "total": 306
  },
  "eval_retrieval": {
   "file": "eval_retrieval.png",
@@ -138,7 +138,7 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-10-04T18:25:48",
+  "generated": "2026-10-18T19:09:25",
   "config_hash": "06b5f07886",
   "sources": [
    "papers/*/metadata.json"
@@ -149,7 +149,7 @@
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-10-04T18:25:49",
+  "generated": "2026-10-18T19:09:25",
   "config_hash": "06b5f07886",
   "sources": [
    "papers/*/metadata.json"
@@ -160,18 +160,18 @@
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-10-04T18:25:49",
+  "generated": "2026-10-18T19:09:26",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 299
+  "n": 306
  },
  "corpus_citations": {
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-10-04T18:25:55",
+  "generated": "2026-10-18T19:09:40",
   "config_hash": "06b5f07886",
   "sources": [
    "papers/*/refs.jsonl",
@@ -184,7 +184,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-10-04T18:25:56",
+  "generated": "2026-10-18T19:09:41",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv",
@@ -431,13 +431,13 @@
   "file": "bench_accuracy_latency.png",
   "group": "bench",
   "description": "précision vs latence, un panneau par métrique",
-  "generated": "2026-10-03T23:03:07",
+  "generated": "2026-10-18T19:09:24",
   "config_hash": "06b5f07886",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 42,
-  "total": 299,
+  "total": 306,
   "metrics": [
    "top-1 accuracy",
    "Top-1",

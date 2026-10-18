@@ -191,18 +191,20 @@ passages. Un article peut toutefois être copié de l'une à l'autre. Détails :
 
 ### Les bases actuelles
 
-Au 29/09/2026 :
+Au 18/10/2026 :
 
 | Base | Intitulé | Dossier | Papiers | Fiches faites | Lignes de benchmark |
 |---|---|---|---|---|---|
-| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu, sûreté et certification) | `bases/fpga/` | 101 | 101 | 299 |
-| `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 73 | 73 | 324 |
+| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu, sûreté et certification) | `bases/fpga/` | 104 | 104 | 299 |
+| `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 87 | 86 | 352 |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` | 56 | 56 | 100 |
+| `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | `bases/yolo-data/` | 44 | 44 | 425 |
 
 La base `drone` s'appelait auparavant `DroneVisionDB` et vivait dans un dossier séparé. Chaque
 base a son `CLAUDE.md` (règles propres au domaine), son [`profile.md`](bases/drone/profile.md)
 et sa carte des gaps : [bases/fpga/gaps.md](bases/fpga/gaps.md) pour `fpga`, [bases/drone/gaps.md](bases/drone/gaps.md)
-pour `drone`, [bases/stage/gaps.md](bases/stage/gaps.md) pour `stage`.
+pour `drone`, [bases/stage/gaps.md](bases/stage/gaps.md) pour `stage`,
+[bases/yolo-data/gaps.md](bases/yolo-data/gaps.md) pour `yolo-data`.
 
 ### Travailler sur plusieurs bases en parallèle
 
@@ -371,7 +373,8 @@ PaperDatabase/                # le code seul ; les données sont dans bases/
 
 ## État et documentation
 
-Au 01/10/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-bases-actuelles)) :
+Le dépôt contient quatre bases (effectifs du 18/10/2026 dans [Les bases actuelles](#les-bases-actuelles)).
+Description des trois premières au 01/10/2026, de `yolo-data` au 18/10/2026 :
 - `fpga` : vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo et MCU, orientée vers la
   thèse « IA embarquée sécuritaire certifiable sur FPGA » (axes `safety-certification` et
   `person-detection`). 101 articles, tous fichés ; 299 lignes dans `benchmarks.csv` (216 sur
@@ -386,6 +389,11 @@ Au 01/10/2026, le dépôt contient trois bases (voir [Les bases actuelles](#les-
   déposés à la main, 1 importé de `fpga`) ; 100 lignes dans `benchmarks.csv` ; 15 gaps dans
   [bases/stage/gaps.md](bases/stage/gaps.md), dont 12 étayés. Les références sans version
   téléchargeable automatiquement restantes sont à déposer à la main (liste dans [SETUP.md §9](SETUP.md#9-état-actuel-et-tâches-à-faire)).
+- `yolo-data` : préparation des données pour la détection YOLO (datasets, annotation, qualité
+  des labels, auto-labelling, active learning, prétraitement, augmentation, synthétique,
+  déséquilibre). 44 articles, tous fichés (8 importés de `fpga` et `drone`, 36 ajoutés depuis
+  OpenAlex) ; 425 lignes dans `benchmarks.csv`, dont 42 sur un YOLO ; 43 gaps dans
+  [bases/yolo-data/gaps.md](bases/yolo-data/gaps.md), dont 34 étayés (1ʳᵉ passe).
 
 ### Ce qui marche (testé : 288 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 

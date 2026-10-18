@@ -808,8 +808,50 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 03/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 18/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 18/10/2026 (base yolo-data).** 4ᵉ base, `bases/yolo-data/` : préparation des
+données pour la détection YOLO, avec pour finalité un guide « quel prétraitement, quel
+labelling selon le besoin ». `base.json` : 9 axes plus `surveys` (`datasets`, `annotation`,
+`label-quality`, `auto-labelling`, `active-learning`, `preprocessing`, `augmentation`,
+`synthetic-da`, `imbalance-small`), 35 `tag_rules`. Les règles ont été testées sur les titres
+et résumés des trois autres bases avant application, ce qui a fait resserrer `tiling`,
+`anchors`, `resize` et les noms de datasets. `profile.md` exclut les architectures sans
+contribution sur les données. 44 articles :
+- 8 importés de `fpga` et `drone` (`base scan`, puis `base import`) : SAHI, ClusDet, UAVDT,
+  VisDrone, WebUAV-3M, CrowdHuman, YOLO9000, YOLOv3 ;
+- 35 par arXiv (`bin/pdb add --from`) après tri des candidats OpenAlex par axe : 3 agents
+  `haiku`, listes fusionnées, identifiants vérifiés sur l'API arXiv ;
+- 1 PDF local en accès libre (Objects365, CVF) avec un `.bib` : sans lui, l'en-tête GROBID
+  donnait un id `unknown-…`.
+Fiches : 44 sur 44, en 5 lots d'agents `sonnet`, environ 0,26 $ par fiche. Lignes de benchmark
+proposées dans `.cache/bench/<id>.csv`, vérifiées puis fusionnées par l'agent principal.
+Écartées : lignes sans valeur, de classification, de tracking ou de vidéo, temps d'annotation.
+425 lignes au total. `gaps.md` 1ʳᵉ passe (agent `opus`) : 43 gaps, dont 34 étayés. Constat
+principal : 42 lignes sur 425 seulement portent sur un YOLO, aucune pour l'auto-labelling,
+l'active learning ou la qualité des labels.
+
+Défauts constatés pendant les lots :
+- un agent a lancé `sed -i` sur toutes les fiches pendant que les autres écrivaient. Sans
+  dégât, mais le prompt interdit depuis toute écriture shell (`sed`, redirection, heredoc) ;
+- une virgule non échappée dans le champ `model` donnait 21 colonnes : prompt complété, et
+  intégration en deux temps (tout valider, puis tout écrire) ;
+- un agent avait recoupé des valeurs « de mémoire » : vérifiées dans `fulltext.md`, puis règle
+  explicite « aucune valeur tirée de la mémoire » ajoutée au prompt ;
+- un lot entier interrompu par la limite de session, sans rien écrire, relancé tel quel.
+
+- [ ] Base yolo-data : 3 articles à déposer à la main dans `bases/yolo-data/inbox/` (pas de
+  version arXiv, téléchargement refusé), puis `bin/pdb ingest` :
+  - Everingham et al. 2010, *The Pascal Visual Object Classes (VOC) Challenge*, IJCV :
+    doi:10.1007/s11263-009-0275-4
+  - Shorten & Khoshgoftaar 2019, *A survey on Image Data Augmentation for Deep Learning*,
+    Journal of Big Data (accès libre) : doi:10.1186/s40537-019-0197-0
+  - *Data augmentation: A comprehensive survey of modern approaches*, Array 2022 (accès
+    libre) : doi:10.1016/j.array.2022.100258
+- [ ] Base yolo-data : `/paper-discover` sur les requêtes de la section « Pistes de lecture »
+  de `gaps.md` (YOLO récents, semi-supervisé et active learning sur YOLO, nombre d'images par
+  classe), puis guide pratique « quel prétraitement, quel labelling selon le besoin ».
 
 **Bilan du 03/10/2026 (figures par base).** Bloc `plot` de `base.json` (DATA_MODEL
 §11.2.1 ; `plot_tasks` reste lu), `pdb plot --check` (diagnostic et proposition de règles),
@@ -911,7 +953,7 @@ suffit pas pour des titres qui ne diffèrent que d'un mot.
   - Tiwari et al. 1994, *Power Analysis of Embedded Software*, IEEE TVLSI : doi:10.1109/92.335012
   - Vergara et al. 2012, *Chemical gas sensor drift compensation…* : doi:10.1016/j.snb.2012.01.074
   - Helwig et al. 2015, *Condition Monitoring of a Complex Hydraulic System*, I2MTC : doi:10.1109/I2MTC.2015.7151267
-- [ ] Base stage : 50 fiches à rédiger (`/paper-fiche`), puis `/paper-gaps`.
+- [x] Base stage : fiches et `/paper-gaps` (56 fiches sur 56 et 15 gaps au 01/10/2026).
 
 **Bilan du 28/09/2026 (base fpga dans `bases/`).** La base `fpga` quitte la racine pour
 `bases/fpga/` (papers/, benchmarks.csv, INDEX.md, gaps.md, labs.md, figures/, eval/results/,

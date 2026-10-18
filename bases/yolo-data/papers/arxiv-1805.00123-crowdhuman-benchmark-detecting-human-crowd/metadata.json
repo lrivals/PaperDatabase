@@ -38,23 +38,24 @@
   "url": "https://arxiv.org/abs/1805.00123",
   "type": "preprint",
   "axes": [
-    "datasets"
+    "datasets",
+    "annotation"
   ],
   "tags": [
-    "crowd"
+    "crowd",
+    "coco"
   ],
   "added": "2026-09-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : Table 2, [figure sans légende identifié, Table 3, Table 5, Table 6, Table 7, Table 8, Table 9, Table 12",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "tableaux sans corps extrait (légende seule) : Table 2, [figure sans légende identifié, Table 3, Table 5, Table 6, Table 7, Table 8, Table 9, Table 12"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "imported_from": {
     "base": "fpga",

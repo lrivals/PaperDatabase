@@ -54,22 +54,25 @@
   "url": "https://arxiv.org/abs/2102.12219",
   "type": "preprint",
   "axes": [
-    "datasets"
+    "datasets",
+    "annotation",
+    "preprocessing"
   ],
   "tags": [
-    "obb"
+    "obb",
+    "tiling",
+    "small-objects"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE 7, TABLE 8, TABLE 9, 49 70.37 84.94 84.11 73.61 80., TABLE 14, .55 65.68 79 .83 74.59 79.35 8, 83.08 90.04 90.86 83 .85 77.80"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

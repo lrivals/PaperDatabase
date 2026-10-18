@@ -1,138 +1,111 @@
 ---
 id: arxiv-2001.06303-detection-tracking-meet-drones-challenge
-fiche: todo
-date: 2026-09-28
-benchmarks: none
+fiche: done
+date: 2026-10-18
 ---
-
-> **Importée de la base `drone` le 2026-10-05.** Cette fiche a été écrite pour une autre base (autre thème) : pertinence à réévaluer ici, puis `fiche: done` via `/paper-fiche`. Statut d'origine : done.
 
 # Detection and Tracking Meet Drones Challenge
 
 Pengfei Zhu, Longyin Wen, Dawei Du, Xiao Bian, Heng Fan, Qinghua Hu, Haibin Ling, 2020, arXiv preprint. https://arxiv.org/abs/2001.06303
-Type : preprint non relu par les pairs (version arXiv v3 du 4 oct. 2021 ; une version publiée
-en revue existe probablement, IEEE TPAMI, mais elle n'est pas mentionnée dans le texte : à vérifier)
+Type : preprint non relu par les pairs (version arXiv v3 du 4 oct. 2021 ; une version en revue existe probablement, mais le texte ne la mentionne pas : à vérifier)
 
 ## Problème
 
-Les détecteurs et trackers génériques sont sous-optimaux sur les images de drone, à cause des
-variations de point de vue, d'échelle et du flou de bougé (§1). Les auteurs attribuent le
-retard du domaine au manque de jeux de données drone publics, volumineux et annotés à la main
-(§1, §2.3). Ils résument les trois éditions du challenge VisDrone (ECCV 2018, ICCV 2019,
-ECCV 2020, plus de 100 équipes) et analysent les méthodes soumises (Abstract, §1).
+Les détecteurs et trackers génériques sont sous-optimaux sur les images de drone : points de vue arbitraires, grandes variations d'échelle selon l'altitude, flou de bougé (§1). Les auteurs attribuent le retard au manque de jeux de données drone publics, volumineux et annotés à la main (§1, §2.3). Le papier présente le jeu VisDrone, résume trois éditions de challenge (ECCV 2018, ICCV 2019, ECCV 2020, plus de 100 équipes) et analyse les méthodes soumises (Abstract, §1). Pour cette base : c'est la description de référence de la constitution et de l'annotation de VisDrone-DET, le jeu de petits objets le plus utilisé avec YOLO.
 
 ## Méthode
 
 Papier dataset + synthèse de challenge, sans méthode propre.
-- **Jeu VisDrone** : 263 clips vidéo (179 264 images) et 10 209 images fixes, plus de
-  2,5 millions de boîtes annotées sur 10 catégories (piéton, personne, voiture, van, bus,
-  camion, moto, vélo, tricycle à auvent, tricycle), prises dans 14 villes chinoises (§1,
-  Fig. 1). Caméras : DJI Mavic et Phantom (3 à 4P). Résolution max 3840 × 2160 en vidéo,
-  2000 × 1500 en image (texte sous Fig. 1). Attributs d'occlusion et de troncature (§4.1).
-  Plus de 6 000 heures d'annotation (§8).
-- **Quatre tâches** : DET (image), VID (vidéo), SOT (suivi mono-objet), MOT (multi-objets)
-  (§1).
-  - DET : 6 471 / 548 / 1 580 / 1 610 images (train / val / test-challenge / test-dev)
-    (§4.1).
-  - VID et MOT : 96 clips, 5 catégories (§5.1, §7).
-  - SOT : 167 séquences (139 276 images), plus 25 séquences longues ajoutées en 2019
-    (§6.1).
-- **Protocoles** : AP COCO (AP@[.5:.95], AP50, AP75, AR1 à AR500) pour DET et VID (§4.2) ;
-  succès et précision à 20 px (OTB) pour SOT (§6.2) ; mAP de tracklets sur trois seuils
-  d'IoU et CLEAR-MOT (MOTA, IDF1…) pour MOT (§7.1). Vérité terrain du test cachée,
-  évaluation par serveur (§3).
-- **Revue** des familles de méthodes soumises : anchor-based / anchor-free, cascade,
-  ensembles, agrégation temporelle, trackers Siamese / DiMP, tracking-by-detection (§4.3,
-  §5.2, §6.3, §7.2).
+
+**Constitution du jeu (§1, §3, Fig. 1)**
+- 263 clips vidéo (179 264 images) et 10 209 images fixes, plus de 2,5 millions de boîtes, 10 catégories, 14 villes chinoises (Tianjin, Hongkong, Daqing, Ganzhou, Guangzhou, Jincang, Liuzhou, Nanjing, Shaoxing, Shenyang, Nanyang, Zhangjiakou, Suzhou, Xuzhou), scènes urbaines et rurales, denses et clairsemées, météo et éclairages variés (Fig. 1, §1).
+- Capteurs : drones DJI Mavic et série Phantom (3, 3A, 3SE, 3P, 4, 4A, 4P) ; résolution maximale 3840 × 2160 en vidéo, 2000 × 1500 en image fixe (légende Fig. 1). Modèle de caméra, focale, altitude de vol : n/r.
+- Splits DET : 6 471 train / 548 val / 1 580 test-challenge / 1 610 test-dev (§4.1). Les images de train, val et test sont prises à des lieux différents mais avec des scènes et attributs similaires (§3). Vérité terrain du test cachée pour éviter le sur-apprentissage ; données externes autorisées si déclarées (§3).
+- VID et MOT : 96 clips, 5 catégories (piéton, voiture, van, bus, camion) : 56 train (24 198 images), 7 val (2 846), 16 test-challenge (6 322), 17 test-dev (6 635) (§5.1, §7). SOT : 167 séquences, 139 276 images ; 25 séquences longues (82 644 images) ajoutées en 2019 (§6.1).
+
+**Annotation (§3, §4.1, §5.1)**
+- Boîtes englobantes annotées à la main, image par image, puis contrôle croisé (cross-checking) pour la qualité (§3). Pas de taux d'accord inter-annotateurs, pas de nombre d'annotateurs, pas d'outil nommé : n/r.
+- Coût : plus de 6 000 heures de travail (§8), soit, rapporté aux 2,5 M de boîtes (toutes tâches confondues), un ordre de grandeur de quelques secondes par boîte (calcul à partir de deux chiffres du papier, non affirmé par les auteurs).
+- 10 classes DET : pedestrian, person, car, van, bus, truck, motor, bicycle, awning-tricycle, tricycle. Règle pedestrian / person : un humain debout ou qui marche est « pedestrian », sinon « person » (note 6, §4.3). Les véhicules rares (machineshop truck, forklift, tanker) sont ignorés, c'est-à-dire non annotés comme classe (§4.1).
+- Deux attributs par boîte : occlusion (aucune 0 %, partielle ]0, 50 %], forte ]50, 100 %]) et troncature (part de l'objet hors cadre, estimée par un humain). Toute instance tronquée à plus de 50 % est exclue de l'évaluation (§4.1).
+- Zones ignorées (ignored regions) annotées par image en VID/MOT (§5.1) ; pour DET, le texte ne le dit pas : n/r.
+- Attributs de séquence SOT : 12, repris d'UAV123 (§6.1).
+
+**Distribution des classes et des tailles**
+- Déséquilibre fort : en DET, awning-tricycle a plus de 40 fois moins d'instances que car (§4.1) ; en VID, plus de 50 fois plus de trajectoires de voitures que de bus en train (§5.1). Les effectifs par classe et par degré d'occlusion sont donnés seulement en Fig. 2 et Fig. 4 (graphiques non extraits) : n/r.
+- Taille des objets : « extremely small scale of objects » (§4.4) ; aucune distribution chiffrée (ni histogramme de tailles, ni AP_small / AP_medium) dans le texte : n/r. Longueur des trajectoires de 1 à 1 255 images (§5.1).
+- Table 1 : VisDrone-DET est annoncé à 10 209 images, 10 catégories, 2000 × 1500 de résolution max (colonne « avg. #labels/categories » 54,2 k, extraction ambiguë, non reprise).
+
+**Recettes de données des équipes (§4.3, §4.4, §4.5, §6.4, §8)** : le papier les cite sans ablation chiffrée, sauf mention contraire.
+- Test multi-échelle : « most of the submitted methods use multi-scale testing » en 2018 (§4.4).
+- Pyramides de caractéristiques et suppression des niveaux hauts du FPN pour les petits objets (HAL-Retina-Net, §4.4).
+- Découpage en sous-images (sub-image splitting) et Mosaic, combinés à Cascade R-CNN avec convolutions déformables (CDNet, CascadeAdapt, 2020) (§4.4). Gain isolé : n/r.
+- Active learning conduit avec augmentation (ACM-OD, 2019, AP 29,13) (§4.4) ; Mean Teacher pour entraîner Cascade DetectoRS (TAUN, 2020, AP 34,54) (§4.4). Gains isolés : n/r.
+- Super-résolution (deep back-projection) pour agrandir l'image avant FPN déformable (DDFPN, 2018) (§4.4).
+- SNIPER (chips de 512 × 512 échantillonnés sur une pyramide d'échelles) et Mosaic de YOLOv4 sont décrits comme stratégies générales (Fig. 3 / encart « other strategies ») ; ClusDet et AutoFocus pour la recherche de régions denses de petits objets (§4.3).
+- Ensembles de détecteurs (DPNet : trois backbones) ; données externes autorisées si déclarées (§3). Les auteurs concluent qu'il est difficile d'apprendre des représentations de petits objets depuis ImageNet ou COCO génériques et appellent à des jeux dédiés (§8).
+- Remède d'annotation proposé pour les foules d'objets occultés : une grande boîte avec un compte pour le groupe, car la NMS supprime des vrais positifs ; nécessiterait une métrique localisation + comptage (§4.5, Fig. 3). Segmentation grossière suggérée pour les objets non rigides (person, bicycle) (§4.5).
 
 ## Plateforme et implémentation
 
-Aucune plateforme embarquée. Les seules indications matérielles concernent la VID :
-« most of the aforementioned methods are computationally expensive for practical
-applications, i.e., the running speeds are less than 10 fps on a workstation with one GTX
-1080Ti GPU » (§5.3). Pour les autres tâches, vitesse, puissance et plateforme : n/r.
-Données et résultats publiés : https://github.com/VisDrone/VisDrone-Dataset (Abstract) et
-http://www.aiskyeye.com/ (§3).
+Aucune plateforme embarquée. Seule indication : les méthodes VID tournent à moins de 10 fps sur une GTX 1080Ti de station de travail (§5.3). Vitesse et puissance des autres tâches : n/r. Données et résultats : https://github.com/VisDrone/VisDrone-Dataset (Abstract) et http://www.aiskyeye.com/ (§3). Code des équipes : non publié dans le papier.
 
 ## Résultats
 
-Meilleurs résultats du test-challenge par tâche (chiffres des équipes participantes) :
+Protocole : AP COCO (AP@[.5:.95], AP50, AP75, AR1 à AR500) (§4.2). Meilleurs résultats du test-challenge DET (équipes tierces, pas des baselines des auteurs) :
 
-| Tâche | Édition | Meilleure méthode | Score | Source |
+| Édition | Méthode | AP | AP50 | Source |
 |---|---|---|---|---|
-| DET | 2018 | HAL-Retina-Net | AP 31,88 | Table 2 |
-| DET | 2019 | DPNet-ensemble | AP 29,62 | Table 2 |
-| DET | 2020 | DroneEye2020 (Cascade R-CNN + DetectoRS) | AP 34,57 ; AP50 58,21 | Table 2 |
-| VID | 2018 | CFE-SSDv2 | AP 21,57 | Table 3 |
-| VID | 2019 | DBAI-Det (Cascade R-CNN) | AP 29,22 | Table 3 |
-| SOT | 2020 | LTNMI | succès 76,5 / précision 92,3 (test-challenge 2018) | §6.4 |
-| SOT | 2020 | SMILEv2 | succès 55,5 / précision 91,9 (test-challenge 2019, long terme) | §6.4 |
-| MOT | 2020 | COFE | AP 61,88 | Table 4 |
-| MOT (avec détections) | 2018 | TrackCG | MOTA 42,6 ; IDF1 58,0 | Table 5 |
+| 2018 | HAL-Retina-Net | 31,88 | 46,18 | Table 2 |
+| 2019 | DPNet-ensemble | 29,62 | 54,00 | Table 2 |
+| 2020 | DroneEye2020 (Cascade R-CNN + DetectoRS) | 34,57 | 58,21 | Table 2 |
 
-Baselines évalués par les auteurs sur le test-dev DET (Table 2) : CornerNet 23,43 AP,
-Light-RCNN 22,08, FPN 22,06, Cascade R-CNN 21,80, DetNet 20,07, RefineDet 19,89, RetinaNet
-18,94. En VID test-dev, FGFA 14,44 AP et D&T 14,21 AP, devant les détecteurs image (Table 3).
-Les petites catégories restent faibles : le meilleur détecteur 2020 reste sous 25 % de mAP
-sur person et bicycle (§4.5), et toutes les méthodes VID restent sous 15 % sur ces deux
-classes (§5.4).
+Autres tâches (équipes tierces) : VID DBAI-Det 29,22 AP en 2019 (Table 3) ; MOT COFE 61,88 AP en 2020 (Table 4) ; SOT SMILEv2 55,5 / 91,9 (succès / précision) sur le test-challenge 2019 (§6.4).
 
-→ reportés dans `benchmarks.csv` : aucune ligne. Les résultats du test-challenge sont ceux
-d'équipes tierces. Les baselines test-dev évalués par les auteurs n'ont ni plateforme, ni
-vitesse, ni puissance : on n'aurait que des lignes de précision seule sur GPU non précisé.
-Les chiffres de référence sont gardés dans le tableau ci-dessus.
+Baselines test-dev évalués par les auteurs, AP COCO (Table 2 puis Table 3) : DET CornerNet 23,43, Light-RCNN 22,08, FPN 22,06, Cascade R-CNN 21,80, DetNet 20,07, RefineDet 19,89, RetinaNet 18,94 ; VID FGFA 14,44, D&T 14,21, FPN 12,93, CenterNet 12,35, CornerNet 12,29, Faster R-CNN 10,25. Les détecteurs vidéo dépassent les détecteurs image (§5.3).
+
+Points sur les petits objets : le meilleur détecteur 2020 reste sous 25 % de mAP sur person et bicycle (§4.5), toutes les méthodes VID sous 15 % sur ces deux classes (§5.4). Texte contre tableau : le §4.4 cite un Cascade R-CNN de base à 16,09 % de mAP pour le challenge 2020 alors que la Table 2 donne 21,80 sur test-dev ; les deux ensembles de test diffèrent, sans précision sur la configuration (incohérence apparente, non résolue).
+
+Lignes ajoutées dans `benchmarks.csv` (proposées à l'agent principal) : 13 lignes, les baselines test-dev des auteurs en DET (7, Table 2) et VID (6, Table 3). Aucune ligne pour les équipes du challenge. Pas de plateforme, vitesse ni puissance (`n/r`), donc des lignes de précision seule.
 
 ## Limites et critique
 
-- **Aucune métrique d'efficacité.** Les auteurs le reconnaissent : « all submissions focus
-  more on accuracy than efficiency » (§8). Les méthodes gagnantes sont des ensembles, des
-  Cascade R-CNN et du test multi-échelle, inutilisables à bord. Les seules vitesses citées
-  sont inférieures à 10 FPS sur une GTX 1080Ti de bureau (§5.3).
-- **Protocole AP COCO** (moyenne sur IoU 0,5:0,95). Il n'est pas comparable aux mAP@0.5
-  souvent rapportés par les papiers YOLO sur VisDrone, ni à l'IoU mono-objet de DAC-SDC.
-  Pas d'AP_small séparé dans les tableaux, malgré l'accent mis sur les petits objets.
-- **Tables extraites imparfaitement** : les colonnes AR des Tables 2 et 3 sont décalées
-  dans l'extraction (en-têtes et valeurs mélangés). Seules les colonnes AP et AP50 ont été
-  reprises ici.
-- **Évolution des splits** : le test-challenge SOT change entre 2018 et 2019 (25 séquences
-  longues ajoutées, §6.1), donc les scores ne sont pas comparables d'une édition à l'autre
-  sur ce set.
-- **Biais de domaine** (déduit) : images prises par des drones grand public DJI, en Chine
-  seulement, sur des scènes urbaines et routières. Pas de contre-drone ni d'air → air.
+- **Annotation peu documentée** : pas d'accord inter-annotateurs, pas de taux d'erreurs trouvées au contrôle croisé, pas d'outil ni de consignes détaillées publiées dans ce papier, pas de politique écrite pour les foules (chaque vélo occulté est une boîte, d'où le problème de NMS soulevé par les auteurs, §4.5). Le coût en heures n'est donné que pour l'ensemble du jeu (§8).
+- **Pas de distribution de tailles chiffrée** ni d'AP_small dans les tableaux, malgré l'accent sur les petits objets ; effectifs par classe seulement en figures.
+- **Recettes des équipes sans ablation** : augmentation, découpage et active learning sont cités comme composants d'une soumission complète, jamais isolés. Le gain d'un Mosaic ou d'un découpage ne peut pas être lu ici. Les gains en 2020 viennent aussi du cadre Cascade R-CNN et de DetectoRS (§4.4).
+- **Protocole AP COCO** (moyenne sur IoU 0,5:0,95), non comparable aux mAP@0.5 souvent rapportés pour YOLO sur VisDrone. Les soumissions visent l'exactitude, pas l'efficacité (§8) : ensembles, test multi-échelle, inutilisables sur du matériel contraint.
+- **Tables 2 et 3** : les colonnes AR sont décalées dans l'extraction ; seuls AP et AP50 sont repris. Table 1 également ambiguë.
+- **Évolution des splits** : le test-challenge SOT change entre 2018 et 2019 (§6.1). Les images de test-challenge DET ne sont pas publiques (étiquettes cachées) ; les chiffres des papiers YOLO sont en général sur val ou test-dev.
+- **Biais de domaine** (déduit) : drones grand public DJI, Chine seulement, scènes urbaines et routières, vue à altitude moyenne ; peu de classes d'objets rares.
 
-## Pertinence pour la thèse
+## Pertinence pour cette base
 
-- **Référence obligatoire pour VisDrone**, le benchmark de base de l'axe `drone-detection`.
-  Le papier fixe les splits, les 10 classes, les attributs d'occlusion et le protocole AP
-  COCO. À citer pour toute évaluation, en précisant test-dev contre test-challenge.
-- **Justifie le problème des petits objets** : plafond de 35 % d'AP en 2020, et échec sur
-  person et bicycle (§4.5). Les directions suggérées vont dans le même sens : ancres
-  anchor-free, contexte, fusion détection et suivi (§8).
-- **Le §8 formule explicitement le gap de la thèse** : « the computation resources are
-  limited on drone platform, making it impossible to deploy a large model on such edge
-  devices », avec une recommandation de NAS sous contrainte matérielle. Rien n'est mesuré.
-- Les axes SOT et MOT fournissent des métriques (succès/précision, MOTA, IDF1) pour l'axe
-  `tracking-navigation`, là encore sans contrainte embarquée.
+**CONSTRUIRE.** Référence pour constituer un jeu de petits objets aériens : plusieurs villes, deux familles de capteurs DJI, lieux différents entre train / val / test (pas de fuite de scène entre splits, §3), test caché avec serveur d'évaluation, ordre de grandeur de coût (plus de 6 000 h pour 2,5 M de boîtes). À appliquer quand on prépare un split pour un jeu à scènes corrélées (vidéos, sites) : découper par lieu, pas par image. Le déséquilibre (40× à 50×) dit qu'un jeu réaliste de drone urbain est dominé par car et pedestrian ; prévoir des stratégies de classes rares (voir axe `imbalance-small`).
+
+**ANNOTER.** Le schéma de labels est un modèle de consignes : 10 classes avec règle explicite pour les cas ambigus (pedestrian / person), classes rares exclues plutôt que mal étiquetées, occlusion en trois niveaux, troncature estimée à la main avec seuil d'exclusion de 50 % à l'évaluation, zones ignorées en vidéo, contrôle croisé. À appliquer pour tout jeu YOLO à foules ou petits objets où l'on veut mesurer par attribut. Le §4.5 pose la question non résolue de l'annotation de groupe (boîte + compte) contre une boîte par instance. Format de fichier YOLO : n/r dans ce papier.
+
+**PRÉTRAITER.** Pas de résolution d'entraînement ni de tuilage chiffrés, mais la mention récurrente de découpage en sous-images, de test multi-échelle, de chips de 512 × 512 (SNIPER) et de super-résolution oriente vers le tuilage pour des images de 2000 × 1500 contenant des objets de quelques pixels. À rapprocher des fiches SAHI et ClusDet de la base ; l'ablation manque ici.
+
+**AUGMENTER.** Les équipes 2020 les mieux classées combinent Mosaic et découpage avec Cascade R-CNN, et ACM-OD associe active learning et augmentation ; TAUN utilise Mean Teacher. Aucune ablation : ne pas citer ces gains comme mesurés. Utile surtout comme indice de ce qui se fait en pratique pour VisDrone, à vérifier par les papiers dédiés (Mosaic / Copy-Paste, tuilage).
+
+**Qualité des labels.** Le jeu est annoté à la main et recoupé ; aucune estimation du bruit. À citer comme jeu de référence supposé propre, non audité ici.
 
 ## Gaps identifiés
 
-- **VisDrone sans métrique d'efficacité** : aucun FPS, aucune puissance, aucune plateforme
-  embarquée dans le challenge de 2018 à 2020. Les auteurs l'annoncent pour les éditions
-  suivantes (§8). À vérifier dans les éditions 2021 et après.
-- **Pas d'AP_small dans les résultats publiés** : l'effet des optimisations embarquées
-  (quantification, réduction de résolution) sur les petites classes reste à mesurer. Cela
-  rejoint l'hypothèse « quantification contre mAP_small » de `gaps.md`.
-- **Fusion détection et suivi pour petits objets** : proposée comme direction (§8), jamais
-  évaluée sous contrainte de calcul embarqué.
+- **Aucune ablation de données sur VisDrone-DET** dans ce papier : gain du Mosaic, du découpage, du multi-échelle, de l'active learning. À chercher dans les papiers dédiés de la base.
+- **Pas de distribution de tailles ni d'AP_small chiffrés** : impossible d'en déduire la proportion d'objets sous 32 × 32 px.
+- **Politique d'annotation des foules** : aucune évaluation de la boîte de groupe avec compte (§4.5, proposé seulement).
+- **Qualité des labels VisDrone** : pas de mesure d'erreur ni d'accord ; à croiser avec la littérature sur les erreurs de benchmarks.
 
 ## Statut de lecture
 
-Papier complet (`fulltext.md` lu en entier, extraction GROBID `ok`). Tables 1 à 5 présentes
-dans l'extraction, mais les Tables 2 et 3 ont des colonnes AR décalées. La Fig. 6 (nuages
-succès/précision SOT) n'est connue que par le texte du §6.4.
+Papier complet (`fulltext.md` lu en entier, extraction GROBID `ok`). Les figures (Fig. 2 effectifs par classe et occlusion, Fig. 4, Fig. 5, Fig. 6) ne sont pas lisibles : leurs valeurs sont `n/r`. Tables 2 et 3 : colonnes AR décalées, AP et AP50 lisibles. Table 1 partiellement ambiguë.
 
-Ce qui suit est déduit et non affirmé par les auteurs :
-- la publication probable dans IEEE TPAMI (non mentionnée dans le texte) ;
-- l'incompatibilité des méthodes gagnantes avec un déploiement à bord ;
-- le biais de domaine (Chine, drones DJI, scènes urbaines) ;
-- la non-comparabilité avec les mAP@0.5 des papiers YOLO.
+Déduit et non affirmé par les auteurs :
+- la publication probable en revue ;
+- l'ordre de grandeur du temps d'annotation par boîte ;
+- l'absence de fuite de scène entre splits (le texte dit lieux différents, la conclusion pratique est la nôtre) ;
+- le biais de domaine (Chine, DJI, urbain) ;
+- l'incompatibilité des méthodes gagnantes avec un usage embarqué ;
+- la non-comparabilité avec les mAP@0.5 des papiers YOLO ;
+- le fait que les recettes d'augmentation des équipes n'ont pas été isolées par ablation (le papier n'en rapporte pas).

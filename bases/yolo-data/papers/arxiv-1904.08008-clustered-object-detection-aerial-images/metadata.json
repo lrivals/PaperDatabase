@@ -30,6 +30,7 @@
   "url": "https://arxiv.org/abs/1904.08008",
   "type": "preprint",
   "axes": [
+    "preprocessing",
     "imbalance-small"
   ],
   "tags": [
@@ -48,13 +49,11 @@
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": [],
   "imported_from": {

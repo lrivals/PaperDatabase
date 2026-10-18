@@ -47,6 +47,7 @@
   "type": "preprint",
   "axes": [
     "datasets",
+    "annotation",
     "imbalance-small"
   ],
   "tags": [
@@ -62,13 +63,12 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 4, figure shows that: I) All the",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 4, figure shows that: I) All the"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "imported_from": {
     "base": "drone",

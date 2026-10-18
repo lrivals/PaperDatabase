@@ -17,13 +17,16 @@
   "arxiv_id": "1804.02767",
   "url": "https://arxiv.org/abs/1804.02767",
   "type": "preprint",
-  "axes": [],
+  "axes": [
+    "imbalance-small"
+  ],
   "tags": [
     "yolov3",
     "darknet-53",
     "coco",
-    "gpu-baseline",
-    "yolo"
+    "yolo",
+    "anchors",
+    "small-objects"
   ],
   "added": "2026-10-04",
   "extraction": {
@@ -31,13 +34,12 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "imported_from": {
     "base": "fpga",

@@ -38,7 +38,9 @@
   "url": "https://arxiv.org/abs/2001.06303",
   "type": "preprint",
   "axes": [
-    "datasets"
+    "datasets",
+    "annotation",
+    "imbalance-small"
   ],
   "tags": [
     "visdrone",
@@ -46,19 +48,18 @@
     "video-object-detection",
     "single-object-tracking",
     "multi-object-tracking",
-    "cascade-rcnn"
+    "cascade-rcnn",
+    "imbalance"
   ],
   "added": "2026-09-28",
   "extraction": {
     "backend": "grobid",
     "ok": true,
-    "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
-    ]
+    "warnings": []
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "warnings": [],
   "imported_from": {

@@ -26,25 +26,26 @@
   "url": "https://arxiv.org/abs/1803.11365",
   "type": "preprint",
   "axes": [
-    "datasets",
+    "synthetic-da",
     "annotation",
-    "synthetic-da"
+    "datasets"
   ],
   "tags": [
     "domain-adaptation",
-    "weak-supervision"
+    "weak-supervision",
+    "voc",
+    "yolo"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 1"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -26,20 +26,23 @@
   "url": "https://arxiv.org/abs/1909.00169",
   "type": "preprint",
   "axes": [
-    "surveys"
+    "surveys",
+    "imbalance-small"
   ],
-  "tags": [],
+  "tags": [
+    "imbalance",
+    "small-objects"
+  ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : TABLE 4, [figure sans légende identifié"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

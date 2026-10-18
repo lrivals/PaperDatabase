@@ -1,11 +1,9 @@
 ---
 id: arxiv-2201.07425-webuav-3m-benchmark-unveiling-power
-fiche: todo
-date: 2026-09-28
+fiche: done
+date: 2026-10-18
 benchmarks: none
 ---
-
-> **Importée de la base `drone` le 2026-10-05.** Cette fiche a été écrite pour une autre base (autre thème) : pertinence à réévaluer ici, puis `fiche: done` via `/paper-fiche`. Statut d'origine : done.
 
 # WebUAV-3M: A Benchmark for Unveiling the Power of Million-Scale Deep UAV Tracking
 
@@ -14,135 +12,155 @@ Type : preprint non relu par les pairs (version lue : arXiv v4, 31 déc. 2022)
 
 ## Problème
 
-Selon les auteurs, les benchmarks de suivi mono-objet (SOT) depuis UAV sont trop petits pour
-entraîner des trackers profonds (rarement plus de 500 vidéos, Fig. 1), ne portent pas de
-descriptions en langage naturel ni audio, couvrent peu de classes (VisDrone : 10) et
-n'évaluent que par attributs globaux binaires, ce qui masque les forces et faiblesses des
-trackers (§1, points i à iv).
+Les benchmarks de suivi mono-objet (SOT) depuis drone sont, selon les auteurs, trop petits pour
+entraîner des trackers profonds (rarement plus de 500 vidéos), sans langage ni audio, avec peu
+de classes et un protocole d'évaluation pauvre (§1, points i à iv). Pour cette base, la partie
+utile est le **problème d'annotation** : étiqueter 3,3 M d'images à la boîte est impossible à la
+main ; les auteurs proposent le pipeline SATA et un contrôle qualité en plusieurs passes (§1,
+§3.3, Table 2).
 
 ## Méthode
 
-Contribution de type **jeu de données + protocole**, sans modèle nouveau :
-- **WebUAV-3M** : 4 500 vidéos, plus de 3,3 M d'images, 223 classes de cibles, 63 classes
-  de mouvement, 12 super-classes (§3.2, Table 1). 3 617 vidéos YouTube (sur plus de 28 k
-  téléchargées, mots-clés « aerial photography », « drone », « UAV »), plus 616 vidéos de
-  Stanford Drone et 267 d'Okutama-Action réannotées (§3.2). Longueur moyenne 710 images
-  (23,7 s à 30 FPS) ; taille moyenne de cible ≈ 50 pixels (§3.7, Fig. 8b).
-- **SATA** (semi-automatic target annotation) : boucle interactive tracker (SiamRPN++) +
-  correction humaine ; 2,99 s par boîte en moyenne contre 15,81 s (Labelme) et 3,86 s
-  (CVAT) (§3.3, Table 3, Annexe B).
-- **17 attributs**, dont 3 au niveau vidéo (complexité, taille, longueur) (§3.4, Table A).
-- **Langage et audio** : une phrase anglaise par vidéo (4 500), convertie en 9 000
-  descriptions audio par synthèse vocale (voix féminine et masculine) (§3.5, A.5).
-- **Découpage** : 3 520 vidéos d'entraînement, 200 de validation, 780 de test ; taille du
-  test choisie par stabilité du classement de 10 trackers (§3.6, A.6, Fig. C). Le texte
-  donne aussi « 520 videos as the training set » à l'étape 4 de A.6, incohérent avec les
-  3 520 de §3.6 (probable coquille).
-- **Protocole UTUSC** : 7 indicateurs continus calculés image par image (faible lumière,
-  occlusion longue, petites cibles, vitesse, distorsion via MetaIQA, perturbations
-  « dual-dynamic » cible + caméra, exemples adverses) et 7 sous-ensembles de test de
-  100 vidéos (§4, Table 4).
-- **Métrique cAUC** (complete success plot) : recouvrement pénalisé par la distance des
-  centres et la cohérence du rapport d'aspect, sur le modèle de CIoU (§5.3).
+Contribution de type **jeu de données + outil d'annotation + protocole**, sans modèle nouveau.
+
+- **WebUAV-3M** : 4 500 vidéos, plus de 3,3 M d'images et environ 3,3 M de boîtes, 223 classes
+  de cibles, 63 classes de mouvement, 12 super-classes (§1, §3.2). 3 617 vidéos YouTube, plus
+  616 vidéos de Stanford Drone et 267 d'Okutama-Action réannotées par SATA (§3.2).
+- **SATA** (semi-automatic target annotation), 5 étapes en boucle (§3.3, Fig. 4) :
+  1. l'humain dessine la boîte de la cible sur la première image ;
+  2. étiquette manuelle de l'image courante (première image, ou image corrigée) ;
+  3. initialisation, puis réentraînement facultatif du tracker (SiamRPN++ préentraîné, §3.3,
+     Annexe B) sur les boîtes corrigées ; l'étape peut être sautée à la main ;
+  4. le tracker prédit la boîte de l'image suivante à partir de la boîte validée précédente ;
+  5. l'annotateur vérifie en temps réel, garde ou ajuste la boîte, et la boucle repart jusqu'à
+     la fin de la vidéo.
+  L'annotateur découpe la vidéo en segments courts et peut choisir un nouveau point de départ
+  quand le suivi se dégrade (Annexe B). Le tracker est donc un « dessinateur de boîtes » ; l'humain
+  ne fait que valider ou corriger.
+- **Règles d'annotation** (A.1) : boîte aussi serrée que possible sur toutes les parties
+  visibles (autorisée à être légèrement trop petite plutôt que trop grande) ; pas de boîte
+  quand la cible est entièrement masquée (étiquette « absent ») ; occlusion et réapparition
+  annotées sur tout leur déroulé.
+- **Contrôle qualité en 10 étapes** (Table 2) : vérification de toutes les vidéos par les
+  auteurs, annotation par une équipe professionnelle d'environ 10 personnes, vérification des
+  boîtes par une équipe de vérification sur 75 % des données, puis par les auteurs sur 100 %
+  et 3 fois (« ×3 »), idem pour attributs, langage et audio, puis acceptation.
+- Tracking en quelques lignes : 17 attributs, une phrase anglaise par vidéo et 9 000
+  descriptions audio synthétiques (§3.4-3.5) ; découpage 3 520 / 200 / 780 vidéos (§3.6, avec
+  une coquille probable « 520 » en A.6) ; protocole UTUSC (7 sous-ensembles de test, §4) ;
+  métrique cAUC (§5.3) ; 43 trackers évalués sur le test (§5.4, Table 5).
 
 ## Plateforme et implémentation
 
-Pas d'implémentation embarquée. Évaluation sur serveur : Intel Xeon Gold 6230R, 3 ×
-NVIDIA RTX A5000, 64 Go, Ubuntu 18.04 ; Python/PyTorch ou MATLAB (§5.2). Les FPS de la
-Table 5 sont mesurés sur ce GPU de bureau ou sur CPU (« @GPU », « @CPU »).
-Puissance : n/r. Données, toolkit et résultats publiés :
-https://github.com/983632847/WebUAV-3M (résumé, §6).
+Pas d'implémentation embarquée. Évaluation sur serveur : Intel Xeon Gold 6230R, 3 × NVIDIA RTX
+A5000 (§5.2). Puissance : n/r. Données, toolkit et résultats annoncés publiés :
+https://github.com/983632847/WebUAV-3M. Le code de l'outil SATA lui-même : non mentionné comme
+publié dans les passages lus (n/r).
 
 ## Résultats
 
-Évaluation de 43 trackers (paramètres et poids d'origine, sans réglage : « lower bound »,
-§5.2) sur le test (Table 5) :
+Annotation (Annexe B, Table 3) : temps moyen par boîte mesuré par les auteurs sur 30 vidéos
+(10 faciles, 10 moyennes, 10 difficiles), annotés indépendamment par des annotateurs
+expérimentés (nombre n/r) :
 
-| Tracker | Pre | nPre | AUC | cAUC | mAcc | FPS (plateforme) |
-|---|---|---|---|---|---|---|
-| AlphaRefine | 0,753 | 0,643 | 0,593 | 0,562 | 0,602 | 42,3 (GPU) |
-| KeepTrack | 0,710 | 0,603 | 0,543 | 0,512 | 0,550 | 33,9 (GPU) |
-| PrDiMP | 0,674 | 0,575 | 0,514 | 0,484 | 0,521 | 32,4 (GPU) |
-| TransT | 0,618 | 0,509 | 0,448 | 0,422 | 0,453 | 53,5 (GPU) |
-| HiFT | 0,515 | 0,413 | 0,360 | 0,314 | 0,358 | 122,6 (GPU) |
-| LightTrack | 0,602 | 0,494 | 0,458 | 0,415 | 0,459 | 64,9 (GPU) |
-| SiamRPN | 0,519 | 0,367 | 0,345 | 0,317 | 0,346 | 142,8 (GPU) |
-| KCF | 0,457 | 0,294 | 0,272 | 0,245 | 0,271 | 132,9 (CPU) |
+| Outil | Type | Facile | Moyen | Difficile | Moyenne |
+|---|---|---|---|---|---|
+| Labelme | manuel | 13,23 s | 16,08 s | 18,11 s | 15,81 s |
+| VoTT | manuel | 6,87 s | 8,61 s | 8,67 s | 8,05 s |
+| ViTBAT | semi-auto | 2,50 s | 5,60 s | 5,96 s | 4,68 s |
+| CVAT | semi-auto | 1,71 s | 3,76 s | 6,12 s | 3,86 s |
+| SATA | semi-auto | 0,11 s | 2,94 s | 5,91 s | 2,99 s |
 
-- AlphaRefine devance le 2ᵉ de 4,3 / 4,0 / 5,0 / 5,0 / 5,2 points (§5.4). Des trackers à
-  features manuelles (MCCT, AutoTrack) égalent ou battent certains trackers profonds (§5.4).
-- UTUSC (Fig. 11-12, courbes seulement) : chute brutale sous une intensité moyenne de 25 ;
-  mAcc qui s'effondre sous une taille de cible de 30 pixels ; TransT le moins affecté par
-  l'occlusion longue ; PrDiMP 1ᵉʳ en vitesse élevée (§5.6).
-- Réentraînement sur WebUAV-3M (Table 6) : gains pour les 5 trackers, par ex. SiamFC cAUC
-  0,317 → 0,417, ATOM 0,261 → 0,344.
-- Transfert croisé (Table 11, reconstruite par PyMuPDF : à vérifier) : SiamRPN entraîné sur
-  WebUAV-3M donne 0,562/0,615 sur VisDrone contre 0,327/0,355 entraîné sur VisDrone.
-- Vision-langage (Annexe C.1, Table C non extraite) : le meilleur tracker VL (VLT_TT) reste
-  à 11,5 points de Pre derrière AlphaRefine ; le langage n'améliore pas toujours.
+- SATA : environ 5,3 fois moins de temps que Labelme et 2,7 fois moins que VoTT en moyenne
+  (rapports calculés ici à partir de la Table 3, pas donnés par les auteurs). Le gain fond avec
+  la difficulté : 0,11 s (facile) contre 5,91 s (difficile), soit près du temps de CVAT (6,12 s).
+- Tout le jeu étiqueté « en moins de trois mois » (§1, nombre d'annotateurs et d'heures
+  totales : n/r au-delà de l'équipe d'environ 10 personnes, Table 2).
+- **Part de boîtes produites automatiquement, part corrigée : n/r.** Le papier ne compte ni le
+  taux d'acceptation des prédictions, ni le nombre de corrections par vidéo.
+- Qualité vérifiée indirectement (§5.7, Table 6, Fig. 13) : cinq trackers réentraînés sur le
+  train set annoté par SATA gagnent en cAUC sur le test (SiamFC 0,317 → 0,417 ; SiamRPN
+  0,317 → 0,415 ; ATOM 0,261 → 0,344 ; MDNet 0,347 → 0,409 ; GOTURN 0,178 → 0,280). Les
+  baselines sont entraînées sur d'autres données (ImageNet VID, etc.), donc l'écart mêle qualité
+  des labels et décalage de domaine (les auteurs écrivent « excluding the influence of the
+  domain gap », Annexe B, sans l'isoler).
+- Effet du volume (Fig. 13, §5.7) : SiamRPN progresse nettement de 1 % (35 vidéos) à 10 %
+  (350 vidéos) des données puis converge ; SiamFC sature plus tôt et peut décliner à 100 %
+  (surapprentissage). Courbes seulement, pas de valeurs lues.
+- Suivi : AlphaRefine premier (Pre 0,753, AUC 0,593, cAUC 0,562, 42,3 FPS sur GPU) (Table 5) ;
+  des trackers à features manuelles égalent certains trackers profonds (§5.4). Les autres
+  lignes de la Table 5 ont des colonnes décalées à l'extraction : non reprises ici.
+  Évaluation de 43 trackers sans réglage (§5.2).
 
-→ reportés dans `benchmarks.csv` : aucune ligne. Le papier propose un jeu de données et un
-protocole, pas un modèle ni une implémentation propre ; les 43 résultats sont des trackers
-tiers, sur GPU de bureau (RTX A5000), sans puissance.
+Lignes proposées pour `benchmarks.csv` (7, fichier `.cache/bench/`) : 5 temps d'annotation
+(Table 3) et 2 réentraînements (Table 6, cAUC).
 
 ## Limites et critique
 
-- **Aucune donnée embarquée.** FPS sur RTX A5000 ou CPU Xeon, sans puissance ni latence ;
-  la gamme de puissance est celle d'un GPU de bureau (hors des gammes nano, FPGA, Jetson).
-  Les auteurs ne présentent pas ces FPS comme embarqués, mais les qualifient d'utiles aux
-  « real-time applications » (§5.4).
-- **Vidéos « UAV » issues de YouTube** : images prises depuis un drone, mais sans
-  métadonnées de vol, d'altitude ni de capteur ; la part filmée par des drones grand public
-  stabilisés, au montage déjà fait, n'est pas quantifiée (déduit).
-- **Test choisi par difficulté** avec 10 trackers (A.6, étape 1) : les vidéos où ces
-  trackers échouent sont sur-représentées, ce qui biaise le test en faveur de trackers
-  différents de ceux utilisés pour le sélectionner (déduit).
-- **Biais d'annotation SATA** : SiamRPN++ génère les boîtes ; les auteurs discutent ce
-  biais (Annexe B) mais ne le mesurent pas (pas de comparaison contre une annotation
-  entièrement manuelle).
-- **Descriptions audio synthétiques** (voix TTS Microsoft), donc sans bruit de rotor ni
-  variabilité réelle ; leur intérêt pour le suivi n'est pas démontré dans le papier.
-- Incohérences mineures : KCF à 132,0 FPS dans le texte (§5.4), 132,9 dans la Table 5 ;
-  520 contre 3 520 vidéos d'entraînement (A.6 contre §3.6).
-- Métriques SOT (Pre, AUC, cAUC) non comparables avec le mAP de détection de VisDrone-DET.
+- **Aucune mesure sur les boîtes erronées.** L'exactitude de SATA n'est pas comparée à une
+  annotation manuelle de référence : les auteurs jugent l'expérience impraticable (Annexe B) et
+  avancent la qualité par la performance des trackers réentraînés, preuve indirecte.
+- **Biais du tracker** : SiamRPN++ propose les boîtes, un annotateur pressé peut valider une
+  dérive. Les auteurs le discutent (segments courts, reprise du point de départ, contrôle en
+  10 étapes) sans le mesurer (Annexe B).
+- **Temps par boîte mesuré sur 30 vidéos** seulement, annotateurs et conditions mal décrits ;
+  la Table 3 ne donne pas d'écart-type. Le gain « facile » (0,11 s) vient de vidéos où le tracker
+  suit presque sans correction (déduit).
+- Le test est choisi par difficulté avec 10 trackers (A.6), ce qui le biaise (déduit). Les FPS
+  sont sur RTX A5000 ou CPU Xeon, sans puissance. Vidéos YouTube sans métadonnées de vol.
+- Incohérences mineures : KCF 132,0 FPS dans le texte (§5.4) contre 132,9 en Table 5 ; 520 contre
+  3 520 vidéos d'entraînement (A.6 contre §3.6). Métriques SOT non comparables au mAP.
 
-## Pertinence pour la thèse
+## Pertinence pour cette base
 
-- **Axe suivi et navigation, volet données** : le plus grand jeu SOT vu depuis un drone du
-  corpus, avec un sous-ensemble « petites cibles » et une taille moyenne de cible d'environ
-  50 pixels, directement en lien avec le thème petits objets.
-- Le protocole UTUSC (indicateurs continus par image) est réutilisable pour caractériser la
-  **dégradation d'un tracker embarqué** en fonction de la taille de cible ou de la lumière,
-  plutôt qu'un seul score global.
-- Il laisse ouvert tout le volet embarqué : aucun tracker n'est mesuré sur Jetson, FPGA ou
-  MCU. Ce serait un banc naturel pour comparer HiFT, LightTrack ou SiamRPN (les plus rapides
-  sur GPU) sur une cible embarquée.
-- Pas de contre-drone : les cibles sont au sol ou sur l'eau (personnes, véhicules, navires) ;
-  la classe « aircraft » existe mais n'est pas analysée.
+Ce que le papier apprend pour **annoter** (et un peu pour construire) un dataset de détection :
+
+- **Boucle humain ↔ modèle prouvée à grande échelle** : un modèle propose la boîte suivante,
+  l'humain valide ou corrige, le modèle est réentraîné sur les corrections (§3.3). C'est la
+  même boucle que la pré-annotation par détecteur ou SAM pour des images, avec la propagation
+  temporelle en plus.
+- **Ordre de grandeur du gain** : 2,99 s contre 15,81 s par boîte avec Labelme (Table 3), mais
+  ce gain dépend de la difficulté (0,11 à 5,91 s). À budgéter par difficulté, pas en moyenne.
+- **Contrôle qualité** : ne pas se fier à la seule passe de l'annotateur : vérification sur
+  75 % puis 100 % trois fois par une autre équipe (Table 2). Modèle de gabarit pour un dataset
+  maison, au coût d'un jeu à 3,3 M de boîtes.
+- **Consignes de boîte** : « serrée, légèrement trop petite plutôt que trop grande », pas de
+  boîte pour un objet totalement masqué, occlusion suivie (A.1) : à comparer aux consignes
+  d'occultation/troncature de la base.
+- **Réutilisable pour un jeu YOLO (déduit, non testé par les auteurs)** : sur des vidéos de
+  drone ou de caméra fixe, SATA permet d'obtenir beaucoup de boîtes de la même instance par
+  vidéo ; pour des images isolées, seul le principe « proposer, corriger, réentraîner » se
+  transpose ; la propagation d'une boîte d'image en image n'existe pas sans continuité
+  temporelle. Les images successives étant très corrélées, elles gonflent le nombre de boîtes
+  sans augmenter la diversité (déduit) : à sous-échantillonner avant l'entraînement d'un
+  détecteur.
+- **Volume** : SiamRPN gagne beaucoup entre 35 et 350 vidéos puis converge (§5.7) : indice
+  (suivi, pas détection) d'une saturation du gain avec le volume.
+- **Dataset** : jeu de suivi, pas de détection ; format boîte `[x, y, w, h]` en pixels, pas de
+  format YOLO normalisé. Cibles ≈ 50 pixels en moyenne (§3.7) : petits objets.
+
+Quand l'appliquer : annotation de séquences vidéo (drone, caméra fixe) à grande échelle avec
+un budget d'annotation limité ; pas pour des images indépendantes.
 
 ## Gaps identifiés
 
-- **Suivi UAV sans métrique embarquée** : les benchmarks SOT depuis drone mesurent les FPS
-  sur GPU de bureau ; aucune colonne puissance ni plateforme embarquée (à recouper avec
-  TCTrack, arxiv-2203.01885, qui mesure sur Jetson).
-- **Petites cibles en suivi** : la chute de mAcc sous 30 pixels (§5.6) est constatée sur
-  GPU FP32 ; l'effet de la quantification sur ce régime n'est pas étudié (lien avec
-  l'hypothèse mAP_small de la base).
-- **Robustesse adverse des trackers** : seuls des exemples adverses numériques sont
-  proposés ; rien sur les perturbations matérielles (soft errors) ou physiques.
+- **Part de boîtes acceptées sans correction, taux d'erreur résiduel** de l'annotation
+  assistée par tracker : non rapportés ; aucune comparaison à une vérité terrain manuelle.
+- **Biais d'un pré-annotateur** sur le jeu final (le tracker valide ses propres dérives) :
+  discuté, non mesuré.
+- **Transfert vers images isolées** (pré-annotation SAM ou détecteur) : non traité.
 
 ## Statut de lecture
 
-Papier complet (`fulltext.md` lu en entier, extraction GROBID `ok`, annexes comprises).
-Tables 4, 5, 6 et A signalées « sans corps extrait » : la Table 5 a néanmoins été retrouvée
-fondue dans le texte de §5.6 (la ligne KCF y est tronquée) ; les Tables 4 et 6 ont un corps
-lisible dans la section « Figures et tableaux ». Table 1 (comparaison des benchmarks),
-Tables B et C (co-occurrence, trackers vision-langage) absentes. Tables 3 et 11
-reconstruites par PyMuPDF. Des passages sont tronqués à l'extraction : fin du scénario
-« target distortions » et suivants de §5.6, liste des « Future Directions » (§6) et début
-de A.5. Les résultats UTUSC ne sont disponibles qu'en figures (non lues).
+Papier complet (`fulltext.md` lu pour les sections liées à l'annotation : §1, §3, §5.7,
+Annexes A.1 et B, Tables 2, 3, 6 ; le reste, notamment §4 et §5.4-5.6, repris de la fiche
+d'origine après vérification des chiffres cités). Extraction GROBID `ok`. Tables 3 et 11
+reconstruites par PyMuPDF, Tables 4, 5, 6 et A par Docling (à vérifier) : les valeurs de la
+Table 3 se recoupent avec le texte de l'Annexe B (15,81 / 8,05 / 4,68 / 3,86 / 2,99 s) ; la
+Table 6 est lisible ; la Table 5 a des colonnes décalées sur plusieurs lignes (non reprises).
+Résultats UTUSC en figures seulement (non lus). Texte tronqué en fin de §5.6 et dans les
+« Future Directions ».
 
-Ce qui suit est déduit et non affirmé par les auteurs : le biais de sélection du test ; le
-caractère non embarqué des FPS et l'absence de métadonnées de vol ; la probable coquille
-520/3 520 ; les gaps « suivi sans métrique embarquée » et « quantification et petites
-cibles en suivi ».
+Déduit et non affirmé par les auteurs : les rapports de temps SATA/Labelme et SATA/VoTT ;
+l'explication du gain « facile » ; le biais de sélection du test ; la transposition de SATA à des
+images isolées et la corrélation entre images successives ; l'absence de données embarquées.

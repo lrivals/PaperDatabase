@@ -17,18 +17,22 @@
   "arxiv_id": "1612.08242",
   "url": "https://arxiv.org/abs/1612.08242",
   "type": "conference",
-  "axes": [],
+  "axes": [
+    "imbalance-small",
+    "preprocessing",
+    "datasets"
+  ],
   "tags": [
     "yolov2",
     "yolo9000",
     "darknet-19",
     "anchor-boxes",
     "wordtree",
-    "gpu-baseline",
     "yolov9000",
     "yolo",
     "coco",
-    "voc"
+    "voc",
+    "anchors"
   ],
   "added": "2026-10-04",
   "extraction": {
@@ -36,13 +40,12 @@
     "ok": true,
     "warnings": [
       "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
-      "tableaux sans corps extrait (légende seule) : Table 1, Table 3, Table 4, Table 6",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 3, Table 4, Table 6"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "imported_from": {
     "base": "fpga",

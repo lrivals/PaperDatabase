@@ -45,20 +45,21 @@
     "auto-labelling"
   ],
   "tags": [
-    "coco"
+    "coco",
+    "pseudo-label",
+    "teacher-student"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 7, Table 10",
       "tableaux sans corps extrait (légende seule) : Table 6, [figure sans légende identifié, Table 8, Table 9, Table 11"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -38,19 +38,21 @@
     "augmentation"
   ],
   "tags": [
-    "coco"
+    "coco",
+    "voc",
+    "pseudo-label",
+    "teacher-student"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 2"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

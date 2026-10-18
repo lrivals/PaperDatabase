@@ -50,22 +50,23 @@
   "url": "https://arxiv.org/abs/1804.06516",
   "type": "preprint",
   "axes": [
-    "synthetic-da"
+    "synthetic-da",
+    "augmentation"
   ],
   "tags": [
-    "synthetic"
+    "synthetic",
+    "domain-adaptation"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 2"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

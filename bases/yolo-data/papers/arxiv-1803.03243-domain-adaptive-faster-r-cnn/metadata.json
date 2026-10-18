@@ -33,19 +33,19 @@
     "synthetic-da"
   ],
   "tags": [
-    "domain-adaptation"
+    "domain-adaptation",
+    "synthetic"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1, Table 3, Table 4"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

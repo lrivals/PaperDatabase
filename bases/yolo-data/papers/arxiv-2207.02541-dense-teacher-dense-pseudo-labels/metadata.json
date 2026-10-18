@@ -42,20 +42,22 @@
   ],
   "tags": [
     "coco",
-    "pseudo-label"
+    "pseudo-label",
+    "teacher-student",
+    "anchor-free",
+    "voc"
   ],
   "added": "2026-10-05",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 4, Table 6",
       "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

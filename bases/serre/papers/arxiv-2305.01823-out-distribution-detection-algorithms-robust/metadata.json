@@ -1,0 +1,64 @@
+{
+  "id": "arxiv-2305.01823-out-distribution-detection-algorithms-robust",
+  "title": "Out-of-distribution detection algorithms for robust insect classification",
+  "authors": [
+    {
+      "given": "Mojdeh",
+      "family": "Saadati"
+    },
+    {
+      "given": "Aditya",
+      "family": "Balu"
+    },
+    {
+      "given": "Shivani",
+      "family": "Chiranjeevi"
+    },
+    {
+      "given": "Talukder Zaki",
+      "family": "Jubery"
+    },
+    {
+      "given": "Asheesh K",
+      "family": "Singh"
+    },
+    {
+      "given": "Soumik",
+      "family": "Sarkar"
+    },
+    {
+      "given": "Arti",
+      "family": "Singh"
+    },
+    {
+      "given": "Baskar",
+      "family": "Ganapathysubramanian"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2305.01823",
+  "url": "https://arxiv.org/abs/2305.01823",
+  "type": "preprint",
+  "axes": [
+    "calibration-decision",
+    "domain-shift"
+  ],
+  "tags": [
+    "ood"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

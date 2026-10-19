@@ -4,10 +4,11 @@ PaperDatabase transforme des PDF d'articles scientifiques en une base de connais
 texte que Claude Code sait parcourir : il y retrouve un chiffre, compare des travaux, repère
 les zones non couvertes. Ce guide montre comment s'en servir au quotidien. Le pipeline ne
 dépend pas du domaine, et un même code gère plusieurs bases séparées (§8). Le dépôt en contient
-quatre : `fpga` (vision embarquée sur FPGA), qui sert d'exemple dans ce guide, `drone`
+cinq : `fpga` (vision embarquée sur FPGA), qui sert d'exemple dans ce guide, `drone`
 (vision embarquée sur drone, dans `bases/drone/`), `stage` (apprentissage continu embarqué
-pour la maintenance prédictive, références d'un stage, dans `bases/stage/`) et `yolo-data`
-(préparation des données pour la détection YOLO, dans `bases/yolo-data/`).
+pour la maintenance prédictive, références d'un stage, dans `bases/stage/`), `yolo-data`
+(préparation des données pour la détection YOLO, dans `bases/yolo-data/`) et `serre`
+(serre autonome pilotée par IA, projet SerreIA, dans `bases/serre/`).
 
 Pour le fonctionnement interne, voir [SETUP.md](../SETUP.md) ; pour les formats de
 fichiers, [DATA_MODEL.md](../DATA_MODEL.md).

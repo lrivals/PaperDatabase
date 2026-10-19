@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-1911.10317-plantdoc-dataset-visual-plant-disease",
+  "title": "PlantDoc: A Dataset for Visual Plant Disease Detection",
+  "authors": [
+    {
+      "given": "Davinder",
+      "family": "Singh"
+    },
+    {
+      "given": "Naman",
+      "family": "Jain"
+    },
+    {
+      "given": "Pranjali",
+      "family": "Jain"
+    },
+    {
+      "given": "Pratik",
+      "family": "Kayal"
+    },
+    {
+      "given": "Sudhakar",
+      "family": "Kumawat"
+    },
+    {
+      "given": "Nipun",
+      "family": "Batra"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": "10.1145/3371158.3371196",
+  "arxiv_id": "1911.10317",
+  "url": "https://arxiv.org/abs/1911.10317",
+  "type": "preprint",
+  "axes": [
+    "disease-classif",
+    "domain-shift"
+  ],
+  "tags": [
+    "plantdoc",
+    "background"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

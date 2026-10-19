@@ -1,0 +1,170 @@
+---
+id: arxiv-2409.13537-shizishangpt-agricultural-large-language-model
+title: "ShizishanGPT: An Agricultural Large Language Model Integrating Tools and Resources"
+year: 2024
+backend: grobid
+---
+
+## Abstract
+
+Recent developments in large language models (LLMs) have led to significant improvements in intelligent dialogue systems' ability to handle complex inquiries. However, current LLMs still exhibit limitations in specialized domain knowledge, particularly in technical fields such as agriculture. To address this problem, we propose ShizishanGPT, an intelligent question answering system for agriculture based on the Retrieval Augmented Generation (RAG) framework and agent architecture. ShizishanGPT consists of five key modules: including a generic GPT-4 based module for answering general questions; a search engine module that compensates for the problem that the large language model's own knowledge cannot be updated in a timely manner; an agricultural knowledge graph module for providing domain facts; a retrieval module which uses RAG to supplement domain knowledge; and an agricultural agent module, which invokes specialized models for crop phenotype prediction, gene expression analysis, and so on. We evaluated the ShizishanGPT using a dataset containing 100 agricultural questions specially designed for this study. The experimental results show that the tool significantly outperforms general LLMs as it provides more accurate and detailed answers due to its modular design and integration of different domain knowledge sources. Our source code, dataset, and model weights are publicly available at https://github.com/Zaiwen/CropGPT.
+
+## 1. Introduction
+
+Recently, the advancement of large model technology has marked a significant milestone in the field of artificial intelligence, showcasing impressive performance across various industry sectorss [1]. These models, trained on vast datasets, have developed a remarkable ability to understand and generate human-like language, which has led to their rapid adoption in sectors such as healthcare and education. Despite their widespread utility, the adaptation of language models for specialized domains, particularly in agriculture and more specifically in the crop domain, remains insufficiently developed [2]. This limitation significantly impacts the application of such models in agricultural practices, including the utilization of advanced genetic tools and the retrieval of specialized crop-related knowledge, which are critical for precision farming and enhanced crop management. To address this problem, this paper proposes an intelligent question answering system for agriculture based on the Retrieval Augmented Generation (RAG) framework and agent architecture (ShizishanGPT). The system uses a large language model to answer questions related to the cultivation of crops (especially maize) and helps users to solve problems by providing accurate answers through access to relevant crop tools. For individuals who lack expertise in crops, the system empowers smart agriculture by integrating specific functional requirements such as crop cultivation, enabling them to excel in knowledge-based tasks within their area of expertise [3]. For instance, in scenarios where a user needs to predict promoter enrichment values (a key indicator of gene expression potential in specific DNA segments of the promoter region) ShizishanGPT leverages its specialized modules to invoke external models that perform detailed calculations and return precise predictions. This capability contrasts sharply with generalpurpose models like ChatGPT-4 [4], which, lacking domain-specific training and integration capabilities, often fail to provide accurate or relevant responses in the agricultural context. Figure 1 shows the contrasting responses from "ChatGPT" and "ShizishanGPT" to a question about predicting promoter enrichment values for a maize DNA sequence. highlighting ShizishanGPT's strength in solving specific problems in the agricultural domain and providing accurate and credible agricultural knowledge.
+
+In this paper, the architectural underpinnings of ShizishanGPT include several key components, which include an Agricultural Knowledge Graph that maps out critical data and relationships within the agricultural domain; a Vector Knowledge Base that contains extensive papers in the domain related to Crop; External tools which contain Gene Sequence Prediction tool that aid in the analysis of genetic data and Maize Phenotype Prediction tools [5]that help anticipate crop characteristics based on genetic and environmental factors. We evaluate our system using a dataset containing 100 question-answer pairs in the field of agriculture, specially designed for this study, and demonstrate the effectiveness of the proposed system. The paper is structured as follows: the introduction provides background information on the research objectives; the second section reviews related research and technologies; the third section details the design and implementation of the system; the experimental section discusses the experimental validation and investigates the contributions of each element in an ablation study; potential limitations of the study are discussed in the subsequent section; the conclusion summarizes the contributions.
+
+## 2. Related Works
+
+This section reviews related works on enhancing large language models (LLMs), focusing on the integration of Retrieval Augmented Generation (RAG) and agent-based frameworks, the use of knowledge graph-enhanced models, and the application of external tools. It also discusses the implementation of knowledge graphs in agriculture, showcasing how these technologies improve the accuracy and utility of large models in complex tasks.
+
+### 2.1. RAG and Agent-Based Frameworks for LLM Enhancement
+
+Since the advent of LLMs like ChatGPT, these models have excelled in a variety of language tasks [6] but still face challenges such as hallucinations [7], outdated knowledge, and data constraints that affect their reliability, especially in tasks requiring extensive and precise knowledge like open-domain question answering and commonsense reasoning. The implementation of RAG has provided a pathway to address some of these limitations by enhancing the response accuracy of LLMs in knowledge-intensive scenarios. The concept of Retrieval-Augmented Generation, initially proposed by Lewis et al [8]. RAG has significantly enhanced the effectiveness of LLM responses by providing contextual grounding from existing documents during the generation process [9]. RAG merges the retrieval and answering processes, which improves the ability to effectively collect knowledge, extract useful information, and generate answers. Additionally, the Reasoning and Action (ReAct) [10] framework aids LLMs in managing complex tasks by integrating multiple reasoning and action steps into the problem-solving process, thus leading to more precise outputs [11].
+
+ShizishanGPT leverages both Retrieval RAG and ReAct to boost its performance in complex agricultural tasks. Specifically enhanced by training on a corpus of over a thousand scholarly articles, RAG improves the factual accuracy and relevance of responses. Meanwhile, ReAct facilitates the handling of intricate problem chains through structured reasoning and action sequences. This combination enables ShizishanGPT not only to provide data-driven, precise answers but also to continually adapt to the evolving needs of the agricultural sector, significantly enhancing the system's utility and reliability in agricultural decision support.
+
+### 2.2. Knowledge Graph Enhanced Large Models
+
+LLMs have become an important technology in modern AI, especially in the field of Natural Language Processing (NLP), and are widely used in a variety of language understanding and generation tasks. These models, such as OpenAI's GPT family, Google's BERT [12] and T5 [13], Facebook's BART [14], LLama [15], learn rich linguistic, contextual, and knowledge information by pre-training on large-scale datasets, enabling them to perform various linguistic tasks without explicit task instructions. In particular, LLMs have demonstrated exceptional capabilities in question-answering systems. These models can provide exhaustive answers and generate innovative answers in specific situations by learning from data, facts and world knowledge. For example, GPT-3 [16], with its large model structure and training data, can answer complex questions without external database support.
+
+To further improve answer quality and accuracy, knowledge graphs and external tools are becoming increasingly important in modern LLM-based QA systems. For example, in December 2023, a research team from China Agricultural University (CAU) released 'Shennong Big Model 1.0' [17], an industry big model applied to the agricultural field. The model is trained from a large amount of high-quality agricultural knowledge data, including more than 10 million agricultural knowledge mapping data, more than 50 million modern agricultural production data and more than 20,000 agricultural books. Based on the traditional big model technology architecture, it integrates knowledge graph, vector database and other technologies to improve the accuracy of the answers.
+
+### 2.3. External Tools Enhanced Large Models
+
+Tool-enhanced Large Language Models (LLM) and agent-based large language models frameworks have received much attention for their application in agriculture. The Tool Augmented Large Language Model framework utilises information from external tools to enhance the capabilities of the language model. [18] In the agricultural domain, these external tools can include maize phenotype prediction models, knowledge graphs in the agricultural domain as well as related literature, Google search engine, etc. By integrating with these tools, the language model can understand and solve agriculture-related problems more accurately. For example, Qing et al [19] designed a pest identification system that integrates a large language model with an external computer vision model, effectively combining it with other small external models to enhance the text comprehension and generation capabilities of the large model. Balaguer et al [20] used retrieval-enhanced generation [21] and fine-tuning techniques to improve the model's responsiveness to region-specific problems. HuggingGPT [22] combines OpenAI's GPT-4 [4] with the Hugging Face model library. It allows GPT-4 to act as a central manager, coordinating and invoking hundreds of small models as external tools to solve specific tasks. This multi-model collaboration mechanism improves the adaptability of the system, allowing it to take advantage of the strengths of different models to solve a variety of complex problems. The agent-based language modelling framework handles requests to language models through agents to improve the efficiency and performance of the system.
+
+### 2.4. Knowledge Graphs in Agriculture
+
+In agriculture, researchers are harnessing knowledge graphs to boost production efficiency and sustainability. These graphs amalgamate diverse agricultural data, aiding in decision-making and providing precise management solutions. Knowledge graphs, with their structured representation of knowledge, enhance the interpretability of large language models used in their training [23]. Therefore, introducing knowledge graphs in the training process of large language models helps to improve the interpretability of large language models. For example, Rezayi et al [24] proposed the AgriBERT model for matching food and nutrients. The model, based on the structure of the BERT language model, was pre-trained on a corpus dataset of academic journals and fine-tuned by augmenting the answers with a map of agricultural expertise, and the results showed a significant improvement in the matching ability of the model. AgriKG [25], a comprehensive agricultural knowledge graph utilized in this study, employs natural language processing to extract and connect entities and their relationships from extensive agricultural data. This graph supports applications such as entity retrieval and intelligent QA. Leveraging AgriKG, this study develops an intelligent QA system using large-scale language models. This system integrates AgriKG's data with user queries to deliver effective QA services.
+
+## 3. System Design
+
+### 3.1. Design of Prompt
+
+In order to ensure that the model is able to generate relevant and accurate responses to the complex needs of the agricultural domain, special attention has been invested in the design of the system's prompts. When processing and analyzing agricultural data, well-designed prompts are essential to guide the model in extracting and utilizing key information. Therefore, we designed the hint generation mechanism in our system to dynamically adjust to the specific content of the query, thus improving the accuracy and efficiency of information retrieval.
+
+Prompts Mechanisms: In the system, the design of prompts is based on the automatic analysis of user queries, from which key information words and action words are extracted, such as "corn," "yield," or "predict." These terms are used to construct structured prompts tailored to specific queries, guiding data retrieval and analysis. For example, for a query about the predicted phenotype value of a specific DNA sequence of maize in the Huazhong region, the prompt might be "Analyze the impact of a certain DNA sequence on maize growth rate under the climatic conditions of the Huazhong region. " Based on these prompts, the system invokes relevant knowledge graphs, databases, and prediction models, and selects appropriate analytical tools to optimize query processing, ensuring accurate and relevant results.
+
+The Role of Prompts in System Architecture: Prompts act as a bridge between the user query and the system's comprehensive database, ensuring that the model's answers are not only relevant but also rich in domain-specific insights. By structuring key descriptors and verbs in the prompts, the system is able to utilise its resources more efficiently, therefore, the design of the prompts has a direct impact on the efficiency with which the system can process a particular query, speeding up the response and improving accuracy by reducing the amount of data to relevant information, this approach enhances the system's ability to provide the user with solutions to a particular problem.
+
+### 3.2. Workflow of System
+
+The general workflow of the system is as follows: When a user inputs a question, the system analyzes the question and selects the most relevant type of problem description from its various functional modules. It then calls the appropriate tools to complete the task. After receiving feedback, the large language model dynamically adjusts the next step of the plan based on the feedback. Finally, it summarizes based on the results and its own knowledge, ultimately providing the user with a clear and useful answer. Our system employs the ReAct architecture; if the agent's first tool selection fails, it reanalyzes the problem based on the returned results, chooses other appropriate tools for iterative execution, can also decompose the problem into sub-problems, calls tools to obtain feedback, and then executes the next step based on the feedback.
+
+### 3.3. System Architecture
+
+We propose an intelligent QA system for agricultural knowledge based on the RAG framework and agent architecture, which adopts an integrated architecture that combines advanced artificial intelligence techniques and data management technologies, aiming to provide efficient and accurate QA services. The system comprises multiple modules optimized for a specific function to ensure comprehensive and accurate question answering, shown in Figure 2. Specifically, the system utilizes a large pre-trained language model to handle generic queries and a search engine module to access the latest agricultural data and research in real time. In addition, the system is embedded with a search vector database of specialized literature to support accurate answers to in-depth domain questions. Using the AgriKG knowledge graph, the system can provide detailed answers to complex questions about crop types, suitable growing conditions, etc. The system also integrates several small prediction models, such as maize phenotype prediction (Resnet model architecture) and rice gene promoter enrichment value prediction, to provide accurate agricultural decision support. The synergistic work of these modules, managed through a unified user interface, ensures the simplicity and efficiency of the system's operation, enabling users to get instant and accurate answers to their natural language queries, thus greatly improving the intelligence of agricultural production and management.
+
+### 3.4. Modules in the Architecture
+
+The modules are as follows:
+
+Problem analysis module: The Generic Module is based on large pre-trained language models and focuses on generic questions, such as queries about the basics of agriculture. This module parses and answers questions using trained NLP models chosen for their broad knowledge base and strong language understanding. The generic module first analyzes the user query to determine its nature and whether additional knowledge sources are required.
+
+### Search module:
+
+The module can retrieve the latest agriculture-related information from external search engines, such as Google, and inject the resulting information into the LLM prompt for answer generation. It aggregates and filters search results from multiple sources, extracts key content from web pages, articles, and reports, and presents answers in summary form. By combining the information obtained from the search engine with the knowledge from other modules within the system, the search engine module provides users with rich and cutting-edge answers to agricultural knowledge, especially for complex questions.
+
+Retrieval module: This module leverages advanced natural language processing techniques by utilizing RAG [21] technology to bolster our QA system's capabilities in a two-step process: retrieval and generation. Initially, a robust vector database searches through over a thousand specialized agricultural documents, including texts on crop breeding, disease control, and recent agricultural innovations, to find those most pertinent to the user's query. Once relevant literature is retrieved, a generative model uses this information to craft precise responses. This extensive repository not only ensures rapid retrieval of relevant documents but also provides essential context, greatly enhancing the QA system's ability to handle specialized queries in agriculture. The system quickly retrieves the document(s) closest to the user query. These retrieved documents provide critical contextual information that lays the foundation for subsequent answer generation as they significantly improve the performance of the QA system on specialized agricultural questions.
+
+Knowledge Graph module: The Knowledge Graph module utilizes the AgriKG Knowledge Graph [4] to inject structured agricultural knowledge into the system's answering process, enhancing the expertise and accuracy of the questions and answers. By pre-indexing information such as crop classification, climate suitability, and pest control in AgriKG, the module can quickly retrieve the relevant knowledge required for a question. It maps the crop names and species entered by the user to entities and relationships in the knowledge graph through an API interface, extracting information such as crop classification and suitable growing environments. The module can also recommend the best planting strategies and optimization suggestions based on the structured expert knowledge in the knowledge graph.
+
+External tool invocation module: This module integrates a variety of specialized predictive models about specific crops, including a maize phenotype prediction model, maize gene promoter enrichment value prediction model, crop growth prediction model, crop variety selection model, pest and disease monitoring and control model, agricultural weather warning model, agricultural technology consulting model, and crop market analysis model to answer crop-related questions. The module automatically selects the appropriate model based on the user's question and invokes the model to obtain prediction and analysis results. The module then combines these results with knowledge from other modules within the system to synthesize multi-faceted answers. Using this module, the system can accurately solve complex crop prediction and analysis problems and provide detailed agricultural recommendations to the user.
+
+## 4. Experiments
+
+Dataset: Since there was no suitable QA dataset to fully test system performance, we did the work of building an agricultural QA dataset. Firstly, some representative problems are found from existing agricultural databases, academic papers, agricultural knowledge websites, etc. We consider crop cultivation, agricultural technology, pest control, agricultural processing and other aspects to ensure a comprehensive and diverse set of issues. After getting the seed questions for each aspect, we used ChatGPT's help to generate some related questions to expand our problem set. The quality of the dataset is then improved by manual screening to remove duplicate questions and irrelevant content. In order to ensure the accuracy and reliability of the answers, we get the correct answers to these questions from professional agricultural websites. Finally, a dataset containing 100 high-quality question answer pairs was constructed as the experimental benchmark to evaluate and test the performance of the system in the field of agricultural QA.
+
+### 4.1. Machine Scoring
+
+Method: We use BLEU, ROUGE, and GLEU to score standard and systemgenerated answers. For each question, a reference answer on a professional agricultural website is used as the benchmark for the answer generated by the evaluation system. The answers generated by each system were scored using the following evaluation indicators.
+
+BLEU : Calculates the n-gram overlap between the system's generated answers and all reference answers, and calculates BLEU scores based on accuracy, recall, and n-gram matches. Relying too heavily on phrase matching in BLEU scoring is not advisable, as it may fail to consider contextual and semantic nuances. ROUGE : Calculates the degree of n-gram overlap between the system generated answer and the reference answer, and calculates the ROUGE score based on n-gram matches of different lengths. GLEU : The system evaluates the syntactic and semantic consistency between the generated answer and the reference answer, and calculates the GLEU score based on n-gram matches of the other models in the BLUE and GLUE metrics. The performance on ROUGE metrics is similar to other models. This indicates that it outperforms ChatGPT and other models in terms of similarity and semantic consistency.
+
+Table 1 presents a comparison of model scoring across different metrics, highlighting ShizishanGPT's superior performance with a BLEU score of 0.88, a ROUGE score of 0.79, and a GLEU score of 0.85, culminating in a composite score of 0.923. This outpaces other models such as ChatGPT-4, Claude, WenXinYiYan, and ZhiPuAI, which demonstrate varying degrees of effectiveness with ChatGPT-4 performing relatively well with a composite score of 0.876.Shizis-hanGPT can acquire knowledge that the model itself does not have from the literature vector library and knowledge graph, and deal with skills that other models do not have from external tools. This result shows that the ShizishanGPT has higher accuracy and reliability in intelligent question-answering in the agricultural field.
+
+### 4.2. Manual Scoring
+
+Scoring Guidelines: In this study, we conducted a manual evaluation through several key steps to ensure the fairness and accuracy of the assessment. First, we selected evaluators with a background in agriculture, who specialize in assessing question-and-answer systems. The evaluators scored the answers generated by the models without knowing their sources. The scoring criteria were divided into three categories: Accuracy, Professionalism, and Language Fluency. Each category's specific standards were thoroughly explained during the training of evaluators to ensure consistency and accuracy in scoring. Each category had a maximum score of 10, and the final total score was calculated using the following weights: Accuracy accounted for 50%, Professionalism for 30%, and Language Fluency for 20%. This weighting ensured a comprehensive assessment of the models' overall performance. To enhance the reliability of the evaluation, we implemented a cross-checking mechanism, ensuring that each answer was scored by at least three independent evaluators. This helped eliminate potential biases from individual scorers and also allowed us to verify the stability and fairness of the scoring system by comparing the consistency of scores among different evaluators.
+
+Scoring Criteria: Accuracy: Assesses how well the model answer corresponds to the requirements of the question and how correct the information is. Professionalism: To see if the terms and concepts used in the answer are in line with standards and common sense in the agricultural field. Language Fluency:
+
+Evaluate whether the answer is natural and grammatically correct. Table 2 shows the results of the experiment, Our results indicate that Shizis-hanGPT outperformed other models with a composite score of 9.65, excelling particularly in accuracy (9.8) and professionalism (9.5). On the other hand, ZhiPuAI scored the lowest overall, with a total of 8.94, suggesting areas for improvement, especially in accuracy (8.7). Models like GPT4 and Claude showed competitive results with overall scores of 9.29 and 9.26, respectively, demonstrating strong language fluency capabilities. These findings highlight the significant potential of employing specialized language models in enhancing the precision and effectiveness of responses in agricultural domains.
+
+### 4.3. Ablation Experiments
+
+We conducted an ablation experiment to demonstrate each component's impact on our system. We disabled individual aspects of the system, such as RAG and external predictive models, and evaluated the system's performance again. We used the same QA dataset, metrics, and analysis procedure as in the previous experiment. Table 3 shows the results of our experiment for the different configurations. As can be seen from the data, the full configuration of ShizishanGPT demonstrated the highest overall performance with scores of 9.8 in Accuracy, 9.5 in Professionalism, and 9.1 in Language Fluency, culminating in a total score of 9.65. When individual components were incrementally removed, the model showed varying degrees of performance impact. Notably, the removal of AgriKG resulted in a slight improvement in Accuracy and Professionalism, indicating a robustness in the remaining components, with a new total score of 9.50. Conversely, the removal of the Retrieval-Augmented Generation (RAG) component resulted in the most significant drop in total score to 9.21, underscoring its critical role in enhancing model performance. Each configuration, whether '-Tools', '-Search', or others, exhibited distinct impacts on specific metrics, but consistently maintained high performance across all metrics, demonstrating the architecture's resilience and the effectiveness of its components.
+
+## 5. Limitations
+
+Although the results of our experiment are encouraging, it is important to discuss potential limitations.
+
+Dataset limitations: The dataset used in this article was generated by GPT-4 and may be affected by the quality of the questions due to limitations and biases in GPT-4's training data and question generation capabilities. Since the seed problem was found manually, the representativeness of the dataset may also have certain limitations.
+
+Scope limitations: In terms of universality and generalization, the research in this paper may only apply to a specific environment or scope of questions. The research in this article may apply only to the field of agriculture and only to specific crops and regions.
+
+## 6. Conclusion
+
+This study successfully integrates a knowledge graph-enhanced large-scale language model with an external tool module and a retrieval vector database module to construct a comprehensive intelligent QA system for agriculture. Experimental results show that the system exhibits good performance and accuracy in answering agriculture-related questions, and the response quality of the system is further enhanced by calling the external tool module and retrieval vector database module.
+
+We have successfully demonstrated intelligent querying, reasoning, and retrieval of agricultural knowledge, providing more comprehensive and effective support for agricultural production and decision-making. In the future, we will further improve the system's responses and the scope of questions it can address to meet the growing demand for agricultural information.
+
+## Figures et tableaux
+
+**Fig. 1.** Example of ChatGPT versus ShizishanGPT in predicting maize gene promoter enrichment values
+
+**Fig. 2.** Fig.
+
+**Fig. 3.** Comparative Analysis of Language Model Scores on BLEU, ROUGE, GLEU, and Composite Metrics
+
+Example: ChatGPT vs. ShizishanGPT.
+
+    User query: Hello, could you help me predict the promoter enrichment values for a certain variety of maize
+    with this DNA sequence
+    "TGAGTGAAGGCAGAATTGACCCATGCAGCTTCCTTTCTTTCACCACTCACTTGCTAGGAAACTACAAAAATAGAAAAAGAAA
+    ACTCACGGCAACCAAAAACGCGAACTCCTAGAGGGTTTCGAACACTTTGAAATTTGTATCAGACATCAAATGAAATCTTTAAC
+    TTCTT"?
+    ChatGPT : Hello! I
+
+'m sorry, I cannot help with predic ng promoter enrichment values based on a DNA sequence.For accurate predic on and analysis of promoter regions in DNA sequences, specialized bioinforma cs tools and so ware are typically used.If you have specific so ware or databases available, I can help you understand how to use them for analysis. If not, you might need to use online tools like PROMO or PlantCARE for predic ons.
+
+     | ShizishanGPT : Hello! The predicted promoter
+     | enrichment value for this gene sequence is
+     | -2.10213041305542.This value indicates that
+     | the level of promoter enrichment in this gene
+     | region may be lower than expected or
+     | rela vely sparse. This situa on may suggest
+     | that gene regula on in this area could be
+     | nega vely influenced by specific regulatory
+    If you need further | factors, or it may reflect func onal limita ons
+    assistance, please let me know what specific support | in this region during certain biological
+    you require. | processes.
+
+**Table 1.** Comparison of model scoring
+
+    Model | BLEU Score ROUGE Score GLEU Score Composite Score
+    ShizishanGPT 0.88 | 0.79 | 0.85 | 0.923
+    ChatGPT-4 | 0.82 | 0.77 | 0.80 | 0.876
+    Claude | 0.80 | 0.75 | 0.79 | 0.857
+    WenXinYiYan 0.76 | 0.73 | 0.74 | 0.818
+    ZhiPuAI | 0.75 | 0.74 | 0.73 | 0.815
+
+**Table 2.** Results on Agricultural QA Tasks
+
+    Model Name Accuracy Professionalism Language Fluency Total Score
+    GPT4 | 9.2 | 9.3 | 9.5 | 9.29
+    Claude | 9.1 | 9.3 | 9.6 | 9.26
+    WenXinYiYan 8.9 | 9.4 | 9.2 | 9.11
+    ZhiPuAI | 8.7 | 9.1 | 9.3 | 8.94
+    ShizishanGPT 9.8 | 9.5 | 9.5 | 9.65
+
+**Table 3.** Results of the ablation study
+
+    Configuration | Accuracy Professionalism Language Fluency Total Score
+    Full ShizishanGPT 9.8 | 9.5 | 9.5 | 9.65
+    -RAG | 9.1 | 9.2 | 9.5 | 9.21
+    -Tools | 9.4 | 9.3 | 9.4 | 9.37
+    -AgriKG | 9.6 | 9.4 | 9.4 | 9.50
+    -Search | 9.5 | 9.3 | 9.5 | 9.44

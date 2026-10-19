@@ -1,0 +1,1892 @@
+{
+ "date": "2026-10-18T1910",
+ "commit": "f1530e2",
+ "dirty": false,
+ "base": "Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE)",
+ "volets": [
+  "extraction",
+  "rag",
+  "speed"
+ ],
+ "results": {
+  "extraction": {
+   "quality": {
+    "papers": 56,
+    "grobid": 56,
+    "coverage_mean": 0.9075690067714757,
+    "coverage_min": 0.6119402985074627,
+    "coverage_worst": [
+     "1936-mahalanobis-generalised-distance-statistics 0.612",
+     "2025-karim-ai-driven-predictive-maintenance-solar 0.778",
+     "2006-baena-garcia-early-drift-detection-method 0.840"
+    ],
+    "words": 469960,
+    "tables": 254,
+    "tables_with_body_rate": 0.7086614173228346,
+    "tables_recovered": 18,
+    "tables_docling": 0,
+    "ligature_leftover_per_10k": 0.3708791208791209,
+    "papers_missed_sections": 10,
+    "papers_spaced_headings": 0,
+    "warnings_per_paper": 1.2142857142857142,
+    "per_paper": {
+     "1936-mahalanobis-generalised-distance-statistics": {
+      "backend": "grobid",
+      "coverage": 0.6119402985074627,
+      "words": 1654,
+      "sections": 7,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "1994-tiwari-power-analysis-embedded-software-first": {
+      "backend": "grobid",
+      "coverage": 0.9518126548074758,
+      "words": 7657,
+      "sections": 18,
+      "tables": 6,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 3
+     },
+     "2004-gama-learning-drift-detection": {
+      "backend": "grobid",
+      "coverage": 0.8807032231059021,
+      "words": 3658,
+      "sections": 7,
+      "tables": 3,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2006-baena-garcia-early-drift-detection-method": {
+      "backend": "grobid",
+      "coverage": 0.8403115871470301,
+      "words": 3102,
+      "sections": 10,
+      "tables": 4,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "2008-liu-isolation-forest": {
+      "backend": "grobid",
+      "coverage": 0.8769883351007424,
+      "words": 6166,
+      "sections": 13,
+      "tables": 6,
+      "tables_with_body": 2,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 3
+     },
+     "2008-saxena-damage-propagation-modeling-aircraft-engine": {
+      "backend": "grobid",
+      "coverage": 0.9068468997942991,
+      "words": 5268,
+      "sections": 19,
+      "tables": 3,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2012-gretton-kernel-two-sample-test": {
+      "backend": "grobid",
+      "coverage": 0.8941793041926851,
+      "words": 20924,
+      "sections": 42,
+      "tables": 3,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2012-nectoux-pronostia-experimental-platform-bearings-accelerated": {
+      "backend": "grobid",
+      "coverage": 0.9250655676283253,
+      "words": 4112,
+      "sections": 18,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "2015-helwig-condition-monitoring-complex-hydraulic-system": {
+      "backend": "grobid",
+      "coverage": 0.8465217391304348,
+      "words": 3942,
+      "sections": 5,
+      "tables": 5,
+      "tables_with_body": 5,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "2016-lessmeier-condition-monitoring-bearing-damage-electromechanical": {
+      "backend": "grobid",
+      "coverage": 0.9284060552092609,
+      "words": 9832,
+      "sections": 17,
+      "tables": 15,
+      "tables_with_body": 14,
+      "tables_recovered": 3,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "2019-benatti-online-learning-classification-emg-gestures": {
+      "backend": "grobid",
+      "coverage": 0.8764694905766001,
+      "words": 8662,
+      "sections": 16,
+      "tables": 3,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "2019-su-robust-anomaly-detection-multivariate-time": {
+      "backend": "grobid",
+      "coverage": 0.9136148211977596,
+      "words": 9501,
+      "sections": 25,
+      "tables": 4,
+      "tables_with_body": 3,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2021-kang-remaining-useful-life-rul-prediction": {
+      "backend": "grobid",
+      "coverage": 0.9076023391812865,
+      "words": 8584,
+      "sections": 20,
+      "tables": 6,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2022-berghout-systematic-guide-predicting-remaining-useful": {
+      "backend": "grobid",
+      "coverage": 0.9694615590677739,
+      "words": 11867,
+      "sections": 62,
+      "tables": 3,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2022-gimenez-device-training-machine-learning-models": {
+      "backend": "grobid",
+      "coverage": 0.951974386339381,
+      "words": 7152,
+      "sections": 25,
+      "tables": 1,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2022-maschler-regularization-continual-learning-fault-prediction": {
+      "backend": "grobid",
+      "coverage": 0.9015924867292773,
+      "words": 3509,
+      "sections": 11,
+      "tables": 3,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "2023-belay-unsupervised-anomaly-detection-iot-multivariate": {
+      "backend": "grobid",
+      "coverage": 0.9177661859466094,
+      "words": 10415,
+      "sections": 27,
+      "tables": 3,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "2024-besnard-continual-learning-time-series-forecasting": {
+      "backend": "grobid",
+      "coverage": 0.9254947613504074,
+      "words": 3670,
+      "sections": 11,
+      "tables": 2,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2024-rub-continual-incremental-learning-tinyml-device": {
+      "backend": "grobid",
+      "coverage": 0.9221192819918934,
+      "words": 5334,
+      "sections": 19,
+      "tables": 2,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2025-karim-ai-driven-predictive-maintenance-solar": {
+      "backend": "grobid",
+      "coverage": 0.778492410599434,
+      "words": 3833,
+      "sections": 23,
+      "tables": 2,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "2025-shah-continual-learning-gradient-monitoring-remaining": {
+      "backend": "grobid",
+      "coverage": 0.9602501116569897,
+      "words": 14378,
+      "sections": 43,
+      "tables": 19,
+      "tables_with_body": 16,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "2025-wu-adaptive-continual-learning-method-nonstationary": {
+      "backend": "grobid",
+      "coverage": 0.8838992332968236,
+      "words": 6804,
+      "sections": 16,
+      "tables": 4,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1511.00363-binaryconnect-training-deep-neural-networks": {
+      "backend": "grobid",
+      "coverage": 0.9301634472511144,
+      "words": 3241,
+      "sections": 15,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-1603.05279-xnor-net-imagenet-classification-binary": {
+      "backend": "grobid",
+      "coverage": 0.8985829397054738,
+      "words": 6120,
+      "sections": 11,
+      "tables": 4,
+      "tables_with_body": 2,
+      "tables_recovered": 2,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1605.04711-ternary-weight-networks": {
+      "backend": "grobid",
+      "coverage": 0.9166666666666666,
+      "words": 2593,
+      "sections": 10,
+      "tables": 3,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-1606.09282-learning-without-forgetting": {
+      "backend": "grobid",
+      "coverage": 0.8963973566403752,
+      "words": 7876,
+      "sections": 13,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 3
+     },
+     "arxiv-1611.07725-icarl-incremental-classifier-representation-learning": {
+      "backend": "grobid",
+      "coverage": 0.8918219461697723,
+      "words": 6303,
+      "sections": 12,
+      "tables": 5,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1612.00796-overcoming-catastrophic-forgetting-neural-networks": {
+      "backend": "grobid",
+      "coverage": 0.9807758324751116,
+      "words": 7169,
+      "sections": 9,
+      "tables": 3,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1703.04200-continual-learning-through-synaptic-intelligence": {
+      "backend": "grobid",
+      "coverage": 0.9183922046285018,
+      "words": 6394,
+      "sections": 13,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-1706.08840-gradient-episodic-memory-continual-learning": {
+      "backend": "grobid",
+      "coverage": 0.9784289784289785,
+      "words": 9664,
+      "sections": 14,
+      "tables": 4,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1711.00614-multimodal-anomaly-detector-robot-assisted": {
+      "backend": "grobid",
+      "coverage": 0.9085714285714286,
+      "words": 5195,
+      "sections": 18,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-1711.09601-memory-aware-synapses-learning-what": {
+      "backend": "grobid",
+      "coverage": 0.9043931997980138,
+      "words": 10348,
+      "sections": 21,
+      "tables": 6,
+      "tables_with_body": 5,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1712.05877-quantization-training-neural-networks-efficient": {
+      "backend": "grobid",
+      "coverage": 0.9044162129461585,
+      "words": 6523,
+      "sections": 22,
+      "tables": 6,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1801.01423-overcoming-catastrophic-forgetting-hard-attention": {
+      "backend": "grobid",
+      "coverage": 0.9388520334583214,
+      "words": 8115,
+      "sections": 25,
+      "tables": 6,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1801.06601-cmsis-nn-efficient-neural-network": {
+      "backend": "grobid",
+      "coverage": 0.9844748858447488,
+      "words": 3705,
+      "sections": 12,
+      "tables": 3,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1805.06370-progress-compress-scalable-framework-continual": {
+      "backend": "grobid",
+      "coverage": 0.9404695360536612,
+      "words": 6906,
+      "sections": 17,
+      "tables": 2,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1806.08342-quantizing-deep-convolutional-networks-efficient": {
+      "backend": "grobid",
+      "coverage": 0.9183879093198992,
+      "words": 6589,
+      "sections": 29,
+      "tables": 7,
+      "tables_with_body": 7,
+      "tables_recovered": 4,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1812.03596-task-free-continual-learning": {
+      "backend": "grobid",
+      "coverage": 0.9374205036886288,
+      "words": 7952,
+      "sections": 20,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1902.00829-incremental-learning-maximum-entropy-regularization": {
+      "backend": "grobid",
+      "coverage": 0.9324921135646688,
+      "words": 6322,
+      "sections": 12,
+      "tables": 4,
+      "tables_with_body": 3,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1909.08383-continual-learning-survey-defying-forgetting": {
+      "backend": "grobid",
+      "coverage": 0.9013009353832921,
+      "words": 20911,
+      "sections": 55,
+      "tables": 20,
+      "tables_with_body": 18,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1910.14481-continual-unsupervised-representation-learning": {
+      "backend": "grobid",
+      "coverage": 0.9678249678249679,
+      "words": 6350,
+      "sections": 19,
+      "tables": 6,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2007.05432-reactive-soft-prototype-computing-concept": {
+      "backend": "grobid",
+      "coverage": 0.850381679389313,
+      "words": 8051,
+      "sections": 23,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2012.06002-overcoming-catastrophic-forgetting-graph-neural": {
+      "backend": "grobid",
+      "coverage": 0.9122749590834697,
+      "words": 6192,
+      "sections": 21,
+      "tables": 2,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2103.08295-tinyol-tinyml-online-learning-microcontrollers": {
+      "backend": "grobid",
+      "coverage": 0.8967025572005384,
+      "words": 4554,
+      "sections": 11,
+      "tables": 1,
+      "tables_with_body": 0,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2105.13127-continual-learning-edge-real-time": {
+      "backend": "grobid",
+      "coverage": 0.9134742404227213,
+      "words": 2232,
+      "sections": 5,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2106.08295-white-paper-neural-network-quantization": {
+      "backend": "grobid",
+      "coverage": 0.9260607758017084,
+      "words": 23737,
+      "sections": 35,
+      "tables": 7,
+      "tables_with_body": 6,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 3
+     },
+     "arxiv-2110.10486-tinyml-platform-device-continual-learning": {
+      "backend": "grobid",
+      "coverage": 0.941794791339818,
+      "words": 10969,
+      "sections": 21,
+      "tables": 4,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2112.04215-self-supervised-models-continual-learners": {
+      "backend": "grobid",
+      "coverage": 0.8686089137565117,
+      "words": 8820,
+      "sections": 18,
+      "tables": 12,
+      "tables_with_body": 9,
+      "tables_recovered": 3,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2212.00824-device-training-first-overview-existing": {
+      "backend": "grobid",
+      "coverage": 0.8463797298431076,
+      "words": 15019,
+      "sections": 35,
+      "tables": 6,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2301.12467-continual-learning-predictive-maintenance-overview": {
+      "backend": "grobid",
+      "coverage": 0.9234125060591372,
+      "words": 13000,
+      "sections": 35,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 20.76923076923077,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 3
+     },
+     "arxiv-2302.00487-comprehensive-survey-continual-learning-theory": {
+      "backend": "grobid",
+      "coverage": 0.940104423209536,
+      "words": 17514,
+      "sections": 43,
+      "tables": 2,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2309.11932-machine-learning-oriented-survey-tiny": {
+      "backend": "grobid",
+      "coverage": 0.9086859688195991,
+      "words": 10803,
+      "sections": 35,
+      "tables": 4,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2311.11420-lifelearner-hardware-aware-meta-continual": {
+      "backend": "grobid",
+      "coverage": 0.8875379939209727,
+      "words": 9385,
+      "sections": 24,
+      "tables": 4,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2312.10549-catastrophic-forgetting-deep-learning-comprehensive": {
+      "backend": "grobid",
+      "coverage": 0.9878113407525172,
+      "words": 21321,
+      "sections": 35,
+      "tables": 0,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2401.01010-unsupervised-continual-anomaly-detection-contrastively": {
+      "backend": "grobid",
+      "coverage": 0.8735001714089818,
+      "words": 8270,
+      "sections": 14,
+      "tables": 15,
+      "tables_with_body": 9,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2403.19076-tiny-machine-learning-progress-futures": {
+      "backend": "grobid",
+      "coverage": 0.9257884972170687,
+      "words": 11793,
+      "sections": 28,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     }
+    }
+   },
+   "header": {
+    "title": 0.8928571428571429,
+    "year": 0.5178571428571429,
+    "doi": 0.5384615384615384,
+    "arxiv_id": 0.7647058823529411,
+    "authors_f1": 0.8663750931608075,
+    "n": {
+     "title": 56,
+     "year": 56,
+     "doi": 26,
+     "arxiv_id": 34,
+     "authors_f1": 56
+    },
+    "title_errors": [
+     "1936-mahalanobis-generalised-distance-statistics titre : None",
+     "2025-shah-continual-learning-gradient-monitoring-remaining titre : 'Knowledge-Based Systems'",
+     "arxiv-1603.05279-xnor-net-imagenet-classification-binary titre : None",
+     "arxiv-2007.05432-reactive-soft-prototype-computing-concept titre : 'Reactive Soft Prototype Computing for Concept Drift Streams 1'",
+     "arxiv-2103.08295-tinyol-tinyml-online-learning-microcontrollers titre : 'TinyOL: TinyML with Online-Learning on Microcontrollers 1 st Haoyu Ren'",
+     "arxiv-2301.12467-continual-learning-predictive-maintenance-overview titre : 'Intelligent Systems with Applications'"
+    ]
+   },
+   "tables": {
+    "values": 112,
+    "in_cited_table": 0.41964285714285715,
+    "in_text": 0.5714285714285714,
+    "table_only_values": 96,
+    "table_only_in_cited_table": 0.4375,
+    "rows_cited_table_absent": 12,
+    "found_outside_table": {
+     "2025-shah": 3,
+     "1711.09601": 2,
+     "2106.08295": 2,
+     "2012.06002": 2,
+     "2112.04215": 2,
+     "2110.10486": 1,
+     "1801.01423": 1,
+     "1801.06601": 1,
+     "1712.05877": 1,
+     "2403.19076": 1,
+     "2008-liu": 1
+    },
+    "cited_chunk_values": 0,
+    "in_cited_chunk": null
+   }
+  },
+  "rag": {
+   "passages": 3640,
+   "model": "BAAI/bge-small-en-v1.5",
+   "dense": true,
+   "gpu": false,
+   "corpus": {
+    "n_papers": 56,
+    "papers": [
+     "1936-mahalanobis-generalised-distance-statistics",
+     "1994-tiwari-power-analysis-embedded-software-first",
+     "2004-gama-learning-drift-detection",
+     "2006-baena-garcia-early-drift-detection-method",
+     "2008-liu-isolation-forest",
+     "2008-saxena-damage-propagation-modeling-aircraft-engine",
+     "2012-gretton-kernel-two-sample-test",
+     "2012-nectoux-pronostia-experimental-platform-bearings-accelerated",
+     "2015-helwig-condition-monitoring-complex-hydraulic-system",
+     "2016-lessmeier-condition-monitoring-bearing-damage-electromechanical",
+     "2019-benatti-online-learning-classification-emg-gestures",
+     "2019-su-robust-anomaly-detection-multivariate-time",
+     "2021-kang-remaining-useful-life-rul-prediction",
+     "2022-berghout-systematic-guide-predicting-remaining-useful",
+     "2022-gimenez-device-training-machine-learning-models",
+     "2022-maschler-regularization-continual-learning-fault-prediction",
+     "2023-belay-unsupervised-anomaly-detection-iot-multivariate",
+     "2024-besnard-continual-learning-time-series-forecasting",
+     "2024-rub-continual-incremental-learning-tinyml-device",
+     "2025-karim-ai-driven-predictive-maintenance-solar",
+     "2025-shah-continual-learning-gradient-monitoring-remaining",
+     "2025-wu-adaptive-continual-learning-method-nonstationary",
+     "arxiv-1511.00363-binaryconnect-training-deep-neural-networks",
+     "arxiv-1603.05279-xnor-net-imagenet-classification-binary",
+     "arxiv-1605.04711-ternary-weight-networks",
+     "arxiv-1606.09282-learning-without-forgetting",
+     "arxiv-1611.07725-icarl-incremental-classifier-representation-learning",
+     "arxiv-1612.00796-overcoming-catastrophic-forgetting-neural-networks",
+     "arxiv-1703.04200-continual-learning-through-synaptic-intelligence",
+     "arxiv-1706.08840-gradient-episodic-memory-continual-learning",
+     "arxiv-1711.00614-multimodal-anomaly-detector-robot-assisted",
+     "arxiv-1711.09601-memory-aware-synapses-learning-what",
+     "arxiv-1712.05877-quantization-training-neural-networks-efficient",
+     "arxiv-1801.01423-overcoming-catastrophic-forgetting-hard-attention",
+     "arxiv-1801.06601-cmsis-nn-efficient-neural-network",
+     "arxiv-1805.06370-progress-compress-scalable-framework-continual",
+     "arxiv-1806.08342-quantizing-deep-convolutional-networks-efficient",
+     "arxiv-1812.03596-task-free-continual-learning",
+     "arxiv-1902.00829-incremental-learning-maximum-entropy-regularization",
+     "arxiv-1909.08383-continual-learning-survey-defying-forgetting",
+     "arxiv-1910.14481-continual-unsupervised-representation-learning",
+     "arxiv-2007.05432-reactive-soft-prototype-computing-concept",
+     "arxiv-2012.06002-overcoming-catastrophic-forgetting-graph-neural",
+     "arxiv-2103.08295-tinyol-tinyml-online-learning-microcontrollers",
+     "arxiv-2105.13127-continual-learning-edge-real-time",
+     "arxiv-2106.08295-white-paper-neural-network-quantization",
+     "arxiv-2110.10486-tinyml-platform-device-continual-learning",
+     "arxiv-2112.04215-self-supervised-models-continual-learners",
+     "arxiv-2212.00824-device-training-first-overview-existing",
+     "arxiv-2301.12467-continual-learning-predictive-maintenance-overview",
+     "arxiv-2302.00487-comprehensive-survey-continual-learning-theory",
+     "arxiv-2309.11932-machine-learning-oriented-survey-tiny",
+     "arxiv-2311.11420-lifelearner-hardware-aware-meta-continual",
+     "arxiv-2312.10549-catastrophic-forgetting-deep-learning-comprehensive",
+     "arxiv-2401.01010-unsupervised-continual-anomaly-detection-contrastively",
+     "arxiv-2403.19076-tiny-machine-learning-progress-futures"
+    ],
+    "subset": false
+   },
+   "sets": {
+    "rag_eval": {
+     "n": 30,
+     "hybrid": {
+      "recall@5": 0.9333333333333333,
+      "recall@10": 0.9666666666666667,
+      "mrr": 0.7552777777777778,
+      "ndcg@10": 0.5266267812088286,
+      "paper@5": 1.0,
+      "misses": [
+       "Why does per-layer post-training quantization collapse on MobileNet while per-channel does not?",
+       "Accuracy of ternary weight networks compared with binary and full-precision weights"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.8333333333333334,
+        "hi": 1.0
+       },
+       "mrr": {
+        "lo": 0.6352777777777778,
+        "hi": 0.8708333333333333
+       }
+      },
+      "by_axis": {
+       "anomaly-detection": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "cl-methods": {
+        "n": 5,
+        "recall@5": 1.0,
+        "mrr": 0.9
+       },
+       "datasets": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.611111111111111
+       },
+       "drift-detection": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.8333333333333334
+       },
+       "pdm-rul": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.75
+       },
+       "quantization": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.40625
+       },
+       "surveys": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.5666666666666667
+       },
+       "tinyml-odl": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.875
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 25,
+        "recall@5": 0.96,
+        "mrr": 0.7663333333333334
+       },
+       "multi": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 0.5
+       },
+       "numeric": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "table": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     },
+     "dense": {
+      "recall@5": 0.9,
+      "recall@10": 0.9333333333333333,
+      "mrr": 0.7344444444444445,
+      "ndcg@10": 0.4723007168401456,
+      "paper@5": 0.9666666666666667,
+      "misses": [
+       "Estimating per-parameter importance online along the training trajectory rather than from a Fisher matrix",
+       "Why does per-layer post-training quantization collapse on MobileNet while per-channel does not?",
+       "Accuracy of ternary weight networks compared with binary and full-precision weights"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.8,
+        "hi": 1.0
+       },
+       "mrr": {
+        "lo": 0.6005555555555555,
+        "hi": 0.8677777777777779
+       }
+      },
+      "by_axis": {
+       "anomaly-detection": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "cl-methods": {
+        "n": 5,
+        "recall@5": 0.8,
+        "mrr": 0.7333333333333333
+       },
+       "datasets": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.7777777777777778
+       },
+       "drift-detection": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "pdm-rul": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.6875
+       },
+       "quantization": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.375
+       },
+       "surveys": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.48333333333333334
+       },
+       "tinyml-odl": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.8333333333333334
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 25,
+        "recall@5": 0.92,
+        "mrr": 0.7533333333333333
+       },
+       "multi": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 0.2
+       },
+       "numeric": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "table": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     },
+     "lexical": {
+      "recall@5": 0.9,
+      "recall@10": 0.9666666666666667,
+      "mrr": 0.7184259259259259,
+      "ndcg@10": 0.496229388661736,
+      "paper@5": 0.9666666666666667,
+      "misses": [
+       "Which memory bottlenecks does backpropagation face when training on tiny devices?",
+       "Why does per-layer post-training quantization collapse on MobileNet while per-channel does not?",
+       "Accuracy of ternary weight networks compared with binary and full-precision weights"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.7666666666666667,
+        "hi": 1.0
+       },
+       "mrr": {
+        "lo": 0.5832407407407408,
+        "hi": 0.8455555555555556
+       }
+      },
+      "by_axis": {
+       "anomaly-detection": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.75
+       },
+       "cl-methods": {
+        "n": 5,
+        "recall@5": 1.0,
+        "mrr": 0.8666666666666666
+       },
+       "datasets": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.5666666666666667
+       },
+       "drift-detection": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "pdm-rul": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.4458333333333333
+       },
+       "quantization": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.53125
+       },
+       "surveys": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.7037037037037037
+       },
+       "tinyml-odl": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.875
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 25,
+        "recall@5": 0.92,
+        "mrr": 0.722111111111111
+       },
+       "multi": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "numeric": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.8333333333333334
+       },
+       "table": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.9666666666666667,
+      "recall@10": 0.9666666666666667,
+      "mrr": 0.7566666666666666,
+      "ndcg@10": 0.5321624893028202,
+      "paper@5": 1.0,
+      "misses": [
+       "Accuracy of ternary weight networks compared with binary and full-precision weights"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.9,
+        "hi": 1.0
+       },
+       "mrr": {
+        "lo": 0.6355555555555555,
+        "hi": 0.8833333333333333
+       }
+      },
+      "by_axis": {
+       "anomaly-detection": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "cl-methods": {
+        "n": 5,
+        "recall@5": 1.0,
+        "mrr": 0.9
+       },
+       "datasets": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.5833333333333334
+       },
+       "drift-detection": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.611111111111111
+       },
+       "pdm-rul": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.6666666666666666
+       },
+       "quantization": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.3625
+       },
+       "surveys": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.8333333333333334
+       },
+       "tinyml-odl": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 25,
+        "recall@5": 1.0,
+        "mrr": 0.748
+       },
+       "multi": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "numeric": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "table": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     }
+    },
+    "rag_eval_holdout": {
+     "n": 40,
+     "hybrid": {
+      "recall@5": 0.65,
+      "recall@10": 0.725,
+      "mrr": 0.488125,
+      "ndcg@10": 0.3287836772741028,
+      "paper@5": 0.975,
+      "misses": [
+       "Forgetting ratio of the attention-mask approach against EWC, progressive networks and SGD",
+       "Continual learning methods that need no task labels or labelled data to decide what to consolidate",
+       "Average accuracy of entropy-regularised incremental learning versus end-to-end and EWC with exemplar memory on CIFAR-100",
+       "Training-time and loss as federated rounds become more frequent for keyword spotting on microcontrollers",
+       "Final accuracy and training time of latent replay depending on which layer replays the stored features",
+       "Accuracy and FLOPs of adaptive-size models for incremental learning on CORe50",
+       "Accuracy of 4-bit quantized weights with and without quantization-aware training on MobileNet and Inception",
+       "End-to-end post-training quantization results at W8A8 and W4A8 across vision and NLP models",
+       "MSE of remaining useful life prediction on the four turbofan subsets for linear regression, MLP, random forest and SVR",
+       "F1 and AUPR of PCA, isolation forest, autoencoders and LSTM on the SWaT and SMD IoT datasets",
+       "Image-level AUROC and forgetting of continual anomaly detection methods on the MVTec industrial images",
+       "AUC of isolation forest versus ORCA, LOF and random forest on benchmark anomaly datasets",
+       "Size and fault modes of the FD001 to FD004 turbofan subsets",
+       "Results of knowledge-transfer between artificial and real bearing damage using vibration or current signals"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.5,
+        "hi": 0.8
+       },
+       "mrr": {
+        "lo": 0.34895833333333337,
+        "hi": 0.61875
+       }
+      },
+      "by_axis": {
+       "anomaly-detection": {
+        "n": 5,
+        "recall@5": 0.4,
+        "mrr": 0.26666666666666666
+       },
+       "cl-methods": {
+        "n": 7,
+        "recall@5": 0.5714285714285714,
+        "mrr": 0.5892857142857143
+       },
+       "datasets": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.5416666666666666
+       },
+       "drift-detection": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.675
+       },
+       "pdm-rul": {
+        "n": 5,
+        "recall@5": 0.8,
+        "mrr": 0.39
+       },
+       "quantization": {
+        "n": 6,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.5416666666666666
+       },
+       "surveys": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.5833333333333334
+       },
+       "tinyml-odl": {
+        "n": 5,
+        "recall@5": 0.4,
+        "mrr": 0.33333333333333337
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 15,
+        "recall@5": 1.0,
+        "mrr": 0.888888888888889
+       },
+       "multi": {
+        "n": 6,
+        "recall@5": 0.8333333333333334,
+        "mrr": 0.5263888888888889
+       },
+       "table": {
+        "n": 19,
+        "recall@5": 0.3157894736842105,
+        "mrr": 0.15964912280701754
+       }
+      }
+     },
+     "dense": {
+      "recall@5": 0.525,
+      "recall@10": 0.625,
+      "mrr": 0.3892261904761905,
+      "ndcg@10": 0.24705514375454496,
+      "paper@5": 0.95,
+      "misses": [
+       "Forgetting ratio of the attention-mask approach against EWC, progressive networks and SGD",
+       "Continual learning methods that need no task labels or labelled data to decide what to consolidate",
+       "Average accuracy of entropy-regularised incremental learning versus end-to-end and EWC with exemplar memory on CIFAR-100",
+       "Per-method average accuracy and forgetting on Tiny ImageNet in the continual learning benchmark study",
+       "Training-time and loss as federated rounds become more frequent for keyword spotting on microcontrollers",
+       "Final accuracy and training time of latent replay depending on which layer replays the stored features",
+       "Accuracy and FLOPs of adaptive-size models for incremental learning on CORe50",
+       "Top-1 and top-5 ImageNet accuracy of binary-weight and XNOR networks versus competing binarization methods",
+       "Accuracy of 4-bit quantized weights with and without quantization-aware training on MobileNet and Inception",
+       "End-to-end post-training quantization results at W8A8 and W4A8 across vision and NLP models",
+       "MSE of remaining useful life prediction on the four turbofan subsets for linear regression, MLP, random forest and SVR",
+       "Scores on newly learned turbofan tasks for vanilla fine-tuning, LwF, EWC and gradient-monitoring variants",
+       "How is a health index built from sensor signals before predicting remaining useful life?",
+       "F1 and AUPR of PCA, isolation forest, autoencoders and LSTM on the SWaT and SMD IoT datasets",
+       "Image-level AUROC and forgetting of continual anomaly detection methods on the MVTec industrial images",
+       "AUC of isolation forest versus ORCA, LOF and random forest on benchmark anomaly datasets",
+       "Prequential error and number of detected drifts on the electricity dataset for DDM and its early variant",
+       "Size and fault modes of the FD001 to FD004 turbofan subsets",
+       "Results of knowledge-transfer between artificial and real bearing damage using vibration or current signals"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.35,
+        "hi": 0.675
+       },
+       "mrr": {
+        "lo": 0.2567261904761905,
+        "hi": 0.5113095238095238
+       }
+      },
+      "by_axis": {
+       "anomaly-detection": {
+        "n": 5,
+        "recall@5": 0.4,
+        "mrr": 0.4
+       },
+       "cl-methods": {
+        "n": 7,
+        "recall@5": 0.5714285714285714,
+        "mrr": 0.5
+       },
+       "datasets": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.25
+       },
+       "drift-detection": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.5982142857142857
+       },
+       "pdm-rul": {
+        "n": 5,
+        "recall@5": 0.4,
+        "mrr": 0.18333333333333332
+       },
+       "quantization": {
+        "n": 6,
+        "recall@5": 0.5,
+        "mrr": 0.3666666666666667
+       },
+       "surveys": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.5982142857142857
+       },
+       "tinyml-odl": {
+        "n": 5,
+        "recall@5": 0.4,
+        "mrr": 0.23333333333333334
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 15,
+        "recall@5": 0.9333333333333333,
+        "mrr": 0.7077777777777778
+       },
+       "multi": {
+        "n": 6,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6071428571428571
+       },
+       "table": {
+        "n": 19,
+        "recall@5": 0.15789473684210525,
+        "mrr": 0.06892230576441102
+       }
+      }
+     },
+     "lexical": {
+      "recall@5": 0.7,
+      "recall@10": 0.875,
+      "mrr": 0.5136706349206349,
+      "ndcg@10": 0.4032833539813643,
+      "paper@5": 1.0,
+      "misses": [
+       "Continual learning methods that need no task labels or labelled data to decide what to consolidate",
+       "Average accuracy of entropy-regularised incremental learning versus end-to-end and EWC with exemplar memory on CIFAR-100",
+       "Which model compression techniques let neural networks fit on microcontrollers according to TinyML surveys?",
+       "Training-time and loss as federated rounds become more frequent for keyword spotting on microcontrollers",
+       "Final accuracy and training time of latent replay depending on which layer replays the stored features",
+       "Meta-learning framework that adapts continual learning to a device's memory and energy budget",
+       "Accuracy and FLOPs of adaptive-size models for incremental learning on CORe50",
+       "How is a health index built from sensor signals before predicting remaining useful life?",
+       "Image-level AUROC and forgetting of continual anomaly detection methods on the MVTec industrial images",
+       "AUC of isolation forest versus ORCA, LOF and random forest on benchmark anomaly datasets",
+       "Size and fault modes of the FD001 to FD004 turbofan subsets",
+       "Results of knowledge-transfer between artificial and real bearing damage using vibration or current signals"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.55,
+        "hi": 0.825
+       },
+       "mrr": {
+        "lo": 0.390515873015873,
+        "hi": 0.6335714285714286
+       }
+      },
+      "by_axis": {
+       "anomaly-detection": {
+        "n": 5,
+        "recall@5": 0.6,
+        "mrr": 0.35333333333333333
+       },
+       "cl-methods": {
+        "n": 7,
+        "recall@5": 0.7142857142857143,
+        "mrr": 0.5654761904761905
+       },
+       "datasets": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.525
+       },
+       "drift-detection": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.875
+       },
+       "pdm-rul": {
+        "n": 5,
+        "recall@5": 0.8,
+        "mrr": 0.47857142857142854
+       },
+       "quantization": {
+        "n": 6,
+        "recall@5": 1.0,
+        "mrr": 0.6666666666666666
+       },
+       "surveys": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.5625
+       },
+       "tinyml-odl": {
+        "n": 5,
+        "recall@5": 0.2,
+        "mrr": 0.11579365079365078
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 15,
+        "recall@5": 0.8666666666666667,
+        "mrr": 0.7678571428571428
+       },
+       "multi": {
+        "n": 6,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.3597222222222222
+       },
+       "table": {
+        "n": 19,
+        "recall@5": 0.5789473684210527,
+        "mrr": 0.36161236424394316
+       }
+      }
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.725,
+      "recall@10": 0.825,
+      "mrr": 0.5928472222222222,
+      "ndcg@10": 0.3831420538150252,
+      "paper@5": 0.975,
+      "misses": [
+       "Continual learning methods that need no task labels or labelled data to decide what to consolidate",
+       "Average accuracy of entropy-regularised incremental learning versus end-to-end and EWC with exemplar memory on CIFAR-100",
+       "Training-time and loss as federated rounds become more frequent for keyword spotting on microcontrollers",
+       "Final accuracy and training time of latent replay depending on which layer replays the stored features",
+       "Accuracy and FLOPs of adaptive-size models for incremental learning on CORe50",
+       "Accuracy of 4-bit quantized weights with and without quantization-aware training on MobileNet and Inception",
+       "End-to-end post-training quantization results at W8A8 and W4A8 across vision and NLP models",
+       "MSE of remaining useful life prediction on the four turbofan subsets for linear regression, MLP, random forest and SVR",
+       "Image-level AUROC and forgetting of continual anomaly detection methods on the MVTec industrial images",
+       "AUC of isolation forest versus ORCA, LOF and random forest on benchmark anomaly datasets",
+       "Results of knowledge-transfer between artificial and real bearing damage using vibration or current signals"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.6,
+        "hi": 0.85
+       },
+       "mrr": {
+        "lo": 0.45763888888888893,
+        "hi": 0.7184027777777777
+       }
+      },
+      "by_axis": {
+       "anomaly-detection": {
+        "n": 5,
+        "recall@5": 0.6,
+        "mrr": 0.36666666666666664
+       },
+       "cl-methods": {
+        "n": 7,
+        "recall@5": 0.7142857142857143,
+        "mrr": 0.7301587301587301
+       },
+       "datasets": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.5777777777777777
+       },
+       "drift-detection": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "pdm-rul": {
+        "n": 5,
+        "recall@5": 0.8,
+        "mrr": 0.55
+       },
+       "quantization": {
+        "n": 6,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.611111111111111
+       },
+       "surveys": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.6666666666666666
+       },
+       "tinyml-odl": {
+        "n": 5,
+        "recall@5": 0.4,
+        "mrr": 0.275
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 15,
+        "recall@5": 1.0,
+        "mrr": 0.8722222222222222
+       },
+       "multi": {
+        "n": 6,
+        "recall@5": 0.8333333333333334,
+        "mrr": 0.5324074074074074
+       },
+       "table": {
+        "n": 19,
+        "recall@5": 0.47368421052631576,
+        "mrr": 0.39137426900584793
+       }
+      }
+     }
+    },
+    "rag_eval_fr": {
+     "n": 8,
+     "hybrid": {
+      "recall@5": 0.375,
+      "recall@10": 1.0,
+      "mrr": 0.38938492063492064,
+      "ndcg@10": 0.19560442215829593,
+      "paper@5": 0.875,
+      "misses": [
+       "Comment la consolidation élastique des poids choisit-elle les poids du réseau à protéger ?",
+       "Comment la quantification est-elle simulée pendant l'entraînement pour que l'inférence n'utilise que de l'arithmétique entière ?",
+       "Apprentissage continu par régularisation pour la prédiction de défauts et de RUL sur des batteries",
+       "Comment la méthode de détection de dérive utilise-t-elle des seuils d'alerte et de dérive sur le taux d'erreur en ligne ?",
+       "Comment les expériences de dégradation accélérée de roulements ont-elles été montées sur la plateforme PRONOSTIA ?"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.125,
+        "hi": 0.75
+       },
+       "mrr": {
+        "lo": 0.1654265873015873,
+        "hi": 0.6723710317460317
+       }
+      }
+     },
+     "dense": {
+      "recall@5": 0.625,
+      "recall@10": 1.0,
+      "mrr": 0.42604166666666665,
+      "ndcg@10": 0.31465787824239355,
+      "paper@5": 0.875,
+      "misses": [
+       "Comment la consolidation élastique des poids choisit-elle les poids du réseau à protéger ?",
+       "Comment TinyOL ajoute-t-il des neurones de sortie quand une nouvelle classe apparaît sur un microcontrôleur ?",
+       "Comment la quantification est-elle simulée pendant l'entraînement pour que l'inférence n'utilise que de l'arithmétique entière ?"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.25,
+        "hi": 0.875
+       },
+       "mrr": {
+        "lo": 0.19270833333333331,
+        "hi": 0.6770833333333334
+       }
+      }
+     },
+     "lexical": {
+      "recall@5": 0.375,
+      "recall@10": 0.375,
+      "mrr": 0.22916666666666666,
+      "ndcg@10": 0.09273635046914526,
+      "paper@5": 0.5,
+      "misses": [
+       "Comment la consolidation élastique des poids choisit-elle les poids du réseau à protéger ?",
+       "Comment la quantification est-elle simulée pendant l'entraînement pour que l'inférence n'utilise que de l'arithmétique entière ?",
+       "Apprentissage continu par régularisation pour la prédiction de défauts et de RUL sur des batteries",
+       "Comment la méthode de détection de dérive utilise-t-elle des seuils d'alerte et de dérive sur le taux d'erreur en ligne ?",
+       "Comment les expériences de dégradation accélérée de roulements ont-elles été montées sur la plateforme PRONOSTIA ?"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.125,
+        "hi": 0.75
+       },
+       "mrr": {
+        "lo": 0.041666666666666664,
+        "hi": 0.5
+       }
+      }
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.75,
+      "recall@10": 0.875,
+      "mrr": 0.53125,
+      "ndcg@10": 0.3338005787387023,
+      "paper@5": 1.0,
+      "misses": [
+       "Comment la consolidation élastique des poids choisit-elle les poids du réseau à protéger ?",
+       "Comment la quantification est-elle simulée pendant l'entraînement pour que l'inférence n'utilise que de l'arithmétique entière ?"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.5,
+        "hi": 1.0
+       },
+       "mrr": {
+        "lo": 0.28125,
+        "hi": 0.8125
+       }
+      }
+     }
+    }
+   },
+   "coverage": {
+    "papers_queried": 52,
+    "share": 0.9285714285714286
+   },
+   "low_relevance": {
+    "n": {
+     "cal_pos": 30,
+     "cal_neg": 19,
+     "val_pos": 40,
+     "val_neg": 18
+    },
+    "cos": {
+     "threshold": 0.8165,
+     "calibration": {
+      "flagged_negatives": 0.8947368421052632,
+      "flagged_positives": 0.1
+     },
+     "validation": {
+      "flagged_negatives": 0.9444444444444444,
+      "flagged_positives": 0.275
+     },
+     "adopted": false,
+     "neg_max": 0.853,
+     "pos_min": 0.729,
+     "pos_median": 0.859,
+     "neg_median": 0.767,
+     "val_negatives_missed": [
+      "Intrusion detection on the TON_IoT network traffic dataset"
+     ],
+     "val_positives_flagged": [
+      "Which categories of catastrophic forgetting mitigation does the comprehensive taxonomy propose?",
+      "MSE of remaining useful life prediction on the four turbofan subsets for linear regression, MLP, random forest and SVR",
+      "Scores on newly learned turbofan tasks for vanilla fine-tuning, LwF, EWC and gradient-monitoring variants",
+      "How is a health index built from sensor signals before predicting remaining useful life?",
+      "F1 and AUPR of PCA, isolation forest, autoencoders and LSTM on the SWaT and SMD IoT datasets",
+      "Why choose the anomaly threshold with extreme value theory instead of a fixed value?",
+      "Computing a two-sample statistic in linear time for very large samples",
+      "Which sensors and sampling rates does the hydraulic test rig dataset include?",
+      "Size and fault modes of the FD001 to FD004 turbofan subsets",
+      "Which loads and rotation speeds define the operating conditions of the run-to-failure bearing experiments?",
+      "Choosing which layer stores the replayed latent activations on edge devices"
+     ]
+    },
+    "rerank": {
+     "threshold": 3.390578508377075,
+     "calibration": {
+      "flagged_negatives": 1.0,
+      "flagged_positives": 0.1
+     },
+     "validation": {
+      "flagged_negatives": 1.0,
+      "flagged_positives": 0.3
+     },
+     "adopted": false,
+     "neg_max": 3.295145034790039,
+     "pos_min": -1.2792528867721558,
+     "pos_median": 5.206805229187012,
+     "neg_median": -3.914642095565796,
+     "val_negatives_missed": [],
+     "val_positives_flagged": [
+      "Forgetting ratio of the attention-mask approach against EWC, progressive networks and SGD",
+      "Distilling through a predictor network to keep self-supervised representations from drifting between tasks",
+      "Average accuracy of entropy-regularised incremental learning versus end-to-end and EWC with exemplar memory on CIFAR-100",
+      "Which categories of catastrophic forgetting mitigation does the comprehensive taxonomy propose?",
+      "MSE of remaining useful life prediction on the four turbofan subsets for linear regression, MLP, random forest and SVR",
+      "RMSE of RUL regression on battery data for the LSTM compared with a fully connected autoencoder",
+      "Scores on newly learned turbofan tasks for vanilla fine-tuning, LwF, EWC and gradient-monitoring variants",
+      "How is a health index built from sensor signals before predicting remaining useful life?",
+      "Why choose the anomaly threshold with extreme value theory instead of a fixed value?",
+      "Computing a two-sample statistic in linear time for very large samples",
+      "Which sensors and sampling rates does the hydraulic test rig dataset include?",
+      "Choosing which layer stores the replayed latent activations on edge devices"
+     ]
+    }
+   },
+   "verify": {
+    "exact": {
+     "n": 40,
+     "accepted_rate": 1.0,
+     "status": {
+      "OK": 40
+     }
+    },
+    "mot remplacé": {
+     "n": 40,
+     "accepted_rate": 0.925,
+     "status": {
+      "APPROX": 37,
+      "NOMBRES": 3
+     }
+    },
+    "chiffre modifié": {
+     "n": 36,
+     "accepted_rate": 0.0,
+     "status": {
+      "NOMBRES": 36
+     }
+    },
+    "autre papier": {
+     "n": 40,
+     "accepted_rate": 0.0,
+     "status": {
+      "ABSENT": 40
+     }
+    }
+   }
+  },
+  "speed": {
+   "extract_s": {
+    "2022-maschler": 0.007539536999956908,
+    "1711.09601": 0.1955083600000762,
+    "2403.19076": 0.19823808699993606
+   },
+   "pymupdf_fallback_s": {
+    "2022-maschler": 0.05816046900008587,
+    "1711.09601": 0.08873254399986763,
+    "2403.19076": 0.07948299500003486
+   },
+   "index_load_s": 0.3740578249999089,
+   "passages": 3640,
+   "cache_mb": 7.309622,
+   "encode_passages_per_s": 16.16661126825714,
+   "full_encode_estimate_s": 225.1554107165969,
+   "search_hybrid_ms": {
+    "p50": 115.33500499990623,
+    "p95": 148.58708499968998
+   },
+   "search_dense_ms": {
+    "p50": 116.80300400030319,
+    "p95": 162.70427000017662
+   },
+   "search_lexical_ms": {
+    "p50": 9.64849799993317,
+    "p95": 14.120340999852488
+   },
+   "search_hybrid+rerank_ms": {
+    "p50": 1442.5403539999024,
+    "p95": 2319.9104289997194
+   },
+   "verify_ms": 2.468722999765305,
+   "cli_s": {
+    "status": 0.34201063800037446,
+    "bench": 0.10387710200029687,
+    "paper": 0.10509745800027304,
+    "search": 7.713127194000208,
+    "show": 0.5301409840003544
+   }
+  }
+ }
+}

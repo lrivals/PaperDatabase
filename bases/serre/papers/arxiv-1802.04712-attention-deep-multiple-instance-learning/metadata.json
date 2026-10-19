@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-1802.04712-attention-deep-multiple-instance-learning",
+  "title": "Attention-based Deep Multiple Instance Learning",
+  "authors": [
+    {
+      "given": "Maximilian",
+      "family": "Ilse"
+    },
+    {
+      "given": "Jakub M.",
+      "family": "Tomczak"
+    },
+    {
+      "given": "Max",
+      "family": "Welling"
+    }
+  ],
+  "year": 2018,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1802.04712",
+  "url": "https://arxiv.org/abs/1802.04712",
+  "type": "preprint",
+  "axes": [
+    "calibration-decision"
+  ],
+  "tags": [],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 3, Table 5, Table 6, Table 9"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

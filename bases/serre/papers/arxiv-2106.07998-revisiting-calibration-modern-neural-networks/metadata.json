@@ -1,0 +1,65 @@
+{
+  "id": "arxiv-2106.07998-revisiting-calibration-modern-neural-networks",
+  "title": "Revisiting the Calibration of Modern Neural Networks",
+  "authors": [
+    {
+      "given": "Matthias",
+      "family": "Minderer"
+    },
+    {
+      "given": "Josip",
+      "family": "Djolonga"
+    },
+    {
+      "given": "Rob",
+      "family": "Romijnders"
+    },
+    {
+      "given": "Frances",
+      "family": "Hubis"
+    },
+    {
+      "given": "Xiaohua",
+      "family": "Zhai"
+    },
+    {
+      "given": "Neil",
+      "family": "Houlsby"
+    },
+    {
+      "given": "Dustin",
+      "family": "Tran"
+    },
+    {
+      "given": "Mario",
+      "family": "Lucic"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2106.07998",
+  "url": "https://arxiv.org/abs/2106.07998",
+  "type": "preprint",
+  "axes": [
+    "calibration-decision"
+  ],
+  "tags": [
+    "calibration",
+    "vit"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 2, 4 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

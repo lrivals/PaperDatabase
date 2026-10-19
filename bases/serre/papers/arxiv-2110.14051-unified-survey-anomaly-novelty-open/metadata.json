@@ -1,0 +1,60 @@
+{
+  "id": "arxiv-2110.14051-unified-survey-anomaly-novelty-open",
+  "title": "A Unified Survey on Anomaly, Novelty, Open-Set, and Out-of-Distribution Detection: Solutions and Future Challenges",
+  "authors": [
+    {
+      "given": "Mohammadreza",
+      "family": "Salehi"
+    },
+    {
+      "given": "Hossein",
+      "family": "Mirzaei"
+    },
+    {
+      "given": "Dan",
+      "family": "Hendrycks"
+    },
+    {
+      "given": "Yixuan",
+      "family": "Li"
+    },
+    {
+      "given": "Mohammad Hossein",
+      "family": "Rohban"
+    },
+    {
+      "given": "Mohammad",
+      "family": "Sabokrou"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2110.14051",
+  "url": "https://arxiv.org/abs/2110.14051",
+  "type": "preprint",
+  "axes": [
+    "surveys",
+    "domain-shift",
+    "calibration-decision",
+    "anomaly"
+  ],
+  "tags": [
+    "ood",
+    "anomaly"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 2, AD Needs to Be Explored More, [figure sans légende identifié, Table 7, Table 9"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

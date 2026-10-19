@@ -1,0 +1,57 @@
+{
+  "id": "2024-yang-laboratory-field-cross-domain-few",
+  "title": "From laboratory to field: cross-domain few-shot learning for crop disease identification in the field",
+  "authors": [
+    {
+      "given": "Sen",
+      "family": "Yang"
+    },
+    {
+      "given": "Quan",
+      "family": "Feng"
+    },
+    {
+      "given": "Jianhua",
+      "family": "Zhang"
+    },
+    {
+      "given": "Wanxia",
+      "family": "Yang"
+    },
+    {
+      "given": "Wenwei",
+      "family": "Zhou"
+    },
+    {
+      "given": "Wenbo",
+      "family": "Yan"
+    }
+  ],
+  "year": 2024,
+  "venue": "Frontiers in Plant Science 15",
+  "doi": "10.3389/fpls.2024.1434222",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3389/fpls.2024.1434222",
+  "type": "journal",
+  "axes": [
+    "disease-classif",
+    "domain-shift"
+  ],
+  "tags": [
+    "plantvillage",
+    "domain-shift"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

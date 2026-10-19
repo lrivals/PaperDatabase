@@ -877,6 +877,10 @@ Défauts constatés pendant les lots :
   explicite « aucune valeur tirée de la mémoire » ajoutée au prompt ;
 - un lot entier interrompu par la limite de session, sans rien écrire, relancé tel quel.
 
+- [ ] Base serre (créée le 19/10/2026, 13 axes, 27 articles ingérés, 0 fiche) : déposer dans
+  `bases/serre/inbox/` les 15 PDF listés dans `bases/serre/A_TELECHARGER.md` (avec leur `.bib`),
+  puis `bin/pdb ingest`, `/paper-fiche` en lot et `/paper-gaps`. Axes maigres : `leaf-detection`,
+  `growth`, `active-labelling`, `forecasting`.
 - [ ] Base yolo-data : 3 articles à déposer à la main dans `bases/yolo-data/inbox/` (pas de
   version arXiv, téléchargement refusé), puis `bin/pdb ingest` :
   - Everingham et al. 2010, *The Pascal Visual Object Classes (VOC) Challenge*, IJCV :

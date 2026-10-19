@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2106.08265-total-recall-industrial-anomaly-detection",
+  "title": "Towards Total Recall in Industrial Anomaly Detection",
+  "authors": [
+    {
+      "given": "Karsten",
+      "family": "Roth"
+    },
+    {
+      "given": "Latha",
+      "family": "Pemula"
+    },
+    {
+      "given": "Joaquin",
+      "family": "Zepeda"
+    },
+    {
+      "given": "Bernhard",
+      "family": "Schölkopf"
+    },
+    {
+      "given": "Thomas",
+      "family": "Brox"
+    },
+    {
+      "given": "Peter",
+      "family": "Gehler"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2106.08265",
+  "url": "https://arxiv.org/abs/2106.08265",
+  "type": "preprint",
+  "axes": [
+    "anomaly"
+  ],
+  "tags": [
+    "patchcore",
+    "anomaly"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 4",
+      "tableaux sans corps extrait (légende seule) : Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

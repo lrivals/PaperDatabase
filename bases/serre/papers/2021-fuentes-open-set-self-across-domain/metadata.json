@@ -1,0 +1,51 @@
+{
+  "id": "2021-fuentes-open-set-self-across-domain",
+  "title": "Open Set Self and Across Domain Adaptation for Tomato Disease Recognition With Deep Learning Techniques",
+  "authors": [
+    {
+      "given": "Alvaro",
+      "family": "Fuentes"
+    },
+    {
+      "given": "Sook",
+      "family": "Yoon"
+    },
+    {
+      "given": "Taehyun",
+      "family": "Kim"
+    },
+    {
+      "given": "Dong Sun",
+      "family": "Park"
+    }
+  ],
+  "year": 2021,
+  "venue": "Frontiers in Plant Science 12",
+  "doi": "10.3389/fpls.2021.758027",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3389/fpls.2021.758027",
+  "type": "journal",
+  "axes": [
+    "disease-classif",
+    "domain-shift",
+    "calibration-decision"
+  ],
+  "tags": [
+    "ood",
+    "domain-shift",
+    "tomato"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE 2, TABLE 4, TABLE 5, TABLE 6"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

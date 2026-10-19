@@ -1,0 +1,63 @@
+{
+  "id": "2025-yu-prediction-control-greenhouse-temperature-methods",
+  "title": "Prediction and control of greenhouse temperature: Methods, applications, and future directions",
+  "authors": [
+    {
+      "given": "Jingxin",
+      "family": "Yu"
+    },
+    {
+      "given": "Congcong",
+      "family": "Sun"
+    },
+    {
+      "given": "Jinpeng",
+      "family": "Zhao"
+    },
+    {
+      "given": "Lushun",
+      "family": "Ma"
+    },
+    {
+      "given": "Wengang",
+      "family": "Zheng"
+    },
+    {
+      "given": "Qiuju",
+      "family": "Xie"
+    },
+    {
+      "given": "Xiaoming",
+      "family": "Wei"
+    }
+  ],
+  "year": 2025,
+  "venue": "Computers and Electronics in Agriculture 237, 110603",
+  "doi": "10.1016/j.compag.2025.110603",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1016/j.compag.2025.110603",
+  "type": "journal",
+  "axes": [
+    "iot-greenhouse",
+    "climate-control",
+    "forecasting"
+  ],
+  "tags": [
+    "digital-twin",
+    "mpc",
+    "rl"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

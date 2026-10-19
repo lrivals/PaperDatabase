@@ -1,0 +1,541 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,fit,calc,shapes.geometric,babel}
+
+\usetheme[progressbar=frametitle,numbering=fraction]{metropolis}
+\setbeamertemplate{footline}[text line]{\hfill\insertframenumber/\inserttotalframenumber}
+\setbeamerfont{footline}{size=\tiny}
+
+\definecolor{acc}{RGB}{235,129,27}
+\definecolor{blu}{RGB}{0,95,115}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcommand{\src}[1]{\vfill{\tiny\color{gray}#1}}
+\newcommand{\pre}{\textsuperscript{\color{acc}p}}
+
+\tikzset{
+  box/.style={draw=blu, fill=blu!8, rounded corners=3pt, align=center,
+              font=\scriptsize, minimum height=8mm, inner sep=4pt},
+  hot/.style={box, draw=acc, fill=acc!12},
+  arr/.style={-{Stealth[length=2mm]}, thick, gray!70!black},
+}
+
+\title{IA embarquée sécuritaire sur FPGA}
+\subtitle{État de l'art, verrous et pistes de problématique}
+\author{Léonard Rivals}
+\institute{Point ARCYS -- ISAE-SUPAERO}
+\date{Octobre 2026}
+
+\begin{document}
+
+\maketitle
+
+% ===========================================================================
+\section{Le sujet}
+
+\begin{frame}{Sujet et cas d'usage}
+  \textbf{Intitulé de travail} : « IA embarquée sécuritaire certifiable sur base de
+  technologies FPGA »
+
+  \vspace{0.6em}
+  \textbf{Cas d'usage ARCYS}
+  \begin{itemize}
+    \item détecteur de type YOLO sur flux caméra ;
+    \item surveillance de zones industrielles dangereuses où la présence humaine est interdite ;
+    \item exigence forte sur les \alert{faux négatifs} (personne non détectée), puis sur
+          les faux positifs ;
+    \item réseau \alert{maîtrisé} : opérations reproduites, sans dépendre de bibliothèques
+          « boîte noire ».
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Deux volets} : le réseau de neurones embarqué, et la démarche de sûreté /
+  certification.
+\end{frame}
+
+\begin{frame}{Périmètre de la lecture}
+  Une centaine d'articles étudiés, regroupés en six thèmes :
+  \vspace{0.5em}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{itemize}
+        \item YOLO et détection sur FPGA
+        \item chaînes d'outils : Vitis AI (DPU), FINN, hls4ml, SATAY
+        \item mesure et comparaison des plateformes (FPGA, Jetson, MCU)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{itemize}
+        \item cadres de certification du ML (EASA, ARP 6983, AMLAS, DEEL)
+        \item fiabilité matérielle, vérification formelle, moniteurs d'exécution
+        \item détection de personnes et robustesse
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.8em}
+  \textbf{Réserves}
+  \begin{itemize}
+    \item aucun texte normatif lu directement (IEC 61508, ISO 13849, ISO/IEC TR 5469) ;
+    \item « absent » veut dire absent des travaux étudiés, pas forcément de toute la
+          littérature ;
+    \item \pre{} = preprint non relu par les pairs.
+  \end{itemize}
+\end{frame}
+
+% ===========================================================================
+\section{YOLO sur FPGA : ce qui existe}
+
+\begin{frame}{Détecteurs YOLO sur FPGA : quelques repères}
+  \scriptsize
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.4cm} >{\raggedright\arraybackslash}p{3.1cm} >{\raggedright\arraybackslash}p{2.6cm} L@{}}
+    \toprule
+    Travail & Modèle & Carte / flot & Résultat rapporté \\
+    \midrule
+    Karki 2026\pre & YOLOv8/11/26 nano INT8 & ZCU104, DPU & 34,05 FPS de bout en bout ;
+      mAP@.5:.95 0,66--0,79 (jeu de personnes non publié) ; puissance estimée \\
+    Gutierrez 2026\pre & YOLOv3-tiny allégé w2a4 & PYNQ-Z1, FINN & 35,66 FPS ; 2,91 W au
+      rail 12 V ; mAP@.5 0,594 (VOC, véhicules) \\
+    Fata 2026 & YOLOv3-tiny élagué & KV260, DPU & 24,3 FPS ; « accuracy » au lieu d'une mAP \\
+    Montgomerie-C. 2023 & YOLOv5n & ZCU104, SATAY & dataflow, tous les poids on-chip \\
+    Zhang 2024 & YOLOv3-tiny & Kintex-7, HLS & 15,2 ms de bout en bout ; NMS en matériel \\
+    Schlosser 2023 & YOLOv4 & ZCU104 vs AGX Xavier & Jetson plus rapide
+      (22,0 contre 54,42 ms) et plus précis \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.3em}
+  \small
+  Un seul travail mesure un \alert{détecteur de personnes} sur FPGA (Karki 2026, preprint) ;
+  les autres portent sur véhicules, VOC, défauts de PCB, drones.
+\end{frame}
+
+\begin{frame}{Deux façons d'implanter : DPU ou dataflow}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{DPU (Vitis AI)}
+      \begin{itemize}
+        \item moteur programmable fourni par AMD, rapide à mettre en œuvre ;
+        \item impose un modèle modifié (ReLU, attention approchée) : $\approx$\,3 points de
+              mAP perdus en plus (Karki 2026\pre) ;
+        \item matériel fermé : peu inspectable.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Dataflow (FINN, hls4ml, SATAY)}
+      \begin{itemize}
+        \item un circuit dédié par couche, open source ;
+        \item démontré pour un YOLOv3-tiny allégé sur Zynq-7020 (Gutierrez 2026\pre),
+              pas pour un YOLO récent sur KV260 ;
+        \item limité par la mémoire on-chip pour les gros réseaux.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.6em}
+  \begin{itemize}
+    \item quantification : QAT à $\approx$\,0,006 de mAP du flottant, contre $\approx$\,0,17 en
+          PTQ (Gutierrez 2026\pre) ;
+    \item le \alert{post-traitement} (NMS) sur l'ARM limite souvent le débit de bout en bout.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{La précision après quantification est rarement vérifiée sur la cible}
+  \begin{itemize}
+    \item YOLOv4, Vitis AI : $-2{,}2$ points de mAP à la quantification, puis encore à la
+          compilation DPU (Schlosser 2023) ;
+    \item YOLOv8n, CPU contre FPGA INT8 : 0,60 $\to$ 0,45 sur VOC, 0,64 $\to$ 0,34 sur KITTI ;
+          écarts jugés \alert{imprévisibles} (Karki 2026\pre) ;
+    \item TensorRT INT8 : $-6{,}4$ à $-12{,}3$ points de mAP50-95, alors que les auteurs
+          concluent « sans perte significative » (Rey 2025) ;
+    \item pertes de 1 à 30 points selon le modèle et le jeu.
+  \end{itemize}
+
+  \vspace{0.6em}
+  \textbf{Conséquence pour la thèse} : une propriété validée sur le modèle entraîné
+  n'est pas garantie sur le circuit. C'est à la fois un problème de performance et de
+  certification.
+\end{frame}
+
+\begin{frame}{Les mesures publiées sont difficilement comparables}
+  \begin{itemize}
+    \item pas de protocole commun : une quinzaine de métriques de précision différentes pour
+          les détecteurs sur FPGA ;
+    \item puissance : de la carte, de la puce, estimée par Vivado ou non précisée ;
+          rarement deux mesures sur la même carte ;
+    \item latences données en \alert{moyenne} : aucun pire cas, p99 ou gigue de bout en bout ;
+    \item comparaisons flatteuses : GOPS/DSP face à un autre modèle, gains face à un GPU
+          de bureau ;
+    \item aucun bitstream publié, code rarement disponible.
+  \end{itemize}
+
+  \vspace{0.6em}
+  Cadre de mesure le plus complet : Schlosser 2023 (mAP mesurée sur la cible, hôte séparé,
+  puissance de carte au multimètre), mais un seul modèle et sans pire cas.
+\end{frame}
+
+% ===========================================================================
+\section{Sûreté et certification du ML}
+
+\begin{frame}{Cadres de certification du ML}
+  \footnotesize
+  \begin{tabularx}{\textwidth}{@{}l l L@{}}
+    \toprule
+    Cadre & Domaine & Point utile pour la thèse \\
+    \midrule
+    EASA Concept Paper L1\&2 (2024) & aéronautique & learning assurance, ODD, objectifs IMP / EXP ;
+      apprentissage en ligne \alert{non accepté} \\
+    CoDANN I et II (EASA, 2020 / 2024) & aéronautique & W-shape ; conformité FPGA (DO-254)
+      renvoyée à plus tard ; argument FPGA contre GPU \\
+    ED-324 / ARP 6983 & aéronautique & processus ML en cours de normalisation \\
+    AMLAS (Hawkins 2021) & générique & cas d'assurance par étapes ; exemple « personne
+      dans la zone » sans étude de cas \\
+    DEEL White Paper (Delseny 2021) & générique & robustesse après quantification posée
+      comme défi ; métriques asymétriques \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.6em}
+  \normalsize
+  \begin{itemize}
+    \item tous viennent de l'aéronautique ou de l'automobile ;
+    \item aucun n'est mis en correspondance avec IEC 61508, ISO 13849 ou ISO/IEC TR 5469,
+          les normes du cadre industriel.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Cas de référence : Certified ML Object Detection for Surveillance Missions}
+  \small
+  Belcaid et al., ERTS 2024 : détection de drones intrus,
+  démarche ED-324 / ARP 6983 appliquée en partie.
+
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{Ce qui est fait}
+      \begin{itemize}
+        \item ODD système, puis ODD du composant ML ;
+        \item analyse de biais du jeu, augmentation ;
+        \item YOLOv3-tiny, image découpée en tuiles ;
+        \item code C / CUDA traçable, sans cuBLAS.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \textbf{Limites}
+      \begin{itemize}
+        \item cible Jetson AGX Xavier : traçabilité arrêtée aux pilotes NVIDIA ;
+        \item FP16 validé par tests, sans preuve ;
+        \item aucune métrique de détection publiée ;
+        \item ni vérification, ni moniteur hors ODD.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.5em}
+  \alert{Transposable} : démarche ODD et données. \alert{À faire} : la même chose avec un
+  accélérateur dont le RTL / HLS est inspectable.
+\end{frame}
+
+\begin{frame}{Verrou 1 : prouver que le circuit fait ce que fait le modèle}
+  \begin{itemize}
+    \item les guides renvoient l'implémentation à plus tard : FPGA hors champ de CoDANN,
+          objectif IMP-06 (préservation après transformation) sans moyen de conformité ;
+    \item aucune chaîne FPGA ne garantit la conversion :
+      \begin{itemize}
+        \item QONNX : arrondis et saturations non garantis entre outils ;
+        \item DPU : modèle modifié, écarts imprévisibles ;
+        \item qualification d'outil (DO-178C, TQL) jamais appliquée à FINN ou Vitis AI ;
+      \end{itemize}
+    \item code traçable existant (ACETONE, de Albuquerque Silva 2022), mais en FP32 sur CPU.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Rejoint la remarque d'Arnaud} : aucune chaîne d'outils ne permet aujourd'hui de
+  certifier. \\
+  \textbf{Piste} : équivalence bit à bit modèle quantifié $\to$ HLS $\to$ bitstream, vérifiée
+  par tests exhaustifs couche par couche sur FINN.
+\end{frame}
+
+\begin{frame}{Verrou 2 : la vérification formelle ne passe pas à l'échelle}
+  \begin{itemize}
+    \item Reluplex : $\approx$\,300 ReLU (ACAS Xu), timeouts sur certaines propriétés
+          (Katz 2017) ;
+    \item réseaux binarisés : $\approx$\,500 neurones denses, sans convolution
+          (Narodytska 2017) ;
+    \item réseau quantifié bit-exact, 4 couches denses : 40 à 56 \% des cas résolus ;
+          problème PSPACE-hard (Henzinger 2021) ;
+    \item propriétés vérifiées : robustesse locale, sans lien avec un danger.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Piste} : vérifier des \alert{composants} plus petits (moniteur, NMS, tête) et compléter
+  par des garanties statistiques. \\
+  {\small Outils récents ($\alpha,\beta$-CROWN, Marabou) encore à étudier.}
+\end{frame}
+
+\begin{frame}{Verrou 3 : un détecteur qui signale son incertitude}
+  \begin{itemize}
+    \item moniteurs d'exécution connus, en logiciel, surtout sur classifieurs :
+          score softmax (Hendrycks 2017), patrons d'activation (Cheng 2018),
+          boîtes d'abstraction (Henzinger 2019) ;
+    \item sur détecteurs, sans cible embarquée : Gaussian YOLOv3 (incertitude de boîte pour
+          +0,04 \% de FLOPs), prédiction conforme sur YOLOv5 (Andéol 2023) ;
+    \item demandés par les guides EASA, \alert{jamais implantés sur FPGA} ; aucun coût
+          matériel mesuré.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Piste} : prédiction conforme puis moniteur à boîtes à côté d'un YOLO sur KV260 ;
+  mesurer ressources, latence ajoutée et taux d'erreurs détectées à fausse alarme fixée. \\
+  {\small Limite : la prédiction conforme d'Andéol 2023 ne couvre pas les faux négatifs.}
+\end{frame}
+
+\begin{frame}{Verrou 4 : fiabilité matérielle (SEU) d'un détecteur}
+  \begin{itemize}
+    \item études de fiabilité sur FPGA, toujours sur petits classifieurs (MNIST, CIFAR) :
+          Libano 2019 et 2020, Gambardella 2019 ;
+    \item la criticité varie par couche : TMR sélectif $\approx$\,40 \% des fautes masquées pour
+          8 \% de surcoût (Libano 2019) ;
+    \item la quantification déplace le risque : réseau binarisé moins sensible, mais plus
+          d'erreurs critiques (38 \% contre 26 \%, Libano 2020) ;
+    \item aucune injection de fautes dans un DPU, ni sur un YOLO.
+  \end{itemize}
+
+  \vspace{0.5em}
+  {\small Au sol, le risque est dominé par les erreurs du modèle plus que par les
+  radiations (Libano 2020) : volet probablement secondaire pour le cas ARCYS.}
+\end{frame}
+
+\begin{frame}{Verrou 5 : qu'est-ce qu'une erreur dangereuse ?}
+  \begin{itemize}
+    \item critère d'erreur des études : celui d'un classifieur (changement de classe) ;
+    \item Rech 2024 propose un critère par boîtes (non-détection, faux positif), sans lien
+          avec SIL ou PL ;
+    \item aucun papier ne traduit un taux d'erreur ou un FIT en SIL / PL ;
+    \item l'asymétrie faux négatif / fausse alarme est posée par les guides (EASA, DEEL),
+          sans métrique pour la détection de personnes.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{À définir} : « personne manquée sur $N$ images consécutives, dans la zone, à
+  telle distance », et un taux de défaillance dangereuse par heure qui combine erreurs du
+  modèle et fautes matérielles. \\
+  {\small Ordre de grandeur (DEEL) : un obstacle par minute et $10^{-3}$ d'erreur donnent
+  $6\cdot10^{-2}$ défaillance par heure.}
+\end{frame}
+
+\begin{frame}{FPGA contre GPU : l'argument du déterminisme reste à mesurer}
+  \begin{itemize}
+    \item CoDANN II plaide pour le FPGA (pas de microcode secret, pas de DVFS, pas de
+          multicœur partagé), mais sans mesure ;
+    \item côté GPU : traçabilité bloquée aux pilotes (Belcaid 2024) ;
+    \item côté FPGA : latences publiées en moyenne, latence parfois variable selon la vidéo
+          (Fata 2026) ;
+    \item aucun pire cas, p99 ni gigue de bout en bout publié.
+  \end{itemize}
+
+  \vspace{0.6em}
+  \textbf{Question candidate} : le FPGA rend-il la borne de latence d'un détecteur
+  démontrable ? Comparer DPU, FINN et Jetson sur le même YOLO, sur $10^5$ images.
+\end{frame}
+
+\begin{frame}{Apprentissage continu contre certification}
+  \begin{itemize}
+    \item EASA : l'apprentissage en ligne « will not be accepted by EASA at this stage » ;
+    \item CoDANN, AMLAS, DEEL : système gelé, apprentissage hors ligne ;
+    \item côté apprentissage continu embarqué : ni non-régression, ni versionnage, ni retour
+          arrière.
+  \end{itemize}
+
+  \vspace{0.6em}
+  \textbf{Piste} : backbone gelé et certifié, tête adaptée sous contraintes, test de
+  non-régression embarqué avant activation, retour arrière. \\
+  {\small Utile si la thèse doit garder un lien avec l'adaptation en service.}
+\end{frame}
+
+% ===========================================================================
+\section{Détection de personnes}
+
+\begin{frame}{Données et métriques pour la détection de personnes}
+  \begin{itemize}
+    \item jeux étudiés : CrowdHuman (foules, images web), Re-ID (campus, rues) ;
+          \alert{aucun jeu industriel} (EPI, machines, éclairage dégradé) ;
+    \item métriques : mAP ou taux d'erreur moyennés ; aucun rappel à taux de fausse alarme
+          fixé, par distance ou par occultation ;
+    \item le cas complet le plus proche (Belcaid 2024) ne publie pas de métrique.
+  \end{itemize}
+
+  \vspace{0.6em}
+  \textbf{Piste} : YOLOv8n de personnes, opérateurs compatibles DPU, entraîné sur CrowdHuman ;
+  rappel à 0,1 FPPI mesuré sur KV260, en flottant et en INT8. Puis un ODD d'exemple pour
+  la zone industrielle.
+\end{frame}
+
+\begin{frame}{Robustesse et chaîne détection, suivi, identification}
+  \textbf{Robustesse adverse}
+  \begin{itemize}
+    \item un patch imprimé d'environ 40\,$\times$\,40 cm cache une personne à YOLOv2
+          (Thys 2019) ;
+    \item effet de la quantification et du FPGA sur cette vulnérabilité : non étudié.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Suivi et identification}
+  \begin{itemize}
+    \item suivi sur l'ARM : le débit peut tomber de 195 à 24 FPS ;
+    \item aucune chaîne détection + suivi + Re-ID complète sur SoC FPGA ;
+    \item le suivi peut servir la sûreté : vote temporel, persistance d'une personne.
+  \end{itemize}
+\end{frame}
+
+% ===========================================================================
+\section{Synthèse et pistes}
+
+\begin{frame}{Le croisement central est vide}
+  \centering
+  \begin{tikzpicture}[node distance=6mm and 10mm]
+    \node[box, minimum width=48mm, minimum height=26mm] (yolo)
+      {\textbf{YOLO sur FPGA}\\[2pt]accélérateurs, DPU, FINN\\débit, puissance\\[2pt]
+       \textit{sans sûreté}};
+    \node[box, minimum width=48mm, minimum height=26mm, right=34mm of yolo] (safe)
+      {\textbf{Sûreté du ML}\\[2pt]fiabilité, vérification,\\moniteurs, certification\\[2pt]
+       \textit{sur classifieurs ou GPU}};
+    \path (yolo) -- (safe) node[midway, hot, minimum width=28mm, minimum height=16mm] (gap)
+      {\textbf{Thèse}\\détecteur de personnes\\quantifié, sûr, sur FPGA};
+    \draw[arr] (yolo) -- (gap);
+    \draw[arr] (safe) -- (gap);
+  \end{tikzpicture}
+
+  \vspace{0.8em}
+  \raggedright
+  Dans les travaux étudiés, aucun détecteur quantifié sur FPGA n'est soumis à la fois à
+  une mesure de précision sur cible, à un moniteur d'exécution et à une analyse de fiabilité.
+  Les deux moitiés existent, séparément.
+\end{frame}
+
+\begin{frame}{Pistes de problématique}
+  \begin{enumerate}
+    \item Quelles contraintes imposer dès la conception (architecture, opérations,
+          quantification) pour passer dans une chaîne de génération de code certifiable ?
+    \item Comment un détecteur embarqué peut-il repérer ses propres situations
+          d'incertitude et lever une alerte, pour qu'un faux négatif ne passe pas inaperçu ?
+    \item Comment vérifier que les propriétés validées sur le modèle restent vraies après
+          quantification, élagage et compilation pour FPGA ?
+    \item Peut-on concevoir un détecteur entièrement maîtrisé (virgule fixe, opérations
+          explicites) qui reste assez précis pour la surveillance de zones dangereuses ?
+    \item Comment adapter l'ARP 6983 (données, robustesse, traçabilité) à un détecteur sur
+          FPGA, et quelles preuves peut-on réellement fournir ?
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Reformuler l'intitulé ?}
+  Si aucune chaîne d'outils ne permet de certifier, l'intitulé ne devrait pas le promettre.
+
+  \vspace{0.8em}
+  \begin{itemize}
+    \item « IA embarquée sécuritaire \alert{en vue de} la certification sur base de technologies
+          FPGA »
+    \item « Conception de réseaux de neurones embarqués sur FPGA pour des applications
+          critiques \alert{certifiables} »
+    \item « IA embarquée sur FPGA : \alert{vers la certification} de réseaux de neurones pour
+          la détection en environnement critique »
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Premières étapes proposées}
+  \begin{enumerate}
+    \item \textbf{Prototype de référence} : YOLO nano de personnes sur KV260, en DPU puis en
+          FINN ; mAP et rappel mesurés \alert{sur la carte}, étape par étape.
+    \item \textbf{Protocole de mesure} : précision sur cible, latence de bout en bout avec
+          pire cas et gigue, puissance de carte.
+    \item \textbf{Premier moniteur} : prédiction conforme ou score d'incertitude, coût
+          matériel mesuré.
+    \item \textbf{Cadre} : ODD et cas d'assurance d'exemple (AMLAS / ARP 6983) pour la zone
+          industrielle.
+    \item \textbf{Lectures à compléter} : ISO/IEC TR 5469, IEC 61508, jeux de données
+          industriels (EPI), vérification récente.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Questions pour la réunion}
+  \begin{itemize}
+    \item Quel volet porte la thèse : le réseau maîtrisé, la preuve d'équivalence, ou le
+          moniteur d'exécution ?
+    \item Quelle norme vise ARCYS : IEC 61508, ISO 13849, ARP 6983 ?
+    \item Données : ARCYS peut-il fournir des images de sites industriels ?
+    \item Matériel visé : KV260, Zynq-7020, autre ?
+    \item Articulation avec les deux thèses encadrées par Arnaud sur le code certifiable
+          pour FPGA ?
+    \item Calendrier et montage (mécénat ISAE, RH ARCYS).
+  \end{itemize}
+\end{frame}
+
+% ===========================================================================
+\section*{Références}
+
+\begin{frame}[allowframebreaks]{Références principales}
+  \scriptsize
+  \begin{itemize}
+    \item Andéol et al., 2023. \textit{Confident Object Detection via Conformal Prediction
+          and Conformal Risk Control: an Application to Railway Signaling}. arXiv:2304.06052\pre.
+    \item Belcaid et al., 2024. \textit{Certified ML Object Detection for Surveillance
+          Missions}. ERTS 2024. arXiv:2406.12362.
+    \item Cheng et al., 2018. \textit{Runtime Monitoring Neuron Activation Patterns}.
+          arXiv:1809.06573\pre.
+    \item Choi et al., 2019. \textit{Gaussian YOLOv3}. arXiv:1904.04620.
+    \item De Albuquerque Silva et al., 2022. \textit{ACETONE: Predictable Programming
+          Framework for ML Applications in Safety-Critical Systems}. ECRTS 2022.
+    \item Delseny et al., 2021. \textit{White Paper Machine Learning in Certified Systems}
+          (DEEL). arXiv:2103.10529.
+    \item EASA, 2020 / 2024. \textit{Concepts of Design Assurance for Neural Networks}
+          (CoDANN I et II).
+    \item EASA, 2024. \textit{Concept Paper: Guidance for Level 1 \& 2 Machine Learning
+          Applications}, Issue 02.
+    \item Fata et al., 2026. \textit{Low-Cost FPGA-Enhanced CNN Accelerator for Real-Time
+          YOLO Object Detection and Classification}. IEEE Access 14.
+    \item Gambardella et al., 2019. \textit{Efficient Error-Tolerant Quantized Neural Network
+          Accelerators}. IEEE DFT.
+    \item Gutierrez et al., 2026. \textit{NPU Accelerator: Quantized Real-Time Vehicle
+          Detection on PYNQ-Z1 Using FINN}. arXiv:2609.24757\pre.
+    \item Hawkins et al., 2021. \textit{Guidance on the Assurance of Machine Learning in
+          Autonomous Systems (AMLAS)}. arXiv:2102.01564.
+    \item Hendrycks, Gimpel, 2017. \textit{A Baseline for Detecting Misclassified and
+          Out-of-Distribution Examples in Neural Networks}. ICLR 2017.
+    \item Henzinger et al., 2020. \textit{Outside the Box: Abstraction-Based Monitoring of
+          Neural Networks}. arXiv:1911.09032, ECAI 2020.
+    \item Henzinger et al., 2021. \textit{Scalable Verification of Quantized Neural
+          Networks}. AAAI 2021.
+    \item Karki et al., 2026. \textit{No Attention, No Problem: DPU-Aware Attention
+          Approximation in Modern YOLO on FPGA}. arXiv:2607.13106\pre.
+    \item Katz et al., 2017. \textit{Reluplex: An Efficient SMT Solver for Verifying Deep
+          Neural Networks}. arXiv:1702.01135.
+    \item Libano et al., 2019. \textit{Selective Hardening for Neural Networks in FPGAs}.
+          IEEE TNS 66(1).
+    \item Libano et al., 2020. \textit{Understanding the Impact of Quantization, Accuracy,
+          and Radiation on the Reliability of CNNs on FPGAs}. IEEE TNS 67(7).
+    \item Montgomerie-Corcoran et al., 2023. \textit{SATAY: A Streaming Architecture Toolflow
+          for Accelerating YOLO Models on FPGA Devices}. ICFPT 2023.
+    \item Narodytska et al., 2017. \textit{Verifying Properties of Binarized Deep Neural
+          Networks}. arXiv:1709.06662.
+    \item Rech, 2024. \textit{Artificial Neural Networks for Space and Safety-Critical
+          Applications: Reliability Issues and Potential Solutions}. IEEE TNS 71(4).
+    \item Rey et al., 2025. \textit{A Performance Analysis of YOLO Models for Deployment on
+          Constrained Computational Edge Devices in Drone Applications}. Electronics 14(3).
+    \item Schlosser et al., 2023. \textit{A Framework for Benchmarking Real-Time Embedded
+          Object Detection}. DAGM GCPR 2022, LNCS 13485.
+    \item Shao et al., 2018. \textit{CrowdHuman: A Benchmark for Detecting Human in a Crowd}.
+          arXiv:1805.00123.
+    \item Thys et al., 2019. \textit{Fooling Automated Surveillance Cameras: Adversarial
+          Patches to Attack Person Detection}. arXiv:1904.08653.
+    \item Zhang et al., 2024. \textit{End-to-End Acceleration of the YOLO Object Detection
+          Framework on FPGA-Only Devices}. Neural Computing and Applications 36(3).
+  \end{itemize}
+\end{frame}
+
+\end{document}

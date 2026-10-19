@@ -1,0 +1,42 @@
+{
+  "id": "2016-mohanty-deep-learning-image-plant-disease",
+  "title": "Using Deep Learning for Image-Based Plant Disease Detection",
+  "authors": [
+    {
+      "given": "Sharada P.",
+      "family": "Mohanty"
+    },
+    {
+      "given": "David P.",
+      "family": "Hughes"
+    },
+    {
+      "given": "Marcel",
+      "family": "Salathé"
+    }
+  ],
+  "year": 2016,
+  "venue": "Frontiers in Plant Science 7",
+  "doi": "10.3389/fpls.2016.01419",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3389/fpls.2016.01419",
+  "type": "journal",
+  "axes": [
+    "disease-classif"
+  ],
+  "tags": [],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : TABLE 1",
+      "sections numérotées non détectées : 1 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

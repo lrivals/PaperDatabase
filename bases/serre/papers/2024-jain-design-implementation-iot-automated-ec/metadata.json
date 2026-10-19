@@ -1,0 +1,42 @@
+{
+  "id": "2024-jain-design-implementation-iot-automated-ec",
+  "title": "Design and Implementation of an IoT-based automated EC and pH Control System in an NFT-based Hydroponic Farm",
+  "authors": [
+    {
+      "given": "Swati",
+      "family": "Jain"
+    },
+    {
+      "given": "Mandeep",
+      "family": "Kaur"
+    }
+  ],
+  "year": 2024,
+  "venue": "Engineering, Technology &amp; Applied Science Research 14(1), 13078–13081",
+  "doi": "10.48084/etasr.6393",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.48084/etasr.6393",
+  "type": "journal",
+  "axes": [
+    "iot-greenhouse",
+    "climate-control"
+  ],
+  "tags": [
+    "hydroponics"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)",
+      "tableaux sans corps extrait (légende seule) : com Jain & Kaur: Design and Im",
+      "sections numérotées non détectées : I, II, IV, V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

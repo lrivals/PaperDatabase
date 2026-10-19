@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-1909.11915-unsupervised-image-translation-adversarial-networks",
+  "title": "Unsupervised Image Translation using Adversarial Networks for Improved Plant Disease Recognition",
+  "authors": [
+    {
+      "given": "Haseeb",
+      "family": "Nazki"
+    },
+    {
+      "given": "Sook",
+      "family": "Yoon"
+    },
+    {
+      "given": "Alvaro",
+      "family": "Fuentes"
+    },
+    {
+      "given": "Dong Sun",
+      "family": "Park"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1909.11915",
+  "url": "https://arxiv.org/abs/1909.11915",
+  "type": "preprint",
+  "axes": [
+    "disease-classif"
+  ],
+  "tags": [
+    "tomato"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

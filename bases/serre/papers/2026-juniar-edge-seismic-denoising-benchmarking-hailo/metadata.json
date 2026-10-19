@@ -1,0 +1,50 @@
+{
+  "id": "2026-juniar-edge-seismic-denoising-benchmarking-hailo",
+  "title": "Edge Seismic Denoising: Benchmarking the Hailo-8L on Raspberry Pi 5",
+  "authors": [
+    {
+      "given": "Antonia Indriyani",
+      "family": "Juniar"
+    },
+    {
+      "given": "Naura Anbiyya Faka",
+      "family": "Mursaid"
+    },
+    {
+      "given": "Ahmad",
+      "family": "Kadarisman"
+    },
+    {
+      "given": null,
+      "family": "Martarizal"
+    }
+  ],
+  "year": 2026,
+  "venue": "Spektra: Jurnal Fisika dan Aplikasinya 11(2), 135–150",
+  "doi": "10.21009/spektra.112.04",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.21009/spektra.112.04",
+  "type": "journal",
+  "axes": [
+    "edge-inference"
+  ],
+  "tags": [
+    "raspberry-pi",
+    "hailo",
+    "quantization",
+    "onnx"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, TABLE 1, Jurnal Fisika dan Aplikasinya, Jurnal Fisika dan Aplikasinya, TABLE 8"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

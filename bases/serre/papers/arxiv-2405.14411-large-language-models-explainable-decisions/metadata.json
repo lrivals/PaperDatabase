@@ -1,0 +1,63 @@
+{
+  "id": "arxiv-2405.14411-large-language-models-explainable-decisions",
+  "title": "Large Language Models for Explainable Decisions in Dynamic Digital Twins",
+  "authors": [
+    {
+      "given": "Nan",
+      "family": "Zhang"
+    },
+    {
+      "given": "Christian",
+      "family": "Vergara-Marcillo"
+    },
+    {
+      "given": "Georgios",
+      "family": "Diamantopoulos"
+    },
+    {
+      "given": "Jingran",
+      "family": "Shen"
+    },
+    {
+      "given": "Nikos",
+      "family": "Tziritas"
+    },
+    {
+      "given": "Rami",
+      "family": "Bahsoon"
+    },
+    {
+      "given": "Georgios",
+      "family": "Theodoropoulos"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2405.14411",
+  "url": "https://arxiv.org/abs/2405.14411",
+  "type": "preprint",
+  "axes": [
+    "iot-greenhouse",
+    "llm-agent"
+  ],
+  "tags": [
+    "xai",
+    "digital-twin",
+    "llm"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 4 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

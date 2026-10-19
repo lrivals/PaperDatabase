@@ -1,0 +1,47 @@
+{
+  "id": "arxiv-1706.04599-calibration-modern-neural-networks",
+  "title": "On Calibration of Modern Neural Networks",
+  "authors": [
+    {
+      "given": "Chuan",
+      "family": "Guo"
+    },
+    {
+      "given": "Geoff",
+      "family": "Pleiss"
+    },
+    {
+      "given": "Yu",
+      "family": "Sun"
+    },
+    {
+      "given": "Kilian Q.",
+      "family": "Weinberger"
+    }
+  ],
+  "year": 2017,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1706.04599",
+  "url": "https://arxiv.org/abs/1706.04599",
+  "type": "preprint",
+  "axes": [
+    "calibration-decision"
+  ],
+  "tags": [
+    "calibration"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

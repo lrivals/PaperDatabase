@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-2409.13537-shizishangpt-agricultural-large-language-model",
+  "title": "ShizishanGPT: An Agricultural Large Language Model Integrating Tools and Resources",
+  "authors": [
+    {
+      "given": "Shuting",
+      "family": "Yang"
+    },
+    {
+      "given": "Zehui",
+      "family": "Liu"
+    },
+    {
+      "given": "Wolfgang",
+      "family": "Mayer"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2409.13537",
+  "url": "https://arxiv.org/abs/2409.13537",
+  "type": "preprint",
+  "axes": [
+    "llm-agent"
+  ],
+  "tags": [
+    "llm"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "arxiv-2107.07511-gentle-introduction-conformal-prediction-distribution",
+  "title": "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification",
+  "authors": [
+    {
+      "given": "Anastasios N.",
+      "family": "Angelopoulos"
+    },
+    {
+      "given": "Stephen",
+      "family": "Bates"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2107.07511",
+  "url": "https://arxiv.org/abs/2107.07511",
+  "type": "preprint",
+  "axes": [],
+  "tags": [
+    "rl"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "aucun axe détecté : à classer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

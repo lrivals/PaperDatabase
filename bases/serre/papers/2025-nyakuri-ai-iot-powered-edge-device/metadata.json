@@ -1,0 +1,56 @@
+{
+  "id": "2025-nyakuri-ai-iot-powered-edge-device",
+  "title": "AI and IoT-powered edge device optimized for crop pest and disease detection",
+  "authors": [
+    {
+      "given": "Jean Pierre",
+      "family": "Nyakuri"
+    },
+    {
+      "given": "Celestin",
+      "family": "Nkundineza"
+    },
+    {
+      "given": "Omar",
+      "family": "Gatera"
+    },
+    {
+      "given": "Kizito",
+      "family": "Nkurikiyeyezu"
+    },
+    {
+      "given": "Gervais",
+      "family": "Mwitende"
+    }
+  ],
+  "year": 2025,
+  "venue": "Scientific Reports 15(1)",
+  "doi": "10.1038/s41598-025-06452-5",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/s41598-025-06452-5",
+  "type": "journal",
+  "axes": [
+    "disease-classif",
+    "edge-inference",
+    "iot-greenhouse"
+  ],
+  "tags": [
+    "efficientnet",
+    "mobilenet",
+    "xai"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 5, Table 4, Table 6, Table 8",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 3, of images No. of classes Sourc"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

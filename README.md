@@ -7,7 +7,7 @@ sans jamais rouvrir un PDF.
 L'outil n'est lié à aucun domaine : il traite n'importe quel corpus d'articles scientifiques,
 et **un même code gère plusieurs bases de connaissance séparées**, une par sujet, utilisables
 en parallèle ([Plusieurs bases de connaissance](#plusieurs-bases-de-connaissance)). Le dépôt en
-contient quatre : deux servent à préparer une thèse, la troisième rassemble les références d'un stage, la quatrième la préparation des données pour la détection YOLO :
+contient cinq : deux servent à préparer une thèse, la troisième rassemble les références d'un stage, la quatrième la préparation des données pour la détection YOLO, la cinquième le projet de serre autonome SerreIA :
 
 | Base | Intitulé | Dossier |
 |---|---|---|
@@ -15,6 +15,7 @@ contient quatre : deux servent à préparer une thèse, la troisième rassemble 
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | [`bases/drone/`](bases/drone/) |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | [`bases/stage/`](bases/stage/) |
 | `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | [`bases/yolo-data/`](bases/yolo-data/) |
+| `serre` | Serre autonome pilotée par IA : vision des maladies, edge, contrôle, agent LLM (projet SerreIA) | [`bases/serre/`](bases/serre/) |
 
 ---
 
@@ -203,12 +204,13 @@ Au 18/10/2026 :
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 87 | 86 | 352 |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` | 56 | 56 | 100 |
 | `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | `bases/yolo-data/` | 44 | 44 | 425 |
+| `serre` (19/10/2026) | Serre autonome pilotée par IA : vision des maladies, edge, contrôle, agent LLM | `bases/serre/` | 27 | 0 | 24 |
 
 La base `drone` s'appelait auparavant `DroneVisionDB` et vivait dans un dossier séparé. Chaque
 base a son `CLAUDE.md` (règles propres au domaine), son [`profile.md`](bases/drone/profile.md)
 et sa carte des gaps : [bases/fpga/gaps.md](bases/fpga/gaps.md) pour `fpga`, [bases/drone/gaps.md](bases/drone/gaps.md)
 pour `drone`, [bases/stage/gaps.md](bases/stage/gaps.md) pour `stage`,
-[bases/yolo-data/gaps.md](bases/yolo-data/gaps.md) pour `yolo-data`.
+[bases/yolo-data/gaps.md](bases/yolo-data/gaps.md) pour `yolo-data`. La base `serre` n'a pas encore de carte des gaps.
 
 ### Travailler sur plusieurs bases en parallèle
 
@@ -378,8 +380,8 @@ PaperDatabase/                # le code seul ; les données sont dans bases/
 
 ## État et documentation
 
-Le dépôt contient quatre bases (effectifs du 18/10/2026 dans [Les bases actuelles](#les-bases-actuelles)).
-Description des trois premières au 01/10/2026, de `yolo-data` au 18/10/2026 :
+Le dépôt contient cinq bases (effectifs du 18/10/2026 dans [Les bases actuelles](#les-bases-actuelles)).
+Description des trois premières au 01/10/2026, de `yolo-data` au 18/10/2026, de `serre` au 19/10/2026 :
 - `fpga` : vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo et MCU, orientée vers la
   thèse « IA embarquée sécuritaire certifiable sur FPGA » (axes `safety-certification` et
   `person-detection`). 101 articles, tous fichés ; 299 lignes dans `benchmarks.csv` (216 sur
@@ -399,6 +401,12 @@ Description des trois premières au 01/10/2026, de `yolo-data` au 18/10/2026 :
   déséquilibre). 44 articles, tous fichés (8 importés de `fpga` et `drone`, 36 ajoutés depuis
   OpenAlex) ; 425 lignes dans `benchmarks.csv`, dont 42 sur un YOLO ; 43 gaps dans
   [bases/yolo-data/gaps.md](bases/yolo-data/gaps.md), dont 34 étayés (1ʳᵉ passe).
+- `serre` (créée le 19/10/2026) : projet SerreIA, une serre autonome. Couvre la vision des maladies
+  et l'écart de domaine PlantVillage → PlantDoc, la calibration et la décision par capture,
+  l'inférence sur RPi 5/Hailo, l'IoT de serre, le contrôle climatique et hydroponique, la
+  prévision et l'agent LLM avec validation humaine (13 axes). 27 articles ingérés, aucun fiché
+  (18 arXiv, 8 PDF en accès libre avec leur BibTeX, 1 importé de `drone`) ; 15 à déposer à la
+  main, liste dans [bases/serre/A_TELECHARGER.md](bases/serre/A_TELECHARGER.md).
 
 ### Ce qui marche (testé : 288 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 

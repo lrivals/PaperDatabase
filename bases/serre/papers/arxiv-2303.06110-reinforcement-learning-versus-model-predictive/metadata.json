@@ -1,0 +1,57 @@
+{
+  "id": "arxiv-2303.06110-reinforcement-learning-versus-model-predictive",
+  "title": "Reinforcement Learning Versus Model Predictive Control on Greenhouse Climate Control",
+  "authors": [
+    {
+      "given": "Bernardo",
+      "family": "Morcego"
+    },
+    {
+      "given": "Wenjie",
+      "family": "Yin"
+    },
+    {
+      "given": "Sjoerd",
+      "family": "Boersma"
+    },
+    {
+      "given": "Eldert van",
+      "family": "Henten"
+    },
+    {
+      "given": "Vicenç",
+      "family": "Puig"
+    },
+    {
+      "given": "Congcong",
+      "family": "Sun"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2303.06110",
+  "url": "https://arxiv.org/abs/2303.06110",
+  "type": "preprint",
+  "axes": [
+    "climate-control"
+  ],
+  "tags": [
+    "mpc",
+    "rl"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 3, Table 4, Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "id": "arxiv-2006.04255-how-useful-active-learning-image",
+  "title": "How useful is Active Learning for Image-based Plant Phenotyping?",
+  "authors": [
+    {
+      "given": "Koushik",
+      "family": "Nagasubramanian"
+    },
+    {
+      "given": "Talukder Z.",
+      "family": "Jubery"
+    },
+    {
+      "given": "Fateme Fotouhi",
+      "family": "Ardakani"
+    },
+    {
+      "given": "Seyed Vahid",
+      "family": "Mirnezami"
+    },
+    {
+      "given": "Asheesh K.",
+      "family": "Singh"
+    },
+    {
+      "given": "Arti",
+      "family": "Singh"
+    },
+    {
+      "given": "Soumik",
+      "family": "Sarkar"
+    },
+    {
+      "given": "Baskar",
+      "family": "Ganapathysubramanian"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2006.04255",
+  "url": "https://arxiv.org/abs/2006.04255",
+  "type": "preprint",
+  "axes": [
+    "growth",
+    "active-labelling"
+  ],
+  "tags": [
+    "active-learning"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

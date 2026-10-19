@@ -1,0 +1,2100 @@
+{
+ "date": "2026-10-18T1915",
+ "commit": "f1530e2",
+ "dirty": false,
+ "base": "Datasets pour la détection YOLO : annotation, prétraitement, augmentation",
+ "volets": [
+  "extraction",
+  "rag",
+  "speed"
+ ],
+ "results": {
+  "extraction": {
+   "quality": {
+    "papers": 44,
+    "grobid": 44,
+    "coverage_mean": 0.9125358163163405,
+    "coverage_min": 0.8205401563610519,
+    "coverage_worst": [
+     "arxiv-2104.02324-multiple-instance-active-learning-object 0.821",
+     "arxiv-1811.00982-open-images-dataset-v4-unified 0.825",
+     "arxiv-2201.07425-webuav-3m-benchmark-unveiling-power 0.870"
+    ],
+    "words": 325271,
+    "tables": 317,
+    "tables_with_body_rate": 0.5930599369085173,
+    "tables_recovered": 16,
+    "tables_docling": 5,
+    "ligature_leftover_per_10k": 0.0,
+    "papers_missed_sections": 7,
+    "papers_spaced_headings": 0,
+    "warnings_per_paper": 1.4090909090909092,
+    "per_paper": {
+     "2019-shao-objects365-large-scale-high-quality": {
+      "backend": "grobid",
+      "coverage": 0.8743224932249323,
+      "words": 4562,
+      "sections": 24,
+      "tables": 15,
+      "tables_with_body": 8,
+      "tables_recovered": 3,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1405.0312-microsoft-coco-common-objects-context": {
+      "backend": "grobid",
+      "coverage": 0.9238395673726904,
+      "words": 6727,
+      "sections": 19,
+      "tables": 4,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1602.08405-we-don-t-need-no": {
+      "backend": "grobid",
+      "coverage": 0.9327125262841695,
+      "words": 5452,
+      "sections": 15,
+      "tables": 1,
+      "tables_with_body": 0,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1612.08242-yolo9000-better-faster-stronger": {
+      "backend": "grobid",
+      "coverage": 0.880522713130056,
+      "words": 5172,
+      "sections": 8,
+      "tables": 6,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1708.02002-focal-loss-dense-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.8890550984791823,
+      "words": 6470,
+      "sections": 17,
+      "tables": 1,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-1708.02750-extreme-clicking-efficient-object-annotation": {
+      "backend": "grobid",
+      "coverage": 0.9087363494539782,
+      "words": 6353,
+      "sections": 21,
+      "tables": 3,
+      "tables_with_body": 3,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1710.09412-mixup-beyond-empirical-risk-minimization": {
+      "backend": "grobid",
+      "coverage": 0.9271523178807947,
+      "words": 5913,
+      "sections": 12,
+      "tables": 7,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1801.05124-localization-aware-active-learning-object": {
+      "backend": "grobid",
+      "coverage": 0.9276865456640737,
+      "words": 8816,
+      "sections": 21,
+      "tables": 8,
+      "tables_with_body": 5,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1803.03243-domain-adaptive-faster-r-cnn": {
+      "backend": "grobid",
+      "coverage": 0.9193548387096774,
+      "words": 6074,
+      "sections": 18,
+      "tables": 4,
+      "tables_with_body": 2,
+      "tables_recovered": 3,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1803.11365-cross-domain-weakly-supervised-object": {
+      "backend": "grobid",
+      "coverage": 0.9194653872515421,
+      "words": 5174,
+      "sections": 22,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object": {
+      "backend": "grobid",
+      "coverage": 0.9303030303030303,
+      "words": 5404,
+      "sections": 11,
+      "tables": 5,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1804.02767-yolov3-incremental-improvement": {
+      "backend": "grobid",
+      "coverage": 0.9080376538740044,
+      "words": 3331,
+      "sections": 11,
+      "tables": 3,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1804.06516-training-deep-networks-synthetic-data": {
+      "backend": "grobid",
+      "coverage": 0.9115942028985508,
+      "words": 4118,
+      "sections": 9,
+      "tables": 1,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1805.00123-crowdhuman-benchmark-detecting-human-crowd": {
+      "backend": "grobid",
+      "coverage": 0.9211881188118812,
+      "words": 4151,
+      "sections": 15,
+      "tables": 14,
+      "tables_with_body": 7,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1811.00982-open-images-dataset-v4-unified": {
+      "backend": "grobid",
+      "coverage": 0.824948915053031,
+      "words": 23809,
+      "sections": 43,
+      "tables": 24,
+      "tables_with_body": 11,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 4
+     },
+     "arxiv-1902.04103-bag-freebies-training-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.8747873426335488,
+      "words": 4158,
+      "sections": 17,
+      "tables": 7,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1902.07296-augmentation-small-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.9436945622830698,
+      "words": 4135,
+      "sections": 17,
+      "tables": 6,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1904.08008-clustered-object-detection-aerial-images": {
+      "backend": "grobid",
+      "coverage": 0.9154581919160752,
+      "words": 5787,
+      "sections": 17,
+      "tables": 4,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-1905.03677-learning-loss-active-learning": {
+      "backend": "grobid",
+      "coverage": 0.9030955585464334,
+      "words": 5659,
+      "sections": 20,
+      "tables": 1,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1905.04899-cutmix-regularization-strategy-train-strong": {
+      "backend": "grobid",
+      "coverage": 0.891729797979798,
+      "words": 5678,
+      "sections": 19,
+      "tables": 15,
+      "tables_with_body": 8,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1906.11172-learning-data-augmentation-strategies-object": {
+      "backend": "grobid",
+      "coverage": 0.9262182566918326,
+      "words": 4616,
+      "sections": 11,
+      "tables": 6,
+      "tables_with_body": 3,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-1908.03195-lvis-dataset-large-vocabulary-instance": {
+      "backend": "grobid",
+      "coverage": 0.9032201914708442,
+      "words": 9540,
+      "sections": 24,
+      "tables": 7,
+      "tables_with_body": 6,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1909.00169-imbalance-problems-object-detection-review": {
+      "backend": "grobid",
+      "coverage": 0.9187529522909778,
+      "words": 22913,
+      "sections": 75,
+      "tables": 3,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-1912.02424-bridging-gap-between-anchor-anchor": {
+      "backend": "grobid",
+      "coverage": 0.9095966620305981,
+      "words": 6587,
+      "sections": 16,
+      "tables": 8,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2001.06303-detection-tracking-meet-drones-challenge": {
+      "backend": "grobid",
+      "coverage": 0.9497131697790797,
+      "words": 14340,
+      "sections": 31,
+      "tables": 5,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 0
+     },
+     "arxiv-2003.01285-noise-resistant-object-detection-noisy": {
+      "backend": "grobid",
+      "coverage": 0.9343404997094712,
+      "words": 5856,
+      "sections": 17,
+      "tables": 5,
+      "tables_with_body": 5,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2003.05176-equalization-loss-long-tailed-object": {
+      "backend": "grobid",
+      "coverage": 0.899300273805902,
+      "words": 5796,
+      "sections": 18,
+      "tables": 13,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2004.10934-yolov4-optimal-speed-accuracy-object": {
+      "backend": "grobid",
+      "coverage": 0.9096431283219438,
+      "words": 7836,
+      "sections": 17,
+      "tables": 10,
+      "tables_with_body": 9,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2005.04757-simple-semi-supervised-learning-framework": {
+      "backend": "grobid",
+      "coverage": 0.9057697883444477,
+      "words": 5726,
+      "sections": 14,
+      "tables": 5,
+      "tables_with_body": 4,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2012.07177-simple-copy-paste-strong-data": {
+      "backend": "grobid",
+      "coverage": 0.9241176470588235,
+      "words": 6353,
+      "sections": 15,
+      "tables": 12,
+      "tables_with_body": 7,
+      "tables_recovered": 1,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2102.09480-unbiased-teacher-semi-supervised-object": {
+      "backend": "grobid",
+      "coverage": 0.9390615478366849,
+      "words": 6684,
+      "sections": 17,
+      "tables": 4,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2102.12219-object-detection-aerial-images-large": {
+      "backend": "grobid",
+      "coverage": 0.8981423173803527,
+      "words": 12612,
+      "sections": 36,
+      "tables": 19,
+      "tables_with_body": 12,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2103.10374-consistency-active-learning-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.8951841359773371,
+      "words": 5337,
+      "sections": 12,
+      "tables": 5,
+      "tables_with_body": 3,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2104.02324-multiple-instance-active-learning-object": {
+      "backend": "grobid",
+      "coverage": 0.8205401563610519,
+      "words": 4577,
+      "sections": 12,
+      "tables": 6,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2106.09018-end-end-semi-supervised-object": {
+      "backend": "grobid",
+      "coverage": 0.9024767801857585,
+      "words": 5582,
+      "sections": 14,
+      "tables": 9,
+      "tables_with_body": 2,
+      "tables_recovered": 2,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2201.07425-webuav-3m-benchmark-unveiling-power": {
+      "backend": "grobid",
+      "coverage": 0.8703265499290109,
+      "words": 17531,
+      "sections": 55,
+      "tables": 15,
+      "tables_with_body": 14,
+      "tables_recovered": 2,
+      "tables_docling": 4,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 5
+     },
+     "arxiv-2202.06934-slicing-aided-hyper-inference-fine": {
+      "backend": "grobid",
+      "coverage": 0.9394887845592071,
+      "words": 3501,
+      "sections": 5,
+      "tables": 2,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 1,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2207.02541-dense-teacher-dense-pseudo-labels": {
+      "backend": "grobid",
+      "coverage": 0.9205515430072226,
+      "words": 4991,
+      "sections": 16,
+      "tables": 7,
+      "tables_with_body": 5,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2211.13993-combating-noisy-labels-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.9355076017655714,
+      "words": 6480,
+      "sections": 18,
+      "tables": 8,
+      "tables_with_body": 8,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2303.05499-grounding-dino-marrying-dino-grounded": {
+      "backend": "grobid",
+      "coverage": 0.9086268504338948,
+      "words": 7909,
+      "sections": 35,
+      "tables": 17,
+      "tables_with_body": 11,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     },
+     "arxiv-2303.06999-identifying-label-errors-object-detection": {
+      "backend": "grobid",
+      "coverage": 0.9242087729039422,
+      "words": 8619,
+      "sections": 20,
+      "tables": 9,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2304.02643-segment-anything": {
+      "backend": "grobid",
+      "coverage": 0.9341517857142857,
+      "words": 19226,
+      "sections": 57,
+      "tables": 5,
+      "tables_with_body": 2,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2309.11069-dynamic-tiling-model-agnostic-adaptive": {
+      "backend": "grobid",
+      "coverage": 0.9603421461897356,
+      "words": 3839,
+      "sections": 8,
+      "tables": 1,
+      "tables_with_body": 0,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": false,
+      "spaced_headings": false,
+      "warnings": 1
+     },
+     "arxiv-2406.05412-select-mosaic-data-augmentation-method": {
+      "backend": "grobid",
+      "coverage": 0.9946091644204852,
+      "words": 1877,
+      "sections": 5,
+      "tables": 2,
+      "tables_with_body": 1,
+      "tables_recovered": 0,
+      "tables_docling": 0,
+      "ligature_leftover_per_10k": 0.0,
+      "missed_numbered_sections": true,
+      "spaced_headings": false,
+      "warnings": 2
+     }
+    }
+   },
+   "header": {
+    "title": 0.9772727272727273,
+    "year": 0.6136363636363636,
+    "doi": 0.0,
+    "arxiv_id": 0.9069767441860465,
+    "authors_f1": 0.914457128537315,
+    "n": {
+     "title": 44,
+     "year": 44,
+     "doi": 4,
+     "arxiv_id": 43,
+     "authors_f1": 44
+    },
+    "title_errors": [
+     "arxiv-1612.08242-yolo9000-better-faster-stronger titre : None"
+    ]
+   },
+   "tables": {
+    "values": 398,
+    "in_cited_table": 0.7110552763819096,
+    "in_text": 0.957286432160804,
+    "table_only_values": 368,
+    "table_only_in_cited_table": 0.7391304347826086,
+    "rows_cited_table_absent": 31,
+    "found_outside_table": {
+     "1902.07296": 12,
+     "1902.04103": 9,
+     "1906.11172": 9,
+     "2104.02324": 7,
+     "2106.09018": 7,
+     "1804.06516": 7,
+     "1804.02767": 7,
+     "2102.09480": 5,
+     "2309.11069": 5,
+     "2012.07177": 4,
+     "1811.00982": 4,
+     "1912.02424": 4,
+     "2003.01285": 4,
+     "1804.00518": 2,
+     "2304.02643": 2,
+     "2207.02541": 2,
+     "1801.05124": 2,
+     "1612.08242": 2,
+     "1805.00123": 2,
+     "2003.05176": 2
+    },
+    "cited_chunk_values": 0,
+    "in_cited_chunk": null
+   }
+  },
+  "rag": {
+   "passages": 2728,
+   "model": "BAAI/bge-small-en-v1.5",
+   "dense": true,
+   "gpu": false,
+   "corpus": {
+    "n_papers": 44,
+    "papers": [
+     "2019-shao-objects365-large-scale-high-quality",
+     "arxiv-1405.0312-microsoft-coco-common-objects-context",
+     "arxiv-1602.08405-we-don-t-need-no",
+     "arxiv-1612.08242-yolo9000-better-faster-stronger",
+     "arxiv-1708.02002-focal-loss-dense-object-detection",
+     "arxiv-1708.02750-extreme-clicking-efficient-object-annotation",
+     "arxiv-1710.09412-mixup-beyond-empirical-risk-minimization",
+     "arxiv-1801.05124-localization-aware-active-learning-object",
+     "arxiv-1803.03243-domain-adaptive-faster-r-cnn",
+     "arxiv-1803.11365-cross-domain-weakly-supervised-object",
+     "arxiv-1804.00518-unmanned-aerial-vehicle-benchmark-object",
+     "arxiv-1804.02767-yolov3-incremental-improvement",
+     "arxiv-1804.06516-training-deep-networks-synthetic-data",
+     "arxiv-1805.00123-crowdhuman-benchmark-detecting-human-crowd",
+     "arxiv-1811.00982-open-images-dataset-v4-unified",
+     "arxiv-1902.04103-bag-freebies-training-object-detection",
+     "arxiv-1902.07296-augmentation-small-object-detection",
+     "arxiv-1904.08008-clustered-object-detection-aerial-images",
+     "arxiv-1905.03677-learning-loss-active-learning",
+     "arxiv-1905.04899-cutmix-regularization-strategy-train-strong",
+     "arxiv-1906.11172-learning-data-augmentation-strategies-object",
+     "arxiv-1908.03195-lvis-dataset-large-vocabulary-instance",
+     "arxiv-1909.00169-imbalance-problems-object-detection-review",
+     "arxiv-1912.02424-bridging-gap-between-anchor-anchor",
+     "arxiv-2001.06303-detection-tracking-meet-drones-challenge",
+     "arxiv-2003.01285-noise-resistant-object-detection-noisy",
+     "arxiv-2003.05176-equalization-loss-long-tailed-object",
+     "arxiv-2004.10934-yolov4-optimal-speed-accuracy-object",
+     "arxiv-2005.04757-simple-semi-supervised-learning-framework",
+     "arxiv-2012.07177-simple-copy-paste-strong-data",
+     "arxiv-2102.09480-unbiased-teacher-semi-supervised-object",
+     "arxiv-2102.12219-object-detection-aerial-images-large",
+     "arxiv-2103.10374-consistency-active-learning-object-detection",
+     "arxiv-2104.02324-multiple-instance-active-learning-object",
+     "arxiv-2106.09018-end-end-semi-supervised-object",
+     "arxiv-2201.07425-webuav-3m-benchmark-unveiling-power",
+     "arxiv-2202.06934-slicing-aided-hyper-inference-fine",
+     "arxiv-2207.02541-dense-teacher-dense-pseudo-labels",
+     "arxiv-2211.13993-combating-noisy-labels-object-detection",
+     "arxiv-2303.05499-grounding-dino-marrying-dino-grounded",
+     "arxiv-2303.06999-identifying-label-errors-object-detection",
+     "arxiv-2304.02643-segment-anything",
+     "arxiv-2309.11069-dynamic-tiling-model-agnostic-adaptive",
+     "arxiv-2406.05412-select-mosaic-data-augmentation-method"
+    ],
+    "subset": false
+   },
+   "sets": {
+    "rag_eval": {
+     "n": 30,
+     "hybrid": {
+      "recall@5": 0.8666666666666667,
+      "recall@10": 0.8666666666666667,
+      "mrr": 0.7583333333333333,
+      "ndcg@10": 0.5252922426836631,
+      "paper@5": 1.0,
+      "misses": [
+       "How many seconds does extreme clicking take to annotate one bounding box?",
+       "How can a detector be made robust when the training boxes are noisy?",
+       "How does CutMix compare with Mixup and Cutout in top-1 accuracy on ImageNet?",
+       "Ablation of the focusing parameter gamma and balance alpha for the focal loss"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.7333333333333333,
+        "hi": 0.9666666666666667
+       },
+       "mrr": {
+        "lo": 0.6166666666666667,
+        "hi": 0.8833333333333333
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "annotation": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6666666666666666
+       },
+       "augmentation": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6666666666666666
+       },
+       "auto-labelling": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.6666666666666666
+       },
+       "datasets": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "imbalance-small": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6666666666666666
+       },
+       "label-quality": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.25
+       },
+       "preprocessing": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "surveys": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.6666666666666666
+       },
+       "synthetic-da": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 23,
+        "recall@5": 0.9565217391304348,
+        "mrr": 0.8369565217391305
+       },
+       "multi": {
+        "n": 2,
+        "recall@5": 1.0,
+        "mrr": 0.75
+       },
+       "numeric": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6666666666666666
+       },
+       "table": {
+        "n": 2,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     },
+     "dense": {
+      "recall@5": 0.8666666666666667,
+      "recall@10": 0.9333333333333333,
+      "mrr": 0.7342063492063492,
+      "ndcg@10": 0.48476735883797856,
+      "paper@5": 1.0,
+      "misses": [
+       "What training tricks improve a detector without increasing inference cost?",
+       "How many seconds does extreme clicking take to annotate one bounding box?",
+       "How does CutMix compare with Mixup and Cutout in top-1 accuracy on ImageNet?",
+       "Ablation of the focusing parameter gamma and balance alpha for the focal loss"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.7333333333333333,
+        "hi": 0.9666666666666667
+       },
+       "mrr": {
+        "lo": 0.5864285714285714,
+        "hi": 0.8666666666666667
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "annotation": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.7000000000000001
+       },
+       "augmentation": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.4166666666666667
+       },
+       "auto-labelling": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.6666666666666666
+       },
+       "datasets": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.5666666666666667
+       },
+       "imbalance-small": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6666666666666666
+       },
+       "label-quality": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.8333333333333334
+       },
+       "preprocessing": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.7777777777777778
+       },
+       "surveys": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.7142857142857143
+       },
+       "synthetic-da": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 23,
+        "recall@5": 0.9565217391304348,
+        "mrr": 0.8649068322981366
+       },
+       "multi": {
+        "n": 2,
+        "recall@5": 1.0,
+        "mrr": 0.75
+       },
+       "numeric": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.2111111111111111
+       },
+       "table": {
+        "n": 2,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     },
+     "lexical": {
+      "recall@5": 0.8333333333333334,
+      "recall@10": 0.9,
+      "mrr": 0.7134259259259259,
+      "ndcg@10": 0.5489542844604601,
+      "paper@5": 0.9666666666666667,
+      "misses": [
+       "How can a detector be made robust when the training boxes are noisy?",
+       "Which kinds of annotation noise are simulated to study their effect on detection accuracy?",
+       "How do semi-supervised detectors filter the pseudo-labels produced by the teacher?",
+       "How does CutMix compare with Mixup and Cutout in top-1 accuracy on ImageNet?",
+       "Ablation of the focusing parameter gamma and balance alpha for the focal loss"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.7,
+        "hi": 0.9666666666666667
+       },
+       "mrr": {
+        "lo": 0.5675925925925926,
+        "hi": 0.8347222222222223
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "annotation": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.7777777777777778
+       },
+       "augmentation": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.7037037037037037
+       },
+       "auto-labelling": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.7083333333333334
+       },
+       "datasets": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "imbalance-small": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6666666666666666
+       },
+       "label-quality": {
+        "n": 3,
+        "recall@5": 0.3333333333333333,
+        "mrr": 0.16666666666666666
+       },
+       "preprocessing": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.75
+       },
+       "surveys": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.3611111111111111
+       },
+       "synthetic-da": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 23,
+        "recall@5": 0.9130434782608695,
+        "mrr": 0.8079710144927535
+       },
+       "multi": {
+        "n": 2,
+        "recall@5": 0.5,
+        "mrr": 0.5625
+       },
+       "numeric": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.5277777777777778
+       },
+       "table": {
+        "n": 2,
+        "recall@5": 0.0,
+        "mrr": 0.05555555555555555
+       }
+      }
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.9,
+      "recall@10": 0.9,
+      "mrr": 0.7444444444444444,
+      "ndcg@10": 0.5629945794874547,
+      "paper@5": 1.0,
+      "misses": [
+       "How do semi-supervised detectors filter the pseudo-labels produced by the teacher?",
+       "How does CutMix compare with Mixup and Cutout in top-1 accuracy on ImageNet?",
+       "Ablation of the focusing parameter gamma and balance alpha for the focal loss"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.8,
+        "hi": 1.0
+       },
+       "mrr": {
+        "lo": 0.611111111111111,
+        "hi": 0.8666666666666667
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "annotation": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.75
+       },
+       "augmentation": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6666666666666666
+       },
+       "auto-labelling": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6666666666666666
+       },
+       "datasets": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.6666666666666666
+       },
+       "imbalance-small": {
+        "n": 3,
+        "recall@5": 0.6666666666666666,
+        "mrr": 0.6666666666666666
+       },
+       "label-quality": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.4166666666666667
+       },
+       "preprocessing": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "surveys": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.611111111111111
+       },
+       "synthetic-da": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 23,
+        "recall@5": 1.0,
+        "mrr": 0.8514492753623187
+       },
+       "multi": {
+        "n": 2,
+        "recall@5": 0.5,
+        "mrr": 0.5
+       },
+       "numeric": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 0.5833333333333334
+       },
+       "table": {
+        "n": 2,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     }
+    },
+    "rag_eval_holdout": {
+     "n": 40,
+     "hybrid": {
+      "recall@5": 0.725,
+      "recall@10": 0.8,
+      "mrr": 0.5543750000000001,
+      "ndcg@10": 0.40111592377037064,
+      "paper@5": 0.875,
+      "misses": [
+       "Ablation of the training tricks (bag of freebies) added to the YOLOv4 backbone and detector",
+       "What quality control is applied to human annotators in large detection datasets?",
+       "Annotation time compared across annotation protocols",
+       "Which public benchmarks are found to contain missing or wrong boxes?",
+       "AUROC of label error detection methods for each type of annotation noise",
+       "Detection mAP versus labelled fraction for active learning against random sampling",
+       "Gains in AP from slicing aided fine-tuning and sliced inference",
+       "Why does downsampling a large image hurt small object detection, and how is it avoided?",
+       "Improvement in COCO AP from learned augmentation policies over the baseline",
+       "Instance segmentation AP with and without copy-paste across backbones",
+       "AP on rare, common and frequent categories of LVIS"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.575,
+        "hi": 0.85
+       },
+       "mrr": {
+        "lo": 0.42854166666666665,
+        "hi": 0.6858333333333333
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.75
+       },
+       "annotation": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.3645833333333333
+       },
+       "augmentation": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.325
+       },
+       "auto-labelling": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.8125
+       },
+       "datasets": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.5083333333333333
+       },
+       "imbalance-small": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.75
+       },
+       "label-quality": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.375
+       },
+       "preprocessing": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.23333333333333334
+       },
+       "surveys": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.625
+       },
+       "synthetic-da": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.8
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 17,
+        "recall@5": 0.9411764705882353,
+        "mrr": 0.6656862745098039
+       },
+       "multi": {
+        "n": 10,
+        "recall@5": 0.8,
+        "mrr": 0.71
+       },
+       "numeric": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "table": {
+        "n": 12,
+        "recall@5": 0.3333333333333333,
+        "mrr": 0.2298611111111111
+       }
+      }
+     },
+     "dense": {
+      "recall@5": 0.725,
+      "recall@10": 0.8,
+      "mrr": 0.5658333333333333,
+      "ndcg@10": 0.36714809981319685,
+      "paper@5": 0.95,
+      "misses": [
+       "Ablation of the training tricks (bag of freebies) added to the YOLOv4 backbone and detector",
+       "What quality control is applied to human annotators in large detection datasets?",
+       "Annotation time compared across annotation protocols",
+       "Which public benchmarks are found to contain missing or wrong boxes?",
+       "AUROC of label error detection methods for each type of annotation noise",
+       "Detection mAP versus labelled fraction for active learning against random sampling",
+       "Gains in AP from slicing aided fine-tuning and sliced inference",
+       "Improvement in COCO AP from learned augmentation policies over the baseline",
+       "How does selectively applying the mosaic operation change training?",
+       "Instance segmentation AP with and without copy-paste across backbones",
+       "AP on rare, common and frequent categories of LVIS"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.575,
+        "hi": 0.85
+       },
+       "mrr": {
+        "lo": 0.43499999999999994,
+        "hi": 0.6993750000000001
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.75
+       },
+       "annotation": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.4
+       },
+       "augmentation": {
+        "n": 4,
+        "recall@5": 0.25,
+        "mrr": 0.3125
+       },
+       "auto-labelling": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.5416666666666666
+       },
+       "datasets": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.8125
+       },
+       "imbalance-small": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.5625
+       },
+       "label-quality": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.5
+       },
+       "preprocessing": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.3625
+       },
+       "surveys": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.5833333333333334
+       },
+       "synthetic-da": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.8333333333333334
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 17,
+        "recall@5": 0.8823529411764706,
+        "mrr": 0.651470588235294
+       },
+       "multi": {
+        "n": 10,
+        "recall@5": 0.9,
+        "mrr": 0.825
+       },
+       "numeric": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "table": {
+        "n": 12,
+        "recall@5": 0.3333333333333333,
+        "mrr": 0.1923611111111111
+       }
+      }
+     },
+     "lexical": {
+      "recall@5": 0.575,
+      "recall@10": 0.825,
+      "mrr": 0.4932242063492064,
+      "ndcg@10": 0.3738818517084779,
+      "paper@5": 0.925,
+      "misses": [
+       "Ablation of the training tricks (bag of freebies) added to the YOLOv4 backbone and detector",
+       "What are the stages of the data engine that builds a mask dataset with a promptable model?",
+       "What quality control is applied to human annotators in large detection datasets?",
+       "Annotation time compared across annotation protocols",
+       "Which public benchmarks are found to contain missing or wrong boxes?",
+       "AUROC of label error detection methods for each type of annotation noise",
+       "How is label noise injected artificially to evaluate noise-robust detection?",
+       "Can a segmentation foundation model be prompted with boxes to get masks?",
+       "Detection mAP versus labelled fraction for active learning against random sampling",
+       "How does adaptive tile size selection work for varying object density?",
+       "Gains in AP from slicing aided fine-tuning and sliced inference",
+       "Why does downsampling a large image hurt small object detection, and how is it avoided?",
+       "Improvement in COCO AP from learned augmentation policies over the baseline",
+       "How does selectively applying the mosaic operation change training?",
+       "Instance segmentation AP with and without copy-paste across backbones",
+       "Adaptation results from Cityscapes to Foggy Cityscapes",
+       "AP on rare, common and frequent categories of LVIS"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.425,
+        "hi": 0.725
+       },
+       "mrr": {
+        "lo": 0.3649503968253968,
+        "hi": 0.6248511904761905
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.7777777777777778
+       },
+       "annotation": {
+        "n": 4,
+        "recall@5": 0.25,
+        "mrr": 0.2916666666666667
+       },
+       "augmentation": {
+        "n": 4,
+        "recall@5": 0.25,
+        "mrr": 0.3229166666666667
+       },
+       "auto-labelling": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.7916666666666666
+       },
+       "datasets": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.5416666666666666
+       },
+       "imbalance-small": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.6145833333333334
+       },
+       "label-quality": {
+        "n": 4,
+        "recall@5": 0.25,
+        "mrr": 0.18571428571428572
+       },
+       "preprocessing": {
+        "n": 4,
+        "recall@5": 0.25,
+        "mrr": 0.15625
+       },
+       "surveys": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.4583333333333333
+       },
+       "synthetic-da": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.7916666666666666
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 17,
+        "recall@5": 0.7058823529411765,
+        "mrr": 0.6053921568627451
+       },
+       "multi": {
+        "n": 10,
+        "recall@5": 0.7,
+        "mrr": 0.530952380952381
+       },
+       "numeric": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "table": {
+        "n": 12,
+        "recall@5": 0.25,
+        "mrr": 0.26064814814814813
+       }
+      }
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.825,
+      "recall@10": 0.95,
+      "mrr": 0.6349305555555556,
+      "ndcg@10": 0.48007218898509374,
+      "paper@5": 0.9,
+      "misses": [
+       "Ablation of the training tricks (bag of freebies) added to the YOLOv4 backbone and detector",
+       "What quality control is applied to human annotators in large detection datasets?",
+       "Annotation time compared across annotation protocols",
+       "AUROC of label error detection methods for each type of annotation noise",
+       "Detection mAP versus labelled fraction for active learning against random sampling",
+       "Why does downsampling a large image hurt small object detection, and how is it avoided?",
+       "Instance segmentation AP with and without copy-paste across backbones"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.7,
+        "hi": 0.925
+       },
+       "mrr": {
+        "lo": 0.5202083333333334,
+        "hi": 0.7486805555555556
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.7777777777777778
+       },
+       "annotation": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.5416666666666666
+       },
+       "augmentation": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.65
+       },
+       "auto-labelling": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.75
+       },
+       "datasets": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.675
+       },
+       "imbalance-small": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.875
+       },
+       "label-quality": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.6145833333333334
+       },
+       "preprocessing": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.2986111111111111
+       },
+       "surveys": {
+        "n": 4,
+        "recall@5": 0.75,
+        "mrr": 0.4583333333333333
+       },
+       "synthetic-da": {
+        "n": 4,
+        "recall@5": 1.0,
+        "mrr": 0.7083333333333334
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 17,
+        "recall@5": 1.0,
+        "mrr": 0.7862745098039216
+       },
+       "multi": {
+        "n": 10,
+        "recall@5": 0.8,
+        "mrr": 0.6944444444444444
+       },
+       "numeric": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "table": {
+        "n": 12,
+        "recall@5": 0.5833333333333334,
+        "mrr": 0.3405092592592593
+       }
+      }
+     }
+    },
+    "rag_eval_fr": {
+     "n": 8,
+     "hybrid": {
+      "recall@5": 0.375,
+      "recall@10": 0.375,
+      "mrr": 0.20833333333333331,
+      "ndcg@10": 0.13814015392515847,
+      "paper@5": 0.875,
+      "misses": [
+       "Combien de secondes faut-il à l'extreme clicking pour annoter une boîte englobante ?",
+       "Comment rendre un détecteur robuste quand les boîtes d'entraînement sont bruitées ?",
+       "Comment les détecteurs semi-supervisés filtrent-ils les pseudo-labels produits par l'enseignant ?",
+       "Comment l'entraînement sur des combinaisons convexes de paires d'exemples régularise-t-il le réseau ?",
+       "Comment le facteur de modulation réduit-il le poids des exemples faciles dans la fonction de perte d'un détecteur dense ?"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.125,
+        "hi": 0.75
+       },
+       "mrr": {
+        "lo": 0.041666666666666664,
+        "hi": 0.5
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 0.3333333333333333
+       },
+       "annotation": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "augmentation": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "auto-labelling": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "datasets": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "imbalance-small": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "label-quality": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "preprocessing": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 0.3333333333333333
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.16666666666666666
+       },
+       "multi": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "numeric": {
+        "n": 2,
+        "recall@5": 0.5,
+        "mrr": 0.5
+       },
+       "table": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     },
+     "dense": {
+      "recall@5": 0.25,
+      "recall@10": 0.25,
+      "mrr": 0.25,
+      "ndcg@10": 0.09559224633725995,
+      "paper@5": 0.75,
+      "misses": [
+       "Combien de secondes faut-il à l'extreme clicking pour annoter une boîte englobante ?",
+       "Comment rendre un détecteur robuste quand les boîtes d'entraînement sont bruitées ?",
+       "Comment les détecteurs semi-supervisés filtrent-ils les pseudo-labels produits par l'enseignant ?",
+       "Quel taux de recouvrement entre tuiles est utilisé pour l'inférence par découpage d'images de grande taille ?",
+       "Comment l'entraînement sur des combinaisons convexes de paires d'exemples régularise-t-il le réseau ?",
+       "Comment le facteur de modulation réduit-il le poids des exemples faciles dans la fonction de perte d'un détecteur dense ?"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.0,
+        "hi": 0.625
+       },
+       "mrr": {
+        "lo": 0.0,
+        "hi": 0.625
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "annotation": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "augmentation": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "auto-labelling": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "datasets": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 1.0
+       },
+       "imbalance-small": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "label-quality": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "preprocessing": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 4,
+        "recall@5": 0.25,
+        "mrr": 0.25
+       },
+       "multi": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "numeric": {
+        "n": 2,
+        "recall@5": 0.5,
+        "mrr": 0.5
+       },
+       "table": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     },
+     "lexical": {
+      "recall@5": 0.0,
+      "recall@10": 0.125,
+      "mrr": 0.020833333333333332,
+      "ndcg@10": 0.013473644315563868,
+      "paper@5": 0.125,
+      "misses": [
+       "Combien de catégories et de boîtes englobantes le jeu de données Objects365 contient-il ?",
+       "Combien de secondes faut-il à l'extreme clicking pour annoter une boîte englobante ?",
+       "Comment rendre un détecteur robuste quand les boîtes d'entraînement sont bruitées ?",
+       "Comment les détecteurs semi-supervisés filtrent-ils les pseudo-labels produits par l'enseignant ?",
+       "Pourquoi la précision de la boîte prédite sert-elle de signal d'acquisition en active learning ?",
+       "Quel taux de recouvrement entre tuiles est utilisé pour l'inférence par découpage d'images de grande taille ?",
+       "Comment l'entraînement sur des combinaisons convexes de paires d'exemples régularise-t-il le réseau ?",
+       "Comment le facteur de modulation réduit-il le poids des exemples faciles dans la fonction de perte d'un détecteur dense ?"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.0,
+        "hi": 0.0
+       },
+       "mrr": {
+        "lo": 0.0,
+        "hi": 0.0625
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "annotation": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "augmentation": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "auto-labelling": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.16666666666666666
+       },
+       "datasets": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "imbalance-small": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "label-quality": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "preprocessing": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 4,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "multi": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.16666666666666666
+       },
+       "numeric": {
+        "n": 2,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "table": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     },
+     "hybrid+rerank": {
+      "recall@5": 0.375,
+      "recall@10": 0.375,
+      "mrr": 0.15625,
+      "ndcg@10": 0.13690511297919156,
+      "paper@5": 0.75,
+      "misses": [
+       "Combien de secondes faut-il à l'extreme clicking pour annoter une boîte englobante ?",
+       "Comment rendre un détecteur robuste quand les boîtes d'entraînement sont bruitées ?",
+       "Comment les détecteurs semi-supervisés filtrent-ils les pseudo-labels produits par l'enseignant ?",
+       "Comment l'entraînement sur des combinaisons convexes de paires d'exemples régularise-t-il le réseau ?",
+       "Comment le facteur de modulation réduit-il le poids des exemples faciles dans la fonction de perte d'un détecteur dense ?"
+      ],
+      "ci": {
+       "recall@5": {
+        "lo": 0.125,
+        "hi": 0.75
+       },
+       "mrr": {
+        "lo": 0.03125,
+        "hi": 0.3125
+       }
+      },
+      "by_axis": {
+       "active-learning": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 0.25
+       },
+       "annotation": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "augmentation": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "auto-labelling": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "datasets": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 0.5
+       },
+       "imbalance-small": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "label-quality": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "preprocessing": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 0.5
+       }
+      },
+      "by_kind": {
+       "fact": {
+        "n": 4,
+        "recall@5": 0.5,
+        "mrr": 0.1875
+       },
+       "multi": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       },
+       "numeric": {
+        "n": 2,
+        "recall@5": 0.5,
+        "mrr": 0.25
+       },
+       "table": {
+        "n": 1,
+        "recall@5": 0.0,
+        "mrr": 0.0
+       }
+      }
+     }
+    }
+   },
+   "coverage": {
+    "papers_queried": 43,
+    "share": 0.9772727272727273
+   },
+   "low_relevance": {
+    "n": {
+     "cal_pos": 30,
+     "cal_neg": 16,
+     "val_pos": 40,
+     "val_neg": 18
+    },
+    "cos": {
+     "threshold": 0.8185,
+     "calibration": {
+      "flagged_negatives": 1.0,
+      "flagged_positives": 0.43333333333333335
+     },
+     "validation": {
+      "flagged_negatives": 0.8333333333333334,
+      "flagged_positives": 0.575
+     },
+     "adopted": false,
+     "neg_max": 0.863,
+     "pos_min": 0.691,
+     "pos_median": 0.8154999999999999,
+     "neg_median": 0.7805,
+     "val_negatives_missed": [
+      "Semantic segmentation annotation tools for street scenes in 2D",
+      "Human pose estimation datasets and keypoint annotation",
+      "Open-set recognition and out-of-distribution detection in detectors"
+     ],
+     "val_positives_flagged": [
+      "Which remedies are discussed for the imbalance between foreground classes, such as rare categories?",
+      "What do the corpus papers say about using mosaic when training detectors?",
+      "Ablation of the training tricks (bag of freebies) added to the YOLOv4 backbone and detector",
+      "How were the box annotations of Open Images produced to speed up labelling?",
+      "What are the stages of the data engine that builds a mask dataset with a promptable model?",
+      "What quality control is applied to human annotators in large detection datasets?",
+      "Annotation time compared across annotation protocols",
+      "How are the crowd workers' tasks split into category labelling, instance spotting and segmentation?",
+      "Which public benchmarks are found to contain missing or wrong boxes?",
+      "How is label noise injected artificially to evaluate noise-robust detection?",
+      "How is the teacher updated as a moving average of the student?",
+      "How does consistency between predictions on augmented copies of an image measure its informativeness?",
+      "How do acquisition functions based on entropy or core-set compare for detection?",
+      "How does adaptive tile size selection work for varying object density?",
+      "What network input size is used for training and testing YOLOv4?",
+      "How does selectively applying the mosaic operation change training?",
+      "How does an adversarial domain classifier with gradient reversal make features domain-invariant?",
+      "Adaptation results from Cityscapes to Foggy Cityscapes",
+      "How well do detectors trained on synthetic or shifted data transfer to real target images?",
+      "How are anchor box shapes obtained by clustering ground-truth boxes?",
+      "AP on rare, common and frequent categories of LVIS",
+      "What share of COCO small objects is covered and why are they under-represented?",
+      "Why does the extreme foreground-background imbalance of one-stage detectors hurt training?"
+     ]
+    },
+    "rerank": {
+     "threshold": 4.138169765472412,
+     "calibration": {
+      "flagged_negatives": 1.0,
+      "flagged_positives": 0.13333333333333333
+     },
+     "validation": {
+      "flagged_negatives": 0.9444444444444444,
+      "flagged_positives": 0.425
+     },
+     "adopted": false,
+     "neg_max": 6.704889297485352,
+     "pos_min": -1.744306206703186,
+     "pos_median": 5.011290550231934,
+     "neg_median": -3.205655097961426,
+     "val_negatives_missed": [
+      "Human pose estimation datasets and keypoint annotation"
+     ],
+     "val_positives_flagged": [
+      "What do the corpus papers say about using mosaic when training detectors?",
+      "Ablation of the training tricks (bag of freebies) added to the YOLOv4 backbone and detector",
+      "How do drone-based detection benchmarks compare with each other in size and attributes?",
+      "How were the box annotations of Open Images produced to speed up labelling?",
+      "What quality control is applied to human annotators in large detection datasets?",
+      "Annotation time compared across annotation protocols",
+      "Which public benchmarks are found to contain missing or wrong boxes?",
+      "How is label noise injected artificially to evaluate noise-robust detection?",
+      "Detection mAP versus labelled fraction for active learning against random sampling",
+      "How is the annotation budget spent over successive active learning cycles starting from a small labelled set?",
+      "How do acquisition functions based on entropy or core-set compare for detection?",
+      "How does adaptive tile size selection work for varying object density?",
+      "How does selectively applying the mosaic operation change training?",
+      "How does an adversarial domain classifier with gradient reversal make features domain-invariant?",
+      "How well do detectors trained on synthetic or shifted data transfer to real target images?",
+      "How are anchor box shapes obtained by clustering ground-truth boxes?",
+      "What share of COCO small objects is covered and why are they under-represented?"
+     ]
+    }
+   },
+   "verify": {
+    "exact": {
+     "n": 40,
+     "accepted_rate": 1.0,
+     "status": {
+      "OK": 40
+     }
+    },
+    "mot remplacé": {
+     "n": 40,
+     "accepted_rate": 0.925,
+     "status": {
+      "APPROX": 37,
+      "NOMBRES": 2,
+      "ABSENT": 1
+     }
+    },
+    "chiffre modifié": {
+     "n": 34,
+     "accepted_rate": 0.0,
+     "status": {
+      "NOMBRES": 34
+     }
+    },
+    "autre papier": {
+     "n": 40,
+     "accepted_rate": 0.0,
+     "status": {
+      "ABSENT": 40
+     }
+    }
+   }
+  },
+  "speed": {
+   "extract_s": {
+    "2406.05412": 0.049330166000345343,
+    "1804.00518": 0.15784797499964043,
+    "2211.13993": 0.0593620650001867
+   },
+   "pymupdf_fallback_s": {
+    "2406.05412": 0.0163038829996367,
+    "1804.00518": 0.0351660900000752,
+    "2211.13993": 0.0522548359999746
+   },
+   "index_load_s": 0.16249208299996099,
+   "passages": 2728,
+   "cache_mb": 5.369206,
+   "encode_passages_per_s": 17.400861005095237,
+   "full_encode_estimate_s": 156.77385154684012,
+   "search_hybrid_ms": {
+    "p50": 114.47394999959215,
+    "p95": 132.36461499991492
+   },
+   "search_dense_ms": {
+    "p50": 115.681518999736,
+    "p95": 151.52224600024056
+   },
+   "search_lexical_ms": {
+    "p50": 10.495511000044644,
+    "p95": 30.53946999989421
+   },
+   "search_hybrid+rerank_ms": {
+    "p50": 1439.2940259999705,
+    "p95": 2337.8581450001548
+   },
+   "verify_ms": 3.0061520001254394,
+   "cli_s": {
+    "status": 0.2523458219998247,
+    "bench": 0.0609285830000772,
+    "paper": 0.06462468200015792,
+    "search": 5.409662647999994,
+    "show": 0.3288424400002441
+   }
+  }
+ }
+}

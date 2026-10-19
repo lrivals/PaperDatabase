@@ -1,0 +1,81 @@
+{
+  "id": "arxiv-2401.10019-r-judge-benchmarking-safety-risk",
+  "title": "R-Judge: Benchmarking Safety Risk Awareness for LLM Agents",
+  "authors": [
+    {
+      "given": "Tongxin",
+      "family": "Yuan"
+    },
+    {
+      "given": "Zhiwei",
+      "family": "He"
+    },
+    {
+      "given": "Lingzhong",
+      "family": "Dong"
+    },
+    {
+      "given": "Yiming",
+      "family": "Wang"
+    },
+    {
+      "given": "Ruijie",
+      "family": "Zhao"
+    },
+    {
+      "given": "Tian",
+      "family": "Xia"
+    },
+    {
+      "given": "Lizhen",
+      "family": "Xu"
+    },
+    {
+      "given": "Binglin",
+      "family": "Zhou"
+    },
+    {
+      "given": "Fangqi",
+      "family": "Li"
+    },
+    {
+      "given": "Zhuosheng",
+      "family": "Zhang"
+    },
+    {
+      "given": "Rui",
+      "family": "Wang"
+    },
+    {
+      "given": "Gongshen",
+      "family": "Liu"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2401.10019",
+  "url": "https://arxiv.org/abs/2401.10019",
+  "type": "preprint",
+  "axes": [
+    "llm-agent"
+  ],
+  "tags": [
+    "llm"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 5",
+      "sections numérotées non détectées : 2, 6, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

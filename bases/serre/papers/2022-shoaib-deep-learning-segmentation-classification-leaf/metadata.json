@@ -1,0 +1,61 @@
+{
+  "id": "2022-shoaib-deep-learning-segmentation-classification-leaf",
+  "title": "Deep learning-based segmentation and classification of leaf images for detection of tomato plant disease",
+  "authors": [
+    {
+      "given": "Muhammad",
+      "family": "Shoaib"
+    },
+    {
+      "given": "Tariq",
+      "family": "Hussain"
+    },
+    {
+      "given": "Babar",
+      "family": "Shah"
+    },
+    {
+      "given": "Ihsan",
+      "family": "Ullah"
+    },
+    {
+      "given": "Sayyed Mudassar",
+      "family": "Shah"
+    },
+    {
+      "given": "Farman",
+      "family": "Ali"
+    },
+    {
+      "given": "Sang Hyun",
+      "family": "Park"
+    }
+  ],
+  "year": 2022,
+  "venue": "Frontiers in Plant Science 13",
+  "doi": "10.3389/fpls.2022.1031748",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3389/fpls.2022.1031748",
+  "type": "journal",
+  "axes": [
+    "disease-classif"
+  ],
+  "tags": [
+    "background",
+    "tomato"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : TABLE 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

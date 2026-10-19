@@ -1,0 +1,63 @@
+{
+  "id": "arxiv-2301.11514-deep-industrial-image-anomaly-detection",
+  "title": "Deep Industrial Image Anomaly Detection: A Survey",
+  "authors": [
+    {
+      "given": "Jiaqi",
+      "family": "Liu"
+    },
+    {
+      "given": "Guoyang",
+      "family": "Xie"
+    },
+    {
+      "given": "Jinbao",
+      "family": "Wang"
+    },
+    {
+      "given": "Shangnian",
+      "family": "Li"
+    },
+    {
+      "given": "Chengjie",
+      "family": "Wang"
+    },
+    {
+      "given": "Feng",
+      "family": "Zheng"
+    },
+    {
+      "given": "Yaochu",
+      "family": "Jin"
+    }
+  ],
+  "year": 2023,
+  "venue": "Machine Intelligence Research vol. 21, no. 1, pp. 104-135, 2024",
+  "doi": "10.1007/s11633-023-1459-z",
+  "arxiv_id": "2301.11514",
+  "url": "https://arxiv.org/abs/2301.11514",
+  "type": null,
+  "axes": [
+    "surveys",
+    "anomaly"
+  ],
+  "tags": [
+    "anomaly"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : Machine Intelligence Research vol. 21, no. 1, pp. 104-135, 2024) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 6",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 4, Table 8"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-2409.12789-reinforcement-learning-model-predictive-control",
+  "title": "Reinforcement Learning-based Model Predictive Control for Greenhouse Climate Control",
+  "authors": [
+    {
+      "given": "Samuel",
+      "family": "Mallick"
+    },
+    {
+      "given": "Filippo",
+      "family": "Airaldi"
+    },
+    {
+      "given": "Azita",
+      "family": "Dabiri"
+    },
+    {
+      "given": "Congcong",
+      "family": "Sun"
+    },
+    {
+      "given": "Bart De",
+      "family": "Schutter"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": "10.1016/j.atech.2024.100751",
+  "arxiv_id": "2409.12789",
+  "url": "https://arxiv.org/abs/2409.12789",
+  "type": "preprint",
+  "axes": [
+    "climate-control"
+  ],
+  "tags": [
+    "mpc",
+    "rl"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 5, [figure sans légende identifié, [figure sans légende identifié",
+      "sections numérotées non détectées : 4 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,231 @@
+---
+id: arxiv-2106.08265-total-recall-industrial-anomaly-detection
+title: "Towards Total Recall in Industrial Anomaly Detection"
+year: 2021
+backend: grobid
+---
+
+## Abstract
+
+Being able to spot defective parts is a critical component in large-scale industrial manufacturing. A particular challenge that we address in this work is the cold-start problem: fit a model using nominal (non-defective) example images only. While handcrafted solutions per class are possible, the goal is to build systems that work well simultaneously on many different tasks automatically. The best peforming approaches combine embeddings from ImageNet models with an outlier detection model. In this paper, we extend on this line of work and propose PatchCore, which uses a maximally representative memory bank of nominal patchfeatures. PatchCore offers competitive inference times while achieving state-of-the-art performance for both detection and localization. On the challenging, widely used MVTec AD benchmark PatchCore achieves an image-level anomaly detection AUROC score of up to 99.6%, more than halving the error compared to the next best competitor. We further report competitive results on two additional datasets and also find competitive results in the few samples regime. Code: github.com/amazon-research/patchcore-inspection. * Work done during a research internship at Amazon AWS.
+
+1 Commonly also dubbed one-class classification (OCC).
+
+## 1. Introduction
+
+The ability to detect unusual patterns in images is a feature deeply ingrained in human cognition. Humans can differentiate between expected variance in the data and outliers after having only seen a small number of normal instances. In this work we address the computational version of this problem, cold-start 1 anomaly detection for visual inspection of industrial image data. It arises in many industrial scenarios where it is easy to acquire imagery of normal examples but costly and complicated to specify the expected defect variations in full. This task is naturally cast as a outof-distribution detection problem where a model needs to distinguish between samples being drawn from the training data distribution and those outside its support. Industrial visual defect classification is especially hard, as errors can vary from subtle changes such as thin scratches to larger structural defects like missing components [5]. Some examples from the MVTec AD benchmark along with results from our proposed method are shown in Figure 1. Existing work on cold-start, industrial visual anomaly detection relies on learning a model of the nominal distribution via autoencoding methods [12,36,44], GANs [2,39,43], or other unsupervised adaptation methods [42,56]. Recently, [4,10] proposed to leverag common deep representations from Im-ageNet classification without adaptation to the target distribution. Despite the missing adaptation, these models offer strong anomaly detection performance and even solid spatial localization of the defects. The key principle behind these techniques is a feature matching between the test sample and the nominal samples while exploiting the multiscale nature of deep feature representations. Subtle, finegrained defect segmentation is covered by high-resolution features, whereas structural deviations and full image-level anomaly detection are supposed to be covered by features at much higher abstraction levels. The inherent downside of this approach, since it is non-adaptive, is the limited matching confidence at the higher abstraction levels: high-level abstract features from ImageNet training coincide little with arXiv:2106.08265v2 [cs.CV] 5 May 2022 the abstract features required in an industrial environment. In addition, nominal context usable by these methods at test time is effectively limited by the small number of extractable high-level feature representations.
+
+In this paper, we present PatchCore as an effective remedy by (1) maximizing nominal information available at test time, (2) reducing biases towards ImageNet classes and (3) retaining high inference speeds. Relying on the fact that an image can be already classified as anomalous as soon as a single patch is anomalous [14,56], Patch-Core achieves this by utilizing locally aggregated, mid-level features patches. The usage of mid-level network patch features allows PatchCore to operate with minimal bias towards ImageNet classes on a high resolution, while a feature aggregation over a local neighbourhood ensures retention of sufficient spatial context. This results in an extensive memory bank allowing PatchCore to optimally leverage available nominal context at test time. Finally, for practical applicability, PatchCore additionally introduces greedy coreset subsampling [1] for nominal feature banks as a key element to both reduce redundancy in the extracted, patch-level memory bank as well as significantly bringing down storage memory and inference time, making Patch-Core very attractive for realistic industrial use cases.
+
+Thorough experiments on the diverse MVTec AD [5] as well as the specialized Magnetic Tile Defects (MTD) [26] industrial anomaly detection benchmarks showcase the power of PatchCore for industrial anomaly detection. It achieves state-of-the-art image-level detection scores on MVTec AD and MTD, with nearly perfect scores on MVTec AD (up to AUROC 99.6%), reducing detection error of previous methods by more than half, as well as state-ofthe-art industrial anomaly localization performance. Patch-Core achieves this while retaining fast inference times without requiring training on the dataset at hand. This makes PatchCore very attractive for practical use in industrial anomaly detection. In addition, further experiments showcase the high sample efficiency of PatchCore, matching existing anomaly detection methods in performance while using only a fraction of the nominal training data.
+
+## 2. Related Works
+
+Most anomaly detection models rely on the ability to learn representations inherent to the nominal data. This can be achieved for example through the usage of autoencoding models [44]. To encourage better estimation of the nominal feature distribution, extensions based on Gaussian mixture models [60], generative adversarial training objectives [2,39,43], invariance towards predefined physical augmentations [25], robustness of hidden features to reintroduction of reconstructions [29], prototypical memory banks [21], attention-guidance [52], structural objectives [7,59] or constrained representation spaces [38] have been pro-posed. Other unsupervised representation learning methods can similarly be utilised, such as via GANs [13], learning to predict predefined geometric transformations [20] or via normalizing flows [42]. Given respective nominal representations and novel test representations, anomaly detection can then be a simple matter of reconstruction errors [44], distances to k nearest neighbours [18] or finetuning of a one-class classification model such as OC-SVMs [46] or SVDD [50,56] on top of these features. For the majority of these approaches, anomaly localization comes naturally based on pixel-wise reconstruction errors, saliency-based approaches such as GradCAM [47] or XRAI [28] can be used for anomaly segmentation [42,45,52] as well.
+
+Industrial Anomaly Detection. While literature on general anomaly detection through learned nominal representations is vast, industrial image data comes with its own challenges [5], for which recent works starting with [4] have shown state-of-the-art detection performance using models pretrained on large external natural image datasets such as ImageNet [16] without any adaptation to the data at hand. This has given rise to other industrial anomaly detection methods reliant on better reuse of pretrained features such as SPADE [10], which utilizes memory banks comprising various feature hierarchies for finegrained, kNN-based [18] anomaly segmentation and image-level anomaly detection. Similarly, [14] recently proposed PaDiM, which utilizes a locally constrained bag-of-features approach [8], estimating patch-level feature distribution moments (mean and covariance) for patch-level Mahalanobis distance measures [33]. This approach is similar to [40] studied on full images. To better account for the distribution shift between natural pretraining and industrial image data, subsequent adaptation can be done, e.g. via student-teacher knowledge distillation [24] such as in [6,45] or normalizing flows [17,30] trained on top of pretrained network features [42].
+
+The specific components used in PatchCore are most related to SPADE and PaDiM. SPADE makes use of a memory-bank of nominal features extracted from a pretrained backbone network with separate approaches for image-and pixel-level anomaly detection. PatchCore similarly uses a memory bank, however with neighbourhoodaware patch-level features critical to achieve higher performance, as more nominal context is retained and a better fitting inductive bias is incorporated. In addition, the memory bank is coreset-subsampled to ensure low inference cost at higher performance. Coresets have seen longstanding usage in fundamental kNN and kMeans approaches [22] or mixture models [19] by finding subsets that best approximate the structure of some available set and allow for approximate solution finding with notably reduced cost [1,9]. More recently, coreset-based methods have also found their way into Deep Learning approaches, e.g for network pruning [34], active learning [48] and increasing effective data coverage of mini-batches for improved GAN training [49] or representation learning [41]. The latter three have found success utilizing a greedy coreset selection mechanism. As we aim to approximate memory bank feature space coverage, we similarly adapt a greedy coreset mechanism for PatchCore . Finally, our patch-level approach to both image-level anomaly detection and anomaly segmentation is related to PaDiM with the goal of encouraging higher anomaly detection sensitivity. We make use of an efficient patch-feature memory bank equally accessible to all patches evaluated at test time, whereas PaDiM limits patch-level anomaly detection to Mahalanobis distance measures specific to each patch. In doing so, PatchCore becomes less reliant on image alignment while also estimating anomalies using a much larger nominal context. Furthermore, unlike PaDiM, input images do not require the same shape during training and testing. Finally, PatchCore makes use of locally aware patch-feature scores to account for local spatial variance and to reduce bias towards ImageNet classes.
+
+## 3. Method
+
+The PatchCore method consists of several parts that we will describe in sequence: local patch features aggregated into a memory bank ( §3.1), a coreset-reduction method to increase efficiency ( §3.2) and finally the full algorithm that arrives at detection and localization decisions ( §3.3).
+
+### 3.1. Locally aware patch features
+
+We use X N to denote the set of all nominal images (∀x ∈ X N : y x = 0) available at training time, with y x ∈ {0, 1} denoting if an image x is nominal (0) or anomalous (1). Accordingly, we define X T to be the set of samples provided at test time, with ∀x ∈ X T : y x ∈ {0, 1}. Following [4], [10] and [14], PatchCore uses a network φ pre-trained on ImageNet. As the features at specific network hierarchies plays an important role, we use φ i,j = φ j (x i ) to denote the features for image x i ∈ X (with dataset X ) and hierarchylevel j of the pretrained network φ. If not noted otherwise, in concordance with existing literature, j indexes feature maps from ResNet-like [23] architectures, such as ResNet-50 or WideResnet-50 [57], with j ∈ {1, 2, 3, 4} indicating the final output of respective spatial resolution blocks.
+
+One choice for a feature representation would be the last level in the feature hierarchy of the network. This is done in [4] or [10] but introduces the following two problems. Firstly, it loses more localized nominal information [14]. As the types of anomalies encountered at test time are not known a priori, this becomes detrimental to the downstream anomaly detection performance. Secondly, very deep and abstract features in ImageNet pretrained networks are biased towards the task of natural image classification, which has only little overlap with the cold-start industrial anomaly detection task and the evaluated data at hand. We thus propose to use a memory bank M of patch-level features comprising intermediate or mid-level feature representations to make use of provided training context, avoiding features too generic or too heavily biased towards Im-ageNet classification. In the specific case of ResNet-like architectures, this would refer to e.g. j ∈ [2,3]. To formalize the patch representation we extend the previously introduced notation. Assume the feature map φ i,j ∈ R c * ×h * ×w * to be a three-dimensional tensor of depth c * , height h * and width w * . We then use φ i,j (h, w) = φ j (x i , h, w) ∈ R c * to denote the c * -dimensional feature slice at positions h ∈ {1, . . . , h * } and w ∈ {1, . . . , w * }. Assuming the receptive field size of each φ i,j to be larger than one, this effectively relates to image-patch feature representations. Ideally, each patch-representation operates on a large enough receptive field size to account for meaningful anomalous context robust to local spatial variations. While this could be achieved by strided pooling and going further down the network hierarchy, the thereby created patch-features become more ImageNet-specific and thus less relevant for the anomaly detection task at hand, while training cost increases and effective feature map resolution drops.
+
+This motivates a local neighbourhood aggregation when composing each patch-level feature representation to increase receptive field size and robustness to small spatial deviations without losing spatial resolution or usability of feature maps. For that, we extend above notation for φ i,j (h, w) to account for an uneven patchsizes p (corresponding to the neighbourhood size considered), incorporating feature vectors from the neighbourhood
+
+N (h,w) p = {(a, b)|a ∈ [h -p/2 , ..., h + p/2 ], b ∈ [w -p/2 , ..., w + p/2 ]},(1)
+
+and locally aware features at position (h, w) as
+
+φ i,j N (h,w) p = f agg {φ i,j (a, b)|(a, b) ∈ N (h,w) p } ,(2)
+
+with f agg some aggregation function of feature vectors in the neighbourhood N (h,w) p
+
+. For PatchCore, we use adaptive average pooling. This is similar to local smoothing over each individual feature map, and results in one single representation at (h, w) of predefined dimensionality d, which is performed for all pairs (h, w) with h ∈ {1, ..., h * } and w ∈ {1, ..., w * } and thus retains feature map resolution. For a feature map tensor φ i,j , its locally aware patch-feature collection P s,p (φ i,j ) is
+
+P s,p (φ i,j ) = {φ i,j (N (h,w) p )| h, w mod s = 0, h < h * , w < w * , h, w ∈ N},(3)
+
+with the optional use of a striding parameter s, which we set to 1 except for ablation experiments done in §4.4.2. Empirically and similar to [10] and [14], we found aggregation of multiple feature hierarchies to offer some benefit. However, to retain the generality of used features as well as the spatial resolution, PatchCore uses only two intermediate feature hierarchies j and j + 1. This is achieved simply by computing P s,p (φ i,j+1 ) and aggregating each element with its corresponding patch feature at the lowest hierarchy level used (i.e., at the highest resolution), which we achieve by bilinearly rescaling P s,p (φ i,j+1 ) such that |P s,p (φ i,j+1 )| and |P s,p (φ i,j )| match.
+
+Finally, for all nominal training samples x i ∈ X N , the PatchCore memory bank M is then simply defined as
+
+M = xi∈X N P s,p (φ j (x i )).
+
+(4)
+
+### 3.2. Coreset-reduced patch-feature memory bank
+
+For increasing sizes of X N , M becomes exceedingly large and with it both the inference time to evaluate novel test data and required storage. This issue has already been noted in SPADE [10] for anomaly segmentation, which makes use of both low-and high-level feature maps. Due to computational limitations, SPADE requires a preselec-tion stage of feature maps for pixel-level anomaly detection based on a weaker image-level anomaly detection mechanism reliant on full-image, deep feature representations, i.e., global averaging of the last feature map. This results in low-resolution, ImageNet-biased representations computed from full images which may negatively impact detection and localization performance.
+
+These issues can be addressed by making M meaningfully searchable for larger image sizes and counts, allowing for patch-based comparison beneficial to both anomaly detection and segmentation. This requires that the nominal feature coverage encoded in M is retained. Unfortunately, random subsampling, especially by several magnitudes, will lose significant information available in M encoded in the coverage of nominal features (see also experiments done in §4.4.2). In this work we use a coreset subsampling mechanism to reduce M, which we find reduces inference time while retaining performance.
+
+Conceptually, coreset selection aims to find a subset S ⊂ A such that problem solutions over A can be most closely and especially more quickly approximated by those computed over S [1]. Depending on the specific problem, the coreset of interest varies. Because PatchCore uses nearest neighbour computations (next Section), we use a minimax facility location coreset selection, see e.g., [48] and [49], to ensure approximately similar coverage of the M-coreset M C in patch-level feature space as compared to the original memory bank M M * C = arg min
+
+M C ⊂M max m∈M min n∈M C m -n 2 .(5)
+
+The exact computation of M * C is NP-Hard [54], we use the iterative greedy approximation suggested in [48]. To further reduce coreset selection time, we follow [49], making use of the Johnson-Lindenstrauss theorem [11] to reduce dimensionalities of elements m ∈ M through random linear projections ψ : R d → R d * with d * < d. The memory bank reduction is summarized in Algorithm 1. For notation, we use PatchCore-n% to denote the percentage n to which the original memory bank has been subsampled to, e.g., Patch-Core-1% a 100x times reduction of M. Figure 3 gives a visual impression of the spatial coverage of greedy coreset subsampling compared to random selection.
+
+Algorithm 1: PatchCore memory bank.
+
+Input: Pretrained φ, hierarchies j, nominal data X N , stride s, patchsize p, coreset target l, random linear projection ψ. Output: Patch-level Memory bank M. Algorithm:
+
+M ← {} for x i ∈ X N do M ← M ∪ P s,p (φ j (x i )) end / * Apply greedy coreset selection. * / M C ← {} for i ∈ [0, ..., l -1] do m i ← arg max m∈M-M C min n∈M C ψ(m) -ψ(n) 2 M C ← M C ∪ {m i } end M ← M C
+
+### 3.3. Anomaly Detection with PatchCore
+
+With the nominal patch-feature memory bank M, we estimate the image-level anomaly score s ∈ R for a test image x test by the maximum distance score s * between test patchfeatures in its patch collection P(x test ) = P s,p (φ j (x test )) to each respective nearest neighbour m * in M:
+
+m test, * , m * = arg max m test ∈P(x test ) arg min m∈M m test -m 2 s * = m test, * -m * 2 .(6)
+
+To obtain s, we use scaling w on s * to account for the behaviour of neighbour patches: If memory bank features closest to anomaly candidate m test, * , m * , are themselves far from neighbouring samples and thereby an already rare nominal occurrence, we increase the anomaly score
+
+s = 1 - exp m test, * -m * 2 m∈N b (m * ) exp m test, * -m 2 • s * ,(7)
+
+with N b (m * ) the b nearest patch-features in M for test patch-feature m * . We found this re-weighting to be more robust than just the maximum patch distance. Given s, segmentations follow directly. The image-level anomaly score in Eq. 7 (first line) requires the computation of the anomaly score for each patch through the arg max-operation. A segmentation map can be computed in the same step, similar to [14], by realigning computed patch anomaly scores based on their respective spatial location. To match the original input resolution, (we may want to use intermediate network features), we upscale the result by bi-linear interpolation. Additionally, we smoothed the result with a Gaussian of kernel width σ = 4, but did not optimize this parameter.
+
+## 4. Experiments
+
+### 4.1. Experimental Details
+
+Datasets. To study industrial anomaly detection performance, the majority of our experiments are performed on the MVTec Anomaly Detection benchmark [5]. MVTec AD contains 15 sub-datasets with a total of 5354 images, 1725 of which are in the test set. Each sub-dataset is divided into nominal-only training data and test sets containing both nominal and anomalous samples for a specific product with various defect types as well as respective anomaly ground truth masks. As in [10,14,56], images are resized and center cropped to 256 × 256 and 224 × 224, respectively. No data augmentation is applied, as this requires prior knowledge about class-retaining augmentations. We also study industrial anomaly detection on more specialized tasks. For that, we leverage the Magnetic Tile Defects (MTD) [26] dataset as used in [42], which contains 925 defect-free and 392 anomalous magnetic tile images with varied illumination levels and image sizes. Same as in [42], 20% of defect-free images are evaluated against at test time, with the rest used for cold-start training. Finally, we also highlight potential applicability of Patch-Core to non-industrial image data, benchmarking coldstart anomaly localization on Mini Shanghai Tech Campus (mSTC) as done in e.g. [52] and [14]. mSTC is a subsampled version of the original STC dataset [32], only using every fifth training and test video frame. It contains pedestrian videos from 12 different scenes. Training videos include normal pedestrian behaviour while test videos can contain different behaviours such as fighting or cycling. For comparability of our cold-start experiments, we follow established mSTC protocols [14,52], not making use of any anomaly supervision and images resized to 256 × 256.
+
+Evaluation Metrics. Image-level anomaly detection performance is measured via the area under the receiveroperator curve (AUROC) using produced anomaly scores. In accordance with prior work we compute on MVTec the class-average AUROC [2,10,14]. To measure segmentation performance, we use both pixel-wise AUROC and the PRO metric first, both following [6]. The PRO score takes into account the overlap and recovery of connected anomaly components to better account for varying anomaly sizes in MVTec AD, see [6] for details. Table 1. Anomaly Detection Performance (AUROC) on MVTec AD [5]. PaDiM * denotes a result from [14] with problem-specific backbone selection. The total count of misclassifications was determined as the sum of false-positive and false-negative predictions given a F1-optimal threshold. We did not have individual anomaly scores for competing methods so could compute this number only for PatchCore.
+
+### 4.2. Anomaly Detection on MVTec AD
+
+The results for image-level anomaly detection on MVTec are shown in Table 1. For PatchCore we report on various levels of memory bank subsampling (25%, 10% and 1%). For all cases, PatchCore achieves significantly higher mean image anomaly detection performance with consistently high performance on all sub-datasets (see supplementary B for detailed comparison). Please note, that a reduction from an error of 2.1% (PaDiM) to 0.9% for Patch-Core-25% means a reduction of the error by 57%. In industrial inspection settings this is a relevant and significant reduction. For MVTec at optimal F1 threshold, there are only 42 out of 1725 images classified incorrectly and a third of all classes are solved perfectly. In the supplementary material B we also show that both with F1-optimal working point and at full recall, classification errors are also lower when compared to both SPADE and PaDiM. With Patch-Core, less than 50 images remain misclassified. In addition, PatchCore achieves state-of-the-art anomaly segmentation, both measured by pixelwise AUROC (Table 2, 98.1 versus 97.5 for PaDiM) and PRO metric (Table 3, 93.5 versus 92.1). Sample segmentations in Figure 1 offer qualitative impressions of the accurate anomaly localization.
+
+In addition, due to the effectiveness of our coreset memory subsampling, we can apply PatchCore-1% on images of higher resolution (e.g. 280/320 instead of 224) and en-semble systems while retaining inferences times less than PatchCore-10% on the default resolution. This allows us to further push image-and pixel-level anomaly detection as highlighted in Tab. 4 (detailed results in supplementary), in parts more than halving the error again (e.g. 1% → 0.4% for image-level AUROC).
+
+### 4.3. Inference Time
+
+The other dimension we are interested in is inference time. We report results in Table 5 (implementation details in supp. A) comparing to reimplementations of SPADE [10] and PaDiM [14] using WideResNet50 and operations on GPU where possible. These inference times include the forward pass through the backbone. As can be seen, inference time for joint image-and pixel-level anomaly detection of PatchCore-100% (without subsampling) are lower than SPADE [10] but with higher performance. With coreset subsampling, Patchcore can be made even faster, with lower inference times than even PaDiM while retaining state-of-the-art image-level anomaly detection and segmentation performance. Finally, we examine PatchCore-100% with approximate nearest neighbour search (IVFPQ [27]) as an orthogonal way of reducing inference time (which can also be applied to SPADE, however which already performs notably worse than even PatchCore-1%). We find a performance drop, especially for image-level anomaly detection, while inference times are still higher than Patch-Core-1%. Though even with performance reduction, approximate nearest neighbour search on PatchCore-100% still outperforms other methods. A combination of coreset and approximate nearest neighbour would further reduce inference time, allowing scaling to much larger datasets.
+
+### 4.4. Ablations Study
+
+We report on ablations for the locally aware patchfeatures and the coreset reduction method. Supplementary experiments show consistency across different backbones ( §C.2), scalability with increased image resolution ( §C.3) and a qualitative analysis of remaining errors ( §C.4). Table 3. Anomaly Detection Performance on MVTec AD [5] as measured in PRO [%] [5,10]. [10] PaDiM [14]
+
+Method AE SSIM [5] Student [6] SPADE
+
+#### 4.4.1. Locally aware patch-features and hierarchies
+
+We investigate the importance of locally aware patchfeatures ( §3.3) by evaluating changes in anomaly detection performance over different neighbourhood sizes in Eq. 1.
+
+Results in the top half of Figure 4 show a clear optimum between locality and global context for patch-based anomaly predictions, thus motivating the neighbourhood size p = 3.
+
+More global context can also be achieved by moving down the network hierarchy (see e.g. [10,14]), however at the cost of reduced resolution and heavier ImageNet class bias ( §3.1). Indexing the first three WideResNet50-blocks with 1 -3, Fig. 4 (bottom) again highlights an optimum between highly localized predictions, more global context and Ima-geNet bias. As can be seen, features from hierarchy level 2 can already achieve state-of-the-art performance, but benefit from additional feature maps taken from subsequent hierarchy levels (2+3, which is chosen as the default setting).
+
+#### 4.4.2. Importance of Coreset subsampling
+
+L rec (m i ) = m i - p k ∈P e mi-p k 2 pj ∈P e mi-pj p k 2 2 ,(8)
+
+to find N proxies that best describe the memory bank data M. In Figure 5 we compare the three settings and find that coreset-based subsampling performs better than the other possible choices. The performance of no subsampling is comparable to a coreset-reduced memory bank that is two orders of magnitudes smaller in size. We also find subsampled memory banks to contain much less redundancy. We recorded the percentage of memory bank samples that are used at test time for non-subsampled and coreset-subsampled memory banks. While initially only less than 30% of memory bank samples are used, coreset subsampling (to 1%) increases this factor to nearly 95%.
+
+For certain subsampling intervals (between around 50% and 10%), we even find joint performance over anomaly detection and localization to partly increase as compared to nonsubsampled PatchCore . Finally, reducing the memory bank size M by means of increased striding (see Eq. 3) shows worse performance due to the decrease in resolution context, with stride s = 2 giving an image anomaly detection AUROC of 97.6%, and stride s = 3 an AUROC of 96.8%.
+
+### 4.5. Low-shot Anomaly Detection
+
+Having access to limited nominal data is a relevant setting for real-world inspection. Therefore in addition to reporting results on the full MVTec AD, we also study the performance with fewer training examples. We vary the amount of training samples from 1 (corresponding to 0.4% of the total nominal training data) to 50 (21%), and compare to reimplementations of SPADE [10] and PaDiM [14] using the same backbone (WideResNet50). Results are summarized in Figure 6, with detailed results available in Supp. Table 6. Anomaly Segmentation on mSTC [32,52] and anomaly detection on MTD [26] compared to results reported in [42]. 76.6 80.0 97.7 97.9 §C.1. As shown, using only one fifth of nominal training data, PatchCore can still match previous state-of-the-art performance. In addition, comparing to the 16-shot experiments performed in [42], we find PatchCore to outperform their approach which adapts a normalizing flows model on top of already pretrained features. Compared to image-level memory approaches in [10], we find matching localization and detection performance with only 5/1 nominal shots.
+
+### 4.6. Evaluation on other benchmarks
+
+We benchmark PatchCore on two additional anomaly detection performance benchmarks: The ShanghaiTech Campus dataset (STC) [32] and the Magnetic Tile Defects dataset (MTD) [26]. Evaluation for STC as described in §4.1 follows [52], [14] and [10]. We report unsupervised anomaly localization performance on a subsampled version of the STC video data (mSTC), with images resized to 256 × 256 [14]. As the detection context is much closer to natural image data available in ImageNet, we make use of deeper network feature maps at hierarchy levels 3 and 4, but otherwise do not perform any hyperparameter tuning for PatchCore. The results in Table 6 (top) show state-ofthe-art anomaly localization performance which suggests good transferability of PatchCore to such domains. Finally, we examine MTD, containing magnetic tile defect images of varying sizes on which spatially rigid approaches like PaDiM cannot be applied directly. Here, nominal data already exhibits high variability similar to those encountered in anomalous samples [42]. We follow the protocol proposed in [42] to measure image-level anomaly detection performance and find performance to match (and even slightly outperform) that of [42] (Table 6, bottom).
+
+## 5. Conclusion
+
+This paper introduced the PatchCore algorithm for coldstart anomaly detection, in which knowledge of only nominal examples has to be leveraged to detect and segment anomalous data at test-time. PatchCore strikes a balance between retaining a maximum amount of nominal context at test-time through the usage of memory banks comprising locally aware, nominal patch-level feature representations extracted from ImageNet pretrained networks, and minimal runtime through coreset subsampling. The result is a state-of-the-art cold-start image anomaly detection and localization system with low computational cost on industrial anomaly detection benchmarks. On MVTec, we achieve an image anomaly detection AUROC over 99% with highest sample efficiency in relevant small training set regimes.
+
+Broader Impact. As automated industrial anomaly detection is one of the most successful applications of Computer Vision, the improvements gained through Patch-Core can be of notable interest for practitioners in this domain. As our work focuses specifically on industrial anomaly detection, negative societal impact is limited. And while the fundamental approach can potentially we leveraged for detection systems in more controversial domains, we don't believe that our improvements are significant enough to change societal application of such systems.
+
+Limitations. While PatchCore shows high effectiveness for industrial anomaly detection without the need to specifically adapt to the problem domain at hand, applicability is generally limited by the transferability of the pretrained features leveraged. This can be addressed by merging the effectiveness of PatchCore with adaptation of the utilized features. We leave this interesting extension to future work. Table S1. Anomaly Detection Performance (AUROC) on MVTec AD [5]. PaDiM * denotes a result from [14] with a backbone specifically selected for the task of image-level anomaly detection, which we could not reproduce.
+
+## Figures et tableaux
+
+**Figure 1.** Examples from the MVTec benchmark datasets. Superimposed on the images are the segmentation results from Patch-Core. The orange boundary denotes anomaly contours of actual segmentation maps for anomalies such as broken glass, scratches, burns or structural changes in blue-orange color gradients.
+
+**Figure 2.** Figure 3. Figure 2. Overview of PatchCore. Nominal samples are broken down into a memory bank of neighbourhood-aware patch-level features. For reduced redundancy and inference time, this memory bank is downsampled via greedy coreset subsampling. At test time, images are classified as anomalies if at least one patch is anomalous, and pixel-level anomaly segmentation is generated by scoring each patch-feature.
+
+Method SPADE [ 10 ] PatchSVDD [56] DifferNet [42] PaDiM [14] Mah.AD [40] PaDiM * [14] PatchCore-25% PatchCore-10% PatchCore-1% AUROC ↑ 85.5
+
+**Figure 4.** Local awareness and network feature depths vs. detection performance. PRO score results in the supplementary.
+
+**Figure 5.** Performance retention for different subsamplers, results for PRO score in the supplementary.
+
+**Figure 5** compares different memory bank M subsampling methods: Greedy coreset selection, random subsampling and learning of a set of basis proxies corresponding to the subsampling target percentage p target . For the latter, we sample proxies p i ∈ P ⊂ R d with |P| = p target • |M|, which are then tasked to minimize a basis reconstruction objective
+
+**Figure 6.** PatchCore shows notably higher sample-efficiency than competitors, matching the previous state-of-the-art with a fraction of nominal training data. Note that PaDiM and SPADE where reimplemented with WideResNet50 for comparability.
+
+[figure sans légende identifiée] [35] DifferNet[42] PatchCore-10 AUROC [%]
+
+**Table 2.** Anomaly Segmentation Performance (pixelwise AUROC) on MVTec AD[5].
+
+     |  |  | 92.1 | 94.9 | 95.3 | 95.8 | 97.9 | 99.1 | 99.0 | 99.0
+    Error ↓ |  | 14.5 | 7.9 | 5.1 | 4.7 | 4.2 | 2.1 | 0.9 | 1.0 | 1.0
+    Misclassifications ↓ | - | - | - | - | - | - | 42 | 47 | 49
+    AUROC ↑ | 87 | 88.8 | 89 |  | 95.7 | 96.0 | 97.5 | 98.1 | 98.1 | 98.0
+    Error ↓ | 13 | 11.2 | 11 |  | 4.3 | 4.0 | 2.5 | 1.9 | 1.9 | 2.0
+
+**Table 4.** PatchCore-1% with higher resolution/larger backbones/ensembles. The coreset subsampling allows for computationally expensive setups while still retaining fast inference. [corps du tableau reconstruit par PyMuPDF : à vérifier]
+
+    Method | AESSIM [5] | Student [6] | SPADE [10] | PaDiM [14] | PatchCore−25% | PatchCore−10% | PatchCore−1%
+    PRO ↑ Error ↓ | 69.4 30.6 | 85.7 14.3 | 91.7 8.3 | 92.1 7.9 | 93.4 6.6 | 93.5 6.5 | 93.1 6.9
+
+**Table 5.** Mean inference time per image on MVTec AD. Scores are (image AUROC, pixel AUROC, PRO metric).
+
+↓ Method \Dataset → Avg Bottle Cable Capsule Carpet Grid Hazeln. Leather Metal Nut Pill Screw Tile Toothb. Trans. Wood Zipper
+
+    GeoTrans [20] | 67.2 | 74.4 | 78.3 | 67.0 | 43.7 | 61.9 | 35.9 | 84.1 | 81.3 | 63.0 | 50.0 | 41.7 | 97.2 | 86.9 | 61.1 | 82.0
+    GANomaly [2] | 76.2 | 89.2 | 75.7 | 73.2 | 69.9 | 70.8 | 78.5 | 84.2 | 70.0 | 74.3 | 74.6 | 79.4 | 65.3 | 79.2 | 83.4 | 74.5
+    DSEBM [58] | 70.9 | 81.8 | 68.5 | 59.4 | 41.3 | 71.7 | 76.2 | 41.6 | 67.9 | 80.6 | 99.9 | 69.0 | 78.1 | 74.1 | 95.2 | 58.4
+    OCSVM [3] | 71.9 | 99.0 | 80.3 | 54.4 | 62.7 | 41.0 | 91.1 | 88.0 | 61.1 | 72.9 | 74.7 | 87.6 | 61.9 | 56.7 | 95.3 | 51.7
+    ITAE [25] | 83.9 | 94.1 | 83.2 | 68.1 | 70.6 | 88.3 | 85.5 | 86.2 | 66.7 | 78.6 | 100 | 73.5 | 100 | 84.3 | 92.3 | 87.6
+    SPADE [10] | 85.5 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | -
+    CAVGA-R w [52] | 90 | 96 | 92 | 93 | 88 | 84 | 97 | 89 | 82 | 86 | 81 | 97 | 89 | 99 | 79 | 96
+    PatchSVDD [56] | 92.1 | 98.6 | 90.3 | 76.7 | 92.9 | 94.6 | 92.0 | 90.9 | 94.0 | 86.1 | 81.3 | 97.8 | 100 | 91.5 | 96.5 | 97.9
+    DifferNet [42] | 94.9 | 99.0 | 95.9 | 86.9 | 92.9 | 84.0 | 99.3 | 97.1 | 96.1 | 88.8 | 96.3 | 99.4 | 98.6 | 91.1 | 99.8 | 95.1
+    PaDiM [14] | 95.3 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | -
+    MahalanobisAD [40] | 95.8 | 100 | 95.0 | 95.1 | 100 | 89.7 | 99.1 | 100 | 94.7 | 88.7 | 85.2 | 99.8 | 96.9 | 95.5 | 99.6 | 97.9
+    PaDiM * [14] | 97.9 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | -
+    PatchCore-25 | 99.1 | 100 | 99.5 | 98.1 | 98.7 | 98.2 | 100 | 100 | 100 | 96.6 | 98.1 | 98.7 | 100 | 100 | 99.2 | 99.4
+    PatchCore-10 | 99.0 | 100 | 99.4 | 97.8 | 98.7 | 97.9 | 100 | 100 | 100 | 96.0 | 97.0 | 98.9 | 99.7 | 100 | 99.0 | 99.5
+    PatchCore-1 | 99.0 | 100 | 99.3 | 98.0 | 98.0 | 98.6 | 100 | 100 | 99.7 | 97.0 | 96.4 | 99.4 | 100 | 99.9 | 99.2 | 99.2
+
+Table S2. Anomaly Segmentation Performance on MVTec [5], as measured in pixelwise AUROC. Avg Bottle Cable Capsule Carpet Grid Hazeln. Leather Metal Nut Pill Screw Tile Toothb. Trans. Wood Zipper
+
+    vis. expl. VAE [31] | 86 | 87 | 90 | 74 | 78 | 73 | 98 | 95 | 94 | 83 | 97 | 80 | 94 | 93 | 77 | 78
+    AE SSIM [5] | 87 | 93 | 82 | 94 | 87 | 94 | 97 | 78 | 89 | 91 | 96 | 59 | 92 | 90 | 73 | 88
+    γ-VAE + grad. [15] | 88.8 | 93.1 | 88.0 | 91.7 | 72.7 | 97.9 | 98.8 | 89.7 | 91.4 | 93.5 | 97.2 | 58.1 | 98.3 | 93.1 | 80.9 | 87.1
+    CAVGA-R w [52] | 89 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | -
+    PatchSVDD [56] | 95.7 | 98.1 | 96.8 | 95.8 | 92.6 | 96.2 | 97.5 | 97.4 | 98.0 | 95.1 | 95.7 | 91.4 | 98.1 | 97.0 | 90.8 | 95.1
+    SPADE [10] | 96.0 | 98.4 | 97.2 | 99.0 | 97.5 | 93.7 | 99.1 | 97.6 | 98.1 | 96.5 | 98.9 | 87.4 | 97.9 | 94.1 | 88.5 | 96.5
+    PaDiM [14] | 97.5 | 98.3 | 96.7 | 98.5 | 99.1 | 97.3 | 98.2 | 99.2 | 97.2 | 95.7 | 98.5 | 94.1 | 98.8 | 98.5 | 94.9 | 98.5
+    PatchCore-25 | 98.1 | 98.6 | 98.4 | 98.8 | 99.0 | 98.7 | 98.7 | 99.3 | 98.4 | 97.4 | 99.4 | 95.6 | 98.7 | 96.3 | 95.0 | 98.8
+    PatchCore-10 | 98.1 | 98.6 | 98.5 | 98.9 | 99.1 | 98.7 | 98.7 | 99.3 | 98.4 | 97.6 | 99.4 | 95.9 | 98.7 | 96.4 | 95.1 | 98.9
+    PatchCore-1 | 98.0 | 98.5 | 98.2 | 98.8 | 98.9 | 98.6 | 98.6 | 99.3 | 98.4 | 97.1 | 99.2 | 96.1 | 98.5 | 94.9 | 95.1 | 98.8
+
+Table S3. Anomaly Segmentation Performance on MVTec[5], as measured in PRO [%][5,10]. Avg Bottle Cable Capsule Carpet Grid Hazeln. Leather Metal Nut Pill Screw Tile Toothb. Trans. Wood Zipper
+
+    AE SSIM [5] | 69.4 | 83.4 | 47.8 | 86.0 | 64.7 | 84.9 | 91.6 | 56.1 | 60.3 | 83.0 | 88.7 | 17.5 | 78.4 | 72.5 | 60.5 | 66.5
+    Student [6] | 85.7 | 91.8 | 86.5 | 91.6 | 69.5 | 81.9 | 93.7 | 81.9 | 89.5 | 93.5 | 92.8 | 91.2 | 86.3 | 70.1 | 72.5 | 93.3
+    SPADE [10] | 91.7 | 95.5 | 90.9 | 93.7 | 94.7 | 86.7 | 95.4 | 97.2 | 94.4 | 94.6 | 96.0 | 75.6 | 93.5 | 87.4 | 87.4 | 92.6
+    PaDiM [14] | 92.1 | 94.8 | 88.8 | 93.5 | 96.2 | 94.6 | 92.6 | 97.8 | 85.6 | 92.7 | 94.4 | 86.0 | 93.1 | 84.5 | 91.1 | 95.9
+    PatchCore-25 | 93.4 | 96.2 | 92.5 | 95.5 | 96.6 | 96.0 | 93.8 | 98.9 | 91.4 | 93.2 | 97.9 | 87.3 | 91.5 | 83.7 | 89.4 | 97.1
+    PatchCore-10 | 93.5 | 96.1 | 92.6 | 95.5 | 96.6 | 95.9 | 93.9 | 98.9 | 91.3 | 94.1 | 97.9 | 87.4 | 91.4 | 83.5 | 89.6 | 97.1
+    PatchCore-1 | 93.1 | 95.9 | 91.6 | 95.5 | 96.5 | 96.1 | 93.8 | 98.9 | 91.2 | 92.9 | 97.1 | 88.3 | 90.2 | 81.2 | 89.5 | 97.0
+
+Table S4. Anomaly Detection and Localization Performance (AUROC) on MVTec AD[5] with PatchCore-1 using larger images (280 × 280) and a WideResNet101 backbone. Avg Bottle Cable Capsule Carpet Grid Hazeln. Leather Metal Nut Pill Screw Tile Toothb. Trans. Wood Zipper
+
+     |  |  |  |  | PatchCore-1, Hierarchies (2, 3), Imagesize 280 |  |  |  |  |  |  | 
+    AUROC | 99.4 | 100 | 99.6 | 98.2 | 98.4 | 99.8 | 100 | 100 | 100 | 97.2 | 98.9 | 98.9 | 100 | 100 | 99.5 | 99.9
+    pwAUROC | 98.2 | 98.6 | 98.4 | 99.1 | 98.7 | 98.7 | 98.8 | 99.3 | 98.8 | 97.8 | 99.3 | 96.1 | 98.8 | 96.4 | 95.1 | 98.9
+    PRO | 94.4 | 96.6 | 93.8 | 96.0 | 97.4 | 96.8 | 91.2 | 99.1 | 94.8 | 94.0 | 97.5 | 89.5 | 95.5 | 84.8 | 91.7 | 97.8
+     |  |  |  | PatchCore-1, Hierarchies (1, 2, 3), Imagesize 280 |  |  |  |  |  |  | 
+    AUROC | 99.2 | 100 | 99.7 | 98.1 | 98.2 | 98.3 | 100 | 100 | 100 | 97.1 | 99.0 | 98.9 | 98.9 | 99.7 | 99.9 | 99.7
+    pwAUROC | 98.4 | 98.6 | 98.7 | 99.1 | 98.7 | 98.8 | 98.8 | 99.3 | 99.0 | 98.6 | 99.5 | 96.3 | 98.9 | 97.1 | 95.2 | 99.0
+    PRO | 95.0 | 96.6 | 94.6 | 96.3 | 97.5 | 97.0 | 91.5 | 99.1 | 95.4 | 96.0 | 98.1 | 90.0 | 95.8 | 85.9 | 92.0 | 98.0

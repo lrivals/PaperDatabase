@@ -1,0 +1,62 @@
+{
+  "id": "arxiv-2305.11533-embrace-limited-imperfect-training-datasets",
+  "title": "Embrace Limited and Imperfect Training Datasets: Opportunities and Challenges in Plant Disease Recognition Using Deep Learning",
+  "authors": [
+    {
+      "given": "Mingle",
+      "family": "Xu"
+    },
+    {
+      "given": "Hyongsuk",
+      "family": "Kim"
+    },
+    {
+      "given": "Jucheng",
+      "family": "Yang"
+    },
+    {
+      "given": "Alvaro",
+      "family": "Fuentes"
+    },
+    {
+      "given": "Yao",
+      "family": "Meng"
+    },
+    {
+      "given": "Sook",
+      "family": "Yoon"
+    },
+    {
+      "given": "Taehyun",
+      "family": "Kim"
+    },
+    {
+      "given": "Dong Sun",
+      "family": "Park"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": "10.3389/fpls.2023.1225409",
+  "arxiv_id": "2305.11533",
+  "url": "https://arxiv.org/abs/2305.11533",
+  "type": "preprint",
+  "axes": [
+    "disease-classif",
+    "iot-greenhouse"
+  ],
+  "tags": [],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

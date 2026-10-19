@@ -32,3 +32,12 @@ docs/etat-de-l-art/*.moo
 docs/etat-de-l-art/*.meg
 docs/etat-de-l-art/*.mes
 docs/etat-de-l-art/*.meo
+
+# Présentation ARCYS : fichiers intermédiaires de LaTeX
+docs/presentation-arcys/*.aux
+docs/presentation-arcys/*.log
+docs/presentation-arcys/*.nav
+docs/presentation-arcys/*.out
+docs/presentation-arcys/*.snm
+docs/presentation-arcys/*.toc
+docs/presentation-arcys/*.vrb

@@ -1,0 +1,51 @@
+{
+  "id": "2019-grindstaff-affordable-remote-monitoring-plant-growth",
+  "title": "Affordable remote monitoring of plant growth in facilities using Raspberry Pi computers",
+  "authors": [
+    {
+      "given": "Brandin",
+      "family": "Grindstaff"
+    },
+    {
+      "given": "Makenzie E",
+      "family": "Mabry"
+    },
+    {
+      "given": "Paul D",
+      "family": "Blischak"
+    },
+    {
+      "given": "Micheal",
+      "family": "Quinn"
+    },
+    {
+      "given": "J Chris",
+      "family": "Pires"
+    }
+  ],
+  "year": 2019,
+  "venue": "Applications in Plant Sciences 7(8), e11280",
+  "doi": "10.1002/aps3.11280",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1002/aps3.11280",
+  "type": "journal",
+  "axes": [
+    "growth",
+    "edge-inference"
+  ],
+  "tags": [
+    "raspberry-pi"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

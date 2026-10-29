@@ -1,0 +1,65 @@
+{
+  "id": "arxiv-2403.02886-revisiting-confidence-estimation-reliable-failure",
+  "title": "Revisiting Confidence Estimation: Towards Reliable Failure Prediction",
+  "authors": [
+    {
+      "given": "Fei",
+      "family": "Zhu"
+    },
+    {
+      "given": "Xu-Yao",
+      "family": "Zhang"
+    },
+    {
+      "given": "Zhen",
+      "family": "Cheng"
+    },
+    {
+      "given": "Cheng-Lin",
+      "family": "Liu"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2403.02886",
+  "url": "https://arxiv.org/abs/2403.02886",
+  "type": "preprint",
+  "axes": [
+    "calibration-decision"
+  ],
+  "tags": [
+    "failure-prediction",
+    "misclassification-detection",
+    "calibration",
+    "ood",
+    "flat-minima",
+    "sam",
+    "swa",
+    "selective-classification",
+    "uncertainty"
+  ],
+  "added": "2026-10-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE 3, 70 28.93±0.95 61.43±2.69 87.82, 01±1.17 46.88±0.89 62, 39±0.07 4.79±0.20 13.17±0.05 R, 43±1.17 42.55±0.89 60.71±1.38, 08±1.23 34.55±0.33 61.49±1.47, 78±0.06 29.33±0.15 65.73±2.18, 56 82.68 79.29 99.74 82.24 103",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "imported_from": {
+    "base": "fpga",
+    "paper_id": "arxiv-2403.02886-revisiting-confidence-estimation-reliable-failure",
+    "date": "2026-10-29",
+    "fiche": "done",
+    "axes": [
+      "failure-prediction",
+      "safety-certification"
+    ]
+  }
+}

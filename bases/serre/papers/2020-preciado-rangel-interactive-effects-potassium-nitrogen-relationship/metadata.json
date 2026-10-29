@@ -1,0 +1,55 @@
+{
+  "id": "2020-preciado-rangel-interactive-effects-potassium-nitrogen-relationship",
+  "title": "Interactive Effects of the Potassium and Nitrogen Relationship on Yield and Quality of Strawberry Grown Under Soilless Conditions",
+  "authors": [
+    {
+      "given": "Pablo",
+      "family": "Preciado-Rangel"
+    },
+    {
+      "given": "Enrique",
+      "family": "Troyo-Diéguez"
+    },
+    {
+      "given": "Luis",
+      "family": "Alonso Valdez-Aguilar"
+    },
+    {
+      "given": "José Luis",
+      "family": "García-Hernández"
+    },
+    {
+      "given": "José Guadalupe",
+      "family": "Luna-Ortega"
+    }
+  ],
+  "year": 2020,
+  "venue": null,
+  "doi": "10.3390/plants9040441",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/plants9040441",
+  "type": "journal",
+  "axes": [
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "strawberry",
+    "hydroponics",
+    "nutrient-solution"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "type de publication à préciser",
+      "ligatures perdues : 2 fragment(s) non réparé(s) (« classi cation »…)",
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 3"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

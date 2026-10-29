@@ -1,0 +1,183 @@
+---
+id: arxiv-2601.08308-agriagent-contract-driven-planning-capability
+title: "AgriAgent: Contract-Driven Planning and Capability-Aware Tool Orchestration in Real-World Agriculture"
+year: 2026
+backend: grobid
+---
+
+## Abstract
+
+Intelligent agent systems in real-world agricultural scenarios must handle diverse tasks under multimodal inputs, ranging from lightweight information understanding to complex multi-step execution. However, most existing approaches rely on a unified execution paradigm, which struggles to accommodate large variations in task complexity and incomplete tool availability commonly observed in agricultural environments. To address this challenge, we propose AgriAgent, a two-level agent framework for real-world agriculture. AgriAgent adopts a hierarchical execution strategy based on task complexity: simple tasks are handled through direct reasoning by modality-specific agents, while complex tasks trigger a contract-driven planning mechanism that formulates tasks as capability requirements and performs capabilityaware tool orchestration and dynamic tool generation, enabling multi-step and verifiable execution with failure recovery. Experimental results show that AgriAgent achieves higher execution success rates and robustness on complex tasks compared to existing tool-centric agent baselines that rely on unified execution paradigms. All code, data will be released at after our work be accepted to promote reproducible research.
+
+## 1. Introduction
+
+Large language model (LLM) based agents have shown strong potential for reasoning and toolaugmented decision making. (Yao et al., 2022;Schick et al., 2023;Nakano et al., 2021;Karpas et al., 2022;Ahn et al., 2022;Patil et al., 2024) However, real-world agricultural tasks pose unique challenges, including long execution chains, multimodal inputs, strong inter-step dependencies, and strict structural constraints. (Wang et al., 2023a;Wu et al., 2023;Achiam et al., 2023;Shen et al., 2023;Wang et al., 2024) These characteristics expose limitations of existing agent frameworks in robustness, verifiability, and scalability. (Shinn et al., 2023; Gou et al., 2023;Madaan et al., 2023;Liu et al., 2023;Xu et al., 2023a) Most prior agent paradigms rely on implicit language-based planning, where action sequences and tool usage are generated without explicit structural constraints. (Yao et al., 2022(Yao et al., , 2023;;Wang et al., 2023b;Kojima et al., 2022;Wei et al., 2022) While effective for short or lightweight tasks, such designs often fail in complex agricultural workflows, where missing steps, incorrect dependencies, or inappropriate tool choices lead to cascading execution errors. (Shinn et al., 2023;Gou et al., 2023;Madaan et al., 2023;Liu et al., 2023;Wang et al., 2022) As tool ecosystems grow, the challenge further shifts from simply invoking tools to reliably matching task requirements with tool capabilities. (Li et al., 2023b;Qin et al., 2023;Patil et al., 2024;Schick et al., 2023;Shen et al., 2023;Wang et al., 2024) We address these challenges by proposing AgriAgent, an agent framework for real-world agriculture built on Contract-Driven Planning and Capability-Aware Tool Orchestration. (Qin et al., 2023;Li et al., 2023a;Park et al., 2023;Wang et al., 2024) AgriAgent adopts a layered de-Figure 2: System 1 (Fast Path). Multimodal inputs are processed by AgriGPT, AgriGPT-VL, and AgriGPT-Omni, optionally augmented by RAG (dense, sparse, and graph paths). Independent reasoning results are fused by Synthesis and finalized through Aggregation to produce the QA output. This path avoids planning and tool orchestration, enabling fast and stable responses for simple agricultural queries.
+
+sign. (Kahneman, 2011) System-1 handles structurally simple queries with efficient and consistent understanding, while System-2 is responsible for executing complex long-chain tasks through iterative planning, verification, and tool coordination. (Shinn et al., 2023;Gou et al., 2023;Madaan et al., 2023;Liu et al., 2023;Xu et al., 2023a;Wei et al., 2022;Wu et al., 2024) At the core of System-2, we introduce contractdriven planning, which encodes task requirements, input-output constraints, and inter-step dependencies as explicit, verifiable contracts. (Meyer, 1997(Meyer, , 2002) ) This transforms planning correctness from an implicit assumption into a checkable property. (Meyer, 1997(Meyer, , 2002) ) In addition, we propose a capability-aware tool orchestration mechanism, where a unified ToolHub retrieves and composes tools based on explicit capability descriptions, (Li et al., 2023b;Qin et al., 2023;Patil et al., 2024;Schick et al., 2023;Shen et al., 2023;Wang et al., 2024;Park et al., 2023;Hong et al., 2023) and a ToolMaker dynamically constructs new tools when required, enabling robust execution in open and evolving environments. (Schick et al., 2023;Wu et al., 2023;Li et al., 2023a;Wu et al., 2024) Our main contributions are summarized as follows:
+
+• AgriAgent. We propose AgriAgent, the first layered agent framework in the agricultural domain designed for real-world task execution, which explicitly separates fast-path understanding from complex long-chain execution to support both efficient responses and structured decision-making.
+
+• Contract-Driven Planning. We introduce a contract-driven planning mechanism that represents agent execution as explicit and verifiable contracts, improving the controllability, consistency, and interpretability of complex multi-step task planning.
+
+• Capability-Aware Tool Orchestration. We propose a capability-aware tool orchestration framework that dynamically aligns task contracts with tool capabilities, enabling adaptive tool retrieval, composition, and on-demand tool construction in open agricultural environments.
+
+• Extensive Evaluation. Extensive experiments across diverse agricultural tasks demonstrate that AgriAgent consistently achieves improved robustness and execution reliability compared to strong agent-based baselines, with particularly clear advantages in longhorizon and tool-intensive scenarios.
+
+## 2. Related Work
+
+Agents in real-world agriculture. (Yang et al., 2025c,a,b), while agricultural autonomy has long relied on hierarchical and layered execution for long-term operation (Eiffert et al., 2022;Herron et al., 2025). AgriAgent follows this hierarchical tradition but introduces a router-based two-level execution to avoid over-processing simple requests and brittleness in complex tasks.
+
+Contract-driven planning. Hierarchical and anticipatory planning for agricultural robotics has been studied in scheduling, task allocation, and conditional decision frameworks (Pal et al., 2022;Chen et al., 2025;Khosravi et al., 2025), and LLM agents further enable multi-step reasoning via deliberative planning (Yao et al., 2022(Yao et al., , 2023;;Wang et al., 2023b). AgriAgent differs by enforcing explicit plan specifications and need contracts with debatebased refinement, preventing failures caused by implicit dependencies or missing constraints.
+
+Capability-aware tool orchestration. Toolaugmented LLMs are explored through tool learning and benchmarks (Schick et al., 2023;Patil et al., 2024;Qin et al., 2023;Xu et al., 2023b;Guo et al., 2024;Li et al., 2023b), while interactive and dynamic settings emphasize robustness, coordination, and recovery (Liu et al., 2023;Shridhar et al., 2020;Agyeman et al., 2025;Escribà-Gelonch et al., 2024;Yang et al., 2025d). AgriAgent treats tools as contract-governed capability providers, enabling need-first retrieval, verifiable composition, and reliable execution at scale.
+
+## 3. Method
+
+AgriAgent adopts a two-level agent architecture designed to accommodate the substantial heterogeneity of task complexity encountered in realworld agricultural scenarios. Instead of relying on a single execution paradigm, the system explicitly decomposes task execution into two complementary pathways: System 1, which handles tasks solvable through direct multimodal reasoning, and System 2, which targets complex tasks requiring structured planning, tool interaction, and verifiable execution. Upon receiving a task, AgriAgent first performs unified task understanding and routing, and then dynamically selects the appropriate execution pathway, enabling a balanced trade-off between efficiency, reliability, and extensibility.
+
+### 3.1. Task Definition and Routing
+
+Given a user instruction U , AgriAgent may additionally receive contextual information C, including crop type, geographic region, temporal scope, resource constraints, or policy conditions. The system further has access to a registered tool set T , external data or knowledge sources K, and an environment state S capturing historical execution traces or intermediate states.
+
+The overall objective of AgriAgent is to map these inputs to an executable and verifiable output:
+
+(U, C, T, K, S) → (P, τ, Y ),
+
+where P denotes a structured plan specification, τ represents tool execution traces, and Y is the final deliverable, such as a natural language response, an analytical report, a structured table, or executable instructions.
+
+At the system entry point, AgriAgent performs task routing based on semantic complexity and execution requirements. Tasks that can be resolved through single-step or weakly dependent reasoning, without explicit external capability invocation or verifiable intermediate outputs, are routed to System 1. Tasks involving multi-step dependencies, multi-source evidence integration, external tool usage, or execution traceability requirements are routed to System 2. By making the decision of whether to plan an explicit system-level operation, AgriAgent avoids the mismatch introduced by a uniform execution paradigm.
+
+### 3.2. System-1: Fast-path Multimodal Question Answering
+
+In real agricultural applications, many user queries do not require explicit action planning but involve heterogeneous inputs such as text, field images, and spoken instructions. Relying on a single omnimodal model in such settings often leads to unstable performance due to modality imbalance, knowledge inconsistency, or amplified noise. System-1 addresses this challenge through a system-level design that combines modality-specialized models with unified retrieval augmentation, achieving efficient and reliable multimodal understanding.
+
+Modality-Aware Processing and Model Collaboration. System-1 processes three input modal- Unified Retrieval-Augmented Reasoning. To ensure factual grounding, System-1 incorporates a unified Retrieval-Augmented Generation (RAG) mechanism shared across all modules. Three complementary retrieval paths are employed: dense retrieval for semantic relevance, sparse retrieval for precise keyword matching, and graph-based retrieval for structured or multi-hop relations. All retrieved evidence is consolidated into a shared context, enabling consistent knowledge access and alignment across modalities.
+
+Collaborative Answer Synthesis. Based on modality-specific interpretations and retrieved evidence, System-1 adopts a collaborative chain-based reasoning strategy. Each module produces intermediate semantic judgments grounded in its respective modality, which are subsequently fused by AgriGPT-Omni to generate the final answer.
+
+### 3.3. System 2: Contract-Driven Structured Planning and Execution
+
+System 2 addresses complex tasks that require multi-step decision-making, integration of heterogeneous evidence, interaction with external tools, and explicit control over execution and verification. Its core principle is to decouple task requirements from concrete tool implementations through structured representations and capability contracts.
+
+#### 3.3.1. Structured Plan Specification
+
+In System 2, each task is first represented as a structured plan specification in the form of a Directed Acyclic Graph (DAG):
+
+P = (V, E),
+
+where each node v i ∈ V corresponds to an atomic execution unit, and each edge e ij ∈ E denotes a dependency between nodes. Each node is formalized as:
+
+v i = ⟨g i , I i , O i , C i , E i ⟩,
+
+where g i denotes the local goal, I i and O i denote required inputs and expected outputs, C i represents execution constraints (e.g., format, scope, or policy requirements), and E i specifies evidence or verification requirements. This explicit representation transforms implicit multi-step reasoning into a manipulable and inspectable structure, enabling systematic planning refinement, execution control, and error localization.
+
+#### 3.3.2. Need Contracts
+
+To bridge structured plans and executable capabilities, System 2 associates each plan node with a need contract. A need contract abstracts execution requirements at the capability level rather than binding them to specific tools:
+
+c i = ⟨cap i , S in i , S out i , pre i , con i , q i ⟩,
+
+where cap i specifies the required capability, S in i and S out i define input and output schemas, pre i denotes preconditions, con i denotes execution constraints, and q i specifies quality or success criteria.
+
+By explicitly separating what capability is required from how it is implemented, need contracts enable flexible tool selection, substitution, and extension under changing tool availability.
+
+#### 3.3.3. Debate-Based Plan Generation and Refinement
+
+Initial plan specifications are generated independently by multiple supervisor agents employing diverse reasoning preferences. These candidate plans are subsequently refined through an iterative debate process consisting of critique, defense, and revision phases. During critique, supervisors identify missing steps, redundant nodes, inconsistent dependencies, or implicit assumptions. In the defense phase, existing design choices are evaluated against constraints and feasibility considerations. The revision phase applies explicit structural edits to the DAG, including node insertion, replacement, wrapping, or removal. After multiple iterations, the system selects or merges plans to obtain a structurally consistent and executable specification. This process surfaces planning assumptions early and reduces the propagation of structural errors into execution.
+
+-v3.1 react - - - - - - - - - - - - plan-and-execute - - - - - - - - - - - - ours-w/o-fb - - - - - - - - - - - -
+
+Employee-ToolHub Negotiation. In AgriAgent, tools are not invoked directly by the agent. Instead, the Employee negotiates with the ToolHub by declaring an explicit tool need, receiving candidate input requirements, and confirming a contract that binds all required inputs and capability constraints. Only after contract confirmation is the tool executed and its outcome returned to the Employee for subsequent steps.
+
+#### 3.3.4. Tool Hub and Dual-Protocol Tool Matching
+
+System 2 manages tools through a centralized Tool Hub, where each tool is registered via a tool card specifying its capabilities, input/output schemas, preconditions, constraints, reliability signals, and provenance. Tool matching is governed by two complementary protocols:
+
+• Tool Description Index (TDI): retrieves candidate tools by matching required capabilities in need contracts against tool metadata embeddings, producing a capability-consistent candidate set. Hit@1 Hit@3 Hit@5 Hit@1 Hit@3 Hit@5 Hit@1 Hit@3 Hit@5 Hit@1 Hit@3 Hit@5 Hit@1 Hit@3 Hit@5 Hit@1 Hit@3 Hit@5 Qwen2.5-7B 0.896 1.000 1.000 0.940 0.940 0.940 0.865 1.000 1.000 0.833 1.000 1.000 0.907 0.907 0.907 0.766 0.766 0.766
+
+### Qwen3-8B
+
+top-k-prompt 1.000 1.000 1.000 0.778 0.778 0.778 1.000 1.000 1.000 0.778 0.778 0.778 0.240 0.240 0.240 0.103 0.103 0.103 all-in-prompt 0.917 0.917 0.917 0.611 0.667 0.667 0.906 0.906 0.906 0.528 0.528 0.528 -----toolhub 0.9375 1.000 1.000 1.000 1.000 1.000 0.927 1.000 1.000 0.917 1.000 1.000 0.900 0.907 0.907 0.754 0.754 0.754
+
+LLaMA3-8B top-k-prompt 0.021 0.021 0.021 0.444 0.500 0.500 0.073 0.073 0.073 0.222 0.222 0.222 0.107 0.120 0.120 0.036 0.040 0.040 toolhub 0.9375 0.958 0.958 1.000 1.000 1.000 0.875 0.917 0.917 0.833 1.000 1.000 0.913 0.913 0.913 0.813 0.813 0.813
+
+### Agrigpt-8B
+
+top-k-prompt 1.000 1.000 1.000 0.889 0.889 0.889 1.000 1.000 1.000 0.833 0.833 0.833 0.233 0.233 0.233 0.1032 0.1032 0.1032 all-in-prompt 0.917 0.917 0.917 0.889 0.889 0.889 0.906 0.906 0.906 0.583 0.583 0.583 -----toolhub 0.958 1.000 1.000 1.000 1.000 1.000 0.9375 1.000 1.000 0.833 1.000 1.000 0.907 0.907 0.907 0.754 0.754 0.754
+
+Qwen2.5-14B top-k-prompt 0.708 0.792 0.792 0.944 1.000 1.000 0.771 0.896 0.896 0.889 0.889 0.889 0.353 0.353 0.353 0.698 0.702 0.702 all-in-prompt 0.146 0.250 0.250 0.667 0.667 0.667 0.104 0.156 0.156 0.694 0.694 0.694 -----toolhub 0.958 1.000 1.000 1.000 1.000 1.000 0.917 1.000 1.000 0.833 1.000 1.000 0.907 0.907 0.907 0.770 0.770 0.770
+
+### Qwen3-32B
+
+top-k-prompt 1.000 1.000 1.000 1.000 1.000 1.000 0.948 0.948 0.948 0.833 0.861 0.861 0.320 0.320 0.320 0.571 0.571 0.571 all-in-prompt 0.458 0.479 0.479 0.722 0.722 0.722 0.490 0.490 0.510 0.583 0.583 0.583 -----toolhub 0.958 1.000 1.000 0.889 1.000 1.000 0.9375 1.000 1.000 0.833 1.000 1.000 0.907 0.907 0.907 0.766 0.766 0.766
+
+Table 2: Tool selection performance under different tool scales and invocation settings. We compare ToolHub with prompt-based baselines under single-step and multi-step (chain) tool invocation.
+
+By decoupling capability matching from schemalevel composition, TDI and TOCI together enable capability-aware orchestration without reliance on fixed tool names or hard-coded pipelines. This design supports scalable tool selection under large and evolving tool inventories, while allowing thirdparty tools to be integrated with minimal assumptions.
+
+#### 3.3.5. Dynamic Tool Generation
+
+When no existing tool satisfies a given need contract, or when candidate tools repeatedly fail during execution or verification, System 2 activates a Tool Maker module. Tool Maker derives a tool specification directly from the unmet contract, generates an implementation, validates it through automated testing, and registers it back into the Tool Hub.
+
+This mechanism converts capability gaps into verifiable executable modules, enabling the system to adapt to incomplete or evolving tool ecosystems rather than relying on speculative reasoning.
+
+#### 3.3.6. Execution, Verification, and Evidence Aggregation
+
+The finalized plan is executed following the DAG dependencies. Each execution step enforces schema validation and contract consistency checks, while recording tool invocation traces and intermediate outputs. Evidence is aggregated along dependency paths to produce a structured final output accompanied by provenance information. By tightly coupling execution with verification and evidence aggregation, System 2 delivers results that are not only correct but also auditable, reproducible, and suitable for iterative refinement.
+
+## 4. Results
+
+### 4.1. Metrics
+
+We evaluate AgriAgent using both programmatic metrics and LLM-based metrics, targeting complementary aspects of execution correctness and semantic task fulfillment.
+
+Programmatic metrics. Programmatic metrics are computed deterministically from the final execution results. Presence Coverage measures whether all required fields specified in the need contracts are instantiated in the final output. Rule Citation checks whether required business or operational rules are explicitly referenced. Evidence Presence verifies whether claims are supported by retrieved or tool-generated evidence. Normalization via Business Rules evaluates whether outputs conform to predefined schema and normalization constraints.
+
+LLM-based metrics. LLM-based metrics assess semantic task completion and reasoning quality using a fixed judge model. These metrics serve as approximate proxies and do not replace human evaluation.
+
+Non-Zero evaluation. For methods that may produce empty or degenerate outputs, we additionally report LLM (Non-Zero), which computes the same LLM-based metrics only on non-empty outputs to diagnose robustness independently of execution failures. Evaluation Datasets. System-1 is evaluated on the AgriGPT-Omni dataset (Yang et al., 2025b) for multimodal agricultural question answering, while System-2 is evaluated on a separately constructed dataset of 1,000 complex agricultural tasks.
+
+### 4.2. System-1 Results
+
+We evaluate System-1 on fast-path multimodal question answering in agricultural scenarios, comparing it with single omni-model reasoning strategies based on Chain-of-Thought (CoT) (Wei et al., 2022) and Tree-of-Thought (ToT) (Yao et al., 2023). As shown in Table 3, experiments cover multiple model scales, including AgriGPT and Qwen omni models. For each setting, we compare single-model CoT/ToT reasoning with System-1 (Ours), which integrates text, vision, and omni-modal models via coordinated reasoning. All methods share the same RAG mechanism to ensure fair comparison.
+
+Results show that System-1 consistently outperforms CoT and ToT across all model scales, with larger gains on smaller and medium-sized models. This suggests that improvements stem from modality-specialized collaboration and shared retrieval grounding, rather than increased reasoning depth within a single model.
+
+### 4.3. System-2 Results
+
+System-2 targets complex multi-step agricultural tasks. We evaluate it on: (i) contract-driven planning effectiveness, (ii) ToolHub tool selection under scaling, and (iii) ToolMaker reliability.
+
+Contract-Driven Planning. Table 1 shows our contract-driven planning consistently outperforms react and plan-and-execute across model families. Gains hold for both programmatic metrics (rule citation, evidence presence, business-rule normalization) and LLM-based metrics, indicating that executable contracts reduce structurally invalid yet fluent plans. Consistent improvements on generalpurpose and domain models suggest the benefit comes from the framework rather than modelspecific capability.
+
+ToolHub for Capability-Aware Orchestration. Table 2 compares tool selection under different tool scales and single/chain invocation. Prompt baselines (all-in-prompt, top-k) degrade sharply as the tool pool grows, especially in the 506-tool unbounded setting evolved from ToolHop (Ye et al., 2025). ToolHub keeps stable Hit@1/3/5 across scales and models, with larger gains in chain invocation, where capability modeling and contract constraints matter for composing dependent tools.
+
+ToolMaker Reliability. Table 4 reports 380/392 successful tool generations (96.94%). Failures are mainly due to external environment constraints rather than planning/contract violations, showing dynamic tool construction is feasible and reliable when guided by explicit contracts and capability specs.
+
+## 5. Conclusion
+
+We introduce AgriAgent, a layered agent system for real-world agriculture. System-1 handles fast-path multimodal question answering, while System-2 executes complex tasks via contract-driven planning and capability-aware tool orchestration. By formalizing task requirements as verifiable contracts, AgriAgent enables reliable tool selection, composition, and dynamic tool generation in highconstraint environments.
+
+### Limitations
+
+• Computational and interaction overhead in long-horizon tasks. For complex longhorizon tasks, System-2 requires multiple rounds of planning, contract verification, and tool invocation, which introduce additional computational cost and interaction latency. While this design improves execution reliability and structural correctness, it may be less suitable for scenarios with strict real-time requirements, where further trade-offs between efficiency and robustness are necessary.
+
+• Dependence on structured output contracts and schema adherence. Contract-driven planning relies on models' ability to consistently follow predefined output schemas and key structures. When using smaller or less capable models, deviations from the expected formats may affect contract parsing and downstream execution. Improving robustness to format variations remains an important direction for future work.
+
+• Scope of tool construction in ToolMaker.
+
+ToolMaker currently focuses on generalpurpose tool construction, including requirement confirmation, tool generation, validation, and registration. While effective for many practical scenarios, it is not explicitly optimized for synthesizing highly complex or domain-specific tools, which may require more advanced generation and verification pipelines.
+
+## Figures et tableaux
+
+**Figure 1:** A Router first analyzes the user query and routes it by task complexity. Simple queries are sent to System 1 for fast-path QA without planning or tool use. Complex tasks are routed to System 2 for contractdriven planning and tool execution.
+
+**Figure 3:** System 2 (Complex Task Path). The plan/spec is refined through Supervisor Debate (critique-defendrevise) to fix structural errors and missing dependencies. Each plan node is then assigned a need contract in the Negotiation stage. Based on these contracts, the Tool Hub retrieves and composes tools from the Tool Pool via TDI/TOCI, while the Tool Maker generates new tools when required. Execution is validated to produce a verifiable result.
+
+**Figure 4:** Multi-agent roundtable discussion following by critique-defend-revise. An initial plan skeleton is generated in Stage 0 (Plan). In Stage 1 (Critique), a supervisor identifies missing, redundant, or invalid nodes.Stage 2 (Defend) justifies necessary components and resolves disagreements. Stage 3 (Revise) applies explicit edits (insert, replace, wrap, remove) to produce an executable plan, which is then passed to downstream tool orchestration.
+
+**Table 3:** Comparison of single-model reasoning and multi-modal fusion. Score denotes averaged task completion accuracy on multimodal QA tasks.
+
+    Component Attempts Succeeded Failed | Rate
+    ToolMaker | 392 | 380 | 12 | 0.9694
+
+**Table 4:** ToolMaker execution statistics in System-2.

@@ -1,0 +1,50 @@
+{
+  "id": "2019-santiago-integrated-pest-management-manual-greenhouses",
+  "title": "Integrated Pest Management Manual for Greenhouses",
+  "authors": [
+    {
+      "given": "Evy Z",
+      "family": "Santiago"
+    },
+    {
+      "given": "Jeff",
+      "family": "Whitworth"
+    },
+    {
+      "given": "Schwarting-Kansas",
+      "family": "Holly"
+    },
+    {
+      "given": null,
+      "family": "Santiago"
+    }
+  ],
+  "year": 2019,
+  "venue": "University of Nebraska–Lincoln, Master's report (Entomology distance program)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "report",
+  "axes": [
+    "crop-practices"
+  ],
+  "tags": [
+    "ipm",
+    "pests",
+    "biocontrol",
+    "greenhouse"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues à l'extraction : 7 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

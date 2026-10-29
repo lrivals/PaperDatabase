@@ -1,0 +1,69 @@
+{
+  "id": "2020-moin-eddin-rezvani-iot-sensor-data-fusion-determining",
+  "title": "IoT-Based Sensor Data Fusion for Determining Optimality Degrees of Microclimate Parameters in Commercial Greenhouse Production of Tomato",
+  "authors": [
+    {
+      "given": "Sayed",
+      "family": "Moin-Eddin Rezvani"
+    },
+    {
+      "given": "Hamid",
+      "family": "Zare Abyaneh"
+    },
+    {
+      "given": "Redmond R",
+      "family": "Shamshiri"
+    },
+    {
+      "given": "Siva K",
+      "family": "Balasundram"
+    },
+    {
+      "given": "Volker",
+      "family": "Dworak"
+    },
+    {
+      "given": "Mohsen",
+      "family": "Goodarzi"
+    },
+    {
+      "given": "Muhammad",
+      "family": "Sultan"
+    },
+    {
+      "given": "Benjamin",
+      "family": "Mahns"
+    }
+  ],
+  "year": 2020,
+  "venue": "Sensors",
+  "doi": "10.3390/s20226474",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s20226474",
+  "type": "journal",
+  "axes": [
+    "calibration-decision",
+    "growth",
+    "iot-greenhouse",
+    "crop-practices"
+  ],
+  "tags": [
+    "calibration",
+    "tomato",
+    "lora",
+    "vpd"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "type de publication à préciser",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

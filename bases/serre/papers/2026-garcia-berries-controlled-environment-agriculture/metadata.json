@@ -1,0 +1,36 @@
+{
+  "id": "2026-garcia-berries-controlled-environment-agriculture",
+  "title": "Berries in CEA: production, nutrient requirement and irrigation (short-course slides)",
+  "authors": [
+    {
+      "given": "Karla",
+      "family": "Garcia"
+    }
+  ],
+  "year": 2026,
+  "venue": "University of Arizona CEAC, short course (slides)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "report",
+  "axes": [
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "strawberry",
+    "hydroponics"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

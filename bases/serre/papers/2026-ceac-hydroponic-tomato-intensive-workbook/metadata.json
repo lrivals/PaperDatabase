@@ -1,0 +1,33 @@
+{
+  "id": "2026-ceac-hydroponic-tomato-intensive-workbook",
+  "title": "Hydroponic Tomato Production Intensive Workbook 2026",
+  "authors": [
+    {
+      "given": "",
+      "family": "UA-CEAC"
+    }
+  ],
+  "year": 2026,
+  "venue": "University of Arizona Controlled Environment Agriculture Center, workshop workbook",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "report",
+  "axes": [
+    "crop-practices"
+  ],
+  "tags": [],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "premier auteur inconnu : paper_id construit avec 'unknown'",
+      "tableaux de recettes et tableau 2 non extraits (texte ~6 ko pour 25 pages) : relecture manuelle du PDF requise"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

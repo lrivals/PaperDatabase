@@ -1,0 +1,41 @@
+{
+  "id": "2018-walters-effects-nutrient-solution-concentration-daily",
+  "title": "Effects of Nutrient Solution Concentration and Daily Light Integral on Growth and Nutrient Concentration of Several Basil Species in Hydroponic Production",
+  "authors": [
+    {
+      "given": "Kellie J",
+      "family": "Walters"
+    },
+    {
+      "given": "Christopher J",
+      "family": "Currey"
+    }
+  ],
+  "year": 2018,
+  "venue": "HortScience 53(9), 1319–1325",
+  "doi": "10.21273/HORTSCI13126-18",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.21273/HORTSCI13126-18",
+  "type": "journal",
+  "axes": [
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "hydroponics",
+    "basil",
+    "EC",
+    "DLI",
+    "NFT"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

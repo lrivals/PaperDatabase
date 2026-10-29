@@ -1,0 +1,338 @@
+{
+ "bench_fps_power": {
+  "file": "bench_fps_power.png",
+  "group": "bench",
+  "description": "débit vs puissance, détection / autres tâches",
+  "generated": "2026-10-29T21:53:32",
+  "config_hash": "d9ea53bf4f",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 12,
+  "total": 32
+ },
+ "bench_gops_per_watt": {
+  "group": "bench",
+  "description": "GOPS/W par précision de calcul",
+  "skipped": "aucune ligne de benchmarks.csv avec gops et power_w chiffrés",
+  "checked": 1793307212.524198,
+  "config_hash": "d9ea53bf4f"
+ },
+ "bench_fpga_resources": {
+  "group": "bench",
+  "description": "LUT vs DSP des FPGA, par toolflow",
+  "skipped": "aucune ligne de benchmarks.csv avec plateforme FPGA, luts et dsps chiffrés",
+  "checked": 1793307212.5242894,
+  "config_hash": "d9ea53bf4f"
+ },
+ "bench_accuracy_fps": {
+  "group": "bench",
+  "description": "précision vs débit, un panneau par métrique",
+  "skipped": "aucune ligne de benchmarks.csv avec accuracy_value et fps chiffrés pour une même métrique (4 lignes au moins)",
+  "checked": 1793307212.5245204,
+  "config_hash": "d9ea53bf4f"
+ },
+ "bench_accuracy_latency": {
+  "group": "bench",
+  "description": "précision vs latence, un panneau par métrique",
+  "skipped": "aucune ligne de benchmarks.csv avec accuracy_value et latency_ms chiffrés pour une même métrique (3 lignes au moins)",
+  "checked": 1793307212.524603,
+  "config_hash": "d9ea53bf4f"
+ },
+ "bench_quantization": {
+  "file": "bench_quantization.png",
+  "group": "bench",
+  "description": "précision de calcul par famille de plateforme",
+  "generated": "2026-10-29T21:53:32",
+  "config_hash": "d9ea53bf4f",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 32,
+  "total": 32
+ },
+ "eval_retrieval": {
+  "group": "eval",
+  "description": "recall@5/@10 et MRR par mode et jeu de questions",
+  "skipped": "aucun run de pdb eval ne contient le volet rag (lancer bin/pdb eval --save)",
+  "checked": 1793307212.8187144,
+  "config_hash": "d9ea53bf4f"
+ },
+ "eval_verify": {
+  "group": "eval",
+  "description": "verdicts de pdb verify par perturbation",
+  "skipped": "aucun run de pdb eval ne contient le volet rag (lancer bin/pdb eval --save)",
+  "checked": 1793307212.818725,
+  "config_hash": "d9ea53bf4f"
+ },
+ "eval_extraction": {
+  "group": "eval",
+  "description": "couverture du texte et tableaux, par papier",
+  "skipped": "aucun run de pdb eval ne contient le volet extraction (lancer bin/pdb eval --save)",
+  "checked": 1793307212.818732,
+  "config_hash": "d9ea53bf4f"
+ },
+ "eval_latency": {
+  "group": "eval",
+  "description": "temps d'exécution (recherche, verify, CLI)",
+  "skipped": "aucun run de pdb eval ne contient le volet speed (lancer bin/pdb eval --save)",
+  "checked": 1793307212.8187366,
+  "config_hash": "d9ea53bf4f"
+ },
+ "eval_history": {
+  "group": "eval",
+  "description": "évolution des métriques au fil des runs",
+  "skipped": "moins de deux runs de pdb eval : pas d'historique à tracer",
+  "checked": 1793307212.8187487,
+  "config_hash": "d9ea53bf4f"
+ },
+ "corpus_years": {
+  "file": "corpus_years.png",
+  "group": "corpus",
+  "description": "papiers par année et type",
+  "generated": "2026-10-29T22:20:03",
+  "config_hash": "d9ea53bf4f",
+  "sources": [
+   "papers/*/metadata.json"
+  ],
+  "n": 67
+ },
+ "corpus_axes": {
+  "file": "corpus_axes.png",
+  "group": "corpus",
+  "description": "papiers par axe, fiches done / todo",
+  "generated": "2026-10-29T22:20:03",
+  "config_hash": "d9ea53bf4f",
+  "sources": [
+   "papers/*/metadata.json"
+  ],
+  "n": 67
+ },
+ "corpus_bench_coverage": {
+  "file": "corpus_bench_coverage.png",
+  "group": "corpus",
+  "description": "part de n/r, power_scope, confidence",
+  "generated": "2026-10-29T22:20:04",
+  "config_hash": "d9ea53bf4f",
+  "sources": [
+   "benchmarks.csv"
+  ],
+  "n": 32
+ },
+ "corpus_citations": {
+  "file": "corpus_citations.png",
+  "group": "corpus",
+  "description": "papiers les plus cités, dans et hors base",
+  "generated": "2026-10-29T22:20:07",
+  "config_hash": "d9ea53bf4f",
+  "sources": [
+   "papers/*/refs.jsonl",
+   "external_refs.csv"
+  ],
+  "n_internal": 15,
+  "n_external": 15
+ },
+ "corpus_gaps": {
+  "file": "corpus_gaps.png",
+  "group": "corpus",
+  "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
+  "generated": "2026-10-29T22:20:07",
+  "config_hash": "d9ea53bf4f",
+  "sources": [
+   "benchmarks.csv",
+   "papers/*/metadata.json"
+  ],
+  "zeros_axis": [
+   [
+    "GPU embarqué",
+    "disease-classif"
+   ],
+   [
+    "GPU embarqué",
+    "domain-shift"
+   ],
+   [
+    "GPU embarqué",
+    "calibration-decision"
+   ],
+   [
+    "GPU embarqué",
+    "leaf-detection"
+   ],
+   [
+    "GPU embarqué",
+    "anomaly"
+   ],
+   [
+    "GPU embarqué",
+    "growth"
+   ],
+   [
+    "GPU embarqué",
+    "active-labelling"
+   ],
+   [
+    "GPU embarqué",
+    "iot-greenhouse"
+   ],
+   [
+    "GPU embarqué",
+    "climate-control"
+   ],
+   [
+    "GPU embarqué",
+    "forecasting"
+   ],
+   [
+    "GPU embarqué",
+    "llm-agent"
+   ],
+   [
+    "GPU embarqué",
+    "crop-practices"
+   ],
+   [
+    "NPU / VPU",
+    "disease-classif"
+   ],
+   [
+    "NPU / VPU",
+    "domain-shift"
+   ],
+   [
+    "NPU / VPU",
+    "calibration-decision"
+   ],
+   [
+    "NPU / VPU",
+    "leaf-detection"
+   ],
+   [
+    "NPU / VPU",
+    "anomaly"
+   ],
+   [
+    "NPU / VPU",
+    "growth"
+   ],
+   [
+    "NPU / VPU",
+    "active-labelling"
+   ],
+   [
+    "NPU / VPU",
+    "iot-greenhouse"
+   ],
+   [
+    "NPU / VPU",
+    "climate-control"
+   ],
+   [
+    "NPU / VPU",
+    "forecasting"
+   ],
+   [
+    "NPU / VPU",
+    "llm-agent"
+   ],
+   [
+    "NPU / VPU",
+    "crop-practices"
+   ],
+   [
+    "plateforme non rapportée",
+    "disease-classif"
+   ],
+   [
+    "plateforme non rapportée",
+    "domain-shift"
+   ],
+   [
+    "plateforme non rapportée",
+    "leaf-detection"
+   ],
+   [
+    "plateforme non rapportée",
+    "anomaly"
+   ],
+   [
+    "plateforme non rapportée",
+    "growth"
+   ],
+   [
+    "plateforme non rapportée",
+    "edge-inference"
+   ],
+   [
+    "plateforme non rapportée",
+    "iot-greenhouse"
+   ],
+   [
+    "plateforme non rapportée",
+    "climate-control"
+   ],
+   [
+    "plateforme non rapportée",
+    "forecasting"
+   ],
+   [
+    "plateforme non rapportée",
+    "llm-agent"
+   ],
+   [
+    "plateforme non rapportée",
+    "crop-practices"
+   ]
+  ],
+  "zeros_task": [
+   [
+    "GPU embarqué",
+    "classification"
+   ],
+   [
+    "GPU embarqué",
+    "anomalie"
+   ],
+   [
+    "GPU embarqué",
+    "compression / AE"
+   ],
+   [
+    "GPU embarqué",
+    "apprentissage continu"
+   ],
+   [
+    "NPU / VPU",
+    "classification"
+   ],
+   [
+    "NPU / VPU",
+    "anomalie"
+   ],
+   [
+    "NPU / VPU",
+    "compression / AE"
+   ],
+   [
+    "NPU / VPU",
+    "apprentissage continu"
+   ],
+   [
+    "plateforme non rapportée",
+    "classification"
+   ],
+   [
+    "plateforme non rapportée",
+    "anomalie"
+   ],
+   [
+    "plateforme non rapportée",
+    "compression / AE"
+   ],
+   [
+    "plateforme non rapportée",
+    "apprentissage continu"
+   ]
+  ]
+ }
+}

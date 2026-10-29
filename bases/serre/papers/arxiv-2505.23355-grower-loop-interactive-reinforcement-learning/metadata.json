@@ -1,0 +1,55 @@
+{
+  "id": "arxiv-2505.23355-grower-loop-interactive-reinforcement-learning",
+  "title": "Grower-in-the-Loop Interactive Reinforcement Learning for Greenhouse Climate Control",
+  "authors": [
+    {
+      "given": "Maxiu",
+      "family": "Xiao"
+    },
+    {
+      "given": "Jianglin",
+      "family": "Lan"
+    },
+    {
+      "given": "Jingxin",
+      "family": "Yu"
+    },
+    {
+      "given": "Weihong",
+      "family": "Ma"
+    },
+    {
+      "given": "Qiuju",
+      "family": "Xie"
+    },
+    {
+      "given": "Congcong",
+      "family": "Sun"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2505.23355",
+  "url": "https://arxiv.org/abs/2505.23355",
+  "type": "preprint",
+  "axes": [
+    "climate-control"
+  ],
+  "tags": [
+    "rl"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 3, Table 6, Table 10"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

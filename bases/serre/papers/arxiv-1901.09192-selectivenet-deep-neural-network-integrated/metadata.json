@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-1901.09192-selectivenet-deep-neural-network-integrated",
+  "title": "SelectiveNet: A Deep Neural Network with an Integrated Reject Option",
+  "authors": [
+    {
+      "given": "Yonatan",
+      "family": "Geifman"
+    },
+    {
+      "given": "Ran",
+      "family": "El-Yaniv"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1901.09192",
+  "url": "https://arxiv.org/abs/1901.09192",
+  "type": "preprint",
+  "axes": [
+    "calibration-decision"
+  ],
+  "tags": [
+    "selective-prediction",
+    "reject-option",
+    "risk-coverage",
+    "calibration",
+    "softmax-response",
+    "mc-dropout"
+  ],
+  "added": "2026-10-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 4, Table 6"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "imported_from": {
+    "base": "fpga",
+    "paper_id": "arxiv-1901.09192-selectivenet-deep-neural-network-integrated",
+    "date": "2026-10-29",
+    "fiche": "done",
+    "axes": [
+      "failure-prediction"
+    ]
+  }
+}

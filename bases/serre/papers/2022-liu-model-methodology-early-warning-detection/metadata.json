@@ -1,0 +1,51 @@
+{
+  "id": "2022-liu-model-methodology-early-warning-detection",
+  "title": "A model-based methodology for the early warning detection of cucumber downy mildew in greenhouses: An experimental evaluation",
+  "authors": [
+    {
+      "given": "Ran",
+      "family": "Liu"
+    },
+    {
+      "given": "Hui",
+      "family": "Wang"
+    },
+    {
+      "given": "José Luis",
+      "family": "Guzmán"
+    },
+    {
+      "given": "Ming",
+      "family": "Li"
+    }
+  ],
+  "year": 2022,
+  "venue": "Computers and Electronics in Agriculture",
+  "doi": "10.1016/j.compag.2022.106751",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1016/j.compag.2022.106751",
+  "type": "journal",
+  "axes": [
+    "crop-practices",
+    "climate-control",
+    "forecasting"
+  ],
+  "tags": [
+    "downy-mildew",
+    "early-warning",
+    "leaf-wetness",
+    "cucumber",
+    "greenhouse-climate-model",
+    "weather-forecast"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

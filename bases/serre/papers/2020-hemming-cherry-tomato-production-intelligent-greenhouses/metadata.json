@@ -1,0 +1,58 @@
+{
+  "id": "2020-hemming-cherry-tomato-production-intelligent-greenhouses",
+  "title": "Cherry Tomato Production in Intelligent Greenhouses-Sensors and AI for Control of Climate, Irrigation, Crop Yield, and Quality",
+  "authors": [
+    {
+      "given": "Silke",
+      "family": "Hemming"
+    },
+    {
+      "given": "Feije",
+      "family": "De Zwart"
+    },
+    {
+      "given": "Anne",
+      "family": "Elings"
+    },
+    {
+      "given": "Anna",
+      "family": "Petropoulou"
+    },
+    {
+      "given": "Isabella",
+      "family": "Righini"
+    }
+  ],
+  "year": 2020,
+  "venue": "Sensors",
+  "doi": "10.3390/s20226430",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s20226430",
+  "type": "journal",
+  "axes": [
+    "climate-control",
+    "crop-practices",
+    "iot-greenhouse"
+  ],
+  "tags": [
+    "MPC",
+    "autonomous-greenhouse-challenge",
+    "background",
+    "cherry-tomato",
+    "digital-twin",
+    "tomato"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1",
+      "tableaux sans corps extrait (légende seule) : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

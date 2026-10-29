@@ -1,0 +1,48 @@
+{
+  "id": "2020-miller-maximizing-productivity-greenhouse-grown-hydroponic",
+  "title": "Maximizing Productivity of Greenhouse-grown Hydroponic Lettuce during Winter",
+  "authors": [
+    {
+      "given": "Alexander",
+      "family": "Miller"
+    },
+    {
+      "given": "Petrus",
+      "family": "Langenhoven"
+    },
+    {
+      "given": "Krishna",
+      "family": "Nemali"
+    }
+  ],
+  "year": 2020,
+  "venue": "HortScience 55(12), 1963–1969",
+  "doi": "10.21273/HORTSCI15351-20",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.21273/HORTSCI15351-20",
+  "type": "journal",
+  "axes": [
+    "growth",
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "lettuce",
+    "hydroponics",
+    "supplemental-lighting",
+    "root-zone-heating",
+    "winter"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

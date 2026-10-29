@@ -1,0 +1,53 @@
+{
+  "id": "2016-depardieu-sawdust-bark-substrates-soilless-strawberry",
+  "title": "Sawdust and Bark-Based Substrates for Soilless Strawberry Production: Irrigation and Electrical Conductivity Management",
+  "authors": [
+    {
+      "given": "Claire",
+      "family": "Depardieu"
+    },
+    {
+      "given": "Valérie",
+      "family": "Prémont"
+    },
+    {
+      "given": "Carole",
+      "family": "Boily"
+    },
+    {
+      "given": "Jean",
+      "family": "Caron"
+    }
+  ],
+  "year": 2016,
+  "venue": "PLOS ONE 11(4), e0154104",
+  "doi": "10.1371/journal.pone.0154104",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1371/journal.pone.0154104",
+  "type": "journal",
+  "axes": [
+    "growth",
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "strawberry",
+    "soilless",
+    "irrigation",
+    "substrate",
+    "EC"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues à l'extraction : 4 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 4 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

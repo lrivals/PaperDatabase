@@ -1,0 +1,43 @@
+{
+  "id": "arxiv-2410.05336-greenlight-gym-reinforcement-learning-benchmark",
+  "title": "GreenLight-Gym: Reinforcement learning benchmark environment for control of greenhouse production systems",
+  "authors": [
+    {
+      "given": "Bart",
+      "family": "Van Laatum"
+    },
+    {
+      "given": "Eldert J",
+      "family": "Van Henten"
+    },
+    {
+      "given": "Sjoerd",
+      "family": "Boersma"
+    }
+  ],
+  "year": 2024,
+  "venue": "IFAC-PapersOnLine 59 (23), (2025), 437-442",
+  "doi": "10.1016/j.ifacol.2025.11.827",
+  "arxiv_id": "2410.05336",
+  "url": "https://arxiv.org/abs/2410.05336",
+  "type": null,
+  "axes": [
+    "climate-control"
+  ],
+  "tags": [
+    "rl"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "publié ailleurs selon arXiv (journal_ref : IFAC-PapersOnLine 59 (23), (2025), 437-442) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

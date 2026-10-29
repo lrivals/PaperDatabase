@@ -29,19 +29,20 @@
     "calibration-decision"
   ],
   "tags": [
-    "calibration"
+    "calibration",
+    "temperature-scaling",
+    "ece"
   ],
   "added": "2026-10-19",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -1,0 +1,42 @@
+{
+  "id": "2023-ertle-reduced-daily-light-integral-end",
+  "title": "Reduced Daily Light Integral at the End of Production Can Delay Tipburn Incidence with a Yield Penalty in Indoor Lettuce Production",
+  "authors": [
+    {
+      "given": "John",
+      "family": "Ertle"
+    },
+    {
+      "given": "Chieri",
+      "family": "Kubota"
+    }
+  ],
+  "year": 2023,
+  "venue": "HortScience 58(10), 1217–1225",
+  "doi": "10.21273/HORTSCI17314-23",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.21273/HORTSCI17314-23",
+  "type": "journal",
+  "axes": [
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "lettuce",
+    "hydroponics",
+    "tipburn",
+    "daily-light-integral"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

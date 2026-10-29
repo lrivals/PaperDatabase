@@ -1,0 +1,40 @@
+{
+  "id": "1990-hochmuth-fertilizer-management-greenhouse-vegetables-florida",
+  "title": "Fertilizer Management for Greenhouse Vegetables-Florida Greenhouse Vegetable Production Handbook, Vol 3 1",
+  "authors": [
+    {
+      "given": "G J",
+      "family": "Hochmuth"
+    }
+  ],
+  "year": 1990,
+  "venue": "UF/IFAS EDIS HS787, Florida Greenhouse Vegetable Production Handbook vol. 3 (extension ; 1re édition 1990, version révisée citée « January 2012 » dans le texte)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "report",
+  "axes": [
+    "crop-practices"
+  ],
+  "tags": [
+    "nutrition",
+    "fertigation",
+    "pH-EC",
+    "tomate",
+    "NFT",
+    "grey-literature"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues : 3 fragment(s) non réparé(s) (« classi cation »…)",
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 3, Table 4, Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

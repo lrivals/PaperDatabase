@@ -1,0 +1,61 @@
+{
+  "id": "2026-fanourakis-climate-driven-pest-disease-dynamics",
+  "title": "Climate-Driven Pest and Disease Dynamics in Greenhouse Vegetables: A Review",
+  "authors": [
+    {
+      "given": "Dimitrios",
+      "family": "Fanourakis"
+    },
+    {
+      "given": "Theodora",
+      "family": "Makraki"
+    },
+    {
+      "given": "Theodora",
+      "family": "Ntanasi"
+    },
+    {
+      "given": "Evangelos",
+      "family": "Giannothanasis"
+    },
+    {
+      "given": "Georgios",
+      "family": "Tsaniklidis"
+    },
+    {
+      "given": "Dimitrios I",
+      "family": "Tsitsigiannis"
+    },
+    {
+      "given": "Georgia",
+      "family": "Ntatsi"
+    }
+  ],
+  "year": 2026,
+  "venue": "Horticulturae",
+  "doi": "10.3390/horticulturae12040415",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/horticulturae12040415",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "crop-practices"
+  ],
+  "tags": [
+    "tomato",
+    "vpd",
+    "ipm"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 1, Table 5"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

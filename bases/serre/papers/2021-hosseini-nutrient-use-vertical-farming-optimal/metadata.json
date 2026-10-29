@@ -1,0 +1,77 @@
+{
+  "id": "2021-hosseini-nutrient-use-vertical-farming-optimal",
+  "title": "Nutrient Use in Vertical Farming: Optimal Electrical Conductivity of Nutrient Solution for Growth of Lettuce and Basil in Hydroponic Cultivation",
+  "authors": [
+    {
+      "given": "Hadis",
+      "family": "Hosseini"
+    },
+    {
+      "given": "Vahi",
+      "family": "Mozafar"
+    },
+    {
+      "given": "Hamid Reza",
+      "family": "Roosta"
+    },
+    {
+      "given": "Hossein",
+      "family": "Shirani"
+    },
+    {
+      "given": "Paulien C H",
+      "family": "Van De Vlasakker"
+    },
+    {
+      "given": "Mohsen",
+      "family": "Farhangi"
+    },
+    {
+      "given": "Antonio",
+      "family": "Ferrante"
+    },
+    {
+      "given": "Miguel",
+      "family": "Guzmán"
+    },
+    {
+      "given": "Roberta",
+      "family": "Bulgari"
+    },
+    {
+      "given": "Stefania",
+      "family": "Toscano"
+    }
+  ],
+  "year": 2021,
+  "venue": "Horticulturae",
+  "doi": "10.3390/horticulturae7090283",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/horticulturae7090283",
+  "type": "journal",
+  "axes": [
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "lettuce",
+    "basil",
+    "hydroponics",
+    "EC",
+    "nutrient-solution",
+    "vertical-farming",
+    "ebb-flow"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

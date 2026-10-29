@@ -1,0 +1,39 @@
+{
+  "id": "2022-johnnys-hydroponic-container-basil-guide",
+  "title": "Hydroponic & Container Basil: Variety Selection Guide",
+  "authors": [
+    {
+      "given": "",
+      "family": "Johnny's Selected Seeds"
+    }
+  ],
+  "year": 2022,
+  "venue": "Johnny's Selected Seeds, grower guide (commercial)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "report",
+  "axes": [
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "basil",
+    "commercial",
+    "downy-mildew",
+    "grey-literature",
+    "hydroponics"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "premier auteur inconnu : paper_id construit avec 'unknown'"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

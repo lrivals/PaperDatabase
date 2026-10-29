@@ -1,0 +1,42 @@
+{
+  "id": "2024-grodan-irrigating-high-tech-greenhouse-strawberries",
+  "title": "Irrigating high-tech greenhouse grown strawberries (whitepaper)",
+  "authors": [
+    {
+      "given": "",
+      "family": "Grodan"
+    }
+  ],
+  "year": 2024,
+  "venue": "Grodan (ROCKWOOL), industry whitepaper",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "report",
+  "axes": [
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "strawberry",
+    "tomato",
+    "irrigation",
+    "stone-wool",
+    "substrate-moisture",
+    "EC",
+    "grey-literature"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "premier auteur inconnu : paper_id construit avec 'unknown'",
+      "tableaux sans corps extrait (légende seule) : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

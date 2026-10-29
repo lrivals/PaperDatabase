@@ -1,0 +1,45 @@
+{
+  "id": "2023-walters-modeling-purple-basil-sage-spearmint",
+  "title": "Modeling purple basil, sage, spearmint, and sweet basil responses to daily light integral and mean daily temperature",
+  "authors": [
+    {
+      "given": "Kellie J",
+      "family": "Walters"
+    },
+    {
+      "given": "Sean",
+      "family": "Tarr"
+    },
+    {
+      "given": "Roberto G",
+      "family": "Lopez"
+    }
+  ],
+  "year": 2023,
+  "venue": "PLOS ONE 18(11), e0294905",
+  "doi": "10.1371/journal.pone.0294905",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1371/journal.pone.0294905",
+  "type": "journal",
+  "axes": [
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "hydroponics",
+    "basil",
+    "herbs",
+    "DLI",
+    "temperature-response"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

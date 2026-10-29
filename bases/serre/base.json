@@ -13,7 +13,8 @@
     "iot-greenhouse": "Architecture IoT de serre : capteurs, MQTT, ESP32, jumeau numérique",
     "climate-control": "Contrôle climatique et hydroponique (MPC, règles, pH/EC, irrigation)",
     "forecasting": "Prévision du microclimat de serre (GRU, LSTM)",
-    "llm-agent": "Agents LLM pour l'agriculture, humain dans la boucle, garde-fous"
+    "llm-agent": "Agents LLM pour l'agriculture, humain dans la boucle, garde-fous",
+    "crop-practices": "Bonnes pratiques de culture sous abri : consignes climat, VPD, DLI, CO₂, nutrition pH/EC, irrigation, protection intégrée"
   },
   "axis_rules": {
     "disease-classif": "(?:plant|leaf|crop|tomato|potato|cassava|maize|grape|apple)\\w* (?:\\w+ ){0,2}(?:disease|pest|lesion)s? (?:\\w+ ){0,2}(?:classif|recogni|identif|detect|diagnos)|PlantVillage|\\bCCMT\\b|pest (?:recognition|classification|detection)",
@@ -27,7 +28,8 @@
     "iot-greenhouse": "\\bIoT\\b|Internet of Things|\\bMQTT\\b|ESP32|wireless sensor network|\\bWSN\\b|LoRa|digital twin|smart (?:greenhouse|farm|agriculture)|sensor nodes?",
     "climate-control": "greenhouse (?:climate )?control|model predictive control|\\bMPC\\b|climate control|irrigation (?:control|scheduling)|nutrient solution|hydroponic|electrical conductivity|\\bpH\\b (?:control|regulation)|fertigation|reinforcement learning (?:for|in) (?:greenhouse|climate)|supplemental lighting|\\bDLI\\b|energy consumption",
     "forecasting": "(?:temperature|humidity|microclimate|climate|CO2) (?:prediction|forecast)|forecast(?:ing)? (?:the )?(?:greenhouse|indoor|microclimate)|\\bGRU\\b|\\bLSTM\\b|time[- ]series (?:prediction|forecasting)",
-    "llm-agent": "large language models?|\\bLLMs?\\b|\\bGPT-?\\d|\\bagents?\\b (?:for|in) (?:agricultur|farm)|tool use|function calling|human-in-the-loop|human oversight|decision support system|guardrails?"
+    "llm-agent": "large language models?|\\bLLMs?\\b|\\bGPT-?\\d|\\bagents?\\b (?:for|in) (?:agricultur|farm)|tool use|function calling|human-in-the-loop|human oversight|decision support system|guardrails?",
+    "crop-practices": "vapou?r pressure deficit|\\bVPD\\b|daily light integral|CO2 enrichment|nutrient solution (?:composition|management|recipe)|fertigation|integrated pest management|\\bIPM\\b|leaf wetness|optimal (?:air )?(?:temperature|humidity)|growth stages?|cultivation (?:guide|practices)|crop management|biological control"
   },
   "axis_queries": {
     "surveys": "survey deep learning greenhouse plant disease smart agriculture",
@@ -42,7 +44,8 @@
     "iot-greenhouse": "IoT smart greenhouse monitoring system MQTT",
     "climate-control": "greenhouse climate control model predictive control",
     "forecasting": "greenhouse microclimate prediction LSTM GRU",
-    "llm-agent": "large language model agent agriculture decision support"
+    "llm-agent": "large language model agent agriculture decision support",
+    "crop-practices": "greenhouse tomato optimal temperature humidity vapour pressure deficit review"
   },
   "tag_rules": [
     ["PlantVillage", "plantvillage"],
@@ -79,6 +82,11 @@
     ["reinforcement learning", "rl"],
     ["\\bLSTM\\b|\\bGRU\\b", "rnn"],
     ["large language models?|\\bLLMs?\\b", "llm"],
-    ["human-in-the-loop|human oversight", "hitl"]
+    ["human-in-the-loop|human oversight", "hitl"],
+    ["basil", "basil"],
+    ["vapou?r pressure deficit|\\bVPD\\b", "vpd"],
+    ["integrated pest management|\\bIPM\\b|biological control", "ipm"],
+    ["CO2 enrichment|CO₂ enrichment|elevated CO2", "co2"],
+    ["leaf wetness", "leaf-wetness"]
   ]
 }

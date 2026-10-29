@@ -1,0 +1,243 @@
+---
+id: 2021-hosseini-nutrient-use-vertical-farming-optimal
+title: "Nutrient Use in Vertical Farming: Optimal Electrical Conductivity of Nutrient Solution for Growth of Lettuce and Basil in Hydroponic Cultivation"
+year: 2021
+backend: grobid
+---
+
+## Abstract
+
+During the past few decades, vertical farming has attracted a lot of interest as an alternative food production method. Vertical farms use engineered growth environments and hydroponic cultivation techniques for growing plants indoors. One of the important factors in vertical farming for the cultivation of different plants is the amount of nutrients, which can be measured as electrical conductivity (EC). Studying the optimal EC is important for avoiding nutrient loss and deficiency in vertical farms. In this study, we investigated the effect of five EC levels (2, 1.2, 0.9, 0.7, and 0.5 dS m -1 ) of Hoagland nutrient solution on the growth and development of basil cultivar 'Emily' and lettuce cultivar 'Batavia-Caipira'. During the study, the environmental parameters were kept fixed using an automatic dosing machine. The experiment was done in automatic vertical farms using the hydroponic ebb-flow cultivation technique with a temperature of 20 ± 1 • C, relative humidity of 50-60%, CO 2 concentration of 450 ppm, pH = 6, the PPFD (photosynthetic photon flux density) of 215 ± 5.5 µmol m -2 s -1 , and the photoperiod of 16:8 h (day/night). Each treatment was replicated four times. We studied the effects on several growth parameters (including the dry and fresh weight of leaves and roots, number of leaves, and leaf area) as well as the chlorophyll and nitrogen concentration of the leaves. According to the results, the basil and lettuce growth parameters among the five treatments have been significantly higher in the treatment with EC of 1.2 and 0.9 dS m -1 . These EC values are lower than the recommended EC value given as the optimum in the previous studies. However, the concentration of chlorophyll and nitrogen show different trends and were higher in full strength of nutrient solution with EC = 2 dS m -1 .
+
+## 1. Introduction
+
+The population of the world is projected to increase more than 25% by 2050 [1]. The scarcity of land and water resources is pushing the current food production practices to their limits [2]. Feeding the growing world population without depleting natural resources requires alternative and more resource-efficient food production practices [3][4][5]. Vertical farming is an innovative cultivation methods that has attracted a lot of interest among young entrepreneurs and farmers [6]. Vertical farms or vertical controlled environment agriculture has seen extensive expansion, technical innovations, prolific growth, and upscaling taking place worldwide [7,8].
+
+These practices are also getting attention in developing countries, which are facing soil and water quality deterioration and a decreasing level of groundwater due to climate change, declined precipitation as well as inappropriate agricultural management [9,10]. As a result of these conditions, many developing countries are in urgent need of transformation of their agricultural sector [11]. Vertical farming in engineered environments (i.e., controlled environment agriculture) has shown potential for producing high-quality crops and high yields in harsh climates [11]. Hydroponic cultivation methods that are used in most vertical farms consume 90% less water than conventional agriculture, which resolves one of the biggest challenges of the agricultural sector in drought-affected countries [11]. So far, several hydroponic techniques have been introduced of which the ebb-flow system is one of the most used culture systems in commercial vertical farms [12]. The advantages of the ebb and flow system are its simplicity, high efficiency, and reliability of operation [12]. This cultivation technique allows entrepreneurs to produce high-quality yields in small spaces.
+
+However, there is a lack of accurate data on the impact of different factors such as concentration of nutrient solution, light spectrums, humidity, and temperature on the growth of different kind of plants in vertical farms [13]. Even in automatized vertical farms that are equipped with nutrient dosing pumps, the electroconductivity (EC) level of nutrient solution should be set manually. This makes providing vertical farmers with a recommendation on the ideal EC levels for different crops important. In this paper, we present the first findings of a research project on precision vertical farming. This paper focuses on the impact of EC as an indicator on the concentration of nutrient solution on the growth of basil and lettuce.
+
+The low EC of used nutrient elements leads to suppressed plant growth, while on the other hand, excessive use of nutrient and high EC levels does not only create higher costs for the farmer but can also be toxic for plants [14][15][16]. Due to the importance of EC in hydroponic cultivation, optimum EC levels have been the subject of several studies [16][17][18][19]. The optimal EC of nutrient solution is linked to the cultivation technique and the crops type that are produced. In this study, we determine the relationship between EC levels and growth parameters to provide a model for estimating yields in a vertical farm. There have been several studies on optimal EC level for the hydroponic cultivation of different kind of plants [20,21]. However, there is a lack of studies on optimized EC under given cultivation regimes such as different growing techniques. This study bridges the gap in existing knowledge for developing more nutrient-efficient vertical farms.
+
+## 2. Materials and Methods
+
+### 2.1. Plant Material, Preparation, and Hydroponic System Properties
+
+Lettuce (Lactuca sativa L.) cultivar 'Batavia-Caipira' and basil (Ocimum basilicum L.) cultivar 'Emily' have been chosen to be cultivated for the present study in automatic vertical farms using the hydroponic ebb-flow cultivation technique for the production of leafy greens and herbs. The vertical farms that are used in this study were developed by Vegger B.V., a vertical farming technology developer based in The Netherlands. The vertical farms named 'Vegger FlaxFarm VFF0105 are equipped with pH and EC monitoring dosing systems and environmental monitoring control sensors and devices. The systems allowed monitoring and adjusting the pH and electrical conductivity (EC) via software throughout the study. Additionally, the light spectra of the Vegger's LED lights that were used in this study were Deep Red/White/Low Blue/Far Red LEDs (Greenpower LED production module, Philips, Eindhoven, The Netherlands).
+
+The experimentation in this study took place in a growth chamber of Vegger at the World Food Center in Ede, The Netherlands. The growth chambers of Vegger are used for growing vegetables and herbs for commercial and research purposes. The vertical farms that were used for the experiments were 5-level vertical farms. The distance between the levels was 50 cm, and the distance between the plantations pots was 12 cm. The roots were flooded five times per day, each time for 10 min. A protocol was designed for the cultivation of plants, sampling, and analyses. According to the protocol, for basil, the seeds were sown in vermiculite in a Vegger's plantation pot (9 cm H × 9 cm W × 9 cm L). Lettuce seeds were sown in rockwool plugs. After sowing the seeds, the grow media were sprayed with distilled water (pH 7) to soak the seeds. After soaking the seeds, they were kept in dark closed plastic boxes. We kept track of when the cultivation processes took place and when seeds were germinated. The environment day temperature, night temperature, relative humidity and CO 2 concentration were 24 ± 2 • C, 16 ± 2 • C, 50-60%, and 450 ppm, respectively.
+
+After seven days, the cubic plots with basil seedlings were transferred to the vertical farms directly. However, the lettuce seedlings were first planted in rockwool blocks and then placed into the specific plastic cubic plots before they were transferred to the vertical farms. The plantation pots were placed in three different levels of the 5-level Vegger vertical farm (FlaxFarm).
+
+### 2.2. Nutrient Solution and Experimental Design
+
+The nutrient solution was prepared based on a formula presented by Hoagland and Arnon (1950) To study the effect of EC on the growth parameters, we designed an experiment in a randomized complete block design with five treatments (Figure 1). Each treatment was replicated four times. The experiments were conducted in an environment with a day temperature of 20 ± 1 • C, night temperature of 16 ± 2 • C, a relative humidity of 50-60%, and a CO 2 concentration of 450 ppm. The pH of the nutrient solution was set on 6 and was kept fixed during the experiment by using a pH-adjustment dosing machine. The PPFD (photosynthetic photon flux density) of the artificial lighting used on the plants was 215 ± 5.5 µmol m -2 s -1 , and the photoperiod was 16:8 h of light/dark. During the study, all conditions were monitored continuously and kept fixed based on the protocol used for growing the plants. The protocol defined growing processes, control, and adjustments of the environment and sampling processes. The only parameter that was variable in different treatments was EC. We used five different EC treatments levels of 2.0, 1.2, 0.9, 0.7, and 0.5 dS m -1 and kept them as a constant value during the experiment using an automatic dosing machine with an accuracy of 2% (see Table A1 in Appendix A).
+
+### 2.3. Collecting the Data and Statistical Analysis
+
+The lettuce and basil plants were harvested 45 and 30 days after the transfer to the vertical farms. The growth parameters that were measured were the number of leaves, fresh and dry weight of leaves, and roots and leaf area. To collect dried material, plants were dried in a drying oven set at a temperature of 72 • C for 24 h.
+
+To measure the chlorophyll content of plants, 100 mg of leaf tissue was digested using 5 mL of N,N-dimethylformamide based on a method described by Moran [22]. The absorption of the plant extraction was detected at 480 and 649 nm using a spectrometer (Rayleigh VIS-7220G) after 24 h. The total amount of chlorophyll was calculated by using the equations described by Wellburn [23]. To measure the nitrogen concentration of each sample, the total nitrogen concentration was determined using the Kjeldahl method [24]. The obtained value was expressed as a percentage of dry weight.
+
+A two-way ANOVA test for determining the relationship between the solution concentration and plant growth parameters was done by using RStudio (RStudio Team, 2020: Integrated Development for R. RStudio, PBC, Boston, MA). The differences between the means of measured growth parameters in different treatments and repeats were compared by using the Tukey HSD (honestly significant difference) test for pairwise comparisons at p < 0.05 under significant results of ANOVA. The relationship between different plant parameters and EC values was conducted using regression analysis at a 0.05 significant level using the lm function in RStudio. Several fit models (linear, quadratic, cubic, and power) were evaluated for all determined growth variables. The best model was selected by comparing the estimated adjusted R square.
+
+## 3. Results
+
+### 3.1. Comparison of Biomass Production
+
+In the present study, we designed and conducted an experiment for growing lettuce and basil with five different EC values, starting with an EC of 2.0 dS m -1 and ending with an EC of 0.5 dSm -1 to determine if the different levels of EC can significantly affect the growth and development of lettuce and basil cultivars 'Batavia-Caipira' and 'Emily', using an ebb-flow hydroponics growing technique. As shown in Tables 1 andA2 (in Appendix A), there was a significant difference among leaf areas, dry/fresh weight of roots, and fresh weight of leaves of lettuce cv. 'Batavia-Caipira' at a p-value of 0.05 in the five treated EC values. The number of leaves and the weight of the dry leaves of lettuce plants was not significantly different at a p-value of 0.05 among different treated EC values. Furthermore, as summarized in Tables 1 andA3 (in Appendix A), our analysis showed that all measured growth parameters of basil are significantly different when the EC level changes at a p-value of 0.05.
+
+We also determined the changes of growth parameters in different EC treatments. As summarized in Table 2, the weight of dry and fresh biomass of lettuce roots and leaves as well as the number and area of leaves in EC = 0.9 dS m -1 were higher than in the other EC values. The trends indicate a decrease of the measured growth parameters (except for root biomass) from EC of 2 dS m -1 to EC = 0.9 dS m -1 and a sharp decline of these measured paraments from EC = 0.9 to the EC of 0.5 dS m -1 . However, the dry and fresh weight of root biomass in EC = 0.9 was slightly lower than 1.2 dS m -1 . Means ± SD within columns followed by the similar letters are not significantly different according to Tukey test.
+
+For basil plants, an increase for all parameters except for root fresh weight from EC = 2 dS m -1 to EC = 1.2 dS m -1 and then a sharp decrease from EC = 1.2 dS m -1 to EC = 0.5 dS m -1 was detected. The fresh and dry weight of the plants grown in the nutrient solution with EC = 2 is higher than those when EC = 1.2 dS m -1 .
+
+### 3.2. Chlorophyll and Nitrogen Concenterations
+
+The total chlorophyll and nitrogen concentrations of lettuce and basil over five different treatments have been compared and summarized in Tables 3, A1 and A2. Both parameters of the lettuce and basil plants were significantly affected with different EC values at a p-value of 0.05. The total chlorophyll and nitrogen concentrations change linearly from the highest EC level (2 dS m -1 ) to the lowest EC level (0.5 dS m -1 ). As shown in Table 4, increasing the EC value resulted in an increase in the measured total chlorophyll and nitrogen concentrations for both basil and lettuce. Means ± SD within columns followed by the similar letters are not significantly different according to Tukey test.
+
+### 3.3. Regression Analysis of Relationship of EC Value and Measured Plant Parameters
+
+The relationship between lettuce and basil growth parameters and EC levels were determined using different mathematical modeling functions, which are summarized in Tables 5 and6. Comparing the adjusted R square of linear, quadratic, cubic, as well as power models, the model with the highest adjusted R square is identified as the best model, which is marked in gray color in the table. Additionally, we created polynomial graphs to visualize the relationship between the parameters and EC levels in Figures 2 and3. In this study, we estimated the relationship between lettuce and basil growth parameters and EC levels using regression analysis. It is the most common machine learning program that indicates different types of relationships between different parameters based on observed data [25]. To select the best fit model, an adjusted R square was used (with significance at a p-value of 0.05). The most fit model for determining the relationship between dry and fresh weight of root and chlorophyll in relation to the EC levels and leaf area and weight of fresh leaf in relation to the EC levels for both plants are power and quadratic models, respectively. However, the estimated models for other variables are not similar between two plants. The linear model was not a fit model for any growth parameters of lettuce and basil. The cubic model was only fit for the nitrogen concentration of basil and the number of leaves of lettuce in relation to EC levels.
+
+## 4. Discussion
+
+Due to the consumption of less water, pesticides and fertilizers, as well as high productivity, vertical farms have gained a lot of interest worldwide [26]. Since the growth of plants in hydroponic cultivation techniques rely on nutrient solution, the concentration and formula of nutrient solutions (i.e., EC) are very important factors for their efficiency and productivity. The EC levels of nutrient solution can affect the economic feasibility and resource efficiency of vertical farms. Some studies revealed that diluted nutrient solution can result in a decreasing yield of several type of plants such as spinach, rocket, or lettuce cultivars [27,28], and there are studies that proved that high concentrations can be harmful for the plants [16,18]. In this study, we used five different dilutions of Hoagland and Arnon [29] nutrient solution with different EC levels to identify the optimal EC levels for the cultivation of basil and lettuce in ebb-and-flow hydroponic systems. To this aim, we compared plant growth parameters that are important from a marketing point of view such as the weight of dry and fresh mass, number of leaves, and specific leaf area as well as leaf color by estimating the chlorophyll and nitrogen concentrations of the plants for two high-demand products, lettuce and basil. Due to satisfactory results obtained by using Hoagland nutrient, which is a composition of mineral salts needed for the growth of plants, it is widely used for experiments in different research projects [18,30].
+
+The EC values recommended by the extension services for basil and lettuce plants are 0.5-1.6 depending on the environmental conditions [20,21]. According to our analysis, the measured growth parameters of cultivated basil and lettuce plants in the first three treatments (2.0, 1.5, and 1 dS m -1 ) applying Hoagland nutrient solution with an EC level above 0.9 dS m -1 were significantly better than the measured parameters in the last treatments with EC values of 0.7 and 0.5 dS m -1 . This finding is in line with studies done by Fallovo et al. [31] and Rouphael et al. [32], which have indicated that a very low amount of EC levels that resulted from a low concentration of nutrient elements can reduce the growth rate of various plants [31,32].
+
+Based on the results of our analysis, there were no significant differences between the growth rates of the basil plants cultivated under the condition with EC values above 0.9 dS m -1 . This finding is consistent with the previous studies, which indicate that an EC higher than 1.3 up to 5 dS m -1 does not have any significant positive influence on the growth parameters of the basil [33,34]. However, in our study, the productivity, which is an important economic factor for producers, with an EC level of 1.2 dS m -1 , was slightly higher than the productivity with an EC level of 2 dS m -1 . Our finding shows a different trend than some previous studies on ideal EC range for basil and lettuce plants. Solis-Toapanta, Fisher, and Gómez [34] concluded that the higher growth rate of basil occurred with an EC level higher than 1.2 dS m -1 , and a study by Wortman [35] showed that productivity can be lower when the EC levels are between 0.5 and 1 dS m -1 compared to EC levels ranging between 0.7 and 2.2 dS m -1 . Comparing our results with these studies and their differences pinpoints the importance of cultivation techniques (e.g., ebb-and-flow, deep water culture, nutrient film technique, wick system, and drip system) and number of hours that roots are flooded or submerged in water each day [36,37]. When roots are flooded or submerged for a longer time and more frequently, lower EC levels for the cultivation of basil and lettuce can have a better effect on the growth parameters of the plants. Son, Kim, and Ahn [36] have also shown that the cultivation techniques and their nutrient management systems can change the way plants absorb nutrients. Therefore, different techniques will require a different EC value for reaching the best growth parameters. This means that the relationship between the way in which roots are flooded and its duration can change the range of optimal EC value. Undertesting this relationship requires further studies and can help estimate the optimal EC value for different hydroponic cultivation techniques.
+
+Additionally, our results show that a high EC level can reduce lettuce yield and increase chlorophyll content. In contrast, a study performed by Yang et al. [38] showed that the decreasing trend of EC levels from 1.8 to 1.0 dS m -1 and from 3.5 to 1.5 dS m -1 caused a decreasing amount of biomass production in arugula. However, their study points out the sensitivity of lettuce to high EC levels. These differences also show that the cultivation technique is an important variable which should be taken into consideration in similar studies.
+
+In our study, the total chlorophyll concentration at the highest EC level (2 dS m -1 ) was higher than shown by other studies. Some studies reported the lack of relationship between nutrient solution concentration and chlorophyll content [17,28]. Our finding showed that there is a relationship between EC level and chlorophyll content. These finding was in accordance with Rosa-Rodríguez et al. [39], Xu and Mou [40], and Kappel, et al. [41], who also indicated there is a relationship between EC levels and total chlorophyll concentration. In our study, we have also determined the nitrogen concentration of leaves. Our findings showed that the calculated percentage of nitrogen in plant dry weight has a similar trend to chlorophyll parameter.
+
+There was a significant difference between the identified optimal EC value for the growth and development of basil and lettuce in this study and the EC values that have been indicated in growing protocols of Vegger for basil and lettuce. According to the previous protocols, the FlaxFarm's dosing system had to keep the EC value for basil at 2 dS m -1 and for lettuce at 1.5 dS m -1 , which are higher that the values that were identified in this study for both plants. The findings of this study have already been applied in Vegger's protocols and according to Vegger's R&D officer have reduced the nutrient consumption around 20% without any negative impact on the yield and quality of the plants.
+
+## 5. Conclusions
+
+Finally, we conclude that the optimal EC level for the growth and developments of basil in ebb-and-flow systems is 1.2 dS m -1 , and for lettuce, the optimal EC level is 0.9 dS m -1 . Our analysis also concludes that keeping the EC value of nutrient solution at a higher level than the identified optimal EC value will have less negative impact on the growth parameters of lettuce and basil than keeping the EC values lower than the optimal level. In this study, we have presented a regression analysis of correlation of EC levels and plant growth parameters. Based on the regression analysis, this paper concludes that the variation in EC values from 0.9 to 1.5 can result in reaching the same plant performance as the optimal EC values that were identified in this paper.
+
+## Figures et tableaux
+
+**Figure 1.** Schematic presentation of the experimental design in this study.
+
+**Figure 2.** Relationship between EC value and lettuce growth, total nitrogen, and chlorophyll parameters. The gray area is a zone that covers the 95% confidence level.
+
+**Figure 3.** Relationship between EC value and basil growth parameters. The gray area is a zone that covers the 95% confidence level.
+
+[figure sans légende identifiée] , which contains 136 g KH 2 PO 4 , 101 g KNO 3 , 236.15 g Ca (NO 3 ) 2 •4H 2 O, 246.48 g MgSO 4 •7H 2 O, 2.86 g H 3 BO 3 , 1.86 g MnCl 2 •4H 2 O, 0.22 g ZnSO 4 •5H 2 O, 0.08 g CuSO 4 •5H 2 O, 0.02 g H 2 MoO 4 •H 2 O, and 10 g Fe EDDHA per one liter stock solution. The nutrient solution was prepared using distilled water.
+
+**Table 1.** The analysis of effectiveness of Hoagland nutrient concentration used for lettuce and basil plants on plant growth parameters.
+
+    Growth Parameters | Plant | Df | Sum Square | Df | Residuals Sum Square
+    No. leaves | Lettuce Basil | 1 1 | 156.0 NS 140.6 * | 18 18 | 860.9 163.1
+    Leaf area | Lettuce Basil | 1 1 | 450,713 * 4537 * | 18 18 | 967,954 5674
+    Root fresh weight | Lettuce Basil | 1 1 | 158.17 * 20.94 * | 18 18 | 52.19 3.25
+    Root dry weight | Lettuce Basil | 1 1 | 0.79 * 0.25 * | 18 18 | 0.3 0.085
+    Leaf fresh weight | Lettuce Basil | 1 1 | 1411 * 228.1 * | 18 18 | 3364 177.2
+    Leaf dry weight | Lettuce Basil | 1 1 | 10.42 NS 7.071 * | 18 18 | 43.79 2.99
+
+**Table 2.** The analysis of effectiveness of Hoagland nutrient concentration used for basil and lettuce plants on plant growth parameters. Data are means ± SD of four replicates.
+
+     |  |  |  | EC (dS m -1 ) |  | 
+    Growth Parameter | Plant | 0.5 | 0.7 | 0.9 | 1.2 | 2
+    No. leaves | Lettuce Basil | 2.5 ± 0.6 b 3 ± 0.8 b | 5.5 ± 0.6 b 4.3± 0.9 b | 22.8 ± 1.7 a 5.3 ± 0.9 b | 9.9 ± 2.2 a,b 13.5 ± 1.9 a | 12.4 ± 0.9 a,b 7.7 ± 1.7 a,b
+    Leaf area | Lettuce Basil | 185 ± 46.8 b 9.5 ± 1.3 b | 372 ± 41.8 b 16.6 ± 3.4 b | 945 ± 52.2 a 24 ± 3.9 b | 708 ± 11.9 a,b 73 ± 4.2 a | 547.8 ± 69.9 a,b 34.5 ± 5.3 a,b
+    Root fresh weight | Lettuce Basil | 0.4 ± 0.06 b 0.3 ± 0.08 b | 0.8 ± 0.1 b 0.7 ± 0.2 b | 7 ± 0.6 a 1.4 ± 0.3 b | 7.3 ± 0.5 a 2.8 ± 0.4 a | 7 ± 0.8 a 2.9 ± 0.5 a
+    Root dry weight | Lettuce Basil | 0.1 ± 0.02 b 0.02 ± 0.005 b | 0.1 ± 0.04 b 0.03 ± 0.01 b | 0.6 ± 0.01 a 0.04 ± 0.003 b | 0.6 ± 0.05 a 0.3 ± 0.03 a | 0.5 ± 0.003 a 0.3 ± 0.05 a
+    Leaf fresh weight | Lettuce Basil | 4.2 ± 0.9 b 1 ± 0.2 b | 12.6 ± 0.9 b 2.2 ± 0.4 b | 47.3 ± 2 a 4.8 ± 0.4 b | 34.8 ± 1.8 a,b 13.5 ± 1.5 a | 22.8 ± 2.2 a,b 7.3 ± 0.8 a,b
+    Leaf dry weight | Lettuce Basil | 0.1 ± 0.04 b 0.01± 0.004 b | 0.6 ± 0.1 b 0.04 ± 0.01 b | 4.6 ± 0.2 a 0.2 ± 0.05 b | 2.9 ± 0.2 a,b 1.6 ± 0.2 a | 1.5 ± 0.2 a,b 1.3 ± 0.5 a
+
+**Table 3.** The analysis of effectiveness of Hoagland nutrient concentration used for lettuce and basil plants on chlorophyll concentration and percentage of nitrogen concentration.
+
+     | Plant | Df | Sum Square | Df | Residuals Sum Square
+    Chlorophyll concentration | Lettuce Basil | 1 1 | 1.13 * 0.45 * | 18 18 | 0.2 0.11
+    %Nitrogen concentration | Lettuce Basil | 1 1 | 0.22 * 0.35 * | 18 18 | 0.09 0.15
+
+**Table 4.** The analysis of effectiveness of Hoagland nutrient concentration used for basil and lettuce plants on chlorophyll concentration and percentage of nitrogen concentration (percentage of dry weight). Data are means ± SD of four replicates.
+
+     |  |  |  | EC (dS m -1 ) |  | 
+     | Plant | 0.5 | 0.7 | 0.9 | 1.2 | 2
+    Chlorophyll concentration (mg g -1 ) | Lettuce Basil | 1.35 ± 0.1 b 3.51 ± 0.02 c | 1.50 ± 0.02 b 3.56± 0.04 c | 1.85± 0.05 a 3.66 ± 0.1 b,c | 1.88 ± 0.05 a 3.85 ± 0.1 a,b | 2.0 ± 0.07 a 3.89 ± 0.08 a
+    % Nitrogen | Lettuce | 2.13 ± 0.04 b | 2.13 ± 0.1 b | 2.34 ± 0.03 a | 2.35 ± 0.04 a | 2.39 ± 0.03 a
+    concentration | Basil | 2.82 ± 0.1 c | 2.97 ± 0.09 b,c | 3.01 ± 0.08 b,c | 3.1 ± 0.01 a,b | 3.2 ± 0.1 a
+
+**Table 5.** Regression analysis of relationship between EC value and lettuce growth parameters with several mathematic models.
+
+    Parameters | Model | Adjusted R 2 | Best Model
+     | Linear | -0.03 NS | 
+    No. of leaves | Quadratic Cubic | 0.44 * 0.51* | y = = -0.56 -0.46 × -0.03x 2 -0.0006x 3
+     | Power | 0.26 * | 
+     | Linear | 0.05 NS | 
+    Leaf area | Quadratic Cubic | 0.42 * 0.45 * | y = -0.57 + 0.0006 × -5.2 × 10 -6 x 2
+     | Power | 0.34 * | 
+     | Linear | 0.03 NS | 
+    Leaf fresh weight | Quadratic Cubic | 0.58 * 0.56 * | y = -0.02 + 0.11 × -0.002x 2
+     | Power | 0.39 * | 
+     | Linear | -0.02 NS | 
+    Leaf dry weight | Quadratic Cubic | 0.53 * 0.75 * | y = 0.08 + 2.26x -0.93x 2 + 0.1x 3
+     | Power | 0.39 * | 
+     | Linear | 0.48 * | 
+    Root fresh weight | Quadratic Cubic | 0.46 * 0.44 * | 
+     | Power | 0.68 * | y = 2.89x 2.29
+     | Linear | 0.42 * | 
+    Dry root weight | Quadratic Cubic | 0.51 * 0.52 * | 
+     | Power | 0.64 * | y = 0.32x 1.52
+     | Linear | 0.65 * | 
+    Total chlorophyll | Quadratic Cubic | 0.69 * 0.69 * | 
+     | Power | 0.77 * | y = 1.8x 0.29
+
+**Table 5.** Cont. indicates significant differences and NS indicates not significant differences at p ≤ 0.05 (Tukey).
+
+    Parameters | Model | Adjusted R 2 | Best Model
+     | Linear | 0.53 * | 
+    Nitrogen% | Quadratic Cubic | 0.65 * 0.64 * | y = 69.9-65.22x + 15.33x 2
+     | Power | 0.62 * | 
+
+**Table 6.** Regression analysis of relationship between EC value and basil growth parameters with several mathematic models.
+
+     | Model | Adjusted R 2 | Best Model
+     | Linear | 0.21 * | 
+    No leaves | Quadratic Cubic | 0.51 * 0.49 * | y = -0.55 + 0.42 × -0.02x 2
+     | Power | 0.49 * | 
+     | Linear | 0.17 * | 
+    Leaf area | Quadratic Cubic | 0.67 * 0.66 * | y = -0.38 + 0.09 × -0.0009x 2
+     | Power | 0.53 * | 
+     | Linear | 0.28 * | 
+    Fresh leaf weight | Quadratic Cubic | 0.67 * 0.67 * | y = 0.07 + 0.34 × -0.02x 2
+     | Power | 0.66 * | 
+     | Linear | 0.57 * | 
+    Dry leaf weight | Quadratic Cubic | 0.7 * 0.71 * | 
+     | Power | 0.83 * | y = 0.23x 3.66
+     | Linear | 0.7 * | 
+    Fresh root weight | Quadratic Cubic | 0.68 * 0.67 * | 
+     | Power | 0.81 * | y = 1.31x 1.66
+     | Linear | 0.62 * | 
+    Dry root weight | Quadratic Cubic | 0.76 * 0.75 * | 
+     | Power | 0.81 * | y = 0.08x 2.3
+     | Linear | 0.69 * | 
+    Total chlorophyll | Quadratic Cubic | 0.67 * 0.65 * | 
+     | Power | 0.76 * | y = 3.71x 0.08
+     | Linear | 0.63 * | 
+    Nitrogen% | Quadratic Cubic | 0.69 * 0.7 * | y = 333.2 -326.3x + 105.59x 2 -11.25x 3
+     | Power | 0.68 * | 
+
+Element Concentration (g) Treatments (EC Value dS m -1 ) T1 (2.0) T2 (1.2) T3 (0.9) T4 (0.7) T5 (0.5)
+
+    KH 2 PO 4 | 136 | 68 | 45.3 | 34 | 27.2
+    KNO 3 | 101 | 50.5 | 33.7 | 25.3 | 20.2
+    Ca (NO 3 ) 2 •4H 2 O | 236.15 | 118.1 | 78.7 | 59.0 | 47.2
+    MgSO 4 •7H 2 O | 246.48 | 123.2 | 82.2 | 61.6 | 49.3
+    H 3 BO 3 | 2.86 | 1.4 | 1.0 | 0.7 | 0.6
+    MnCl 2 •4H 2 O | 1.86 | 0.9 | 0.6 | 0.5 | 0.4
+    ZnSO 4 •5H 2 O | 0.22 | 0.1 | 0.1 | 0.1 | 0.04
+    CuSO 4 •5H 2 O | 0.08 | 0.04 | 0.03 | 0.02 | 0.01
+    H 2 MoO 4 •H 2 O | 0.02 | 0.01 | 0.006 | 0.005 | 0.004
+    Fe EDDHA | 10 | 5 | 3.3 | 2.5 | 2
+
+Table A2. The analysis of effectiveness of Hoagland nutrient concentration used for lettuce on plant growth parameters.
+
+     | Lettuce |  |  |  | 
+     | Df | Sum Sq | Sq | F Value | Pr (>F)
+    No. leaves | 1 | 156.0 | 156.03 | 3.26 | 0.0876
+    Residuals | 18 | 860.9 | 47.83 |  | 
+    Leaf area | 1 | 450,713 | 450,713 | 8.38 | 0.00965 **
+    Residuals | 18 | 967,954 | 53,775 |  | 
+    Root fresh weight | 1 | 158.17 | 158.2 | 54.55 | 7.49 × 10 -7 ***
+    Residuals | 18 | 52.19 | 2.9 |  | 
+
+Table A2. Cont. *', '**', '***' indicate significant differences at p < 0.05; 0.01 and 0.0001 respectively.
+
+     | Lettuce |  |  |  | 
+     | Df | Sum Sq | Sq | F Value | Pr (>F)
+    Root dry weight | 1 | 0.79 | 0.79 | 47.49 | 1.92 × 10 -6 ***
+    Residuals | 18 | 0.3 | 0.02 |  | 
+    Leaf fresh weight | 1 | 1411 | 1410.9 | 7.55 | 0.0132 *
+    Residuals | 18 | 3364 | 186.9 |  | 
+    Leaf dry weight | 1 | 10.42 | 10.42 | 4.29 | 0.0531
+    Residuals | 18 | 43.79 | 2.43 |  | 
+    Chlorophyll concentration | 1 | 1.13 | 1.13 | 101 | 8.25 × 10 -9 ***
+    Residuals | 18 | 0.20 | 0.01 |  | 
+    %Nitrogen concentration | 1 | 0.22 | 0.22 | 45.08 | 2.7 × 10 -6 ***
+    Residuals | 18 | 0.09 | 0.005 |  | 
+
+Table A3. The analysis of effectiveness of Hoagland nutrient concentration used for basil on plant growth parameters.
+
+     | Basil |  |  |  | 
+     | Df | Sum Sq | Sq | F Value | Pr (>F)
+    No. leaves | 1 | 140.6 | 140.63 | 15.52 | 0.000962 ***
+    Residuals | 18 | 163.1 | 9.06 |  | 
+    Leaf area | 1 | 4537 | 4537 | 14.39 | 0.00133 **
+    Residuals | 18 | 5674 | 315 |  | 
+    Root fresh weight | 1 | 20.94 | 20.94 | 116 | 2.81 × 10 -9 ***
+    Residuals | 18 | 3.25 | 0.18 |  | 
+    Root dry weight | 1 | 0.25 | 0.25 | 52.11 | 1.02 × 10 -6 ***
+    Residuals | 18 | 0.085 | 0.005 |  | 
+    Leaf fresh weight | 1 | 228.1 | 228.10 | 23.17 | 0.000139 ***
+    Residuals | 18 | 177.2 | 9.85 |  | 
+    Leaf dry weight | 1 | 7.071 | 7.071 | 42.49 | 3.96 × 10 -6 ***
+    Residuals | 18 | 2.99 | 0.17 |  | 
+    Chlorophyll concentration | 1 | 0.45 | 0.45 | 73.64 | 8.9 × 10 -8 ***
+    Residuals | 18 | 0.11 | 0.006 |  | 
+    %Nitrogen concentration | 1 | 0.35 | 0.35 | 43.39 | 3.46 × 10 -6 ***
+    Residuals | 18 | 0.15 | 0.008 |  |

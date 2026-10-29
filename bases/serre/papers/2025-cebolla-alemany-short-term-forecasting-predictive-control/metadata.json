@@ -1,0 +1,61 @@
+{
+  "id": "2025-cebolla-alemany-short-term-forecasting-predictive-control",
+  "title": "Short-term forecasting and predictive control of rooftop greenhouse microclimate using multi-horizon machine learning models",
+  "authors": [
+    {
+      "given": "Joaquim",
+      "family": "Cebolla-Alemany"
+    },
+    {
+      "given": "Yunyao",
+      "family": "Cheng"
+    },
+    {
+      "given": "Laia",
+      "family": "Pintó-Espín"
+    },
+    {
+      "given": "Michele",
+      "family": "Albano"
+    },
+    {
+      "given": "Marcel",
+      "family": "Macarulla"
+    },
+    {
+      "given": "Santiago",
+      "family": "Gassó-Domingo"
+    }
+  ],
+  "year": 2025,
+  "venue": "Smart Agricultural Technology 13, 101733",
+  "doi": "10.1016/j.atech.2025.101733",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1016/j.atech.2025.101733",
+  "type": "journal",
+  "axes": [
+    "iot-greenhouse",
+    "climate-control",
+    "forecasting"
+  ],
+  "tags": [
+    "digital-twin",
+    "mpc",
+    "fuzzy-control",
+    "lightgbm",
+    "tabular-forecasting"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "type de publication à préciser",
+      "tableaux sans corps extrait (légende seule) : Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

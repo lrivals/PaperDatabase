@@ -1,0 +1,57 @@
+{
+  "id": "2019-hemming-remote-control-greenhouse-vegetable-production",
+  "title": "Remote Control of Greenhouse Vegetable Production with Artificial Intelligence-Greenhouse Climate, Irrigation, and Crop Production",
+  "authors": [
+    {
+      "given": "Silke",
+      "family": "Hemming"
+    },
+    {
+      "given": "Feije",
+      "family": "De Zwart"
+    },
+    {
+      "given": "Anne",
+      "family": "Elings"
+    },
+    {
+      "given": "Isabella",
+      "family": "Righini"
+    },
+    {
+      "given": "Anna",
+      "family": "Petropoulou"
+    }
+  ],
+  "year": 2019,
+  "venue": "Sensors",
+  "doi": "10.3390/s19081807",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/s19081807",
+  "type": "journal",
+  "axes": [
+    "climate-control",
+    "crop-practices",
+    "iot-greenhouse"
+  ],
+  "tags": [
+    "autonomous-greenhouse",
+    "background",
+    "benchmark",
+    "cucumber",
+    "reinforcement-learning"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues à l'extraction : 4 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : Table, [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

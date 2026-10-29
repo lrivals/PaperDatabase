@@ -1,0 +1,44 @@
+{
+  "id": "2018-savvas-application-soilless-culture-technologies-modern",
+  "title": "Application of soilless culture technologies in the modern greenhouse industry – A review",
+  "authors": [
+    {
+      "given": "Dimitrios",
+      "family": "Savvas"
+    },
+    {
+      "given": "Nazim",
+      "family": "Gruda"
+    }
+  ],
+  "year": 2018,
+  "venue": "European Journal of Horticultural Science 83(5), 280–293",
+  "doi": "10.17660/eJHS.2018/83.5.2",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.17660/eJHS.2018/83.5.2",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "hydroponics",
+    "soilless",
+    "nutrient-solution",
+    "drainage-recirculation",
+    "irrigation"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues : 8 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

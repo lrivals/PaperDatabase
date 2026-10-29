@@ -1,0 +1,44 @@
+{
+  "id": "2013-brechner-cornell-hydroponic-lettuce-handbook",
+  "title": "Hydroponic Lettuce Handbook",
+  "authors": [
+    {
+      "given": "Melissa",
+      "family": "Brechner"
+    },
+    {
+      "given": "A. J.",
+      "family": "Both"
+    }
+  ],
+  "year": 2013,
+  "venue": "Cornell University, Controlled Environment Agriculture program (handbook)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": null,
+  "type": "report",
+  "axes": [
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "lettuce",
+    "hydroponics",
+    "DWC",
+    "DLI",
+    "tipburn",
+    "grey-literature"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Construction Figure 12. Empty, [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

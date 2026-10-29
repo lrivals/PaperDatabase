@@ -1,0 +1,220 @@
+---
+id: arxiv-2107.05464-igrow-smart-agriculture-solution-autonomous
+title: "IGrow: A Smart Agriculture Solution to Autonomous Greenhouse Control"
+year: 2021
+backend: grobid
+---
+
+## Abstract
+
+Agriculture is the foundation of human civilization. However, the rapid increase of the global population poses a challenge on this cornerstone by demanding more food. Modern autonomous greenhouses, equipped with sensors and actuators, provide a promising solution to the problem by empowering precise control for high-efficient food production. However, the optimal control of autonomous greenhouses is challenging, requiring decision-making based on high-dimensional sensory data, and the scaling of production is limited by the scarcity of labor capable of handling this task. With the advances of artificial intelligence (AI), the internet of things (IoT), and cloud computing technologies, we are hopeful to provide a solution to automate and smarten greenhouse control to address the above challenges. In this paper, we propose a smart agriculture solution named iGrow, for autonomous greenhouse control (AGC): (1) for the first time, we formulate the AGC problem as a Markov decision process (MDP) optimization problem; (2) we design a neural network-based simulator incorporated with the incremental mechanism to simulate the complete planting process of an autonomous greenhouse, which provides a testbed for the optimization of control strategies; (3) we propose a closed-loop bi-level optimization algorithm, which can dynamically re-optimize the greenhouse control strategy with newly observed data during real-world production. We not only conduct simulation experiments but also deploy iGrow in real scenarios, and experimental results demonstrate the effectiveness and superiority of iGrow in autonomous greenhouse simulation and optimal control. Particularly, compelling results from the tomato pilot project in real autonomous greenhouses show that our solution significantly increases crop yield (+10.15%) and net profit (+92.70%) with statistical significance compared to planting experts. Our solution opens up a new avenue for greenhouse production. The data and code are provided in supplementary materials.
+
+## 1. Introduction
+
+With the global challenge in food caused by the continuous population growth, the transformation and upgrading of the agricultural industry is urgently in need (Deichmann, Goyal, and Mishra 2016).
+
+As a result, the greenhouse industry is expanding rapidly due to the ability to provide fresh food steadily (Allen 2015). This ability is attributed to its controlled indoor environment, which provides a favorable environment for crop growth. In particular, modern high-tech autonomous greenhouses integrated with IoT (sensors and actuators) and cloud computing technologies support real-time remote monitoring and precise control, thus promising high crop yields at relatively low resource costs. However, autonomous greenhouse management nowadays relies mainly on experienced labor and the scarcity of such human resources limits the production scale-up (Sparks 2018). On the other hand, when facing a high volume of multimodal information (such as long time-series of temperature, humidity, CO 2 concentration, etc.), it is not feasible to rely solely on human decisions to control high-tech autonomous greenhouses.
+
+With the development of AI, new data-driven technologies are being applied in various agriculture subfields (Liakos et al. 2018). To the best of our knowledge, there is no mature AI-based solution for the autonomous greenhouse control (AGC) optimization problem. The main task of the AGC optimization problem is to provide a control strategy that aims to maximize crop yield and minimize resource consumption of a long-term planting period (typically lasting 3-5 months). However, data collection in greenhouse production is costly and time-consuming, accompanied by sparse signals (e.g., fruits weight). From a machine learning point of view, this poses a serious challenge of insufficient samples for any data-driven optimization algorithms. Inspired by the idea of digital twins, we consider a simulator to simulate the autonomous greenhouse planting process (abbreviated as AGPP), which enables fast generation of virtual planting trajectories. With a simulator as a testbed, the AGC problem becomes a long-horizon strategic optimization problem, similar to robot control (Vemula, Muelling, and Oh 2016). Then one can use optimization algorithms (e.g., reinforcement learning (RL), heuristic algorithms) to explore the optimal AGC strategy on the simulator.
+
+In the literature of greenhouse modeling, the dynamic simulation of the greenhouse planting process is mainly divided into indoor climate simulation (Van Straten et al. 2010) and crop growth simulation (Marcelis et al. 2008). Traditional rule-based simulators rely on strong assumptions and constraints according to expert knowledge (such as crop growth mechanisms), which may oversimplify the planting process (Van Straten et al. 2010;Marcelis et al. 2008). Although this type of simulator reduces the reliance on data, its limited expressive power can lead to a gap between simulation and reality. As a universal approximator (Hornik, Stinchcombe, and White 1989), the powerful ability of NNbased models in the representation of complex nonlinear systems has attracted more and more attention (Chellapilla et al. 1999;Imrak 2008).
+
+Several studies develop NN-based simulators to simulate the climate or crop yields in greenhouses (Schillaci, Schmidt, and Miranda 2021;Salazar et al. 2014). However, these simulators do not couple indoor climate and crop growth states together to simulate the complete planting process in autonomous greenhouses. In addition, they consider only a few factors affecting the greenhouse planting process, for example, in yield prediction, only CO 2 concentration, transpiration and solar radiation intensity are used as inputs (Salazar et al. 2014). To be a competent testbed for strategy optimization, the complete the AGPP simulator should comprehensively consider the interaction of greenhouse climate, crop growth state, and greenhouse control strategy. To this end, we propose an NN-based simulator, which involves 14 factors (such as temperature, humidity, CO 2 concentration, illumination, etc.) to approximate the complete AGPP as much as possible.
+
+The quantity and quality of data are key to training an accurate enough NN-based simulator. IoT technologies enable measurement of high dimensional data (Mekala and Viswanathan 2017), which can be efficiently processed and stored via the cloud platform (Keerthi and Kodandaramaiah 2015). The combination of IoT and the cloud platform provides an ideal solution for data collection and management. However, limited by the sensor capacity, only partial observations of the greenhouse states can be monitored. Any NNbased simulator trained on such collected data inevitably leads to the simulation-to-reality gap. To alleviate this gap, we introduce an incremental scheme in our framework. The intuition behind this is to incrementally update the simulator by continuously accumulating sensor data, thus keep improving the accuracy and can be eventually qualified for deployment to large-scale real-world production.
+
+In this paper, we formalize the AGC problem and propose a smart agriculture solution named iGrow, which is built upon AI, IoT and cloud-native technologies. An overview of iGrow is presented in Figure 1. The main contributions of our work are summarized as follows:
+
+• We formulate the AGC problem as a Markov decision process (MDP) optimization problem. Crop modeling is the other essential part of greenhouse planting process simulation, which can be used to predict yield, growth, etc (Marcelis et al. 2008). Horticultural researchers focus on exploring crop growth mechanisms and establish some rule-based crop models (Bertin and Heuvelink 1993;Marcelis et al. 2008). However, crop growth is a complex nonlinear system, thus the potential relationships between variables are difficult to be characterized. To improve the predictability of crop models, NN-based simulators have been explored on crop yield prediction, such as sweet peppers (Lin and Hill 2008), tomato (Salazar et al. 2014;An et al. 2021).
+
+To the best of our knowledge, AI methods for modeling the complete AGPP remain underexplored. In this paper, we present an incremental NN-based simulator that combines indoor climate, crop growth state, and environmental control operations to simulate the AGPP.
+
+### 2.2. Optimal control for greenhouse
+
+IoT with cloud computing technology has been used to provide smart agricultural solutions (Mekala and Viswanathan 2017). Some applications (Van Beveren et al. 2015;Parameswaran and Sivaprasath 2016) utilize wireless sensor networks to monitor and control crop growth. A smart irrigation system has been developed for remote control to minimize human involvement (Parameswaran and Sivaprasath 2016). In order to improve wheat yields, a reinforcement learning algorithm is used to optimize soil variables on a However, there are no proven solutions to provide automatic strategies for greenhouse control. In this paper, we propose a closed-loop bi-level optimization algorithm to dynamically iterate control strategies during the AGPP.
+
+## 3. Problem Statement
+
+In this work, we formulate the AGC problem as a stochastic MDP optimization problem. In the following section, we give the necessary background of MDP and formally introduce the AGC optimization problem.
+
+### 3.1. MDP introduction
+
+An MDP can be denoted by a tuple S = (S, A, P, R, γ, ρ 0 ), where S ⊆ R n and A ⊆ R m represent the state and action spaces, respectively. The dynamics or transition distribution are denoted as P (s | s, a), the initial state s 0 ∈ S is assumed to follow the initial state distribution ρ 0 , R(s, a, s ) gives the reward function of executing action a to transition from state s to s , and γ ∈ (0, 1] is the discount factor. A policy π(a | s) on S maps a state s to a probability distribution over A that generates trajectories as τ = (s 0 , a 0 , r 0 , s 1 , a 1 , . . . , s T ), where
+
+a t ∼ π (• | s t ), s t+1 ∼ P (• | s t , a t ), r t = R (s t , a t , s t+1
+
+), and T is the terminate time step.
+
+MDP optimization problem. Find a policy π * that maximizes the cumulative expected return R T given s 0 :
+
+π * = argmax π E τ [R T ] = argmax π E τ T -1 t=0 γ t r t . (1)
+
+### 3.2. Formulation
+
+An complete AGPP can be denoted by a tuple
+
+G =< C, G, Y, A, W >, where c ∈ C ⊆ R 4 denotes green- house climate, g ∈ G ⊆ R 3 is the crop growth state, y ∈ Y ⊆ R + ∪ {0} represents the yield, a ∈ A ⊆ R 4
+
+specifies the control setpoints, and w ∈ W ⊆ R 6 represents the outside weather.
+
+The objective of AGC is to find a strategy that both improves crop yields and reduces expenses, such as resource consumption and labor costs, and this can be viewed as a specific instance of the MDP optimization problem. There are many factors involved in the AGC optimization problem, but we can only obtain partial observations from the greenhouse due to the limitation of the sensors. As a result, we focus on 14 observable factors that have a significant impact on planting in the autonomous greenhouse, and omit other variables. Within this context, we can specify the state space, the action space, the reward function, and the transition function of the AGC problem as follows.
+
+• State space: In the AGC problem, each state s consists of a four tuple < w, c, g, y >, and details of each element are shown in Supplementary Table S1. It is noteworthy that each variable of the state is a number with different units, which encode the different information determining the growth status of the crop. • Action space: Only four essential control variables are involved in the AGC problem, including temperature, CO 2 concentration, illumination, and irrigation. We present basic statistics in Supplementary Table S2. Notice that the setting of these action variables will have a decisive effect on the transition of state variables, except for the outside weather w, which is beyond control. • Reward function: Since AGC aims to weigh crop yields against total expenses, we denote the cumulative return R T by the crop gains minus the cost of control strategy consisting of resource consumption, labor costs, etc. By setting γ = 1, the reward function R can be converted into the formulation:
+
+r t = R t+1 -R t .
+
+• Transition function: The transition function in AGC
+
+problem is assumed to be unknown, and we seek for a simulator of the dynamics P (s | s, a) as the approximation of P (s | s, a).
+
+### 3.3. Bi-level optimization
+
+Let θ be the parameterization of the simulator P, and parameterize the control strategy π by parameters φ. In AGC prob-lem, Pθ should be learned before the optimization of strategy π φ in consideration of the sample inefficiency of crop planting. Within this context, the AGC optimization can be formulated as:
+
+max φ R t (θ * , φ) s.t. θ * = argmin θ L train (θ; D),(2)
+
+where L train (θ; D) is the training loss on a given dataset D. This formulation is consistent with bi-level optimization (Wen and Hsu 1991) in a broader scope since both φ and θ need to be optimized to achieve better strategies. φ and θ are treated respectively as upper-level and lower-level variables that are optimized in an interleaving way. In particular, the lower-level optimization represents the simulator calibration with continuous data collection, while the upperlevel optimization corresponds to the strategy iterations on the calibrated simulator.
+
+## 4. Methodology
+
+As shown in Figure 1, we lay out the framework designed for the AGC optimization problem. The proposed solution consists of several essential components and each of them plays a different role in bi-level optimization. To be specific, the decision-making module leverages optimization algorithms to optimize the control strategy on a given simulator, which essentially is a predictive model learned from greenhouse planting data in our context. Supported by IoT and cloud technologies, the optimized strategy can be deployed to real greenhouses, and the corresponding greenhouse state will be monitored and stored in the database. We recall that the continuous collection of new planting data will undoubtedly contribute to the calibration of the data-driven NN-based simulator, which provides a more accurate testbed for further optimization of the AGC control strategy.
+
+### 4.1. Incremental NN-based simulator
+
+As mentioned above, the simulator P of complete the AGPP is a prerequisite to solving the AGC optimization problem.
+
+Since data-driven methods can simulate the planting dynamic with less prior knowledge, we use NNs to build the simulator for the sake of high accuracy and generalizability. Inspired by the design pattern of rule-based simulators, our proposed simulator is divided into three modules (C Θ1 , G Θ2 and Y Θ3 ) instead of directly using one-module modeling to approximate P. The three-module design is equivalent to introducing an additional regularization that not only enhances the interpretability of the simulator but also prevents overfitting while reducing the demand for training data. The detailed modeling process is described below and the configuration of the three neural networks is given in Technical Appendix Section 2.1.
+
+### Greenhouse climate module:
+
+The indoor climate c t at time t can be predicted by the previous outside weather
+
+, where g
+
+(i)
+
+d represents the growth state of the i-th hour of day d, so that the yield module can be denoted by: y d ← Y Θ3 (g
+
+(23)
+
+d-1 , y d-1 ). Similarly, we use the MSE loss function to train the parameters Θ 3 of the yield module.
+
+Incremental mechanism: Note that there is an inherent simulation-to-reality gap between P and P due to partial observations and limited data. However, according to the central limit theorem (Rosenblatt 1956), we can deduce that lim |D|→+∞ P = P, where |D| represents the scale of the dataset. This inference manifests that given sufficiently abundant real data, the data-driven simulator P can be an ideal approximation of the dynamic P in real greenhouses. Therefore, we introduce the concept of the incremental mechanism based on the three-stage simulator, that is, streaming updates the simulator with the newly collected data for error calibration.
+
+### 4.2. Optimization algorithms
+
+AI optimization algorithms are known to be an efficient way to solve the MDP optimization problem (Kolobov 2012;Yao et al. 2021). With the incremental simulator as the testbed, we consider two classical AI optimization algorithms, including the elitist genetic algorithm (EGA) (Rani, Suri, and Goyal 2019) and the soft actor-critic algorithm (SAC) (Haarnoja et al. 2018), to seek the optimal control strategy for the AGC problem. The detailed description and procedure of them are given in Technical Appendix Section 1.
+
+### 4.3. AGC bi-level optimization
+
+When there is a gap between the simulator and the real planting process, the gap has a bad impact on the simulatorbased algorithm optimization. That is, there maybe larger bias between the simulated strategy performance and that of in the real deployment (Janner et al. 2019). To alleviate this problem, we propose a bi-level optimization algorithm to achieve continuous but possibly asynchronous optimization of the simulator and the strategy, as shown in Algorithm 1. In a complete autonomous greenhouse planting period T , the control strategy is re-optimized on the latest simulator at every K 1 time step. The setpoints generated by the latest strategy are fed back to the greenhouse to adjust the state of the greenhouse. Then, the setpoints and the state of the greenhouse will be collected in the data buffer. On the other hand, for every K 2 time step, the simulator will in turn be calibrated by fine-tuning on the latest data buffer. The proposed procedure is similar to lifelong learning (Field 2000) and allows the flexibility to incrementally iterate the simulator and the greenhouse control strategy at different paces to ensure stable and optimal progress.
+
+## 5. Simulation Experiment
+
+In this section, we aim to answer the following questions:
+
+1. How does our incremental NN-based simulator perform compared to an expert rule-based simulator? 2. How effective are the control strategies optimized by the iGrow decision-making module?
+
+### 5.1. Dataset
+
+There are two datasets of tomato planting involved in the simulation experiments, denoted by D r and D v , respectively. Both datasets contain comprehensive records (control strategy, monitored sensor data and economic effectiveness) of autonomous greenhouse tomato planting process.
+
+To be specific, the data in D r are trajectoriesfoot_0 of six independent greenhouses each controlled by a different participating team during the 2find Autonomous Greenhouse Challenge 2 , while D v is composed of thousands of virtual trajectories generated by a SOTA rule-based tomato simulator (namely WUR simulator) (Luo et al. 2005) using multiple stochastic strategies. Note that the two aforementioned datasets share the same calculation method of economic effectiveness 1 .
+
+### 5.2. Simulator evaluation
+
+To evaluate the performance of the incremental NN-based three-stage simulator in representing the dynamic process of complete autonomous greenhouse planting, we design the following two experiments.
+
+Accuracy on virtual trajectories. We consider two variants, baseline and incremental simulators, which are trained by pure virtual and hybrid trajectories, respectively. For pure virtual trajectories, we randomly select 1000 trajectories from D v , denoted by Dv . For hybrid trajectories Dv+r , we replacing 5 virtual trajectories in Dv with 5 real trajectories from D r (excluding the planting trajectory of the champion team -Automatoes). Besides, both simulators are evaluated on the same test set T v consisting of 200 additional random virtual trajectories from D v . The evaluation metric is goodness-of-fit, denoted by R 2 (McDonald 1989). The R 2 of both simulators on different state variables are given in Table 1 (See Supplementary Table S1 for the descriptions of state variables). It is easy to calculate that the overall R 2 of baseline and incremental simulator reach 0.911±0.009 and 0.906±0.046, respectively. The results show that both variants of our simulator achieve accuracy comparable to that of WUR simulator, which demonstrates the feasibility and effectiveness of NN-based simulator in reducing the reliance on expert knowledge. On the other hand, we note that the performance of incremental simulator is slightly inferior to that of incremetal simulator. The reason is that incremental simulator is trained on Dv+r containing real trajectories, whose data distribution may deviate from the test set T v composed of virtual trajectories.
+
+Accuracy on real trajectories. To further investigate the ability of different simulators to characterize the real planting process, we input the control strategy of champion team Automatoes into three simulators, i.e., WUR simulator and both of our simulators. We visualize net profit curves simulated by the three simulators versus ground truth in Figure 3.
+
+As shown in Figure 3, it can be found that the gap between WUR simulator and real planting process is the smallest. However, WUR simulator is a rule-based simulator parametrized based on strong prior and assumptions, which makes it difficult to generalize and adapt to different realworld scenarios. On the other hand, by comparing two variants of our simulators (see in Figure 3(b)), we find that real data can calibrate the gap between simulation and reality. And it can be anticipated that as the collected real data become abundant enough, incremental NN-based simulators would overtake ruled-based simulators due to stronger expressive power and fewer constraints from assumptions.
+
+### 5.3. Decision-making module evaluation
+
+In order to solve the AGC optimization problem, we propose a decision-making module. In this section, we verify the performance of control strategies optimized by this module compared with that of planting experts. To be specific, we use two typical optimization algorithms, SAC and EGA, to optimize the AGC strategies on the above trained incremen- tal simulator (see parameters in Technical Appendix Section 2.2 and 2.3). Besides, we simulate the planting strategy of Automatoes (the champion team of the 2find Autonomous Greenhouse Challenge), which is representative of the most advanced planting level based on the expert decision. For the experiment to be comparable, we set the simulated outside weather to be consistent with that during the 2find Autonomous Greenhouse Challenge. The evaluation results are shown in Figure 4, and we can observe that:
+
+• Although only EGA beats Automatoes in yield, both optimization algorithms show significant advantages in terms of resource efficiency (see in Figure 4(a), (b)). As a result, compared to Automatoes, the control strategies of SAC and EGA algorithms are superior at balancing yield and cost, improving net profit by 29.39% and 285.82%, respectively (see in Figure 4(c)). The main reason is that optimization algorithms can provide more fine-grained control strategies than human experts, as shown in Figure 4(d). This experimental result demonstrates the potential of iGrow decision-making module in solving the AGC problem. • The final net profit of SAC is inferior to that of EGA. This is probably because SAC focuses on short-range optimization due to bootstrapping of discounted cumulative net profit by Bellman update, whereas the long-term planting period (nearly 4000 steps) poses a great challenge to the estimation accuracy. In contrast, EGA only cares about the final net profit, by directly optimizing the full strategy of the whole planting period, thus enables a better balance between yield and cost. Based on the above results and analysis, we use EGA algorithm to drive the decision-making module when we deploy iGrow in real greenhouses.
+
+## 6. Real-world Experiment
+
+In this section, we analyze the results of 2 pilot projects deployed in real autonomous greenhouses to validate the effectiveness and superiority of iGrow in practical applications.
+
+### 6.1. Deployment overview
+
+We configure the iGrow supporting hardware and software facilities (decision-making, IoT and cloud-native module, etc.) in some real greenhouses, as shown in Figure 1. Growers/Central computers can make decisions based on the data collected by the sensors, and then send control commands to these autonomous greenhouses remotely. Next, these commands take effect via the actuators installed in greenhouses. The above process forms a closed-loop control to plant in autonomous greenhouses (see details in Supplementary Figure S2, S3 and Technical Appendix Section 3).
+
+In terms of economic effectiveness, we refer to the calculation of the 2find Autonomous Greenhouse Challenge, and additionally take into account the equipment depreciation (apportioning the purchase price of equipment to six years).
+
+### 6.2. Case study
+
+We conduct 2 pilot projects in some real autonomous greenhouses in Liaoyang City, Liaoning Province, China, with tomatoes as the experimental crop (See Supplementary Figure S1).
+
+In each pilot project, we take a control experiment to evaluate the greenhouse control strategy, where the control groups are managed by planting experts, while the experimental groups rely on iGrow. The 1st pilot project runs from October 2019 to March 2020, and the net profit of the experimental group (2 greenhouses) is on average about 500 C per greenhouse higher than that of the control group (1 greenhouse), where the area of each greenhouse is 667 m 2 . To further verify the statistical significance of the experimental results, we scale up the experiments in the 2find pilot project (from March 2020 to July 2020), i.e., the control and experimental groups consist of 2 and 7 greenhouses, respectively.
+
+In this paper, we present the analyses of the result of the second pilot project We use an independent sample t-test for the economic effectiveness of the experimental group, demonstrating the superiority of iGrow compared to expert growers. Key statistics from Figure 5 and Table 2 are summarized below.
+
+• The experimental group on average increases yield and net profit by 10.15% and 92.70% compared to the control group. • In terms of cost, although the experimental group consumes more energy, its fruits ripened faster (on average, the harvest is completed one week earlier, shown in Figure 5(a)), resulting in significant savings in crop maintenance costs and thus lower total costs than that of the control group. • The average unit price of fruits is higher in the experimental group, which indicates that the experimental group produces fruits of higher quality (e.g., sweetness and weight) compared to the control group. Furthermore, we analyze the pair relationship among four action variables over time to understand the differences of strategies and obtain some insights that may inspire growers. Due to space limitations, the relevant visualization and analysis are described in Supplementary Figure S4 to S13.
+
+## 7. Conclusion
+
+In this paper, we formulate AGC as a MDP optimization problem and propose a smart agriculture solution, namely iGrow. The core component of iGrow is the decision-making module, which is updated by our proposed bi-level optimization algorithm. Both simulated and pilot results demonstrate the effectiveness and superiority of iGrow.
+
+Our solution has been verified to improve the automation level of greenhouse control and boost growing efficiency in real production environments, thus can be considered as an alternative of traditional manual control. Moreover, the idea of bi-level optimization provides a paradigm of first building an accurate digital twin of the corresponding real-world application, and then evaluating and iterating the optimization algorithm without a real environment.
+
+## Figures et tableaux
+
+**Figure 1:** An overview of iGrow. Specifically, iGrow optimizes the AGC strategy based on a decision-making module, then performs actions and monitors greenhouse status through IoT technology. Sensor data is visualized on the cloud platform, as well as used by a bi-level optimization algorithm to dynamically re-optimize the decision-making module to calibrate errors.
+
+**Figure 2:** Network structure of the incremental simulator. (a) and (b) represent the greenhouse climate module and the crop growth module, respectively, which simulate the greenhouse planting process at hourly level. (c) represents the yield module, which simulates at daily level.
+
+**Figure 3:** Accuracy of different simulators in the real scenario, take planting trajectory of Automatoes as an example. (a) presents accumulative net profit simulated by different simulators versus ground truth; (b) presents accumulative absolute error of the simulated curves of net profit compared to the ground truth over the planting period.
+
+**Figure 4:** Performance comparison of different methods on our incremental simulator. (a)-(c) denote economic effectiveness simulated by different methods; (d) shows the 120hour illumination action provided by EGA and Automatoes.
+
+**Figure 5:** Comparison of the economic effectiveness of the control group (planting experts) and the experimental group (iGrow) in the 2find pilot project. (a), (b) denote the accumulative harvest during the planting period. (c) shows the distribution of fruit prices.
+
+[figure sans légende identifiée] and C are defined in Section 3.2. We adopt the mean-square error (MSE) as the loss function. Moreover, we assume that greenhouse climate states transit once per hour, which is a suitable time granularity to approximate reality.
+
+    (0)
+
+[figure sans légende identifiée] Algorithm 1: AGC bi-level optimization algorithm Input: Dataset D, simulator P, the update period K 1 of strategy, and the update period K 2 of simulator Output: Updated simulator P and updated dataset D
+
+    1 Initialize τ = ∅
+     | // A complete planting period T
+    2 for t ∈ [0, T ) do
+     | // The upper-level optimization
+    3 | if t mod K 1 == 0 then
+    4 | π ← re-optimize π by simulating on the latest
+     | simulator | P
+     | // The lower-level optimization
+    5 | if t mod K 2 == 0 then
+    6 | P ← update P by τ
+     | // Control and monitoring
+     | greenhouse status
+    7 | a t ← π, s t+1 ← P(s t , a t ), r t ← R(s t , a t )
+     | // Cumulative planting data
+
+**Table 1:** R 2 of different variables of two simulators. Note that R 2 ∈ [0, 1] and higher values indicate higher accuracy.
+
+    Sim | Var | AirT | AirRH | AirCO 2 | PAR
+    Baseline | 0.915 | 0.707 | 0.930 | 1.000
+    Incremental 0.986 | 0.941 | 0.988 | 1.000
+    Sim | Var | LAI | PlantLoad NetGrowth | FW
+    Baseline | 0.927 | 0.935 | 0.959 | 0.917
+    Incremental 0.669 | 0.849 | 0.939 | 0.880
+
+[figure sans légende identifiée] RI: relative improvement of the experimental group compared to the control group, and +/-in this column indicates improvement/degradation in performance, respectively. T-test: a value less than 0.01 indicates that the result is statistically significant.
+
+    Economic (per greenhouse) | Control Group | Experimental Group | RI | T-test
+    Energy Cost (C) | 13.90 ± 0.23 | 50.11 ± 20.48 | -260.57% 2e-2
+    Crop Maintenance Cost (C) | 1543.96 ± 0.00 | 1457.19 ± 5.11 | +5.62% | 5e-6
+    Equipment Depreciation (C) | 1711.88 ± 0.00 | 1711.88 ± 0.00 | 0.00% | -
+    Total Cost ( C) | 3269.74 ± 0.23 | 3219.18 ± 18.14 | +1.55% | 5e-3
+    Fruit Prices ( C/Kg) | 0.45 ± 0.00 | 0.49 ± 0.01 | +10.63% | 5e-4
+    Crop Yield (Kg) | 11097.60 ± 53 | 12223.90 ± 45 | +10.15% | 8e-3
+    Gains ( C) | 4768.30 ± 9.79 6106.88 ± 189.09 +28.07% | 1e-4
+    Net Profit (C) | 1498.56 ± 10.03 2887.70 ± 183.45 +92.70% | 1e-4
+
+**Table 2:** Overall economic effectiveness comparison of the 2find pilot project. Note that we first account for the economic indicators for each greenhouse, and then calculate the statistical indicators (including mean and standard deviation) for the control and experimental groups, respectively.

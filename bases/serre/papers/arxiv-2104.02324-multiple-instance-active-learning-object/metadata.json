@@ -1,0 +1,71 @@
+{
+  "id": "arxiv-2104.02324-multiple-instance-active-learning-object",
+  "title": "Multiple instance active learning for object detection",
+  "authors": [
+    {
+      "given": "Tianning",
+      "family": "Yuan"
+    },
+    {
+      "given": "Fang",
+      "family": "Wan"
+    },
+    {
+      "given": "Mengying",
+      "family": "Fu"
+    },
+    {
+      "given": "Jianzhuang",
+      "family": "Liu"
+    },
+    {
+      "given": "Songcen",
+      "family": "Xu"
+    },
+    {
+      "given": "Xiangyang",
+      "family": "Ji"
+    },
+    {
+      "given": "Qixiang",
+      "family": "Ye"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2104.02324",
+  "url": "https://arxiv.org/abs/2104.02324",
+  "type": "preprint",
+  "axes": [
+    "calibration-decision",
+    "active-labelling"
+  ],
+  "tags": [
+    "active-learning",
+    "voc",
+    "coco"
+  ],
+  "added": "2026-10-05",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 1, Table, [figure sans légende identifié, Table 4, Table 5",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "imported_from": {
+    "base": "yolo-data",
+    "paper_id": "arxiv-2104.02324-multiple-instance-active-learning-object",
+    "date": "2026-10-29",
+    "fiche": "done",
+    "axes": [
+      "active-learning"
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "id": "2018-shamshiri-review-optimum-temperature-humidity-vapour",
+  "title": "Review of optimum temperature, humidity, and vapour pressure deficit for microclimate evaluation and control in greenhouse cultivation of tomato: a review",
+  "authors": [
+    {
+      "given": "Redmond Ramin",
+      "family": "Shamshiri"
+    },
+    {
+      "given": "James W",
+      "family": "Jones"
+    },
+    {
+      "given": "Kelly R",
+      "family": "Thorp"
+    },
+    {
+      "given": "Desa",
+      "family": "Ahmad"
+    },
+    {
+      "given": "Hasfalina Che",
+      "family": "Man"
+    },
+    {
+      "given": "Sima",
+      "family": "Taheri"
+    }
+  ],
+  "year": 2018,
+  "venue": "International Agrophysics 32(2), 287–302",
+  "doi": "10.1515/intag-2017-0005",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1515/intag-2017-0005",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "growth",
+    "crop-practices"
+  ],
+  "tags": [
+    "humidity",
+    "survey",
+    "temperature",
+    "tomato",
+    "vpd"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

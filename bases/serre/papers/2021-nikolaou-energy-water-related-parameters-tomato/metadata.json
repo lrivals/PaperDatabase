@@ -1,0 +1,63 @@
+{
+  "id": "2021-nikolaou-energy-water-related-parameters-tomato",
+  "title": "Energy and Water Related Parameters in Tomato and Cucumber Greenhouse Crops in Semiarid Mediterranean Regions. A Review, Part II: Irrigation and Fertigation",
+  "authors": [
+    {
+      "given": "Georgios",
+      "family": "Nikolaou"
+    },
+    {
+      "given": "Damianos",
+      "family": "Neocleou"
+    },
+    {
+      "given": "Anastasis",
+      "family": "Christou"
+    },
+    {
+      "given": "Polycarpos",
+      "family": "Polycarpou"
+    },
+    {
+      "given": "Evangelini",
+      "family": "Kitta"
+    },
+    {
+      "given": "Nikolaos",
+      "family": "Katsoulas"
+    }
+  ],
+  "year": 2021,
+  "venue": "Horticulturae",
+  "doi": "10.3390/horticulturae7120548",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/horticulturae7120548",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "climate-control",
+    "crop-practices"
+  ],
+  "tags": [
+    "tomato",
+    "cucumber",
+    "irrigation",
+    "fertigation",
+    "EC",
+    "soilless",
+    "nutrient-solution",
+    "salinity"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 2"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

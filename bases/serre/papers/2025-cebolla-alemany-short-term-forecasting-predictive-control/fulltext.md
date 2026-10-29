@@ -1,0 +1,415 @@
+---
+id: 2025-cebolla-alemany-short-term-forecasting-predictive-control
+title: "Short-term forecasting and predictive control of rooftop greenhouse microclimate using multi-horizon machine learning models"
+year: 2025
+backend: grobid
+---
+
+## Abstract
+
+This study presents a data-driven forecasting and control framework tailored to rooftop smart greenhouses integrated into buildings for urban agriculture-a context rarely addressed in existing literature. By combining internal environmental data, external meteorological inputs, and actuator operation states, the framework enables short-term temperature forecasting with high temporal resolution (5, 10, and 15-minute horizons). Advanced feature engineering techniques-including lag variables, rolling statistics, and derived indicators-were applied to capture complex greenhouse dynamics. Seven regression-based machine learning models (namely, Decision Tree, Random Forest, Gradient Boosting, XGBoost, LightGBM, Support Vector Regression, and Multi-layer Perceptron) were trained and systematically compared using cross-validation and SHAP-based interpretability. The best-performing model for each horizon was selected and integrated into a thresholdbased and a fuzzy logic-based predictive control system. Results from real-world rooftop greenhouse data show robust forecasting performance (R² > 0.98, MAE between 0.280 and 0.311, and RMSE between 0.638 and 0.728 for the best performing model across all horizons) and demonstrate that the fuzzy controller achieved over 60% energy savings compared to traditional threshold-based strategies, while maintaining climate stability. This work highlights the feasibility of deploying data-driven MPC strategies in building-integrated greenhouse environments and their compatibility with digital twin ecosystems. It also identifies key challenges for generalization, including dataset size, system configuration, and geographical variability.
+
+## 1. Introduction
+
+The integration of greenhouses into buildings is increasingly recognized as a promising strategy to improve food security and optimize resource use in urban environments. Building-integrated agriculture represents a critical component of the ecological transition in cities, aligning with broader goals of sustainability [1,2]. Particularly, rooftop greenhouses offer a promising approach to addressing urban sustainability challenges while enhancing local food [3]. By coupling building systems with water, energy, and food flows, these integrated systems create synergies that contribute to decarbonization and improved urban resilience. As cities face growing challenges due to climate change, population growth, and resource scarcity, integrated solutions that promote circularity, energy efficiency, and self-sufficiency are gaining attention. Rooftop greenhouses represent one such strategy, offering benefits across multiple domains, including reduced heating demand [4], improved water reuse [5], carbon capture via CO₂ absorption by crops [6], and community engagement through urban farming and education [7].
+
+Moreover, it is important to highlight that building-integrated rooftop greenhouses exhibit fundamentally different microclimatic and energy dynamics compared to conventional standalone greenhouses. In rooftop greenhouses, the rooftop structure allows for symbiotic exchanges of heat, water, and CO₂ between the greenhouse and the host building, which can significantly reduce the building's heating and cooling loads [3,8,9]. Additionally, unlike rural or freestanding greenhouses, rooftop greenhouses are subject to urban microclimate effects, increased cooling demand, and structural constraints, necessitating a more holistic modeling approach that integrates building energy performance, ventilation, and rooftop-specific phenomena [10,11]. These rooftop-specific conditions include the moderating influence of the building's thermal mass and exposure to the urban heat island effect, which elevates nighttime temperatures and reduces radiative cooling.
+
+However, managing environmental conditions within rooftop greenhouses is particularly complex due to intense external influences such as high ambient temperature and solar irradiance. In arid and semiarid regions, as well as Mediterranean climates, summer temperatures can be extreme, leading to excessive energy usage and unfavorable internal conditions that compromise crop yield and quality [12]. A common response to cope with these severe conditions is to shut down greenhouse operations during peak heat periods [13], which results in revenue losses [14]. Greenhouse temperature critically affects crop yield, energy consumption, and water demand [15]. Elevated temperatures increase transpiration losses and cause plant stress, while low temperatures can inhibit enzymatic activity and reduce productivity [16]. Thus, effective, adaptive temperature control is essential to ensure consistent performance under varying external conditions [12].
+
+Model Predictive Control (MPC) has proven effective in managing dynamic systems with constraints and nonlinearities [17]. Conventional MPC approaches rely either on physics-based models-limited by simplifying assumptions-or on purely data-driven (DD) models, which, while accurate, often function as black boxes [18,19]. DD models have extensively demonstrated performance in predicting temperature, humidity, and other environmental parameters in conventional greenhouse settings. Some applications reported in the literature outperforming classical regression models include the capture of the intricate dependencies between solar radiation, ventilation, and internal temperature [20]; the estimation of crop evapotranspiration [21]; or the simulation of relative humidity in terms of root mean squared error (RMSE) and mean absolute error (MAE) [22]. However, both types of models, physics-based and DD models, face challenges related to system uncertainties, including unknown greenhouse properties and rapidly changing weather conditions (e.g., clouds affecting solar irradiance) [23]. These uncertainties can undermine the effectiveness of deterministic MPC strategies, emphasizing the need for robust, adaptive, and interpretable control frameworks [24,25].
+
+Recent research has advanced the interpretability of DD models in MPC contexts. For instance, SHAP (SHapley Additive exPlanations) has been integrated into ensemble forecasting systems to explain model predictions (e.g. [26][27][28]). Other contributions include inverse optimal control methods for local explainability [29] and SHAP-guided feature selection in agricultural applications pipelines [30,31]. These developments aim to improve the transparency of black-box models, enabling more reliable decision-making in control systems. Nonetheless, existing solutions ten lack fine-grained temporal resolution and integrated control loops.
+
+In this regard, Yu, Sun, et al. [32] have recently published a comprehensive review on prediction and control methods for greenhouse temperature, offering a valuable perspective on the current status of AI-based approaches and outlining future directions. While their work provides a robust conceptual framework for greenhouse climate control, it highlights the need for more integrated solutions that address both forecasting and autonomous decision-making cohesively.
+
+Building on this framework and aligned with the directions outlined by Yu, Sun, et al. [25], this research addresses these gaps by proposing a robust data-driven forecasting and control framework tailored to rooftop greenhouses-an environment still underrepresented in the literature and characterized by unique urban microclimatic dynamics [3,20]. The framework integrates three data streams: internal environmental variables (e.g., temperature, humidity), external meteorological conditions (e.g., ambient temperature, solar irradiance, wind speed), and control data (e.g., fan operation states). Although such multi-source fusion remains rare in predictive greenhouse control, previous studies highlight its strong potential for improving forecast accuracy and control robustness [20,33]. Furthermore, the implementation of multi-horizon forecasting at high temporal resolution (5, 10, and 15 minutes) can address a critical gap in short-term microclimate prediction, where many existing works still rely on single-horizon or coarser time-step models [34,35].
+
+The methodology employed in this study incorporates advanced feature engineering-including lag variables, rolling statistics, and derivatives-to capture complex greenhouse temporal dynamics, following recent recommendations for improving generalization in controlled agricultural time-series [26,36,37]. All models are trained within a modular and scalable Python architecture that standardizes data preprocessing, cross-validated training, centralized logging, and SHAP-based interpretability [38]. These SHAP techniques have been applied ensemble models [27,28], feature selection in agriculture [30,31], and accelerated explanation generation (C-SHAP) transparency [33], enhancing the practical utility of interpretable ML pipelines [35]. A diverse set of regression machine learning (ML) models-Decision Tree, Random Forest, Gradient Boosting, XGBoost, LightGBM, Support Vector Regression (SVR), and Multi-Layer Perceptron (MLP)-is benchmarked across multiple forecasting horizons (5, 10, and 15 minutes) at high temporal resolution (5-minute intervals), addressing the limitations of single-step or long-horizon approaches. Then, the best-performing model for each horizon is selected based on accuracy and robustness, and subsequently used in the predictive control layer. The resulting multi-horizon, interpretable forecasting pipeline enables direct incorporation into a fuzzy-logic controller, supporting adaptive and energy-efficient fan operation while maintaining climate stability-thereby demonstrating the feasibility of forecast-driven predictive control in rooftop greenhouse environments.
+
+Regression-based models, such as Random Forest (RF), XGBoost, LightGBM, SVR, and MLP, have become popular in greenhouse climate forecasting due to their strong balance of accuracy, interpretability, and computational efficiency. These models outperform traditional timeseries approaches like ARIMA, which struggle with nonlinearity, multivariate inputs, and noisy sensor data [34,39]. For example, LightGBM has been shown to outperform SVR, MLP, and Radial Basis Function (RBF) approaches in greenhouse temperature prediction when using carefully engineered time-series features [34], while SVR consistently surpasses simple linear and ARIMA models in capturing greenhouse climate dynamics [40]. Additionally, XGBoost has demonstrated superior performance over Long Short-Term Memory (LSTM) networks in internal greenhouse temperature predictions, requiring less computational effort and providing better interpretability [41]. While LSTMs offer powerful sequence modeling, they demand larger datasets, longer training times, and lack transparency, making regression models more suitable for real-time, interpretable greenhouse control systems.
+
+Furthermore, while recent work has demonstrated the potential of machine learning techniques, particularly GRU-based (Gated Recurrent Unit) model models, for multi-horizon temperature forecasting in conventional solar greenhouses [42], their approach was limited to offline forecasting and did not integrate control actions or actuator behavior. Their study, based on 15-minute resolution data from a single-span greenhouse, focused primarily on prediction accuracy across horizons ranging from 15 minutes to 24 hours. In contrast, the present study advances the field by embedding short-term forecasting (5, 10, and 15 minutes) into a real-time predictive control loop tailored for urban rooftop greenhouses-an environment characterized by rapid microclimatic fluctuations and structural integration challenges. The proposed architecture not only provides high-resolution forecasts but also actively regulates ventilation through a fuzzy logic controller. This combination yields interpretable and energy-efficient climate control with demonstrated cost savings, offering a scalable and digitally replicable solution compatible with smart building environments.
+
+In summary, this work addresses the still underexplored context of predictive microclimate control in urban rooftop greenhouses, which face highly dynamic and challenging climatic conditions. The proposed approach aims to integrate internal, external, and control data sources with regression-based models and interpretability techniques, enabling robust and adaptive multi-horizon forecasts. Additionally, embedding these forecasts into a fuzzy logic controller shows the potential for more efficient and explainable temperature regulation, reducing energy costs while ensuring climate stability.
+
+The article is structured as follows. Section 2 introduces the case study, detailing the data preprocessing steps, forecasting models, and control frameworks. Section 3 presents the experimental results. Section 4 discusses the performance of the forecasting models and control strategies, as well as the broader impact, limitations, and directions for future research. Finally, Section 5 concludes the study by summarizing the main contributions.
+
+## 2. Methodology
+
+### 2.1. Data source
+
+The studied greenhouse is located on the rooftop of the TR5 building at the ESEIAAT campus of the Universitat Politècnica de Catalunya (UPC), in Terrassa, in the northeastern Iberian Peninsula (Mediterranean region; 41.5627 • N, 2.0231 • E). This greenhouse is part of the Air Quality & Green Infrastructure Living Lab (Airgilab).
+
+The experimental platform consists of a Venlo-type greenhouse with a gable roof design (Fig. 1), covering 15 m² (5 m wide × 3 m long). It features a gutter height of 2.8 m and a 40% roof slope, resulting in a ridge height of 3.8 m. The structure is built from hot-dip galvanized steel and enclosed with 10 mm-thick transparent polycarbonate panels, compliant with the EN 16153:2013 standard for light-transmitting multiwall sheets. These panels provide 81% light transmittance and 80% total solar energy transmittance, supporting optimal plant growth. Their thermal transmittance (U-value) of 3.02 W/m²⋅K contributes to effective insulation.
+
+Three of the greenhouse's walls are exposed to the outdoor environment, while the north-facing wall is shared with an identical adjoining greenhouse. Indoor climate regulation is achieved through a mechanical ventilation system consisting of a double-deflection aluminum inlet shutter on the west wall and an overpressure exhaust shutter on the east wall. The system operates with a maximum airflow rate of 5760 m³/h, powered by a 0.75 kW fan motor.
+
+Environmental data were collected during a year from within the greenhouse at 5-minute intervals, including indoor temperature, relative humidity, and extended photosynthetically active radiation (ePAR), as well as the operational status of the ventilation system. Indoor measurements were obtained using an Apogee SME-600 ePAR Guardian CEA Multi-Sensor Monitor, suspended from the ceiling to ensure accurate and representative readings. In parallel, outdoor environmental variables-ambient temperature, humidity, wind speed, and total incident solar radiation-were recorded using a Davis Instruments Vantage Pro2 weather station installed 400 meters from the greenhouse, on the rooftop of another building within the same campus. Sensor specifications are summarized in Table 1.
+
+### 2.2. Data preprocessing and feature engineering
+
+The values of environmental variables were organized into records, composed of values collected for the same timestamp. A structured preprocessing workflow was implemented to standardize missing value representations, interpolate missing data based on time, and apply KNN imputation.
+
+As starting point, duplicate timestamps were removed, and data was filtered to exclude extreme temperature outliers (> 60 • C). Then, timebased interpolation was applied to handle small time gaps from sensor delays ensuring continuity following Eq. ( 1), where x(t i ) is a missing observation of variable x at discrete time t i .
+
+x(t i ) = x(t i-1 ) + x(t i+1 ) -x(t i-1 ) t i+1 -t i-1 ⋅(t i -t i-1 )(1)
+
+After applying the time-based interpolation, missing values may remain due to prolonged outages or data anomalies. To solve this issue, K-nearest neighbor (KNN) imputation was used as described in Eq. ( 2), where xˆj is a feature vector with missing values, x i is a known vector from the k-nearest neighbors, and w i is a distance-based weight. This is applied with a number of neighbors equal to 5 to fill remaining gaps.
+
+xj = ∑ k i=1 w i ⋅x ij ∑ k i=1 w i
+
+, where
+
+w i = 1 ‖ x i -x j ‖(2)
+
+Then, the correlation matrix is used to assess interrelations between observed variables to conduct a preliminary assessment of data quality.
+
+Finally, the following types of features F were generated for each sensor variable. Although models trained on raw variables can be effective in more stable greenhouse environments, rooftop greenhouses exhibit low thermal inertia and rapid internal-external exchanges, which introduce short-term temporal dependencies and actuator-driven delays. To ensure that the models could capture these dynamics (and to provide physically meaningful inputs for control-oriented forecasting) the feature set was designed to represent temporal evolution, environmental gradients, and the influence of recent actuator activity. The number of 5-minute intervals used for rolling statistics (mean and standard deviation) is denoted by N, as defined below.
+
+• Forecast targets (t + h) were created to train and evaluate each model at prediction horizons:
+
+y t+h = x Temperature t (t + h), h ∈ {5, 10, 15} min(3)
+
+• Lagged features (lags up to 30 minutes), capture temporal dependencies by referencing past sensor values:
+
+F lag x,t-Δt = x(t -Δt), Δt ∈ {5, 10, 15, 20, 30}(4)
+
+• First-order differences, to highlight trends or rapid changes in sensor values:
+
+F delta x (t) = x(t) -x(t -5)(5)
+
+• Rolling statistics, to aggregate data over a rolling window to compute mean standard deviation where N ∈ {6, 12, 24} corresponding to 30, 60, and 120 minutes:
+
+F roll mean x (t) = 1 N ∑ N-1 i=0 x(t -5i)(6)
+
+F roll std x (t) = ̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅ ̅ 1 N ∑ N-1 i=0 ( x(t -5i) -F roll mean x (t) ) 2 √ √ √ √(7)
+
+• Cross features, representing internal-external environmental gradients to highlight the effect of external conditions on internal states and understand the environmental dynamics of a building, as shown in Eqs. ( 8) and (9).
+
+F TempDiff (t) = Temperature(t) -ExtTemp(t) (8) F HumidityDiff (t) = RelativeHumidity(t) -ExtHumidity(t)(9)
+
+• Actuator features, to provide context on system behavior as a result of recent fan operational trends and metrics (minutes since last on/off, rolling sum:
+
+F FanOnSince (t) = min{τ : C1Fan(t -τ) = 1} (10) F FanRunSum (t) = ∑ 5 i=0 C1Fan(t -5i) (11)
+
+### 2.3. Forecasting framework
+
+As described in the previous section and illustrated in Eq. ( 3), the forecasting task was structured to predict short-term internal greenhouse temperature at horizons of 5, 10, and 15 minutes ahead. This multi-horizon setup allows for more responsive and anticipatory control strategies compared to traditional single-step forecasting approaches. To this end, a range of non-linear supervised regression ML was evaluated. These models were trained independently for each forecast horizon, evaluated using multiple metrics, and cross-validated to enhance analysis robustness with MAE as the scoring metric.
+
+The evaluated models, based on their relevance to short-term environmental forecasting, include:
+
+• Tree-based: Decision Tree (DT) and Random Forest (RF).
+
+• Boosted Trees: XGBoost, LightGBM, and Gradient Boosting (GBR).
+
+• Kernel-based: Support Vector Regression with Radial Basis Function kernel (SVR-RBF). • Neural Network: Multi-layer Perceptron (MLP).
+
+DT and RF models split data using feature thresholds. While DTs are easy to implement, they are prone to overfitting. RF mitigates this by aggregating multiple trees, enhancing generalization. RF has been applied in indoor air quality prediction tasks [43]. Boosted Trees models -XGBoost, LightGBM, and GBR-improve prediction accuracy by sequentially correcting errorsand incorporate regularization, missing data handling, and high effectiveness in HVAC and greenhouse modeling [44]. SVR with RBF kernel efficiently captures non-linear dynamics even in small datasets and has been successfully used in forecasting indoor environmental variables [45]. MLP neural networks, composed of layered non-linear transformations, have shown strong predictive performance in estimating indoor air temperature, CO 2 concentration, and relative humidity [46].
+
+Model configuration was handled via YAML files to ensure transparency and reproducibility. The dataset was split using an 80/20 ratio, with 80% for training and 20% for testing, and a sliding window timeseries cross-validation strategy was implemented to assess preserve temporal structure and avoid information leakage. In each fold, models were trained on a rolling historical subset and evaluated on the subsequent window, improving generalization and allowing performance to be tracked over time and across varying climatic conditions. This approach has been recognized as effective for time-series modeling [47].
+
+Model interpretability was addressed through the application of SHAP (SHapley Additive exPlanations) values. SHAP provides a unified measure of feature impact across models, quantifying each input feature's contribution to a given prediction. This allowed for the identification of the most influential variables at each forecasting horizon and improved trust in the model outputs. Global SHAP values were aggregated to rank features by average importance, while local SHAP values enabled inspection of individual predictions to detect anomalies or context-specific drivers of forecasted temperature changes. The applicability of SHAP for interpretability in environmental and energy systems has been demonstrated in several peer-reviewed studies [48].
+
+Finally, model performance was evaluated using the metrics listed in Table 2, by representing the predicted values against the actual observations for each model, and analyzed through the following plots and diagrams:
+
+• Error control chart, containing the mean error and control bands of twice its standard deviation.
+
+• Error histogram.
+
+• Residuals vs predicted temperature scatter plot.
+
+• Hourly MAE.
+
+• Real vs predicted temperature over time for a month.
+
+### 2.4. Real-time prediction workflow
+
+A live prediction script was implemented to facilitate real-time forecasting of environmental variables. The script takes real-time environmental data as input and generates predicted temperatures for 5, 10, and 15 minutes ahead. The processing pipeline mirrors that used during the model training phase, including steps such as data interpolation, KNN imputation, and feature engineering. This ensures consistency between training and real-time prediction. The script applies the bestperforming models identified during training to deliver accurate and timely forecasts. The primary objective of this workflow is to enable real-time monitoring and dynamic climate adaptation in greenhouse environments, optimizing conditions for plant growth and resource efficiency.
+
+### 2.5. Predictive control framework
+
+The predictive control framework proactively maintains optimal environmental conditions by anticipating future temperatures. It employs a threshold-based control logic where a model's live forecasts are compared to a setpoint of 26 • C, with a tolerance band of ±1 • C. If a prediction exceeds the setpoint, the C1Fan is activated to regulate the temperature. To prevent the accumulation of small forecasting errors from propagating across control steps, a corrected forecast was used. In this correction, the actual measured temperature at time t replaces the previously forecasted value that would otherwise serve as input for the multi-step prediction. This prevents minor deviations from causing intermittent or oscillatory actuator behavior, leading to smoother and more stable control responses without modifying the underlying forecasting models. A sliding window approach is also applied to ensure the system remains responsive and enables continuous, real-time adjustments to maintain desired climate conditions.
+
+To further enhance control smoothness and reduce abrupt actuator switching, a fuzzy logic-based control strategy was developed and evaluated alongside the threshold-based predictive control. The fuzzy logic controller was designed to mimic expert knowledge through intuitive rules based on the predicted temperature.
+
+The controller uses the forecasted temperature as its input and generates a continuous output representing fan intensity. This approach allows the system to implement gradual control decisions, rather than binary ON/OFF switching, which can reduce mechanical stress on the fan and provide more stable climate regulation. The input variable, "forecast temperature," was fuzzified into three linguistic categories reflecting plant growth conditions: Low (suboptimal for plant growth), optimal (target comfort zone), high (risk of overheating or stress).
+
+Each term was modeled using standard membership functions based on optimal tomato growth conditions found in the literature. The membership functions used are illustrated in Fig. 2.
+
+Mathematically, these membership functions were defined as follows:
+
+• Low: Modeled with a left-shoulder membership function:
+
+μ Low (x) = ⎧ ⎪ ⎪ ⎪ ⎨ ⎪ ⎪ ⎪ ⎩ 1 x ≤ 16 20 -x 4 16 < x ≤ 20 0 x > 20(12)
+
+• Optimal: Defined by a triangular membership function:
+
+μ Optimal (x) = ⎧ ⎪ ⎪ ⎪ ⎪ ⎪ ⎨ ⎪ ⎪ ⎪ ⎪ ⎪ ⎩ 0 x ≤ 18 or x ≥ 27 x -18 5 18 < x ≤ 23 27 -x 4 23 < x < 27(13)
+
+• High: Defined by a right-shoulder membership function:
+
+μ High (x) = ⎧ ⎪ ⎪ ⎪ ⎨ ⎪ ⎪ ⎪ ⎩ 0 x ≤ 26 x -26 4 26 < x ≤ 30 1 30 < x (14
+
+)
+
+The output variable fan power is defined on a normalized range [0,1] and categorized as Off or On. A Mamdani-type fuzzy inference system with centroid defuzzification was implemented using Scikit-Fuzzy. The final control action was binarized using a threshold of 0.5 to determine fan activation.
+
+### 2.6. Control cost computation
+
+In the predictive control framework, two cost components are defined to evaluate the efficiency of fan-based climate regulation: energy cost and penalty cost. These metrics quantify the trade-off between energy consumption and thermal comfort within the greenhouse.
+
+Energy Cost (EC). The fan control action ∈ {0,1} at time t is determined by comparing the mean predicted temperature across the 5, 10, and 15-minute horizons against the defined setpoint. If this mean temperature exceeds the setpoint plus a tolerance, the fan is activated. The energy cost at each timestep is given by Eq. ( 15), where α is the is the cost coefficient per minute of fan usage (0.2), a t is the binary control action (1 if fan ON, 0 if OFF) and Δt is the control interval duration (5 minutes).
+
+EnergyCost t = α⋅a t ⋅Δt (15)
+
+Penalty Cost (PC). To penalize thermal discomfort when predictions deviate significantly from the setpoint (T set =26 • C), a deviation penalty is computed as indicated in Eq. ( 16), where β is the penalty weight (1), T t
+
+MAE = 1 n ⋅ ∑ ⃒ ⃒ yi -ŷi ⃒ ⃒ Root Mean Squared Error (RMSE) RMSE = ̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅ 1 n ⋅ ∑ ( yi -ŷi ) 2 √ Coefficient of determination (R²) R 2 = 1 - [∑ ( yi -ŷi ) 2 ∑ ( yi -yi ) ] Mean Absolute Percentage Error (MAPE) MAPE = 100 n ⋅ [ |yi -ŷi | yi ] , ( yi ∕ = 0 ) Symmetric Mean Absolute Percentage Error (SMAPE) SMAPE = 100 n ⋅ ⎡ ⎢ ⎣ |yi -ŷi | |yi| + | ŷi | 2 ⎤ ⎥ ⎦ Normalized RMSE (NRMSE) NRMSEmean = RMSE yi NRMSErange = RMSE ( max ( yi ) -min ( yi ))
+
+Fig. 2. Fuzzy membership functions for the forecasted temperature variable: low (left-shoulder), optimal (triangular), and high (right-shoulder).
+
+is the average forecasted temperature (over t+5, t+10, and t+15 minutes) and ε is the tolerance band around the setpoint (1 • C).
+
+PenaltyCost t = β⋅max(0, |T t -T set | -ε) (16)
+
+Cumulative Costs. To track the performance of the control system over time, cumulative costs are aggregated according to Eqs. ( 17)- (19).
+
+CumulativeEnergyCost t = ∑ t i=1 EnergyCost i (17
+
+)
+
+CumulativePenaltyCost t = ∑ t i=1 PenaltyCost i (18
+
+)
+
+CumulativeTotalCost t = CumulativeEnergyCost t + CumulativePenaltyCost t (19
+
+)
+
+Analogous to the threshold-based strategy, the fuzzy control's effectiveness was evaluated via energy cost and penalty cost:
+
+• The fuzzy energy cost was calculated using the same formulation as Eq. ( 15), substituting fuzzy control actions. • The fuzzy penalty cost was computed using a fuzzy optimality curve defined as a triangular membership function centered on the optimal temperature range (18-27 • C). The penalty was defined as:
+
+FuzzyPenalty t = 1 -μ optimal (T t )(20)
+
+where μ optimal is the fuzzy membership value indicating how close the temperature is to the optimal. Cumulative fuzzy energy, penalty, and total costs were calculated similarly to Eqs. ( 17)-( 19), and then compared to the threshold-based methods.
+
+## 3. Results
+
+### 3.1. Data imputation and preprocessing
+
+The original dataset presented 1 030 797 points. It was reduced to 916 256 after dropping duplicates. Then, NaN values were reconstructed using the imputation methods described in the previous section, resulting in 36 573 repaired points and a 0 NaNs after the imputation.
+
+Additionally, the correlation matrix of monitored features (Fig. 3) shows strong relationships between external temperature, relative humidity, and solar index. The correlation between temperature and relative humidity is reasonable given the actual definition of relative humidity as a function of the environmental temperature. The solar index or solar radiation directly influences temperature, as the daytime with higher radiation intensity (for example, at midday or during clear days), temperature tends to be higher as well. Adversely, there is a weak correlation between greenhouse temperature and external temperature or solar irradiance as expected for the effect of the ventilation system controlling indoor conditions to not surpass the temperature threshold. Finally, considering the interrelation of solar index and relative humidity with temperature, a strong correlation between these two variables is also expected. seconds), reflecting the additional computational cost of its ensemble approach.
+
+### 3.2. Model training and validation
+
+XGBoost stands out with exceptional efficiency, achieving low times for both cross-validation (4.156 seconds) and training/evaluation (0.818 seconds). Similarly, LightGBM performs impressively, with a cross-validation time of 7.961 seconds and a training/evaluation time of 0.951 seconds, showcasing its optimization for fast execution. In contrast, SVR-RBF exhibits the longest times, with cross-validation taking 411.290 seconds and training/evaluation 270.143 seconds, reflecting its more traditional implementation and higher computational demands.
+
+The performance of the models for 5, 10 and 15 minutes ahead forecasting is summarized in Table 4 and represented in Fig. 4.
+
+This table shows very similar results for the three forecasting horizons. The evaluation metrics for 5-minute-ahead forecasting indicate that all models achieved high performance, with MAE values ranging from 0.280 to 0.347 and RMSE values between 0.638 and 0.810. LightGBM exhibited the lowest MAE (0.280) and RMSE (0.638), along with an R² of 0.993, indicating its superior predictive accuracy. Other metrics, such as NRMSE mean , NRMSE range , MAPE, and SMAPE, further corroborate LightGBM's performance, with values of 0.033, 0.014, 1.267, and 1.255, respectively. XGBoost performed comparably, with slightly higher error metrics but the same R² as LightGBM. DT showed the highest error metrics among the models, but still maintained a strong R² value of 0.989. These results can also be seen in Fig. 3, where deviated forecasts tend to appear mostly over 25 • C due to underestimation for the six models, except for the DT, which shows both underestimation and overestimation at similar a proportion.
+
+For 10-minute-ahead forecasting, as detailed in Table 4, model performance decreased slightly compared to the 5-minute horizon. LightGBM remained the best-performing model, with an MAE of 0.31 and an RMSE of 0.703, alongside an R² of 0.992. RF and XGBoost also performed well, with MAE values of 0.317 and 0.32, respectively, and R² values of 0.991. The DT model had the largest errors, with an MAE of 0.367 and an RMSE of 0.835, but still maintained an R² of 0.988.
+
+For 15-minute-ahead forecasting, the results in Table 4 reveal a further slight decline in performance. LightGBM continued to lead with the lowest MAE (0.311) and RMSE (0.728), along with an R² of 0.991. XGBoost and RF followed closely, with MAE values of 0.321 and 0.334, respectively. DT had the highest error values, with an MAE of 0.358 and an RMSE of 0.859, though its R² value remained robust at 0.988.
+
+The rest of the section presents the performance of the models, focusing on the 5-minute-ahead predictions generated by the LightGBM model. These results highlight its accuracy and reliability, providing detailed insights into its ability to forecast short-term temperature fluctuations effectively, in consistency with its results in terms of MAE, RMSE, R 2 and both NRMSE.
+
+Fig. A1 shows the error control chart for the month of April, illustrating the prediction errors associated with the LightGBM model for 5minute-ahead forecasts. The prediction error, plotted over time, fluctuates around zero, indicating no significant bias in the forecasts. The blue dots represent the instantaneous forecast error, calculated as the difference between the predicted and actual greenhouse temperatures. The dashed blue line indicates the mean error, which remains close to zero throughout the time series, suggesting that the model is unbiased and does not systematically overestimate or underestimate the temperature. The red and green dashed lines represent ±2σ, where σ denotes the standard deviation of the prediction error. These bounds serve as thresholds for assessing the variability and consistency of the model performance. The fact that the majority of the prediction errors fall within these boundaries indicates that the model maintains stable forecasting behavior over time, with only a few outliers.
+
+The observed cyclic pattern in the error distribution, linked to the diurnal temperature cycle, is captured without introducing significant drift or variance escalation. Overall, this control chart demonstrates that the LightGBM model delivers robust and consistent short-term predictions under varying climatic conditions, confirming its suitability for real-time greenhouse climate control applications.
+
+Fig. A2 presents the histogram of prediction errors across the entire C to 0 • C) exhibits a higher frequency than its positive counterpart, suggesting the model more often underpredicts temperature values rather than overpredicts. This trend reverses for larger errors (above ±2 • C), where the right tail becomes more pronounced. This shift implies that while large errors are rare, when they do occur, they are more likely to result from overpredictions.
+
+Overall, the error distribution confirms the model's robustness, with low bias and a sharp decline in frequency for extreme deviations. This reinforces the findings from the control chart (Fig. A1), emphasizing the model's suitability for real-time predictive control in greenhouse environments. This pattern of dispersion and asymmetry is consistent with the trends observed in Figs. A1 andA2, where the control chart and error histogram revealed increased variability and asymmetric distribution in the prediction errors. A likely explanation for this behavior lies in the real-world dynamics of the greenhouse environment, particularly the operation of the ventilation system. The activation and deactivation of the fan can lead to abrupt shifts in indoor temperature, especially near the control threshold around 26 • C. These rapid transitions are difficult for the model to anticipate based solely on prior conditions, often resulting in temporary over-or underestimations. As such, the increased error variance near these critical temperature values likely reflects the system's response to sudden thermal changes induced by mechanical ventilation events. Fig. 5 presents the hourly distribution of the Mean Absolute Error (MAE) throughout the day. The model exhibits its highest prediction errors during midday, with a peak MAE of approximately 0.9 • C at 14:00, which coincides with the period of highest solar irradiance and ambient temperature in Terrassa and, more generally, in Mediterranean climates. Elevated error levels persist between 12:00 and 16:00, with MAE values exceeding 0.8 • C, and remain significant between 10:00 and 17:00, where they surpass 0.6 • C. In contrast, forecasting performance improves significantly during the night and early morning hours (20:00 -08:00) with MAE values consistently below 0.
+
+1 • C.
+
+evaluation dataset, providing insight into the distribution and frequency of forecast deviations. The majority of prediction errors fall within a narrow band of ±0.2 • C, highlighting the high accuracy and low dispersion of the forecasting model. The distribution is notably asymmetric: the most frequent error values are concentrated within the [0, 0.2] • C range, indicating a tendency for slight overestimation. Additionally, the left tail (-2
+
+This diurnal pattern is consistent with the trends observed in Figs. A1 to A3, where error dispersion and residuals were found to be greater during warmer hours. The control chart in Fig. A1 highlighted greater variability in prediction errors during the day, while the error histogram in Fig. A2 and the residuals vs. predicted plot in Fig. A3 revealed asymmetric distributions and higher residuals associated with predictions above 25 • C. These hours of elevated thermal load are also when the fan system is most active, suggesting a stronger influence of abrupt internal temperature changes and potentially delayed actuator response on prediction accuracy. Fig. 6 shows the comparison between predicted and actual indoor temperatures over an independent 33-day period, from March 31 to May 2, which was not included in either the training or validation datasets. This segment was specifically selected to evaluate the model's generalization performance under unseen, real-world greenhouse conditions.
+
+The predicted temperatures (orange crosses) closely track the measured values (blue dots), accurately replicating the daily thermal fluctuations within the greenhouse. The model demonstrates its ability to forecast both the daytime heating peaks and nighttime cooling phases with consistency.
+
+Several days exhibit rapid temperature increases (e.g., April 4,8,and 9), likely due to sudden changes in solar radiation or ventilation system operation. Despite these challenges, the model maintains satisfactory predictive performance, though some deviations appear during these abrupt transitions. These discrepancies align with the error patterns previously identified in Figs. A1 to A3, where larger residuals were concentrated around midday and during sharp thermal changes. Moreover, despite brief interruptions in the real data signal, such as the gap seen between April 13 and 16, possibly due to sensor malfunctions, the model continues to produce coherent forecasts. This robustness is attributed to the preprocessing pipeline and engineered features that enable the model to maintain stability under real-world conditions.
+
+Overall, this independent evaluation period confirms the robustness and generalizability of the model, reinforcing its potential for real-time deployment in predictive control applications in rooftop greenhouse environments.
+
+### 3.3. Control
+
+Fig. 7 presents the behavior of the MPC strategies introduced in Section 2.5, applied to a representative 24-hour period. Two approaches are compared: the conventional threshold-based control (directly observed) and the fuzzy logic-based control (simulated, so the controllers can be directly compared), both using the best-performing models with and without correction.
+
+In the top panel of this figure, the real temperature is plotted alongside the forecasted and corrected forecast values. The control setpoint is defined at 26 • C, with a tolerance band of ±1 • C. This plot allows visualization of how the control strategy maintains temperature within desired limits. First, the traditional threshold approach at 26 • C shows how the controlled temperature oscillates once it reaches the threshold. While the forecast temperature remains within the tolerance band of ±1 • C, the real monitored temperature reaches values beyond it at both ends during said oscillations, presenting a slight underestimation by the model.
+
+The middle panel shows the fan state resulting from the thresholdbased control strategy. During the active period (approximately 10:00 to 18:00), this strategy triggers frequent ON/OFF switching of the fan, especially between 14:00 and 16:00, when temperatures peak. These frequent transitions correspond to the temperature oscillations observed in the top plot, where the real temperature intermittently exceeds the tolerance bounds. This behavior is primarily due to the slight underestimation in the forecasts and the reactive nature of threshold control, leading to a pulsing control effect that may reduce system efficiency and accelerate mechanical wear.
+
+The bottom panel illustrates the fan activation pattern under the fuzzy logic control strategy. Unlike the threshold-based control, this approach generates a smoother and more gradual actuation response. The fan operates more continuously and with fewer abrupt transitions, particularly when using the corrected forecast. This behavior reflects the influence of fuzzy membership functions and rule-based logic, which allow partial activation states to be interpreted as binary outputs through defuzzification. As a result, the fan exhibits reduced oscillation and more sustained ON periods during high-temperature phases (notably from 12:00 to 18:00), promoting better thermal regulation and potentially extending actuator lifespan. Additionally, the corrected forecast enhances the regularity and responsiveness of the fuzzy controller, contributing to improved overall control stability.
+
+Fig. 8 shows the cumulative cost evolution for the different control strategies throughout the day. The fuzzy control approaches, both original and corrected forecast versions, consistently performs better than the threshold-based controllers in terms of overall cost-efficiency. By the end of the control period, the fuzzy strategy achieves a reduction in cumulative cost, exceeding 65% compared to the traditional threshold method. This advantage is primarily due to smoother fan operation and reduced switching frequency, as seen in Fig. 7, where the fuzzy controller avoids the excessive ON/OFF cycling characteristic of the threshold-based system, particularly between 10:00 and 18:00.
+
+The corrected forecast variants (dashed lines) for both strategies closely follow their original counterparts, indicating that forecast correction had only minor influence on cumulative cost performance during this specific day. This suggests that the fuzzy logic controller is inherently more robust to small prediction inaccuracies, maintaining low energy consumption and minimal temperature deviation penalties even without correction.
+
+Overall, this comparison highlights the energy-saving potential and improved thermal regulation offered by fuzzy predictive control in greenhouse climate management.
+
+## 4. Discussion
+
+### 4.1. Forecasting model performance and comparative evaluation
+
+While numerous studies have already compared the performance of machine learning algorithms for greenhouse microclimate forecasting, the objective of the present analysis is not to revisit that literature but to assess whether the tested models provide the accuracy and responsiveness required for reliable predictive control in a rooftop greenhouse context. Results show high accuracy for every temporal horizon, with values over 0.96 for the R². Regarding the evaluation metrics for the 5, 10, and 15-minute-ahead forecasting horizons reveal several notable trends and provide insight into the performance of the different predictive models tested.
+
+Firstly, LightGBM consistently outperformed the other models across all forecasting horizons. Its lower MAE and RMSE values, combined with the highest R² scores, highlight its ability to accurately predict shortterm temperature fluctuations with minimal error. Its superiority over other models indicates its suitability for real-time forecasting tasks, especially in environments requiring precise and timely predictions.
+
+XGBoost and RF also delivered strong performances, with metrics closely trailing those of LightGBM. Both models demonstrated their robustness in handling the variability inherent in short-term forecasting. The slightly higher error metrics observed for these models suggest that while they are reliable, they may not capture fine-grained temperature dynamics as effectively as LightGBM.
+
+The DT model, while maintaining relatively high R² values, showed the largest errors across all horizons. This performance is consistent with its known limitations, such as overfitting and an inability to generalize as effectively as ensemble methods. These limitations become more pronounced as the forecasting horizon increases, leading to a larger discrepancy in accuracy compared to the other models.
+
+When comparing forecasting horizons, a gradual decline in performance was observed for all models as the prediction horizon increased from 5 to 15 minutes. This behavior is expected, as the uncertainty in predicting future states typically grows with the time horizon. Nevertheless, the relatively small increase in error metrics suggests that these models are well-suited for short-term forecasting applications. This capability is particularly valuable in dynamic environments such as greenhouses, where rapid adjustments to temperature control systems are necessary.
+
+Table 3 highlights clear distinctions in computational efficiency among the models. XGBoost and LightGBM emerge as the most efficient, demonstrating their suitability for scenarios prioritizing speed and scalability. DT provides a practical, low-cost solution for simpler tasks with moderate data requirements. RF, while slower, offers a balance between accuracy and robustness, making it a viable choice for applications where computational cost is less critical. Gradient Boosting, the most computationally intensive model, is best suited for situations where precision and stability are prioritized over execution time.
+
+Therefore, in terms of practical implications, the consistent performance of LightGBM and its ability to provide reliable forecasts with low computational cost make it a strong candidate for real-time implementation. Its success underscores the importance of advanced ensemble techniques in predictive modeling, particularly when accuracy and efficiency are critical. However, models like RF and XGBoost may also be valuable in applications where slight trade-offs in precision are acceptable in exchange for interpretability or ease of deployment. The results in Fig. A1 highlight the robustness of the LightGBM model for 5-minute-ahead forecasting, as evidenced by the tight clustering of errors within the ±2σ range. The near-zero mean error indicates an absence of systematic overprediction or underprediction, which is crucial for maintaining reliability in real-time applications. However, sporadic outliers exceeding the ±2σ thresholds suggest that sudden environmental changes and extreme conditions, particularly around midday (as clearly shown in Fig. A2), may still pose challenges for the model. These deviations could be attributed to unaccounted external factors or inherent limitations of short-term forecasting. Addressing these outliers through enhanced feature engineering or the incorporation of additional real-time inputs could further improve the model's performance and adaptability.
+
+Fig. A2 suggests that the model tends to slightly overestimate temperature by up to 0.2 • C, having also a wider range of overestimationderived errors than of errors due to underestimation. This situation might indicate that positive outlayers in the training dataset slightly bias the models towards subtly higher values than reality. This could be caused by a non-homogeneous distribution of temperature within the greenhouse or the rapid heating of the indoor environment during midday hours in the Mediterranean area. This reasoning could also be applied in Fig. 5, as it shows how the model shows poorer performance at maximum heat hours. This might be caused by the higher influence at this time of the day of the weather and situations like cloud shading or strong wind affecting temperature.
+
+Nonetheless, Fig. A3 shows a major occurrence of model deviations around 26 • C, that is, the setpoint to trigger the mechanical ventilation. Consequently, it is reasonable to assume that control dynamics are faster than the model ones. This would result in deviations due to the handling of the effect of the fan actions on the greenhouse.
+
+Overall, the comparative evaluation primarily serves to demonstrate that the forecasting accuracy achieved (particularly by LightGBM) is sufficient to support stable and effective predictive control, which is the central focus of this work.
+
+### 4.2. Performance of control strategies
+
+Regarding temperature control through fan activation, first, while the traditional threshold-based controller is simple to implement, its reliance on a fixed setpoint leads to oscillatory behavior, particularly during periods of high solar radiation and external temperatures. This is evident in the repeated on-off switching of the fan, which not only affects temperature stability, but could also result in increased mechanical wear and energy inefficiency. Moreover, the observed deviation of real temperatures outside the tolerance band, despite forecasts staying within it, highlights the lag between actuation and thermal response, as well as a slight underestimation by the forecast model under dynamic conditions.
+
+By contrast, the application of corrected forecasts yields two notable improvements: increased prediction accuracy and more stable actuation. This supports the idea that enhancing the reliability of short-term forecasts (without modifying the control logic) can directly impact system performance.
+
+Although some discrepancies between the fuzzy and threshold actuation still occur, particularly in transitional moments, the overall behavior is more homogeneous. Most notably, the cumulative cost analysis clearly favors the fuzzy approach. Achieving over 60% cost reduction compared to the threshold strategy underscores the potential of rule-based fuzzy control in balancing thermal comfort with resource efficiency. Interestingly, the corrected and uncorrected forecast versions of both control types performed similarly in terms of cost, suggesting that in this specific context, the forecast correction had a more noticeable effect on control stability than on energy savings.
+
+Overall, results indicate that forecast-enhanced fuzzy control is a promising alternative for greenhouse climate management, capable of reducing operational costs while maintaining acceptable temperature conditions, particularly under variable environmental conditions.
+
+### 4.3. Scientific context and transferability
+
+The results of this research are consistent with previous works reporting satisfactory control of greenhouse temperature in nonbuilding-integrated cases [49,50]. Predicted temperature in other greenhouse typologies typically range between 2 and 3 • C as shown in case studies conducted in China [51].
+
+Energy savings by implementing the fuzzy controller (approximately 60%) are slightly above others reported in the literature (typically ranging between 10% and 30%)for greenhouses of similar size using MPC instead of traditional control [52]. Other studies show energy savings of 9% during a cold wave using mechanistic models and ML optimization algorithms [53], or 25% by using variable angular speed fans [54]. These differences can be partly explained by the distinct climate conditions and system configurations considered in each study, as well as by the specific control objectives pursued (e.g., heating optimization vs. cooling-driven ventilation). In rooftop greenhouses, ventilation plays a dominant role in thermal regulation, and the stronger cooling potential combined with urban and building-integration effects can amplify the relative impact of improved predictive control.
+
+This work demonstrates that with historical data and short-term forecasting models, it is feasible to implement data-driven MPC strategies for managing temperature in building-integrated rooftop smart greenhouses. The algorithms developed show strong potential for realtime deployment, enabling not only improved environmental control but also energy efficiency in urban agricultural systems. From an engineering perspective, this highlights how data-driven approaches can empower operators to optimize actuator performance and system behavior without manual intervention.
+
+This contribution also complements and advances recent work by Yu, Sun, et al. [25], who proposed a fuzzy logic-enhanced neural model predictive controller for temperature regulation in conventional greenhouse environments. While their approach integrated interpretability into a black-box neural forecasting model, it was limited to single-horizon forecasting and a more static, rural greenhouse context. In contrast, the present study addresses more dynamic rooftop environments using multi-horizon forecasting, real-time deployment, and a comparative evaluation of multiple regression models. Moreover, the integration of SHAP-based interpretability provides transparency and diagnostic insight into model behavior, an aspect not included in Yu, Sun, et al. [25]. These features collectively strengthen the transferability of the proposed framework to other greenhouse typologies and urban climates.
+
+Furthermore, the MPC strategies presented are compatible with digital twin environments, allowing for simulation, testing, and deployment in virtual replicas of the greenhouse system. This opens the door for more responsive and adaptive climate control solutions in future smart building infrastructure.
+
+Despite the promising results, several limitations must be acknowledged. First, the models were trained and validated using data from a single greenhouse over one year. While this provides a solid foundation, it is still unclear what minimum data volume is required to achieve reliable performance (an important aspect for new deployments or fast implementation scenarios).
+
+Additionally, the data used reflect a specific geographical location, structural configuration, and crop type, which may limit generalization to other greenhouses or climates. Differences in insulation, ventilation, or solar exposure could significantly influence control outcomes and must be considered when transferring the models to other settings.
+
+## 5. Conclusions
+
+This study presents a comprehensive forecasting and control framework for rooftop greenhouses integrated into buildings, an emerging solution for urban agriculture. Focusing on the dynamic and underexplored conditions of rooftop environments, particularly in Mediterranean climates, the work demonstrate how short-term temperatures forecasting can support intelligent climate regulation using a combination of machine learning and fuzzy logic.
+
+High-resolution data collected every five minutes over several months from a real rooftop greenhouse in Terrassa (Spain) served as the basis for developing and evaluating multiple supervised regression models. These models, which included RF, XGBoost, LightGBM, SVR-RBF, and MLP, were trained on a rich feature set incorporating lagged variables, rolling statistics, actuator states, and environmental gradients. Among them, LightGBM consistently achieved the best performance across all three forecast horizons (5, 10, and 15 minutes), with R² values above 0.96 and low error metrics.
+
+In addition to their raw accuracy, the models were made interpretable using SHAP (Shapley Additive exPlanations), enabling both global and local insight into the drivers of temperature dynamics. This transparency strengthens the case for deploying these models in real-world systems, where explainability is key to operational trust and diagnostics.
+
+Forecasts were used to develop a smart predictive control system for controlling a ventilation fan. Two control strategies were evaluated: a standard threshold-based approach and a fuzzy logic controller that utilized forecasts for improved decision-making. Results showed that the fuzzy controller produced a smoother response and reduced fan switching frequency. This stability led to tangible benefits, including over 60% energy savings compared to the basic method, while maintaining the temperature within the target range.
+
+A detailed analysis of the model errors and control performance revealed that the largest deviations tended to occur during periods of rapid temperature changes, typically driven by peaks in solar radiation or ventilation system activity. Despite these demanding conditions, the forecasting-control loop remained robust: prediction errors were generally confined within ±0.2 • C, and the mean absolute error remained low throughout the day. Hourly error analysis, together with cost and control behavior metrics, confirmed the reliability of the proposed strategy, particularly during midday hours, when thermal loads are highest and control becomes most challenging.
+
+The overall system architecture was designed with real-time operation and digital twin integration in mind. Its modular structure, using standardized configuration files, automated data preprocessing, and centralized logging, ensures that the approach can be easily adapted, scaled, and reproduced across different greenhouse or building environments.
+
+The findings validate the potential of data-driven MPC strategies for real-world deployment in urban agriculture, enhancing both energy efficiency and autonomous operation. Furthermore, the overall system architecture was designed with real-time operation and digital twin integration in mind. Its modular structure, using standardized configuration files, automated data preprocessing, and centralized logging, ensures that the approach can be easily adapted, scaled, and reproduced across different greenhouse or building environments.
+
+However, it is important to acknowledge the limitations of the study. The models were trained and validated using data from a single rooftop greenhouse over one year, with a specific structural design, and climate. While the results are promising, further validation is needed to confirm their applicability to different locations, greenhouse configurations, and operational settings.
+
+To broaden the applicability and robustness of the proposed MPC approach, several avenues for future research are identified. First, a systematic analysis is needed to determine the minimum dataset size and diversity required for accurate forecasting and control. This would support scalability and reduce onboarding time in other systems.
+
+Secondly, while this study focused on temperature control, future work should incorporate additional environmental variables such as relative humidity, solar radiation, and CO₂ concentration, to enable multivariable and multiobjective control strategies.
+
+Finally, the integration of other actuators, such as LED lighting or shading curtains, would allow for the development of more comprehensive and flexible control architectures, adapting to varying crop needs and external weather dynamics while optimizing energy consumption and crop yield simultaneously.
+
+In summary, this work shows that combining short-term, data-driven forecasting models with fuzzy logic control offers a practical and effective approach for managing indoor climates in rooftop greenhouses. It provides a valuable step toward more autonomous, resource-efficient climate control systems that align with the broader goals of sustainable urban agriculture and smart building design.
+
+### Declaration of generative AI and AI-assisted technologies in the writing process
+
+During the preparation of this work the authors used Grammarly and ChatGPT in order to improve language and readability of the article. After using these tools, the authors reviewed and edited the content as needed and take full responsibility for the content of the publication.
+
+## Figures et tableaux
+
+**Fig. 1.** Venlo-type greenhouse (west and south walls).
+
+**Fig. 3.** Correlation matrix of monitored features.
+
+Fig. A3 presents the residuals (prediction errors) as a function of the predicted temperature, highlighting the asymmetric error behavior previously observed. The largest deviations are concentrated around predictions of 26 • C, where residuals tend to be predominantly positive, frequently exceeding +3 • C, while negative deviations rarely surpass -2.5 • C. A diagonal trend can be observed beyond 26 • C, where residuals increase in parallel with predicted temperatures, reaching up to 3 • C at around 33 • C. The overall dispersion also grows steadily from lower temperatures up to approximately 25 • C, after which it abruptly contracts, with residuals largely confined within the ±1 • C range for
+
+**Fig. 4.** Five-minute-ahead forecast compared with observations for (a) Decision Tree; (b) Random Forest; (c) XGBoost; (d) Gradient Boosting; (e) LightGBM; (f) Support Vector Machine; and (g) Multilayer Perceptron.
+
+**Fig. 5.** Mean absolute error (MAE) by hour of day for LightGBM model for 5-minute-ahead forecast.
+
+**Fig. 6.** Measured and predicted temperature over April data from LightGBM model for 5-minute-ahead forecast.
+
+**Fig. 7.** (a) Real monitored temperature (blue), forecast (yellow), corrected forecast (red), and setpoint temperature with tolerance band (green) during a day; with (b) fan activation state following the threshold approach with base forecast (blue) and corrected forecast (yellow); and (c) fan activation state following the fuzzy logic controller with base forecast (blue) and corrected forecast (yellow).
+
+**Fig. 8.** Cumulative cost comparison.
+
+Fig. A3. Residuals vs predicted temperature for LightGBM model for 5-minute-ahead forecast.
+
+**Table 1** Sensor's characteristics.
+
+    Location | Sensor | Magnitude | Range | Error
+    Inside the | SM-600: ePAR | Temperature | -60 - | ± 0.2 • C
+    Greenhouse | Guardian CEA | ( • C) | 80 | 
+     | Multi-Sensor | Relative | 1 -95 | ±3% (from
+     |  | humidity (%) ePAR (µmol⋅m -2 ⋅s -1 ) | 4000 0 - | 20 to 80%) ± 5%
+    Weather | Davis Instruments | Temperature | -40 - | ±0.3 • C
+    station | Vantage Pro2 | ( • C) | 65 | 
+     |  | Relative | 1 - | ± 2%
+     |  | humidity (%) | 100 | 
+     |  | Solar radiation (W/m 2 ) | 1800 0 - | ±5%
+
+**Table 2** Model evaluation metrics.
+
+    Metrics | Equation
+    Mean Absolute Error (MAE) | 
+
+**Table 3** Training and cross-validation time for 5-minute-ahead forecasting models.
+
+    Model | Process | Runtime (s)
+    DecisionTree_t+5 | Cross validation | 5.653
+     | Training and evaluation | 4.335
+    RandomForest_t+5 | Cross validation | 50.371
+     | Training and evaluation | 46.282
+    XGBoost_t+5 | Cross validation | 4.156
+     | Training and evaluation | 0.818
+    LightGBM_t+5 | Cross validation | 7.961
+     | Training and evaluation | 0.951
+    GradientBoosting_t+5 | Cross validation | 151.032
+     | Training and evaluation | 120.687
+    SVR-RBF _t+5 | Cross validation | 411.290
+     | Training and evaluation | 270.143
+    MLP_t+5 | Cross validation | 38.805
+     | Training and evaluation | 14.564
+
+**Table 4** Evaluation metrics for forecasting models across different time horizons.
+
+    Model | MAE | RMSE | R 2 | NRMSE mean | NRMSE range | MAPE | SMAPE
+    DT_t+5 | 0.347 | 0.810 | 0.989 | 0.041 | 0.018 | 1.490 | 1.480
+    GBR_t+5 | 0.343 | 0.735 | 0.991 | 0.038 | 0.016 | 1.552 | 1.539
+    LightGBM_t+5 | 0.280 | 0.638 | 0.993 | 0.033 | 0.014 | 1.267 | 1.255
+    RF_t+5 | 0.286 | 0.678 | 0.992 | 0.035 | 0.015 | 1.228 | 1.221
+    XGBoost_t+5 | 0.281 | 0.643 | 0.993 | 0.033 | 0.014 | 1.263 | 1.255
+    SVR-RBF_t+5 | 0.308 | 0.732 | 0.991 | 0.037 | 0.016 | 1.400 | 1.389
+    MLP_t+5 | 0.335 | 0.857 | 0.988 | 0.039 | 0.016 | 1.543 | 1.525
+    DT_t+10 | 0.367 | 0.835 | 0.988 | 0.043 | 0.018 | 1.580 | 1.576
+    GBR_t+10 | 0.365 | 0.756 | 0.991 | 0.039 | 0.016 | 1.649 | 1.642
+    LightGBM_t+10 | 0.310 | 0.703 | 0.992 | 0.036 | 0.015 | 1.381 | 1.373
+    RF_t+10 | 0.317 | 0.729 | 0.991 | 0.037 | 0.015 | 1.360 | 1.359
+    XGBoost_t+10 | 0.320 | 0.724 | 0.991 | 0.037 | 0.015 | 1.421 | 1.416
+    SVR-RBF_t+10 | 0.339 | 0.793 | 0.990 | 0.040 | 0.017 | 1.514 | 1.508
+    MLP_t+10 | 0.354 | 0.771 | 0.990 | 0.039 | 0.017 | 1.561 | 1.559
+    DT_t+15 | 0.358 | 0.859 | 0.988 | 0.044 | 0.018 | 1.519 | 1.514
+    GBR_t+15 | 0.373 | 0.803 | 0.989 | 0.041 | 0.017 | 1.653 | 1.647
+    LightGBM_t+15 | 0.311 | 0.728 | 0.991 | 0.037 | 0.016 | 1.371 | 1.364
+    RF_t+15 | 0.334 | 0.758 | 0.991 | 0.039 | 0.016 | 1.441 | 1.441
+    XGBoost_t+15 | 0.321 | 0.740 | 0.991 | 0.038 | 0.016 | 1.403 | 1.399
+    SVR-RBF_t+15 | 0.351 | 0.824 | 0.989 | 0.042 | 0.018 | 1.548 | 1.542
+    MLP_t+15 | 0.372 | 0.855 | 0.988 | 0.044 | 0.018 | 1.596 | 1.596

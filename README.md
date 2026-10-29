@@ -204,7 +204,7 @@ Au 18/10/2026 :
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 87 | 86 | 352 |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` | 56 | 56 | 100 |
 | `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | `bases/yolo-data/` | 44 | 44 | 425 |
-| `serre` (19/10/2026) | Serre autonome pilotée par IA : vision des maladies, edge, contrôle, agent LLM | `bases/serre/` | 27 | 0 | 24 |
+| `serre` (29/10/2026) | Serre autonome pilotée par IA : vision des maladies, edge, contrôle, agent LLM, pratiques de culture | `bases/serre/` | 67 | 31 | 32 |
 
 La base `drone` s'appelait auparavant `DroneVisionDB` et vivait dans un dossier séparé. Chaque
 base a son `CLAUDE.md` (règles propres au domaine), son [`profile.md`](bases/drone/profile.md)
@@ -401,12 +401,16 @@ Description des trois premières au 01/10/2026, de `yolo-data` au 18/10/2026, de
   déséquilibre). 44 articles, tous fichés (8 importés de `fpga` et `drone`, 36 ajoutés depuis
   OpenAlex) ; 425 lignes dans `benchmarks.csv`, dont 42 sur un YOLO ; 43 gaps dans
   [bases/yolo-data/gaps.md](bases/yolo-data/gaps.md), dont 34 étayés (1ʳᵉ passe).
-- `serre` (créée le 19/10/2026) : projet SerreIA, une serre autonome. Couvre la vision des maladies
+- `serre` (créée le 19/10/2026, mise à jour le 29/10/2026) : projet SerreIA, une serre autonome. Couvre la vision des maladies
   et l'écart de domaine PlantVillage → PlantDoc, la calibration et la décision par capture,
   l'inférence sur RPi 5/Hailo, l'IoT de serre, le contrôle climatique et hydroponique, la
-  prévision et l'agent LLM avec validation humaine (13 axes). 27 articles ingérés, aucun fiché
-  (18 arXiv, 8 PDF en accès libre avec leur BibTeX, 1 importé de `drone`) ; 15 à déposer à la
-  main, liste dans [bases/serre/A_TELECHARGER.md](bases/serre/A_TELECHARGER.md).
+  prévision, l'agent LLM avec validation humaine et, depuis le 29/10/2026, les bonnes pratiques
+  de culture sous abri (axe `crop-practices` : consignes T°, HR, VPD, DLI, CO₂, pH/EC, irrigation,
+  protection intégrée, risque maladie, pour tomate, laitue, basilic et fraise ; littérature grise
+  acceptée). 67 articles ingérés, dont 24 sur `crop-practices` ; 31 fiches faites, chacune avec
+  une section « Consignes chiffrées » (valeurs sourcées par `chunk_id` et comparées à
+  `recettes.yaml` de SerreIA) ou « Pour SerreIA ». PDF restant à déposer à la main :
+  [bases/serre/A_TELECHARGER.md](bases/serre/A_TELECHARGER.md).
 
 ### Ce qui marche (testé : 288 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 

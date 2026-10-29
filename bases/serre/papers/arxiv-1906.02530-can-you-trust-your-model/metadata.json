@@ -1,0 +1,81 @@
+{
+  "id": "arxiv-1906.02530-can-you-trust-your-model",
+  "title": "Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift",
+  "authors": [
+    {
+      "given": "Yaniv",
+      "family": "Ovadia"
+    },
+    {
+      "given": "Emily",
+      "family": "Fertig"
+    },
+    {
+      "given": "Jie",
+      "family": "Ren"
+    },
+    {
+      "given": "Zachary",
+      "family": "Nado"
+    },
+    {
+      "given": "D",
+      "family": "Sculley"
+    },
+    {
+      "given": "Sebastian",
+      "family": "Nowozin"
+    },
+    {
+      "given": "Joshua V",
+      "family": "Dillon"
+    },
+    {
+      "given": "Balaji",
+      "family": "Lakshminarayanan"
+    },
+    {
+      "given": "Jasper",
+      "family": "Snoek"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1906.02530",
+  "url": "https://arxiv.org/abs/1906.02530",
+  "type": "preprint",
+  "axes": [
+    "calibration-decision"
+  ],
+  "tags": [
+    "uncertainty",
+    "calibration",
+    "dataset-shift",
+    "deep-ensembles",
+    "temperature-scaling",
+    "ood"
+  ],
+  "added": "2026-10-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  },
+  "imported_from": {
+    "base": "fpga",
+    "paper_id": "arxiv-1906.02530-can-you-trust-your-model",
+    "date": "2026-10-29",
+    "fiche": "done",
+    "axes": [
+      "failure-prediction",
+      "safety-certification"
+    ]
+  }
+}

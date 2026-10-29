@@ -1,0 +1,57 @@
+{
+  "id": "2015-rowlandson-reconsidering-leaf-wetness-duration-determination",
+  "title": "Reconsidering Leaf Wetness Duration Determination for Plant Disease Management",
+  "authors": [
+    {
+      "given": "Tracy",
+      "family": "Rowlandson"
+    },
+    {
+      "given": "Mark",
+      "family": "Gleason"
+    },
+    {
+      "given": "Paulo",
+      "family": "Sentelhas"
+    },
+    {
+      "given": "Terry",
+      "family": "Gillespie"
+    },
+    {
+      "given": "Carla",
+      "family": "Thomas"
+    },
+    {
+      "given": "Brian",
+      "family": "Hornbuckle"
+    }
+  ],
+  "year": 2015,
+  "venue": "Plant Disease 99(3), 310–319",
+  "doi": "10.1094/PDIS-05-14-0529-FE",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1094/PDIS-05-14-0529-FE",
+  "type": "journal",
+  "axes": [
+    "crop-practices"
+  ],
+  "tags": [
+    "leaf-wetness",
+    "rh-threshold",
+    "downy-mildew-risk",
+    "disease-warning"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 1"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

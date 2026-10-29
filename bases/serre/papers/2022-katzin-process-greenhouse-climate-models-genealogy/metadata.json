@@ -1,0 +1,44 @@
+{
+  "id": "2022-katzin-process-greenhouse-climate-models-genealogy",
+  "title": "Process-based greenhouse climate models: Genealogy, current status, and future directions",
+  "authors": [
+    {
+      "given": "David",
+      "family": "Katzin"
+    },
+    {
+      "given": "Eldert J",
+      "family": "Van Henten"
+    },
+    {
+      "given": "Simon",
+      "family": "Van Mourik"
+    }
+  ],
+  "year": 2022,
+  "venue": "Agricultural Systems 198, 103388",
+  "doi": "10.1016/j.agsy.2022.103388",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1016/j.agsy.2022.103388",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "climate-control"
+  ],
+  "tags": [
+    "greenhouse-model",
+    "genealogy",
+    "validation",
+    "process-based"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

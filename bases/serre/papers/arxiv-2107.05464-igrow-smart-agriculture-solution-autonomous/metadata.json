@@ -1,0 +1,78 @@
+{
+  "id": "arxiv-2107.05464-igrow-smart-agriculture-solution-autonomous",
+  "title": "IGrow: A Smart Agriculture Solution to Autonomous Greenhouse Control",
+  "authors": [
+    {
+      "given": "Xiaoyan",
+      "family": "Cao"
+    },
+    {
+      "given": "Yao",
+      "family": "Yao"
+    },
+    {
+      "given": "Lanqing",
+      "family": "Li"
+    },
+    {
+      "given": "Wanpeng",
+      "family": "Zhang"
+    },
+    {
+      "given": "Zhicheng",
+      "family": "An"
+    },
+    {
+      "given": "Zhong",
+      "family": "Zhang"
+    },
+    {
+      "given": "Li",
+      "family": "Xiao"
+    },
+    {
+      "given": "Shihui",
+      "family": "Guo"
+    },
+    {
+      "given": "Xiaoyu",
+      "family": "Cao"
+    },
+    {
+      "given": "Meihong",
+      "family": "Wu"
+    },
+    {
+      "given": "Dijun",
+      "family": "Luo"
+    }
+  ],
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2107.05464",
+  "url": "https://arxiv.org/abs/2107.05464",
+  "type": "preprint",
+  "axes": [
+    "iot-greenhouse",
+    "climate-control"
+  ],
+  "tags": [
+    "tomato"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 7 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 2",
+      "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

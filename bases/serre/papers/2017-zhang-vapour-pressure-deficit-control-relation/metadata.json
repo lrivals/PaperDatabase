@@ -1,0 +1,57 @@
+{
+  "id": "2017-zhang-vapour-pressure-deficit-control-relation",
+  "title": "Vapour pressure deficit control in relation to water transport and water productivity in greenhouse tomato production during summer",
+  "authors": [
+    {
+      "given": "Dalong",
+      "family": "Zhang"
+    },
+    {
+      "given": "Qingjie",
+      "family": "Du"
+    },
+    {
+      "given": "Zhi",
+      "family": "Zhang"
+    },
+    {
+      "given": "Xiaocong",
+      "family": "Jiao"
+    },
+    {
+      "given": "Xiaoming",
+      "family": "Song"
+    },
+    {
+      "given": "Jianming",
+      "family": "Li"
+    }
+  ],
+  "year": 2017,
+  "venue": "Scientific Reports 7, 43461",
+  "doi": "10.1038/srep43461",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/srep43461",
+  "type": "journal",
+  "axes": [
+    "crop-practices",
+    "climate-control"
+  ],
+  "tags": [
+    "tomato",
+    "vpd",
+    "fogging",
+    "water-use-efficiency",
+    "greenhouse"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

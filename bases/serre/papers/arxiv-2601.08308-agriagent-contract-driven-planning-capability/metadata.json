@@ -1,0 +1,58 @@
+{
+  "id": "arxiv-2601.08308-agriagent-contract-driven-planning-capability",
+  "title": "AgriAgent: Contract-Driven Planning and Capability-Aware Tool Orchestration in Real-World Agriculture",
+  "authors": [
+    {
+      "given": "Bo",
+      "family": "Yang"
+    },
+    {
+      "given": "Yu",
+      "family": "Zhang"
+    },
+    {
+      "given": "Yunkui",
+      "family": "Chen"
+    },
+    {
+      "given": "Lanfei",
+      "family": "Feng"
+    },
+    {
+      "given": "Xiao",
+      "family": "Xu"
+    },
+    {
+      "given": "Nueraili",
+      "family": "Aierken"
+    },
+    {
+      "given": "Shijian",
+      "family": "Li"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2601.08308",
+  "url": "https://arxiv.org/abs/2601.08308",
+  "type": "preprint",
+  "axes": [
+    "llm-agent"
+  ],
+  "tags": [],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "tableaux sans corps extrait (légende seule) : Table 3, Table 4",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

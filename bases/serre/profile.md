@@ -32,6 +32,10 @@ Serre autonome pilotée par IA : vision des maladies des plantes et écart de do
     la solution nutritive (pH/EC) en serre ? Quelle précision de prévision pour une GRU ?
   - comment encadrer un agent LLM qui propose des actions sur un système physique (garde-fous,
     preuves, validation humaine) ?
+  - quelles plages de consignes (T° jour/nuit, HR et VPD, DLI, CO₂, pH, EC, humidité du
+    substrat) par espèce et par stade, et avec quelle source ? Cultures visées : tomate,
+    laitue hydroponique, basilic et aromatiques, fraise. C'est la baseline de pratiques du
+    contrôleur (`recettes.yaml`) et de l'agent.
 - Toujours noter le dataset d'entraînement et celui de test, et préciser si le test est
   in-domain ou hors domaine. Noter aussi le matériel et la latence mesurée.
 
@@ -49,12 +53,17 @@ Serre autonome pilotée par IA : vision des maladies des plantes et écart de do
 - Contrôle climatique et hydroponique : règles, MPC, RL, irrigation, pH/EC, éclairage, énergie.
 - Prévision du microclimat de serre (GRU, LSTM, modèles physiques).
 - Agents LLM et systèmes d'aide à la décision en agriculture, humain dans la boucle.
+- Bonnes pratiques de culture sous abri, chiffrées : consignes climatiques et VPD, DLI et
+  photopériode, enrichissement en CO₂, solutions nutritives (pH, EC), irrigation, protection
+  intégrée et lutte biologique, modèles de risque maladie (humectation foliaire). Littérature
+  grise acceptée (handbooks, guides de vulgarisation universitaires), à déposer dans `inbox/`.
 
 ## Exclus
 
 - Agriculture de plein champ par satellite ou drone (base `drone`).
 - Accélération matérielle sur FPGA (base `fpga`).
-- Génomique, sélection variétale et agronomie sans composante logicielle.
+- Génomique, sélection variétale, et agronomie sans composante logicielle, sauf les consignes
+  de culture sous abri chiffrées (baseline du contrôleur, axe `crop-practices`).
 - Architectures de vision génériques sans évaluation sur des plantes, sauf pour la
   calibration, l'OOD ou les anomalies quand la méthode est transférable.
 
@@ -64,7 +73,8 @@ PlantVillage, PlantDoc, CCMT, in-domain / hors domaine, domain shift, remplaceme
 temperature scaling, ECE, OOD, rejet, spécificité, précision « anormal », multiple instance
 learning, agrégation top-k, crop, PatchCore, Grad-CAM, phénotypage, DLI, VPD, EC, pH,
 hydroponie, NFT / DWC, MPC, GRU / LSTM, MQTT, ESP32, Raspberry Pi 5, Hailo-8L, HEF, ONNX,
-quantification INT8, humain dans la boucle, garde-fous.
+quantification INT8, humain dans la boucle, garde-fous, consigne, stade, protection intégrée
+(IPM), lutte biologique, humectation foliaire, enrichissement CO₂.
 
 ## Suggestions en attente
 
@@ -74,3 +84,4 @@ quantification INT8, humain dans la boucle, garde-fous.
 
 - 2026-10-19 — base créée (`pdb base new`).
 - 2026-10-19 — 12 axes plus surveys, règles de classement, requêtes et 35 tag_rules, précisions, inclus, exclus et vocabulaire (/base-profile) — périmètre : tout le projet SerreIA.
+- 2026-10-29 — axe `crop-practices` (baseline de pratiques de culture : tomate, laitue, basilic, fraise), exclusion agronomie levée pour les consignes chiffrées, littérature grise acceptée.

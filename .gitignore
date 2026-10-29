@@ -20,3 +20,4 @@ docs/presentation/*.vrb
 
 # Fichiers générés par l'extension TS-TeX de l'éditeur
 tstex_modules/
+bases/fpga/docs/proposition_ARCYS/

@@ -1,0 +1,60 @@
+{
+  "id": "2023-wu-laboratory-field-unsupervised-domain-adaptation",
+  "title": "From Laboratory to Field: Unsupervised Domain Adaptation for Plant Disease Recognition in the Wild",
+  "authors": [
+    {
+      "given": "Xinlu",
+      "family": "Wu"
+    },
+    {
+      "given": "Xijian",
+      "family": "Fan"
+    },
+    {
+      "given": "Peng",
+      "family": "Luo"
+    },
+    {
+      "given": "Sruti",
+      "family": "Das Choudhury"
+    },
+    {
+      "given": "Tardi",
+      "family": "Tjahjadi"
+    },
+    {
+      "given": "Chunhua",
+      "family": "Hu"
+    }
+  ],
+  "year": 2023,
+  "venue": "Plant Phenomics 5, 0038",
+  "doi": "10.34133/plantphenomics.0038",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.34133/plantphenomics.0038",
+  "type": "journal",
+  "axes": [
+    "disease-classif",
+    "domain-shift"
+  ],
+  "tags": [
+    "plantdoc",
+    "plantvillage",
+    "domain-shift",
+    "unsupervised-domain-adaptation",
+    "resnet50"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : 13: Calculate 14: Calculate , Table 2",
+      "sections numérotées non détectées : 1, 2 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

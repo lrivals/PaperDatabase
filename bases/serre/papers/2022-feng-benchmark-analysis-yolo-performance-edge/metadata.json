@@ -48,13 +48,12 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "tableaux reconstruits par Docling, chiffres à vérifier : Table 1",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "tableaux reconstruits par Docling, chiffres à vérifier : Table 1"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "imported_from": {
     "base": "drone",

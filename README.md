@@ -204,7 +204,7 @@ Au 18/10/2026 :
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 87 | 86 | 352 |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` | 56 | 56 | 100 |
 | `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | `bases/yolo-data/` | 44 | 44 | 425 |
-| `serre` (29/10/2026) | Serre autonome pilotée par IA : vision des maladies, edge, contrôle, agent LLM, pratiques de culture | `bases/serre/` | 67 | 31 | 32 |
+| `serre` (29/10/2026) | Serre autonome pilotée par IA : vision des maladies, edge, contrôle, agent LLM, pratiques de culture | `bases/serre/` | 67 | 43 | 58 |
 
 La base `drone` s'appelait auparavant `DroneVisionDB` et vivait dans un dossier séparé. Chaque
 base a son `CLAUDE.md` (règles propres au domaine), son [`profile.md`](bases/drone/profile.md)
@@ -407,7 +407,9 @@ Description des trois premières au 01/10/2026, de `yolo-data` au 18/10/2026, de
   prévision, l'agent LLM avec validation humaine et, depuis le 29/10/2026, les bonnes pratiques
   de culture sous abri (axe `crop-practices` : consignes T°, HR, VPD, DLI, CO₂, pH/EC, irrigation,
   protection intégrée, risque maladie, pour tomate, laitue, basilic et fraise ; littérature grise
-  acceptée). 67 articles ingérés, dont 24 sur `crop-practices` ; 31 fiches faites, chacune avec
+  acceptée). 67 articles ingérés, dont 24 sur `crop-practices` ; 43 fiches faites, 58 lignes dans
+  `benchmarks.csv` (vision : chaque ligne précise jeu d'entraînement, jeu de test et
+  in-domain ou hors domaine). Chaque fiche a
   une section « Consignes chiffrées » (valeurs sourcées par `chunk_id` et comparées à
   `recettes.yaml` de SerreIA) ou « Pour SerreIA ». PDF restant à déposer à la main :
   [bases/serre/A_TELECHARGER.md](bases/serre/A_TELECHARGER.md).

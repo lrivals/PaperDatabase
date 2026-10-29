@@ -30,21 +30,28 @@
   "url": "https://arxiv.org/abs/2312.07905",
   "type": "preprint",
   "axes": [
+    "surveys",
     "disease-classif",
-    "iot-greenhouse"
+    "domain-shift"
   ],
-  "tags": [],
+  "tags": [
+    "datasets",
+    "PlantVillage",
+    "PlantDoc",
+    "CCMT",
+    "annotation",
+    "taxonomy"
+  ],
   "added": "2026-10-19",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

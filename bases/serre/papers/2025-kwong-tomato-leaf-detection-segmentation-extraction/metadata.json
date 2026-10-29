@@ -1,0 +1,55 @@
+{
+  "id": "2025-kwong-tomato-leaf-detection-segmentation-extraction",
+  "title": "Tomato Leaf Detection, Segmentation, and Extraction in Real-Time Environment for Accurate Disease Detection",
+  "authors": [
+    {
+      "given": "Foong",
+      "family": "Kwong"
+    },
+    {
+      "given": "Sotirios K",
+      "family": "Goudos"
+    },
+    {
+      "given": "Shahab Ul",
+      "family": "Islam"
+    },
+    {
+      "given": "Giampaolo",
+      "family": "Ferraioli"
+    },
+    {
+      "given": "Vito",
+      "family": "Pascazio"
+    }
+  ],
+  "year": 2025,
+  "venue": "AgriEngineering",
+  "doi": "10.3390/agriengineering7040120",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/agriengineering7040120",
+  "type": "journal",
+  "axes": [
+    "disease-classif",
+    "leaf-detection"
+  ],
+  "tags": [
+    "autodistill",
+    "sam",
+    "tomato",
+    "tomato-village",
+    "two-stage",
+    "yolo",
+    "yolov8"
+  ],
+  "added": "2026-10-29",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

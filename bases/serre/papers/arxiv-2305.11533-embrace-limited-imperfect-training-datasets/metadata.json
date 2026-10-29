@@ -42,8 +42,9 @@
   "url": "https://arxiv.org/abs/2305.11533",
   "type": "preprint",
   "axes": [
+    "surveys",
     "disease-classif",
-    "iot-greenhouse"
+    "domain-shift"
   ],
   "tags": [],
   "added": "2026-10-19",
@@ -51,12 +52,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

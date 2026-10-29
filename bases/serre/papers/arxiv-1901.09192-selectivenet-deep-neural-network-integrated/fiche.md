@@ -49,6 +49,8 @@ Attention au vocabulaire : « calibration » dans l'article désigne le réglage
 
 ## Pour SerreIA
 
+> **Mise à jour (29/10/2026)** : SerreIA a déjà `vision/eval/temperature.py` (temperature scaling de la tête `sante`, ajusté sur les crops vérité terrain de PlantDoc val, T copié dans le bundle edge) et `vision/eval/decision_search.py` (recherche de la règle de décision). Restent à faire d'après cette fiche : la tête `classe`, l'ECE avant/après en domaine et hors domaine, et la recalibration après quantification INT8 Hailo.
+
 Contexte (fourni par le projet, non vérifié dans l'article) : classifieur `vision/` EfficientNet-B0 multi-têtes ; hors domaine (PlantDoc) ECE `sante` 0,13, ECE `classe` 0,30, spécificité 0,50, 42 % de faux positifs sur images saines ; ni temperature scaling ni seuil réglé (`docs/14-resultats-phase1.md`, `docs/17-analyse-systeme.md` §10) ; règle `edge/controller/regles.yaml` : `classe_conf_min: 0.6` non calibré ; simulateur `sim/`.
 
 Méthode recommandée, par ordre de coût :

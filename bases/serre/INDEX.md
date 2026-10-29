@@ -2,7 +2,7 @@
 
 <!-- GÉNÉRÉ par bin/reindex.py — ne pas éditer à la main -->
 
-**67 papiers, 36 fiches à faire.**
+**67 papiers, 24 fiches à faire.**
 
 Un papier peut apparaître sous plusieurs axes.
 
@@ -12,6 +12,8 @@ Un papier peut apparaître sous plusieurs axes.
 |---|---|---|---|---|---|---|
 | [2026-fanourakis-climate-driven-pest-disease-dynamics](papers/2026-fanourakis-climate-driven-pest-disease-dynamics/fiche.md) | Climate-Driven Pest and Disease Dynamics in Greenhouse Vegetables: A Review | Fanourakis et al. | 2026 | Horticulturae | journal | done |
 | [arxiv-2301.11514-deep-industrial-image-anomaly-detection](papers/arxiv-2301.11514-deep-industrial-image-anomaly-detection/fiche.md) | Deep Industrial Image Anomaly Detection: A Survey | Liu et al. | 2023 | Machine Intelligence Research vol. 21, no. 1, pp. 104-135, 2024 | n/r | todo |
+| [arxiv-2305.11533-embrace-limited-imperfect-training-datasets](papers/arxiv-2305.11533-embrace-limited-imperfect-training-datasets/fiche.md) | Embrace Limited and Imperfect Training Datasets: Opportunities and Challenges in Plant Disease Recognition Using Deep Learning | Xu et al. | 2023 | arXiv preprint | preprint | done |
+| [arxiv-2312.07905-plant-disease-recognition-datasets-age](papers/arxiv-2312.07905-plant-disease-recognition-datasets-age/fiche.md) | Plant Disease Recognition Datasets in the Age of Deep Learning: Challenges and Opportunities | Xu et al. | 2023 | arXiv preprint | preprint | done |
 | [2022-katzin-process-greenhouse-climate-models-genealogy](papers/2022-katzin-process-greenhouse-climate-models-genealogy/fiche.md) | Process-based greenhouse climate models: Genealogy, current status, and future directions | David Katzin, Eldert J Van Henten, Simon Van Mourik | 2022 | Agricultural Systems 198, 103388 | journal | done |
 | [2021-nikolaou-energy-water-related-parameters-tomato](papers/2021-nikolaou-energy-water-related-parameters-tomato/fiche.md) | Energy and Water Related Parameters in Tomato and Cucumber Greenhouse Crops in Semiarid Mediterranean Regions. A Review, Part II: Irrigation and Fertigation | Nikolaou et al. | 2021 | Horticulturae | journal | done |
 | [arxiv-2110.14051-unified-survey-anomaly-novelty-open](papers/arxiv-2110.14051-unified-survey-anomaly-novelty-open/fiche.md) | A Unified Survey on Anomaly, Novelty, Open-Set, and Out-of-Distribution Detection: Solutions and Future Challenges | Salehi et al. | 2021 | arXiv preprint | preprint | todo |
@@ -22,28 +24,30 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
-| [2025-kwong-tomato-leaf-detection-segmentation-extraction](papers/2025-kwong-tomato-leaf-detection-segmentation-extraction/fiche.md) | Tomato Leaf Detection, Segmentation, and Extraction in Real-Time Environment for Accurate Disease Detection | Kwong et al. | 2025 | n/r | n/r | todo |
-| [2025-nyakuri-ai-iot-powered-edge-device](papers/2025-nyakuri-ai-iot-powered-edge-device/fiche.md) | AI and IoT-powered edge device optimized for crop pest and disease detection | Nyakuri et al. | 2025 | Scientific Reports 15(1) | journal | todo |
-| [2024-yang-laboratory-field-cross-domain-few](papers/2024-yang-laboratory-field-cross-domain-few/fiche.md) | From laboratory to field: cross-domain few-shot learning for crop disease identification in the field | Yang et al. | 2024 | Frontiers in Plant Science 15 | journal | todo |
-| [2023-wu-laboratory-field-unsupervised-domain-adaptation](papers/2023-wu-laboratory-field-unsupervised-domain-adaptation/fiche.md) | From Laboratory to Field: Unsupervised Domain Adaptation for Plant Disease Recognition in the Wild | Wu et al. | 2023 | Plant Phenomics 5, 0038 | journal | todo |
-| [arxiv-2305.11533-embrace-limited-imperfect-training-datasets](papers/arxiv-2305.11533-embrace-limited-imperfect-training-datasets/fiche.md) | Embrace Limited and Imperfect Training Datasets: Opportunities and Challenges in Plant Disease Recognition Using Deep Learning | Xu et al. | 2023 | arXiv preprint | preprint | todo |
-| [arxiv-2312.07905-plant-disease-recognition-datasets-age](papers/arxiv-2312.07905-plant-disease-recognition-datasets-age/fiche.md) | Plant Disease Recognition Datasets in the Age of Deep Learning: Challenges and Opportunities | Xu et al. | 2023 | arXiv preprint | preprint | todo |
-| [2022-shoaib-deep-learning-segmentation-classification-leaf](papers/2022-shoaib-deep-learning-segmentation-classification-leaf/fiche.md) | Deep learning-based segmentation and classification of leaf images for detection of tomato plant disease | Shoaib et al. | 2022 | Frontiers in Plant Science 13 | journal | todo |
-| [2021-fuentes-open-set-self-across-domain](papers/2021-fuentes-open-set-self-across-domain/fiche.md) | Open Set Self and Across Domain Adaptation for Tomato Disease Recognition With Deep Learning Techniques | Fuentes et al. | 2021 | Frontiers in Plant Science 12 | journal | todo |
-| [arxiv-1909.11915-unsupervised-image-translation-adversarial-networks](papers/arxiv-1909.11915-unsupervised-image-translation-adversarial-networks/fiche.md) | Unsupervised Image Translation using Adversarial Networks for Improved Plant Disease Recognition | Nazki et al. | 2019 | arXiv preprint | preprint | todo |
-| [arxiv-1911.10317-plantdoc-dataset-visual-plant-disease](papers/arxiv-1911.10317-plantdoc-dataset-visual-plant-disease/fiche.md) | PlantDoc: A Dataset for Visual Plant Disease Detection | Singh et al. | 2019 | arXiv preprint | preprint | todo |
-| [2016-mohanty-deep-learning-image-plant-disease](papers/2016-mohanty-deep-learning-image-plant-disease/fiche.md) | Using Deep Learning for Image-Based Plant Disease Detection | Sharada P. Mohanty, David P. Hughes, Marcel Salathé | 2016 | Frontiers in Plant Science 7 | journal | todo |
+| [2025-kwong-tomato-leaf-detection-segmentation-extraction](papers/2025-kwong-tomato-leaf-detection-segmentation-extraction/fiche.md) | Tomato Leaf Detection, Segmentation, and Extraction in Real-Time Environment for Accurate Disease Detection | Kwong et al. | 2025 | AgriEngineering | journal | done |
+| [2025-nyakuri-ai-iot-powered-edge-device](papers/2025-nyakuri-ai-iot-powered-edge-device/fiche.md) | AI and IoT-powered edge device optimized for crop pest and disease detection | Nyakuri et al. | 2025 | Scientific Reports 15(1) | journal | done |
+| [2024-yang-laboratory-field-cross-domain-few](papers/2024-yang-laboratory-field-cross-domain-few/fiche.md) | From laboratory to field: cross-domain few-shot learning for crop disease identification in the field | Yang et al. | 2024 | Frontiers in Plant Science 15 | journal | done |
+| [2023-wu-laboratory-field-unsupervised-domain-adaptation](papers/2023-wu-laboratory-field-unsupervised-domain-adaptation/fiche.md) | From Laboratory to Field: Unsupervised Domain Adaptation for Plant Disease Recognition in the Wild | Wu et al. | 2023 | Plant Phenomics 5, 0038 | journal | done |
+| [arxiv-2305.11533-embrace-limited-imperfect-training-datasets](papers/arxiv-2305.11533-embrace-limited-imperfect-training-datasets/fiche.md) | Embrace Limited and Imperfect Training Datasets: Opportunities and Challenges in Plant Disease Recognition Using Deep Learning | Xu et al. | 2023 | arXiv preprint | preprint | done |
+| [arxiv-2312.07905-plant-disease-recognition-datasets-age](papers/arxiv-2312.07905-plant-disease-recognition-datasets-age/fiche.md) | Plant Disease Recognition Datasets in the Age of Deep Learning: Challenges and Opportunities | Xu et al. | 2023 | arXiv preprint | preprint | done |
+| [2022-shoaib-deep-learning-segmentation-classification-leaf](papers/2022-shoaib-deep-learning-segmentation-classification-leaf/fiche.md) | Deep learning-based segmentation and classification of leaf images for detection of tomato plant disease | Shoaib et al. | 2022 | Frontiers in Plant Science 13 | journal | done |
+| [2021-fuentes-open-set-self-across-domain](papers/2021-fuentes-open-set-self-across-domain/fiche.md) | Open Set Self and Across Domain Adaptation for Tomato Disease Recognition With Deep Learning Techniques | Fuentes et al. | 2021 | Frontiers in Plant Science 12 | journal | done |
+| [arxiv-1909.11915-unsupervised-image-translation-adversarial-networks](papers/arxiv-1909.11915-unsupervised-image-translation-adversarial-networks/fiche.md) | Unsupervised Image Translation using Adversarial Networks for Improved Plant Disease Recognition | Nazki et al. | 2019 | arXiv preprint | preprint | done |
+| [arxiv-1911.10317-plantdoc-dataset-visual-plant-disease](papers/arxiv-1911.10317-plantdoc-dataset-visual-plant-disease/fiche.md) | PlantDoc: A Dataset for Visual Plant Disease Detection | Singh et al. | 2019 | arXiv preprint | preprint | done |
+| [2016-mohanty-deep-learning-image-plant-disease](papers/2016-mohanty-deep-learning-image-plant-disease/fiche.md) | Using Deep Learning for Image-Based Plant Disease Detection | Sharada P. Mohanty, David P. Hughes, Marcel Salathé | 2016 | Frontiers in Plant Science 7 | journal | done |
 
 ## Généralisation labo → terrain, arrière-plan, adaptation de domaine (`domain-shift`)
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
-| [2024-yang-laboratory-field-cross-domain-few](papers/2024-yang-laboratory-field-cross-domain-few/fiche.md) | From laboratory to field: cross-domain few-shot learning for crop disease identification in the field | Yang et al. | 2024 | Frontiers in Plant Science 15 | journal | todo |
-| [2023-wu-laboratory-field-unsupervised-domain-adaptation](papers/2023-wu-laboratory-field-unsupervised-domain-adaptation/fiche.md) | From Laboratory to Field: Unsupervised Domain Adaptation for Plant Disease Recognition in the Wild | Wu et al. | 2023 | Plant Phenomics 5, 0038 | journal | todo |
+| [2024-yang-laboratory-field-cross-domain-few](papers/2024-yang-laboratory-field-cross-domain-few/fiche.md) | From laboratory to field: cross-domain few-shot learning for crop disease identification in the field | Yang et al. | 2024 | Frontiers in Plant Science 15 | journal | done |
+| [2023-wu-laboratory-field-unsupervised-domain-adaptation](papers/2023-wu-laboratory-field-unsupervised-domain-adaptation/fiche.md) | From Laboratory to Field: Unsupervised Domain Adaptation for Plant Disease Recognition in the Wild | Wu et al. | 2023 | Plant Phenomics 5, 0038 | journal | done |
 | [arxiv-2305.01823-out-distribution-detection-algorithms-robust](papers/arxiv-2305.01823-out-distribution-detection-algorithms-robust/fiche.md) | Out-of-distribution detection algorithms for robust insect classification | Saadati et al. | 2023 | arXiv preprint | preprint | todo |
-| [2021-fuentes-open-set-self-across-domain](papers/2021-fuentes-open-set-self-across-domain/fiche.md) | Open Set Self and Across Domain Adaptation for Tomato Disease Recognition With Deep Learning Techniques | Fuentes et al. | 2021 | Frontiers in Plant Science 12 | journal | todo |
+| [arxiv-2305.11533-embrace-limited-imperfect-training-datasets](papers/arxiv-2305.11533-embrace-limited-imperfect-training-datasets/fiche.md) | Embrace Limited and Imperfect Training Datasets: Opportunities and Challenges in Plant Disease Recognition Using Deep Learning | Xu et al. | 2023 | arXiv preprint | preprint | done |
+| [arxiv-2312.07905-plant-disease-recognition-datasets-age](papers/arxiv-2312.07905-plant-disease-recognition-datasets-age/fiche.md) | Plant Disease Recognition Datasets in the Age of Deep Learning: Challenges and Opportunities | Xu et al. | 2023 | arXiv preprint | preprint | done |
+| [2021-fuentes-open-set-self-across-domain](papers/2021-fuentes-open-set-self-across-domain/fiche.md) | Open Set Self and Across Domain Adaptation for Tomato Disease Recognition With Deep Learning Techniques | Fuentes et al. | 2021 | Frontiers in Plant Science 12 | journal | done |
 | [arxiv-2110.14051-unified-survey-anomaly-novelty-open](papers/arxiv-2110.14051-unified-survey-anomaly-novelty-open/fiche.md) | A Unified Survey on Anomaly, Novelty, Open-Set, and Out-of-Distribution Detection: Solutions and Future Challenges | Salehi et al. | 2021 | arXiv preprint | preprint | todo |
-| [arxiv-1911.10317-plantdoc-dataset-visual-plant-disease](papers/arxiv-1911.10317-plantdoc-dataset-visual-plant-disease/fiche.md) | PlantDoc: A Dataset for Visual Plant Disease Detection | Singh et al. | 2019 | arXiv preprint | preprint | todo |
+| [arxiv-1911.10317-plantdoc-dataset-visual-plant-disease](papers/arxiv-1911.10317-plantdoc-dataset-visual-plant-disease/fiche.md) | PlantDoc: A Dataset for Visual Plant Disease Detection | Singh et al. | 2019 | arXiv preprint | preprint | done |
 
 ## Calibration, seuils, rejet / OOD, agrégation des prédictions (`calibration-decision`)
 
@@ -51,7 +55,7 @@ Un papier peut apparaître sous plusieurs axes.
 |---|---|---|---|---|---|---|
 | [arxiv-2403.02886-revisiting-confidence-estimation-reliable-failure](papers/arxiv-2403.02886-revisiting-confidence-estimation-reliable-failure/fiche.md) | Revisiting Confidence Estimation: Towards Reliable Failure Prediction | Zhu et al. | 2024 | arXiv preprint | preprint | todo |
 | [arxiv-2305.01823-out-distribution-detection-algorithms-robust](papers/arxiv-2305.01823-out-distribution-detection-algorithms-robust/fiche.md) | Out-of-distribution detection algorithms for robust insect classification | Saadati et al. | 2023 | arXiv preprint | preprint | todo |
-| [2021-fuentes-open-set-self-across-domain](papers/2021-fuentes-open-set-self-across-domain/fiche.md) | Open Set Self and Across Domain Adaptation for Tomato Disease Recognition With Deep Learning Techniques | Fuentes et al. | 2021 | Frontiers in Plant Science 12 | journal | todo |
+| [2021-fuentes-open-set-self-across-domain](papers/2021-fuentes-open-set-self-across-domain/fiche.md) | Open Set Self and Across Domain Adaptation for Tomato Disease Recognition With Deep Learning Techniques | Fuentes et al. | 2021 | Frontiers in Plant Science 12 | journal | done |
 | [arxiv-2104.02324-multiple-instance-active-learning-object](papers/arxiv-2104.02324-multiple-instance-active-learning-object/fiche.md) | Multiple instance active learning for object detection | Yuan et al. | 2021 | arXiv preprint | preprint | todo |
 | [arxiv-2106.07998-revisiting-calibration-modern-neural-networks](papers/arxiv-2106.07998-revisiting-calibration-modern-neural-networks/fiche.md) | Revisiting the Calibration of Modern Neural Networks | Minderer et al. | 2021 | arXiv preprint | preprint | todo |
 | [arxiv-2110.14051-unified-survey-anomaly-novelty-open](papers/arxiv-2110.14051-unified-survey-anomaly-novelty-open/fiche.md) | A Unified Survey on Anomaly, Novelty, Open-Set, and Out-of-Distribution Detection: Solutions and Future Challenges | Salehi et al. | 2021 | arXiv preprint | preprint | todo |
@@ -66,7 +70,7 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
-| [2025-kwong-tomato-leaf-detection-segmentation-extraction](papers/2025-kwong-tomato-leaf-detection-segmentation-extraction/fiche.md) | Tomato Leaf Detection, Segmentation, and Extraction in Real-Time Environment for Accurate Disease Detection | Kwong et al. | 2025 | n/r | n/r | todo |
+| [2025-kwong-tomato-leaf-detection-segmentation-extraction](papers/2025-kwong-tomato-leaf-detection-segmentation-extraction/fiche.md) | Tomato Leaf Detection, Segmentation, and Extraction in Real-Time Environment for Accurate Disease Detection | Kwong et al. | 2025 | AgriEngineering | journal | done |
 
 ## Détection d'anomalies visuelles non supervisée (`anomaly`)
 
@@ -99,8 +103,8 @@ Un papier peut apparaître sous plusieurs axes.
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
 | [2026-juniar-edge-seismic-denoising-benchmarking-hailo](papers/2026-juniar-edge-seismic-denoising-benchmarking-hailo/fiche.md) | Edge Seismic Denoising: Benchmarking the Hailo-8L on Raspberry Pi 5 | Juniar et al. | 2026 | Spektra: Jurnal Fisika dan Aplikasinya 11(2), 135–150 | journal | todo |
-| [2025-nyakuri-ai-iot-powered-edge-device](papers/2025-nyakuri-ai-iot-powered-edge-device/fiche.md) | AI and IoT-powered edge device optimized for crop pest and disease detection | Nyakuri et al. | 2025 | Scientific Reports 15(1) | journal | todo |
-| [2022-feng-benchmark-analysis-yolo-performance-edge](papers/2022-feng-benchmark-analysis-yolo-performance-edge/fiche.md) | Benchmark Analysis of YOLO Performance on Edge Intelligence Devices | Feng et al. | 2022 | Cryptography 6(2), 16 | journal | todo |
+| [2025-nyakuri-ai-iot-powered-edge-device](papers/2025-nyakuri-ai-iot-powered-edge-device/fiche.md) | AI and IoT-powered edge device optimized for crop pest and disease detection | Nyakuri et al. | 2025 | Scientific Reports 15(1) | journal | done |
+| [2022-feng-benchmark-analysis-yolo-performance-edge](papers/2022-feng-benchmark-analysis-yolo-performance-edge/fiche.md) | Benchmark Analysis of YOLO Performance on Edge Intelligence Devices | Feng et al. | 2022 | Cryptography 6(2), 16 | journal | done |
 | [2019-grindstaff-affordable-remote-monitoring-plant-growth](papers/2019-grindstaff-affordable-remote-monitoring-plant-growth/fiche.md) | Affordable remote monitoring of plant growth in facilities using Raspberry Pi computers | Grindstaff et al. | 2019 | Applications in Plant Sciences 7(8), e11280 | journal | todo |
 
 ## Architecture IoT de serre : capteurs, MQTT, ESP32, jumeau numérique (`iot-greenhouse`)
@@ -108,12 +112,10 @@ Un papier peut apparaître sous plusieurs axes.
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
 | [2025-cebolla-alemany-short-term-forecasting-predictive-control](papers/2025-cebolla-alemany-short-term-forecasting-predictive-control/fiche.md) | Short-term forecasting and predictive control of rooftop greenhouse microclimate using multi-horizon machine learning models | Cebolla-Alemany et al. | 2025 | Smart Agricultural Technology 13, 101733 | journal | done |
-| [2025-nyakuri-ai-iot-powered-edge-device](papers/2025-nyakuri-ai-iot-powered-edge-device/fiche.md) | AI and IoT-powered edge device optimized for crop pest and disease detection | Nyakuri et al. | 2025 | Scientific Reports 15(1) | journal | todo |
+| [2025-nyakuri-ai-iot-powered-edge-device](papers/2025-nyakuri-ai-iot-powered-edge-device/fiche.md) | AI and IoT-powered edge device optimized for crop pest and disease detection | Nyakuri et al. | 2025 | Scientific Reports 15(1) | journal | done |
 | [2025-yu-prediction-control-greenhouse-temperature-methods](papers/2025-yu-prediction-control-greenhouse-temperature-methods/fiche.md) | Prediction and control of greenhouse temperature: Methods, applications, and future directions | Yu et al. | 2025 | Computers and Electronics in Agriculture 237, 110603 | journal | done |
 | [2024-jain-design-implementation-iot-automated-ec](papers/2024-jain-design-implementation-iot-automated-ec/fiche.md) | Design and Implementation of an IoT-based automated EC and pH Control System in an NFT-based Hydroponic Farm | Swati Jain, Mandeep Kaur | 2024 | Engineering, Technology &amp; Applied Science Research 14(1), 13078–13081 | journal | done |
 | [arxiv-2405.14411-large-language-models-explainable-decisions](papers/arxiv-2405.14411-large-language-models-explainable-decisions/fiche.md) | Large Language Models for Explainable Decisions in Dynamic Digital Twins | Zhang et al. | 2024 | arXiv preprint | preprint | todo |
-| [arxiv-2305.11533-embrace-limited-imperfect-training-datasets](papers/arxiv-2305.11533-embrace-limited-imperfect-training-datasets/fiche.md) | Embrace Limited and Imperfect Training Datasets: Opportunities and Challenges in Plant Disease Recognition Using Deep Learning | Xu et al. | 2023 | arXiv preprint | preprint | todo |
-| [arxiv-2312.07905-plant-disease-recognition-datasets-age](papers/arxiv-2312.07905-plant-disease-recognition-datasets-age/fiche.md) | Plant Disease Recognition Datasets in the Age of Deep Learning: Challenges and Opportunities | Xu et al. | 2023 | arXiv preprint | preprint | todo |
 | [arxiv-2107.05464-igrow-smart-agriculture-solution-autonomous](papers/arxiv-2107.05464-igrow-smart-agriculture-solution-autonomous/fiche.md) | IGrow: A Smart Agriculture Solution to Autonomous Greenhouse Control | Cao et al. | 2021 | arXiv preprint | preprint | todo |
 | [2020-hemming-cherry-tomato-production-intelligent-greenhouses](papers/2020-hemming-cherry-tomato-production-intelligent-greenhouses/fiche.md) | Cherry Tomato Production in Intelligent Greenhouses-Sensors and AI for Control of Climate, Irrigation, Crop Yield, and Quality | Hemming et al. | 2020 | Sensors | journal | done |
 | [2020-moin-eddin-rezvani-iot-sensor-data-fusion-determining](papers/2020-moin-eddin-rezvani-iot-sensor-data-fusion-determining/fiche.md) | IoT-Based Sensor Data Fusion for Determining Optimality Degrees of Microclimate Parameters in Commercial Greenhouse Production of Tomato | Moin-Eddin Rezvani et al. | 2020 | Sensors | journal | done |

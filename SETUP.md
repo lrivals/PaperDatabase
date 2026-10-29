@@ -878,8 +878,8 @@ Défauts constatés pendant les lots :
 - un lot entier interrompu par la limite de session, sans rien écrire, relancé tel quel.
 
 - [ ] Base serre (créée le 19/10/2026 ; au 29/10/2026 : 14 axes dont `crop-practices`, 67 articles,
-  31 fiches) : finir les fiches par vagues de sous-agents (calibration et anomalies, agent LLM,
-  RL et contrôle restants), fusionner leurs lignes de benchmarks, puis `/paper-gaps`. PDF encore
+  43 fiches, 58 lignes de benchmark) : finir les 24 fiches restantes par vagues de sous-agents
+  (calibration et anomalies, agent LLM, RL et contrôle, phénotypage), fusionner leurs lignes de benchmarks, puis `/paper-gaps`. PDF encore
   à déposer : [bases/serre/A_TELECHARGER.md](bases/serre/A_TELECHARGER.md). Tableaux par stade
   non extraits (Shamshiri 2018, Savvas 2018, Hochmuth HS787) : candidats à `/table-review` ;
   workbook CEAC 2026 : recettes en images, peu exploitable.

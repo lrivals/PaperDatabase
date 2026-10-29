@@ -36,7 +36,10 @@
   ],
   "tags": [
     "efficientnet",
+    "in-domain-test",
+    "knowledge-distillation",
     "mobilenet",
+    "raspberry-pi-5",
     "xai"
   ],
   "added": "2026-10-19",
@@ -44,13 +47,12 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 5, Table 4, Table 6, Table 8",
       "tableaux sans corps extrait (légende seule) : Table 2, Table 3, of images No. of classes Sourc"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

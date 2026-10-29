@@ -39,7 +39,9 @@
   ],
   "tags": [
     "plantdoc",
-    "background"
+    "background",
+    "hors-domaine",
+    "pretraining-plantvillage"
   ],
   "added": "2026-10-19",
   "extraction": {
@@ -47,12 +49,11 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux reconstruits par PyMuPDF, chiffres à vérifier : Table 3"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

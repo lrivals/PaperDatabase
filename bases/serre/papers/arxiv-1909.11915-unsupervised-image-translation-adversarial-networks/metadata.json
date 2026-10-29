@@ -29,7 +29,11 @@
     "disease-classif"
   ],
   "tags": [
-    "tomato"
+    "tomato",
+    "gan",
+    "data-augmentation",
+    "class-imbalance",
+    "image-translation"
   ],
   "added": "2026-10-19",
   "extraction": {
@@ -37,12 +41,11 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

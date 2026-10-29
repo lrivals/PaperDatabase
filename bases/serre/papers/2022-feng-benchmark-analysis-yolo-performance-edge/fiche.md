@@ -1,10 +1,8 @@
 ---
 id: 2022-feng-benchmark-analysis-yolo-performance-edge
-fiche: todo
-date: 2026-09-24
+fiche: done
+date: 2026-10-29
 ---
-
-> **Importée de la base `drone` le 2026-10-19.** Cette fiche a été écrite pour une autre base (autre thème) : pertinence à réévaluer ici, puis `fiche: done` via `/paper-fiche`. Statut d'origine : done.
 
 # Benchmark Analysis of YOLO Performance on Edge Intelligence Devices
 
@@ -82,7 +80,7 @@ Table 3 (S = 416, FP16) :
 - Les auteurs avancent un gain d'environ ×2 avec TensorRT (§4.2), mais le reprennent d'une
   référence [45] **sans le mesurer**.
 
-→ reportés dans `benchmarks.csv` : 24 lignes
+→ lignes de `benchmarks.csv` : 24, déjà présentes (reprises à l'import depuis `drone`), aucune ajoutée ici
 - 12 lignes de la Table 3 (3 cartes × 2 modèles × 2 vidéos). Quatre sont en
   `confidence: medium` (NX YOLOv3 et RPi YOLOv3-tiny, pour les deux vidéos) : l'extraction
   avait fusionné leurs cellules et je les ai reconstituées dans l'ordre des colonnes, en
@@ -113,21 +111,58 @@ Table 3 (S = 416, FP16) :
 - Pas de FPGA, alors que le titre parle d'edge en général. Les auteurs l'annoncent en
   travaux futurs (§5).
 
-## Pertinence pour la thèse
+## Pertinence pour SerreIA
 
-- Premier papier du corpus avec des chiffres **Jetson et VPU** pour YOLO. Il fournit un
-  ordre de grandeur hors FPGA : YOLOv3-tiny entre 6,6 et 41 FPS pour 6 à 15 W (portée non
-  précisée).
-- Il sert surtout de **contre-exemple méthodologique** pour le gap « pas de protocole de
-  mesure commun pour YOLO » (gaps.md) : pas de mAP, puissance de portée inconnue, runtime
-  bridé.
-- Point à retenir pour un déploiement : la conversion de modèle vers un accélérateur dédié
-  (OpenVINO ici, par analogie Vitis AI ou FINN) peut dégrader silencieusement la détection
-  (0 % de confiance). Il faut donc vérifier la précision **après** compilation sur la cible.
+Lecture secondaire : le papier ne contient ni Hailo, ni RPi 5, ni détection de feuilles. Il
+sert de **repère d'ordre de grandeur** (SBC bas coût, YOLO COCO) et de **contre-exemple de
+méthode**, pas de baseline chiffrée pour le Hailo-8L. Les modèles (YOLOv3/v4, FP16, Darknet)
+sont d'une autre génération que le YOLOv8n INT8 visé.
+
+- Point à retenir pour le HEF : la conversion vers un accélérateur dédié peut dégrader
+  silencieusement la détection (confiance moyenne 0 % pour YOLOv3-tiny / Video1 sur RPi + NCS2,
+  Table 3, 2022-feng#027.0 ; cause : coupure des couches Region par OpenVINO, 2022-feng#017.0).
+  Cela justifie le critère de `05-edge-deploiement.md` (écart HEF vs ONNX < 2 points sur `test`
+  et `test_xdomain`) : mesurer la précision sur la cible, pas seulement le FPS.
+
+## Pour SerreIA
+
+**Plateformes et chiffres de référence (hors Hailo).** Seul repère proche d'un RPi + NPU USB :
+RPi 4B + Intel NCS2 (Myriad X, FP16), YOLOv3-tiny S = 416 : 18,8 à 19,0 FPS pour 6,5 à 6,8 W
+(Table 3, 2022-feng#027.0) ; YOLOv3 : 2,5 FPS pour 6,0 à 6,2 W. Jetson Nano, même modèle :
+6,6 à 6,8 FPS, 7,2 à 7,4 W ; Xavier NX : 35,6 à 41,1 FPS, 13,2 à 13,5 W. Puissance à vide :
+RPi + NCS2 3,16 W, Nano 2,60 W, NX 3,15 W (Table 4, 2022-feng#028.0). À prendre comme plancher
+« génération 2020 » : le Hailo-8L (13 TOPS INT8) n'est pas comparable en débit, et aucun de ces
+chiffres ne remplace une mesure `hailortcli benchmark` sur le Pi 5.
+
+**Conditions de mesure à reprendre (ou à ne pas reprendre).**
+- Résolution : S = 416 pour la comparaison entre cartes, 320 / 608 sur Nano seulement : le FPS
+  est divisé par environ 3 de 320 à 608 (YOLOv3-tiny, Table 5). SerreIA doit fixer sa
+  résolution d'entrée (YOLOv8n de feuilles, puis crops 224 × 224 pour EfficientNet-B0) et la
+  noter avec chaque chiffre.
+- Données : deux vidéos de 768 × 436 et 1920 × 1080 (2022-feng#012.0) ; le FPS change peu
+  entre les deux (§4.1) car le redimensionnement vers S est fixe. Batch non déclaré (batch 1
+  supposé, non affirmé).
+- FPS de bout en bout sur vidéo (lecture, redimensionnement, affichage compris), moyenne de
+  10 passes ; pas de latence isolée. Pour SerreIA, séparer : latence du modèle seul
+  (`hailortcli benchmark`), puis chaîne complète caméra + pré-traitement + NMS + classifieur.
+- Puissance : JTOP (Jetson) et wattmètre USB (RPi), portée non décrite (`unspecified`). À
+  refaire au wattmètre sur l'alimentation du Pi 5 + HAT, au repos et en charge.
+
+**Pièges de comparaison.**
+- Pas de TensorRT, FP16 sur Jetson (§3.2, 2022-feng#006.0) : Jetson sous-évalués ; le gain
+  ×2 avec TensorRT est cité d'une référence, non mesuré (2022-feng#016.2). Comparaison
+  équitable entre ces trois cartes, pas face à un Hailo en INT8.
+- « Mean confidence » n'est pas une mAP : aucune précision n'est mesurée ; ne pas la comparer
+  aux mAP ou aux accuracies de PlantVillage / PlantDoc.
+- Les puissances de la Table 3 (carte entière ou presque) et celles des Tables 5-6 (GPU seul)
+  ne se comparent pas ; les watts du NCS2 ne comptent pas la consommation de l'hôte
+  de la même manière que JTOP (déduit, méthode non décrite).
+- Spécifications constructeur (TFLOPs, W nominaux, Table 2) : ne pas les mélanger avec les
+  mesures.
 
 ## Gaps identifiés
 
-- **Protocole de mesure :** confirme le gap existant. Même hors FPGA, un benchmark publié ne
+- **Protocole de mesure :** confirme le gap existant (pour SerreIA : aucune référence Hailo-8L / RPi 5 ici, à chercher). Même hors FPGA, un benchmark publié ne
   donne ni mAP, ni latence, ni portée de puissance.
 - **Baseline Jetson à jour :** il manque une baseline Jetson optimisée (TensorRT INT8, mAP
   COCO val, puissance carte au wattmètre) pour comparer honnêtement un YOLO sur FPGA.

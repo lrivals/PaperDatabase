@@ -3,53 +3,53 @@
   "file": "bench_fps_power.png",
   "group": "bench",
   "description": "débit vs puissance, détection / autres tâches",
-  "generated": "2026-10-29T21:53:32",
+  "generated": "2026-10-29T22:26:48",
   "config_hash": "d9ea53bf4f",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 12,
-  "total": 32
+  "total": 58
  },
  "bench_gops_per_watt": {
   "group": "bench",
   "description": "GOPS/W par précision de calcul",
   "skipped": "aucune ligne de benchmarks.csv avec gops et power_w chiffrés",
-  "checked": 1793307212.524198,
+  "checked": 1793309208.4533515,
   "config_hash": "d9ea53bf4f"
  },
  "bench_fpga_resources": {
   "group": "bench",
   "description": "LUT vs DSP des FPGA, par toolflow",
   "skipped": "aucune ligne de benchmarks.csv avec plateforme FPGA, luts et dsps chiffrés",
-  "checked": 1793307212.5242894,
+  "checked": 1793309208.4534442,
   "config_hash": "d9ea53bf4f"
  },
  "bench_accuracy_fps": {
   "group": "bench",
   "description": "précision vs débit, un panneau par métrique",
   "skipped": "aucune ligne de benchmarks.csv avec accuracy_value et fps chiffrés pour une même métrique (4 lignes au moins)",
-  "checked": 1793307212.5245204,
+  "checked": 1793309208.4536269,
   "config_hash": "d9ea53bf4f"
  },
  "bench_accuracy_latency": {
   "group": "bench",
   "description": "précision vs latence, un panneau par métrique",
   "skipped": "aucune ligne de benchmarks.csv avec accuracy_value et latency_ms chiffrés pour une même métrique (3 lignes au moins)",
-  "checked": 1793307212.524603,
+  "checked": 1793309208.454451,
   "config_hash": "d9ea53bf4f"
  },
  "bench_quantization": {
   "file": "bench_quantization.png",
   "group": "bench",
   "description": "précision de calcul par famille de plateforme",
-  "generated": "2026-10-29T21:53:32",
+  "generated": "2026-10-29T22:26:48",
   "config_hash": "d9ea53bf4f",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 32,
-  "total": 32
+  "n": 58,
+  "total": 58
  },
  "eval_retrieval": {
   "group": "eval",
@@ -90,7 +90,7 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-10-29T22:20:03",
+  "generated": "2026-10-29T22:26:48",
   "config_hash": "d9ea53bf4f",
   "sources": [
    "papers/*/metadata.json"
@@ -101,7 +101,7 @@
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-10-29T22:20:03",
+  "generated": "2026-10-29T22:26:49",
   "config_hash": "d9ea53bf4f",
   "sources": [
    "papers/*/metadata.json"
@@ -112,18 +112,18 @@
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-10-29T22:20:04",
+  "generated": "2026-10-29T22:26:49",
   "config_hash": "d9ea53bf4f",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 32
+  "n": 58
  },
  "corpus_citations": {
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-10-29T22:20:07",
+  "generated": "2026-10-29T22:26:53",
   "config_hash": "d9ea53bf4f",
   "sources": [
    "papers/*/refs.jsonl",
@@ -136,7 +136,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-10-29T22:20:07",
+  "generated": "2026-10-29T22:26:53",
   "config_hash": "d9ea53bf4f",
   "sources": [
    "benchmarks.csv",
@@ -240,12 +240,128 @@
     "crop-practices"
    ],
    [
-    "plateforme non rapportée",
-    "disease-classif"
+    "CPU",
+    "domain-shift"
    ],
    [
-    "plateforme non rapportée",
-    "domain-shift"
+    "CPU",
+    "calibration-decision"
+   ],
+   [
+    "CPU",
+    "leaf-detection"
+   ],
+   [
+    "CPU",
+    "anomaly"
+   ],
+   [
+    "CPU",
+    "growth"
+   ],
+   [
+    "CPU",
+    "active-labelling"
+   ],
+   [
+    "CPU",
+    "climate-control"
+   ],
+   [
+    "CPU",
+    "forecasting"
+   ],
+   [
+    "CPU",
+    "llm-agent"
+   ],
+   [
+    "CPU",
+    "crop-practices"
+   ],
+   [
+    "GPU bureau",
+    "calibration-decision"
+   ],
+   [
+    "GPU bureau",
+    "anomaly"
+   ],
+   [
+    "GPU bureau",
+    "growth"
+   ],
+   [
+    "GPU bureau",
+    "active-labelling"
+   ],
+   [
+    "GPU bureau",
+    "edge-inference"
+   ],
+   [
+    "GPU bureau",
+    "iot-greenhouse"
+   ],
+   [
+    "GPU bureau",
+    "climate-control"
+   ],
+   [
+    "GPU bureau",
+    "forecasting"
+   ],
+   [
+    "GPU bureau",
+    "llm-agent"
+   ],
+   [
+    "GPU bureau",
+    "crop-practices"
+   ],
+   [
+    "autre",
+    "calibration-decision"
+   ],
+   [
+    "autre",
+    "leaf-detection"
+   ],
+   [
+    "autre",
+    "anomaly"
+   ],
+   [
+    "autre",
+    "growth"
+   ],
+   [
+    "autre",
+    "active-labelling"
+   ],
+   [
+    "autre",
+    "edge-inference"
+   ],
+   [
+    "autre",
+    "iot-greenhouse"
+   ],
+   [
+    "autre",
+    "climate-control"
+   ],
+   [
+    "autre",
+    "forecasting"
+   ],
+   [
+    "autre",
+    "llm-agent"
+   ],
+   [
+    "autre",
+    "crop-practices"
    ],
    [
     "plateforme non rapportée",
@@ -258,14 +374,6 @@
    [
     "plateforme non rapportée",
     "growth"
-   ],
-   [
-    "plateforme non rapportée",
-    "edge-inference"
-   ],
-   [
-    "plateforme non rapportée",
-    "iot-greenhouse"
    ],
    [
     "plateforme non rapportée",
@@ -302,6 +410,10 @@
     "apprentissage continu"
    ],
    [
+    "GPU embarqué",
+    "autre"
+   ],
+   [
     "NPU / VPU",
     "classification"
    ],
@@ -318,8 +430,64 @@
     "apprentissage continu"
    ],
    [
-    "plateforme non rapportée",
-    "classification"
+    "NPU / VPU",
+    "autre"
+   ],
+   [
+    "CPU",
+    "détection"
+   ],
+   [
+    "CPU",
+    "anomalie"
+   ],
+   [
+    "CPU",
+    "compression / AE"
+   ],
+   [
+    "CPU",
+    "apprentissage continu"
+   ],
+   [
+    "CPU",
+    "autre"
+   ],
+   [
+    "GPU bureau",
+    "détection"
+   ],
+   [
+    "GPU bureau",
+    "anomalie"
+   ],
+   [
+    "GPU bureau",
+    "compression / AE"
+   ],
+   [
+    "GPU bureau",
+    "apprentissage continu"
+   ],
+   [
+    "autre",
+    "détection"
+   ],
+   [
+    "autre",
+    "anomalie"
+   ],
+   [
+    "autre",
+    "compression / AE"
+   ],
+   [
+    "autre",
+    "apprentissage continu"
+   ],
+   [
+    "autre",
+    "autre"
    ],
    [
     "plateforme non rapportée",

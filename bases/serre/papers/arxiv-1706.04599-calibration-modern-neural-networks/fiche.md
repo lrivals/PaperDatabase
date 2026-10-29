@@ -46,6 +46,8 @@ Axe `calibration-decision` : référence fondatrice pour le point de la question
 
 ## Pour SerreIA
 
+> **Mise à jour (29/10/2026)** : SerreIA a déjà `vision/eval/temperature.py` (temperature scaling de la tête `sante`, ajusté sur les crops vérité terrain de PlantDoc val, T copié dans le bundle edge) et `vision/eval/decision_search.py` (recherche de la règle de décision). Restent à faire d'après cette fiche : la tête `classe`, l'ECE avant/après en domaine et hors domaine, et la recalibration après quantification INT8 Hailo.
+
 À reprendre concrètement (fichiers de `/home/leonard/Documents/Perso/SerreIA/`, lecture seule) :
 
 1. **Temperature scaling par tête** sur le classifieur `vision/` (EfficientNet-B0 multi-têtes) : un T pour `sante`, un T pour `classe`, ajustés sur la NLL d'un jeu de validation, logits figés (1706.04599#007.3). L'argmax est inchangé : l'exactitude et les décisions de classe restent identiques, seules les probabilités changent. Coût négligeable (1 paramètre, quelques itérations). Pour une tête binaire `sante` en sigmoïde, appliquer le même T aux logits avant la sigmoïde (ou Platt scaling, §4.1, 1706.04599#006.5).

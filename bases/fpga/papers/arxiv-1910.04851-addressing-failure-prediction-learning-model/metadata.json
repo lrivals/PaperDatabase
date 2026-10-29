@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-1910.04851-addressing-failure-prediction-learning-model",
+  "title": "Addressing Failure Prediction by Learning Model Confidence",
+  "authors": [
+    {
+      "given": "Charles",
+      "family": "Corbière"
+    },
+    {
+      "given": "Nicolas",
+      "family": "Thome"
+    },
+    {
+      "given": "Avner",
+      "family": "Bar-Hen"
+    },
+    {
+      "given": "Matthieu",
+      "family": "Cord"
+    },
+    {
+      "given": "Patrick",
+      "family": "Pérez"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1910.04851",
+  "url": "https://arxiv.org/abs/1910.04851",
+  "type": "preprint",
+  "axes": [
+    "failure-prediction"
+  ],
+  "tags": [
+    "failure-prediction",
+    "uncertainty",
+    "confidence-estimation",
+    "true-class-probability",
+    "selective-classification"
+  ],
+  "added": "2026-10-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : Table 4, Table 4"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

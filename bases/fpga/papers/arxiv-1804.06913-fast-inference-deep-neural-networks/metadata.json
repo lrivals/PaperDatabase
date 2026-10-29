@@ -1,0 +1,80 @@
+{
+  "id": "arxiv-1804.06913-fast-inference-deep-neural-networks",
+  "title": "Fast inference of deep neural networks in FPGAs for particle physics",
+  "authors": [
+    {
+      "given": "Javier",
+      "family": "Duarte"
+    },
+    {
+      "given": "Song",
+      "family": "Han"
+    },
+    {
+      "given": "Philip",
+      "family": "Harris"
+    },
+    {
+      "given": "Sergo",
+      "family": "Jindariani"
+    },
+    {
+      "given": "Edward",
+      "family": "Kreinar"
+    },
+    {
+      "given": "Benjamin",
+      "family": "Kreis"
+    },
+    {
+      "given": "Jennifer",
+      "family": "Ngadiuba"
+    },
+    {
+      "given": "Maurizio",
+      "family": "Pierini"
+    },
+    {
+      "given": "Ryan",
+      "family": "Rivera"
+    },
+    {
+      "given": "Nhan",
+      "family": "Tran"
+    },
+    {
+      "given": "Zhenbin",
+      "family": "Wu"
+    }
+  ],
+  "year": 2018,
+  "venue": "JINST 13 P07027 (2018)",
+  "doi": "10.1088/1748-0221/13/07/P07027",
+  "arxiv_id": "1804.06913",
+  "url": "https://arxiv.org/abs/1804.06913",
+  "type": "journal",
+  "axes": [
+    "toolflows",
+    "platforms"
+  ],
+  "tags": [
+    "hls4ml",
+    "HLS",
+    "virgule fixe",
+    "élagage",
+    "reuse factor",
+    "physique des particules",
+    "MLP",
+    "latence"
+  ],
+  "added": "2026-10-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

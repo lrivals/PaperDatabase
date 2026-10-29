@@ -1,0 +1,59 @@
+{
+  "id": "arxiv-1706.04599-calibration-modern-neural-networks",
+  "title": "On Calibration of Modern Neural Networks",
+  "authors": [
+    {
+      "given": "Chuan",
+      "family": "Guo"
+    },
+    {
+      "given": "Geoff",
+      "family": "Pleiss"
+    },
+    {
+      "given": "Yu",
+      "family": "Sun"
+    },
+    {
+      "given": "Kilian Q.",
+      "family": "Weinberger"
+    }
+  ],
+  "year": 2017,
+  "venue": "Proceedings of the 34th International Conference on Machine Learning (ICML 2017), PMLR 70",
+  "doi": null,
+  "arxiv_id": "1706.04599",
+  "url": "https://arxiv.org/abs/1706.04599",
+  "type": "conference",
+  "axes": [
+    "failure-prediction"
+  ],
+  "tags": [
+    "calibration",
+    "ece",
+    "temperature-scaling",
+    "confidence",
+    "selective-prediction"
+  ],
+  "added": "2026-10-19",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "métadonnées à vérifier à la main"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  },
+  "imported_from": {
+    "base": "serre",
+    "paper_id": "arxiv-1706.04599-calibration-modern-neural-networks",
+    "date": "2026-10-26",
+    "fiche": "todo",
+    "axes": [
+      "calibration-decision"
+    ]
+  }
+}

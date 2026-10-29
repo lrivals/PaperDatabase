@@ -16,6 +16,43 @@ Format d'une entrée :
 
 ---
 
+Mise à jour du 26/10/2026 (9e passage) : **114 fiches `done` sur 114**, **308 lignes** dans
+`benchmarks.csv` (55 papiers). Nouveautés depuis le 8e passage :
+- les trois papiers fondateurs YOLO (arxiv-1506.02640, arxiv-1612.08242, arxiv-1804.02767),
+  sans ligne de benchmark : ils ne changent aucun gap (baselines GPU Titan X) ;
+- l'axe **`failure-prediction`** (8 fiches : arxiv-2603.25499 KGFP, arxiv-1910.04851
+  ConfidNet, arxiv-2403.02886, arxiv-1901.09192 SelectiveNet, arxiv-1706.04599,
+  arxiv-1906.02530, arxiv-1709.01686 BranchyNet, arxiv-1703.09844 MSDNet), ajouté avec le
+  draft de sujet ARCYS (profile.md, 25/10/2026) ;
+- hls4ml 2018 (arxiv-1804.06913, 2 lignes, estimations HLS) et l'étude SEU d'un BNN FINN
+  sur Ultra96 (arxiv-2404.01757, sans ligne).
+
+Changements de ce passage :
+- **section nouvelle** « Prédiction d'échec, sorties anticipées et moniteur sur cible »,
+  **6 gaps** au croisement du sujet ARCYS : 5 étayés dans le corpus (dont 3 restent en
+  hypothèse pour la littérature) et 1 en hypothèse (fiabilité du moniteur) ;
+- **l'axe `timing-analysis` (base.json) ne contient aucun papier** : tout gap temporel
+  repose sur des remarques de fiches d'autres axes. Il reste donc en hypothèse pour la
+  littérature (corpus vide, pas preuve d'absence) ;
+- **nuancés ou étendus** : « Aucun détecteur d'objets quantifié… » (KGFP surveille un
+  YOLOv8, mais sur GPU), « Fiabilité SEU… » (injection CRAM + FF sur FINN, arxiv-2404.01757),
+  « Critère de criticité… » (étiquette « au moins une personne manquée » de KGFP),
+  « Moniteurs d'exécution… » (+7 fiches), « Argument FPGA contre GPU… » (hls4ml,
+  arxiv-1905.04223 §7.4), « Détecteurs de personnes quantifiés… » (première métrique de
+  personnes manquées, hors FPGA), « Estimation de puissance et de latence dans les
+  toolflows » (écart HLS / implémentation de hls4ml) ;
+- **aucun gap supprimé** : aucune des 13 fiches nouvelles n'en contredit un ;
+- au total, **42 gaps**.
+
+Réserve propre à ce passage : les 8 fiches `failure-prediction` sont de l'apprentissage
+automatique **logiciel** (aucune plateforme, aucune ligne de benchmark), 7 sur 8 en
+classification. Les travaux de prédiction de faux négatifs de détecteur cités par KGFP
+(§2.2, chunk 2603.25499#003.0-1) ne sont pas dans la base : Yang et al. 2021 (Sensors
+21(8):2819, « Introspective false negative prediction for black-box object detectors in
+autonomous driving »), Yatbaz et al. (moniteur de couches précoces de détecteurs 3D),
+DECIDER (Subramanyam et al., ECCV), Torpmann-Hagen et al. 2025 (IEEE Access 13). Références
+tirées de la bibliographie de KGFP, non vérifiées.
+
 Mise à jour du 01/10/2026 (8e passage) : **101 fiches `done` sur 101**, **299 lignes** dans
 `benchmarks.csv` (54 papiers, dont **216 lignes FPGA** issues de 44 papiers). Soixante
 fiches ajoutées depuis le 7e passage, dont les 29 de l'axe `safety-certification` et les 5 de
@@ -581,7 +618,12 @@ Nouveau au 7e passage, nuancé au 8e.
     1,05 % sur AlexNet, arxiv-2202.10935, Table 6) ; arxiv-2503.04832 (−3,4 à −16,1 %,
     Table V) ;
   - (8e passage) hls4ml mesure enfin une énergie, avec EEMBC, dans MLPerf Tiny
-    (arxiv-2206.11791).
+    (arxiv-2206.11791) ;
+  - (9e passage) hls4ml d'origine : les ressources de la Table 2 sont des estimations de
+    synthèse Vivado HLS ; sur un réseau plus petit implémenté, les FF estimés sont 2 à 4 fois
+    trop hauts et les LUT aussi surestimées ; l'horloge visée (5 ns) a dû être relâchée à
+    8 ns à l'implémentation (arxiv-1804.06913, §3.2-3.3, Fig. 16-17). Les 2 lignes du CSV
+    portent cette réserve.
 - Ce qui manque : un modèle de puissance validé sur carte, intégré au flot.
 - Statut : hypothèse pour l'état actuel des outils. Étayé (7 fiches) pour le constat
   « estimation non validée » dans les papiers.
@@ -773,13 +815,17 @@ DEEL), les surveys et les études de fiabilité.
     - YOLOv3-tiny « certifié » ED-324 / ARP6983 sur Jetson AGX Xavier
       (arxiv-2406.12362, §V) ;
     - prédiction conforme sur YOLOv5m sans plateforme (arxiv-2304.06052) ;
+    - (9e passage) moniteur de personnes manquées KGFP sur YOLOv8l gelé, GPU non précisé,
+      sans quantification (arxiv-2603.25499, §3.2, « Plateforme ») ;
+  - (9e passage) la seule nouvelle étude de fiabilité sur FPGA reste un classifieur : BNN
+    FINN entièrement connecté sur MNIST, ~93 %, Ultra96 (arxiv-2404.01757, §II-C) ;
   - inversement, **aucun des 18 papiers `yolo-fpga` ne traite la sûreté**. 2026-fata
     renvoie la tolérance aux fautes en perspective (§VI) ; 2024-zhang, 2025-kim, 2024-yan,
     arxiv-2609.24757 et arxiv-2607.13106 n'en disent rien.
 - Ce qui manque : un YOLO quantifié sur SoC FPGA soumis à injection de fautes, à
   vérification (même partielle) et à un moniteur d'exécution, avec une métrique de
   détection.
-- Statut : étayé (25 fiches). C'est le croisement central de la thèse : les deux moitiés
+- Statut : étayé (27 fiches). C'est le croisement central de la thèse : les deux moitiés
   existent, séparément.
 - Piste : choisir un YOLOv3-tiny / v8n sur KV260 comme objet commun aux expériences de
   fiabilité, de mAP sur cible et de moniteur.
@@ -799,7 +845,16 @@ DEEL), les surveys et les études de fiabilité.
     - latches et buffers seulement, sans logique de contrôle ni configuration FPGA
       (2017-li, §4.3) ;
     - fautes de poids logicielles (arxiv-1912.00941) ;
-    - fautes uniques seulement (2019-libano, arxiv-1912.07394) ;
+    - fautes uniques seulement (2019-libano, arxiv-1912.07394, arxiv-2404.01757) ;
+    - (9e passage) **contre-exemple partiel** : la mémoire de configuration (CRAM, par
+      émulation FREtZ, 194 031 fautes, marge 0,3 %) et les FF (simulation exhaustive) d'un
+      BNN FINN sont injectées. Mais réseau MNIST, une seule configuration PE/SIMD, aucun
+      essai sous faisceau (arxiv-2404.01757, §III, Tables II-III) ;
+  - (9e passage) **la criticité varie aussi dans le temps** : les erreurs critiques viennent
+    surtout des ~50 premiers cycles de la couche 0 ; des crashes (timeouts, 1,06 % des
+    fautes CRAM, 1,51 % des FF) viennent de la logique de contrôle, même d'une couche pas
+    encore démarrée (arxiv-2404.01757, §IV-B, Fig. 4, Tables II-III). Un crash est une
+    défaillance temporelle, pas une erreur de classe (déduit) ;
   - **la quantification déplace le risque** : section efficace estimée 39 % plus basse pour
     le réseau binarisé, mais une part d'erreurs critiques de 38 % contre 26 %
     (2020-libano, §IV-B) ;
@@ -818,8 +873,10 @@ DEEL), les surveys et les études de fiabilité.
   - une campagne d'injection (configuration, BRAM, multi-fautes) sur un YOLO INT8, en DPU
     et en dataflow (FINN) ;
   - la criticité par couche mesurée en mAP et en personnes manquées ;
-  - un durcissement sélectif (TMR, clipping, SED) chiffré en LUT / BRAM.
-- Statut : étayé (9 fiches).
+  - un durcissement sélectif (TMR, clipping, SED) chiffré en LUT / BRAM ;
+  - l'effet de la précision et du folding (PE/SIMD) sur la vulnérabilité, promis en travail
+    futur par arxiv-2404.01757 (§V).
+- Statut : étayé (10 fiches).
 - Piste :
   - méthode de 2019-libano (ICAP / Pblocks, criticité par couche) appliquée au YOLOv3-tiny
     FINN d'arxiv-2609.24757 et au DPU de 2026-fata ;
@@ -849,12 +906,21 @@ DEEL), les surveys et les études de fiabilité.
     - mais la prédiction conforme ne couvre que les vrais positifs, ni les faux négatifs
       ni les faux positifs (arxiv-2304.06052, §4.1-4.2) ;
   - « détecter une personne » est inspécifiable au sens d'ISO 26262 (arxiv-1709.02435,
-    §III-C).
+    §III-C) ;
+  - (9e passage) KGFP fournit une **première définition opérationnelle** : une image est
+    « non sûre » si au moins une personne est manquée (IoU < 0,5, seuil de confiance 0,5)
+    (arxiv-2603.25499, §3.1, Éq. 1, §4.1). Elle reste tout-ou-rien, au niveau de l'image,
+    sans distance, zone ni persistance sur plusieurs images (fiche, Limites). Le papier
+    invoque le SIL 4 (§1) sans aucun argument d'assurance ;
+  - (9e passage) BNN FINN : « critique » = mauvaise classe MNIST, les crashes sont comptés à
+    part (arxiv-2404.01757, §IV) ; les critères de prédiction d'échec du corpus sont
+    symétriques (erreur 0/1 : arxiv-1901.09192 §2 ; TCP : arxiv-1910.04851 §2.1 ; règle de
+    Chow : arxiv-2403.02886 §3.3.2).
 - Ce qui manque : une définition de l'erreur dangereuse d'un détecteur de personnes (personne
   manquée sur N images consécutives, dans une zone, à une distance), et une chaîne de calcul
   du taux de défaillance dangereuse par heure qui combine l'inexactitude du modèle et les
   fautes matérielles, comparable aux cibles SIL / PL.
-- Statut : étayé (11 fiches) pour l'absence de traduction. Les valeurs cibles des normes
+- Statut : étayé (15 fiches) pour l'absence de traduction. Les valeurs cibles des normes
   ne sont pas dans la base : leur usage reste à vérifier dans les textes.
 - Piste :
   - partir du MEBF de 2020-libano et du calcul horaire de arxiv-2103.10529 ;
@@ -959,12 +1025,27 @@ DEEL), les surveys et les études de fiabilité.
     - MD01 / MD03 / MD04 (arxiv-1905.04223) ;
     - monitorage hors ODD en travail futur (arxiv-2406.12362, §VI) ;
   - aucun coût matériel (LUT, BRAM, latence) n'est mesuré pour un moniteur ; aucun moniteur
-    n'est évalué sur near-OOD réalistes (éclairage, EPI, occultation).
+    n'est évalué sur near-OOD réalistes (éclairage, EPI, occultation) ;
+  - (9e passage) **les nouvelles fiches `failure-prediction` confirment le constat** :
+    - ConfidNet, SelectiveNet, FMFP, temperature scaling : logiciel seul, plateforme n/r
+      (arxiv-1910.04851, arxiv-1901.09192, arxiv-2403.02886, arxiv-1706.04599,
+      « Plateforme ») ;
+    - les méthodes les plus fiables sous décalage (ensembles, M = 5 suffit) coûtent k passes
+      ou k modèles, en formules seulement (arxiv-1906.02530, §5, Table S1) ;
+    - à l'inverse, le temperature scaling est un scalaire sur les logits, sans effet sur
+      l'argmax (arxiv-1706.04599, §4.2) ; FMFP ne change que les poids (déduit par la fiche,
+      arxiv-2403.02886) ; leur coût FPGA serait quasi nul, mais n'est pas mesuré ;
+    - **avertissement** : calibrer ou utiliser un score OOD dégrade souvent la prédiction
+      d'échec (AURC ×10³ de 9,52 à 16,27 avec mixup, ResNet110 CIFAR-10 ; arxiv-2403.02886,
+      Table 1). Un moniteur doit donc être évalué en AURC / AUROC d'erreur, pas en ECE ;
+    - KGFP bat GRAM, KNN et ViM (AUROC sûr / non sûr 92,9 % contre 52,5 à 54,3 %), mais ces
+      baselines sont non supervisées (arxiv-2603.25499, Table 2, §5.3).
 - Ce qui manque : des moniteurs légers (MSP, boîtes, patrons, conformal, reconstruction)
   implantés à côté d'un YOLO sur FPGA, comparés à ressources égales. Il faut mesurer la
   latence ajoutée, l'effet de l'INT8 sur leur calibration, et le taux de détection des
   erreurs à taux de fausse alarme fixé.
-- Statut : étayé (20 fiches).
+- Statut : étayé (27 fiches). Le volet « prédiction d'échec de détecteur » est détaillé dans
+  la section « Prédiction d'échec, sorties anticipées et moniteur sur cible ».
 - Piste :
   - commencer par la prédiction conforme d'arxiv-2304.06052 : une marge additive après
     inférence, calibrée hors ligne (déduit par la fiche) ;
@@ -1018,11 +1099,22 @@ DEEL), les surveys et les études de fiabilité.
     est signalé non traité par arxiv-2509.04153 (§III-B) ;
   - les atouts supposés (FSM déterministe, dataflow à latence fixe, floorplan explicite,
     chaîne 100 % matérielle) sont des déductions des fiches 2025-kim, arxiv-2206.11791,
-    2021-alonso et 2024-zhang, pas des affirmations mesurées.
+    2021-alonso et 2024-zhang, pas des affirmations mesurées ;
+  - (9e passage) hls4ml donne une latence calculable par couche (Éq. 2.4 : 75 ns pour
+    R = 1), mais à l'horloge de la synthèse HLS (5 ns), relâchée à 8 ns à l'implémentation
+    (arxiv-1804.06913, §3.2-3.3) ; aucune borne n'est démontrée ;
+  - (9e passage) arxiv-1905.04223 (§7.4, chunk 1905.04223#047.1) juge que le ML n'ajoute pas
+    de difficulté au WCET, car l'effort de calcul serait indépendant de l'entrée. Cette
+    prémisse tombe pour les réseaux à sorties anticipées (arxiv-1709.01686,
+    arxiv-1703.09844), le NMS et le suivi sur le PS (déduit) ;
+  - (9e passage) sur CPU, le point fixe 16 bits d'une couche réduit l'OWCET observé de 29 %
+    et la dispersion (arxiv-2406.12362, §V-B, Fig. 11) : seul lien chiffré du corpus entre
+    quantification et pire cas, observé et non analytique.
 - Ce qui manque : une mesure de distribution de latence (max, p99.9, gigue) de bout en bout,
   sur FPGA (DPU et dataflow) et sur Jetson Orin, pour un même YOLO, avec et sans charge du
   PS. Il faudrait aussi un WCET analytique pour le dataflow.
-- Statut : étayé (12 fiches).
+- Statut : étayé (14 fiches). L'axe `timing-analysis` ne contient aucun papier : hypothèse
+  pour la littérature (WCET de DNN sur SoC FPGA, contention mémoire, multi-DPU).
 - Piste : ajouter à l'expérience KV260 contre Orin des traces de latence sur 10⁵ images.
   Comparer DPU, FINN et TensorRT. Question de thèse candidate : « le FPGA rend-il la borne
   de latence d'un détecteur démontrable ? ».
@@ -1061,6 +1153,166 @@ DEEL), les surveys et les études de fiabilité.
 - Piste : SLDA StaticCov sur DPU + PL (2021-piyasena-accelerating), avec un test de
   non-régression automatique avant activation des nouveaux paramètres. Mesurer le coût et
   la latence de validation.
+
+## Prédiction d'échec, sorties anticipées et moniteur sur cible
+
+Section nouvelle au 9e passage, liée au draft de sujet ARCYS (profile.md, 25/10/2026).
+Réserve : les 8 fiches `failure-prediction` sont logicielles, 7 sur 8 en classification ;
+l'axe `timing-analysis` est vide. Les travaux de prédiction de faux négatifs de détecteur
+cités par KGFP ne sont pas dans la base (voir l'en-tête du 9e passage).
+
+### Aucun moniteur de faux négatifs de détecteur mesuré sur matériel
+- Constat :
+  - le seul moniteur de personnes manquées du corpus (KGFP) n'a **aucune mesure de coût** :
+    tête de 2,6 M de paramètres, plus un DINO ViT-B de 86 M en seconde passe ; « la latence
+    vient surtout des backbones », sans chiffre de latence ni de FLOPs ; GPU non précisé
+    (arxiv-2603.25499, §5.2, §6, chunk 2603.25499#026.1 ; preprint) ;
+  - les moniteurs de classification ont un coût annoncé, jamais mesuré : ConfidNet « aussi
+    rapide » que le réseau, sans chiffre, et un encodeur dupliqué après fine-tuning
+    (arxiv-1910.04851, §2.2, §3.2) ; tête de sélection FC 512 + sigmoïde non chiffrée
+    (arxiv-1901.09192, §6.3) ; prédiction conforme « légère » non mesurée
+    (arxiv-2304.06052, §1) ;
+  - l'outil le plus proche de la forme d'un tel moniteur (petit MLP en virgule fixe) est
+    hls4ml : MLP de 4 389 paramètres, 75 ns, mais en estimation HLS, sur Kintex et pour la
+    physique des particules (arxiv-1804.06913, Table 2, §3.3) ;
+  - aucune ligne de `benchmarks.csv` ne porte sur un moniteur.
+- Ce qui manque : un moniteur de faux négatifs (tête légère sur les features du détecteur)
+  implanté à côté d'un YOLO INT8 sur SoC FPGA, avec LUT / DSP / BRAM, latence ajoutée et
+  puissance, comparé à KGFP sur les mêmes étiquettes (COCO person, IoU 0,5).
+- Statut : étayé (6 fiches) dans le corpus. **Hypothèse** pour la littérature : Yang et al.
+  2021 (Sensors) et Yatbaz et al. (moniteur de couches précoces) ne sont pas dans la base.
+- Piste : reproduire KGFP (code publié, Fraunhofer GitLab) avec une tête légère sans DINO,
+  puis la passer en hls4ml ou en PL à côté du DPU de la KV260.
+
+### Prédiction d'échec ciblée sur le faux négatif : un seul travail, moniteur externe sur détecteur gelé
+- Constat :
+  - KGFP est le seul papier qui prédit l'échec « personne manquée » d'un détecteur
+    (arxiv-2603.25499, §3.1). Mais :
+    - le détecteur est gelé, seul le moniteur est entraîné (§4) ;
+    - la décision est prise au niveau de l'image, sans localisation (§5.1) ;
+    - hors distribution, le rappel tombe à 34,2 % en moyenne sur COCO-O, alors que la
+      conclusion annonce 85 % (fiche, Limites ; §5.1) ;
+    - images isolées, pas de flux vidéo ni de taux d'alarme par heure (fiche, Limites) ;
+  - les méthodes d'apprentissage conjoint existent, mais **en classification et avec un
+    risque symétrique** : SelectiveNet apprend prédiction et rejet ensemble (risque 0/1,
+    arxiv-1901.09192, §4) ; ConfidNet apprend la TCP sur les features du modèle (perte L2,
+    erreur de classe quelconque, arxiv-1910.04851, §2) ;
+  - la prédiction conforme sur YOLO ne couvre pas les faux négatifs (arxiv-2304.06052,
+    §4.1-4.2) ; Gaussian YOLOv3 ne modélise que l'incertitude de localisation
+    (arxiv-1904.04620) ;
+  - aucun papier n'emploie une perte asymétrique qui pénalise le faux négatif d'une classe
+    critique, alors que les guides la demandent (2020-easa §8.1.1 ; arxiv-2103.10529,
+    §4.2.4.2).
+- Ce qui manque : un moniteur entraîné **avec** le détecteur (perte conjointe, comme
+  SelectiveNet), ciblé sur la personne manquée, localisé (par région ou par échelle de la
+  FPN) et évalué sur flux (alarmes successives, délai de détection de l'échec).
+- Statut : étayé (8 fiches).
+- Piste : ajouter à un YOLOv8n une tête de sélection par échelle, entraînée conjointement
+  avec une perte pondérée sur les personnes manquées ; comparer à KGFP (gelé, externe) sur
+  COCO person et CrowdHuman.
+
+### Sorties anticipées jamais utilisées comme alerte conservatrice
+- Constat :
+  - dans le corpus, une sortie anticipée sert à **gagner du temps** : BranchyNet sort si
+    l'entropie du softmax est sous un seuil choisi « au coude » précision / temps, sur les
+    données d'évaluation (arxiv-1709.01686, §III-C, §IV) ; MSDNet cale ses seuils sur max
+    softmax pour un budget moyen, en supposant une probabilité de sortie constante
+    (arxiv-1703.09844, §4.1) ;
+  - aucun des deux ne mesure l'erreur parmi les échantillons sortis tôt (fiches, Limites) ;
+    les deux sont en classification ; la détection est un travail futur
+    (arxiv-1709.01686, §VI ; arxiv-1703.09844, §6) ;
+  - un seuil de confiance suppose une confiance fiable, or :
+    - les réseaux modernes sont surconfiants, ECE de 4 à 10 % (arxiv-1706.04599, §5,
+      Table 1) ;
+    - la calibration se dégrade sous décalage pour toutes les méthodes (arxiv-1906.02530,
+      §5) ;
+    - calibrer n'aide pas à prédire l'échec (arxiv-2403.02886, Table 1) ;
+  - seul SelectiveNet donne un seuil avec une borne (calibration de la couverture, Hoeffding,
+    arxiv-1901.09192, §5), en i.i.d. et sur une sortie unique ;
+  - la règle de rejet de Chow et le cadre risque-couverture (arxiv-2403.02886, §3.3.2) sont
+    transposables à un rejet « vers le réseau complet ou vers l'alarme » (déduit par la
+    fiche).
+- Ce qui manque : une sortie anticipée dont le rôle est inversé : signaler tôt un échec
+  probable (personne manquée), avec un seuil réglé pour le rappel des échecs à taux de
+  fausse alarme fixé, et une garantie de calibration (jeu séparé, borne de couverture).
+- Statut : étayé (6 fiches) pour l'usage « raccourci de calcul » et l'absence d'usage
+  conservateur dans le corpus. **Hypothèse** pour la littérature : les détecteurs à sorties
+  anticipées récents ne sont pas dans la base.
+- Piste : `/paper-discover "early exit object detection"` et « early exit uncertainty
+  safety » ; question de thèse candidate : « une sortie anticipée peut-elle borner le délai
+  d'alerte d'un échec de détection, sans raccourcir la décision nominale ? ».
+
+### Pire cas temporel des sorties anticipées et délai de réaction de bout en bout
+- Constat :
+  - les gains des sorties anticipées sont des **moyennes** : 2 à 6 fois sur CPU et GPU, à
+    batch 1 ; un lot plus grand réduit le gain (arxiv-1709.01686, Table I, Fig. 3) ; en
+    mode anytime, le budget de MSDNet est une variable aléatoire, pas une borne
+    (arxiv-1703.09844, §3) ;
+  - le pire cas d'un réseau à sorties anticipées est le réseau complet plus les branches
+    traversées (déduit, fiches arxiv-1709.01686 et arxiv-1703.09844) ;
+  - la prémisse « calcul indépendant de l'entrée, donc WCET sans difficulté propre au ML »
+    (arxiv-1905.04223, §7.4) ne tient plus avec des sorties anticipées (déduit) ;
+  - KGFP propose de ne vérifier qu'une image sur N pour amortir le coût
+    (chunk 2603.25499#026.1), ce qui allonge le délai de détection de l'échec, non étudié ;
+  - le corpus n'a aucune mesure de délai de réaction de bout en bout (caméra → détection →
+    moniteur → alarme) ; les seuls pire cas sont un OWCET observé sur CPU
+    (arxiv-2406.12362, §V-B) et un WCET OTAWA sur une autre cible que celle mesurée
+    (2022-de-albuquerque-silva-acetone) ;
+  - l'axe `timing-analysis` ne contient aucun papier.
+- Ce qui manque : une borne de délai de réaction pour un détecteur avec moniteur et sorties
+  anticipées sur SoC FPGA, qui distingue chemin nominal, chemin d'alerte et interférences
+  PS / PL (DDR partagée, post-traitement sur l'ARM).
+- Statut : étayé (6 fiches) pour l'absence dans le corpus. **Hypothèse** pour la
+  littérature, puisque l'axe `timing-analysis` est vide.
+- Piste : `/paper-discover timing-analysis` (requête de base.json : « WCET analysis neural
+  network inference FPGA SoC ») ; mesurer sur KV260 la distribution de latence avec et sans
+  branche de sortie anticipée, sous charge du PS.
+
+### Effet de la quantification sur la prédiction d'échec et les décisions critiques
+- Constat :
+  - **aucun travail de prédiction d'échec ou de calibration ne quantifie** : KGFP, ConfidNet,
+    SelectiveNet, FMFP, temperature scaling, Ovadia (arxiv-2603.25499, arxiv-1910.04851,
+    arxiv-1901.09192, arxiv-2403.02886, arxiv-1706.04599, arxiv-1906.02530 :
+    « Plateforme », « Limites ») ; l'effet des minima plats sur la quantification est une
+    hypothèse de la fiche d'arxiv-2403.02886 ;
+  - côté FPGA, la quantification est évaluée sur des **moyennes** : rapport d'AUC
+    99,68 % à `<16,6>` (arxiv-1804.06913, Table 2) ; mAP après PTQ INT8 avec des écarts
+    imprévisibles selon le modèle (arxiv-2607.13106, Table II) ; FP16 / point fixe validés
+    par tests (arxiv-2406.12362) ;
+  - le seul résultat sur la **gravité** des erreurs : le réseau binarisé a une section
+    efficace plus basse mais une part d'erreurs critiques de 38 % contre 26 %
+    (2020-libano, §IV-B) ;
+  - la MSP, base de nombreux seuils, dépend de la calibration des logits, que l'INT8 peut
+    modifier (déduit par la fiche d'arxiv-1610.02136).
+- Ce qui manque : mesurer, sur un détecteur de personnes, ce que l'INT8 / INT4 change (1) au
+  taux de personnes manquées, au-delà de la mAP, (2) à la séparation du score du moniteur
+  (AUROC d'échec, AURC) et (3) aux seuils des sorties anticipées calés en flottant.
+- Statut : étayé (9 fiches). Question de thèse candidate, au croisement des rôles de
+  M. Lauer et A. Dion (profile.md).
+- Piste : sur le YOLOv8n de la piste précédente, comparer flottant, PTQ INT8 Vitis AI et
+  QAT FINN : rappel des personnes, AUROC du moniteur, recalibration de la température par
+  précision.
+
+### Fiabilité matérielle du moniteur et redondance sélective guidée par le moniteur
+- Constat :
+  - les études SEU portent sur le réseau principal ; aucune n'injecte de fautes dans un
+    moniteur ou dans une branche de sortie anticipée (arxiv-2404.01757, gaps de la fiche ;
+    2019-libano ; arxiv-1912.07394) ;
+  - la criticité est localisée (couche 0, premiers cycles, logique de contrôle :
+    arxiv-2404.01757, §IV-B ; FC finale : 2019-libano, §V-C) et la réplication sélective
+    coûte 49,87 à 173,47 % de MAC (arxiv-1912.07394, Table III) ;
+  - les guides proposent moniteur de sortie, n-version et repli sûr (arxiv-1905.04223,
+    §7.4.2 ; Doer / Checker, 2020-easa §6.6), sans coût ni couplage avec la redondance ;
+  - la distinction entre erreur de perception (KGFP), anomalie d'exécution (SEU critique)
+    et défaillance temporelle (crash par timeout, arxiv-2404.01757, Tables II-III) n'est
+    faite par aucun papier dans un même cadre (déduit du croisement des fiches).
+- Ce qui manque : une architecture où le moniteur déclenche la redondance (ré-exécution,
+  TMR temporaire) seulement quand l'échec est probable, avec le moniteur lui-même durci et
+  son taux de défaillance compté.
+- Statut : **hypothèse** (5 fiches), car elle repose sur l'absence de travaux de ce type
+  dans la base.
+- Piste : campagne d'injection FREtZ (méthode d'arxiv-2404.01757) sur un moniteur hls4ml
+  isolé, puis sur l'ensemble détecteur + moniteur en FINN.
 
 ## Détection de personnes en milieu industriel
 
@@ -1114,13 +1366,16 @@ constats viennent aussi des fiches `safety-certification` et `yolo-fpga`.
       Limites) ;
     - « accuracy » (2026-fata) ;
     - aucun taux de personnes manquées à taux de fausse alarme fixé, par distance ou par
-      niveau d'occultation ;
+      niveau d'occultation, **sur FPGA**. (9e passage) KGFP mesure le rappel des personnes
+      parmi les images acceptées à 5 % de FPR (64,3 % → 84,5 % sur COCO val ; 34,2 % en
+      moyenne sur COCO-O), mais sur GPU, YOLOv8l flottant, images isolées COCO
+      (arxiv-2603.25499, §5.1 ; preprint) ;
   - CrowdHuman fournit des boîtes tête / visible / corps entier, signaux redondants pour un
     moniteur (déduit par la fiche, arxiv-1805.00123).
 - Ce qui manque : un YOLO de personnes quantifié sur KV260, évalué sur CrowdHuman (ou un jeu
   industriel) par le rappel à FPPI fixé, par taille et par occultation. Il faut le faire
   sur la cible, pas seulement en logiciel.
-- Statut : étayé (9 fiches).
+- Statut : étayé (10 fiches).
 - Piste : réentraîner un YOLOv8n à opérateurs compatibles DPU (recette d'arxiv-2607.13106)
   sur CrowdHuman. Mesurer le MR⁻² et le rappel à 0,1 FPPI sur KV260, en flottant et en INT8.
 

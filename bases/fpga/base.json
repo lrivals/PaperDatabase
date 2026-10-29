@@ -8,7 +8,9 @@
     "toolflows": "Toolflows",
     "platforms": "Plateformes",
     "safety-certification": "Sûreté, fiabilité et certification",
-    "person-detection": "Détection de personnes en milieu industriel"
+    "person-detection": "Détection de personnes en milieu industriel",
+    "failure-prediction": "Prédiction d'échec, confiance et sorties anticipées",
+    "timing-analysis": "Analyse temporelle (WCET, interférences)"
   },
   "axis_rules": {
     "yolo-fpga": "\\byolo",
@@ -17,7 +19,9 @@
     "toolflows": "hls4ml|\\bFINN\\b|vitis ai|fpga ai suite|\\bSATAY\\b|tool ?flow|codesign workflow",
     "platforms": "zynq|kria|kv260|zcu ?10[24]|pynq|versal|ultrascale|jetson",
     "safety-certification": "safety[- ]critical|functional safety|safety assurance|safety systems?|certif(?:ication|iable|ied)|\\bSEUs?\\b|single[- ]event|soft errors?|fault[- ](?:injection|toleran)|radiation(?:-induced| tests?| hardness| effects)|\\bTMR\\b|ISO 26262|IEC 61508|ISO 13849|DO-178|DO-254|\\bEASA\\b|learning assurance|design assurance|operational design domain|AMC 20-1\\d\\d|tool qualification|out-of-distribution|\\bOOD\\b|novelty detection|runtime monitor|abstraction-based monitor|formal verification|verif(?:y|ying|ication)[\\w -]{0,30}(?:quantized|binarized|neural)|conformal (?:prediction|risk control)|uncertainty (?:quantification|estimation)|localization uncertainty|probabilistic object detection|trustworth",
-    "person-detection": "pedestrian|person (?:detection|re-?identification)|human detection|crowd|\\bworkers?\\b|\\bPPE\\b|hard ?hat|construction site|hazardous|human-robot"
+    "person-detection": "pedestrian|person (?:detection|re-?identification)|human detection|crowd|\\bworkers?\\b|\\bPPE\\b|hard ?hat|construction site|hazardous|human-robot",
+    "failure-prediction": "failure prediction|misclassif\\w* detection|detecting misclassified|confidence (?:estimation|learning|score)|true class probability|selective (?:prediction|classification|net)|reject option|abstention|early[- ]exit|multi-exit|\\bBranchyNet\\b|\\bMSDNet\\b|calibrat(?:ion|ed) (?:of )?(?:modern )?neural|predictive uncertainty|missed (?:objects?|detections?)|false negatives?",
+    "timing-analysis": "\\bWCET\\b|worst[- ]case (?:execution|response|latency)|timing analysis|response[- ]time analysis|timing predictab|predictable execution|memory (?:contention|interference)|bus arbitration|shared resources? interference"
   },
   "axis_queries": {
     "surveys": "survey FPGA deep learning accelerator",
@@ -27,13 +31,17 @@
     "toolflows": "FPGA neural network toolflow hls4ml FINN",
     "platforms": "Zynq UltraScale Kria neural network inference",
     "safety-certification": "safety assurance certification neural network FPGA",
-    "person-detection": "worker person detection industrial safety surveillance"
+    "person-detection": "worker person detection industrial safety surveillance",
+    "failure-prediction": "failure prediction misclassification detection object detector confidence early exit",
+    "timing-analysis": "WCET analysis neural network inference FPGA SoC"
   },
   "hardware_axes": [
     "toolflows",
     "platforms",
     "safety-certification",
-    "person-detection"
+    "person-detection",
+    "failure-prediction",
+    "timing-analysis"
   ],
   "topic_re": "\\bFPGAs?\\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\\bHLS\\b|high-level synthesis|\\bSoC\\b|edge (?:ai|devices?|inference)|embedded",
   "title_topic_re": "\\bFPGAs?\\b|field[- ]programmable gate arrays?|reconfigurable|hardware accelerat|\\bHLS\\b|high-level synthesis|\\bSoC\\b|edge (?:ai|devices?|inference)|embedded|accelerators?\\b|\\bhardware\\b|tinyml|micro-?controllers?|\\bMCUs?\\b|on-device|(?:extreme|the|at) edge\\b|edge (?:computing|intelligence|artificial)|\\btiny (?:deep learning|ml)\\b",
@@ -162,6 +170,26 @@
     [
       "human-robot|\\bHRC\\b",
       "hrc"
+    ],
+    [
+      "early[- ]exit|multi-exit|\\bBranchyNet\\b",
+      "early-exit"
+    ],
+    [
+      "fixed[- ]point|numerical (?:error|precision)|round-?off",
+      "fixed-point"
+    ],
+    [
+      "\\bWCET\\b|worst[- ]case execution",
+      "wcet"
+    ],
+    [
+      "failure prediction|misclassif\\w* detection|selective (?:prediction|classification)",
+      "failure-prediction"
+    ],
+    [
+      "calibrat",
+      "calibration"
     ]
   ]
 }

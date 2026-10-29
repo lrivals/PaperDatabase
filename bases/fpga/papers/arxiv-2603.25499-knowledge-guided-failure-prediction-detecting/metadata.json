@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2603.25499-knowledge-guided-failure-prediction-detecting",
+  "title": "Knowledge-Guided Failure Prediction: Detecting When Object Detectors Miss Safety-Critical Objects",
+  "authors": [
+    {
+      "given": "Jakob Paul",
+      "family": "Zimmermann"
+    },
+    {
+      "given": "Gerrit",
+      "family": "Holzbach"
+    },
+    {
+      "given": "David",
+      "family": "Lerch"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2603.25499",
+  "url": "https://arxiv.org/abs/2603.25499",
+  "type": "preprint",
+  "axes": [
+    "failure-prediction",
+    "safety-certification",
+    "person-detection"
+  ],
+  "tags": [
+    "failure-prediction",
+    "runtime-monitoring",
+    "ood",
+    "selective-prediction",
+    "yolov8",
+    "dino",
+    "foundation-model",
+    "coco-o",
+    "saiad-cvpr-2026"
+  ],
+  "added": "2026-10-26",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : 6 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

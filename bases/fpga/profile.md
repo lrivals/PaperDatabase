@@ -31,6 +31,13 @@ industriel dangereux.
 - Tension à instruire (2026-10-01) : apprentissage embarqué contre certification. Les cadres
   actuels (EASA, AMLAS) excluent l'apprentissage en ligne ; question du gel du modèle, du
   versionnage, de la non-régression et du retour arrière d'un modèle mis à jour sur la cible.
+- Questions du draft de sujet ARCYS (Lauer, Dion ; 2026-10-25) : prédiction d'échec ciblée
+  sur le faux négatif critique (moniteur appris avec le détecteur) ; sorties anticipées
+  comme signalement conservateur, pas comme raccourci de calcul ; distinction entre erreur
+  de perception, anomalie d'exécution et défaillance temporelle ; effet de la quantification
+  sur les décisions critiques ; délai de réaction de bout en bout (WCET, interférences) ;
+  redondance sélective. Rôles : Michaël Lauer (temps réel, ordonnancement), Arnaud Dion
+  (virgule fixe, code certifiable pour FPGA).
 
 ## Inclus
 
@@ -55,12 +62,21 @@ industriel dangereux.
   comme brique de moniteur d'exécution.
 - Compression d'image apprise : seulement si la méthode (quantification, codage) est
   transférable à la détection.
+- Prédiction d'échec, estimation de confiance, prédiction sélective (abstention) et
+  calibration, même sans contexte embarqué ; sorties anticipées (early exit), rangées dans
+  l'axe `failure-prediction`.
+- Analyse temporelle de l'inférence DNN (WCET, contention mémoire, multi-DPU), axe
+  `timing-analysis`.
+- Analyse d'erreur et optimisation de la précision en virgule fixe ; taxonomie de la
+  *dependability* (Avizienis).
 
 ## Exclus
 
 - Architectures et entraînements génériques sans contexte embarqué (ResNet, AlexNet,
   Batch Norm…), même très cités.
 - Résultats uniquement sur GPU de bureau ou serveur.
+- Sorties anticipées étudiées seulement pour le débit sur serveur, sauf travaux fondateurs
+  (BranchyNet, MSDNet).
 
 ## Vocabulaire
 
@@ -79,7 +95,11 @@ localization uncertainty, calibration, incertitude aléatoire / épistémique. A
 continu : class-IL / task-IL, task-recency bias, exemplars, herding, oubli catastrophique, FACIL,
 dataset distillation / distilled replay, on-device training. Mesure : MLPerf Tiny, QONNX, EEMBC
 EnergyRunner. Détection : YOLO récents avec attention (v11/v26, OBB, NMS-free), adaptation
-d'opérateurs non supportés par le DPU.
+d'opérateurs non supportés par le DPU. Prédiction d'échec : failure prediction,
+misclassification detection, TCP (true class probability), selective prediction /
+risk–coverage, AURC, early exit / multi-exit, ECE, dataset shift, KGFP. Temps réel : WCET,
+contention mémoire, arbitrage de bus, multi-DPU. Numérique : borne d'erreur, précision fixe.
+Sûreté : fault / error / failure (Avizienis), état sûr, IEC 61496.
 
 ## Suggestions en attente
 
@@ -96,4 +116,6 @@ d'opérateurs non supportés par le DPU.
 - 2026-10-01 — `safety-certification` : règle élargie (EASA, assurance, ODD, TQL, monitors, conformal, incertitude, vérification de BNN, trustworthiness), `radiation` restreint aux effets radiatifs — rattrape 6 fiches, retire 2 faux positifs HEP (suggestions du 29/09)
 - 2026-10-01 — `person-detection` : `+ crowd`, axe ajouté à `hardware_axes` ; `title_topic_re` : `+ tiny (deep learning|ml)` ; tags conformal, easa, uncertainty, hrc — hors sujet 13 → 4 papiers
 - 2026-10-01 — Précisions (apprentissage embarqué contre certification), Inclus (EASA, ARP6983, code prédictible, entraînement embarqué, anomalies visuelles, compression) et Vocabulaire complétés — 19 suggestions du 29/09 retenues
+- 2026-10-26 — axes `failure-prediction` et `timing-analysis` ajoutés (règles, requêtes, `hardware_axes`) ; tags early-exit, fixed-point, wcet, failure-prediction, calibration — draft de sujet ARCYS (Lauer, Dion)
+- 2026-10-26 — Précisions (questions du draft ARCYS), Inclus, Exclus et Vocabulaire complétés ; suggestions en attente laissées reportées (schéma)
 - 2026-10-01 — écartée : élargir `yolo-fpga` à la détection d'objets (≈10 faux positifs pour 4 papiers rattrapés ; axes des fiches déjà confirmés) ; reportées : type « report », benchmarks hors plateforme embarquée

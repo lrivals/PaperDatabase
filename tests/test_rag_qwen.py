@@ -23,7 +23,8 @@ class RagTest(unittest.TestCase):
         shutil.copytree(source, self.root / "papers" / source.name,
                         ignore=shutil.ignore_patterns("paper.pdf", "grobid.tei.xml"))
         with (self.root / "benchmarks.csv").open("w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=schema.BENCHMARK_COLUMNS)
+            # les colonnes optionnelles de la vraie base (DATA_MODEL §7) ne servent pas ici
+            writer = csv.DictWriter(f, fieldnames=schema.BENCHMARK_COLUMNS, extrasaction="ignore")
             writer.writeheader()
             with (ROOT / "bases" / "fpga" / "benchmarks.csv").open(newline="") as original:
                 for row in csv.DictReader(original):

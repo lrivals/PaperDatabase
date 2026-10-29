@@ -196,11 +196,11 @@ passages. Un article peut toutefois être copié de l'une à l'autre. Détails :
 
 ### Les bases actuelles
 
-Au 18/10/2026 :
+Au 29/10/2026 :
 
 | Base | Intitulé | Dossier | Papiers | Fiches faites | Lignes de benchmark |
 |---|---|---|---|---|---|
-| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu, sûreté et certification) | `bases/fpga/` | 104 | 104 | 299 |
+| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu, sûreté et certification, prédiction d'échec) | `bases/fpga/` | 114 | 114 | 308 |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 87 | 86 | 352 |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` | 56 | 56 | 100 |
 | `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | `bases/yolo-data/` | 44 | 44 | 425 |
@@ -380,14 +380,18 @@ PaperDatabase/                # le code seul ; les données sont dans bases/
 
 ## État et documentation
 
-Le dépôt contient cinq bases (effectifs du 18/10/2026 dans [Les bases actuelles](#les-bases-actuelles)).
-Description des trois premières au 01/10/2026, de `yolo-data` au 18/10/2026, de `serre` au 19/10/2026 :
+Le dépôt contient cinq bases (effectifs du 29/10/2026 dans [Les bases actuelles](#les-bases-actuelles)).
+Description de `fpga` au 26/10/2026, de `drone` et `stage` au 01/10/2026, de `yolo-data` au 18/10/2026, de `serre` au 29/10/2026 :
 - `fpga` : vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo et MCU, orientée vers la
-  thèse « IA embarquée sécuritaire certifiable sur FPGA » (axes `safety-certification` et
-  `person-detection`). 101 articles, tous fichés ; 299 lignes dans `benchmarks.csv` (216 sur
-  FPGA) ; 36 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md), dont 29 étayés (8ᵉ passage,
-  avec sections sûreté et détection de personnes). Un état de l'art LaTeX (sources et PDF, avec trois glossaires : plateformes, modèles, métriques) est dans
-  [bases/fpga/docs/etat-de-l-art/](bases/fpga/docs/etat-de-l-art/).
+  thèse « IA embarquée sécuritaire certifiable sur FPGA » (axes `safety-certification`,
+  `person-detection` et, depuis le draft de sujet ARCYS du 25/10/2026, `failure-prediction`
+  et `timing-analysis`). 114 articles, tous fichés ; 308 lignes dans `benchmarks.csv` ;
+  42 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md) (9ᵉ passage, avec sections sûreté,
+  détection de personnes et prédiction d'échec ; l'axe `timing-analysis` n'a encore aucun
+  papier). Un état de l'art LaTeX (sources et PDF, avec trois glossaires : plateformes, modèles, métriques) est dans
+  [bases/fpga/docs/etat-de-l-art/](bases/fpga/docs/etat-de-l-art/), une présentation Beamer
+  (état de l'art, verrous, problématique) dans
+  [bases/fpga/docs/presentation-arcys/](bases/fpga/docs/presentation-arcys/).
 - `drone` : 73 articles, tous fichés ; 324 lignes dans `benchmarks.csv` ; 19 gaps dans
   [bases/drone/gaps.md](bases/drone/gaps.md), dont 17 étayés. Les 24 derniers articles ont
   été ajoutés par dépôt manuel des PDF dans `inbox/`, avec leur export de citation.
@@ -414,7 +418,7 @@ Description des trois premières au 01/10/2026, de `yolo-data` au 18/10/2026, de
   `recettes.yaml` de SerreIA) ou « Pour SerreIA ». PDF restant à déposer à la main :
   [bases/serre/A_TELECHARGER.md](bases/serre/A_TELECHARGER.md).
 
-### Ce qui marche (testé : 288 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
+### Ce qui marche (testé : 312 tests unitaires, banc `pdb eval`, essais sur les vraies bases)
 
 - acquisition arXiv, DOI (via OpenAlex), PDF local, par lot ; exports `.bib` / `.ris`
   éditeur prioritaires sur l'en-tête GROBID (vérifié sur 6 exports IEEE, ACM, MDPI,

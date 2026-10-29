@@ -9,10 +9,11 @@ personnes dans un secteur industriel dangereux). Nom court : `fpga`
 
 **Plusieurs bases.** Cette base vit dans `bases/fpga/` du dépôt PaperDatabase, dont elle
 partage le code : `bin/`, `.venv` et `.claude/commands/` sont des liens vers la racine
-(`../../`). Le dépôt contient une seconde base, `drone` (vision embarquée sur drone :
-détection, accélérateurs, co-design système), dans [../drone/](../drone/), avec son
-propre `CLAUDE.md`. Depuis ce dossier, les commandes et les skills agissent sur la base `fpga`
-seulement. Ne jamais écrire dans `../drone/` depuis ici : pour reprendre un article d'une
+(`../../`). Le dépôt contient quatre autres bases, chacune avec son propre `CLAUDE.md` :
+`drone` (vision embarquée sur drone), `stage` (apprentissage continu sur MCU), `yolo-data`
+(données pour YOLO) et `serre` (serre autonome SerreIA), dans `../<nom>/`. Depuis ce
+dossier, les commandes et les skills agissent sur la base `fpga` seulement. Ne jamais
+écrire dans une autre base depuis ici : pour reprendre un article d'une
 base à l'autre, `bin/pdb base import <base>:<paper_id>` lancé dans la base qui le reçoit.
 Mode d'emploi multi-bases : [README.md](../../README.md#plusieurs-bases-de-connaissance),
 [DATA_MODEL.md §11](../../DATA_MODEL.md#11-plusieurs-bases--registre-basejson-profilemd).

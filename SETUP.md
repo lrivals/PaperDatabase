@@ -808,8 +808,29 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 18/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 29/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 26/10/2026 (base fpga : draft de sujet ARCYS, 9ᵉ passage des gaps).**
+- Profil : axes `failure-prediction` (prédiction d'échec, confiance, prédiction sélective,
+  calibration, sorties anticipées) et `timing-analysis` (WCET, contention mémoire, multi-DPU),
+  dans `hardware_axes` ; tags `early-exit`, `fixed-point`, `wcet`, `failure-prediction`,
+  `calibration` ; questions du draft dans `profile.md` (Précisions).
+- 10 articles fichés : 8 sur `failure-prediction` (KGFP 2603.25499, ConfidNet 1910.04851,
+  2403.02886, SelectiveNet, Guo 2017, Ovadia 2019, BranchyNet, MSDNet), hls4ml 2018
+  (1804.06913, 2 lignes) et SEU d'un BNN FINN (2404.01757). 114 fiches, 308 lignes.
+- `gaps.md`, 9ᵉ passage : 42 gaps ; section nouvelle « Prédiction d'échec, sorties
+  anticipées et moniteur sur cible » (6 gaps) ; aucun gap supprimé.
+- Présentation Beamer `bases/fpga/docs/presentation-arcys/` (41 diapositives, `make`) ; le
+  draft de sujet `proposition_ARCYS/` reste hors du dépôt (`.gitignore`).
+- Test `test_rag_qwen` adapté aux colonnes optionnelles de `benchmarks.csv` ; 312 tests.
+
+- [ ] Base fpga : l'axe `timing-analysis` est vide ; `/paper-discover timing-analysis`
+  (WCET de l'inférence DNN, interférences sur SoC FPGA, multi-DPU).
+- [ ] Base fpga : prédiction de faux négatifs de détecteur, travaux cités par KGFP et absents
+  de la base (références à vérifier) : Yang et al. 2021 (Sensors 21(8):2819), Yatbaz et al.,
+  DECIDER (ECCV), Torpmann-Hagen et al. 2025 (IEEE Access 13). Les 8 fiches
+  `failure-prediction` actuelles sont logicielles, 7 sur 8 en classification.
 
 **Bilan du 18/10/2026 (bancs par base, claims, comparaison, tableaux, provenance).**
 - **Lot K-1** : les jeux fpga quittent `tests/fixtures/` pour `bases/fpga/eval/fixtures/`

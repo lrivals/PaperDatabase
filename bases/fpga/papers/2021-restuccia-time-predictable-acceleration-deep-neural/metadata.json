@@ -1,0 +1,41 @@
+{
+  "id": "2021-restuccia-time-predictable-acceleration-deep-neural",
+  "title": "Time-Predictable Acceleration of Deep Neural Networks on FPGA SoC Platforms",
+  "authors": [
+    {
+      "given": "Francesco",
+      "family": "Restuccia"
+    },
+    {
+      "given": "Alessandro",
+      "family": "Biondi"
+    }
+  ],
+  "year": 2021,
+  "venue": "2021 IEEE Real-Time Systems Symposium (RTSS) 441-454",
+  "doi": "10.1109/RTSS52674.2021.00047",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/RTSS52674.2021.00047",
+  "type": "conference",
+  "axes": [
+    "platforms",
+    "timing-analysis",
+    "toolflows"
+  ],
+  "tags": [
+    "zynq",
+    "zcu102",
+    "vitis-ai",
+    "wcet"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -200,7 +200,7 @@ Au 03/11/2026 :
 
 | Base | Intitulé | Dossier | Papiers | Fiches faites | Lignes de benchmark |
 |---|---|---|---|---|---|
-| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu, sûreté et certification, prédiction d'échec, analyse temporelle) | `bases/fpga/` | 124 | 124 | 325 |
+| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu, sûreté et certification, prédiction d'échec, analyse temporelle) | `bases/fpga/` | 125 | 125 | 337 |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 87 | 86 | 352 |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` | 56 | 56 | 100 |
 | `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | `bases/yolo-data/` | 44 | 44 | 425 |
@@ -385,10 +385,11 @@ Description de `fpga` au 03/11/2026, de `drone` et `stage` au 01/10/2026, de `yo
 - `fpga` : vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo et MCU, orientée vers la
   thèse « IA embarquée sécuritaire certifiable sur FPGA » (axes `safety-certification`,
   `person-detection` et, depuis le draft de sujet ARCYS du 25/10/2026, `failure-prediction`
-  et `timing-analysis`). 124 articles, tous fichés ; 325 lignes dans `benchmarks.csv` ;
+  et `timing-analysis`). 125 articles, tous fichés ; 337 lignes dans `benchmarks.csv` ;
   45 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md), dont 36 étayés (10ᵉ passage, avec
   sections sûreté, détection de personnes, prédiction d'échec et analyse temporelle sur SoC
-  FPGA ; 7 papiers sur `timing-analysis`, dont le WCET multi-DPU de Zhang 2025). Un état de l'art LaTeX (sources et PDF, avec trois glossaires : plateformes, modèles, métriques) est dans
+  FPGA ; 8 papiers sur `timing-analysis`, dont le WCET multi-DPU de Zhang 2025 et la borne
+  de temps de réponse du DPU de Restuccia et Biondi 2021). Un état de l'art LaTeX (sources et PDF, avec trois glossaires : plateformes, modèles, métriques) est dans
   [bases/fpga/docs/etat-de-l-art/](bases/fpga/docs/etat-de-l-art/), une présentation Beamer
   (état de l'art, verrous, problématique) dans
   [bases/fpga/docs/presentation-arcys/](bases/fpga/docs/presentation-arcys/).

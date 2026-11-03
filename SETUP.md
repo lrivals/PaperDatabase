@@ -825,6 +825,11 @@ Point au 03/11/2026. À mettre à jour à chaque étape franchie (cocher, dater,
   et interférences sur SoC FPGA » (3 gaps) ; aucun gap supprimé.
 - Deux suggestions en attente dans `profile.md` : classe de tâche `monitoring` pour
   `pdb plot`, et colonne de borne temporelle (WCET estimé, cycles) dans `benchmarks.csv`.
+- Ajout le même jour (PDF IEEE et `.bib` déposés dans `inbox/`) : Restuccia et Biondi 2021
+  (RTSS), borne de temps de réponse du DPU sur ZCU102, référence de comparaison de Zhang 2025 ;
+  12 lignes (latences maximales mesurées de 6 DNN, avec et sans OCM, et ressources du DPU).
+  125 fiches, 337 lignes ; `gaps.md` non repassé (le papier étaye les gaps « Interférences
+  PS / PL et DDR » et « Pire cas temporel »).
 
 - [ ] Base fpga : PDF à déposer dans `inbox/` (accès libre bloqué par une page anti-robot,
   ou paywall) : Yang et al. 2021 (Sensors, 10.3390/s21082819), Gao et al. 2024 (TVLSI,

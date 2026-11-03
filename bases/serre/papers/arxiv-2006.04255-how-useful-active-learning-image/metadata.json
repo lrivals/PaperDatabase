@@ -42,11 +42,16 @@
   "url": "https://arxiv.org/abs/2006.04255",
   "type": "preprint",
   "axes": [
-    "growth",
-    "active-labelling"
+    "active-labelling",
+    "disease-classif",
+    "growth"
   ],
   "tags": [
-    "active-learning"
+    "active-learning",
+    "soybean",
+    "weeds",
+    "entropy",
+    "coreset"
   ],
   "added": "2026-10-19",
   "extraction": {
@@ -54,12 +59,11 @@
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

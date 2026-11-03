@@ -24,19 +24,24 @@
   "axes": [
     "calibration-decision"
   ],
-  "tags": [],
+  "tags": [
+    "multiple-instance-learning",
+    "attention-pooling",
+    "aggregation",
+    "interpretability",
+    "histopathology"
+  ],
   "added": "2026-10-19",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : Table 3, Table 5, Table 6, Table 9"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -39,12 +39,11 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, TABLE 1, Jurnal Fisika dan Aplikasinya, Jurnal Fisika dan Aplikasinya, TABLE 8"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

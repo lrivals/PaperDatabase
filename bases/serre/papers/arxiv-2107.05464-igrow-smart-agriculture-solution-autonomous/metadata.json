@@ -65,7 +65,6 @@
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 7 mot(s) réparé(s) (lib/ligatures.py)",
       "tableaux sans corps extrait (légende seule) : [figure sans légende identifié, Table 2",
       "sections numérotées non détectées : 2 — leur texte est rattaché à la section précédente"
@@ -73,6 +72,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

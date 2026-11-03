@@ -17,21 +17,28 @@
   "arxiv_id": "2107.07511",
   "url": "https://arxiv.org/abs/2107.07511",
   "type": "preprint",
-  "axes": [],
+  "axes": [
+    "calibration-decision",
+    "surveys"
+  ],
   "tags": [
-    "rl"
+    "conformal-prediction",
+    "calibration",
+    "ood",
+    "selective-classification",
+    "covariate-shift",
+    "risk-control"
   ],
   "added": "2026-10-19",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "aucun axe détecté : à classer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -32,13 +32,12 @@
     "ok": true,
     "warnings": [
       "publié ailleurs selon arXiv (journal_ref : International Conference on Learning Representations 2017) : type journal/conference à préciser",
-      "tableaux sans corps extrait (légende seule) : Table 2, Table 4, Table 7, Table 11",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "tableaux sans corps extrait (légende seule) : Table 2, Table 4, Table 7, Table 11"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   },
   "imported_from": {
     "base": "fpga",

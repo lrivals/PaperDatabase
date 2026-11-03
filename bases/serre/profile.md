@@ -79,6 +79,7 @@ quantification INT8, humain dans la boucle, garde-fous, consigne, stade, protect
 ## Suggestions en attente
 
 <!-- Une ligne par suggestion : - AAAA-MM-JJ (source : paper_id ou /base-profile) — proposition — raison -->
+- 2026-11-03 (arxiv-2107.07511-gentle-introduction-conformal-prediction-distribution) — ajouter « conformal prediction », « couverture », « classification sélective », « distribution-free » au vocabulaire et à `axis_rules` de `calibration-decision` — papier de référence sur des garanties de rejet/OOD et de seuil non couvertes par les termes actuels
 
 ## Historique
 

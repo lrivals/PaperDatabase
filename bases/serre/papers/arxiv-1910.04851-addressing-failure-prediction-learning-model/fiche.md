@@ -1,11 +1,8 @@
 ---
 id: arxiv-1910.04851-addressing-failure-prediction-learning-model
-fiche: todo
-date: 2026-10-26
-benchmarks: none
+fiche: done
+date: 2026-11-03
 ---
-
-> **Importée de la base `fpga` le 2026-10-29.** Cette fiche a été écrite pour une autre base (autre thème) : pertinence à réévaluer ici, puis `fiche: done` via `/paper-fiche`. Statut d'origine : done.
 
 # Addressing Failure Prediction by Learning Model Confidence
 
@@ -29,7 +26,7 @@ fort recouvrement des deux distributions (Fig. 1, §1).
 
 ## Plateforme et implémentation
 
-Aucune plateforme matérielle : n/r (pas de FPGA, ni de GPU/CPU précisé dans le texte principal ; détails d'entraînement renvoyés au supplementary, non fourni dans fulltext). Code publié (lien ci-dessus). Mesure de puissance, latence, FPS : n/r. Seule remarque de coût : ConfidNet est « aussi rapide que le réseau de segmentation d'origine » (§3.2, affirmation qualitative sans chiffre).
+Aucune plateforme matérielle : n/r (ni GPU ni CPU précisé dans le texte principal ; détails d'entraînement renvoyés au supplementary, absent de fulltext). Code publié (lien ci-dessus). Mesure de puissance, latence, FPS : n/r. Seule remarque de coût : ConfidNet est « aussi rapide que le réseau de segmentation d'origine » (§3.2, affirmation qualitative sans chiffre).
 
 ## Résultats
 
@@ -38,28 +35,29 @@ Aucune plateforme matérielle : n/r (pas de FPGA, ni de GPU/CPU précisé dans l
 - Fine-tuning de l'encodeur : environ +1 à +2 points (Table 2 : MNIST 43,94 vers 45,89 ; CIFAR-100 72,68 vers 73,68).
 - Entraîner sur un jeu de validation (10 %) dégrade les résultats, sauf CIFAR-100 (+0,17) (Table 3, §3.3). Perte BCE inférieure à la perte L2 sur CIFAR-10 (47,95 contre 49,94) et CamVid (48,96 contre 50,51) (Table 4, corps de tableau reconstruit, valeurs aussi données dans le texte).
 - Courbes risque-couverture : gain surtout à forte couverture (0,8-0,95 CIFAR-10) (Fig. 3, §3.2).
-→ reportés dans `benchmarks.csv` : aucune ligne. Papier de ML purement logiciel (classification, segmentation), sans mesure sur plateforme matérielle ; les métriques sont de qualité de détection d'erreur (AUPR), pas de performance embarquée.
+- Incohérences internes : MNIST SmallConvNet sans fine-tuning 43,94 (Table 2) est repris comme « train set » en Table 3, alors que Table 1 donne 45,89 ; MNIST MLP 57,34 (Table 3) contre 57,37 (Table 1) ; CamVid 50,28 (Table 3) contre 50,51 (Table 1). Table 1 fait foi pour les lignes ci-dessous.
+→ reportés dans `benchmarks.csv` (proposition, 6 lignes, ConfidNet de la Table 1, `confidence: high`, chunk `1910.04851#017.0`, plateforme/quantification `n/r`) : MNIST MLP 57,37 ; MNIST SmallConvNet 45,89 ; SVHN 50,72 ; CIFAR-10 VGG-16 49,94 ; CIFAR-100 VGG-16 73,68 ; CamVid SegNet 50,51 (AUPR-Error, %, test in-domain ; MCP, MCDropout, TrustScore en `baseline`). Pas de ligne pour les variantes des Tables 2-4 (ablations).
 
 ## Limites et critique
 
-- Aucune évaluation matérielle : coût mémoire/calcul de ConfidNet (5 couches denses + encodeur dupliqué après fine-tuning, donc un second encodeur à embarquer) non chiffré. Déduit, non affirmé.
-- Jeux petits et réseaux simples (MNIST, SVHN, CIFAR, VGG-16, SegNet) ; pas de détection d'objets ni de personnes, donc pas de notion de faux négatif critique ; l'erreur visée est symétrique (toute mauvaise classe).
+- Aucune évaluation matérielle ni sur plantes : coût mémoire/calcul de ConfidNet (5 couches denses + encodeur dupliqué après fine-tuning, donc un second encodeur à embarquer) non chiffré. Déduit, non affirmé.
+- Jeux petits et réseaux simples (MNIST, SVHN, CIFAR, VGG-16, SegNet) ; pas de détection d'objets ni de plantes, pas de notion de coût asymétrique des erreurs ; l'erreur visée est symétrique (toute mauvaise classe).
 - Confiance apprise sur le jeu d'entraînement, où les erreurs sont rares (sur-apprentissage) ; l'entraînement sur validation dégrade (§3.3). Un moniteur appris sur un modèle quantifié ou sous décalage de domaine n'est pas étudié.
 - Pas de garantie formelle sur [1/K, 1/2] ; pas d'analyse de robustesse ni de calibration. Gains faibles sur CIFAR-100 ; pas de barres d'erreur visibles dans le texte extrait.
 - Table 4 : corps de tableau mal extrait (« sans corps extrait » dans les warnings), valeurs recoupées avec le texte §3.3.
 - Preprint 2019, non relu par les pairs.
 
-## Pertinence pour la thèse
+## Pertinence pour le thème (base serre)
 
-Référence directe pour la prédiction d'échec du sujet ARCYS : le moniteur est un petit réseau appris avec (au-dessus des features de) le modèle principal, ce qui correspond à l'idée d'un moniteur appris conjointement au détecteur de personnes. Son critère TCP cible l'erreur par rapport à la vérité terrain, ce qu'on pourrait réorienter vers le faux négatif critique (personne non détectée). Utile aussi comme point de départ pour des sorties anticipées conservatrices (signal de confiance fiable pour déclencher une alarme ou une redondance). Laissé ouvert : détection d'objets, impact de la quantification sur le moniteur, implémentation FPGA du moniteur, coût et WCET du moniteur, absence de garantie certifiable.
+Axe `calibration-decision`. Donne un critère de confiance (TCP) et un moniteur appris (ConfidNet) qui classe mieux erreurs et réussites que MCP : utile pour décider quand un classifieur de maladies doit rejeter une capture ou passer la main à l'humain, avec des courbes risque-couverture pour fixer un seuil à risque donné (Fig. 3, §3.2). Le papier ne traite ni plantes ni écart de domaine (PlantVillage vers PlantDoc), ni la calibration (ECE) : il écarte même le temperature scaling comme inefficace sur le classement des confiances (§2.3). Coût d'un second encodeur sur RPi/Hailo non chiffré (déduit). Transposition à EfficientNet-B0 et aux tests hors domaine : non démontrée, à tester.
 
 ## Gaps identifiés
 
-- Moniteur de confiance appris pour détecteurs d'objets (faux négatifs) : non traité.
-- Coût matériel (FPGA) et temporel (WCET) d'un moniteur de type ConfidNet : non mesuré.
-- Robustesse du moniteur sous quantification et décalage de domaine : non étudiée.
+- Failure prediction (TCP/ConfidNet) sur images de plantes et sous décalage de domaine (labo vers terrain) : non traité.
+- Comparaison à temperature scaling + seuil MCP en ECE et en fausses alertes « anormal » à rappel donné : non faite.
+- Coût (mémoire, latence) du moniteur sur RPi 5 / Hailo-8L et après quantification INT8 : non mesuré.
 
 ## Statut de lecture
 
-papier complet (fulltext.md lu en entier ; supplementary non disponible). Extraction grobid ok ; Table 4 sans corps extrait.
-Ce qui suit est déduit et non affirmé par les auteurs : coût d'un second encodeur embarqué, transposition au faux négatif d'un détecteur de personnes, usage pour sorties anticipées conservatrices.
+papier complet (fulltext.md lu en entier ; supplementary non disponible). Extraction grobid ok (pas de bandeau PyMuPDF/Docling) ; Table 4 sans corps extrait, valeurs recoupées avec le texte §3.3 (le texte de la Table 3 est aussi partiellement désordonné).
+Ce qui suit est déduit et non affirmé par les auteurs : coût d'un second encodeur embarqué, transposition aux classifieurs de maladies de plantes, usage pour le rejet de captures et le choix de seuils.

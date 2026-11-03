@@ -1,11 +1,8 @@
 ---
 id: arxiv-1906.02530-can-you-trust-your-model
-fiche: todo
-date: 2026-10-26
-benchmarks: none
+fiche: done
+date: 2026-11-03
 ---
-
-> **Importée de la base `fpga` le 2026-10-29.** Cette fiche a été écrite pour une autre base (autre thème) : pertinence à réévaluer ici, puis `fiche: done` via `/paper-fiche`. Statut d'origine : done.
 
 # Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
 
@@ -32,27 +29,27 @@ Aucune plateforme matérielle (modèles LeNet, ResNet-20, ResNet-50, LSTM, MLP, 
 - Les variantes dernière couche (LL-SVI, LL-Dropout) font parfois pire que Vanilla sous décalage et sur OOD (§4.2, §4.3).
 - La plupart des méthodes sont « confiantes et fausses » sur OOD complet (MNIST, §4.1).
 - Génomique : même la meilleure méthode reste sous 65 % de précision à p(y|x) >= 0.9 (App. F).
-→ reportés dans `benchmarks.csv` : aucune ligne. Article ML sans mesure sur plateforme matérielle ; ce n'est pas un survey, mais la base exclut les mesures hors plateforme (benchmarks: none).
+→ reportés dans `benchmarks.csv` (proposition, 6 lignes, Table G.2, `confidence: medium`) : ECE médian sur les 80 variantes ImageNet-C, ResNet-50, par méthode : Vanilla 0.102, Temp. Scaling 0.072, Ensembles (M=10) 0.032, MC-Dropout 0.043, LL-Dropout 0.071, LL-SVI 0.106. Pas de lignes pour MNIST, CIFAR-10, Criteo (valeurs seulement en figures ou tableaux sans libellé fiable).
 
 ## Limites et critique
 
-- Classification uniquement ; pas de détection d'objets, ni de faux négatifs / objets manqués.
-- Méthodes les plus fiables (ensembles, dropout, SVI) coûtent k passes avant ou k modèles : incompatible a priori avec un budget FPGA temps réel ; le papier le reconnaît (§5) sans mesurer.
-- Pas de quantification, de précision réduite ou de WCET ; l'effet de la quantification sur la calibration n'est pas étudié.
+- Classification uniquement ; aucune image de plante ni détection.
+- Méthodes les plus fiables (ensembles, dropout, SVI) coûtent k passes avant ou k modèles : coût que le papier reconnaît (§5) sans le mesurer ; pour un RPi 5 / Hailo, impact déduit, non mesuré.
+- Pas de quantification ni de précision réduite ; l'effet sur la calibration n'est pas étudié.
 - Ordre des méthodes non stable (SVI meilleur sur MNIST, pas ailleurs, §4.2) ; SVI difficile à entraîner à grande échelle (§5).
-- Décalages synthétiques (corruptions, rotations) : leur représentativité de dérives réelles (éclairage, caméra industrielle) est non établie.
-- Preprint ; hyperparamètres tunés par méthode, ImageNet non tuné (§4).
+- Décalages synthétiques (corruptions, rotations) : leur représentativité de dérives réelles (éclairage de serre, capteur, fond de terrain) est non établie.
+- Preprint (la fiche d'origine, écrite pour la base `fpga`, a été revérifiée contre le texte et sa pertinence réécrite pour `serre`) ; hyperparamètres tunés par méthode, ImageNet non tuné (§4).
 
 ## Pertinence pour la thèse
 
-Rattache à l'axe `failure-prediction` du sujet ARCYS (prédiction d'échec ciblée sur les faux négatifs d'un détecteur de personnes, moniteur sur FPGA). Apport : (1) argument empirique que le score de confiance brut et la temperature scaling ne suffisent pas sous décalage, ce qui motive un moniteur dédié et conservateur (abstention / sortie anticipée prudente) ; (2) protocole d'évaluation transposable (ECE, Brier, accuracy-vs-confiance sous corruptions graduées) pour valider ce moniteur ; (3) tableau de coûts (Table S1) base de discussion sur le surcoût d'un ensemble matériel. Laisse ouvert : détection d'objets, faux négatifs, quantification, coût FPGA/WCET d'un estimateur d'incertitude. Déduit (non affirmé par les auteurs) : lien avec les sorties anticipées et la certification.
+Pour SerreIA (base `serre`, axe `calibration-decision`) : réponse directe à la question « comment calibrer un classifieur (temperature scaling, ECE) et choisir les seuils ». Apports : (1) la temperature scaling ajustée sur validation i.i.d. (cas d'un classifieur PlantVillage/CCMT) se dégrade quand le décalage croît (§4.2, §5), donc elle ne protège pas sur PlantDoc ou en serre réelle ; sur Criteo elle aggrave même le Brier (§4.4) ; (2) protocole transposable : ECE, Brier et accuracy-vs-confiance sous corruptions graduées, utile pour évaluer le rejet des crops hors distribution et les seuils de fausses alertes « anormal » ; (3) l'entropie prédictive permet de s'abstenir (§4.3), ce qui alimente le garde-fou « validation humaine » ; (4) coût : ensembles M=5 (≈5 passes avant) à comparer au budget d'inférence RPi 5 / Hailo-8L (Table S1, formules seulement). Non traité : images de plantes, détection, quantification INT8 et son effet sur la calibration, agrégation multi-feuilles. Déduit (non affirmé par les auteurs) : les liens avec PlantDoc, Hailo et l'agrégation par capture. Les corruptions ImageNet-C (flou, bruit, luminosité) ne remplacent pas un vrai écart de domaine feuille/terrain.
 
 ## Gaps identifiés
 
-- Incertitude sous décalage évaluée sur un détecteur (pas un classifieur), en visant les faux négatifs.
-- Effet de la quantification sur la calibration et la prédiction d'échec.
-- Coût matériel (latence, WCET, ressources FPGA) des estimateurs d'incertitude, notamment ensembles à M=5.
+- Calibration sous écart de domaine réel PlantVillage vers PlantDoc (et non corruptions synthétiques), avec temperature scaling vs ensembles.
+- Effet de la quantification INT8 (Hailo) sur l'ECE et le seuil de rejet.
+- Coût en latence d'un ensemble M=5 ou d'un MC-Dropout sur Raspberry Pi 5 / Hailo-8L.
 
 ## Statut de lecture
 
-papier complet (fulltext.md lu en entier, backend grobid, extraction ok). Les figures n'étant pas lisibles en texte, les résultats sont tirés du texte et des Tables G ; Table G.2 recoupée avec le texte seulement qualitativement. Déduit et non affirmé par les auteurs : toute la section « Pertinence » (lien ARCYS) et le jugement d'incompatibilité des ensembles avec un budget FPGA.
+papier complet (fulltext.md lu en entier, backend grobid, extraction ok). Les figures ne sont pas lisibles en texte : résultats tirés du texte et des Tables G. Les tableaux G sont extraits sans légende fiable (l'étiquette « G.1 CIFAR-10 » est perdue, le tableau d'en-tête sans titre après G.3 est non identifié) ; les chiffres de G.2 (ImageNet) sont recoupés avec le texte seulement qualitativement, d'où `medium`. Déduit et non affirmé par les auteurs : toute la section « Pertinence » (liens SerreIA) et le jugement sur le coût des ensembles pour un budget embarqué.

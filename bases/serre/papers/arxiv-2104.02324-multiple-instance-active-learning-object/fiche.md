@@ -1,10 +1,8 @@
 ---
 id: arxiv-2104.02324-multiple-instance-active-learning-object
-fiche: todo
-date: 2026-10-18
+fiche: done
+date: 2026-11-03
 ---
-
-> **Importée de la base `yolo-data` le 2026-10-29.** Cette fiche a été écrite pour une autre base (autre thème) : pertinence à réévaluer ici, puis `fiche: done` via `/paper-fiche`. Statut d'origine : done.
 
 # Multiple instance active learning for object detection
 
@@ -35,7 +33,7 @@ Entraînement par cycle : 26 epochs, batch 2, lr 0,001 puis 0,0001 après 20 epo
 
 ## Plateforme et implémentation
 
-Entraînement / évaluation sur GPU TITAN V (§4.2). Pas de contrainte matérielle d'inférence. Code publié : https://github.com/yuantn/MI-AOD (abstract). Temps de calcul : Tab. 5 (corps non extrait ; le texte dit seulement que MI-AOD coûte moins que CDAL aux premiers cycles, §4.3).
+Entraînement / évaluation sur GPU TITAN V (§4.2) ; ni fps, ni latence, ni puissance rapportés (`power_scope` : n/r). Aucune cible embarquée : le coût porte sur l'entraînement par cycle. Code publié : https://github.com/yuantn/MI-AOD (abstract). Temps de calcul : Tab. 5 (corps non extrait ; le texte dit seulement que MI-AOD coûte moins que CDAL aux premiers cycles, §4.3).
 
 ## Résultats
 
@@ -52,7 +50,7 @@ Les courbes principales (Fig. 5 : VOC/RetinaNet, VOC/SSD, COCO/RetinaNet) sont d
 - Hyperparamètres (Tab. 4) : λ = 0,5, k = 10k optimaux ; k = 1 → 70,33 à 20 %, k = 100 → 71,47, k = N → 72,03 ; λ = 0,2 → 72,06 ; fragment partiel (lignes de λ = 1 : 71,62).
 - Analyse : MI-AOD sélectionne plus d'instances vraies positives à chaque cycle que les autres (Fig. 7, §4.4).
 
-→ reportés dans `benchmarks.csv` : 8 lignes proposées (VOC, RetinaNet, 7 budgets de 5,0 à 20,0 % + 100 % des images), via le fichier `.cache/bench/` de l'agent.
+→ `benchmarks.csv` contient déjà 8 lignes de ce papier (importées de `yolo-data`, 7 budgets VOC/RetinaNet de 5,0 à 20,0 % d'images + 100 % des images ; Tab. 4 reconstruit et §4.3, confiance `medium`). Cette relecture propose les mêmes 8 valeurs avec les colonnes optionnelles renseignées (`chunk_id` 2104.02324#023.0 et #010.1, `metric_def`, `dataset_split`, `input_res`, `batch`) ; aucun remplacement fait ici. Pas de ligne COCO/SSD : valeurs en figure seulement.
 
 ## Limites et critique
 
@@ -63,12 +61,17 @@ Les courbes principales (Fig. 5 : VOC/RetinaNet, VOC/SSD, COCO/RetinaNet) sont d
 - Aucun test sur petit objets, domaines spécifiques (drone, industriel) ni sur des données déséquilibrées ; pas de validation avec de vrais annotateurs (les labels sont ceux du benchmark, supposés propres).
 - Reproductibilité : code public, 5 répétitions moyennées, mais pas d'écarts-types dans le texte.
 
-## Pertinence pour la thèse
+## Pertinence pour la base serre
 
-Pour **CONSTRUIRE** un dataset de détection avec un budget d'annotation limité : montre qu'on gagne le plus lorsque le budget est petit (démarrer avec 5 % d'images tirées au hasard, puis ajouter 2,5 % par cycle, sur VOC ; 2 % + 2 % sur COCO). Pour **ANNOTER** : économise une part des annotations en choisissant les images à étiqueter selon l'incertitude des instances plutôt qu'au hasard (déduit à ~12,5 % vs 20 % pour une même mAP, voir Résultats ; non affirmé par les auteurs). Ne s'applique ni au **PRÉTRAITEMENT** ni à l'**AUGMENTATION** (non traités). À appliquer quand : grand pool non étiqueté, budget d'annotation très serré (< 10-20 % du pool), classes présentes dans chaque image ; peu utile si le dataset est déjà petit (le gain d'un cycle d'active learning est faible) ou si le coût d'entraînement par cycle est prohibitif. Reste ouvert pour YOLO : cohabitation avec Mosaic / augmentations fortes, coût GPU par cycle, mesure en nombre de boîtes ou en temps d'annotation, petits objets.
+Relu pour SerreIA (axe `active-labelling` ; l'axe `calibration-decision` déduit automatiquement est retiré : le papier ne traite ni calibration, ni seuils, ni OOD). Le papier est écrit pour la détection d'objets (RetinaNet, VOC/COCO), pas pour la classification de maladies ni pour des plantes : aucune donnée agricole (§4.1).
+
+- **Apprentissage actif pour étiqueter des images de serre** : choisir quelles captures faire annoter quand le budget est serré (déduit : utile si le détecteur de feuilles du pipeline en deux étages doit être entraîné sur peu de boîtes ; gain surtout à petit budget, 5 à 10 % du pool, §4.2). Transfert à un classifieur (EfficientNet-B0) non testé ; seul indice : IUL seul sur CIFAR-10 / ResNet-18, +7,06 pts à 2 % d'échantillons (Tab. 2, §4.3).
+- **Lien avec l'agrégation multi-instances** (question de recherche du profil) : le MIL ici sert à pondérer des incertitudes d'ancres pour choisir des images, pas à agréger des prédictions de feuilles en une décision par capture ; analogie de sac d'instances seulement (déduit).
+- **Limites pour le projet** : pas de domaine de plantes, pas de petits objets feuillus, étiquettes de benchmark supposées propres ; coût d'entraînement par cycle (Tab. 5 illisible) à comparer à l'annotation d'une serre de petite taille, où le pool est peut-être trop petit pour que l'active learning vaille le coût (déduit). Code publié (https://github.com/yuantn/MI-AOD, abstract) : reproductible sur PlantDoc ou CCMT sans travail de recherche.
 
 ## Gaps identifiés
 
+- Active learning sur images de plantes (feuilles, PlantDoc/CCMT, captures de serre) : aucune mesure ici ; gap pour l'axe `active-labelling`.
 - Active learning avec un détecteur de la famille YOLO (sans ancres, Mosaic) : aucune mesure ici.
 - Budget exprimé en boîtes ou en temps d'annotation, pas en pourcentage d'images.
 - Combinaison active learning + pseudo-labels / SAM (annoter seulement ce qui est incertain, pré-annoter le reste).
@@ -76,5 +79,5 @@ Pour **CONSTRUIRE** un dataset de détection avec un budget d'annotation limité
 
 ## Statut de lecture
 
-papier complet (`fulltext.md`, extraction grobid, ok). Tab. 1, Tab. 4 (partiellement), Tab. 5 « sans corps extrait » : Tab. 1 et 5 illisibles (`n/r`), Tab. 4 et Tab. 3 reconstitués depuis des fragments (confiance moyenne : les colonnes sont supposées être 5,0 → 20,0 %). Fig. 5 (courbes principales) illisible.
-Ce qui suit est déduit et non affirmé par les auteurs : nombre de cycles (6 VOC, 4 COCO) ; économie d'annotation (~12,5 % vs 20 %) ; lecture des colonnes de Tab. 4 ; budget du 5,19 % et du 3,20 % du §4.2 (texte tronqué) ; différence 5,18 pts à 20 %.
+papier complet (`fulltext.md` lu en entier, extraction grobid, ok ; fiche importée de `yolo-data`, parties factuelles revérifiées contre `fulltext.md`). Tab. 1, Tab. 4 (partiellement), Tab. 5 « sans corps extrait » : Tab. 1 et 5 illisibles (`n/r`), Tab. 4 et Tab. 3 reconstitués depuis des fragments (confiance moyenne : les colonnes sont supposées être 5,0 → 20,0 %). Fig. 5 (courbes principales) illisible. Un fragment orphelin « .18 56.94 64.44 67.70 69.58 70.67 72.12 » (probable ligne de Tab. 1) n'est pas attribuable : non utilisé.
+Ce qui suit est déduit et non affirmé par les auteurs : nombre de cycles (6 VOC, 4 COCO) ; économie d'annotation (~12,5 % vs 20 %) ; lecture des colonnes de Tab. 4 ; budget du 5,19 % et du 3,20 % du §4.2 (texte tronqué) ; différence 5,18 pts à 20 % ; transferts à la serre (section Pertinence).

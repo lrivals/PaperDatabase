@@ -20,24 +20,31 @@
   "doi": "10.1016/j.ifacol.2025.11.827",
   "arxiv_id": "2410.05336",
   "url": "https://arxiv.org/abs/2410.05336",
-  "type": null,
+  "type": "conference",
   "axes": [
     "climate-control"
   ],
   "tags": [
-    "rl"
+    "rl",
+    "greenlight",
+    "ppo",
+    "sac",
+    "tomato",
+    "simulation",
+    "benchmark-environment",
+    "casadi",
+    "open-source"
   ],
   "added": "2026-10-29",
   "extraction": {
     "backend": "grobid",
     "ok": true,
     "warnings": [
-      "publié ailleurs selon arXiv (journal_ref : IFAC-PapersOnLine 59 (23), (2025), 437-442) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "publié ailleurs selon arXiv (journal_ref : IFAC-PapersOnLine 59 (23), (2025), 437-442) : type journal/conference à préciser"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

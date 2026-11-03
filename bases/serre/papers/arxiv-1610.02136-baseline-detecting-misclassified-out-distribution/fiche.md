@@ -1,16 +1,13 @@
 ---
 id: arxiv-1610.02136-baseline-detecting-misclassified-out-distribution
-fiche: todo
-date: 2026-09-29
-benchmarks: none
+fiche: done
+date: 2026-11-03
 ---
-
-> **Importée de la base `fpga` le 2026-10-29.** Cette fiche a été écrite pour une autre base (autre thème) : pertinence à réévaluer ici, puis `fiche: done` via `/paper-fiche`. Statut d'origine : done.
 
 # A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks
 
 Dan Hendrycks, Kevin Gimpel, 2017, International Conference on Learning Representations (ICLR) 2017. https://arxiv.org/abs/1610.02136 (DOI n/r)
-Type : conférence (ICLR 2017) ; version arXiv lue.
+Type : conférence (ICLR 2017) ; version arXiv (1610.02136) lue.
 
 ## Problème
 
@@ -28,10 +25,11 @@ Sans objet (aucune cible matérielle, réseaux de laboratoire : MLP 3x256 pour M
 
 ## Résultats
 
-- Erreur/succès : AUROC 97 (MNIST), 93 (CIFAR-10), 87 (CIFAR-100), qui baisse avec l'erreur du modèle (Table 1).
-- OOD : CIFAR-10/SUN AUROC 95, CIFAR-100/SUN 91, MNIST/notMNIST 85 (Table 2, corps extrait du texte : chiffres lus dans le dump, tableaux « sans corps extrait » selon les avertissements, à vérifier). NLP : IMDB/All 94 (Table 4), 15/5 Newsgroups 75 (Table 6). POS : WSJ/Weblog 61 (Table 8), cas presque OOD.
-- Module d'anormalité : moyenne AUROC 97 contre 80 pour le softmax sur TIMIT, 100 contre 93 sur MNIST (Table 11).
-- Aucun chiffre matériel : pas de ligne dans `benchmarks.csv` (`benchmarks: none`).
+- Erreur/succès par MSP : AUROC 97 (MNIST), 93 (CIFAR-10), 87 (CIFAR-100), qui baisse quand l'erreur du modèle monte (1,69 / 4,96 / 20,7 %) (Table 1). La probabilité moyenne des prédictions fausses reste élevée : 86 / 80 / 66 % (Table 1).
+- OOD par MSP : CIFAR-10/SUN AUROC 95, CIFAR-100/SUN 91, MNIST/notMNIST 85 (Table 2) ; MNIST/Uniform 99, MNIST/Gaussian 90 ; probabilité moyenne des OOD 56-92 %. NLP : IMDB/All 94 (Table 4), 15/5 Newsgroups 75 (Table 6) ; POS : WSJ/Twitter 80, WSJ/Weblog 61 (Table 8, cas presque OOD) ; parole : TIMIT/All 97 (Table 9).
+- Module d'anormalité : AUROC moyen 97 contre 80 pour le softmax sur TIMIT, 100 contre 93 sur MNIST (Table 11).
+- Aucun chiffre matériel (ni latence ni puissance). Base : jeux jouets, aucun résultat sur plantes.
+→ reportés dans `benchmarks.csv` (proposition de 6 lignes, vision seulement, plateforme `n/r`) : MNIST, CIFAR-10, CIFAR-100 en détection d'erreur (Table 1, high) ; CIFAR-10/SUN, CIFAR-100/SUN, MNIST/notMNIST en OOD (Table 2, medium : corps de tableau reconstruit à partir du flux de texte). NLP, parole et module d'anormalité non reportés (hors thème de la base).
 
 ## Limites et critique
 
@@ -42,16 +40,16 @@ Sans objet (aucune cible matérielle, réseaux de laboratoire : MLP 3x256 pour M
 - Le baseline est ancien (2016) ; supplanté par ODIN, Mahalanobis, energy, etc. (connaissance externe, non affirmée par le papier).
 - Tableaux 2, 4, 7, 11 listés sans corps extrait : leurs chiffres sont pris dans le texte reconstitué en fin de fichier, dont l'ordre est mélangé (plusieurs légendes mal appariées).
 
-## Pertinence pour la thèse
+## Pertinence pour le thème (serre)
 
-Référence fondatrice pour la surveillance à l'exécution (axe `safety-certification`) : MSP comme moniteur OOD/erreur, très peu coûteux, donc implémentable sur FPGA en post-traitement du réseau (un softmax et un seuil), et le module d'anormalité rappelle le principe de l'autoencodeur comme détecteur (lien avec l'axe autoencodeurs). Ne traite ni le détecteur d'objets YOLO (sorties de type objectness, pas softmax global), ni le matériel, ni la certification.
+Axe `calibration-decision`. Référence fondatrice pour le rejet des crops inexploitables et des captures hors distribution du projet SerreIA : la MSP du classifieur de maladies (EfficientNet-B0) est un score de rejet gratuit, sans réentraînement, à comparer au temperature scaling/ECE. Le papier insiste que la MSP n'est pas une confiance calibrée (91 % sur bruit gaussien, §1), donc seuil à choisir sur validation. Laisse ouvert : seuil à rappel donné (AUROC/AUPR seulement, pas de point de fonctionnement, §2), OOD proches (WSJ/Weblog 61, Table 8) analogues à PlantVillage vs PlantDoc, comportement sur plantes et après quantification INT8 sur Hailo (déduit, non traité). Fiche réévaluée depuis la base `fpga` (thème précédent : moniteur FPGA).
 
 ## Gaps identifiés
 
-- Moniteur OOD/erreur sur détecteur d'objets (YOLO) et sur FPGA : coût matériel, latence, comportement en quantification INT8 (la MSP dépend de la calibration des logits).
-- Choix et validation d'un seuil de rejet avec taux de fausse alarme garanti (zone industrielle : les personnes manquées coûtent plus que les fausses alarmes).
-- Évaluation des moniteurs sur near-OOD réalistes (changement d'éclairage, EPI, occultation) plutôt que bruit ou datasets étrangers.
+- MSP versus temperature scaling pour rejeter les crops de feuilles hors distribution, avec seuil à rappel « anormal » donné.
+- Détection d'écart de domaine PlantVillage vers PlantDoc par MSP : near-OOD réaliste plutôt que bruit ou SUN.
+- Effet de la quantification INT8 (Hailo-8L) sur la MSP et le seuil de rejet.
 
 ## Statut de lecture
 
-Papier complet (fulltext.md lu en entier). Tables 2, 4, 7 et 11 sans corps propre : leurs valeurs sont reprises du texte de flux mélangé ; les légendes sont décalées d'un numéro, à vérifier sur le PDF. Déduit et non affirmé par les auteurs : implémentabilité sur FPGA, limites de la MSP sur détecteurs d'objets et en INT8, état de l'art postérieur.
+Papier complet (fulltext.md lu en entier ; extraction grobid, ok). Tables 2, 4, 7 et 11 listées sans corps extrait : leurs valeurs sont reprises du texte de flux mélangé, dont les légendes sont décalées d'un numéro (à vérifier sur le PDF) ; Table 1 a un corps lisible. Déduit et non affirmé par les auteurs : application au classifieur de feuilles, comportement en INT8, état de l'art postérieur (ODIN, Mahalanobis, energy).

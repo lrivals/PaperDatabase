@@ -1,0 +1,45 @@
+{
+  "id": "2004-avizienis-basic-concepts-taxonomy-dependable-secure",
+  "title": "Basic concepts and taxonomy of dependable and secure computing",
+  "authors": [
+    {
+      "given": "A.",
+      "family": "Avizienis"
+    },
+    {
+      "given": "J.-C.",
+      "family": "Laprie"
+    },
+    {
+      "given": "B.",
+      "family": "Randell"
+    },
+    {
+      "given": "C.",
+      "family": "Landwehr"
+    }
+  ],
+  "year": 2004,
+  "venue": "IEEE Transactions on Dependable and Secure Computing 1(1), 11–33",
+  "doi": "10.1109/tdsc.2004.2",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/tdsc.2004.2",
+  "type": "journal",
+  "axes": [
+    "safety-certification"
+  ],
+  "tags": [
+    "fault-injection",
+    "dependability"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

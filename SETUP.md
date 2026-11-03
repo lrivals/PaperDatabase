@@ -808,8 +808,32 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 29/10/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 03/11/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 03/11/2026 (base fpga : axe `timing-analysis`, références du draft ARCYS, 10ᵉ passage des gaps).**
+- 10 articles ajoutés et fichés : 6 sur `timing-analysis` (WCET multi-DPU Zhang 2025, TPDS ;
+  Restuccia 2020, FCCM et ECRTS ; thèse De Albuquerque Silva 2024, ISAE ; 2406.12346 ;
+  PHAROS 2604.05308 ; 2610.29503), 2 moniteurs cités par KGFP (Yatbaz 2404.07685, DECIDER
+  2408.00331) et Avizienis 2004. 124 fiches, 325 lignes (17 nouvelles, dont les premières
+  lignes de moniteur, en `server`).
+- Acquisition : 5 par arXiv, 3 PDF en accès libre avec `.bib` (DOI sans version arXiv :
+  `pdb add` refuse, dépôt dans `inbox/`), 2 PDF sous paywall déposés à la main. La thèse
+  (en-tête mal lu, `.bib` non apparié faute de titre et de DOI extraits) a eu ses
+  métadonnées corrigées à la main avant toute fiche.
+- `gaps.md`, 10ᵉ passage : 45 gaps, dont 36 étayés ; section nouvelle « Analyse temporelle
+  et interférences sur SoC FPGA » (3 gaps) ; aucun gap supprimé.
+- Deux suggestions en attente dans `profile.md` : classe de tâche `monitoring` pour
+  `pdb plot`, et colonne de borne temporelle (WCET estimé, cycles) dans `benchmarks.csv`.
+
+- [ ] Base fpga : PDF à déposer dans `inbox/` (accès libre bloqué par une page anti-robot,
+  ou paywall) : Yang et al. 2021 (Sensors, 10.3390/s21082819), Gao et al. 2024 (TVLSI,
+  10.1109/tvlsi.2024.3443834), thèse Restuccia 2020 (HAL tel-03770711), Bachiri et al.
+  2025 (SCP, 10.1016/j.scico.2025.103316). Introuvables : Torpmann-Hagen 2025, « OneFlip ».
+- [ ] Schéma `benchmarks.csv` : pas de colonne pour une borne temporelle ni pour des cycles
+  (WCET de Zhang 2025 et de la thèse restés dans les fiches).
+- [ ] `pdb status` compte comme un gap l'intertitre « Couverture croisée » de `gaps.md`
+  (46 au lieu de 45).
 
 **Bilan du 26/10/2026 (base fpga : draft de sujet ARCYS, 9ᵉ passage des gaps).**
 - Profil : axes `failure-prediction` (prédiction d'échec, confiance, prédiction sélective,
@@ -825,12 +849,11 @@ Point au 29/10/2026. À mettre à jour à chaque étape franchie (cocher, dater,
   draft de sujet `proposition_ARCYS/` reste hors du dépôt (`.gitignore`).
 - Test `test_rag_qwen` adapté aux colonnes optionnelles de `benchmarks.csv` ; 312 tests.
 
-- [ ] Base fpga : l'axe `timing-analysis` est vide ; `/paper-discover timing-analysis`
-  (WCET de l'inférence DNN, interférences sur SoC FPGA, multi-DPU).
-- [ ] Base fpga : prédiction de faux négatifs de détecteur, travaux cités par KGFP et absents
-  de la base (références à vérifier) : Yang et al. 2021 (Sensors 21(8):2819), Yatbaz et al.,
-  DECIDER (ECCV), Torpmann-Hagen et al. 2025 (IEEE Access 13). Les 8 fiches
-  `failure-prediction` actuelles sont logicielles, 7 sur 8 en classification.
+- [x] Base fpga : l'axe `timing-analysis` est vide ; `/paper-discover timing-analysis`
+  (WCET de l'inférence DNN, interférences sur SoC FPGA, multi-DPU) — 7 papiers le 03/11/2026.
+- [x] Base fpga : prédiction de faux négatifs de détecteur, travaux cités par KGFP et absents
+  de la base : Yatbaz et DECIDER ajoutés le 03/11/2026 ; Yang 2021 à déposer à la main,
+  Torpmann-Hagen 2025 introuvable (voir le bilan du 03/11/2026).
 
 **Bilan du 18/10/2026 (bancs par base, claims, comparaison, tableaux, provenance).**
 - **Lot K-1** : les jeux fpga quittent `tests/fixtures/` pour `bases/fpga/eval/fixtures/`

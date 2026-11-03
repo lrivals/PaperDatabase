@@ -1,0 +1,59 @@
+{
+  "id": "arxiv-2406.12346-certification-hybrid-architectures-analysing-interference",
+  "title": "Towards the Certification of Hybrid Architectures: Analysing Interference on Hardware Accelerators through PML",
+  "authors": [
+    {
+      "given": "Benjamin",
+      "family": "Lesage"
+    },
+    {
+      "given": "Frédéric",
+      "family": "Boniol"
+    },
+    {
+      "given": "Kevin",
+      "family": "Delmas"
+    },
+    {
+      "given": "Adrien",
+      "family": "Gauffriau"
+    },
+    {
+      "given": "Alfonso",
+      "family": "Mascarenas-Gonzalez"
+    },
+    {
+      "given": "Claire",
+      "family": "Pagetti"
+    }
+  ],
+  "year": 2024,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2406.12346",
+  "url": "https://arxiv.org/abs/2406.12346",
+  "type": "preprint",
+  "axes": [
+    "safety-certification",
+    "timing-analysis"
+  ],
+  "tags": [
+    "easa",
+    "amc20-193",
+    "amc20-152a",
+    "interference",
+    "accelerator"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

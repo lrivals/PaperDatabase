@@ -16,6 +16,79 @@ Format d'une entrée :
 
 ---
 
+Mise à jour du 03/11/2026 (10e passage) : **124 fiches `done` sur 124**, **325 lignes** dans
+`benchmarks.csv` (59 papiers). Nouveautés depuis le 9e passage (10 fiches, toutes du
+03/11/2026) :
+- l'axe **`timing-analysis` n'est plus vide** : 7 papiers dans INDEX.md
+  (2025-zhang-wcet-estimation-cnn-inference-fpga, WCET multi-DPU sur ZCU102 ;
+  2020-restuccia-safely-preventing-unbounded-delays-during, AXI Stall Monitor ;
+  2020-restuccia-modeling-analysis-bus-contention-hardware, contention AXI ;
+  2024-de-albuquerque-silva-certifiable-efficient-implementation-neural-networks, thèse
+  ACETONE ; arxiv-2406.12346, PML et AMC 20-193 ; arxiv-2604.05308 PHAROS ;
+  arxiv-2610.29503, ordonnanceur RL sous enveloppe HRT). Trois sont des preprints
+  (arxiv-2406.12346, arxiv-2604.05308, arxiv-2610.29503) ;
+- l'axe **`failure-prediction`** passe de 8 à 10 fiches : Yatbaz et al.
+  (arxiv-2404.07685, moniteur de faux négatifs 3D sur couches précoces ; preprint, CVPRW
+  2024 selon OpenAlex, non confirmé par le texte) et DECIDER (arxiv-2408.00331 ; preprint,
+  ECCV 2024 selon OpenAlex, non confirmé). Deux des quatre références de KGFP signalées
+  absentes au 9e passage sont donc dans la base ; **Yang et al. 2021** (Sensors, « Introspective
+  false negative prediction for black-box object detectors in autonomous driving », cité par
+  KGFP et par Yatbaz d'après external_refs.csv) et **Torpmann-Hagen et al. 2025** ne le
+  sont toujours pas ;
+- la taxonomie de la sûreté de fonctionnement (2004-avizienis-basic-concepts-taxonomy-dependable-secure,
+  version rapport technique ISR, sans ligne).
+
+Changements de ce passage :
+- **3 gaps nouveaux**, dans une section nouvelle « Analyse temporelle et interférences sur
+  SoC FPGA » : interférences PS / PL et DDR non modélisées pour un accélérateur CNN
+  (étayé) ; bornes temporelles fondées sur la mesure, un modèle ou une autre cible (étayé) ;
+  repli et état sûr après une défaillance temporelle de l'accélérateur (hypothèse) ;
+- **mis à jour**, sans changement de statut principal :
+  - « Pire cas temporel des sorties anticipées et délai de réaction de bout en bout » :
+    l'axe n'est plus vide ; les 7 papiers supposent tous un graphe d'exécution fixe, et
+    aucun ne borne un détecteur YOLO en temps réel dur. Le volet « pas de borne HRT d'un
+    YOLO sur SoC FPGA » y est rattaché plutôt que d'en faire un gap séparé ;
+  - « Argument FPGA contre GPU… » : première dispersion mesurée sur DPU (2025-zhang,
+    §III, Fig. 4), titre et constat nuancés ;
+  - « Aucun moniteur de faux négatifs de détecteur mesuré sur matériel » : Yatbaz fournit les
+    premières lignes de latence d'un moniteur (CPU / GPU serveur, 8 lignes) ; l'ASM de
+    Restuccia est le premier moniteur mesuré sur FPGA, mais il surveille le bus, pas la
+    perception ;
+  - « Prédiction d'échec ciblée sur le faux négatif… » : **titre reformulé** (« un seul
+    travail » est contredit par arxiv-2404.07685, qui prédit aussi le faux négatif, en 3D
+    LiDAR) ;
+  - « Sorties anticipées jamais utilisées comme alerte conservatrice » : Yatbaz et DECIDER
+    montrent que les couches précoces renseignent mieux sur l'échec ;
+  - « Chaîne de preuve d'équivalence modèle → bitstream » : la thèse ACETONE complète
+    (sémantique formelle, padding divergent entre TensorFlow et PyTorch, quantification hors
+    périmètre). L'absence d'équivalent d'ACETONE pour HLS / RTL y est rattachée ;
+  - « Critère de criticité… SIL / PL », « Fiabilité matérielle du moniteur… » : vocabulaire
+    faute / erreur / défaillance et couverture d'un détecteur d'erreur (Avizienis) ;
+  - « Correspondance des cadres… » : AMC 20-152A / AMC 20-193 appliqués aux accélérateurs
+    (arxiv-2406.12346), toujours sans IEC 61508 ni ISO 13849 ;
+  - « Interaction PS-PL et post-traitement », « Moniteurs d'exécution… », « Effet de la
+    quantification… », « Aucun détecteur d'objets quantifié… » : constats ajoutés ;
+- **aucun gap supprimé** : aucune des 10 fiches n'en contredit un ;
+- au total, **45 gaps** : 36 dont le statut principal est `étayé`, 9 en `hypothèse` (dont 3
+  étayés en partie).
+
+Réserves propres à ce passage :
+- les 17 lignes nouvelles de `benchmarks.csv` ne sont pas des performances de détection :
+  latences du moniteur de Yatbaz (8 lignes, i9 et RTX 3090, `server`, moniteur seul hors
+  détecteur, Table 2) ; latences de modèles tronqués sur Versal VCK5000, issues du modèle
+  de CHARM ou d'une mesure non précisée (5 lignes PHAROS, `server`, §5.1) ; maxima observés
+  en DPU seul sur ZCU102 (2 lignes 2025-zhang, dont YOLOv3 en `confidence: low`, unité ms
+  déduite) ; LUT de l'ASM (2 lignes) ;
+- **limite d'outil qui cache une partie du corpus** : le schéma n'a pas de colonne de borne
+  temporelle (WCET estimé, rapport borne / mesure) ni d'unité en cycles. Les résultats
+  centraux de l'axe `timing-analysis` (rapports 128 % à 317 % de 2025-zhang §VI-B-C ; bornes
+  RT de 2020-restuccia-safely §VIII-B ; 41 configurations de la thèse ACETONE en cycles)
+  ne sont donc que dans les fiches. Une requête `pdb bench` sur la latence ne montre que des
+  moyennes ou des maxima observés (suggestion en attente dans profile.md) ;
+- aucun des 7 papiers temporels ne porte sur un détecteur YOLO mesuré en conditions
+  d'application ; YOLOv3 / YOLOv4 n'apparaissent que comme charges du DPU (2025-zhang) et
+  YOLO-v2 comme charge simulée (arxiv-2610.29503, §6.1).
+
 Mise à jour du 26/10/2026 (9e passage) : **114 fiches `done` sur 114**, **308 lignes** dans
 `benchmarks.csv` (55 papiers). Nouveautés depuis le 8e passage :
 - les trois papiers fondateurs YOLO (arxiv-1506.02640, arxiv-1612.08242, arxiv-1804.02767),
@@ -405,9 +478,18 @@ Nouveau au 7e passage, nuancé au 8e.
   - gestion temps réel PS-PL (RTOS, priorités, WCET) non traitée dans la littérature selon
     arxiv-2509.04153 (§III-B) ;
   - concaténation et détection sur le PS (2025-kim).
+- Constat (10e passage) :
+  - la seule analyse temporelle d'un DPU borne la contention **entre DPU** (interconnexions
+    PL et PS, arbitre des ports DDR) ; le PS, l'OS et le post-traitement n'entrent pas dans
+    le modèle (2025-zhang-wcet-estimation-cnn-inference-fpga, §V-C1 ; fiche, Limites,
+    déduit) ;
+  - les ports PS-PL (GP, HP, ACP) sont des canaux d'interférence à modéliser, l'ACP pouvant
+    dégrader le cache du processeur (arxiv-2406.12346, Example 10, §VI-C ; preprint, sans
+    calcul ni mesure).
+  Détail dans la section « Analyse temporelle et interférences sur SoC FPGA ».
 - Ce qui manque : une mesure de bout en bout (capture → PL → post-traitement → sortie) sur
   SoC, avec un partitionnement PS / PL justifié et une borne de latence.
-- Statut : étayé (14 fiches).
+- Statut : étayé (16 fiches).
 - Piste : porter le post-traitement matériel de 2024-zhang (8 893 LUT, Table 2) sur KV260 à
   côté du DPU, et mesurer le gain de latence et de gigue.
 
@@ -819,6 +901,10 @@ DEEL), les surveys et les études de fiabilité.
       sans quantification (arxiv-2603.25499, §3.2, « Plateforme ») ;
   - (9e passage) la seule nouvelle étude de fiabilité sur FPGA reste un classifieur : BNN
     FINN entièrement connecté sur MNIST, ~93 %, Ultra96 (arxiv-2404.01757, §II-C) ;
+  - (10e passage) le moniteur de faux négatifs de Yatbaz porte sur des détecteurs 3D LiDAR,
+    sur RTX 3090 et i9 (arxiv-2404.07685, §4.4 ; preprint) ; YOLOv3 et YOLOv4 sur DPU
+    n'apparaissent que comme charges d'une analyse temporelle, sans fiabilité ni moniteur
+    (2025-zhang, §III, §VI) ;
   - inversement, **aucun des 18 papiers `yolo-fpga` ne traite la sûreté**. 2026-fata
     renvoie la tolérance aux fautes en perspective (§VI) ; 2024-zhang, 2025-kim, 2024-yan,
     arxiv-2609.24757 et arxiv-2607.13106 n'en disent rien.
@@ -915,12 +1001,21 @@ DEEL), les surveys et les études de fiabilité.
   - (9e passage) BNN FINN : « critique » = mauvaise classe MNIST, les crashes sont comptés à
     part (arxiv-2404.01757, §IV) ; les critères de prédiction d'échec du corpus sont
     symétriques (erreur 0/1 : arxiv-1901.09192 §2 ; TCP : arxiv-1910.04851 §2.1 ; règle de
-    Chow : arxiv-2403.02886 §3.3.2).
+    Chow : arxiv-2403.02886 §3.3.2) ;
+  - (10e passage) Yatbaz étiquette « erreur » toute image où un objet n'a pas de boîte
+    d'IoU > 0,7, sans criticité, classe ni distance ; les auteurs demandent eux-mêmes de
+    meilleures métriques d'erreur (arxiv-2404.07685, §4.4, §5) ;
+  - (10e passage) **le vocabulaire existe, hors ML** : défaillance de contenu ou temporelle,
+    signalée ou non, de gravité mineure à catastrophique ; un détecteur d'erreur a deux modes
+    de défaillance, fausse alarme et défaillance non signalée ; système *fail-controlled*
+    (2004-avizienis, §3.3.1). Le texte cite IEC 61508 mais la déclare hors sujet et laisse
+    ouvertes les mesures quantitatives de la dependability (§1). Le classement de la personne
+    manquée comme défaillance de contenu non signalée est une déduction de la fiche.
 - Ce qui manque : une définition de l'erreur dangereuse d'un détecteur de personnes (personne
   manquée sur N images consécutives, dans une zone, à une distance), et une chaîne de calcul
   du taux de défaillance dangereuse par heure qui combine l'inexactitude du modèle et les
   fautes matérielles, comparable aux cibles SIL / PL.
-- Statut : étayé (15 fiches) pour l'absence de traduction. Les valeurs cibles des normes
+- Statut : étayé (17 fiches) pour l'absence de traduction. Les valeurs cibles des normes
   ne sont pas dans la base : leur usage reste à vérifier dans les textes.
 - Piste :
   - partir du MEBF de 2020-libano et du calcul horaire de arxiv-2103.10529 ;
@@ -958,12 +1053,24 @@ DEEL), les surveys et les études de fiabilité.
       qualification (arxiv-2503.04832) ;
     - le DSP packing INT4 pose un risque d'équivalence bit-exacte (déduit, 2024-yan) ;
   - la vérification formelle bit-exacte du réseau quantifié existe sur petit réseau
-    (arxiv-2012.08185), mais son lien avec la RTL ou le bitstream n'est pas démontré.
+    (arxiv-2012.08185), mais son lien avec la RTL ou le bitstream n'est pas démontré ;
+  - (10e passage) **la thèse ACETONE complète l'article de 2022** sans changer le constat
+    (2024-de-albuquerque-silva-certifiable-efficient-implementation-neural-networks) :
+    - sémantique formelle de chaque couche (ch. 4) ; TensorFlow et PyTorch ne remplissent
+      pas le « same padding » du même côté (§4.5, Fig. 4.17) : un écart de sémantique entre
+      frameworks existe avant toute compilation matérielle ;
+    - préservation testée sur 1 000 entrées (erreur max ≈ 1e-6 en FP32, Table 6.1), non
+      prouvée ; aucune borne d'erreur admissible fixée ; ACETONE non qualifié (DO-330) ;
+    - quantification, élagage, Winograd écartés parce qu'ils ne préservent pas la
+      sémantique (§6.2) ; virgule fixe en perspective seulement (§7.4.1) ;
+    - C monocœur sur CPU : **aucun équivalent pour HLS / RTL** dans le corpus (fiche,
+      Gaps). C'est le cœur du rôle d'A. Dion (profile.md).
 - Ce qui manque :
   - une chaîne de preuve modèle entraîné → modèle quantifié (QONNX) → HLS / RTL → bitstream,
     avec équivalence bit-exacte vérifiée au moins par tests exhaustifs sur les couches ;
   - une analyse de qualification (TQL) d'un toolflow (FINN ou Vitis AI).
-- Statut : étayé (14 fiches). Question de thèse candidate.
+- Statut : étayé (15 fiches). Question de thèse candidate : « un ACETONE pour HLS, à
+  sémantique définie en virgule fixe / INT8 et équivalence testée couche par couche ».
 - Piste :
   - comparer, sur un YOLO FINN, les sorties bit à bit du modèle QONNX exécuté en logiciel
     et du bitstream (cosimulation, puis carte) ;
@@ -1039,12 +1146,24 @@ DEEL), les surveys et les études de fiabilité.
       d'échec (AURC ×10³ de 9,52 à 16,27 avec mixup, ResNet110 CIFAR-10 ; arxiv-2403.02886,
       Table 1). Un moniteur doit donc être évalué en AURC / AUROC d'erreur, pas en ECE ;
     - KGFP bat GRAM, KNN et ViM (AUROC sûr / non sûr 92,9 % contre 52,5 à 54,3 %), mais ces
-      baselines sont non supervisées (arxiv-2603.25499, Table 2, §5.3).
+      baselines sont non supervisées (arxiv-2603.25499, Table 2, §5.3) ;
+  - (10e passage) **deux moniteurs appris de plus, toujours sur serveur** :
+    - Yatbaz : ResNet18 + FC sur activations du détecteur, 1,80 à 11,47 ms sur RTX 3090 et
+      4,94 à 54,32 ms sur i9, moniteur seul, hors détecteur (arxiv-2404.07685, Table 2,
+      `confidence: medium` ; preprint) ;
+    - DECIDER : un second réseau de même architecture que le classifieur, plus une
+      similarité à K × C embeddings d'attributs CLIP ; coût non mesuré ; sous fort décalage
+      (calage sur Sketch), quasi tout-rejet, SR 0,12 à 0,18 (arxiv-2408.00331, Table 10 ;
+      preprint) ;
+  - (10e passage) le seul moniteur mesuré sur FPGA du corpus est **temporel** : l'AXI Stall
+    Monitor, 183 à 185 LUT, 203 FF, 0 BRAM / DSP, sans latence mesurable en nominal
+    (2020-restuccia-safely-preventing-unbounded-delays-during, Table III reconstruite par
+    PyMuPDF, §VIII-C). Il ne détecte pas une erreur de calcul (fiche, Limites).
 - Ce qui manque : des moniteurs légers (MSP, boîtes, patrons, conformal, reconstruction)
   implantés à côté d'un YOLO sur FPGA, comparés à ressources égales. Il faut mesurer la
   latence ajoutée, l'effet de l'INT8 sur leur calibration, et le taux de détection des
   erreurs à taux de fausse alarme fixé.
-- Statut : étayé (27 fiches). Le volet « prédiction d'échec de détecteur » est détaillé dans
+- Statut : étayé (30 fiches). Le volet « prédiction d'échec de détecteur » est détaillé dans
   la section « Prédiction d'échec, sorties anticipées et moniteur sur cible ».
 - Piste :
   - commencer par la prédiction conforme d'arxiv-2304.06052 : une marge additive après
@@ -1067,18 +1186,27 @@ DEEL), les surveys et les études de fiabilité.
     est antérieur aux détecteurs profonds. Il ne discute ni SIL ni PL. Les solutions
     certifiées sont propriétaires, à capteurs 3D (2018-halme-review-vision-safety-systems-human) ;
   - le niveau d'assurance accessible au non-supervisé est limité à DAL D
-    (2024-easa-concept-paper, Foreword, §B.4).
+    (2024-easa-concept-paper, Foreword, §B.4) ;
+  - (10e passage) **AMC 20-152A et AMC 20-193 appliqués aux accélérateurs** : un accélérateur
+    est un « dispositif complexe » au sens d'AMC 20-152A et entre dans le champ d'AMC 20-193 ;
+    taxonomie en couplage (étroit, passif, semi-actif, actif) et gabarits PML ; un SoC FPGA
+    se modélise selon ce qui est configuré dans la PL (arxiv-2406.12346, §V-VI, §VIII,
+    Example 10 ; preprint, aucune validation). IEC 61508 et ISO 13849 n'y sont pas
+    discutées (fiche, Limites) ;
+  - (10e passage) la thèse ACETONE aligne ses cinq objectifs sur DO-178C / ARP6983 / EASA
+    (2024-de-albuquerque-silva, §2.3) ; Avizienis cite IEC 61508 sans l'utiliser
+    (2004-avizienis, §1). Le cadre reste aéronautique.
 - Ce qui manque : une correspondance objectif par objectif (learning assurance, ODD, IMP-xx,
   EXP-xx) vers IEC 61508-3 / ISO 13849-1 et ISO/IEC TR 5469, pour une fonction de sécurité
   de type « arrêt sur détection de personne » (ISO 10218 / TS 15066).
-- Statut : étayé (11 fiches) pour l'absence dans le corpus ; **hypothèse** pour la
+- Statut : étayé (14 fiches) pour l'absence dans le corpus ; **hypothèse** pour la
   littérature, car les normes et les travaux industriels récents (ISO/IEC TR 5469,
   ISO/PAS 8800) ne sont pas ingérés.
 - Piste : ajouter à la base ISO/IEC TR 5469 (ou une présentation publique) et des travaux
   sur la sécurité machine avec ML ; construire le tableau de correspondance comme livrable
   du pré-projet.
 
-### Argument FPGA contre GPU pour la certification : déterminisme, WCET et gigue non mesurés
+### Argument FPGA contre GPU pour la certification : déterminisme et WCET non démontrés, gigue mesurée sur DPU seul
 - Constat :
   - **l'argument est posé, sans mesure** :
     - CoDANN II argumente pour le FPGA contre le GPU face aux objectifs COTS de l'AMC
@@ -1095,6 +1223,13 @@ DEEL), les surveys et les études de fiabilité.
     - latence d'une architecture streaming qui dépend du taux de compression des
       activations, avec reconfiguration (arxiv-2403.18921, Fig. 8, Table IV) ;
     - aucun papier ne donne de pire cas, de p99 ni de gigue de bout en bout ;
+    - (10e passage) **contre-exemple partiel, hors bout en bout** : sur un DPU B4096 seul
+      (ZCU102), MobileNetV2 varie de 5,56 à 5,81 ms sur 20 000 images, YOLOv3 de 8,867 à
+      9,093 (écart 2,49 %, unité non écrite, `confidence: low`) ; avec trois DPU sur la
+      même puce, le maximum dépasse le minimum d'environ 200 % (§III, Fig. 4 ; l'abstract
+      dit « 3X » et l'introduction « up-to 300 % », formulations incohérentes)
+      (2025-zhang-wcet-estimation-cnn-inference-fpga). Le DPU seul est donc stable ; c'est
+      le partage de la DDR qui rompt la prévisibilité ;
   - la distinction temps réel dur / mou est posée par 2025-hozhabr (§II-C2), et le WCET PS-PL
     est signalé non traité par arxiv-2509.04153 (§III-B) ;
   - les atouts supposés (FSM déterministe, dataflow à latence fixe, floorplan explicite,
@@ -1113,8 +1248,11 @@ DEEL), les surveys et les études de fiabilité.
 - Ce qui manque : une mesure de distribution de latence (max, p99.9, gigue) de bout en bout,
   sur FPGA (DPU et dataflow) et sur Jetson Orin, pour un même YOLO, avec et sans charge du
   PS. Il faudrait aussi un WCET analytique pour le dataflow.
-- Statut : étayé (14 fiches). L'axe `timing-analysis` ne contient aucun papier : hypothèse
-  pour la littérature (WCET de DNN sur SoC FPGA, contention mémoire, multi-DPU).
+- Statut : étayé (16 fiches), nuancé pour le DPU seul. Au 10e passage, l'axe
+  `timing-analysis` compte 7 papiers (WCET multi-DPU, contention AXI), mais aucun ne compare
+  FPGA et GPU sur la même charge : la comparaison reste une hypothèse pour la littérature.
+  Côté GPU, AMC 20-193 et l'isolation par SM d'un Volta reposent sur un support non
+  documenté (arxiv-2406.12346, Example 8 ; preprint).
 - Piste : ajouter à l'expérience KV260 contre Orin des traces de latence sur 10⁵ images.
   Comparer DPU, FINN et TensorRT. Question de thèse candidate : « le FPGA rend-il la borne
   de latence d'un détecteur démontrable ? ».
@@ -1160,6 +1298,11 @@ Section nouvelle au 9e passage, liée au draft de sujet ARCYS (profile.md, 25/10
 Réserve : les 8 fiches `failure-prediction` sont logicielles, 7 sur 8 en classification ;
 l'axe `timing-analysis` est vide. Les travaux de prédiction de faux négatifs de détecteur
 cités par KGFP ne sont pas dans la base (voir l'en-tête du 9e passage).
+(10e passage) L'axe `failure-prediction` compte 10 fiches, toutes sans plateforme embarquée
+(Yatbaz : RTX 3090 et i9 ; DECIDER : aucune) ; 2 sur 10 portent sur la détection (KGFP en
+2D, Yatbaz en 3D LiDAR). L'axe `timing-analysis` compte 7 papiers : voir la section
+« Analyse temporelle et interférences sur SoC FPGA ». Yang et al. 2021 et Torpmann-Hagen
+et al. 2025 restent absents.
 
 ### Aucun moniteur de faux négatifs de détecteur mesuré sur matériel
 - Constat :
@@ -1175,16 +1318,33 @@ cités par KGFP ne sont pas dans la base (voir l'en-tête du 9e passage).
   - l'outil le plus proche de la forme d'un tel moniteur (petit MLP en virgule fixe) est
     hls4ml : MLP de 4 389 paramètres, 75 ns, mais en estimation HLS, sur Kintex et pour la
     physique des particules (arxiv-1804.06913, Table 2, §3.3) ;
-  - aucune ligne de `benchmarks.csv` ne porte sur un moniteur.
+  - aucune ligne de `benchmarks.csv` ne porte sur un moniteur ;
+  - (10e passage) **premières lignes de moniteur dans `benchmarks.csv`, aucune sur cible
+    embarquée** :
+    - moniteur de faux négatifs de Yatbaz (ResNet18 + FC sur activations PPC, MLA, LLA ou
+      leur concaténation) : 1,80 à 11,47 ms sur RTX 3090, 4,94 à 54,32 ms sur i9, 1,6 à
+      36,32 GFLOPs, moniteur seul, hors détecteur et hors extraction des activations
+      (arxiv-2404.07685, Table 2, 8 lignes `server`, `confidence: medium` ; preprint). Sa
+      précision (AUROC, Table 1) n'est pas extraite : le gain réel n'est pas chiffré ici ;
+    - DECIDER double le classifieur (un second réseau de même architecture, plus CLIP) sans
+      chiffrer le coût (arxiv-2408.00331, « Plateforme ») ; KGFP le lui reproche
+      (arxiv-2603.25499, §2) ;
+    - la seule IP de surveillance mesurée sur FPGA est l'ASM, moniteur de bus AXI de
+      183 à 185 LUT (2020-restuccia-safely-preventing-unbounded-delays-during, Table III,
+      2 lignes, `confidence: medium`) : la preuve qu'un moniteur matériel coûte peu existe
+      pour le temps, pas pour la perception (déduit) ;
+    - le coût de l'export des activations précoces vers un moniteur (mémoire, bande passante
+      DDR) n'est étudié nulle part (arxiv-2404.07685, fiche, Gaps).
 - Ce qui manque : un moniteur de faux négatifs (tête légère sur les features du détecteur)
   implanté à côté d'un YOLO INT8 sur SoC FPGA, avec LUT / DSP / BRAM, latence ajoutée et
   puissance, comparé à KGFP sur les mêmes étiquettes (COCO person, IoU 0,5).
-- Statut : étayé (6 fiches) dans le corpus. **Hypothèse** pour la littérature : Yang et al.
-  2021 (Sensors) et Yatbaz et al. (moniteur de couches précoces) ne sont pas dans la base.
+- Statut : étayé (9 fiches) dans le corpus. **Hypothèse** pour la littérature : Yatbaz et al.
+  est désormais dans la base (serveur seulement) ; Yang et al. 2021 (Sensors) et
+  Torpmann-Hagen et al. 2025 ne le sont pas.
 - Piste : reproduire KGFP (code publié, Fraunhofer GitLab) avec une tête légère sans DINO,
   puis la passer en hls4ml ou en PL à côté du DPU de la KV260.
 
-### Prédiction d'échec ciblée sur le faux négatif : un seul travail, moniteur externe sur détecteur gelé
+### Prédiction d'échec ciblée sur le faux négatif : deux travaux, moniteurs externes sur détecteurs gelés
 - Constat :
   - KGFP est le seul papier qui prédit l'échec « personne manquée » d'un détecteur
     (arxiv-2603.25499, §3.1). Mais :
@@ -1202,11 +1362,21 @@ cités par KGFP ne sont pas dans la base (voir l'en-tête du 9e passage).
     (arxiv-1904.04620) ;
   - aucun papier n'emploie une perte asymétrique qui pénalise le faux négatif d'une classe
     critique, alors que les guides la demandent (2020-easa §8.1.1 ; arxiv-2103.10529,
-    §4.2.4.2).
+    §4.2.4.2) ;
+  - (10e passage) **« un seul travail » est contredit par arxiv-2404.07685** (Yatbaz), qui
+    prédit aussi le faux négatif par image (au moins un objet sans boîte d'IoU > 0,7,
+    §4.4), mais sur détecteurs 3D LiDAR (PointPillars, CenterPoint), KITTI et nuScenes. Le
+    constat de fond tient : détecteurs pré-entraînés OpenMMDet3D, moniteur entraîné à part
+    (§4.1, §4.4) ; focal loss pondérée par classe d'erreur, pas par criticité de l'objet ;
+    aucune évaluation sous décalage de domaine (§5) ; preprint ;
+  - (10e passage) DECIDER prédit l'échec d'un classifieur par désaccord avec un second
+    réseau guidé par CLIP et des attributs générés par GPT-3 (arxiv-2408.00331, §4.2-4.5) :
+    risque symétrique, pas de détection, attributs non audités (fiche, Limites).
 - Ce qui manque : un moniteur entraîné **avec** le détecteur (perte conjointe, comme
   SelectiveNet), ciblé sur la personne manquée, localisé (par région ou par échelle de la
   FPN) et évalué sur flux (alarmes successives, délai de détection de l'échec).
-- Statut : étayé (8 fiches).
+- Statut : étayé (10 fiches). Le titre du 9e passage (« un seul travail ») est corrigé
+  d'après arxiv-2404.07685.
 - Piste : ajouter à un YOLOv8n une tête de sélection par échelle, entraînée conjointement
   avec une perte pondérée sur les personnes manquées ; comparer à KGFP (gelé, externe) sur
   COCO person et CrowdHuman.
@@ -1231,11 +1401,21 @@ cités par KGFP ne sont pas dans la base (voir l'en-tête du 9e passage).
     arxiv-1901.09192, §5), en i.i.d. et sur une sortie unique ;
   - la règle de rejet de Chow et le cadre risque-couverture (arxiv-2403.02886, §3.3.2) sont
     transposables à un rejet « vers le réseau complet ou vers l'alarme » (déduit par la
-    fiche).
+    fiche) ;
+  - (10e passage) **les couches précoces renseignent mieux sur l'échec que la dernière** :
+    pour Yatbaz, les activations PPC et MLA surpassent la dernière couche (LLA), MLA ayant le
+    meilleur AUROC sur nuScenes (arxiv-2404.07685, §4.6.1 ; chiffres de Table 1 non
+    extraits) ; pour DECIDER, les couches 1 et 2 de ResNet-18 donnent les meilleurs MCC et
+    les couches profondes dégradent (arxiv-2408.00331, §7, Fig. 6b, Table 6). Aucun des deux
+    n'en fait une sortie anticipée ; le lien avec un signalement précoce est une déduction
+    des fiches ;
+  - (10e passage) une sortie anticipée qui renonce à la décision nominale correspond à un
+    service dégradé, arrêt contrôlé d'un système *fail-controlled* (2004-avizienis, §3.3.1 ;
+    rapprochement déduit par la fiche).
 - Ce qui manque : une sortie anticipée dont le rôle est inversé : signaler tôt un échec
   probable (personne manquée), avec un seuil réglé pour le rappel des échecs à taux de
   fausse alarme fixé, et une garantie de calibration (jeu séparé, borne de couverture).
-- Statut : étayé (6 fiches) pour l'usage « raccourci de calcul » et l'absence d'usage
+- Statut : étayé (8 fiches) pour l'usage « raccourci de calcul » et l'absence d'usage
   conservateur dans le corpus. **Hypothèse** pour la littérature : les détecteurs à sorties
   anticipées récents ne sont pas dans la base.
 - Piste : `/paper-discover "early exit object detection"` et « early exit uncertainty
@@ -1258,15 +1438,42 @@ cités par KGFP ne sont pas dans la base (voir l'en-tête du 9e passage).
     moniteur → alarme) ; les seuls pire cas sont un OWCET observé sur CPU
     (arxiv-2406.12362, §V-B) et un WCET OTAWA sur une autre cible que celle mesurée
     (2022-de-albuquerque-silva-acetone) ;
-  - l'axe `timing-analysis` ne contient aucun papier.
+  - ~~l'axe `timing-analysis` ne contient aucun papier~~ : **faux depuis le 10e passage**
+    (7 papiers). Ils confirment le gap au lieu de le combler, car **tous supposent un graphe
+    d'exécution fixe** :
+    - « charge de calcul identique quelle que soit l'image », posée explicitement ; un chemin
+      dépendant de l'entrée n'est pas modélisé (2025-zhang, §I, §III ; fiche, Limites) ;
+    - tâche = séquence fixe de couches (arxiv-2604.05308, §3.3, §5.5 ; preprint) ;
+    - WCET profilés par couche et par accélérateur, en simulation
+      (arxiv-2610.29503, §3.1, §6.1 ; preprint) ;
+    - réseau feed-forward à graphe statique, C sans allocation dynamique
+      (2024-de-albuquerque-silva, §2.4, ch. 4) ;
+  - (10e passage) **aucune borne temps réel dur d'un détecteur YOLO sur SoC FPGA** :
+    - 2025-zhang borne YOLOv3 / YOLOv4 sur DPU, mais la borne vaut 164 % (meilleur cas) à
+      317 % (pire cas) du maximum mesuré avec trois DPU ; relâcher les hypothèses resserre
+      la borne au risque de la sous-estimer, « acceptable en temps réel souple, pas en temps
+      réel dur » (§VI-C, §VI-D) ; pré- et post-traitement (NMS) hors modèle ;
+    - PHAROS ne garantit qu'un temps de réponse borné (SRT), sans CNN ni YOLO ; le HRT est
+      une perspective (arxiv-2604.05308, §1, Limites) ;
+    - l'enveloppe de sûreté HRT de arxiv-2610.29503 inclut YOLO-v2 parmi ses charges, mais
+      sur des accélérateurs Eyeriss / Simba simulés, avec des WCET supposés sûrs
+      (Théorème 1, §4, §6.1) ;
+  - (10e passage) un patron utile au chemin d'alerte : optimiseur appris, validé par une
+    couche de sûreté déterministe en O(N), repli sur un plan de référence ; surcharge de
+    37,9 µs, 0,76 % de la période (arxiv-2610.29503, §5.1, §6.3 ; preprint, simulation).
 - Ce qui manque : une borne de délai de réaction pour un détecteur avec moniteur et sorties
   anticipées sur SoC FPGA, qui distingue chemin nominal, chemin d'alerte et interférences
   PS / PL (DDR partagée, post-traitement sur l'ARM).
-- Statut : étayé (6 fiches) pour l'absence dans le corpus. **Hypothèse** pour la
-  littérature, puisque l'axe `timing-analysis` est vide.
-- Piste : `/paper-discover timing-analysis` (requête de base.json : « WCET analysis neural
-  network inference FPGA SoC ») ; mesurer sur KV260 la distribution de latence avec et sans
-  branche de sortie anticipée, sous charge du PS.
+- Statut : étayé (10 fiches) pour l'absence dans le corpus, y compris dans l'axe
+  `timing-analysis` (7 papiers, tous à graphe fixe). **Hypothèse** pour la littérature : les
+  travaux sur le WCET de réseaux à sorties anticipées et Restuccia et Biondi 2021
+  (« Time-predictable acceleration of deep neural networks on FPGA SoC platforms », cité
+  comme [8] par 2025-zhang et par 2 autres papiers d'après external_refs.csv, non vérifié)
+  ne sont pas dans la base.
+- Piste : ajouter Restuccia et Biondi 2021 ; étendre la décomposition en segments de
+  2025-zhang (§V-C2) à un segment par sortie anticipée (chemin nominal, chemin d'alerte) ;
+  mesurer sur KV260 la distribution de latence avec et sans branche de sortie anticipée,
+  sous charge du PS.
 
 ### Effet de la quantification sur la prédiction d'échec et les décisions critiques
 - Constat :
@@ -1283,11 +1490,15 @@ cités par KGFP ne sont pas dans la base (voir l'en-tête du 9e passage).
     efficace plus basse mais une part d'erreurs critiques de 38 % contre 26 %
     (2020-libano, §IV-B) ;
   - la MSP, base de nombreux seuils, dépend de la calibration des logits, que l'INT8 peut
-    modifier (déduit par la fiche d'arxiv-1610.02136).
+    modifier (déduit par la fiche d'arxiv-1610.02136) ;
+  - (10e passage) les deux nouveaux moniteurs (arxiv-2404.07685, arxiv-2408.00331) sont en
+    flottant ; la thèse ACETONE écarte la quantification parce qu'elle ne préserve pas la
+    sémantique (2024-de-albuquerque-silva, §6.2, §7.4.1). Aucun papier temporel ne dit la
+    précision numérique de ses charges (2025-zhang : quantification n/r).
 - Ce qui manque : mesurer, sur un détecteur de personnes, ce que l'INT8 / INT4 change (1) au
   taux de personnes manquées, au-delà de la mAP, (2) à la séparation du score du moniteur
   (AUROC d'échec, AURC) et (3) aux seuils des sorties anticipées calés en flottant.
-- Statut : étayé (9 fiches). Question de thèse candidate, au croisement des rôles de
+- Statut : étayé (12 fiches). Question de thèse candidate, au croisement des rôles de
   M. Lauer et A. Dion (profile.md).
 - Piste : sur le YOLOv8n de la piste précédente, comparer flottant, PTQ INT8 Vitis AI et
   QAT FINN : rappel des personnes, AUROC du moniteur, recalibration de la température par
@@ -1305,14 +1516,127 @@ cités par KGFP ne sont pas dans la base (voir l'en-tête du 9e passage).
     §7.4.2 ; Doer / Checker, 2020-easa §6.6), sans coût ni couplage avec la redondance ;
   - la distinction entre erreur de perception (KGFP), anomalie d'exécution (SEU critique)
     et défaillance temporelle (crash par timeout, arxiv-2404.01757, Tables II-III) n'est
-    faite par aucun papier dans un même cadre (déduit du croisement des fiches).
+    faite par aucun papier dans un même cadre (déduit du croisement des fiches) ;
+  - (10e passage) **le cadre conceptuel existe, sans ML** : chaîne faute → erreur →
+    défaillance, défaillances de contenu ou temporelles, tolérance = détection d'erreur +
+    recouvrement, couverture (*coverage*) d'un détecteur d'erreur, et récursivité : le
+    mécanisme de tolérance doit lui-même être protégé (2004-avizienis, §2.2, §3.3.1,
+    §5.2.1-5.2.2). Aucune fiche ne transpose cette grille à un réseau de vision ni ne
+    chiffre la couverture d'un moniteur (fiche, Gaps) ;
+  - (10e passage) les deux moitiés sont outillées **séparément** : moniteur temporel
+    matériel (ASM, 2020-restuccia-safely, §VII) d'un côté, moniteurs de perception
+    logiciels (KGFP, arxiv-2404.07685) de l'autre ; leur interaction n'est traitée nulle
+    part (2020-restuccia-safely, fiche, Gaps).
 - Ce qui manque : une architecture où le moniteur déclenche la redondance (ré-exécution,
   TMR temporaire) seulement quand l'échec est probable, avec le moniteur lui-même durci et
   son taux de défaillance compté.
-- Statut : **hypothèse** (5 fiches), car elle repose sur l'absence de travaux de ce type
+- Statut : **hypothèse** (7 fiches), car elle repose sur l'absence de travaux de ce type
   dans la base.
 - Piste : campagne d'injection FREtZ (méthode d'arxiv-2404.01757) sur un moniteur hls4ml
   isolé, puis sur l'ensemble détecteur + moniteur en FINN.
+
+## Analyse temporelle et interférences sur SoC FPGA
+
+Section nouvelle au 10e passage : les 7 papiers de l'axe `timing-analysis`, liés au rôle de
+M. Lauer dans le draft ARCYS (profile.md). Réserve : 3 des 7 sont des preprints
+(arxiv-2406.12346, arxiv-2604.05308, arxiv-2610.29503) ; aucun ne mesure un détecteur dans
+les conditions de l'application ; le schéma de `benchmarks.csv` n'a pas de colonne de borne,
+les résultats sont donc dans les fiches seulement.
+
+### Interférences PS / PL et DDR non modélisées pour un accélérateur CNN
+- Constat :
+  - **la seule analyse d'un DPU ne modélise que l'interférence entre DPU** : phases du DPU,
+    transactions concurrentes bornées sur l'interconnexion PL, l'interconnexion PS et
+    l'arbitre des ports DDR (Lemme 1, §V-B, §V-C1) ; la DDR est une boîte noire, faute de
+    documentation publique, et les temps de transfert maximaux sont **mesurés** (HP lecture
+    35 cycles, LPD lecture 146, §VI-A) ; le PS, l'OS et le post-traitement ne sont pas dans
+    le modèle (déduit par la fiche ; au plus 5 des 6 ports DDR servent aux DPU, chunk
+    2025-zhang#013.4) (2025-zhang-wcet-estimation-cnn-inference-fpga) ;
+  - **les analyses de contention AXI ne portent pas sur des CNN** : IP de test cycle-précises
+    (GHW-tasks) derrière une hiérarchie d'interconnects, d_PS profilé **sans charge CPU**
+    (50 / 40 cycles), un seul port FPGA-PS, FIFO non saturées
+    (2020-restuccia-modeling-analysis-bus-contention-hardware, §3.3, §5.2) ; FFT, DMA et
+    FIR avec une DDR modélisée « grossièrement » (2020-restuccia-safely-preventing-unbounded-delays-during,
+    §V-VI, §VIII) ; l'étude de cas avec un vrai accélérateur annoncée en §1 de l'ECRTS
+    n'apparaît pas en §5 (fiche, Limites) ;
+  - **les ordonnanceurs multi-accélérateurs ignorent la mémoire** : PHAROS a des DMA
+    dédiés vers la DDR sans modèle d'interférence dans ses WCET (arxiv-2604.05308, §3.1,
+    fiche, Limites ; preprint) ; arxiv-2610.29503 englobe les transferts dans des WCET
+    profilés (§2.1 ; preprint, simulation) ;
+  - **la certification le demande sans le calculer** : ports GP / HP / ACP comme canaux
+    d'interférence, AMC 20-193 applicable aux accélérateurs (arxiv-2406.12346, Example 10,
+    §VIII ; preprint) ;
+  - le pessimisme qui en résulte est lourd : borne à 164-317 % du maximum mesuré avec trois
+    DPU (2025-zhang, §VI-C), et le choix de la configuration des ports mémoire change la
+    borne, celle par défaut de Vitis AI n'étant pas la meilleure (§VI-E).
+- Ce qui manque : un modèle d'interférence qui couvre ensemble DPU (ou dataflow FINN), ARM
+  (post-traitement, OS) et DDR, validé borne contre mesure sur Zynq UltraScale+ ou Kria, et
+  des leviers de réduction (configuration des ports, régulation de bande passante) chiffrés.
+- Statut : étayé (6 fiches) dans le corpus. **Hypothèse** pour la littérature : les travaux
+  de régulation mémoire et de bornes DRAM sur MPSoC (« Bounding DRAM interference in COTS
+  heterogeneous MPSoCs for mixed criticality systems », 2018, cité par les deux Restuccia
+  d'après external_refs.csv, non vérifié) ne sont pas dans la base.
+- Piste : rejouer sur KV260 l'expérience de 2025-zhang (§III, Fig. 4 : 20 000 images,
+  min / max) avec un seul DPU et une charge mémoire concurrente sur l'ARM (NMS, stress DDR) ;
+  le code du calcul de WCET est publié (github.com/212SoleYu/WCET-Multi-DPUs, §VI-B).
+
+### Bornes temporelles fondées sur la mesure, un modèle de performance ou une autre cible
+- Constat :
+  - **WCET sur une cible, temps mesuré sur une autre** : OTAWA calcule le WCET sur un
+    binaire pour lpc2138, faute de modèle du Cortex-A15 où les temps sont mesurés ; les
+    auteurs refusent de corréler les deux (2024-de-albuquerque-silva-certifiable-efficient-implementation-neural-networks,
+    §5.3.2.1) ; OTAWA ne termine pas sur V3, AlexNet et VGG-16 (§5.3.2.2), et le GEMM par
+    blocs, le plus rapide, a un WCET OTAWA **pire** que la version naïve (§6.4.6) ; même
+    constat dans l'article de 2022 (2022-de-albuquerque-silva-acetone) ;
+  - **bornes alimentées par des maxima mesurés** : le « WCET mesuré » de référence est un
+    maximum sur 1 million d'exécutions, que les auteurs disent pouvoir être sous le vrai
+    pire cas (2025-zhang, §VI-B) ; d_PS et latences d'interconnect sont profilés par ILA
+    (2020-restuccia-modeling, §5.2 ; 2020-restuccia-safely, Table II) ;
+  - **bornes issues d'un modèle de performance** : les WCET de PHAROS viennent du modèle de
+    CHARM, sans écart modèle / matériel rapporté (arxiv-2604.05308, §5.1 ; preprint) ; ceux
+    de arxiv-2610.29503 sont des latences profilées par un outil non nommé (§6.1) ;
+  - **aucune analyse statique sur la vraie cible SoC FPGA** : ni DPU, ni ARM du PS, ni
+    dataflow HLS. L'analyse de cache de la thèse (défauts L1D prédits à ~5 % près, Table
+    6.10) suppose un cœur seul, LRU, sans L2 aléatoire ni interférence (§6.5.7) ;
+  - les **unités** empêchent la comparaison : cycles sans fréquence (thèse ACETONE, 41
+    configurations), cycles d'interconnect, ms (déduit des fiches ; aucune colonne du
+    schéma ne les porte).
+- Ce qui manque : une borne de pire cas pour l'inférence d'un CNN sur SoC FPGA dont la
+  sûreté ne repose pas sur une campagne de mesure, ou, à défaut, un argument explicite sur la
+  représentativité de la campagne (couverture des entrées, charges concurrentes), exprimé
+  dans une unité commune.
+- Statut : étayé (6 fiches). Question de thèse candidate : « pour un dataflow FINN à
+  latence fixe, la borne analytique (hls4ml Éq. 2.4, arxiv-1804.06913) et la mesure
+  coïncident-elles une fois la DDR exclue ? ».
+- Piste : sur un même CNN, comparer la borne de 2025-zhang (DPU), une borne analytique de
+  dataflow et le maximum mesuré sur 10⁵ à 10⁶ images ; noter dans les fiches l'horloge pour
+  convertir les cycles.
+
+### Repli et état sûr après une défaillance temporelle de l'accélérateur de perception
+- Constat :
+  - l'ASM découple une HW-task qui dépasse son budget de cycles bloqués, lève une
+    interruption et complète les écritures avec des **données factices** ; le résultat de
+    la tâche est invalide et la reprise est laissée au PS
+    (2020-restuccia-safely-preventing-unbounded-delays-during, §VII ; fiche, Limites) ;
+    évaluation sur une seule défaillance injectée (DMA), aucun accélérateur DNN (§VIII-C) ;
+  - l'enveloppe HRT de arxiv-2610.29503 se replie sur un plan de référence et abandonne le
+    travail SRT du préfixe rejeté ; la perte de qualité de service n'est pas quantifiée
+    hors taux de repli (§5.1 ; fiche, Gaps ; preprint) ; les défaillances temporelles
+    anormales (fautes, dérive) sont supposées bornées par le WCET (fiche, Limites) ;
+  - un SEU dans la logique de contrôle d'un accélérateur FINN produit des crashes par
+    timeout (1,06 % des fautes CRAM, 1,51 % des FF ; arxiv-2404.01757, Tables II-III),
+    sans mécanisme de détection temporelle évalué ;
+  - le cadre attend un système *fail-controlled* (défaillance limitée à des modes spécifiés,
+    l'arrêt plutôt que l'erratique ; 2004-avizienis, §3.3.1) ; pour un détecteur de
+    personnes, l'état sûr après perte d'une image ou découplage n'est défini par aucune fiche
+    (déduit).
+- Ce qui manque : pour un flux vidéo de sécurité, la définition de l'état sûr après une
+  défaillance temporelle de l'accélérateur (image perdue, découplage, ré-exécution) et le
+  délai de passage à cet état, compté dans le délai de réaction de bout en bout.
+- Statut : **hypothèse** (4 fiches) : repose sur l'absence de travaux de ce type dans la base.
+- Piste : placer un ASM (185 LUT) entre le DPU et l'interconnect de la KV260, injecter un
+  blocage (méthode de 2020-restuccia-safely, §IV) et mesurer le délai jusqu'à l'alarme et à
+  l'état sûr.
 
 ## Détection de personnes en milieu industriel
 

@@ -1,0 +1,56 @@
+{
+  "id": "2020-restuccia-modeling-analysis-bus-contention-hardware",
+  "title": "Modeling and Analysis of Bus Contention for Hardware Accelerators in FPGA SoCs",
+  "authors": [
+    {
+      "given": "Francesco",
+      "family": "Restuccia"
+    },
+    {
+      "given": "Marco",
+      "family": "Pagani"
+    },
+    {
+      "given": "Alessandro",
+      "family": "Biondi"
+    },
+    {
+      "given": "Mauro",
+      "family": "Marinoni"
+    },
+    {
+      "given": "Giorgio",
+      "family": "Buttazzo"
+    }
+  ],
+  "year": 2020,
+  "venue": "LIPIcs, Volume 165, ECRTS 2020 165, 12:1-12:23",
+  "doi": "10.4230/LIPICS.ECRTS.2020.12",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.4230/LIPICS.ECRTS.2020.12",
+  "type": "conference",
+  "axes": [
+    "platforms",
+    "timing-analysis"
+  ],
+  "tags": [
+    "zynq",
+    "axi",
+    "bus-contention",
+    "response-time-analysis",
+    "round-robin",
+    "wcet"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

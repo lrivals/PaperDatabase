@@ -1,0 +1,57 @@
+{
+  "id": "2025-zhang-wcet-estimation-cnn-inference-fpga",
+  "title": "WCET Estimation for CNN Inference on FPGA SoC With Multi-DPU Engines",
+  "authors": [
+    {
+      "given": "Wei",
+      "family": "Zhang"
+    },
+    {
+      "given": "Yunlong",
+      "family": "Yu"
+    },
+    {
+      "given": "Xiao",
+      "family": "Jiang"
+    },
+    {
+      "given": "Nan",
+      "family": "Guan"
+    },
+    {
+      "given": "Naijun",
+      "family": "Zhan"
+    },
+    {
+      "given": "Lei",
+      "family": "Ju"
+    }
+  ],
+  "year": 2025,
+  "venue": "IEEE Trans. Parallel Distrib. Syst. 36(6), 1146–1160",
+  "doi": "10.1109/TPDS.2025.3555968",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/TPDS.2025.3555968",
+  "type": "journal",
+  "axes": [
+    "toolflows",
+    "timing-analysis"
+  ],
+  "tags": [
+    "vitis-ai",
+    "wcet"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux sans corps extrait (légende seule) : TABLE I, TABLE II, TABLE VIII, Table XI, TABLE XI, TABLE XII",
+      "sections numérotées non détectées : I, V, VI — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

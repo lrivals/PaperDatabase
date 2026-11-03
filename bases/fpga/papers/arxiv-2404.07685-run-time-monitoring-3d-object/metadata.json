@@ -1,0 +1,52 @@
+{
+  "id": "arxiv-2404.07685-run-time-monitoring-3d-object",
+  "title": "Run-time Monitoring of 3D Object Detection in Automated Driving Systems Using Early Layer Neural Activation Patterns",
+  "authors": [
+    {
+      "given": "Hakan",
+      "family": "Yekta Yatbaz"
+    },
+    {
+      "given": "Mehrdad",
+      "family": "Dianati"
+    },
+    {
+      "given": "Konstantinos",
+      "family": "Koufos"
+    },
+    {
+      "given": "Roger",
+      "family": "Woodman"
+    }
+  ],
+  "year": 2024,
+  "venue": "CVPR Workshops (CVPRW) 2024",
+  "doi": "10.1109/cvprw63382.2024.00356",
+  "arxiv_id": "2404.07685",
+  "url": "https://arxiv.org/abs/2404.07685",
+  "type": "conference",
+  "axes": [
+    "failure-prediction",
+    "safety-certification"
+  ],
+  "tags": [
+    "runtime-monitoring",
+    "introspection",
+    "lidar",
+    "3d-object-detection",
+    "activation-patterns"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "Table 1 (AUROC, rappel) absent de fulltext.md : aucune valeur de précision extraite",
+      "venue, doi et type repris d'OpenAlex (2026-11-03), non affirmés dans le texte"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

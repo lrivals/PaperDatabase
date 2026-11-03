@@ -1,0 +1,66 @@
+{
+  "id": "arxiv-2604.05308-pharos-pipelined-heterogeneous-accelerators-real",
+  "title": "PHAROS: Pipelined Heterogeneous Accelerators for Real-time Safety-critical Systems With Deadline Compliance",
+  "authors": [
+    {
+      "given": "Shixin",
+      "family": "Ji"
+    },
+    {
+      "given": "Jinming",
+      "family": "Zhuang"
+    },
+    {
+      "given": "Sarah",
+      "family": "Schultz"
+    },
+    {
+      "given": "Zhuoping",
+      "family": "Yang"
+    },
+    {
+      "given": "Xingzhen",
+      "family": "Chen"
+    },
+    {
+      "given": "Zheng",
+      "family": "Dong"
+    },
+    {
+      "given": "Alex K",
+      "family": "Jones"
+    },
+    {
+      "given": "Yihui",
+      "family": "Ren"
+    },
+    {
+      "given": "Peipei",
+      "family": "Zhou"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2604.05308",
+  "url": "https://arxiv.org/abs/2604.05308",
+  "type": "preprint",
+  "axes": [
+    "safety-certification",
+    "timing-analysis"
+  ],
+  "tags": [
+    "wcet",
+    "versal"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": []
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

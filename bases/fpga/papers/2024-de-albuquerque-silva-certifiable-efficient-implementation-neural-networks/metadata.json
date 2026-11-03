@@ -1,0 +1,47 @@
+{
+  "id": "2024-de-albuquerque-silva-certifiable-efficient-implementation-neural-networks",
+  "title": "Certifiable and efficient implementation of neural networks on embedded safety-critical real-time systems",
+  "authors": [
+    {
+      "given": "Iryna",
+      "family": "De Albuquerque Silva"
+    }
+  ],
+  "year": 2024,
+  "venue": "Thèse de doctorat, ISAE-SUPAERO (Université de Toulouse)",
+  "doi": "10.70675/77aeb2d0zdf5dz4260zb0dbz058b9ec2ecae",
+  "arxiv_id": null,
+  "url": "http://www.theses.fr/2024ESAE0033/document",
+  "type": "thesis",
+  "axes": [
+    "safety-certification",
+    "timing-analysis"
+  ],
+  "tags": [
+    "wcet",
+    "otawa",
+    "acetone",
+    "do-178c",
+    "easa",
+    "avionics",
+    "gemm",
+    "code-generation",
+    "keras2c",
+    "microtvm",
+    "arm-cortex-a15"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "ligatures perdues à l'extraction : 123 mot(s) réparé(s) (lib/ligatures.py)",
+      "tableaux sans corps extrait (légende seule) : Journals • [51] Iryna De Albuq, [figure sans légende identifié, [figure sans légende identifié, Table 5, Table 5, Table 5, Table 5, Table 5, Table 5, [figure sans légende identifié, Algorithm 1: Direct convolutio, Table 6, Table 6, Table 6, Table 6, Table 6, [figure sans légende identifié, [figure sans légende identifié, 3 Discussion des résultats de",
+      "métadonnées corrigées à la main (theses.fr, OpenAlex) ; directeurs de thèse : C. Pagetti, T. Carle"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

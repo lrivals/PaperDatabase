@@ -1,0 +1,48 @@
+{
+  "id": "2020-restuccia-safely-preventing-unbounded-delays-during",
+  "title": "Safely Preventing Unbounded Delays During Bus Transactions in FPGA-based SoC",
+  "authors": [
+    {
+      "given": "Francesco",
+      "family": "Restuccia"
+    },
+    {
+      "given": "Alessandro",
+      "family": "Biondi"
+    },
+    {
+      "given": "Mauro",
+      "family": "Marinoni"
+    },
+    {
+      "given": "Giorgio",
+      "family": "Buttazzo"
+    }
+  ],
+  "year": 2020,
+  "venue": "2020 IEEE 28th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM) 129-137",
+  "doi": "10.1109/FCCM48280.2020.00026",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/FCCM48280.2020.00026",
+  "type": "conference",
+  "axes": [
+    "platforms",
+    "timing-analysis"
+  ],
+  "tags": [
+    "zynq"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "tableaux reconstruits par PyMuPDF, chiffres à vérifier : TABLE II, TABLE III",
+      "tableaux sans corps extrait (légende seule) : [figure sans légende identifié"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

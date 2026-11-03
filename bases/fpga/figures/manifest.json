@@ -3,49 +3,49 @@
   "file": "bench_fps_power.png",
   "group": "bench",
   "description": "débit vs puissance, détection / autres tâches",
-  "generated": "2026-10-26T12:45:38",
+  "generated": "2026-11-03T13:24:30",
   "config_hash": "15f7534fe2",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 82,
-  "total": 308
+  "total": 325
  },
  "bench_gops_per_watt": {
   "file": "bench_gops_per_watt.png",
   "group": "bench",
   "description": "GOPS/W par précision de calcul",
-  "generated": "2026-10-26T12:45:39",
+  "generated": "2026-11-03T13:24:31",
   "config_hash": "15f7534fe2",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 54,
-  "total": 308
+  "total": 325
  },
  "bench_fpga_resources": {
   "file": "bench_fpga_resources.png",
   "group": "bench",
   "description": "LUT vs DSP des FPGA, par toolflow",
-  "generated": "2026-10-26T12:45:39",
+  "generated": "2026-11-03T13:24:31",
   "config_hash": "15f7534fe2",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 111,
-  "total": 308
+  "n": 113,
+  "total": 325
  },
  "bench_accuracy_fps": {
   "file": "bench_accuracy_fps.png",
   "group": "bench",
   "description": "précision vs débit, un panneau par métrique",
-  "generated": "2026-10-26T12:45:40",
+  "generated": "2026-11-03T13:24:32",
   "config_hash": "15f7534fe2",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 41,
-  "total": 308,
+  "total": 325,
   "metrics": [
    "mAP50-95 (jeu propre, 1 cible)",
    "top-1 accuracy",
@@ -57,13 +57,13 @@
   "file": "bench_quantization.png",
   "group": "bench",
   "description": "précision de calcul par famille de plateforme",
-  "generated": "2026-10-26T12:45:40",
+  "generated": "2026-11-03T13:24:32",
   "config_hash": "15f7534fe2",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 308,
-  "total": 308
+  "n": 325,
+  "total": 325
  },
  "eval_retrieval": {
   "file": "eval_retrieval.png",
@@ -138,40 +138,40 @@
   "file": "corpus_years.png",
   "group": "corpus",
   "description": "papiers par année et type",
-  "generated": "2026-10-29T22:13:44",
+  "generated": "2026-11-03T13:24:33",
   "config_hash": "15f7534fe2",
   "sources": [
    "papers/*/metadata.json"
   ],
-  "n": 114
+  "n": 124
  },
  "corpus_axes": {
   "file": "corpus_axes.png",
   "group": "corpus",
   "description": "papiers par axe, fiches done / todo",
-  "generated": "2026-10-29T22:13:44",
+  "generated": "2026-11-03T13:24:33",
   "config_hash": "15f7534fe2",
   "sources": [
    "papers/*/metadata.json"
   ],
-  "n": 114
+  "n": 124
  },
  "corpus_bench_coverage": {
   "file": "corpus_bench_coverage.png",
   "group": "corpus",
   "description": "part de n/r, power_scope, confidence",
-  "generated": "2026-10-29T22:13:44",
+  "generated": "2026-11-03T13:24:33",
   "config_hash": "15f7534fe2",
   "sources": [
    "benchmarks.csv"
   ],
-  "n": 308
+  "n": 325
  },
  "corpus_citations": {
   "file": "corpus_citations.png",
   "group": "corpus",
   "description": "papiers les plus cités, dans et hors base",
-  "generated": "2026-10-29T22:13:52",
+  "generated": "2026-11-03T13:24:42",
   "config_hash": "15f7534fe2",
   "sources": [
    "papers/*/refs.jsonl",
@@ -184,7 +184,7 @@
   "file": "corpus_gaps.png",
   "group": "corpus",
   "description": "heatmaps famille × axe / tâche (cases vides = gaps)",
-  "generated": "2026-10-29T22:13:53",
+  "generated": "2026-11-03T13:24:43",
   "config_hash": "15f7534fe2",
   "sources": [
    "benchmarks.csv",
@@ -194,10 +194,6 @@
    [
     "FPGA",
     "failure-prediction"
-   ],
-   [
-    "FPGA",
-    "timing-analysis"
    ],
    [
     "GPU embarqué",
@@ -281,15 +277,7 @@
    ],
    [
     "CPU",
-    "safety-certification"
-   ],
-   [
-    "CPU",
     "person-detection"
-   ],
-   [
-    "CPU",
-    "failure-prediction"
    ],
    [
     "CPU",
@@ -305,15 +293,7 @@
    ],
    [
     "GPU bureau",
-    "safety-certification"
-   ],
-   [
-    "GPU bureau",
     "person-detection"
-   ],
-   [
-    "GPU bureau",
-    "failure-prediction"
    ],
    [
     "GPU bureau",
@@ -434,10 +414,6 @@
     "apprentissage continu"
    ],
    [
-    "CPU",
-    "autre"
-   ],
-   [
     "GPU bureau",
     "détection"
    ],
@@ -495,13 +471,13 @@
   "file": "bench_accuracy_latency.png",
   "group": "bench",
   "description": "précision vs latence, un panneau par métrique",
-  "generated": "2026-10-26T12:45:40",
+  "generated": "2026-11-03T13:24:32",
   "config_hash": "15f7534fe2",
   "sources": [
    "benchmarks.csv"
   ],
   "n": 42,
-  "total": 308,
+  "total": 325,
   "metrics": [
    "top-1 accuracy",
    "Top-1",

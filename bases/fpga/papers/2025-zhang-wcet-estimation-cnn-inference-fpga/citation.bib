@@ -1,0 +1,17 @@
+@article{10.1109/TPDS.2025.3555968,
+author = {Zhang, Wei and Yu, Yunlong and Jiang, Xiao and Guan, Nan and Zhan, Naijun and Ju, Lei},
+title = {WCET Estimation for CNN Inference on FPGA SoC With Multi-DPU Engines},
+year = {2025},
+issue_date = {June 2025},
+publisher = {IEEE Press},
+volume = {36},
+number = {6},
+issn = {1045-9219},
+url = {https://doi.org/10.1109/TPDS.2025.3555968},
+doi = {10.1109/TPDS.2025.3555968},
+abstract = {The Deep Learning Processor Unit (DPU) released in the official Xilinx Vitis AI toolchain stands as a commercial off-the-shelf solution tailored for accelerating convolutional neural network (CNN) inference on Xilinx FPGA devices. While most FPGA accelerator focus on high performance and energy-efficiency, analyzing the worst-case execution time (WCET) bound is essential for using CNN accelerations in real-time embedded systems design. In this work, we show that in a multi-DPU environment, the observed worst-case inference time for a CNN inference task could become 3X larger w.r.t. the best case inference time, which prompts the prominent importance of a static timing analysis for FPGA-based CNN inference. We propose, to the best of the authors’ knowledge, the first static timing analysis framework for CNN inference in a multi-DPU environment. The proposed framework introduces a generalized timing behavior model for shared bus arbitration and memory access contention between parallel running DPU engines. Additionally, it incorporates a fine-grained memory access contention analysis that takes into account the characteristics of deep learning applications. For a single-DPU environment, the analysis result is 27% tighter in average compared with the state-of-the-art results. Furthermore, our proposed method produces relatively tight estimated results in the multi-DPU environment.},
+journal = {IEEE Trans. Parallel Distrib. Syst.},
+month = jun,
+pages = {1146–1160},
+numpages = {15}
+}

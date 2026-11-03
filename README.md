@@ -196,11 +196,11 @@ passages. Un article peut toutefois être copié de l'une à l'autre. Détails :
 
 ### Les bases actuelles
 
-Au 29/10/2026 :
+Au 03/11/2026 :
 
 | Base | Intitulé | Dossier | Papiers | Fiches faites | Lignes de benchmark |
 |---|---|---|---|---|---|
-| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu, sûreté et certification, prédiction d'échec) | `bases/fpga/` | 114 | 114 | 308 |
+| `fpga` (par défaut) | Vision embarquée sur FPGA (YOLO, autoencodeurs, apprentissage continu, sûreté et certification, prédiction d'échec, analyse temporelle) | `bases/fpga/` | 124 | 124 | 325 |
 | `drone` | Vision embarquée sur drone (détection, accélérateurs, co-design système) | `bases/drone/` | 87 | 86 | 352 |
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | `bases/stage/` | 56 | 56 | 100 |
 | `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | `bases/yolo-data/` | 44 | 44 | 425 |
@@ -380,15 +380,15 @@ PaperDatabase/                # le code seul ; les données sont dans bases/
 
 ## État et documentation
 
-Le dépôt contient cinq bases (effectifs du 29/10/2026 dans [Les bases actuelles](#les-bases-actuelles)).
-Description de `fpga` au 26/10/2026, de `drone` et `stage` au 01/10/2026, de `yolo-data` au 18/10/2026, de `serre` au 29/10/2026 :
+Le dépôt contient cinq bases (effectifs du 03/11/2026 dans [Les bases actuelles](#les-bases-actuelles)).
+Description de `fpga` au 03/11/2026, de `drone` et `stage` au 01/10/2026, de `yolo-data` au 18/10/2026, de `serre` au 29/10/2026 :
 - `fpga` : vision embarquée sur FPGA, Jetson, VPU, Edge TPU, Hailo et MCU, orientée vers la
   thèse « IA embarquée sécuritaire certifiable sur FPGA » (axes `safety-certification`,
   `person-detection` et, depuis le draft de sujet ARCYS du 25/10/2026, `failure-prediction`
-  et `timing-analysis`). 114 articles, tous fichés ; 308 lignes dans `benchmarks.csv` ;
-  42 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md) (9ᵉ passage, avec sections sûreté,
-  détection de personnes et prédiction d'échec ; l'axe `timing-analysis` n'a encore aucun
-  papier). Un état de l'art LaTeX (sources et PDF, avec trois glossaires : plateformes, modèles, métriques) est dans
+  et `timing-analysis`). 124 articles, tous fichés ; 325 lignes dans `benchmarks.csv` ;
+  45 gaps dans [bases/fpga/gaps.md](bases/fpga/gaps.md), dont 36 étayés (10ᵉ passage, avec
+  sections sûreté, détection de personnes, prédiction d'échec et analyse temporelle sur SoC
+  FPGA ; 7 papiers sur `timing-analysis`, dont le WCET multi-DPU de Zhang 2025). Un état de l'art LaTeX (sources et PDF, avec trois glossaires : plateformes, modèles, métriques) est dans
   [bases/fpga/docs/etat-de-l-art/](bases/fpga/docs/etat-de-l-art/), une présentation Beamer
   (état de l'art, verrous, problématique) dans
   [bases/fpga/docs/presentation-arcys/](bases/fpga/docs/presentation-arcys/).

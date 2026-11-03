@@ -1,0 +1,46 @@
+{
+  "id": "arxiv-2408.00331-decider-leveraging-foundation-model-priors",
+  "title": "DECIDER: Leveraging Foundation Model Priors for Improved Model Failure Detection and Explanation",
+  "authors": [
+    {
+      "given": "Rakshith",
+      "family": "Subramanyam"
+    },
+    {
+      "given": "Kowshik",
+      "family": "Thopalli"
+    },
+    {
+      "given": "Vivek",
+      "family": "Narayanaswamy"
+    },
+    {
+      "given": "Jayaraman J",
+      "family": "Thiagarajan"
+    }
+  ],
+  "year": 2024,
+  "venue": "ECCV 2024, Lecture Notes in Computer Science",
+  "doi": "10.1007/978-3-031-72986-7_27",
+  "arxiv_id": "2408.00331",
+  "url": "https://arxiv.org/abs/2408.00331",
+  "type": "conference",
+  "axes": [
+    "failure-prediction"
+  ],
+  "tags": [],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "titre du PDF ≠ titre arXiv : « Leveraging Foundation Model Priors for Improved Model Failure Detection DECIDER: Leveraging Foundation Model Priors for Improved Model Failure Detection and Explanation »",
+      "sections numérotées non détectées : 2, 4 — leur texte est rattaché à la section précédente",
+      "venue, doi et type repris d'OpenAlex (2026-11-03), non affirmés dans le texte"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

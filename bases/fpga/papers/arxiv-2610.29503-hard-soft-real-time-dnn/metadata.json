@@ -1,0 +1,54 @@
+{
+  "id": "arxiv-2610.29503-hard-soft-real-time-dnn",
+  "title": "Hard and Soft Real-Time DNN Inference Scheduling on Heterogeneous Multi-Accelerator Systems via Reinforcement Learning",
+  "authors": [
+    {
+      "given": "Francesco Giulio",
+      "family": "Blanco"
+    },
+    {
+      "given": "Enrico",
+      "family": "Russo"
+    },
+    {
+      "given": "Giuseppe",
+      "family": "Ascia"
+    },
+    {
+      "given": "Davide",
+      "family": "Patti"
+    },
+    {
+      "given": "Maurizio",
+      "family": "Palesi"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2610.29503",
+  "url": "https://arxiv.org/abs/2610.29503",
+  "type": "preprint",
+  "axes": [
+    "safety-certification",
+    "timing-analysis"
+  ],
+  "tags": [
+    "wcet",
+    "scheduling",
+    "reinforcement-learning",
+    "runtime-certification"
+  ],
+  "added": "2026-11-03",
+  "extraction": {
+    "backend": "grobid",
+    "ok": true,
+    "warnings": [
+      "sections numérotées non détectées : 6 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

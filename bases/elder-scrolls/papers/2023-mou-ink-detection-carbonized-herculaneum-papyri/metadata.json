@@ -1,0 +1,45 @@
+{
+  "id": "2023-mou-ink-detection-carbonized-herculaneum-papyri",
+  "title": "Ink Detection from Carbonized Herculaneum Papyri using Deep Learning",
+  "authors": [
+    {
+      "given": "Farzana Sharmin",
+      "family": "Mou"
+    },
+    {
+      "given": "Tanvir",
+      "family": "Ahmed"
+    }
+  ],
+  "year": 2023,
+  "venue": "International Conference on Computer and Information Technology (ICCIT)",
+  "doi": "10.1109/iccit60459.2023.10441240",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/iccit60459.2023.10441240",
+  "type": "conference",
+  "axes": [
+    "ink-detection"
+  ],
+  "tags": [
+    "herculaneum",
+    "kaggle",
+    "unet",
+    "attention-unet",
+    "ensemble",
+    "autoencoder"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (International Conference on Computer and Information Technology (ICCIT), DOI 10.1109/iccit60459.2023.10441240) : type journal/conference à préciser",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

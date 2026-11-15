@@ -1,0 +1,74 @@
+{
+  "id": "2019-tournie-ancient-greek-text-concealed-back",
+  "title": "Ancient Greek text concealed on the back of unrolled papyrus revealed through shortwave-infrared hyperspectral imaging",
+  "authors": [
+    {
+      "given": "Aurélie",
+      "family": "Tournié"
+    },
+    {
+      "given": "Kilian Josef",
+      "family": "Fleischer"
+    },
+    {
+      "given": "Inna",
+      "family": "Bukreeva"
+    },
+    {
+      "given": "Francesca",
+      "family": "Palermo"
+    },
+    {
+      "given": "Michela",
+      "family": "Perino"
+    },
+    {
+      "given": "Alessia",
+      "family": "Cedola"
+    },
+    {
+      "given": "Christine",
+      "family": "Andraud"
+    },
+    {
+      "given": "Graziano",
+      "family": "Ranocchia"
+    }
+  ],
+  "year": 2019,
+  "venue": "Science Advances",
+  "doi": "10.1126/sciadv.aav8936",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1126/sciadv.aav8936",
+  "type": "journal",
+  "axes": [
+    "papyrology"
+  ],
+  "tags": [
+    "papyrus",
+    "infrared",
+    "multispectral",
+    "SWIR",
+    "hyperspectral",
+    "PCA",
+    "verso",
+    "Philodemus",
+    "PHerc. 1691/1021"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Science Advances, DOI 10.1126/sciadv.aav8936) : type journal/conference à préciser",
+      "titre du PDF ≠ titre arXiv : « Science Journals — AAAS »",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "sections numérotées non détectées : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

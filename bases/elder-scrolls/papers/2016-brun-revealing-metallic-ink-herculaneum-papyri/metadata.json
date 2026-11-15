@@ -1,0 +1,75 @@
+{
+  "id": "2016-brun-revealing-metallic-ink-herculaneum-papyri",
+  "title": "Revealing metallic ink in Herculaneum papyri",
+  "authors": [
+    {
+      "given": "Emmanuel",
+      "family": "Brun"
+    },
+    {
+      "given": "Marine",
+      "family": "Cotte"
+    },
+    {
+      "given": "Jonathan Paul",
+      "family": "Wright"
+    },
+    {
+      "given": "Marie",
+      "family": "Ruat"
+    },
+    {
+      "given": "Pieter",
+      "family": "Tack"
+    },
+    {
+      "given": "László",
+      "family": "Vincze"
+    },
+    {
+      "given": "Claudio",
+      "family": "Ferrero"
+    },
+    {
+      "given": "Daniel",
+      "family": "Delattre"
+    },
+    {
+      "given": "Vito",
+      "family": "Mocella"
+    }
+  ],
+  "year": 2016,
+  "venue": "Proceedings of the National Academy of Sciences",
+  "doi": "10.1073/pnas.1519958113",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1073/pnas.1519958113",
+  "type": "journal",
+  "axes": [
+    "ink-detection",
+    "papyrology",
+    "virtual-unwrapping"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "synchrotron",
+    "xrf",
+    "lead-ink"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Proceedings of the National Academy of Sciences, DOI 10.1073/pnas.1519958113) : type journal/conference à préciser",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

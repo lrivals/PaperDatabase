@@ -1,0 +1,61 @@
+{
+  "id": "2016-seales-damage-discovery-virtual-unwrapping-reading",
+  "title": "From damage to discovery via virtual unwrapping: Reading the scroll from En-Gedi",
+  "authors": [
+    {
+      "given": "W. Brent",
+      "family": "Seales"
+    },
+    {
+      "given": "C. Seth",
+      "family": "Parker"
+    },
+    {
+      "given": "Michael",
+      "family": "Segal"
+    },
+    {
+      "given": "Emanuel",
+      "family": "Tov"
+    },
+    {
+      "given": "Pnina",
+      "family": "Shor"
+    },
+    {
+      "given": "Yosef",
+      "family": "Porath"
+    }
+  ],
+  "year": 2016,
+  "venue": "Science Advances",
+  "doi": "10.1126/sciadv.1601247",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1126/sciadv.1601247",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "surface-segmentation",
+    "mesh-flattening",
+    "ct-imaging"
+  ],
+  "tags": [
+    "en-gedi"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Science Advances, DOI 10.1126/sciadv.1601247) : type journal/conference à préciser",
+      "titre du PDF ≠ titre arXiv : « Science Journals — AAAS »",
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

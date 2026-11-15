@@ -82,6 +82,8 @@ Vesuvius Challenge : lecture virtuelle des papyrus carbonisés d'Herculanum par 
 - 2026-11-15 (arxiv-1907.07131-boosting-resolution-recovering-texture-micro) — ajouter « métriques de fidélité de texture / hallucination en super-résolution GAN » aux Inclus (axe super-resolution ou validation-fp) — le papier admet que le PSNR ne mesure pas la texture générée.
 - 2026-11-15 (arxiv-2603.27698-ink-detection-surface-topography-herculaneum) — ajouter la profilométrie optique de surface comme modalité d'étude du signal d'encre (hypothèse morphologique) — papier ink-detection dont la modalité n'est ni CT ni IR/multispectral.
 - 2026-11-15 (/paper-fiche, agent principal) — adapter les colonnes de benchmarks.csv au thème (résolution µm/voxel, source du scan, région tenue à l'écart, type de labels) — l'en-tête FPGA (fps, luts, power…) laisse 10 colonnes sur 20 à n/r.
+- 2026-11-15 (2019-tournie-ancient-greek-text-concealed-back, 2025-verde-sub-terahertz-radar-imaging-ancient) — ajouter aux Inclus l'imagerie non CT des papyrus déjà déroulés (SWIR hyperspectral, radar sub-THz) ou un axe dédié — ces deux papiers ne relèvent que de `papyrology`, tous les axes d'imagerie étant centrés sur la CT.
+- 2026-11-15 (2016-brun-revealing-metallic-ink-herculaneum-papyri) — ajouter aux Inclus l'analyse élémentaire de l'encre (XRF/XRD synchrotron sur fragments : Pb, composition), rattachée à `ink-detection` ou `papyrology` — conditionne le contraste attendu de l'encre en micro-CT.
 
 ## Historique
 

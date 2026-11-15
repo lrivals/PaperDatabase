@@ -1,0 +1,55 @@
+{
+  "id": "2018-dahl-layered-surface-detection-virtual-unrolling",
+  "title": "Layered Surface Detection for Virtual Unrolling",
+  "authors": [
+    {
+      "given": "Vedrana Andersen",
+      "family": "Dahl"
+    },
+    {
+      "given": "Anders Bjorholm",
+      "family": "Dahl"
+    },
+    {
+      "given": "Camilla Himmelstrup",
+      "family": "Trinderup"
+    },
+    {
+      "given": "Carsten",
+      "family": "Gundlach"
+    }
+  ],
+  "year": 2018,
+  "venue": "Proceedings - International Conference on Pattern Recognition/Proceedings/International Conference on Pattern Recognition",
+  "doi": "10.1109/icpr.2018.8545715",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/icpr.2018.8545715",
+  "type": "conference",
+  "axes": [
+    "virtual-unwrapping",
+    "surface-segmentation",
+    "mesh-flattening"
+  ],
+  "tags": [
+    "optimal-net-surface",
+    "graph-cut",
+    "quad-mesh",
+    "micro-ct",
+    "industrial-inspection"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Proceedings - International Conference on Pattern Recognition/Proceedings/International Conference on Pattern Recognition, DOI 10.1109/icpr.2018.8545715) : type journal/conference à préciser",
+      "ligatures perdues à l'extraction : 30 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 5 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

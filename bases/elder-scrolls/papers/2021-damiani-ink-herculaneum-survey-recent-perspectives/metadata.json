@@ -1,0 +1,42 @@
+{
+  "id": "2021-damiani-ink-herculaneum-survey-recent-perspectives",
+  "title": "Ink in Herculaneum: A Survey of Recent Perspectives",
+  "authors": [
+    {
+      "given": "Vincenzo",
+      "family": "Damiani"
+    }
+  ],
+  "year": 2021,
+  "venue": "BRILL eBooks",
+  "doi": "10.1163/9789004444805_005",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1163/9789004444805_005",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "ink-detection",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "synchrotron",
+    "phase-contrast"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (BRILL eBooks, DOI 10.1163/9789004444805_005) : type journal/conference à préciser",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

@@ -34,7 +34,10 @@
   "url": "https://doi.org/10.1126/sciadv.1601247",
   "type": "journal",
   "axes": [
-    "virtual-unwrapping"
+    "virtual-unwrapping",
+    "surface-segmentation",
+    "mesh-flattening",
+    "ct-imaging"
   ],
   "tags": [
     "en-gedi"
@@ -47,13 +50,12 @@
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Science Advances, DOI 10.1126/sciadv.1601247) : type journal/conference à préciser",
       "titre du PDF ≠ titre arXiv : « Science Journals — AAAS »",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

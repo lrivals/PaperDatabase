@@ -42,13 +42,18 @@
   "url": "https://doi.org/10.1126/sciadv.aav8936",
   "type": "journal",
   "axes": [
-    "virtual-unwrapping",
     "papyrology"
   ],
   "tags": [
     "papyrus",
     "infrared",
-    "multispectral"
+    "multispectral",
+    "SWIR",
+    "hyperspectral",
+    "PCA",
+    "verso",
+    "Philodemus",
+    "PHerc. 1691/1021"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -58,13 +63,12 @@
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Science Advances, DOI 10.1126/sciadv.aav8936) : type journal/conference à préciser",
       "titre du PDF ≠ titre arXiv : « Science Journals — AAAS »",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
       "sections numérotées non détectées : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

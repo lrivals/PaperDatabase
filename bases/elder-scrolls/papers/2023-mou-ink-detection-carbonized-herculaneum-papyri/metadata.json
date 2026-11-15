@@ -38,12 +38,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (International Conference on Computer and Information Technology (ICCIT), DOI 10.1109/iccit60459.2023.10441240) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

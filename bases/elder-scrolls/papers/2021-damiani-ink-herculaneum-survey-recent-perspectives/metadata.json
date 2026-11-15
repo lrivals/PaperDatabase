@@ -15,7 +15,7 @@
   "type": "journal",
   "axes": [
     "surveys",
-    "virtual-unwrapping",
+    "ink-detection",
     "ct-imaging",
     "papyrology"
   ],
@@ -32,12 +32,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (BRILL eBooks, DOI 10.1163/9789004444805_005) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

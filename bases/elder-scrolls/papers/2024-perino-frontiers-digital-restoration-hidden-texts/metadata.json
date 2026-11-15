@@ -32,7 +32,8 @@
   "axes": [
     "surveys",
     "virtual-unwrapping",
-    "papyrology"
+    "papyrology",
+    "ct-imaging"
   ],
   "tags": [],
   "added": "2026-11-15",
@@ -41,12 +42,11 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "publié ailleurs selon OpenAlex (Heritage, DOI 10.3390/heritage7020034) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "publié ailleurs selon OpenAlex (Heritage, DOI 10.3390/heritage7020034) : type journal/conference à préciser"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

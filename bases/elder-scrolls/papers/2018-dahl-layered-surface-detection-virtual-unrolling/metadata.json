@@ -27,9 +27,16 @@
   "type": "conference",
   "axes": [
     "virtual-unwrapping",
-    "surface-segmentation"
+    "surface-segmentation",
+    "mesh-flattening"
   ],
-  "tags": [],
+  "tags": [
+    "optimal-net-surface",
+    "graph-cut",
+    "quad-mesh",
+    "micro-ct",
+    "industrial-inspection"
+  ],
   "added": "2026-11-15",
   "extraction": {
     "backend": "pymupdf",
@@ -37,13 +44,12 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Proceedings - International Conference on Pattern Recognition/Proceedings/International Conference on Pattern Recognition, DOI 10.1109/icpr.2018.8545715) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 30 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 5 fragment(s) non réparé(s) (« classi cation »…)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

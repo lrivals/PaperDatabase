@@ -46,12 +46,16 @@
   "url": "https://doi.org/10.1073/pnas.1519958113",
   "type": "journal",
   "axes": [
-    "virtual-unwrapping",
-    "papyrology"
+    "ink-detection",
+    "papyrology",
+    "virtual-unwrapping"
   ],
   "tags": [
     "herculaneum",
-    "papyrus"
+    "papyrus",
+    "synchrotron",
+    "xrf",
+    "lead-ink"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -60,13 +64,12 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Proceedings of the National Academy of Sciences, DOI 10.1073/pnas.1519958113) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

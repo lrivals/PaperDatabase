@@ -1,0 +1,41 @@
+{
+  "arxiv_id": null,
+  "title": "Sub-terahertz Radar Imaging of Ancient Herculaneum Papyrus Scrolls reveals Adhesion to Substrate after Unrolling",
+  "authors": [
+    {
+      "given": "Federica",
+      "family": "Verde"
+    },
+    {
+      "given": "Sofia",
+      "family": "Ceccarelli"
+    },
+    {
+      "given": "Valeria",
+      "family": "Giliberti"
+    },
+    {
+      "given": "Francesco",
+      "family": "Vitucci"
+    },
+    {
+      "given": "Costanza",
+      "family": "Miliani"
+    },
+    {
+      "given": "Graziano",
+      "family": "Ranocchia"
+    },
+    {
+      "given": "Michele",
+      "family": "Ortolani"
+    }
+  ],
+  "year": 2025,
+  "doi": "10.1109/irmmw-thz61557.2025.11319600",
+  "journal_ref": null,
+  "venue_openalex": "International Conference on Infrared, Millimeter, and Terahertz Waves (IRMMW-THz)",
+  "type": "conference",
+  "url": "https://doi.org/10.1109/irmmw-thz61557.2025.11319600",
+  "abstract": null
+}

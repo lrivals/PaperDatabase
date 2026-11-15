@@ -1,0 +1,17 @@
+{
+  "arxiv_id": null,
+  "title": "Auditing the evaluation pipeline of a machine learning benchmark: data, code and results for a case study on the Vesuvius Challenge",
+  "authors": [
+    {
+      "given": "Sedat",
+      "family": "Golgiyaz"
+    }
+  ],
+  "year": 2026,
+  "doi": "10.5281/zenodo.21907639",
+  "journal_ref": null,
+  "venue_openalex": "Zenodo (CERN European Organization for Nuclear Research)",
+  "type": "report",
+  "url": "https://doi.org/10.5281/zenodo.21907639",
+  "abstract": null
+}

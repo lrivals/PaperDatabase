@@ -1,0 +1,29 @@
+{
+  "arxiv_id": null,
+  "title": "Virtual unrolling and information recovery from scanned scrolled historical documents",
+  "authors": [
+    {
+      "given": "Oksana",
+      "family": "Samko"
+    },
+    {
+      "given": "Yu‐Kun",
+      "family": "Lai"
+    },
+    {
+      "given": "David",
+      "family": "Marshall"
+    },
+    {
+      "given": "Paul L.",
+      "family": "Rosin"
+    }
+  ],
+  "year": 2013,
+  "doi": "10.1016/j.patcog.2013.06.015",
+  "journal_ref": null,
+  "venue_openalex": "Pattern Recognition",
+  "type": "journal",
+  "url": "https://doi.org/10.1016/j.patcog.2013.06.015",
+  "abstract": null
+}

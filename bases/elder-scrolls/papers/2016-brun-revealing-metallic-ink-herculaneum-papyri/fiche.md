@@ -55,7 +55,7 @@ Pertinence pour le thème (profile.md) : article fondateur sur la nature physiqu
 
 - Variabilité de la teneur en Pb entre rouleaux, scribes et périodes : un seul couple de fragments ici.
 - Lien entre concentration de Pb et contraste en micro-CT 8-9 µm et 2,4 µm : non mesuré.
-- Spéciation du composé plombé (renvoi à Tack et al. 2016, Sci Rep, absent de la base).
+- Spéciation du composé plombé (renvoi à Tack et al. 2016, Sci Rep : présent dans la base, `2016-tack-tracking-ink-composition-herculaneum-papyrus`).
 - Les cartes XRF de fragments comme labels d'encre alignés sur CT : non exploité.
 
 ## Statut de lecture

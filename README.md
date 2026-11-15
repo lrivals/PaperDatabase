@@ -7,7 +7,7 @@ sans jamais rouvrir un PDF.
 L'outil n'est lié à aucun domaine : il traite n'importe quel corpus d'articles scientifiques,
 et **un même code gère plusieurs bases de connaissance séparées**, une par sujet, utilisables
 en parallèle ([Plusieurs bases de connaissance](#plusieurs-bases-de-connaissance)). Le dépôt en
-contient cinq : deux servent à préparer une thèse, la troisième rassemble les références d'un stage, la quatrième la préparation des données pour la détection YOLO, la cinquième le projet de serre autonome SerreIA :
+contient six : deux servent à préparer une thèse, la troisième rassemble les références d'un stage, la quatrième la préparation des données pour la détection YOLO, la cinquième le projet de serre autonome SerreIA, la sixième le projet Elder-scrolls (Vesuvius Challenge) :
 
 | Base | Intitulé | Dossier |
 |---|---|---|
@@ -16,6 +16,7 @@ contient cinq : deux servent à préparer une thèse, la troisième rassemble le
 | `stage` | Apprentissage continu embarqué pour la maintenance prédictive (stage ISAE) | [`bases/stage/`](bases/stage/) |
 | `yolo-data` | Datasets pour la détection YOLO : annotation, prétraitement, augmentation | [`bases/yolo-data/`](bases/yolo-data/) |
 | `serre` | Serre autonome pilotée par IA : vision des maladies, edge, contrôle, agent LLM (projet SerreIA) | [`bases/serre/`](bases/serre/) |
+| `elder-scrolls` | Vesuvius Challenge : lecture virtuelle des rouleaux d'Herculanum (détection d'encre, segmentation, déroulage, super-résolution) | [`bases/elder-scrolls/`](bases/elder-scrolls/) |
 
 ---
 

@@ -1,0 +1,48 @@
+{
+  "id": "2026-korotetskyi-volumetric-texture-analysis-unsupervised-ink",
+  "title": "Volumetric Texture Analysis for Unsupervised Ink Detection in Herculaneum Papyri",
+  "authors": [
+    {
+      "given": "Oleksandr",
+      "family": "Korotetskyi"
+    },
+    {
+      "given": "Michal",
+      "family": "Haindl"
+    }
+  ],
+  "year": 2026,
+  "venue": "Zenodo (CERN European Organization for Nuclear Research)",
+  "doi": "10.5281/zenodo.20766168",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.5281/zenodo.20766168",
+  "type": "report",
+  "axes": [
+    "virtual-unwrapping",
+    "ink-detection",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "ct",
+    "carbon-ink"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Zenodo (CERN European Organization for Nuclear Research), DOI 10.5281/zenodo.20766168) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 36 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 4 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

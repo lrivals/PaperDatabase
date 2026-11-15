@@ -1,0 +1,47 @@
+{
+  "id": "arxiv-2007.15551-quantitative-distortion-analysis-flattening-applied",
+  "title": "Quantitative Distortion Analysis of Flattening Applied to the Scroll from En-Gedi",
+  "authors": [
+    {
+      "given": "Clifford Seth",
+      "family": "Parker"
+    },
+    {
+      "given": "William Brent",
+      "family": "Seales"
+    },
+    {
+      "given": "Pnina",
+      "family": "Shor"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2007.15551",
+  "url": "https://arxiv.org/abs/2007.15551",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "mesh-flattening",
+    "papyrology"
+  ],
+  "tags": [
+    "en-gedi"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 33 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 5 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

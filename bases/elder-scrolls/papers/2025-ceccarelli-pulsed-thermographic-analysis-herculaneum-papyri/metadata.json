@@ -1,0 +1,75 @@
+{
+  "id": "2025-ceccarelli-pulsed-thermographic-analysis-herculaneum-papyri",
+  "title": "Pulsed thermographic analysis of Herculaneum papyri",
+  "authors": [
+    {
+      "given": "Sofia",
+      "family": "Ceccarelli"
+    },
+    {
+      "given": "Massimo",
+      "family": "Rippa"
+    },
+    {
+      "given": "Giovanni",
+      "family": "Caruso"
+    },
+    {
+      "given": "Loredana",
+      "family": "Luvidi"
+    },
+    {
+      "given": "Simona",
+      "family": "Boccuti"
+    },
+    {
+      "given": "Melania",
+      "family": "Paturzo"
+    },
+    {
+      "given": "Vito",
+      "family": "Pagliarulo"
+    },
+    {
+      "given": "Kilian Josef",
+      "family": "Fleischer"
+    },
+    {
+      "given": "Costanza",
+      "family": "Miliani"
+    },
+    {
+      "given": "Graziano",
+      "family": "Ranocchia"
+    }
+  ],
+  "year": 2025,
+  "venue": "Scientific Reports",
+  "doi": "10.1038/s41598-025-19911-w",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/s41598-025-19911-w",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/s41598-025-19911-w) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

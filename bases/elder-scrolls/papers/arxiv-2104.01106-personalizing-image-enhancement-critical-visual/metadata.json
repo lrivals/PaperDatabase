@@ -1,0 +1,42 @@
+{
+  "id": "arxiv-2104.01106-personalizing-image-enhancement-critical-visual",
+  "title": "Personalizing image enhancement for critical visual tasks: improved legibility of papyri using color processing and visual illusions",
+  "authors": [
+    {
+      "given": "Vlad",
+      "family": "Atanasiu"
+    },
+    {
+      "given": "Isabelle",
+      "family": "Marthot-Santaniello"
+    }
+  ],
+  "year": 2021,
+  "venue": "nternational Journal on Document Analysis and Recognition (IJDAR) (2021)",
+  "doi": "10.1007/s10032-021-00386-0",
+  "arxiv_id": "2104.01106",
+  "url": "https://arxiv.org/abs/2104.01106",
+  "type": null,
+  "axes": [
+    "papyrology"
+  ],
+  "tags": [
+    "papyrus"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : nternational Journal on Document Analysis and Recognition (IJDAR) (2021)) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

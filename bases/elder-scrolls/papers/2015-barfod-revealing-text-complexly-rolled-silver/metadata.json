@@ -1,0 +1,50 @@
+{
+  "id": "2015-barfod-revealing-text-complexly-rolled-silver",
+  "title": "Revealing text in a complexly rolled silver scroll from Jerash with computed tomography and advanced imaging software",
+  "authors": [
+    {
+      "given": "Gry H.",
+      "family": "Barfod"
+    },
+    {
+      "given": "John Møller",
+      "family": "Larsen"
+    },
+    {
+      "given": "Achim",
+      "family": "Lichtenberger"
+    },
+    {
+      "given": "Rubina",
+      "family": "Raja"
+    }
+  ],
+  "year": 2015,
+  "venue": "Scientific Reports",
+  "doi": "10.1038/srep17765",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/srep17765",
+  "type": "journal",
+  "axes": [
+    "ink-detection",
+    "ct-imaging"
+  ],
+  "tags": [
+    "ct"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/srep17765) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

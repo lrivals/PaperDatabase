@@ -1,0 +1,59 @@
+{
+  "id": "2026-seiler-model-carbonized-papyrus-scroll-opens",
+  "title": "A model carbonized papyrus scroll opens a novel path to identifying readable scrolls of the Herculaneum Library",
+  "authors": [
+    {
+      "given": "Douglas",
+      "family": "Seiler"
+    },
+    {
+      "given": "Jacob Michael",
+      "family": "LaManna"
+    },
+    {
+      "given": "Michael",
+      "family": "McOsker"
+    },
+    {
+      "given": "David",
+      "family": "Kreimer"
+    },
+    {
+      "given": "Michael Cyrus",
+      "family": "Daugherty"
+    },
+    {
+      "given": "J.",
+      "family": "Dopke"
+    }
+  ],
+  "year": 2026,
+  "venue": "PLoS ONE",
+  "doi": "10.1371/journal.pone.0353485",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1371/journal.pone.0353485",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (PLoS ONE, DOI 10.1371/journal.pone.0353485) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

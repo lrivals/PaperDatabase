@@ -1,0 +1,62 @@
+{
+  "id": "2018-stromer-browsing-through-sealed-historical-manuscripts",
+  "title": "Browsing through sealed historical manuscripts by using 3-D computed tomography with low-brilliance X-ray sources",
+  "authors": [
+    {
+      "given": "Daniel",
+      "family": "Stromer"
+    },
+    {
+      "given": "Vincent",
+      "family": "Christlein"
+    },
+    {
+      "given": "Christine F.",
+      "family": "Martindale"
+    },
+    {
+      "given": "Patrick",
+      "family": "Zippert"
+    },
+    {
+      "given": "Eric",
+      "family": "Haltenberger"
+    },
+    {
+      "given": "Tino",
+      "family": "Hausotte"
+    },
+    {
+      "given": "Andreas",
+      "family": "Maier"
+    }
+  ],
+  "year": 2018,
+  "venue": "Scientific Reports",
+  "doi": "10.1038/s41598-018-33685-4",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/s41598-018-33685-4",
+  "type": "journal",
+  "axes": [
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "ct"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/s41598-018-33685-4) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

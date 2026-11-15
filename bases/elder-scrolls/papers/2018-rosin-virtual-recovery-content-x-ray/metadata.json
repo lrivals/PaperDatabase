@@ -1,0 +1,57 @@
+{
+  "id": "2018-rosin-virtual-recovery-content-x-ray",
+  "title": "Virtual Recovery of Content from X-Ray Micro-Tomography Scans of Damaged Historic Scrolls",
+  "authors": [
+    {
+      "given": "Paul L.",
+      "family": "Rosin"
+    },
+    {
+      "given": "Yu‐Kun",
+      "family": "Lai"
+    },
+    {
+      "given": "Chang",
+      "family": "Liu"
+    },
+    {
+      "given": "Graham Roy",
+      "family": "Davis"
+    },
+    {
+      "given": "David",
+      "family": "Mills"
+    },
+    {
+      "given": "Gary",
+      "family": "Tuson"
+    },
+    {
+      "given": "Yuki",
+      "family": "Russell"
+    }
+  ],
+  "year": 2018,
+  "venue": "Scientific Reports",
+  "doi": "10.1038/s41598-018-29037-x",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/s41598-018-29037-x",
+  "type": "journal",
+  "axes": [],
+  "tags": [],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/s41598-018-29037-x) : type journal/conference à préciser",
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

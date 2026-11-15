@@ -84,6 +84,8 @@ def check_paper_files(folder, meta, problems, notes):
 
 def load_papers(problems, notes, root=ROOT):
     papers = []
+    if not (root / "papers").is_dir():  # base neuve : aucun papier encore
+        return papers
     for folder in sorted(p for p in (root / "papers").iterdir() if p.is_dir()):
         if not (folder / "metadata.json").exists():
             problems.append(f"{folder.name} : metadata.json absent")

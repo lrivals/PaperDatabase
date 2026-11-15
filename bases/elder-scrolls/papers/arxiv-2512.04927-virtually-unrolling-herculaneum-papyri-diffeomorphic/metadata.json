@@ -1,0 +1,40 @@
+{
+  "id": "arxiv-2512.04927-virtually-unrolling-herculaneum-papyri-diffeomorphic",
+  "title": "Virtually Unrolling the Herculaneum Papyri by Diffeomorphic Spiral Fitting",
+  "authors": [
+    {
+      "given": "Paul",
+      "family": "Henderson"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2512.04927",
+  "url": "https://arxiv.org/abs/2512.04927",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "mesh-flattening",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

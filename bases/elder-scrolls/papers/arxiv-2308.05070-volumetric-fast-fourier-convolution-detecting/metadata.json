@@ -1,0 +1,51 @@
+{
+  "id": "arxiv-2308.05070-volumetric-fast-fourier-convolution-detecting",
+  "title": "Volumetric Fast Fourier Convolution for Detecting Ink on the Carbonized Herculaneum Papyri",
+  "authors": [
+    {
+      "given": "Fabio",
+      "family": "Quattrini"
+    },
+    {
+      "given": "Vittorio",
+      "family": "Pippi"
+    },
+    {
+      "given": "Silvia",
+      "family": "Cascianelli"
+    },
+    {
+      "given": "Rita",
+      "family": "Cucchiara"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2308.05070",
+  "url": "https://arxiv.org/abs/2308.05070",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "ink-detection",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

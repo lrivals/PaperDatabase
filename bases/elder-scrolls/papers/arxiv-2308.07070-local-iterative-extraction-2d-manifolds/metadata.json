@@ -1,0 +1,48 @@
+{
+  "id": "arxiv-2308.07070-local-iterative-extraction-2d-manifolds",
+  "title": "A Local Iterative Approach for the Extraction of 2D Manifolds from Strongly Curved and Folded Thin-Layer Structures",
+  "authors": [
+    {
+      "given": "Nicolas",
+      "family": "Klenert"
+    },
+    {
+      "given": "Verena",
+      "family": "Lepper"
+    },
+    {
+      "given": "Daniel",
+      "family": "Baum"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2308.07070",
+  "url": "https://arxiv.org/abs/2308.07070",
+  "type": "preprint",
+  "axes": [
+    "surface-segmentation",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "papyrus",
+    "parchment",
+    "ct"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : 2, 3, 4 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

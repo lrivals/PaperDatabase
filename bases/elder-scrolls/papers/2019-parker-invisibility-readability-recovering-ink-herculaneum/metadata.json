@@ -1,0 +1,61 @@
+{
+  "id": "2019-parker-invisibility-readability-recovering-ink-herculaneum",
+  "title": "From invisibility to readability: Recovering the ink of Herculaneum",
+  "authors": [
+    {
+      "given": "C. Seth",
+      "family": "Parker"
+    },
+    {
+      "given": "Stephen",
+      "family": "Parsons"
+    },
+    {
+      "given": "Jack",
+      "family": "Bandy"
+    },
+    {
+      "given": "Christy Y.",
+      "family": "Chapman"
+    },
+    {
+      "given": "Frederik",
+      "family": "Coppens"
+    },
+    {
+      "given": "W. Brent",
+      "family": "Seales"
+    }
+  ],
+  "year": 2019,
+  "venue": "PLoS ONE",
+  "doi": "10.1371/journal.pone.0215775",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1371/journal.pone.0215775",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "ink-detection",
+    "ct-imaging"
+  ],
+  "tags": [
+    "herculaneum",
+    "ct",
+    "carbon-ink"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (PLoS ONE, DOI 10.1371/journal.pone.0215775) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

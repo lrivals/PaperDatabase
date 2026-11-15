@@ -1,0 +1,302 @@
+---
+id: arxiv-2512.04927-virtually-unrolling-herculaneum-papyri-diffeomorphic
+title: "Virtually Unrolling the Herculaneum Papyri by Diffeomorphic Spiral Fitting"
+year: 2025
+backend: pymupdf
+---
+
+Virtually Unrolling the Herculaneum Papyri by Diffeomorphic Spiral Fitting
+
+Paul Henderson University of Glasgow
+
+Scotland, UK
+
+paul@pmh47.net
+
+## Abstract
+
+The Herculaneum Papyri are a collection of rolled papyrus documents that were charred and buried by the famous eruption of Mount Vesuvius. They promise to contain a wealth of previously unseen Greek and Latin texts, but are extremely fragile and thus most cannot be unrolled physically. A solution to access these texts is virtual unrolling, where the papyrus surface is digitally traced out in a CT scan of the scroll, to create a flattened representation. This tracing is very laborious to do manually in gigavoxel-sized scans, so automated approaches are desirable. We present the first top-down method that automatically fits a surface model to a CT scan of a severely damaged scroll. We take a novel approach that globally fits an explicit parametric model of the deformed scroll to existing neural network predictions of where the rolled papyrus likely passes. Our method guarantees the resulting surface is a single continuous 2D sheet, even passing through regions where the surface is not detectable in the CT scan. We conduct comprehensive experiments on high-resolution CT scans of two scrolls, showing that our approach successfully unrolls large regions, and exceeds the performance of the only existing automated unrolling method suitable for this data.
+
+## 1. Introduction
+
+Buried for almost 2000 years, the Herculaneum Papyri are a trove of classical texts, many of which remain unread [57]. They originally formed a small private library, but during the famous eruption of Mount Vesuvius in AD79, the tightly rolled papyrus scrolls were carbonized by the high temperatures, then buried and badly distorted over the centuries.
+
+Despite being rediscovered and excavated starting in 1752, many of the scrolls still cannot be read, since they have proven impossible to unroll. Extensive attempts at physical unrolling from the 18th to 20th centuries met with limited success [1, 6], as the scrolls are highly brittle and densely wound. The sheets are difficult to separate and tend to disintegrate into fragments when disturbed [57].
+
+canonical archimedean spiral distorted spiral
+
+3D CT scan pretrained
+
+nnUNet sparse predictions
+
+surfaces fibers normals
+
+matching losses
+
+diffeomorphism
+
+φ
+
+Euler integration
+
+**Figure 1.** Our approach ingests noisy volumetric U-Net predictions of papyrus surface in a CT scan of a rolled scroll, and virtually unrolls it into a continuous 2D sheet surface. It fits a parametric model of an idealized scroll and a diffeomorphic transform given as the integral of a velocity field.
+
+One solution to access the text is to acquire 3D micro-CT scans of the rolled scrolls [40] (Fig. 2a). To recover legible text, these 3D scans are virtually unrolled [34, 39, 54, 55]. This involves determining how the original 2D papyrus surface passes through 3D scan volume, typically by manual tracing. Once this is known, we can extract a thin, flattened volume from the original scan, centered on the original sheet surface. This enables visual inspection or automated ink detection similarly to a physically-unrolled scroll.
+
+Virtually unrolling the Herculaneum Papyri is highly challenging, since their interior structure is very complex [40]. The original sheets consisted of two layers of papyrus fibers pressed together [26, 63]; however the sheets have frayed and separated over time, leaving it unclear which parts constitute the original inked surface. Moreover, the scrolls contain hundreds of highly-compressed and distorted windings within a radius of a few centimeters, making it challenging to distinguish one sheet from the next even in high-resolution scans. Consequently, tracing out the papyrus surface manually is exceedingly time-consuming.
+
+It is therefore desirable to automate the virtual unrolling process. This requires automatically predicting a 2D man-
+
+ifold surface specifying where the papyrus sheet lies in the 3D scan volume. This surface is typically represented as a 3D surface mesh, accompanied by a 2D UV coordinate parameterization that defines how to flatten it. Some works directly use high absorbance voxels to localize the papyrus sheet, followed by heuristics to extract a manifold 2D surface [3, 49, 55]. Other approaches instead use neural network predictions of which voxels lie on the surface [24, 25]. However even state-of-the-art voxel-based surface predictions for the Herculaneum Papryi do not yield a single clean surface from which a mesh can be ‘read off’—instead there are many locations where surfaces touch, or are broken. Moreover, existing methods do not aim to produce a single contiguous surface as output, instead yielding multiple fragments and/or holes; indeed they lack awareness that the scroll originally took this form.
+
+In this work, we present a new method for automated virtual unrolling. Our key contribution is to leverage prior knowledge of the scrolls’ structure to design a model-based approach. Specifically, we know the original physical scroll was a single rectangular sheet, rolled up into a cylinder, then distorted in some complex way following the eruption. We aim to invert this process, i.e. to find a ‘good’ rolled sheet and deformation that can explain the observed scan data. The deformation is a spatial transform that warps an idealized rolled scroll (an extruded Archimedean spiral) into the distorted shape we observe in the scans. We enforce parametrically that the deformation is a diffeomorphism, i.e. a smooth one-to-one mapping. This means the topological structure of the idealized scroll is preserved by the deformation—it will still be a single, contiguous 2D sheet without holes or intersections, albeit highly distorted. As input, our approach only requires imperfect neural network predictions of which voxels lie on the papyrus surface or fibers. It supports efficient GPU implementation in standard deep learning frameworks, and leverages sparse representations to avoid loading the scroll volume itself into memory.
+
+Our approach differs substantially from existing methods for automated unrolling and unfolding. It is a top-down, model-based method that optimizes a well-defined objective function globally across the entire scroll; this contrasts with typical bottom-up methods that lack global context, yield fragmentary or non-manifold outputs, and/or are unsuited for the scale and complexity of the Herculaneum Papyri [15, 24, 49]. Our approach always produces a single continuous rolled surface, that also passes through missing (e.g. burned away) regions or those undetected during neural network processing. Its global model of how a scroll is constituted ensures sheets are interpolated correctly across these gaps.
+
+In summary our primary contribution is a new modelbased paradigm for automated virtual unrolling, where an arbitrarily-deformed whole-scroll surface model is fitted to noisy surface predictions. As secondary contri-
+
+butions facilitating this, we develop (i) a strategy to convert existing noisy neural network predictions to a sparse representation that is robust to errors and efficiently captures the information necessary for surface fitting; (ii) a set of geometric losses that result in a computationally tractable optimization problem that largely avoids local optima.
+
+We carefully evaluate our method on the scrolls PHerc. Paris 4 and PHerc. 172 [40]. Their challenging structure (Fig. 2a) makes these scrolls an excellent testbed for automated unrolling. Moreover, a gold-standard manually-created surface mesh is available for 30 windings of PHerc. Paris 4—we use this for quantitative evaluation, measuring the benefits of different losses and diffeomorphism parameterizations. Finally we show our method yields better results than the only existing automated unrolling approach suitable for the Herculaneum Papyri [49].
+
+## 2. Background and Related Work
+
+The Herculaneum Papyri are a collection of papyrus scrolls discovered in the Villa dei Papiri in Herculaneum in 1752 [6, 57]. They are believed to come from a small library in the villa, possibly belonging to the Epicurean philosopher Philodemus [11]. During the eruption in AD79 that also destroyed Pompeii, the scrolls were rapidly carbonized by pyroclastic flows [40], prior to being buried. Since excavation, around 1800 scrolls or fragments have been catalogued [1]; of these approximately 1000 have never been unrolled.
+
+Unfortunately ink is typically not directly visible even in high-resolution micro-CT scans of the Herculaneum Papyri, since they are written in a carbon-based ink that is almost identical in X-ray absorbance to the carbonized papyrus itself [53]. Still, [10, 31] showed propagation-based phasecontrast CT can render ink visible, and [37, 39] showed that ink not visible as light-dark contrast can sometimes still be detected by neural networks. Indeed, recent work has successfully applied similar methods to virtually-unrolled scans [33, 34], detecting significant volumes of legible text based on the ink’s effect on the surface texture of the papyrus. Virtual unrolling. The first work to demonstrate the feasibility of virtual unrolling from CT scans was [54], which applied simple thresholding then meshing, on modern replica papyrus scrolls with fewer than five windings. Seales et al. [55] virtually unrolled the En-Gedi scroll via a largely automated approach growing a surface out from a seed point; this revealed text in that scroll for the first time.
+
+A scan of the Jerash silver scroll was unrolled using an automated method to extract surfaces from strips [19], which were re-combined manually. [8] instead use Otsu thresholding [35] then skeletonization [17], and incorporate manual correction. Otsu thresholding was also applied to a modern papyrus scroll with few windings in [3], using region-growing to create the surface mesh.
+
+(a) (b) (c) (d) (e)
+
+**Figure 2.** (a–c) Cross-section, longwise section and volume rendering of PHerc. Paris 4, from the micro-CT scan in EduceLab-Scrolls [40]. The original scroll is highly compressed and distorted, and it is difficult to discern where the original 2D papyrus surface passes. (d) State-of-the-art segmentation of surface voxels (red) overlaid on the scroll. Note there are breaks in certain regions, as well as falsely joined sheets and spurious fragments. The predictions do not allow directly extracting a manifold surface. (e) Representative examples of datasets used in prior works on virtual unrolling/unfolding (CT-OCR-2022 [41] used in [25]; Papyrus L/El227b/3-pU from [24]; Papryus L/El227b/1-pC from [29]); compare with the complexity of PHerc. Paris 4 seen in (a–d).
+
+Baum et al. [7] extract surfaces of a small papyrus package with around 10 layers, manually tracing the surface in cross-sections, then interpolating to other slices. A similar approach is taken in [29], applied to several of the Elephantine Papyri, some of which are folded and badly distorted. In [15] CT scans of folded letters are segmented using [61] followed by heuristic postprocessing to clean up; [64] processes terahertz wave scans similarly. Samko et al. [46, 47] analyze simple parchment scrolls, using graph-cuts to separate the clearly-delineated surfaces; [28] instead uses [35] then heuristics to separate fused sheets.
+
+Klenert et al. [23] presents a method for automatically extracting a surface from a binary volume, based on ridge points [16]. This was applied to a small folded papyrus sheet [29], as well as a folded silver sheet, showing better performance than [15], and also than other methods for ridge extraction [2, 52]. This is extended in [24] by replacing the raw CT intensities with predictions from a U-Net [20, 44] trained to segment the papyrus surface; subsequent processing then follows [23]. Similarly, [25] uses a neural network to find surface voxels, then skeletonization to extract a mesh, with heuristics to address failure cases. They only evaluate on six documents with simple structures— fewer than ten well-spaced windings and a high-quality unbroken surface everywhere [41].
+
+On the Herculaneum Papyri themselves, there have been fewer efforts. They are uniquely challenging [8, 41, 55], as they contain hundreds of tightly-packing windings that have been compressed, distorted and sometimes broken following the eruption [40]. Still, [10] consider small regions of two scrolls, while [60] consider two small, nearly-flat fragments; they manually trace out the surface mesh, then flatten it using [27, 56]. Nicolardi et al. [34] apply deep learning techniques to detect ink signals in a virtually unrolled part of PHerc. Paris 4 based on a manually-created mesh (part of the region considered in this work), while [50] presents a semi-automated approach using U-Net surface predictions. The only existing fully-automated ap-
+
+proach that can tackle large portions of Herculaneum Papyri is ThaumatoAnakalyptor [49]. It uses intensity gradients to locate the papyrus sheet and segments this into surface fragments using Mask3D [51]. Heuristics determine whether nearby instances lie on the same winding, with postprocessing to ensure a manifold surface. This method fails for broken or highly compressed regions, and its heuristics do not optimize any well-defined objective.
+
+None of these methods have any global awareness that the scroll was originally a single sheet rolled or folded, nor do they aim to produce a single surface as output—they yield multiple fragments in challenging cases, and rely on continuity and separability of the surface predictions.
+
+Learning and representing diffeomorphisms. One common application of 3D diffeomorphisms is in medical image registration [4, 13, 14, 62]. Here we seek a spatial transform that maps anatomically-corresponding points in two 3D scans onto each other. The mapping is often represented as diffeomorphism since topology should be preserved— there should be no tears or singularities, and the mapping should be injective. In this work, we instead use a diffeomorphism to transform an idealized spiral-shaped scroll to match a micro-CT scan. We parameterize it as the integral of a time-constant flow field [5]; however we use explicit Euler integration instead of scaling-and-squaring [32], since we found the latter to be unstable. Another use of diffeomorphisms in machine learning is normalizing flows [22, 36, 43], which are flexible learned probability densities, that smoothly and invertibly transform points drawn from an easy-to-sample distribution. Continuous normalizing flows [12, 18] solve a differential equation defined by a neural flow field, similar to us. However, we define the field directly on a grid with trilinear interpolation, and use unrolled optimization to backpropagate, rather than the adjoint method.
+
+## 3. Dataset
+
+For this work, we use publicly-available scan data from the EduceLab-Scrolls dataset [40]. Specifically, we focus on PHerc. Paris 4 and PHerc. 172. Both scrolls were excavated between 1752 and 1754; each measures approximately 15–20cm long by 5cm diameter, and both are heavily distorted (Fig. 2a–2c). The X-ray micro-CT scans from [40] were acquired using a synchrotron source at 54keV beam energy with 7.91 µm resolution. The overall sizes are 14376 × 7888 × 8096 and 21000 × 6700 × 9100 voxels respectively. These scans are much more complex than those typically considered in virtual unrolling—compare Fig. 2a with the examples from recent works in Fig. 2e. For PHerc. Paris 4, we specifically consider a region near the center that has been the focus of recent manual unrolling attempts [33, 34]; this subvolume has a bounding-box of size 13600×4200×3600 voxels. A ground-truth surface mesh is available representing the geometry of the papyrus sheet in this region, enabling us to conduct quantitative experiments. This covers approximately 30 windings, and was was created by a tour de force manual annotation effort requiring hundreds of hours of human input [38].
+
+## 4. Feature Extraction and Postprocessing
+
+Given a CT scan of a scroll, we aim to extract a compact representation containing salient features such as probable locations of the sheet surface and its normals, which will be used to guide the automated unrolling process. Neural network predictions. We use three existing publicly-available volumetric U-Net [44] segmentation models, trained using nnUNet-v2 [20] on a tiny fraction of PHerc. Paris 41. They output probabilities that each voxel belongs to (i) the surface of the papyrus (similar to [24]); or (ii) a horizontal or vertical fiber. We emphasize that these segmentation tasks are very challenging—although the CT scan reveals papyrus as bright against a dark background, sheets are often tightly packed together, highly curved, or even broken. Sometimes individual strips of papyrus have frayed away from the surface; sometimes the entire front and back surfaces have separated over a larger area. Consequently, even these state-of-the models have errors in their predictions, e.g. cases where sheets or fibers are falsely joined, or entirely missing from the segmentation (see Fig. 2d). In this work, our focus is on extracting a plausible 2D manifold surface from these predictions despite their imperfections. Feature postprocessing. Given the surface and fiber U- Net predictions, our first contribution is to convert these to a more compact representation in a way that is robust to errors, prior to fitting global model of the scroll surface to
+
+1models and predictions obtained from https://dl.ash2txt. org/community-uploads/bruniss/scrolls/s1/
+
+them. Specifically, we aim to find sequences of 3D points that should lie on the same winding, i.e. adjacent to each other in the unrolled scroll; we term such series of points paths. Our strategy is different for fibers and surfaces, due to the different geometric structures they represent. Fiber paths. We threshold the fiber prediction probabilities at 50% confidence, and extract connected components (CCs) from the resulting binary volume using the method of [45, 65] as implemented in [58]. Each connected component is then skeletonized using [48, 59]. Ideally each skeleton would have the form of a chain graph, tracing the midline of the respective fiber, which should form a path lying on the papyrus sheet. However, the CCs do not necessarily capture individual fibers, as fibers sometimes touch, either physically in the scroll or due to segmentation errors; this results in skeletons with a branching structure. We therefore further process each extracted skeleton, finding the longest chain between two end-/branch-points, saving this as a fiber path, removing it from the skeleton, and repeating. This ensures that each fiber path represents only a single fiber belonging to a single sheet, at the expense of sometimes breaking fibers into multiple sections. Surface paths. After thresholding the surface predictions, we observe that na¨ıve use of 3D connected components yields CCs with many sheets combined, since their segmentation masks touch. Instead, we extract 2D slices from the volume, and find (2D) CCs within these slices only. Since it is exponentially less probable that two sheets are wrongly joined in one specific slice than globally, this yields CCs that only very rarely include multiple sheets, albeit at the expense of these CCs being only 1D slices of the true 2D surface. We use the same subsequent processing as for fibers, i.e. skeletonization then iterated longest-path extraction. We repeat this process using slices along each of the canonical planes independently and merge the results. Surface normals. We also extract approximate surface normals, by convolving the surface prediction probability volume with a 3D Sobel filter, then taking a mean within windows of normals whose magnitude exceeds a threshold. Window centers are chosen by stratified sampling, iterating over grid cells, and sampling points on paths in each cell. Relative winding numbers. For each extracted surface path, we also determine what nearby paths lies on the next winding outwards; this allows us to derive an estimate of the winding spacing. We cast rays outwards along the local normals from each point along the path, and record the first path hit. Since there may be breaks in surfaces or spurious fragments, we then construct a graph with one node per surface path, and edges connecting those which were found to be neighboring during the ray-casting process. We drop nodes that are part of cycles (since these imply a contradiction), then use majority voting by edges to determine whether two paths in fact should be treated as adjacent.
+
+## 5. Spiral Fitting
+
+Our goal now is to fit a model of the deformed scroll to the postprocessed U-Net outputs described above. This model is an explicit representation of the scroll, as a single, highly distorted, rolled-up surface. The predicted fiber and surface paths, normals, and relative winding numbers specify a set of constraints on where the surface lies in the scan volume. We set up a continuous global optimization problem of finding the geometric parameters of the original rolled scroll, and a smooth, invertible deformation (a diffeomorphism) that transforms it to its distorted state in the scan, aiming to satisfy the constraints as well as possible.
+
+In Sec. 5.1, we describe the idealized form of the nondeformed scroll in a canonical space, and its parameters. Then, Sec. 5.2 discusses the diffeomorphism that transforms the idealized scroll to the distorted version seen in the scan volume. Sec. 5.3 describes the losses used to fit the transform to the features from Sec. 4. Lastly, Sec. 5.4 explains how we extract a flattened surface mesh.
+
+### 5.1. Canonical spiral representation
+
+We define a ‘canonical’ pre-deformation space, in which the scroll is assumed to have taken the form of an Archimedean spiral in cross-section; this is extruded perpendicular to the plane to create a 2D surface. The spiral cross-section of the canonical scroll has only one unknown parameter ω, how tightly it winds (i.e. the rate of change of radius wrt angle). We assume the direction of winding (clockwise vs anticlockwise) is known, since this is easy to observe visually. We also assume the canonical spiral is centered in the xy-plane and extruded along the z-axis. Thus, 3D points s on the canonical 2D surface are given by
+
+s( \t he t
+
+a
+
+, \ , z ; \
+
+, \o m
+
+e
+
+g
+
+a ) = \lef t ( \begin {array}{c} \frac {\theta }{\omega } \cos \theta \\ -\frac {\theta }{\omega } \sin \theta \\ z \end {array} \right ) \; \forall \, \theta > 0 ,\, z_\mathrm {min} < z < z_\mathrm {max} \label {eq:spiral}
+
+While this representation is naturally somewhat idealized (for example the real papyrus sheet has a non-infinitessimal thickness), it still reflects the overall structure of the original rolled scroll.
+
+### 5.2. Transform parameterization
+
+We next describe a multi-stage spatial transform TS→V mapping from the canonical space of the original spiralshaped scroll, to the 3D space of the scan volume. This transform models the deformation of the perfect canonical scroll into the complex shape we observe in the scan. We enforce parametrically that the deformation is a diffeomorphism, i.e. a smooth one-to-one mapping. This means the topological structure of the canonical scroll is preserved during distortion—it will still be a single, contiguous sheet after deformation.
+
+Specifically, the transform is a composition TS→V =
+
+Taff ◦Tflow ◦Tgap, where: (i) Taff is a per-slice affine (scaling and translation) transform; (ii) Tflow is the result of integrating a flow field; (iii) Tgap rescales inter-winding gaps. We describe each of these stages below, and provide full mathematical details in the supplementary material. Per-slice scale and translation. We non-isotropically scale and translate each slice in the xy-plane; the scale factors and translations vary wrt z. This stage is parameterized by N ×2 log-scales where N is a fixed number of keypoints along the z-axis; the translations and log-scales are linearly interpolated for other z values. Integrated flow field. We introduce a flow field u, i.e. a 3D vector field of 3D velocities over the scan volume. This allows us to transform a given point by simulating its movement in the flow for a fixed length of time. This is done by solving an ODE defined by u and an initial condition (the starting point). Writing ϕ(t) for the transform induced by simulating the flow u for time t, the final transformed position of a point x is given by Tflow(x) = ϕ(1)(x), where ϕ(t) evolves according to
+
+\frac {d } {
+
+d
+
+t}\phi
+
+^{(t)}(\mathbf {x}) = \mathbf {u}\left ( \phi ^{(t)}(\mathbf {x}) \right )
+
+with the initial condition ϕ(0)(x) = x, i.e. we start with an identity transform. The resulting transformation is guaranteed to be a diffeomorphism, provided the flow field u is itself smooth [4, 5]. Formally, the space of flow fields is the Lie algebra that generates the Lie group of diffeomorphisms; the former provides a straightforward way to parameterize the latter. Moreover, the inverse diffeomorphism is easily found by negating the flow field, then integrating backwards in time. We parameterize the flow field by trilinear interpolation of coarse and fine grids of 3D velocity vectors defined over the scan volume, where the fine grid is 48× lower resolution than the raw scan, and the coarse grid 6× lower again. We solve the ODE using explicit Euler integration with 16 steps. Note that in principle this stage is sufficiently expressive without the other stages; however we find that the others ease optimization (by allowing more global updates), and reduce the required resolution (hence memory cost) of the flow field. Gap scaling. We define a scalar field over the 2D surface of the canonical scroll spiral, which specifies for each point, by how much the next winding should be pushed outward from its default distance (defined by being an Archimedean spiral), i.e. locally scaling the gaps between windings. This field is parameterized by bilinear interpolation of a 2D grid of log-scales defined over the surface. Since it is quadratic in memory cost, this provides a more efficient way to gain spatial resolution than increasing the resolution of the 3D grid defining the flow field above.
+
+The overall composed transform TS→V is diffeomorphic and efficiently invertible (since each stage is); we write TV→S = T −1
+
+S→V. This enables defining losses (which re-
+
+**Figure 3.** Cross-sections of PHerc. Paris 4 with the spiral overlaid in red, before optimization when the diffeomorphism is an identity transform (top-left inset); and after optimization. During fitting the spiral adapts to follow the distorted scroll surface. Far right: Undeformed cross-section, given by transforming the scan with the inverse diffeomorphism. The distorted windings become near-circular.
+
+quires transforming from scan to canonical space) and performing reconstruction or reversing the distortion (which require transforming from canonical to scan space). In the next section, we discuss the losses we use to fit the transform parameters, i.e. the per-slice log-scales, the 3D flow field, and the 2D gap-scaling field.
+
+### 5.3. Losses and optimization
+
+To optimize the parameters of the spiral and the deformation to fit the surface and fiber predictions, we define several losses based on the postprocessed features.
+
+First, Lnormal requires that normals of the deformed spiral match those of the surface predictions. For a point xV
+
+in the scan volume, we use the approximate normal n from the U-Net surface predictions (Sec. 4), then calculate xS = TV→S(xV), and the corresponding canonical-space radial direction vector δr = (xS
+
+0/||xS||, xS 1/||xS||, 0). Then \loss { n orm
+
+a
+
+l} = 1 - \ m at
+
+hrm {sim}\!\left ( \boldsymbol {\delta r} ,\, \TVS (\xV + \mathbf {n}) \right )
+
+where sim denotes cosine similarity of vectors.
+
+Second, Lradius requires that paths (i.e. series of points on the same surface or fiber, extracted per Sec. 4) lie at constant radius in the canonical space, after adjusting for radius change due to the spiral. For a set of points P representing such a path,
+
+\loss { rad
+
+i
+
+us}
+
+= \fra c {1}{|\mathcal {P}|} \sum _{\xV \in \mathcal {P}} |r(\xV ) - \langle r \rangle |
+
+where r(xV) = ||xS −xS · (0, 0, 1))||−ω arctan
+
+ 
+
+xS
+
+2/xS 
+
+, xS = TV→S(xV), and ⟨r⟩= |P|
+
+P
+
+xV∈P r(xV). Third, Lwindings requires that estimated relative winding numbers between surfaces should be respected, i.e. if two points in the scan volume are predicted to be K windings apart, then they should also be K spiral windings apart when mapped to canonical space.
+
+The above losses are designed to be robust to local optima; this is important due to the repetitive layered structure of the tightly-wound papyrus sheets. The losses aim to match the orientation and density of scroll windings, but not the exact ‘phase’ or alignment of individual sheets along the normal direction. This means the model can freely shift windings outwards or inwards to match the overall structure
+
+of the scroll, avoiding local optima.
+
+However, we also aim for precise alignment of our deformed spiral with individual sheets, not just correct spacing and orientation. Therefore, during the second half of the optimization process, after the overall structure is found, we add an extra loss. Ldistance requires each predicted surface and fiber path to be exactly aligned with a winding of our deformed spiral. For each path P we find the spiral winding that is nearest to it, and impose an L1 loss between all points of the path and the corresponding nearest points on the deformed spiral winding:
+
+\loss { d i sta
+
+n
+
+ce}
+
+= \frac {1}{|\
+
+mathcal {P}|} \sum _{\xV \in \mathcal {P}} \left | r(\xV ) - r^*(\xV ) \right |
+
+where
+
+r^*( \
+
+x
+
+V ) = \ be g i n {case s } r ( \ xV ) - m & \text {if $m < \pi \,\omega $} \\ r(\xV ) + 2\pi \,\omega - m & \text {if $m \geq \pi \,\omega $} \end {cases}
+
+and m = r(xV) mod (2π ω). Note that per (1), 2π ω corresponds to the winding spacing in the canonical space.
+
+To ensure that the surface is correctly orientated when flattened, we include two directional losses based on the fiber predictions. Lhorizontal requires horizontal fiber paths P have constant z-coordinate in the canonical space:
+
+\loss {ho r i zon
+
+t
+
+al}
+
+= \frac {1}{|\mathcal {P}|} \sum _{z \in \mathcal {Z}} |z - \langle z \rangle |
+
+where Z =
+
+
+
+TV→S(xV) · (0, 0, 1)
+
+xV ∈P
+
+. Lvertical requires vertical fiber paths have constant angular coordinate; it is defined analogously to Lhorizontal.
+
+We also include two regularization losses. Lstretch discourages the deformation from stretching the surface tangentially, so it only bends, or sheets separate: Lstretch = ||TV→S(xV+∆)−TV→S(xV)||−1
+
+where ∆is a random unit vector perpendicular to n(xV). Lcenter encourages the centerline of the scroll to remain at its original position.
+
+Our overall loss is a weighted sum of those discussed above, calculated over minibatches of randomly sampled paths2. We minimize this loss wrt the diffeomorphism and spiral parameters using Adam [21], with a fixed learning
+
+2further hyperparameter details are given in the supplementary material
+
+WJF MRWD ChD AD Str
+
+Ours (full) 3.20% 7.64 5.29 0.0568 1.239 + SLIM 0.0933 1.031 no surface-normals 3.08% 8.41 5.75 0.0546 1.223 no rel. wind. num 2.77% 25.67 7.72 0.0556 1.166 no dist. loss 3.90% 7.46 5.93 0.0535 1.172
+
+no fiber orient. loss 3.15% 7.51 5.36 0.0583 1.292 + SLIM 0.0933 1.013 no fiber losses 3.75% 6.83 5.46 0.0533 1.214 + SLIM 0.0925 1.005
+
+ThaumatoAnakalyptor – – 5.59 0.1567 1.027
+
+**Table 1.** Comparison of several variants and ablations of our approach, and the previous state-of-the-art automated unrolling method ThaumatoAnakalyptor. ‘Ours (full)’ uses only fibers for UV embedding (flattening); ‘+ SLIM’ uses [42] for a post-hoc flattening (UV-embedding) stage. Lower is better for all metrics
+
+rate of 5 × 10−4. We run for 20K iterations, by which point the overall loss has converged.
+
+### 5.4. Extracting and flattening a mesh
+
+After fitting the diffeomorphism and spiral parameters, it is desirable to extract the papryus surface as a mesh. In the canonical spiral space, we can directly create a quad-mesh by building a lattice of points sampled with regular spacing δθ around the spiral (from the center out to the edge) and δz along its length. We then transform the vertices of this mesh to the scan volume using the diffeomorphism. Thus, the (i, j)th vertex of the final quad-mesh is given by vij = TS→V (s(i δθ, j δz; ω)) The resulting mesh is guaranteed to be manifold and free of intersections, since it is given by applying the (topology-preserving) diffeomorphism to the spiral surface that already has these characteristics.
+
+In order to display the flattened surface, we must also associate a 2D UV coordinate with each vertex of the mesh, defining where in the plane it is placed after flattening. Typically [8, 49, 60] this is done in a separate flattening stage using 2D parameterization methods [27, 42, 56]. However, our spiral already defines a 2D parameterization of the space—the canonical space θ and z directions correspond to the desired U and V coordinates. These are encouraged to align with the true orientation of the papyrus by the fiber orientation loss described above. In practice, we can also apply SLIM [42] as an extra stage to improve the smoothness of our flattening. Given the surface mesh with UV coordinates, it is straightforward to reconstruct an unrolled volume by sampling from the original scan volume.
+
+## 6. Results
+
+In this section, we thoroughly evaluate the design space of our method, considering different variants of losses, available input features, and transform parameterizations. We also compare against the only existing automated unrolling
+
+approach suitable for this data [49]. 3
+
+Metrics. We use five metrics to quantify performance: • WJF (winding jump fraction) measures how often the ground-truth surfaces cross between different windings of our spiral. For 100 slices along the z-axis, we find line-segments where the ground-truth surface mesh intersects those slices. We then calculate the fraction of linesegments for which the nearest spiral winding at one end differs from that at the other. • MRWD (mean radial winding distance) measures how close windings are to their ground-truth radii. It is the mean over windings, of distance from the Kth spiral winding to the Kth ground-truth winding, measured radially from the umbilicus at 100 angles per slice. • ChD is the one-directional chamfer distance from the ground-truth surface to the predicted surface. • AD is the mean angular defect over mesh vertices; this is a discrete approximation of the absolute intrinsic Gaussian curvature of the surface. It should be zero for developable surfaces (i.e. those which can be flattened, which we expect to be true of the papyrus sheet). • Str measures the amount of in-sheet stretching, given by the average over mesh edges of the difference between the edge length in scan space and UV space. Quantitative results. We first benchmark our method against ThaumatoAnakalyptor [49], the only existing work to unroll substantial regions of Herculaneum papyri fully automatically. This bottom-up approach extracts surface fragments from a point-cloud, then stitches these into a surface. Since ThaumatoAnakalyptor directly outputs a mesh, we only report ChD, AD and Str, not those metrics which rely on access to the canonical spiral representation. Results on PHerc. Paris 4 are given in Table 1; our method (top row) outperforms [49] (bottom row) according to ChD and AD, indicating closer conformance to the ground-truth surface. Ours stretches the surface slightly more (higher Str); however if like [49] we use SLIM [42] flattening in addition (2find row), this gap closes substantially.
+
+We also measure the benefit brought by each of our losses. Rows 3–5 of Table 1 ablate respectively the surface normals, relative winding number, and distance (in the second half of training) losses; we see that the full model gives the best balance of performance across metrics. The next four rows remove the losses defined on papyrus fibers (rather than surfaces); removing the orientation losses has minimal effect on metrics, but causes the text to be distorted in-plane; removing all fiber losses worsens ChD and WJF.
+
+Next we investigate the impact of changing the diffeomorphism parameterization. In Table 2, we compare our full model against two ablations, removing the gap expander and per-slice scale. We see that even though the
+
+3Our code is available at https://github.com/pmh47/ spiral-fitting
+
+**Figure 4.** Top: Visualization of the papyrus surface extracted from PHerc. Paris 4 by our method. The right-hand end corresponds to the center of the rolled scroll; the wavy edge at the top reflects the increasing radius of windings further from the center. Bottom: Ink predictions using the TimeSformer [9] model from [33], applied to the virtually unrolled volume. Note the rows of Greek characters (black) visible throughout the extracted surface. Best viewed with zoom.
+
+**Figure 5.** Top: deformed spiral overlaid on PHerc. 172. Bottom: Close-ups of the unrolled surface. Ink is visible as light areas; several Greek letters can be discerned. The full output of our method is in the appendix.
+
+integrated flow field can theoretically represent general diffeomorphisms, the composition with the other stages improves WJF significantly in practice.
+
+Qualitative results. Fig. 3 shows the initial (not deformed) spiral and the final deformed spiral, overlaid on several cross sections of PHerc. Paris 4; Fig. 5 (top) shows the same for PHerc. 172. The deformed spiral windings closely conform to the distorted shape of the scroll windings in each slice. Since the deformed spiral forms a single continuous surface, it propagates across breaks in the papyrus, bridging these regions plausibly with windings.
+
+**Figure 6.** Our predicted (green) and ground-truth (red) surfaces overlaid. The surfaces are closely matched, and ours has substantially greater coverage.
+
+**Fig. 6** shows the groundtruth (red) and fitted (green) surfaces for PHerc. Paris 4. Ours has significantly larger coverage than the groundtruth, and in regions where they overlap the two surfaces are closely aligned. Fig. 4 (top) shows the unrolled surface of PHerc. Paris 4. We can see the structure of the papyrus, with horizontal and vertical fibers visible. Dark
+
+Flow Aff GE WJF MRWD ChD AD Str
+
+✓ ✓ ✓ 3.20% 7.64 5.29 0.0568 1.239 ✓ ✓ 3.59% 6.12 4.59 0.0599 1.111 ✓ 3.43% 5.84 4.78 0.0529 1.105
+
+**Table 2.** Variants of our model with different parametrisations of the diffeomorphism from canonical to scroll space. Flow is the flow field; Aff is the z-varying affine transform; GE is the gapexpander. Lower is better for all metrics
+
+regions are where there is no papyrus under the predicted surface; this may be because it is broken or burned away. Fig. 4 (bottom) shows the result of running a pretrained TimeSformer [9] ink detection model [33] on the unrolled scroll. This reveals many letters forming complete words and lines of Greek text. In the rightmost panel of Fig. 3— here instead of flattening the scroll, we apply the inverse diffeomorphism to the scan volume, to transform the scan into the canonical space. This converts the highly distorted windings into near-concentric circles, indicating that our approach can successfully recover even the extreme distortions observed in PHerc. Paris 4. Fig. 5 shows results on PHerc. 172; here the deformed spiral (top) covers almost the entire radius of the scroll, conforming closely with the windings. Fig. 5 (bottom) shows close-ups of the scroll surface (full version in supplementary); this reveals numerous Greek letters, bright against the darker background.
+
+Computational cost. On a workstation with one Nvidia RTX 3090 GPU, our approach takes 19 hours for PHerc. Paris 4. This includes 16 hrs to postprocess the existing nnUNet outputs. Spiral-fitting takes around 3 hours for 20 000 iterations, by which point the loss has converged. The high speed of spiral fitting is due to our GPU-friendly implementation, and the design of the feature postprocessing strategy, which produces sets of 1D tracks—no volumetric data (neither raw scroll scan nor nnUNet predictions) needs to be loaded during fitting.
+
+## 7. Conclusion
+
+We have presented an automated approach to virtual unrolling, applied to two challenging Herculaneum Papyri. We fit a global model of the deformed scroll to neural network predictions of where the papyrus lies, guaranteeing a single continuous 2D surface as output. We hope our method can accelerate the unrolling of the hundreds of scrolls in the collection that have not yet been read. Limitations. Our method minimizes a sum of L1 losses capturing how well the surface conforms to the paths; when paths are contradictory due to imperfect U-Net predictions, the surface sometimes wanders between two true windings, instead of committing to one. Using an Lp-norm for p < 1, or using the augmented Lagrangian method, would therefore be fruitful directions for future work. We also currently assume the scroll is a single rolled sheet. It would be interesting to extend the approach to documents that are folded rather than rolled (or indeed folded then rolled), such as the Elephantine Papyri [29]. In principle this simply requires using a different idealized structure in the canonical space.

@@ -33,24 +33,30 @@
     "virtual-unwrapping",
     "ink-detection",
     "validation-fp",
-    "papyrology"
+    "papyrology",
+    "ct-imaging",
+    "label-efficiency"
   ],
   "tags": [
     "herculaneum",
     "papyrus",
-    "carbon-ink"
+    "carbon-ink",
+    "dataset",
+    "educelab",
+    "infrared-labels",
+    "cross-validation",
+    "synchrotron"
   ],
   "added": "2026-11-15",
   "extraction": {
     "backend": "pymupdf",
     "ok": false,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

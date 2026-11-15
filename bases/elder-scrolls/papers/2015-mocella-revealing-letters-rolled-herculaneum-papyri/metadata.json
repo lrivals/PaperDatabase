@@ -42,7 +42,6 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Nature Communications, DOI 10.1038/ncomms6895) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 22 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 8 fragment(s) non réparé(s) (« classi cation »…)",
       "aucune section détectée"
@@ -50,6 +49,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

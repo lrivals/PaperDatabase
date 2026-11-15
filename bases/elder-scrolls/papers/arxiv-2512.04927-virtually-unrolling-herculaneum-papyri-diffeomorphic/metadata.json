@@ -8,20 +8,27 @@
     }
   ],
   "year": 2025,
-  "venue": "arXiv preprint",
-  "doi": null,
+  "venue": "WACV 2026",
+  "doi": "10.1109/wacv61042.2026.00619",
   "arxiv_id": "2512.04927",
   "url": "https://arxiv.org/abs/2512.04927",
-  "type": "preprint",
+  "type": "conference",
   "axes": [
-    "virtual-unwrapping",
     "mesh-flattening",
-    "ct-imaging",
-    "papyrology"
+    "virtual-unwrapping",
+    "surface-segmentation"
   ],
   "tags": [
     "herculaneum",
-    "papyrus"
+    "papyrus",
+    "diffeomorphism",
+    "spiral-fitting",
+    "PHerc-Paris-4",
+    "PHerc-172",
+    "EduceLab-Scrolls",
+    "nnUNet",
+    "SLIM",
+    "ThaumatoAnakalyptor"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -29,12 +36,11 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

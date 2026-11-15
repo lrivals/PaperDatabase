@@ -23,13 +23,15 @@
   "type": "preprint",
   "axes": [
     "surface-segmentation",
-    "ct-imaging",
-    "papyrology"
+    "virtual-unwrapping"
   ],
   "tags": [
     "papyrus",
-    "parchment",
-    "ct"
+    "fast-marching",
+    "2d-manifold",
+    "folded-documents",
+    "micro-ct",
+    "orientable-surface"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -37,12 +39,11 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 2, 3, 4 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

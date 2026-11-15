@@ -22,12 +22,16 @@
   "url": "https://arxiv.org/abs/1907.07131",
   "type": "preprint",
   "axes": [
-    "ct-imaging",
-    "super-resolution"
+    "super-resolution",
+    "ct-imaging"
   ],
   "tags": [
     "ct",
-    "super-resolution"
+    "super-resolution",
+    "gan",
+    "edsr",
+    "micro-ct",
+    "roches"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -35,7 +39,6 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 29 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 24 fragment(s) non réparé(s) (« classi cation »…)",
       "aucune section détectée"
@@ -43,6 +46,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

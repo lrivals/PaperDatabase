@@ -1,0 +1,56 @@
+{
+  "id": "arxiv-2004.08270-weakly-supervised-geodesic-segmentation-egyptian",
+  "title": "Weakly Supervised Geodesic Segmentation of Egyptian Mummy CT Scans",
+  "authors": [
+    {
+      "given": "Avik",
+      "family": "Hati"
+    },
+    {
+      "given": "Matteo",
+      "family": "Bustreo"
+    },
+    {
+      "given": "Diego",
+      "family": "Sona"
+    },
+    {
+      "given": "Vittorio",
+      "family": "Murino"
+    },
+    {
+      "given": "Alessio Del",
+      "family": "Bue"
+    }
+  ],
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2004.08270",
+  "url": "https://arxiv.org/abs/2004.08270",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging",
+    "label-efficiency"
+  ],
+  "tags": [
+    "ct"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 34 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 11 fragment(s) non réparé(s) (« classi cation »…)",
+      "sections numérotées non détectées : I — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

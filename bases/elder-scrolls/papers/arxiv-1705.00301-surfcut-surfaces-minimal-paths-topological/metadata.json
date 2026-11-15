@@ -1,0 +1,40 @@
+{
+  "id": "arxiv-1705.00301-surfcut-surfaces-minimal-paths-topological",
+  "title": "SurfCut: Surfaces of Minimal Paths From Topological Structures",
+  "authors": [
+    {
+      "given": "Marei",
+      "family": "Algarni"
+    },
+    {
+      "given": "Ganesh",
+      "family": "Sundaramoorthi"
+    }
+  ],
+  "year": 2017,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1705.00301",
+  "url": "https://arxiv.org/abs/1705.00301",
+  "type": "preprint",
+  "axes": [
+    "surface-segmentation"
+  ],
+  "tags": [],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 29 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 4 fragment(s) non réparé(s) (« classi cation »…)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

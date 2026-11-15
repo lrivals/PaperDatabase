@@ -2,7 +2,7 @@
 
 <!-- GÉNÉRÉ par bin/reindex.py — ne pas éditer à la main -->
 
-**25 papiers, 0 fiches à faire.**
+**28 papiers, 3 fiches à faire.**
 
 Un papier peut apparaître sous plusieurs axes.
 
@@ -19,8 +19,10 @@ Un papier peut apparaître sous plusieurs axes.
 | [arxiv-2308.07070-local-iterative-extraction-2d-manifolds](papers/arxiv-2308.07070-local-iterative-extraction-2d-manifolds/fiche.md) | A Local Iterative Approach for the Extraction of 2D Manifolds from Strongly Curved and Folded Thin-Layer Structures | Nicolas Klenert, Verena Lepper, Daniel Baum | 2023 | arXiv preprint | preprint | done |
 | [2021-dambrogio-unlocking-history-through-automated-virtual](papers/2021-dambrogio-unlocking-history-through-automated-virtual/fiche.md) | Unlocking history through automated virtual unfolding of sealed documents imaged by X-ray microtomography | Dambrogio et al. | 2021 | Nature Communications | journal | done |
 | [2021-stabile-computational-platform-virtual-unfolding-herculaneum](papers/2021-stabile-computational-platform-virtual-unfolding-herculaneum/fiche.md) | A computational platform for the virtual unfolding of Herculaneum Papyri | Stabile et al. | 2021 | Scientific Reports | journal | done |
+| [arxiv-2004.08270-weakly-supervised-geodesic-segmentation-egyptian](papers/arxiv-2004.08270-weakly-supervised-geodesic-segmentation-egyptian/fiche.md) | Weakly Supervised Geodesic Segmentation of Egyptian Mummy CT Scans | Hati et al. | 2020 | arXiv preprint | preprint | todo |
 | [arxiv-2007.15551-quantitative-distortion-analysis-flattening-applied](papers/arxiv-2007.15551-quantitative-distortion-analysis-flattening-applied/fiche.md) | Quantitative Distortion Analysis of Flattening Applied to the Scroll from En-Gedi | Clifford Seth Parker, William Brent Seales, Pnina Shor | 2020 | arXiv preprint | preprint | done |
 | [2019-parker-invisibility-readability-recovering-ink-herculaneum](papers/2019-parker-invisibility-readability-recovering-ink-herculaneum/fiche.md) | From invisibility to readability: Recovering the ink of Herculaneum | Parker et al. | 2019 | PLoS ONE | journal | done |
+| [2019-stromer-virtual-cleaning-unwrapping-non-invasively](papers/2019-stromer-virtual-cleaning-unwrapping-non-invasively/fiche.md) | Virtual cleaning and unwrapping of non-invasively digitized soiled bamboo scrolls | Stromer et al. | 2019 | Scientific Reports | journal | todo |
 | [2018-rosin-virtual-recovery-content-x-ray](papers/2018-rosin-virtual-recovery-content-x-ray/fiche.md) | Virtual Recovery of Content from X-Ray Micro-Tomography Scans of Damaged Historic Scrolls | Rosin et al. | 2018 | Scientific Reports | journal | done |
 | [2018-stromer-browsing-through-sealed-historical-manuscripts](papers/2018-stromer-browsing-through-sealed-historical-manuscripts/fiche.md) | Browsing through sealed historical manuscripts by using 3-D computed tomography with low-brilliance X-ray sources | Stromer et al. | 2018 | Scientific Reports | journal | done |
 | [arxiv-1706.09883-investigating-herculaneum-papyri-innovative-3d](papers/arxiv-1706.09883-investigating-herculaneum-papyri-innovative-3d/fiche.md) | Investigating Herculaneum papyri: An innovative 3D approach for the virtual unfolding of the rolls | Bukreeva et al. | 2017 | arXiv preprint | preprint | done |
@@ -50,6 +52,7 @@ Un papier peut apparaître sous plusieurs axes.
 | [arxiv-2308.07070-local-iterative-extraction-2d-manifolds](papers/arxiv-2308.07070-local-iterative-extraction-2d-manifolds/fiche.md) | A Local Iterative Approach for the Extraction of 2D Manifolds from Strongly Curved and Folded Thin-Layer Structures | Nicolas Klenert, Verena Lepper, Daniel Baum | 2023 | arXiv preprint | preprint | done |
 | [2021-dambrogio-unlocking-history-through-automated-virtual](papers/2021-dambrogio-unlocking-history-through-automated-virtual/fiche.md) | Unlocking history through automated virtual unfolding of sealed documents imaged by X-ray microtomography | Dambrogio et al. | 2021 | Nature Communications | journal | done |
 | [2018-rosin-virtual-recovery-content-x-ray](papers/2018-rosin-virtual-recovery-content-x-ray/fiche.md) | Virtual Recovery of Content from X-Ray Micro-Tomography Scans of Damaged Historic Scrolls | Rosin et al. | 2018 | Scientific Reports | journal | done |
+| [arxiv-1705.00301-surfcut-surfaces-minimal-paths-topological](papers/arxiv-1705.00301-surfcut-surfaces-minimal-paths-topological/fiche.md) | SurfCut: Surfaces of Minimal Paths From Topological Structures | Marei Algarni, Ganesh Sundaramoorthi | 2017 | arXiv preprint | preprint | todo |
 
 ## Reconstruction de maillage, suivi de fibres, ajustement de spirale, aplatissement (paramétrisation) (`mesh-flattening`)
 
@@ -77,6 +80,7 @@ Un papier peut apparaître sous plusieurs axes.
 | [arxiv-2308.05070-volumetric-fast-fourier-convolution-detecting](papers/arxiv-2308.05070-volumetric-fast-fourier-convolution-detecting/fiche.md) | Volumetric Fast Fourier Convolution for Detecting Ink on the Carbonized Herculaneum Papyri | Quattrini et al. | 2023 | arXiv preprint | preprint | done |
 | [2021-dambrogio-unlocking-history-through-automated-virtual](papers/2021-dambrogio-unlocking-history-through-automated-virtual/fiche.md) | Unlocking history through automated virtual unfolding of sealed documents imaged by X-ray microtomography | Dambrogio et al. | 2021 | Nature Communications | journal | done |
 | [2021-stabile-computational-platform-virtual-unfolding-herculaneum](papers/2021-stabile-computational-platform-virtual-unfolding-herculaneum/fiche.md) | A computational platform for the virtual unfolding of Herculaneum Papyri | Stabile et al. | 2021 | Scientific Reports | journal | done |
+| [arxiv-2004.08270-weakly-supervised-geodesic-segmentation-egyptian](papers/arxiv-2004.08270-weakly-supervised-geodesic-segmentation-egyptian/fiche.md) | Weakly Supervised Geodesic Segmentation of Egyptian Mummy CT Scans | Hati et al. | 2020 | arXiv preprint | preprint | todo |
 | [2019-parker-invisibility-readability-recovering-ink-herculaneum](papers/2019-parker-invisibility-readability-recovering-ink-herculaneum/fiche.md) | From invisibility to readability: Recovering the ink of Herculaneum | Parker et al. | 2019 | PLoS ONE | journal | done |
 | [arxiv-1907.07131-boosting-resolution-recovering-texture-micro](papers/arxiv-1907.07131-boosting-resolution-recovering-texture-micro/fiche.md) | Boosting Resolution and Recovering Texture of micro-CT Images with Deep Learning | Ying Da Wang, Ryan T. Armstrong, Peyman Mostaghimi | 2019 | arXiv preprint | preprint | done |
 | [2018-rosin-virtual-recovery-content-x-ray](papers/2018-rosin-virtual-recovery-content-x-ray/fiche.md) | Virtual Recovery of Content from X-Ray Micro-Tomography Scans of Damaged Historic Scrolls | Rosin et al. | 2018 | Scientific Reports | journal | done |
@@ -110,6 +114,7 @@ Un papier peut apparaître sous plusieurs axes.
 |---|---|---|---|---|---|---|
 | [2026-korotetskyi-volumetric-texture-analysis-unsupervised-ink](papers/2026-korotetskyi-volumetric-texture-analysis-unsupervised-ink/fiche.md) | Volumetric Texture Analysis for Unsupervised Ink Detection in Herculaneum Papyri | Oleksandr Korotetskyi, Michal Haindl | 2026 | Zenodo (CERN European Organization for Nuclear Research) | report | done |
 | [arxiv-2304.02084-educelab-scrolls-verifiable-recovery-text](papers/arxiv-2304.02084-educelab-scrolls-verifiable-recovery-text/fiche.md) | EduceLab-Scrolls: Verifiable Recovery of Text from Herculaneum Papyri using X-ray CT | Parsons et al. | 2023 | arXiv preprint | preprint | done |
+| [arxiv-2004.08270-weakly-supervised-geodesic-segmentation-egyptian](papers/arxiv-2004.08270-weakly-supervised-geodesic-segmentation-egyptian/fiche.md) | Weakly Supervised Geodesic Segmentation of Egyptian Mummy CT Scans | Hati et al. | 2020 | arXiv preprint | preprint | todo |
 
 ## Transfert entre scans, rouleaux et protocoles (écart de domaine, harmonisation) (`domain-transfer`)
 

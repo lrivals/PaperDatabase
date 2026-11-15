@@ -1,0 +1,21 @@
+{
+  "arxiv_id": null,
+  "title": "Digital restoration using volumetric scanning",
+  "authors": [
+    {
+      "given": "W. Brent",
+      "family": "Seales"
+    },
+    {
+      "given": "Yun",
+      "family": "Lin"
+    }
+  ],
+  "year": 2004,
+  "doi": "10.1145/996350.996380",
+  "journal_ref": null,
+  "venue_openalex": "ACM/IEEE Joint Conference on Digital Libraries",
+  "type": "conference",
+  "url": "https://doi.org/10.1145/996350.996380",
+  "abstract": null
+}

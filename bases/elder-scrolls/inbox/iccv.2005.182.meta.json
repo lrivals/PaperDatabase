@@ -1,0 +1,21 @@
+{
+  "arxiv_id": null,
+  "title": "Opaque document imaging: building images of inaccessible texts",
+  "authors": [
+    {
+      "given": "Yun",
+      "family": "Lin"
+    },
+    {
+      "given": "W. Brent",
+      "family": "Seales"
+    }
+  ],
+  "year": 2005,
+  "doi": "10.1109/iccv.2005.182",
+  "journal_ref": null,
+  "venue_openalex": "IEEE/CVF International Conference on Computer Vision (ICCV)",
+  "type": "conference",
+  "url": "https://doi.org/10.1109/iccv.2005.182",
+  "abstract": null
+}

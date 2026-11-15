@@ -1,0 +1,55 @@
+{
+  "id": "2019-stromer-virtual-cleaning-unwrapping-non-invasively",
+  "title": "Virtual cleaning and unwrapping of non-invasively digitized soiled bamboo scrolls",
+  "authors": [
+    {
+      "given": "Daniel",
+      "family": "Stromer"
+    },
+    {
+      "given": "Vincent",
+      "family": "Christlein"
+    },
+    {
+      "given": "Xiaolin",
+      "family": "Huang"
+    },
+    {
+      "given": "Patrick",
+      "family": "Zippert"
+    },
+    {
+      "given": "Tino",
+      "family": "Hausotte"
+    },
+    {
+      "given": "Andreas",
+      "family": "Maier"
+    }
+  ],
+  "year": 2019,
+  "venue": "Scientific Reports",
+  "doi": "10.1038/s41598-019-39447-0",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/s41598-019-39447-0",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping"
+  ],
+  "tags": [],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/s41598-019-39447-0) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -28,7 +28,7 @@
 \title{État de l'art du Vesuvius Challenge\\[4pt]
 \large Lecture virtuelle des rouleaux d'Herculanum en micro-CT :\\ ce qui a été publié, ce que la communauté a obtenu, ce qui reste ouvert}
 \author{Projet Elder-scrolls — synthèse de la base \texttt{elder-scrolls}}
-\date{15 novembre 2026 (version 2 : corpus entièrement fiché)}
+\date{15 novembre 2026 (version 3 : 34 articles fichés)}
 
 \begin{document}
 \maketitle
@@ -36,7 +36,7 @@
 \begin{abstract}
 \noindent Ce document fait le point sur la lecture virtuelle des papyrus carbonisés d'Herculanum
 au 15 novembre 2026. Il croise deux sources. La première est la littérature scientifique
-réunie dans la base \texttt{elder-scrolls} : 25 articles, tous lus en entier et fichés. La
+réunie dans la base \texttt{elder-scrolls} : 34 articles, tous lus en entier et fichés. La
 seconde est la veille communautaire du dépôt Elder-scrolls (Discord, Substack, dépôt
 \texttt{villa}, août–novembre 2026). Quatre constats ressortent.
 (1) Le contraste de l'encre dépend de sa composition. Une encre métallique (plomb, fer, cuivre)
@@ -61,13 +61,14 @@ de la surface), et plusieurs modalités indépendantes peuvent fournir une véri
 
 \paragraph{Sources.}
 \begin{itemize}
-  \item \textbf{Base \texttt{elder-scrolls}} (PaperDatabase) : 25 articles, tous fichés
-  (lecture intégrale, résultats chiffrés dans \texttt{benchmarks.csv}, 64 lignes, 8 articles
+  \item \textbf{Base \texttt{elder-scrolls}} (PaperDatabase) : 34 articles, tous fichés
+  (lecture intégrale, résultats chiffrés dans \texttt{benchmarks.csv}, 72 lignes, 10 articles
   chiffrés). La liste complète est en annexe~\ref{sec:corpus}.
   \item \textbf{Dépôt Elder-scrolls} : \nolinkurl{docs/COMMUNITY_BRIEF.md} (veille Discord,
   Substack et \texttt{villa}, août–15~nov.~2026), \nolinkurl{docs/PRIZES.md},
   \nolinkurl{research/prior_work_super_resolution.md} (recherche d'antériorité sur la
-  super-résolution, 15~nov.~2026).
+  super-résolution, 15~nov.~2026) et \nolinkurl{research/plan_super_resolution.md} (plan
+  d'expérience, branche \texttt{ccr-beb2d7f4-kz9t2h}, non fusionnée).
 \end{itemize}
 
 \paragraph{Niveau de preuve.} Chaque affirmation porte une étiquette :
@@ -78,8 +79,10 @@ Zenodo non relus par les pairs sont signalés. Une valeur non rapportée s'écri
 
 \paragraph{Limites de la base.}
 \begin{itemize}
-  \item 17 des 25 articles n'ont aucune ligne dans \texttt{benchmarks.csv} : leurs résultats
+  \item 24 des 34 articles n'ont aucune ligne dans \texttt{benchmarks.csv} : leurs résultats
   sont surtout qualitatifs (figures, lectures expertes) ou sans tâche comparable.
+  \item Deux articles sont des revues narratives \cite{damiani2021,perino2024} : elles
+  situent le domaine mais n'apportent pas de résultat propre.
   \item Plusieurs fiches signalent des tableaux mal extraits du PDF ; les chiffres
   correspondants ne sont pas cités.
   \item \texttt{gaps.md} n'est pas encore rempli.
@@ -112,8 +115,11 @@ La chaîne de référence de l'équipe du Challenge en 2026 \commu{} est la suiv
   \item rendu \texttt{tifxyz} dans les deux sens de profondeur ;
   \item détection d'encre (Reader V3 par défaut).
 \end{enumerate}
-Cette chaîne descend du pipeline EduceLab (segmentation, texturation, aplatissement dans Volume
-Cartographer, puis classifieur d'encre \emph{ink-ID}) \lu~\cite{parsons2023}, §3.1. La
+Le cadre « segmentation, texturation, aplatissement » a été posé pour lire le rouleau
+d'En-Gedi \lu~\cite{seales2016}. Cinq spires de ce rouleau ont été restituées à 18~µm,
+révélant deux colonnes du Lévitique, avec une encre dense, supposée métallique. EduceLab l'a
+ensuite étendu à Herculanum : aplatissement dans Volume Cartographer, puis classifieur d'encre
+\emph{ink-ID} \lu~\cite{parsons2023}, §3.1. La
 publication de 2026 sur \pherc{1667} en décrit la version actuelle
 \lu~\cite{angelotti2026complete}, « Technical strategy ». Elle compte quatre étages :
 \begin{itemize}
@@ -133,11 +139,17 @@ publication de 2026 sur \pherc{1667} en décrit la version actuelle
 Plusieurs travaux montrent qu'une encre contenant un élément lourd se voit en CT, et qu'une
 encre sans élément lourd ne se voit pas :
 \begin{itemize}
-  \item \textbf{Plomb dans l'encre d'Herculanum.} Tack et al.\ mesurent le plomb par XRF sur
-  deux fragments déroulés \lu~\cite{tack2016}, Table~1 et Results. Dans l'encre, il atteint
-  0,78~\% massique, contre 0,05~\% dans le papyrus nu. Sa densité surfacique vaut
-  16~±~5 et 84~±~5~µg/cm², pour un mélange encre + papyrus. L'origine du plomb reste
-  indéterminée.
+  \item \textbf{Plomb dans l'encre d'Herculanum.} Brun et al.\ (\emph{PNAS}) et Tack et al.\
+  mesurent le plomb par XRF synchrotron sur les deux mêmes fragments déroulés
+  \lu~\cite{brun2016,tack2016}. Le plomb est l'élément qui sépare le mieux encre et papyrus.
+  Dans l'encre, il atteint 0,78~\% massique, contre 0,05~\% dans le papyrus nu. Sa densité
+  surfacique vaut 16~±~5 et 84~±~5~µg/cm², pour un mélange encre + papyrus
+  \cite{tack2016}, Table~1. Brun et al.\ excluent un apport par l'eau ou par un encrier en
+  bronze, et concluent à un ajout intentionnel. Cette conclusion repose sur un calcul
+  d'ordre de grandeur et sur deux fragments seulement : ces deux articles sont une seule
+  mesure, pas deux confirmations indépendantes \deduit. La revue de Damiani reprend ces
+  chiffres et écarte l'extension de l'encre au plomb à toute la collection
+  \lu~\cite{damiani2021}.
   \item \textbf{Rouleau modèle au plomb.} Seiler et al.\ fabriquent et carbonisent un rouleau
   modèle écrit avec une encre carbonée dopée au plomb \lu~\cite{seiler2026}, §3.4. Le scan se
   fait en laboratoire (NIST, 18~µm, 30~kV). Des lignes dosées jusqu'à 25~µg/cm² restent
@@ -265,6 +277,8 @@ Modalité & Objet & Ce qui est montré & Applicable aux rouleaux fermés ? \\
 Profilométrie optique \cite{angelotti2026topo} & fragments ouverts & encre détectée par la topographie seule (Dice 0,89 à 0,34~µm) & non \\
 Thermographie pulsée \cite{ceccarelli2025} & fragments déroulés & lecture améliorée par rapport au NIR à 1000~nm ; carte d'adhésion et des kolleseis ; qualitatif & non \\
 MA-XRF \cite{romano2023,tack2016} & fragments déroulés & cartes de plomb : encre, réglures, mise en page & non \\
+SWIR hyperspectral \cite{tournie2019} & fragments déroulés, 200~µm & texte du verso révélé (une colonne de 15 lignes) ; plus de 150 mots nouveaux au recto par rapport à 950~nm ; trous parfois pris pour de l'encre & non \\
+Radar sub-THz \cite{verde2025} & fragment déroulé & zones collées ou décollées du carton ; un seul cas, qualitatif & non \\
 Xénon sous pression \cite{hoffmann2026} & échantillon modèle, BESSY~II, 3,6~µm & le xénon s'adsorbe dans l'encre et augmente son atténuation ; réversible & futurs scans seulement \\
 Traitement couleur \cite{atanasiu2021} & photos de papyrus & image négative utile pour juger si une trace est de l'encre ; étude à 8 participants & sans objet \\
 \bottomrule
@@ -273,7 +287,9 @@ Traitement couleur \cite{atanasiu2021} & photos de papyrus & image négative uti
 les pairs.}
 \end{table}
 
-\noindent Leur intérêt pour le projet est surtout de fournir une \textbf{vérité terrain
+\noindent La revue de Perino et al.\ couvre huit familles de techniques. Elle note que la
+tomographie X est la seule à lire un rouleau fermé \lu~\cite{perino2024}, §6. L'intérêt des
+autres modalités pour le projet est donc surtout de fournir une \textbf{vérité terrain
 indépendante} sur des fragments, pour valider ou entraîner des détecteurs CT \deduit.
 
 %======================================================================
@@ -291,17 +307,22 @@ Travail & Données & Modèle et labels & Résultat \\
 ink-ID, Parker 2019 \cite{parker2019} & fantôme 12~µm ; 1 fragment & CNN 3D sur patchs de surface ; labels photo & qualitatif \\
 ink-ID, EduceLab 2023 \cite{parsons2023} & 4 fragments, CV 8 plis & classifieur 3D de patchs ; labels IR recalés & 7/15 caractères (fr.~34) \\
 vFFC, Quattrini 2023 \cite{quattrini2023} & fragments 3,2~µm ; fr.~1 en test & ResNet-34 3D + goulot vFFC + décodeur 2D ; labels IR & F0.5 = 0,47 (test) ; 0,70 / 0,60 (Kaggle, ensemble) \\
+U-Net / Attention U-Net, Mou 2023 \cite{mou2023} & fragments Kaggle (4~µm) & 3 U-Net 2D sur sous-volumes 64×64×20 ; ensemble & Dice 0,766 (ensemble) ; protocole flou \\
 Texture 3D, Korotetskyi 2026 \cite{korotetskyi2026} & \pherc{172}, 25 lettres & sans apprentissage ; référence = prédiction d'un réseau & MCC 0,374 \\
 Angelotti 2026 \cite{angelotti2026complete} & \pherc{1667}, Paris~4, 139 à 2,4~µm & supervision de fragments + pseudo-labels conservateurs ; modèles « amplificateurs de visibilité » & lecture complète ; pas de métrique \\
 \bottomrule
 \end{tabularx}
-\caption{Détection d'encre dans la littérature de la base. Seul Parker~2019 est relu par les
-pairs ; les autres sont des preprints ou un rapport Zenodo.}
+\caption{Détection d'encre dans la littérature de la base. Seuls Parker~2019 et Mou~2023
+(actes ICCIT) sont relus par les pairs ; les autres sont des preprints ou un rapport Zenodo.}
 \end{table}
 
 \noindent Le goulot vFFC n'apporte presque rien : F0.5 de 0,47 contre 0,46 pour une convolution
 3D, sur un seul fragment de test \lu~\cite{quattrini2023}, Table~3. Les augmentations comptent
-davantage : F0.5 passe de 0,37 à 0,46 avec le groupe diédral (Table~1). L'article de 2026 sur
+davantage : F0.5 passe de 0,37 à 0,46 avec le groupe diédral (Table~1). Chez Mou et al.,
+l'ensemble de trois U-Net (Dice 0,766) dépasse nettement chaque modèle seul (0,630 à 0,679),
+et le pré-entraînement sur des lettres grecques n'aide pas \lu~\cite{mou2023}, Table~I. Mais
+le papier ne dit pas si ces scores portent sur une zone du fragment d'entraînement ou sur des
+fragments tenus à l'écart. L'article de 2026 sur
 \pherc{1667} reconnaît que la segmentation d'encre reste faible et varie selon la recette
 d'encre, l'état de conservation et la diffusion des rayons X \lu~\cite{angelotti2026complete},
 Discussion.
@@ -355,7 +376,10 @@ Travail & Objet, scan & Méthode et résultat \lu \\
 \midrule
 \endhead
 Barfod 2015 \cite{barfod2015} & rouleau d'argent, labo 23~µm & Lignes dessinées à la main, dépliées par polylignes ; fort contraste métal/air. \\
+Seales 2016 \cite{seales2016} & rouleau d'En-Gedi, labo 18~µm & Chaîne de particules (tenseur de structure, ressorts), corrections manuelles ; 5 spires, 2 colonnes lues. Qualitatif. \\
+Dahl 2018 \cite{dahl2018} & objet roulé en polymère, labo & Surfaces en couches optimales (coupe minimale) en coordonnées cylindriques ; nombre de tours donné à la main. Un seul objet, qualitatif. \\
 Rosin 2018 \cite{rosin2018} & parchemins, labo 5–40~µm & Coupe par coupe : Otsu, détection des jonctions de couches fusionnées, courbes optimisées. Déroulage complet ; 15–30~\% du texte lisible sur Bressingham, le reste perdu dans les zones fusionnées. \\
+Liu 2018 \cite{liu2018} & parchemins (TIP) & Version étendue de la méthode de Rosin : segmentation topologiquement correcte sur les 3070 coupes de Bressingham ; 22,8~s contre 6,4~h pour Samko et al.\ sur le petit rouleau. Évaluée sur 12 à 14 coupes annotées. \\
 Stabile 2021 \cite{stabile2021} & fragments d'Herculanum, labo 12~µm et ESRF 47~µm & Seuillage global, Poisson, LSCM/ABF, coupes manuelles ; qualitatif. \\
 Dambrogio 2021 \cite{dambrogio2021} & lettres pliées, XMT & Entièrement automatique : crêtes sous-voxel, épaisseur locale, aplatissement incrémental ; 4 lettres reconstruites (2 restent incomplètes), une lue pour la première fois. Une seule validation, contre une photo, sans erreur chiffrée. \\
 Klenert 2023 \cite{klenert2023} & papyrus plié, feuille d'argent & Fast marching depuis des graines ; surface garantie orientable. 3~min sur un papyrus doublement plié, 0,2~s par graine ; petits volumes. \\
@@ -384,8 +408,10 @@ biais optimiste possible \deduit.}
 \end{table}
 
 \noindent Ces travaux ont deux points communs \deduit. D'abord, toutes les méthodes
-automatiques échouent là où les couches se touchent ou fusionnent (Rosin, Stabile, Klenert,
-Henderson). Ensuite, aucune ne mesure la qualité de segmentation sur un rouleau tenu à
+automatiques échouent là où les couches se touchent ou fusionnent (Seales, Rosin et Liu,
+Stabile, Klenert, Henderson). Plusieurs supposent aussi une géométrie simple : une seule
+spirale et un nombre de tours connu \cite{dahl2018}, ou un fort contraste entre couches
+\cite{rosin2018,liu2018}. Ensuite, aucune ne mesure la qualité de segmentation sur un rouleau tenu à
 l'écart, avec une vérité terrain indépendante. Le seul déroulage complet publié reste
 semi-automatique \cite{angelotti2026complete}.
 
@@ -471,7 +497,7 @@ dégradation synthétique, \texttt{scan\_transfer}, paires au même protocole (0
 \section{Validation et faux positifs}
 %======================================================================
 
-\paragraph{Littérature.} Aucun des 25 articles ne rapporte de test placebo, de lecture inversée
+\paragraph{Littérature.} Aucun des 34 articles ne rapporte de test placebo, de lecture inversée
 ni de calibration. Les protocoles observés :
 \begin{itemize}
   \item inspection visuelle et lecture experte (2015–2021, et \cite{angelotti2026complete} dans
@@ -487,7 +513,9 @@ ni de calibration. Les protocoles observés :
 \end{itemize}
 Les lectures confirmées par thermographie le sont par des papyrologues co-auteurs, éditeurs
 des mêmes textes : la validation n'est pas indépendante \lu~\cite{ceccarelli2025}, Résultats ;
-\deduit.
+\deduit. En SWIR, les trous, fissures et plis apparaissent parfois comme de l'encre ; seule la
+comparaison à l'original les écarte \lu~\cite{tournie2019}, Discussion. Le même piège existe
+en CT (voir les pratiques de la communauté, plus bas).
 
 \paragraph{Vérités terrain possibles.}
 \begin{itemize}
@@ -567,19 +595,41 @@ Auto-supervisé 3D & dinovol \commu & Aucun article dans la base \\
 \caption{Verrous du domaine au 15 novembre 2026.}
 \end{table}
 
-\paragraph{État du dépôt Elder-scrolls.} Le dépôt compte 5 commits. La documentation de
-contexte est complète. Il contient des scripts de téléchargement et d'aperçu, et une
-recherche d'antériorité sur la super-résolution. Aucun modèle n'a encore été entraîné :
-\texttt{src/scroll\_tools} est vide, et l'environnement ML (\texttt{villa} sous WSL) n'est pas
-installé.
+\paragraph{État du dépôt Elder-scrolls.} La documentation de contexte est complète. Le
+dépôt contient des scripts de téléchargement et d'aperçu, une recherche d'antériorité sur la
+super-résolution et, depuis le 15~nov., un plan d'expérience pour restaurer le 9~µm vers le
+2,4~µm (\nolinkurl{research/plan_super_resolution.md}, branche non fusionnée). Aucun modèle
+n'a encore été entraîné : \texttt{src/scroll\_tools} est vide, et l'environnement ML
+(\texttt{villa} sous WSL) n'est pas installé.
+
+\paragraph{Le plan de super-résolution.} Il comble le gap du §7 et s'appuie sur la
+littérature de la base \deduit :
+\begin{itemize}
+  \item \textbf{Phase~0, sans entraînement} : mesurer le plafond. On compare les modèles
+  d'encre sur le 9~µm natif, sur le 2,4~µm ramené à 9,6~µm, sur la sortie de
+  \texttt{scan\_transfer}, et sur le 2,4~µm natif. Si le 2,4~µm ramené ne gagne pas au moins
+  0,02 d'AUC sur le natif, la restauration n'a rien à gagner.
+  \item \textbf{Étape~A} : restauration sur la même grille (9~µm natif → 2,4~µm ramené à
+  9,6~µm). C'est l'inverse de \texttt{scan\_transfer}, avec un risque d'encre inventée faible.
+  \item \textbf{Étape~B} : vraie super-résolution ×4, seulement si A réussit.
+\end{itemize}
+Les données viennent de rendus de surface appariés, publiés par segment pour six
+échantillons au protocole des scans de prix. L'évaluation tient un rouleau entier à l'écart
+(0841, puis 0139). Le plan exclut les pertes adversariales et de diffusion. Il prévoit cinq
+tests anti-hallucination ; le plus fort entraîne un restaurateur sur des tuiles sans encre.
+Le tableau~\ref{tab:topo} et l'écart 0,95/0,11 rapporté par la communauté laissent attendre
+un gain limité pour l'étape~B ; le plan le reconnaît \deduit.
 
 \paragraph{Pistes concrètes.}
 \begin{enumerate}
-  \item \textbf{Comparer la super-résolution à la distillation} sur des paires au même
-  protocole (0139, 0814, 0841), avec des métriques de fidélité de l'encre plutôt que le PSNR.
-  Demander d'abord aux organisateurs le statut d'un volume super-résolu.
-  \item \textbf{Mesurer la perte de signal en CT}, en reproduisant le protocole du
-  tableau~\ref{tab:topo} sur des paires recalées 2,4/9~µm.
+  \item \textbf{Lancer la phase~0 du plan} : elle ne demande aucun entraînement et répond à
+  la question du §3.4 en CT réel. Les étapes 1 et 2 (lecteur de paires, contrôle
+  d'alignement) peuvent commencer sans l'environnement WSL. Demander en parallèle aux
+  organisateurs le statut d'un volume restauré.
+  \item \textbf{Ajouter un ensemble de modèles comme témoin} dans la phase~0. Les ensembles
+  aident nettement chez Mou et al.\ \cite{mou2023}, mais pas pour les graines
+  d'\texttt{ink\_9um} \commu. Un gain de restauration doit être comparé à ce gain gratuit
+  \deduit.
   \item \textbf{Relier composition de l'encre et transfert entre rouleaux.} Les échecs de
   transfert pourraient venir de la teneur en plomb, qui varie d'un fragment à l'autre (16 et
   84~µg/cm²) \cite{tack2016} \deduit. Une carte de « densité claire » par rouleau, croisée
@@ -590,9 +640,10 @@ installé.
 \begin{itemize}
   \item Le volet Methods et Extended Data de \cite{angelotti2026complete}, absent du texte
   extrait : énergie du scan, recette d'encre, éventuels tests à l'aveugle.
-  \item Seales et al.\ 2016 (En-Gedi, \emph{Science Advances}) et Brun et al.\ 2016 (encre
-  métallique, \emph{PNAS}), en libre accès mais bloqués au téléchargement automatique (liste
-  \nolinkurl{A_TELECHARGER.md}).
+  \item Les 8 articles restants de \nolinkurl{A_TELECHARGER.md}. En priorité Samko et al.\
+  2013 (\emph{Pattern Recognition}, cité par 5 papiers de la base) et la méthode de déroulage
+  entièrement automatique d'ICDAR 2024 (LNCS 14806). Viennent ensuite les 5 rapports Zenodo
+  restreints, dont trois sur la généralisation entre fragments et entre résolutions.
   \item Pré-entraînement auto-supervisé 3D et hallucination en reconstruction tomographique
   (Bhadra et al., IEEE TMI 2021).
 \end{itemize}
@@ -604,7 +655,7 @@ installé.
 %======================================================================
 
 \begin{small}
-\begin{longtable}{@{}p{1cm}p{6.3cm}p{2.3cm}p{5cm}@{}}
+\begin{longtable}{@{}p{1.2cm}p{6.1cm}p{2.3cm}p{5cm}@{}}
 \toprule
 Année & Article & Type & Apport principal \\
 \midrule
@@ -613,22 +664,31 @@ Année & Article & Type & Apport principal \\
 2015 & Barfod et al. \cite{barfod2015} & journal & rouleau métallique, segmentation manuelle \\
 2016 & Bukreeva et al. \cite{bukreeva2016} & preprint & lignes lues en XPCT, Philodème \\
 2016 & Tack et al. \cite{tack2016} & journal & plomb dans l'encre (XRF) \\
+2016 & Brun et al. \cite{brun2016} & journal & encre au plomb, ajout intentionnel \\
+2016 & Seales et al. \cite{seales2016} & journal & déroulage et lecture d'En-Gedi \\
 2017 & Bukreeva et al. \cite{bukreeva2017} & preprint & scorzatura virtuelle \\
 2018 & Rosin et al. \cite{rosin2018} & journal & déroulage automatique de parchemins \\
 2018 & Stromer et al. \cite{stromer2018} & journal & contraste de six encres en CT \\
+2018 & Dahl et al. \cite{dahl2018} & conférence & surfaces en couches optimales \\
+2018 & Liu et al. \cite{liu2018} & journal & déroulage robuste de parchemins \\
 2019 & Parker et al. \cite{parker2019} & journal & encre carbone visible par sa morphologie \\
 2019 & Wang et al. \cite{wang2019} & preprint & super-résolution GAN en micro-CT \\
+2019 & Tournié et al. \cite{tournie2019} & journal & SWIR hyperspectral, texte du verso \\
 2020 & Parker et al. \cite{parker2020} & preprint & mesure de distorsion d'aplatissement \\
 2021 & Stabile et al. \cite{stabile2021} & journal & plateforme de déroulage, LSCM/ABF \\
 2021 & Dambrogio et al. \cite{dambrogio2021} & journal & dépliage automatique de lettres \\
 2021 & Atanasiu, Marthot-Santaniello \cite{atanasiu2021} & journal & rehaussement couleur pour la lecture \\
+2021 & Damiani \cite{damiani2021} & chapitre & revue : l'encre d'Herculanum \\
 2023 & Parsons et al. \cite{parsons2023} & preprint & jeu EduceLab-Scrolls, ink-ID \\
 2023 & Quattrini et al. \cite{quattrini2023} & preprint & vFFC pour l'encre \\
 2023 & Klenert et al. \cite{klenert2023} & preprint & extraction de surface orientable \\
 2023 & Romano et al. \cite{romano2023} & journal & réglures au plomb, mise en page \\
+2023 & Mou, Ahmed \cite{mou2023} & conférence & U-Net et ensembles pour l'encre \\
+2024 & Perino et al. \cite{perino2024} & journal & revue des techniques d'imagerie \\
 2025 & Henderson \cite{henderson2025} & conférence & spirale difféomorphe \\
 2025 & Ceccarelli et al. \cite{ceccarelli2025} & journal & thermographie pulsée \\
 2025 & Foschiatti et al. \cite{foschiatti2025} & preprint & banc pédagogique en lumière visible \\
+2025 & Verde et al. \cite{verde2025} & conférence & radar sub-THz, adhésion au carton \\
 2026 & Angelotti et al. \cite{angelotti2026topo} & journal & encre et topographie \\
 2026 & Angelotti et al. \cite{angelotti2026complete} & preprint & déroulage et lecture complets de 1667 \\
 2026 & Seiler et al. \cite{seiler2026} & journal & rouleau modèle au plomb \\
@@ -666,7 +726,16 @@ Année & Article & Type & Apport principal \\
 \bibitem{seiler2026} D.~Seiler, J.~M.~LaManna, M.~McOsker, D.~Kreimer, M.~C.~Daugherty, J.~Dopke. \emph{A model carbonized papyrus scroll opens a novel path to identifying readable scrolls of the Herculaneum Library}. PLoS ONE 21(9):e0353485, 2026. \href{https://doi.org/10.1371/journal.pone.0353485}{doi:10.1371/journal.pone.0353485}.
 \bibitem{korotetskyi2026} O.~Korotetskyi, M.~Haindl. \emph{Volumetric Texture Analysis for Unsupervised Ink Detection in Herculaneum Papyri}. Rapport Zenodo, 2026. \href{https://doi.org/10.5281/zenodo.20766168}{doi:10.5281/zenodo.20766168}.
 \bibitem{hoffmann2026} H.~Hoffmann. \emph{Xenon Contrast for Carbon-Ink Tomography}. Poster, Eighth Papyrus Curatorial and Conservation Meeting, Berlin, 2026 ; Zenodo. \href{https://doi.org/10.5281/zenodo.23164128}{doi:10.5281/zenodo.23164128}.
-\bibitem{brief} Projet Elder-scrolls. \emph{Community brief: Vesuvius Challenge, Aug–Nov 2026} (\nolinkurl{docs/COMMUNITY_BRIEF.md}) et \emph{Prior work: super-resolution from $\sim$9~µm to 2.4~µm scans} (\nolinkurl{research/prior_work_super_resolution.md}), 15~nov.~2026. Sources primaires : Discord du Vesuvius Challenge, \url{https://scrollprize.substack.com}, \url{https://github.com/ScrollPrize/villa}.
+\bibitem{brun2016} E.~Brun, M.~Cotte, J.~P.~Wright, M.~Ruat, P.~Tack, L.~Vincze, C.~Ferrero, D.~Delattre, V.~Mocella. \emph{Revealing metallic ink in Herculaneum papyri}. PNAS, 2016. \href{https://doi.org/10.1073/pnas.1519958113}{doi:10.1073/pnas.1519958113}.
+\bibitem{seales2016} W.~B.~Seales, C.~S.~Parker, M.~Segal, E.~Tov, P.~Shor, Y.~Porath. \emph{From damage to discovery via virtual unwrapping: Reading the scroll from En-Gedi}. Science Advances 2(9):e1601247, 2016. \href{https://doi.org/10.1126/sciadv.1601247}{doi:10.1126/sciadv.1601247}.
+\bibitem{dahl2018} V.~A.~Dahl, A.~B.~Dahl, C.~H.~Trinderup, C.~Gundlach. \emph{Layered Surface Detection for Virtual Unrolling}. ICPR 2018, IEEE. \href{https://doi.org/10.1109/icpr.2018.8545715}{doi:10.1109/icpr.2018.8545715}.
+\bibitem{liu2018} C.~Liu, P.~L.~Rosin, Y.-K.~Lai, W.~Hu. \emph{Robust Virtual Unrolling of Historical Parchment XMT Images}. IEEE Transactions on Image Processing 27(4):1914–1926, 2018. \href{https://doi.org/10.1109/tip.2017.2783626}{doi:10.1109/tip.2017.2783626}.
+\bibitem{tournie2019} A.~Tournié, K.~J.~Fleischer, I.~Bukreeva, F.~Palermo, M.~Perino, A.~Cedola, C.~Andraud, G.~Ranocchia. \emph{Ancient Greek text concealed on the back of unrolled papyrus revealed through shortwave-infrared hyperspectral imaging}. Science Advances 5(10):eaav8936, 2019. \href{https://doi.org/10.1126/sciadv.aav8936}{doi:10.1126/sciadv.aav8936}.
+\bibitem{damiani2021} V.~Damiani. \emph{Ink in Herculaneum: A Survey of Recent Perspectives}. Chapitre d'ouvrage collectif, Brill, 2021. \href{https://doi.org/10.1163/9789004444805_005}{doi:10.1163/9789004444805\_005}.
+\bibitem{mou2023} F.~S.~Mou, T.~Ahmed. \emph{Ink Detection from Carbonized Herculaneum Papyri using Deep Learning}. ICCIT 2023, IEEE. \href{https://doi.org/10.1109/iccit60459.2023.10441240}{doi:10.1109/iccit60459.2023.10441240}.
+\bibitem{perino2024} M.~Perino, L.~Pronti, C.~Moffa, M.~Rosellini, A.~C.~Felici. \emph{New Frontiers in the Digital Restoration of Hidden Texts in Manuscripts: A Review of the Technical Approaches}. Heritage 7:683–696, 2024. \href{https://doi.org/10.3390/heritage7020034}{doi:10.3390/heritage7020034}.
+\bibitem{verde2025} F.~Verde, S.~Ceccarelli, V.~Giliberti, F.~Vitucci, C.~Miliani, G.~Ranocchia, M.~Ortolani. \emph{Sub-terahertz Radar Imaging of Ancient Herculaneum Papyrus Scrolls reveals Adhesion to Substrate after Unrolling}. IRMMW-THz 2025, IEEE. \href{https://doi.org/10.1109/irmmw-thz61557.2025.11319600}{doi:10.1109/irmmw-thz61557.2025.11319600}.
+\bibitem{brief} Projet Elder-scrolls. \emph{Community brief: Vesuvius Challenge, Aug–Nov 2026} (\nolinkurl{docs/COMMUNITY_BRIEF.md}) et \emph{Prior work: super-resolution from $\sim$9~µm to 2.4~µm scans} (\nolinkurl{research/prior_work_super_resolution.md}) et \emph{Plan: restoring 9~µm scans toward 2.4~µm quality} (\nolinkurl{research/plan_super_resolution.md}), 15~nov.~2026. Sources primaires : Discord du Vesuvius Challenge, \url{https://scrollprize.substack.com}, \url{https://github.com/ScrollPrize/villa}.
 \end{thebibliography}
 
 \end{document}

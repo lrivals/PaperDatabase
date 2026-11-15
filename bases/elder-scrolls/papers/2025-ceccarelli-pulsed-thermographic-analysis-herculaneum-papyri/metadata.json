@@ -50,12 +50,16 @@
   "url": "https://doi.org/10.1038/s41598-025-19911-w",
   "type": "journal",
   "axes": [
-    "virtual-unwrapping",
+    "ink-detection",
     "papyrology"
   ],
   "tags": [
     "herculaneum",
-    "papyrus"
+    "papyrus",
+    "thermography",
+    "pulsed-thermography",
+    "mwir",
+    "non-invasive"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -64,12 +68,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/s41598-025-19911-w) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

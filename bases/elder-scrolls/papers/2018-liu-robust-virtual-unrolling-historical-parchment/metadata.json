@@ -1,0 +1,51 @@
+{
+  "id": "2018-liu-robust-virtual-unrolling-historical-parchment",
+  "title": "Robust Virtual Unrolling of Historical Parchment XMT Images",
+  "authors": [
+    {
+      "given": "Chang",
+      "family": "Liu"
+    },
+    {
+      "given": "Paul L.",
+      "family": "Rosin"
+    },
+    {
+      "given": "Yu‐Kun",
+      "family": "Lai"
+    },
+    {
+      "given": "Weiduo",
+      "family": "Hu"
+    }
+  ],
+  "year": 2018,
+  "venue": "IEEE Transactions on Image Processing 27(4):1914-1926, 2018",
+  "doi": "10.1109/tip.2017.2783626",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/tip.2017.2783626",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging"
+  ],
+  "tags": [
+    "parchment"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : IEEE Transactions on Image Processing 27(4):1914-1926, 2018) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 57 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 10 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

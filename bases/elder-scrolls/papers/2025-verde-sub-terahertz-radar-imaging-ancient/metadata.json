@@ -1,0 +1,63 @@
+{
+  "id": "2025-verde-sub-terahertz-radar-imaging-ancient",
+  "title": "Sub-terahertz Radar Imaging of Ancient Herculaneum Papyrus Scrolls reveals Adhesion to Substrate after Unrolling",
+  "authors": [
+    {
+      "given": "Federica",
+      "family": "Verde"
+    },
+    {
+      "given": "Sofia",
+      "family": "Ceccarelli"
+    },
+    {
+      "given": "Valeria",
+      "family": "Giliberti"
+    },
+    {
+      "given": "Francesco",
+      "family": "Vitucci"
+    },
+    {
+      "given": "Costanza",
+      "family": "Miliani"
+    },
+    {
+      "given": "Graziano",
+      "family": "Ranocchia"
+    },
+    {
+      "given": "Michele",
+      "family": "Ortolani"
+    }
+  ],
+  "year": 2025,
+  "venue": "International Conference on Infrared, Millimeter, and Terahertz Waves (IRMMW-THz)",
+  "doi": "10.1109/irmmw-thz61557.2025.11319600",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/irmmw-thz61557.2025.11319600",
+  "type": "conference",
+  "axes": [
+    "virtual-unwrapping",
+    "validation-fp",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (International Conference on Infrared, Millimeter, and Terahertz Waves (IRMMW-THz), DOI 10.1109/irmmw-thz61557.2025.11319600) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

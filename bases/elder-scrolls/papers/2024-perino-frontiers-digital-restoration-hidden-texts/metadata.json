@@ -1,0 +1,52 @@
+{
+  "id": "2024-perino-frontiers-digital-restoration-hidden-texts",
+  "title": "New Frontiers in the Digital Restoration of Hidden Texts in Manuscripts: A Review of the Technical Approaches",
+  "authors": [
+    {
+      "given": "Michela",
+      "family": "Perino"
+    },
+    {
+      "given": "Lucilla",
+      "family": "Pronti"
+    },
+    {
+      "given": "Candida",
+      "family": "Moffa"
+    },
+    {
+      "given": "Michela",
+      "family": "Rosellini"
+    },
+    {
+      "given": "Anna Candida",
+      "family": "Felici"
+    }
+  ],
+  "year": 2024,
+  "venue": "Heritage",
+  "doi": "10.3390/heritage7020034",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.3390/heritage7020034",
+  "type": "journal",
+  "axes": [
+    "surveys",
+    "virtual-unwrapping",
+    "papyrology"
+  ],
+  "tags": [],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Heritage, DOI 10.3390/heritage7020034) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

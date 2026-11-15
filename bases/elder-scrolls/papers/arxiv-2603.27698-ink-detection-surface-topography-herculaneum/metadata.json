@@ -30,7 +30,8 @@
     "ct-imaging",
     "validation-fp",
     "papyrology",
-    "domain-transfer"
+    "domain-transfer",
+    "ink-physics"
   ],
   "tags": [
     "herculaneum",

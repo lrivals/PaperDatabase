@@ -52,7 +52,8 @@
   "axes": [
     "ink-detection",
     "ct-imaging",
-    "papyrology"
+    "papyrology",
+    "ink-physics"
   ],
   "tags": [
     "herculaneum",

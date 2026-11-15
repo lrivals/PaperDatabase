@@ -60,6 +60,11 @@ Vesuvius Challenge : lecture virtuelle des papyrus carbonisés d'Herculanum par 
 - Adaptation de domaine en imagerie volumique.
 - Validation, faux positifs et hallucination des modèles en imagerie scientifique.
 - Papyrologie d'Herculanum, paléographie grecque, reconnaissance de caractères anciens.
+- Super-résolution : métriques de fidélité au-delà du PSNR/SSIM, détection d'hallucination
+  (texture plausible sans gain d'information, risque pour l'encre).
+- Physique et chimie de l'encre (Pb, XRF, XANES), agents de contraste, et modalités hors CT
+  appliquées aux papyrus : thermographie, profilométrie de surface, NIR/SWIR, macro-XRF.
+- Rouleaux modèles et fantômes carbonisés à vérité terrain connue (validation à l'aveugle).
 
 ## Exclus
 
@@ -75,17 +80,18 @@ Vesuvius Challenge : lecture virtuelle des papyrus carbonisés d'Herculanum par 
 - *Lasagna* : champs de normales, de phase et de fibres ; *spiral fit* : ajustement global.
 - *Kollesis* (pl. kolleseis) : jonction collée entre deux feuilles de papyrus.
 - *First Letters* : prix pour les premières lettres lisibles d'un rouleau.
+- *Fantôme / rouleau modèle* : papyrus moderne écrit puis carbonisé, scanné pour disposer
+  d'une vérité terrain.
+- *Scorza* : couches externes, très dégradées, d'un rouleau d'Herculanum.
 
 ## Suggestions en attente
 
 <!-- Une ligne par suggestion : - AAAA-MM-JJ (source : paper_id ou /base-profile) — proposition — raison -->
-- 2026-11-15 (arxiv-1907.07131-boosting-resolution-recovering-texture-micro) — ajouter « métriques de fidélité de texture / hallucination en super-résolution GAN » aux Inclus (axe super-resolution ou validation-fp) — le papier admet que le PSNR ne mesure pas la texture générée.
-- 2026-11-15 (arxiv-2603.27698-ink-detection-surface-topography-herculaneum) — ajouter la profilométrie optique de surface comme modalité d'étude du signal d'encre (hypothèse morphologique) — papier ink-detection dont la modalité n'est ni CT ni IR/multispectral.
-- 2026-11-15 (/paper-fiche, agent principal) — adapter les colonnes de benchmarks.csv au thème (résolution µm/voxel, source du scan, région tenue à l'écart, type de labels) — l'en-tête FPGA (fps, luts, power…) laisse 10 colonnes sur 20 à n/r.
-- 2026-11-15 (2016-tack-tracking-ink-composition-herculaneum-papyrus) — ajouter un axe « ink-chemistry » (composition de l'encre, XRF/XANES, lien avec le contraste CT) ou l'inclure dans ct-imaging — papier de chimie des matériaux sans axe propre.
-- 2026-11-15 (2025-ceccarelli-pulsed-thermographic-analysis-herculaneum-papyri) — ajouter « imagerie de surface non-CT (thermographie, NIR, SWIR, macro-XRF) de papyrus déroulés » aux Inclus, éventuellement un axe dédié — classé en ink-detection par défaut alors que le papier est hors CT.
-- 2026-11-15 (2026-seiler-model-carbonized-papyrus-scroll-opens) — ajouter un sous-thème « rouleaux modèles / fantômes à vérité terrain » (validation à l'aveugle, dépistage XRF du plomb) — relève de ct-imaging et validation-fp sans axe dédié.
 
 ## Historique
 
 - 2026-11-15 — base créée (`pdb base new`) ; profil, 12 axes et règles rédigés à partir des docs du dépôt Elder-scrolls (PRIZES, COMMUNITY_BRIEF, research/).
+- 2026-11-15 — axe `ink-physics` ajouté (règle, requête, tags xrf/thermography/phantom) ; attribué à Tack 2016, Romano 2023, Ceccarelli 2025, Hoffmann 2026, Seiler 2026, 2603.27698 ; `ink-detection` retiré de Ceccarelli — suggestions Tack, Ceccarelli, profilométrie : chimie de l'encre et modalités hors CT sans axe.
+- 2026-11-15 — Inclus : fidélité/hallucination en super-résolution, physique de l'encre et modalités hors CT, rouleaux modèles ; vocabulaire : fantôme, scorza — suggestions Boosting Resolution et Seiler.
+- 2026-11-15 — bloc `plot` : 5 classes de tâches, 2 familles (scanner CT, XRF), figures FPGA écartées — 74 % des tâches et 24 % des plateformes classées « autre ».
+- 2026-11-15 — `benchmarks.csv` : colonnes optionnelles input_res, dataset_split, metric_def, chunk_id — suggestion « colonnes adaptées au thème » (résolution, région tenue à l'écart) sans changer le schéma partagé.

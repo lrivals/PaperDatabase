@@ -37,7 +37,8 @@
     "ct-imaging",
     "validation-fp",
     "virtual-unwrapping",
-    "papyrology"
+    "papyrology",
+    "ink-physics"
   ],
   "tags": [
     "herculaneum",

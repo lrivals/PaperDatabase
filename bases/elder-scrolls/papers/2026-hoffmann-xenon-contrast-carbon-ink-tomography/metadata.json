@@ -15,7 +15,8 @@
   "type": "report",
   "axes": [
     "ct-imaging",
-    "ink-detection"
+    "ink-detection",
+    "ink-physics"
   ],
   "tags": [
     "xenon",

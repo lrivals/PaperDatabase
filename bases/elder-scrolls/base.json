@@ -7,6 +7,7 @@
     "surface-segmentation": "Segmentation de feuillets / surfaces minces enroulées en volume 3D",
     "mesh-flattening": "Reconstruction de maillage, suivi de fibres, ajustement de spirale, aplatissement (paramétrisation)",
     "ct-imaging": "Imagerie : micro-CT synchrotron, contraste de phase, résolution, bruit, reconstruction",
+    "ink-physics": "Physique et chimie de l'encre, modalités hors CT (XRF, XANES, thermographie, profilométrie, agents de contraste), rouleaux modèles",
     "super-resolution": "Super-résolution volumétrique, transfert et distillation entre résolutions",
     "self-supervised-3d": "Pré-entraînement auto-supervisé et modèles de fondation pour volumes 3D",
     "label-efficiency": "Labels rares ou bruités : pseudo-labels, auto-entraînement, annotation interactive",
@@ -20,6 +21,7 @@
     "surface-segmentation": "sheet (?:segmentation|tracing|detection)|surface (?:segmentation|detection|extraction|prediction)|thin (?:structure|layer|sheet)s?|layer (?:separation|segmentation)|nnU-?Net|3D U-?Net|instance segmentation (?:of )?(?:sheets|layers)",
     "mesh-flattening": "mesh (?:generation|reconstruction|parameteri[sz]ation)|surface (?:parameteri[sz]ation|flattening|reconstruction)|flatten(?:ing)?|\\bSLIM\\b|conformal map|as-rigid-as-possible|\\bARAP\\b|fiber (?:tracking|tracing|orientation)|structure tensor|spiral (?:fit|model)|winding (?:number|field)|level[- ]set",
     "ct-imaging": "(?:micro-?)?computed tomography|micro-?CT|\\bCT\\b scans?|X-ray (?:tomograph|phase|imaging)|synchrotron|phase[- ]contrast|propagation[- ]based|beam hardening|ring artifacts?|tomographic reconstruction|voxel size|\\bESRF\\b|Diamond Light Source",
+    "ink-physics": "\\bXRF\\b|X-ray fluorescence|\\bXANES\\b|ink composition|\\blead\\b (?:in|content|signal)|thermograph|profilometr|surface topograph|contrast agent|xenon|model (?:carboni[sz]ed )?(?:papyrus )?scroll|phantom",
     "super-resolution": "super[- ]resolution|upsampl(?:e|ing)|resolution (?:enhancement|transfer)|cross[- ]resolution|knowledge distillation|(?:teacher|student) (?:model|network)|deblur",
     "self-supervised-3d": "self-supervised|contrastive (?:learning|pre-?training)|masked (?:autoencoder|image modeling)|\\bDINO(?:v2|v3)?\\b|foundation model|pre-?train(?:ed|ing) (?:on )?(?:3D|volum)",
     "label-efficiency": "pseudo-?labels?|self-training|semi-supervised|weak(?:ly)? supervis|sparse (?:labels|annotations)|scribbles?|noisy labels|active learning|interactive (?:segmentation|annotation)|label smoothing",
@@ -34,6 +36,7 @@
     "surface-segmentation": "thin sheet surface segmentation volumetric CT rolled document",
     "mesh-flattening": "surface parameterization flattening mesh scroll unrolling fiber tracking",
     "ct-imaging": "synchrotron phase contrast micro-CT papyrus carbon ink",
+    "ink-physics": "Herculaneum ink composition X-ray fluorescence lead carbon ink imaging",
     "super-resolution": "volumetric super-resolution micro-CT deep learning paired registration",
     "self-supervised-3d": "self-supervised pretraining 3D volumetric segmentation foundation model",
     "label-efficiency": "pseudo-labels sparse annotation 3D segmentation self-training",
@@ -153,8 +156,62 @@
     [
       "ensembl",
       "ensemble"
+    ],
+    [
+      "\\bXRF\\b|X-ray fluorescence",
+      "xrf"
+    ],
+    [
+      "thermograph",
+      "thermography"
+    ],
+    [
+      "phantom|model (?:carboni[sz]ed )?scroll",
+      "phantom"
     ]
   ],
   "topic_re": "tomograph|micro-?CT|\\bCT\\b|X-ray|synchrotron|volumetric|\\b3D\\b|papyr|scrolls?\\b|Herculaneum|unwrap|unroll|carboni[sz]ed|\\bink\\b|manuscript|palimpsest|cultural heritage",
-  "title_topic_re": "tomograph|micro-?CT|\\bCT\\b|X-ray|synchrotron|volumetric|\\b3D\\b|papyr|scrolls?\\b|Herculaneum|unwrap|unroll|carboni[sz]ed|\\bink\\b|manuscript|palimpsest|cultural heritage"
+  "title_topic_re": "tomograph|micro-?CT|\\bCT\\b|X-ray|synchrotron|volumetric|\\b3D\\b|papyr|scrolls?\\b|Herculaneum|unwrap|unroll|carboni[sz]ed|\\bink\\b|manuscript|palimpsest|cultural heritage",
+  "plot": {
+    "tasks": [
+      [
+        "encre (détection / segmentation)",
+        "\\bink\\b.*(?:detect|segment|visib)|ink detection|unsupervised ink"
+      ],
+      [
+        "signal plomb / XRF",
+        "\\blead\\b|\\bXRF\\b"
+      ],
+      [
+        "lecture / lisibilité",
+        "\\breading\\b|character|letter|legib"
+      ],
+      [
+        "déroulage / surface",
+        "unroll|unwrap|manifold|surface|seed"
+      ],
+      [
+        "super-résolution",
+        "super-r"
+      ]
+    ],
+    "families": [
+      [
+        "scanner CT / imagerie",
+        "micro-?CT|cone-beam|\\bkV\\b|NeXT"
+      ],
+      [
+        "instrument XRF",
+        "\\bXRF\\b"
+      ]
+    ],
+    "skip": [
+      "bench_fps_power",
+      "bench_gops_per_watt",
+      "bench_fpga_resources",
+      "bench_accuracy_fps",
+      "bench_quantization"
+    ],
+    "max_other": 0.1
+  }
 }

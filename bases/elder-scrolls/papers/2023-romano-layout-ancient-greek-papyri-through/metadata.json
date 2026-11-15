@@ -66,7 +66,8 @@
   "url": "https://doi.org/10.1038/s41598-023-33242-8",
   "type": "journal",
   "axes": [
-    "papyrology"
+    "papyrology",
+    "ink-physics"
   ],
   "tags": [
     "papyrus",

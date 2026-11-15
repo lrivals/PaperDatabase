@@ -36,6 +36,7 @@
   "axes": [
     "virtual-unwrapping",
     "ct-imaging",
+    "ink-detection",
     "papyrology"
   ],
   "tags": [
@@ -48,12 +49,11 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "publié ailleurs selon OpenAlex (PLoS ONE, DOI 10.1371/journal.pone.0353485) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "publié ailleurs selon OpenAlex (PLoS ONE, DOI 10.1371/journal.pone.0353485) : type journal/conference à préciser"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

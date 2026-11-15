@@ -1,0 +1,54 @@
+{
+  "id": "2015-mocella-revealing-letters-rolled-herculaneum-papyri",
+  "title": "Revealing letters in rolled Herculaneum papyri by X-ray phase-contrast imaging",
+  "authors": [
+    {
+      "given": "Vito",
+      "family": "Mocella"
+    },
+    {
+      "given": "Emmanuel",
+      "family": "Brun"
+    },
+    {
+      "given": "Claudio",
+      "family": "Ferrero"
+    },
+    {
+      "given": "Daniel",
+      "family": "Delattre"
+    }
+  ],
+  "year": 2015,
+  "venue": "Nature Communications",
+  "doi": "10.1038/ncomms6895",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/ncomms6895",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "phase-contrast"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Nature Communications, DOI 10.1038/ncomms6895) : type journal/conference à préciser",
+      "ligatures perdues à l'extraction : 22 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 8 fragment(s) non réparé(s) (« classi cation »…)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

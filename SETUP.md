@@ -926,6 +926,8 @@ Défauts constatés pendant les lots :
   explicite « aucune valeur tirée de la mémoire » ajoutée au prompt ;
 - un lot entier interrompu par la limite de session, sans rien écrire, relancé tel quel.
 
+- [ ] Base elder-scrolls (créée le 15/11/2026 ; 12 axes, 0 article) : premiers articles par
+  `/paper-discover` (Seales et al., Parker et al., travaux du Vesuvius Challenge), puis fiches.
 - [ ] Base serre (créée le 19/10/2026 ; au 29/10/2026 : 14 axes dont `crop-practices`, 67 articles,
   43 fiches, 58 lignes de benchmark) : finir les 24 fiches restantes par vagues de sous-agents
   (calibration et anomalies, agent LLM, RL et contrôle, phénotypage), fusionner leurs lignes de benchmarks, puis `/paper-gaps`. PDF encore

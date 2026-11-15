@@ -1,0 +1,64 @@
+{
+  "id": "2021-stabile-computational-platform-virtual-unfolding-herculaneum",
+  "title": "A computational platform for the virtual unfolding of Herculaneum Papyri",
+  "authors": [
+    {
+      "given": "Sara",
+      "family": "Stabile"
+    },
+    {
+      "given": "Francesca",
+      "family": "Palermo"
+    },
+    {
+      "given": "Inna",
+      "family": "Bukreeva"
+    },
+    {
+      "given": "Daniela",
+      "family": "Mele"
+    },
+    {
+      "given": "V.",
+      "family": "Formoso"
+    },
+    {
+      "given": "Roberto",
+      "family": "Bartolino"
+    },
+    {
+      "given": "Alessia",
+      "family": "Cedola"
+    }
+  ],
+  "year": 2021,
+  "venue": "Scientific Reports",
+  "doi": "10.1038/s41598-020-80458-z",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/s41598-020-80458-z",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/s41598-020-80458-z) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

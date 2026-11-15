@@ -31,7 +31,7 @@ from lib import base, ids, openalex, xbase  # noqa: E402
 ROOT = base.ROOT
 INBOX = ROOT / "inbox"
 PAPERS = ROOT / "papers"
-API = "http://export.arxiv.org/api/query"
+API = "https://export.arxiv.org/api/query"
 HEADERS = {"User-Agent": "PaperDatabase/1.0 (usage personnel, recherche bibliographique)"}
 ATOM = {"a": "http://www.w3.org/2005/Atom", "arxiv": "http://arxiv.org/schemas/atom"}
 API_DELAY = 3  # secondes entre deux appels, politique d'usage de l'API arXiv

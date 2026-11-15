@@ -1,0 +1,29 @@
+{
+  "arxiv_id": null,
+  "title": "Robust Virtual Unrolling of Historical Parchment XMT Images",
+  "authors": [
+    {
+      "given": "Chang",
+      "family": "Liu"
+    },
+    {
+      "given": "Paul L.",
+      "family": "Rosin"
+    },
+    {
+      "given": "Yu‐Kun",
+      "family": "Lai"
+    },
+    {
+      "given": "Weiduo",
+      "family": "Hu"
+    }
+  ],
+  "year": 2017,
+  "doi": "10.1109/tip.2017.2783626",
+  "journal_ref": null,
+  "venue_openalex": "IEEE Transactions on Image Processing",
+  "type": "journal",
+  "url": "https://doi.org/10.1109/tip.2017.2783626",
+  "abstract": null
+}

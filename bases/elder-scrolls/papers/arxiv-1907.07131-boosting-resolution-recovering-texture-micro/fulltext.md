@@ -1,0 +1,356 @@
+---
+id: arxiv-1907.07131-boosting-resolution-recovering-texture-micro
+title: "Boosting Resolution and Recovering Texture of micro-CT Images with Deep Learning"
+year: 2019
+backend: pymupdf
+---
+
+BOOSTING RESOLUTION AND RECOVERING TEXTURE OF
+
+MICRO-CT IMAGES WITH DEEP LEARNING
+
+A PREPRINT
+
+Ying Da Wang School of Minerals and Energy Resources Engineering
+
+University of New South Wales
+
+Sydney, NSW, 2052 yingda.wang@unsw.edu.au
+
+Ryan T. Armstrong School of Minerals and Energy Resources Engineering
+
+University of New South Wales
+
+Sydney, NSW, 2052 ryan.armstrong@unsw.edu.au
+
+Peyman Mostaghimi School of Minerals and Energy Resources Engineering
+
+University of New South Wales
+
+Sydney, NSW, 2052 peyman@unsw.edu.au
+
+July 30, 2019
+
+## Abstract
+
+Digital Rock Imaging is constrained by detector hardware, and a trade-off between the image ﬁfield of view (FOV) and the image resolution must be made. This can be compensated for with super resolution (SR) techniques that take a wide FOV, low resolution (LR) image, and super resolve a high resolution (HR), high FOV image. A Super Resolution Convolutional Neural Network (SRCNN) that excels in capturing edge details is coupled with a Generative Adversarial Network (GAN) to recover high frequency texture details. The Enhanced Deep Super Resolution Generative Adversarial Network (EDSRGAN) is trained on the Deep Learning Digital Rock Super Resolution Dataset (DeepRock-SR), a diverse compilation of raw and processed µCT (micro-Computed Tomography) images. The dataset consists of 12000 sandstone, carbonate, and coal samples of image size 500x500 as a representation of fractured and granular media. The SRCNN network shows comparable performance of +3-5dB in pixel accuracy (50% to 70% reduction in relative error) over bicubic interpolation. GAN performance in recovering texture shows superior visual similarity compared to normal SRCNN and other interpolation methods. Difference maps indicate that the SRCNN section of the SRGAN network recovers large scale edge (grain boundaries) features while the GAN network regenerates perceptually indistinguishable high frequency texture. Extrapolation of the learned network with external samples remains accurate and network performance is generalised with augmentation, showing high adaptability to noise and blur. HR images are fed into the network, generating HR-SR images to extrapolate network performance to sub-resolution features present in the HR images themselves. Results show that under-resolution features such as dissolved minerals and thin fractures are regenerated despite the network operating outside of trained speciﬁcations. Comparison with Scanning Electron Microscope (SEM) images shows details are consistent with the underlying geometry of the sample. Recovery of textures beneﬁts the characterisation of digital rocks with a high proportion of under-resolution micro-porous features, such as carbonate and coal samples. Images that are normally constrained by the mineralogy of the rock (coal), by fast transient imaging (waterﬂooding), or by the energy of the source (microporosity), can be super resolved accurately for further analysis downstream. The neural network architecture and training methodology presented in this study (and SRGANs in general) offer the potential to generate HR µCT images that exceed the typical imaging limits.
+
+Keywords Digital Rock Imaging · Super Resolution · Convolutional Neural Networks · Generative Adversarial Networks
+
+Plain Language Summary
+
+When capturing an image of the insides of a rock sample (or any opaque object), hardware limitations on the image quality and size exist. This limitation can be overcome with the use of machine learning algorithms that "super-resolve" a lower resolution image. Once trained, the machine algorithm can sharpen otherwise blurry features, and regenerate the underlying texture of the imaged object. We train such an algorithm on a large and wide array of digital rock images, and test its ﬂflexibility on some images that it had never seen before, as well as on some very high quality images that it was not trained to super-resolve. The results of training and testing the algorithm shows a promising degree of accuracy and ﬂflexibility in handling a wide array of images of different quality, and allows for higher quality images to be generated for use in other image-based analysis techniques.
+
+Introduction
+
+X-ray micro-computed tomography (µCT) techniques can generate 3D images that detail the internal micro-structure of porous rock samples. It allows samples to be used for other analyses, as it does not physically interact with the sample [1, 2, 3, 4]. It assists in the determination of the petrophysical and ﬂflow properties of rocks [5, 6, 7, 8, 9, 10], as they can resolve features down to a few micrometres over a ﬁfield of view (FOV) spanning a few millimetres, sufﬁcient enough to characterise the micro-structure of conventional rocks [11, 12]. For use in ﬂflow simulation [13, 13, 14] and other numerical methods [15], an imaged rock sample must be of sufﬁciently high resolution to resolve the pore space features and connectivity while also spanning a wide enough FOV to represent bulk properties of the rocks in a way that captures the heterogeneity of the sample [16]. This is challenging for certain cases of more unconventional rocks such as carbonate rocks that can have up to 50% of the pore space unresolvable under the resolution of the imaging device [17] or coal samples that are limited to 15-25 µm resolutions due to sample fragility resulting in physical sample size constraints causing under-resolution of fracture features [18]. The capabilities of the scanning device and the physical characteristics of rocks themselves are limiting factors in capturing high resolution µCT digital rock images, with trade-offs between resolution and ﬁfield of view. These problems can be addressed by applying super resolution methods on low resolution data, resulting in a high resolution image with a wide FOV that captures more of the pore space geometry in higher detail [19].
+
+Super resolution methods aim to generate a super resolution (SR) image from only a single low resolution (LR) image (as opposed to using multiple LR images) in a way that most closely resembles its true high resolution (HR) counterpart [20]. It is an ill-posed, indeterminate inverse problem with an inﬁnite solution space [21]. Simple, typical methods apply interpolation (bicubic, linear, etc.) on the LR data to generate an higher resolution image that struggles to recover features and is mostly a blurry image with more pixels. More complex methods apply a reconstruction based method that utilises prior knowledge of the domain characteristics to reduce the size of the solution space while generating sharp details [22, 23, 24]. The scale factor is limited in these methods and the computational time required during image generation is high. Example based methods, also known as learning based methods, utilise machine learning algorithms to improve the speed and performance of SR methods. The statistical relationship between LR and HR features are deduced from a large example dataset, and have been applied with the Markov Random Field [25], Neighbour Embedding [26], sparse coding methods [27], and Random Forest methods [28]. These learning based methods have also been combined with reconstruction based methods to further improve SR performance [29]. The sparse coding example based SR technique, while inﬂflexible, has been shown to outperform bicubic interpolation and has since been generalised [21] into the structurally analogous but highly ﬂflexible Super Resolution Convolutional Neural Network (SRCNN) for super resolving individual photographic images [21, 30, 31, 32, 33, 34], medical images [35, 36, ?], and digital rock images [19, 37]. Results from SRCNN have shown to consistently outperform previously utilised learning based and reconstruction based methods. Speciﬁcally for digital rock images, SRCNN methods have been applied to µCT images of rocks using a variety of different architectures in 2D and 3D, producing compelling results that can be applied to Digital Rock workﬂflows.
+
+Using Convolutional Neural Networks to super resolve an image was originally done with a network that applied 3-5 activated convolutional layers [21] to a bicubically upscaled LR image to recover the HR details on a direct mapping. This initial architecture coined the acronym "SRCNN", and was iteratively improved upon with deeper, more complex networks with improved LR to HR mappings. Integrated LR to HR SRCNNs that do not require bicubic upsampling as a processing step are favoured as the need for a fully sized input image increases the computational cost. Deconvolutional layers at the end of the network [38] have been replaced by subpixel convolution to reduce checkerboard artifacting [39, 40]. Deeper networks have shown improved results by using the skip connection that adds outputs from shallow
+
+layers to deeper layers to preserve important shallow feature sets and improve gradient scaling [33]. Batch normalisation is featured in many deep networks [34], but has since been empirically observed to reduce the accuracy of SRCNN methods that rely on mini batches of cropped images due to the highly variant batch characteristics. As such they were removed in later networks [31], and are no longer present in more recent formulations [32]. The typical SRCNN algorithm attempts to generate a SR image that has the smallest L2 (Mean Squared Error) or L1 1 (Mean Absolute Error) loss across the image [41] which has been found to be more robust against outlying features and improve convergence rates. The generated SR images tend to have high PSNR values but a low perceptual quality, with high frequency texture features lost as smearing occurs in order to achieve a high "average" accuracy that represents multiple possible HR realisations [42], a manifestation of the local minima problem in neural network training. While larger scale features that have high contrast edges over multiple pixels are recovered by SRCNN, the overall image ﬁdelity is unsatisfying due to the loss of texture. Efforts to address this problem have resulted in the use of hybrid loss functions that combine a pixelwise L1 or L2 loss with a featurewise loss that is calculated as the L2 loss of features extracted from a convolutional layer in a pretrained model [43]. This has shown superior perceptual results compared to standard loss functions. This problem of texture loss has been most successfully addressed by the introduction of the SRGAN network.
+
+Generative Adversarial Networks (GANs) [44] are comprised of a pair of neural networks, a generator and a discriminator, being participants in a zero-sum game. The discriminator learns to classify inputs as either real or fake, while the generator attempts to generate fake inputs to the discriminator that are good enough for it to classify as real. In its simplest form, random noise is fed into a generator that is trained to transform the input noise into data that closely resembles the real data from the training set. The discriminator is trained alongside the generator to distinguish between the real training set data, and the generated data. As the neural networks are trained, the discriminator becomes better at identifying fake data, while the generator becomes better at generating data that fools the discriminator. By combining a SRCNN network (the generator) with an image classiﬁcation network (the discriminator), an SRGAN is formed.
+
+SRGANs have been applied to the generation of photo-realistic and highly textured images that score highly on human surveys of image quality [34, 42]. Cycle Consistent GANs (cycleGANs) [41] have been used as a semi-supervised method of generating SR images, by training on unpaired SR and LR datasets [36]. While SRGAN results in features that look to the human eye as realistic when surveyed, the resulting generated SR images are lower in pixelwise accuracy compared to SRCNN due to pixelwise mismatch [36]. Since µCT images contain signiﬁcant amounts of image noise and texture as high frequency features, this is also recovered inadvertently recovered. As image segmentation is common in most Digital Rock workﬂflows [45], SRCNN tends to sufﬁce as they possess some form of intrinsic noise suppression while maximising edge recovery [19]. While sufﬁcient for conventional samples that are resolvable at the 3-5 µm resolution scale, the blurring of intraphase texture is detrimental to images such as carbonate and coal, with signiﬁcant under-resolution features. In the context of digital rock imaging, to the authors’ best knowledge, SRGAN networks have not yet been applied to the generation of SR µCT images.
+
+In the following sections of this paper, we introduce the DeepRock-SR dataset used to train and validate the results from the Super Resolution Generative Adversarial Network, which in this case, the generator (acting as the SRCNN) is a modiﬁed EDSR [31] network (seen in Figure 2), and the discriminator is a deep convolutional classiﬁer (seen in Figure 3). The generator shows comparative performance to other SRCNN networks, with performance on the DeepRock-SR dataset is in line with expected improvements in PSNR of +3-5 dB, which translates to a reduction in relative pixelwise error of 50% to 70% respectively according to Eqn 3. Difference maps of the validation sample images conﬁrm SRCNN recovery of bulk features, while the SRGAN network is able to regenerate the high resolution texture. Extrapolation of network performance with unseen external images incurs minimal performance loss, while application of image augmentation to generalise the model capabilities indicates good adaptation to image noise and blur. Super resolution images of the high resolution sandstone, coal, and carbonate samples in the DeepRock-SR dataset are also generated. This extrapolates the network performance past the image resolutions of the training (3-5 µm) to under 1 µm to observe the improvement in sub-pixel resolution past the physical capabilities of µCT scanners, showing excellent visual regeneration of under-resolution features across a wide range of image resolutions, which are also conﬁrmed with a direct comparison with high ﬁdelity SEM images.
+
+1Lebesgue spaces, named after Henri Lebesgue, L1 and L2 are speciﬁc cases of Lp spaces
+
+Materials and Methods
+
+Datasets and Digital Rocks
+
+The SRGAN network in this study is trained on the DeepRock-SR-2D dataset [46], which comprises of 12000 500x500 high resolution unsegmented slices of various digital rocks of sandstone, carbonate, and coal, with image resolution ranging from 2.7 to 25 µm, outlined in Table 1. Each rock type is represented by 4000 images for an even distribution of rock geometries. The images are shufﬂed and split 8:1:1 into training, validation, and testing sets. From a pore morphology and image characteristics perspective, the rock types differ greatly from each other, seen in Figure 1. The samples in the dataset are diverse, and represent both simple resolved sandstone images (sandstone), and complex underresolved images of carbonate microporosity and coal fracture networks. There is also a Gildehauser sandstone sample that is highly processed by Non-Local Means Filtering [47], resulting in a very smooth intraphase image. The carbonate images are under-resolved due to much of the pore space measuring under 1 µm in resolution [17] (requiring an image resolution approaching 100 nm to adequately resolve such features). The coal samples are inadequately resolved due to the fragility of the rock itself, restricting the size to a larger than usual sample, limiting the resolution of the resulting image [18]. The images are downsampled by a factor of 2x and 4x using the matlab imresize function, used commonly for SR dataset benchmarking [19], with one set being downsampled exclusively by bicubic interpolation, while another set is downsampled with random kernels of either box, triangle, lanczos2, and lanczos3. In this paper, to generalise the results, the set with random (unknown) downsampling functions is used for training at a scale factor of x4. All training and testing was performed on a GTX1080ti Nvidia GPU with TensorFlow 1.12. While the training and testing dataset used here is of a ﬁfixed, relatively small size per image, the resulting trained SRCNN and SRGAN networks are "fully convolutional networks" that can be applied to any image of any size, without cropping or windowing.
+
+## (préambule)
+
+**Figure 1:** Sample slices of images from DeepRock-SR
+
+**Table 1:** DeepRock-SR Dataset constituents. A diverse set of digital rock images.
+
+Source Resolution (µm) Processing Reference
+
+Bentheimer Sandstone 1 UNSW Tyree X-ray None [48] Bentheimer Sandstone 2 ANU CTLab None [49] Berea Sandstone ANU CTLab None [49] Leopard Sandstone ANU CTLab None [49] Gildehauser Sandstone TOMCAT beamline Non-Local Means Filtered [50] Wilcox Tight Sandstone UT Austin None [51]
+
+Estaillades Carbonate UGCT HECTOR None [52] Savonnieres Carbonate UGCT HECTOR None [53] Massangis Carbonate UGCT HECTOR None [54]
+
+Sheared Coal Ultratom RXSolutions None [55] Naturally Fractured Coal Ultratom RXSolutions None [56]
+
+While datasets are generated synthetically to remain consistent with other SR datasets, real LR µCT images are not mapped as consistently to HR equivalents, and registration error of even a few pixels can considerably reduce training results if the network requires images to be perfectly matched. Pixel binning of greyscale values [57] has been used to model LR digital rock images, but in a practical case, with a lower energy detector or a shorter exposure time, the resulting LR µCT image can have different noise and blur compared to a synthetic LR images downsampled from a HR registered equivalent. Aside from the images contained within the DeepRock-SR dataset used for training and validation, external samples are also used in this study to extrapolate network performance. These are outlined in Table
+
+**Table 2:** External digital rock images used to extrapolate network performance
+
+Source Resolution (µm) Processing Reference
+
+Bentheimer Sandstone Equinor None [58]
+
+Ketton Carbonate Imperial College None [59]
+
+Super Resolution Convolutional Neural Network
+
+SRCNN networks generate an SR image from only an LR image through a feed-forward CNN, the generator G. Here, G is composed of multiple layers L of weights wL and biases bL such that SR = GwL,bL(LR), that are calculated by optimising an objective loss function fLoss(SR, HR). The LR image input can be described as a tensor of shape (Nx, Ny, Nc), where Nx and Ny are the dimensions of the image, and Nc are the number of colour channels present.
+
+At a scale factor of 4 used in this study, the resulting SR image dimensions are (4Nx, 4Ny, Nc).
+
+The architecture used in this study is based on the Enhanced Deep Super Resolution (EDSR) [31] and the SR-Resnet [34] networks. In particular, the overall EDSR architecture is retained, with the Rectiﬁed Linear Unit (ReLU) layers replaced by Parametric Rectiﬁed Linear Unit (PReLU) layers from SR-Resnet. These steps are taken as the use of batch normalisation layers in SRCNN networks have been shown to be detrimental to training [32], while the PReLU layers provide a minor improvement in performance for minimal computational impact [60]. In this paper, the EDSR network utilises convolutional layers of kernel size 3 with 64 ﬁfilters over 16 residual layers and skip connections throughout the layers prior to upscaling, as seen in Figure 2. Typically, EDSR and similar SRCNN networks use the L2 loss as the objective minimisation function, deﬁned as the pixelwise mean of the sum of the squares of the differences between the generated SR and ground truth HR images:
+
+L2Loss =
+
+P
+
+i(SRi −HRi)2
+
+P
+
+i i
+
+This choice of loss function in SRCNN has been superseded by the L1 loss deﬁned as:
+
+L1Loss =
+
+P
+
+i |SRi −HRi| P
+
+i i
+
+as it has been shown to converge SRCNN networks faster, with better results [41]. This is suspected to be due to a better representation of the high frequency noise and texture of an image, resulting in a lower local minimum during training.
+
+The modiﬁed EDSR is trained for 100 epochs at 1000 iterations per epoch with mini-batches of 16 cropped 192x192 images using an L1 loss as in Eqn 2 with a learning rate of 1e-4 using the Adam optimiser [61]. The PSNR metric is tracked during the training and validation of the DeepRock-SR dataset, and is calculated assuming that the HR and SR image pixel values lie between [-1,1] such that I = 2:
+
+PSNR = 10log10
+
+I2
+
+L2Loss
+
+Further training may result in a higher ﬁfinal SRCNN-only PSNR score, however previous SRCNN tests on the DRSRD1 dataset [48] has indicated that 100 epochs of 1000 iterations of 16x192x192 batches are typically enough to saturate training for digital rocks, with the PSNR plateauing at around 50 epochs using a learning rate of 1e-4. After the training of this SRCNN-only model is done, the SRGAN is initialised and trained.
+
+**Figure 2:** Architecture of the modiﬁed EDSR network. All ReLU activation layers are replaced with PReLU layers, and the subpixel
+
+convolutions are activated by PReLU for additional non-linearity during the critical upscaling layers
+
+Super Resolution Generative Adversarial Network
+
+The GAN network attaches onto the generative SRCNN network in the form of an image classiﬁcation type network, a discriminator that identiﬁes and labels input images as real and fake. The discriminator is trained on the SR and HR images, gradually becoming better at identifying SR and HR images. As the discriminator improves, its classiﬁcation feedback is passed back to the generator to allow it to generate progressively more realistic SR images that attempt to fool a progressively improving classiﬁer.
+
+The discriminator network is built with 8 discriminator blocks, with each block containing a convolutional layer of kernel size 3, stride 2 and ﬁfilter numbers increasing from 64 to 512, LReLU activation (α = 0.2), and batch normalisation as can be seen in Figure 3. The network ends with 2 dense layers followed by sigmoid activation to obtain probabilistic values.
+
+**Figure 3:** Architecture of the Discriminator network
+
+The discriminator ultimately outputs a single value between [0,1] for each image it is classifying, that acts as a logit, or a "probability", that the image is either real (1) or fake (0). These probabilities are discretised appropriately when classifying images. The SR and HR images are labelled as yHR = 1 and ySR = 0, while the binary cross entropy (BXE) loss function of the discriminator output outputdiscrim = p(SR, HR) is given by:
+
+BXEHR = −1
+
+N
+
+N X
+
+i=1
+
+yHRlog(p(HR))
+
+BXESR = −1
+
+N
+
+N X
+
+i=1
+
+ySRlog(p(SR))
+
+Since the output of the discriminator has passed through a sigmoid function, the Binary Cross Entropy calculated here is also known as the Sigmoid Cross Entropy. The discriminator network is trained with the Adam optimiser and a learning rate of 1e-4 to minimise the total classiﬁcation loss between real and fake images:
+
+DLoss = BXEHR + BXESR
+
+The GAN begins training after the generator G has reached its prescribed number of iterations (see Section 3.2), and both GAN and SRCNN are trained for 150,000 further iterations. To encourage the generation of texture and features that a typical SRCNN generator would omit, the pixelwise L1 loss is supplemented with a perceptual loss parameter [34] calculated as the mean squared error between the SR and HR feature maps obtained as the fully convolutional
+
+output from the 16th layer of the 19 layer VGG network [43]. This term, the V GG19Loss, corresponds to the 4th convolutional output prior to the 5th max-pooling layer in the VGG-19 network. The feature maps obtained by passing an image through the network, φ, are used to compute the L2 loss as:
+
+V GG19Loss =
+
+P
+
+i(φSRi −φHRi)2
+
+P
+
+i i
+
+The generator and discriminator are coupled together by passing the discriminator SR outputs p(SR) into the generator as part of the generative loss function. The adversarial loss term (ADV) takes the form of a BXE against labels of 1:
+
+advLoss = −1
+
+N
+
+N X
+
+i=1
+
+log(p(SR))
+
+This term is minimised when the discriminator classiﬁes the SR images as real images (1 label), despite being trained to classify SR images as fake (0 label) based on Eqn 4. The generator loss function is now a hybrid function deﬁned as:
+
+GLoss = L1Loss + αV GG19Loss + βadvLoss
+
+where α and β are scaling terms. In this paper, we take them to equal 1e-5 and 5e-3 respectively to scale near the magnitude of the L1 loss. The choice of the scaling terms will affect the accuracy of the SRGAN network, as the generation of perceptually accurate features by the discriminator works adversarially to the generation of pixelwise accurate features by the L2 loss. As a whole ensemble, the network of generator and discriminator is depicted in Figure
+
+**Figure 4:** Overall architecture of the network, showing the coupling of Generator and Discriminator Networks
+
+Results and Discussion
+
+Training and Validation Metrics
+
+The network is trained using the ﬁfirst 9,600 images of the shufﬂed subset of the DeepRock-SR dataset, which is comprised of a selection of µCT images listed in Table 1. The parameters used are outlined in sections 3.2 and 3.3. Losses and metrics over the training epochs are tracked over 250 epochs as a moving average with a window of 1000 over 250,000 iterations. The training schedule is comprised of 100 epochs of SRCNN generator training and a further 150 epochs of SRGAN training with the discriminator active.
+
+**Figure 5** shows the generator losses as described in Eqn 8, with the L1 pixelwise loss, the VGG featurewise loss, and the ADV adversarial classiﬁcation loss. The L1 loss falls to a plateau during the ﬁfirst 100 epochs and results show a 0.053 L1 error between SR and HR images in the training dataset. This translates to a training PSNR of 32, shown in ﬁfigure 7, and an equivalent L2 error of .0025 (calculated from Eqn 3). These are consistent with typical expected results for SRCNN training on digital rocks [19], and will be elaborated upon in the later section 4.2. The VGG and ADV losses are activated after 100 epochs, and fall to a plateau over 150 further epochs. The VGG loss falls from 0.045 to 0.041, while the ADV loss drops from 0.025 to 0.0125. During the SRGAN training, the L1 loss rises to 0.071 with an associated PSNR of 29.7. Similarly during SRGAN training, the discriminator metrics are tracked (see Figure 6) and show a stable training of the discriminator, plateauing to an overall Dloss value of 0.8. The separate classiﬁcation probabilities p(HR) and p(LR) (see Eqn 4) are also plotted, and show that the ﬁfinal equilibrium between generator and discriminator results in a classiﬁcation accuracy of 75%.
+
+**Figure 5:** Generative during training of SRGAN. SRCNN is trained with only a pixelwise L1 loss for the ﬁfirst 100 epochs, followed by
+
+the activation of SRGAN, with VGG feature losses and adversarial losses falling over epochs 101-250 with an increase in L1 losses.
+
+As the training is run, at the end of every epoch (1000 mini-batch iterations), 1200 fullsize 500x500 images from the DeepRock-SR-2D shufﬂed dataset are used to validate the generator. The results are plotted with the training PSNR calculated on the 1000 16x192x192 mini-batches in each training epoch, shown in Figure 7. PSNR values obtained during validation track closely to the training PSNR, with a reduction of 0.2 to 0.3, settling to approximately 29.5 compared to 29.7. The variation in the validation PSNR increases signiﬁcantly when the SRGAN is active, reﬂected in the VGG and ADV losses in Figure 5 due to the adversarial interplay between generator and discriminator. From both Figures 7 and 5, it can be seen that there are potentially further improvements in the SRCNN performance past 100 epochs, as the initial generator training is not completely plateaued when the discriminator is activated.
+
+During SRGAN training, the rise in the L1 loss in order to obtain a lower VGG and ADV is indicative of limitations in the SRGAN network architecture. In an ideal optimisation, the increase in higher frequency texture features should also be reﬂected in the L1 loss. However, the Adam optimisation [61] (or, likely any optimiser) utilised in SRGAN to
+
+**Figure 6:** Discriminative losses during training of SRGAN. From epochs 101-250, the discriminator losses rise ﬁfirst fall as it is
+
+trained to distinguish SR and HR images, then rises as the generator catches up and begins to fool the discriminator. A perfect generator would result in a Dloss of 1, and classiﬁcation losses of 0.5.
+
+**Figure 7:** PSNR metrics over the training epochs. Like the L1 loss, the PSNR value falls once the discriminator is activated as texture
+
+is regenerated. Training and validation PSNR values track closely, indicating the minibatch window size of 192x192 is sufﬁcient to capture details of the images.
+
+obtain these texture features are in competition with the L1 loss which tends to favour smoother, averaged pixels. The presence of the VGG loss tends to act as a bridging parameter between the smoothing effect of the L1 loss and the texture generation of the ADV loss [34].
+
+Validation and Testing Analysis
+
+The validation applied during training of the network (see Figure 7) is applied to a bulk shufﬂed collection of 1,200 images from the DeepRock-SR dataset. This is expanded upon in this section to include the 1,200 images in the testing section of the dataset and split apart into sandstone, carbonate, and coal subsets.
+
+An initial visualisation of the resulting validation images is shown in Figure 8, and difference maps with respect to the HR images is shown in Figure 9. The LR image (top row) and HR image (2find row) are used as comparison points to the bicubically (BC) generated image, SR image, and SRGAN image that are generated only from the LR image. Inspection of these sample validation images indicate that there is an increasing trend of visual sharpness and texture from BC to SR to SRGAN images. While present in all 3 types of rock images, this is especially apparent in the carbonate images that contain highly heterogeneous features such as oolitic vugs and high frequency texture associated with microporosity.
+
+The difference maps of these sample images, shown in Figure 9, provide a better indication of the ability for each method to recover important features from a single LR image. The BC images struggle to regenerate large scale features such as the edges of coal fractures and grain contacts in sandstone and carbonates. The SR images lose intragranular detail but recover larger features well, which is useful for cases where the details within each phase are irrelevant. This is typically the case for well resolved grains and pores of sandstones. SRGAN images tend to still struggle to achieve a pixelwise match to the HR image. The perceptual texture and sharpness seen in the images in Figure 8 are shown in the difference maps in Figure 9 to not contribute any signiﬁcant improvement in accuracy. This is most noticeable in the ﬁfirst sand image (from the left), where there exists a region of dissolved microporous mineral that is below the resolution of both the HR and LR images. The SR image results in a mostly blurry and featureless characterisation of this under-resolution area, while the SRGAN recovers very convincingly the mineralised features of this region. The difference maps of this area however, show that the overall pixelwise accuracy has not improved. Aside from the texture regeneration, it can be seen in the coal sample images that SRGAN also improves upon the edge recovery of SRCNN, resulting a better match with the well deﬁned fractured features of the coal images.
+
+Comparative validation of the SRCNN and SRGAN results is performed on separated subsets of sandstone, carbonate, and coal images, each comprising 800 500x500 images. The PSNR metrics for each subset are computed and shown in Figure 10, and show that SR images outperform bicubic interpolation, while SRGAN images are less accurate on a pixelwise basis. The overall PSNR boosts are given in Table 3, and show similarly, that the SRCNN network results in a noticeable boost in the pixelwise accuracy, while the SRGAN performs poorly in comparison. The variance of the dataset PSNR changes when applying SRCNN and SRGAN methods compared to Bicubic methods. For the sandstone dataset, the the highly ﬁfiltered and smooth Gildehauser sandstone sample results in high SR PSNR values as the smoothness of the image can be inferred by the network, while Bicubic methods cannot. Similarly, the signiﬁcant reduction in PSNR variance in the Coal samples when using SR methods can be attributed to the presence of thin fracture features that bicubic methods struggle to regenerate, resulting in low PSNR values.
+
+**Table 3:** PSNR results for rock types in the validation and testing DeepRock-SR dataset
+
+Sandstone Carbonate Coal Mean Var Mean Var Mean Var Bicubic SRCNN SRGAN
+
+While it is visually clear from Figures 8 and 9 that SRGAN images posses improvements in perceptual, high frequency, textural features while maintaining accuracy of the bulk features that are recovered by SRCNN, this cannot be quantiﬁed appropriately using averaging metrics such as the PSNR since the generated texture is not a pixelwise match.
+
+External Sample Testing
+
+Testing of the SRCNN generator on unseen images is expected to result in less error compared to previous SRCNN tests on external samples since the training and validation sets are derived from the larger and more diverse DeepRock-SR dataset. However, the samples used in this section are completely unlike the validation/testing sets, which are unseen
+
+**Figure 8:** Sample images from the validation of the network, highlighted with a Jet colourmap for visual clarity. From the LR image,
+
+a bicubic image is generated, a SR image is generated from the epoch prior to activation of the GAN, and the SRGAN image is generated at the end of the training. Visually, the results show a gradual improvement in feature recovery until the SRGAN images that look perceptually identical to the HR images.
+
+**Figure 9:** Difference maps of the sample images shown in Figure 8. This more quantitative analysis of the images reveals the beneﬁts
+
+and limitations of the SRGAN results. No distinct improvement in pixelwise accuracy in the sandstone and carbonate examples can be seen despite the considerable textural and perceptual improvement. Coal SRGAN images further improve the edge recovery from the SR images likely due to the SRCNN method struggling to cope with the high contrast and thin fracture features.
+
+**Figure 10:** Boxplots of the PSNR values computed by comparison of original HR images to BC, SR, and SRGAN images for sandstone,
+
+carbonate, and coal. Results show that SRCNN outperforms bicubic interpolation, while SRGAN performs worse. The texture recovery capabilities of the SRGAN network are not quantiﬁable by the PSNR metric.
+
+subsections of training images. Therefore the images used may exist further away from the manifold of features that the network is trained on.
+
+Testing the network on these completely unseen images shows that SRCNN performance is impacted so a slight degree in terms of the PSNR, seen in Figure 12, but retains its superiority to BC images in terms of edge feature recovery and overall pixelwise matching, seen in Figure 11. Similarly, SRGAN generated images of the external samples remain visually similar to their HR counterparts. PSNR performance is as expected, with SRCNN improving over bicubic methods, and SRGAN resulting in a decline in pixelwise accuracy. The more globular features of Bentheimer Sandstone and Ketton Carbonate are less sensitive to the edge-loss incurred with bicubic interpolation.
+
+While the SRCNN and SRGAN generated images for these external samples are signiﬁcant improvements on interpolation methods in terms of their features and textures, deviation from the ground truth is unavoidable to an extent, as deep learning is highly reliant on large amounts of representative data. Other further deviations can be expected with images of low contrast (not included in the DeepRock-SR dataset) or otherwise. Testing network performance on completely unseen digital rocks inevitably results in a performance penalty that can be rectiﬁed by ever increasingly diverse training data.
+
+LR Augmentation for Generalisation of Blur and Noise
+
+Training SRCNN and SRGAN networks using synthetic data generated using downsampling kernels ultimately limits the capabilities of the resulting generator when dealing with images that contain characteristics that are not present in synthetic images. In particular, the image noise may be different and there may be some blur associated with the LR image. While maintaining synthetic sample training, it has been shown that augmenting the LR training images with noise and blur will signiﬁcantly impact SRCNN performance [19]. Blur is applied as a Gaussian smoothing kernel with a standard deviation randomly sampled from 0 to 1, and noise is applied as Gaussian white noise with mean of 0 and variance randomly sampled between 0 and 0.005. The resulting LR training images are depicted in Figure 13. Previously published results indicate that application of these augmentation parameters results in SR images that are highly denoised with very sharp and accurate edges. This is due to the increase in the "unlearnable" randomness of the LR to HR mapping. This extreme loss of intraphase detail is beneﬁcial for segmentation of well resolved features such as sandstone grains, but is detrimental to characterising the microporosity and under-resolution features present in coal and carbonate images. Training on these augmented images for the full schedule of 250 epochs of 1000 iterations, with GAN training starting from epoch 101 results in validation PSNR values that are given in Figure 14, showing a clear reduction in SR performance from a pixelwise perspective. The SR images generated from the network trained on synthetic images, and the ones generated from the network trained on augmented images, will hereinafter be referred to simply as "synthetic" and "augmented" SR images
+
+Example SR images obtained from the synthetic network compared to the augmented network shows in Figure 15 shows that synthetic images outperform augmented images in feature recovery, though both results retain larger scale edgewise features [19]. The GAN trained results again show little perceptual difference. There are losses in the detail in coal SR images during augmentation, likely due to an excessive augmentation of noise and blur, that affects the lower contrast coal images more signiﬁcantly. Boxplots of the PSNR over the 800 validation and testing images of sandstone, carbonate, and coal in Figure 16 show that the PSNR is affected adversely, with the loss of intraphase features resulting in lower PSNR values than even bicubic methods. The overall PSNR is lower in augmented images, but the ﬁfinal result is compensated by the discriminator to regenerate the texture in a perceptually convincing manner.
+
+Despite the reduced PSNR achieved by the augmented training, the seemingly high ﬁdelity texture regeneration shows that sandstone and carbonate Aug-SRGAN images result in a similar visual texture match with the Syn-SRGAN images, indicating that the GAN texture that is regenerated is spatially similar to the HR images.
+
+The lower performance of coal images is due to the presence of thin fracture features that are lost or poorly estimated when the LR images are augmented with blur and noise, seen in a sample image in Figure 17, and present throughout the generated augmented SR images. With a less aggressive augmentation, it can be expected that the network will appropriately recover the features and textures. A full repository of the results can be found in conjunction with the DeepRock-SR dataset [46].
+
+To illustrate and quantify the limitations and different results that can be expected between synthetic and augmented training, we use a Bentheimer sample with a resolution of 7 µm as a LR input and generate SR images. This sample contains some natural blur and noise that is outside the manifold that synthetic LR images exist on, thus outside the parameters learned from training on synthetically downsampled images. From the original 7 µm, noisy and blurry image, a few SR images can be generated from the trained networks, shown in Figure 18. The synthetically trained networks generate images that contain higher resolution features and textures, but remain blurry and noisy. The
+
+**Figure 11:** Samples of the external rock images of Bentheimer (left) and Ketton Carbonate (right). Similar characteristics can be
+
+observed in terms of the relative performance of bicubic interpolation, SRCNN, and SRGAN. Images show that SRCNN recovers bulk features with high accuracy, while SRGAN regenerates a visually similar textured image to the HR counterpart.
+
+**Figure 12:** Boxplots of the external rock images of Bentheimer (left) and Ketton Carbonate (right). PSNR pixelwise error shows the
+
+typical boost over bicubic interpolation that SRCNN achieves, while SRGAN is less accurate. Overall, these are again in line with expected results obtained during validation and testing in section 4.2.
+
+**Figure 13:** Sample images of the resulting augmented LR image compared to the synthetic LR image, and the original HR image.
+
+**Figure 14:** Validation PSNR achieved over training epochs for the augmented dataset training, compared to the synthetic data from Figure 7. There is a signiﬁcant drop in network performance, as the augmented LR images provide generalisation to the SR results
+
+by adding unlearnable randomness to the LR-HR pairing
+
+**Figure 15:** Sample images generated from training with synthetic and augmented datasets. Compared to the synthetic SR images (also shown in Figure 8), augmented SR images provide generalisation to the SR results by adding unlearnable randomness to the LR-HR pairing. SRGAN images on the other hand, remain perceptually convincing regenerations of the HR image, as any losses in the pixelwise recovery of intraphase detail is compensated for by the GAN. The lower contrast coal images are signiﬁcantly affected by the augmentation, which is likely too excessive for the image characteristics.
+
+**Figure 16:** Box plots of the PSNR achieved using synthetic and augmented training datasets. Augmented training results in a
+
+reduction in PSNR performance, and in the case of SRGAN images and coal images, lower performance than even bicubic methods. However, a visual inspection of the sample images in Figure 15 reveals that the losses in the pixelwise accuracy do not occur at the edges of important edge features, but instead occurs in the intraphase regions of the image.
+
+**Figure 17:** Sample image of how the blur and noise augmentation causes an overestimation of the fracture aperture in coal images,
+
+as the fracture features are too attenuated by the augmentation process.
+
+augmented networks instead are capable of sharpening the input image as LR image blur is a recognised input feature and are generally more perceptually superior.
+
+Super Resolution of High Resolution Images
+
+Since the network is trained on downsampled LR counterparts (synthetic and augmented) of HR ground truth images, the HR images themselves are unseen by the trained network. Feeding the HR images as input LR images will generate HR-SR images with an image resolution higher than the range that the training is conducted with. The Bentheimer sample 1 [48], Estaillades Carbonate [52], and Sheared Coal [55] samples are used to represent the different rock types of interest, shown in Table 4. The DeepRock-SR dataset contains sandstone and carbonate images with a HR to LR feature mapping of around 3-5 µm to 12-20 µm, and a coal mapping of 25 µm to 100 µm. Feeding the trained network an input sandstone image of for example, 4 µm, and expecting an accurate SRGAN image with a resolution of µm is an extrapolation of performance. The SRCNN and SRGAN synthetic generators are applied to the HR images of each sample, and samples of the HR-SR images are outlined in Table 4 and shown in Figure 19.
+
+In this case, there are no ground truth images to compare quantitatively with so PSNR metrics of pixelwise accuracy are unavailable to analyse. Of particular interest is the generation of sub-pixel features of micro-porous or poorly resolved regions, such as the partially dissolved mineralisation found in the Bentheimer image, the micro-porous texture of the Estaillades Carbonate, and any under-resolved fractures present in the coal images. These features typically require SEM imaging or nano-CT to resolve properly and will form part of our future work in this area of research. In the generated SR and SRGAN images, the under-resolved features that were present in the original HR images become resolved and sharpened, with texture regenerated by the SRGAN. In the cases of sandstone and carbonate features, SRGAN results are visually sharp, with textures appearing qualitatively as expected in a typical greyscale µCT image. The coal image on the other hand appears to remain perceptually blurry and undertextured. However,
+
+**Figure 18:** Sample images of the 7 µm, noisy and blurry Bentheimer sample, with generated SR images with a scaling factor of 4x (resulting in a 1.75 µm resolution), trained with synthetic and augmented images. It can be seen that the synthetic images do not
+
+account for the blur present in the original images, and generate perceptually unsatisfying results. The augmented networks are capable of accounting for image blur and thus generate higher ﬁdelity results.
+
+**Table 4:** HR images used as input to generate HR-SR images
+
+HR Resolution (µm) HR-SR Resolution (µm)
+
+Bentheimer Sandstone
+
+Estaillades Carbonate
+
+Sheared Coal
+
+under-resolved fracture features are clearly resolved in the HR-SR image, shown in Figure 19 by the green bounding boxes. It is important to emphasise that by applying the trained network on images with a voxel size mapping (1-5 µm) that is outside the range of training (5-20 µm), the primary assumption is that the type of texture exists at the smaller length scales of the domain. While an exercise in extrapolation, this suggests that if the network (or similar SRGAN architecture) is trained on a wider range of image resolutions (obtained from nano-CT, SEM, or otherwise), performance would remain accurate.
+
+Direct Visual Comparison with SEM Images
+
+A ﬁfinal test is performed using the trained network by taking a SEM scan of a slice from a Mt Simon sandstone and comparing its detail and features with the equivalent µCT image. The SEM image measures 7047x6226, at a resolution of 0.5 µm, while the equivalent CT image was imaged at 1.7 µm and resampled to the suitable 4x image size of 1762x1557, resulting in a voxel size of 2 µm. These testing images can be seen in Figure 20. The lower resolution µCT image is super resolved to boost the resolution and recover the texture of the image. Once again, this particular use case involves images with voxel sizes outside the range of the DeepRock-SR training dataset. The SEM image characteristics are also very different to the µCT, as it possesses high image sharpness, showing each pixel discretely
+
+**Figure 19:** Sample images of HR images in the DeepRock-SR dataset, used as inputs for generating HR-SR images. Features that are
+
+near the limit of the image resolution become resolved and textured.
+
+unlike the µCT images which are more diffuse with information spanning multiple pixels. Since the network was trained on such diffuse images, it is not possible under the current training scheme to reach image detail levels in the range of the SEM image.
+
+A selection of small subsets of the images is shown in Figure 21, and shows a clear visual improvement in the regeneration of features from a low resolution source image compared to a bicubic upsampling. There are some convolutional artefacts present in the SRGAN µCT generated images due to the extrapolative nature of this test case, but the results show that the images generated by EDSRGAN improve connectivity and feature detail in a manner that is visually consistent with the high ﬁdelity SEM images. Aside from convolutional artefacts from network extrapolation, the main sources of comparative error come from (a) the inherently more diffuse quality of the µCT images that the network is trained on, (b) the µCT image pixels contain diffuse information from the previous and subsequent slice, and (c) registration error and changes in grain locations between imaging.
+
+**Figure 20:** µCT image (left) and registered SEM image (right) of Mt Simon slice
+
+**Figure 21:** Sample subsections of the Mt Simon sandstone, with comparison between the original low resolution, the bicubic
+
+upsample, the SRGAN upsample, and the registered SEM image. There is a clear improvement in image quality achieved by the use of the EDSRGAN network.
+
+Conclusions
+
+By training the network with the DeepRock-SR dataset, the inherent hardware limitations with FOV and resolution of Digital Rock Images can be compensated. A low resolution, noisy, blurry image of sandstone, carbonate or coal can be transformed into a high ﬁdelity, accurately textured SR image. This is possible by combining SRCNN that difference maps have shown to excel in capturing edge details with a GAN to recover high frequency texture details. The SRCNN network shows a 3-5 dB boost in pixel accuracy (50% to 70% reduction in relative error) compared to bicubic interpolation, while texture shows superior similarity from SRGAN images compared to normal SRCNN and other interpolation methods. Extrapolation of training with external, morphologically distinct samples remains similarly accurate based on pixel error and visual texture analysis. Generalising the LR to HR mapping with augmentation results in a high adaptability to noise and blur. HR-SR images generated by feeding HR images into the network to extrapolate performance to sub-resolution features in the HR images themselves show that under-resolution features are recovered in high detail. Dissolved minerals and thin fractures are regenerated despite the network operating outside of trained speciﬁcations. Direct comparison to SEM images of a Mt Simon sandstone show that even in the extrapolative tests, the generated details are consistent with the underlying geometry of the sample, which bicubic interpolations are unable to achieve.
+
+The neural network architecture used in this study can be made more efﬁcient with wide activation network trimming [32], or more ﬂflexible with unpaired, unsupervised cyclical networks [36]. The choice of loss function weights will affect the interplay between generator and discriminator (features and textures), and the availability of training data and augmentation further adds avenues of algorithmic improvement. In its current state, the network is operational and adequately effective in its accuracy and ﬂflexibility for the purposes of illustrating and quantifying the general effectiveness of SRGAN methods. SRGAN images are accurate in both a feature and texture basis when applied to unseen validation and testing LR images within the boundaries of the dataset used for training, as seen in Figure 9. However, when there does not exist a ground truth image to calculate comparative metrics with, there is understandable scepticism and suspicion towards the generation of texture within the intra-phase with SRGAN methods, especially true in the case of extrapolative uses of trained networks. The use of 2D super resolution models on 3D data ignores the depth dimension, which limits this study as a proof of concept for the recovery and generation of micro-CT images that can be segmented for digital rock workﬂflows. Application of specialised networks to 3D super resolution of micro-CT images and coupled Super Resolution with Segmentation is natural progression from this work.
+
+The recovery of both features and texture from LR images is beneﬁcial for characterising digital rocks that are dominated by under-resolution micro-porous features such as in carbonate and coal samples. Overall, images can be constrained by the brittle mineralogy of the rock (coal), by lower quality fast transient imaging (waterﬂooding), or by the energy of the source (microporosity). These limitations can be overcome and super resolved accurately for further analysis downstream. The neural network architecture and training methodology used in this study provide the tools necessary to generate HR µCT images that exceed typical imaging limits.
+
+Acknowledgements
+
+We would like to acknowledge both the Tyree X-ray facility (http://www.tyreexrayct.unsw.edu.au/), and the Digital Rocks Portal (https://www.digitalrocksportal.org/projects/) for providing images that were analysed in this paper. Images used and generated in this paper can be found in the DeepRock-SR repository on the Digital Rocks Portal.

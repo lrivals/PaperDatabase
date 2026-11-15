@@ -1,0 +1,160 @@
+{
+  "name": "Vesuvius Challenge : lecture virtuelle des rouleaux d'Herculanum",
+  "axes": {
+    "surveys": "Surveys",
+    "virtual-unwrapping": "Déroulage virtuel de documents (rouleaux, livres, papyrus), travaux fondateurs",
+    "ink-detection": "Détection d'encre en tomographie X (encre carbonée, modèles 2D/3D, labels)",
+    "surface-segmentation": "Segmentation de feuillets / surfaces minces enroulées en volume 3D",
+    "mesh-flattening": "Reconstruction de maillage, suivi de fibres, ajustement de spirale, aplatissement (paramétrisation)",
+    "ct-imaging": "Imagerie : micro-CT synchrotron, contraste de phase, résolution, bruit, reconstruction",
+    "super-resolution": "Super-résolution volumétrique, transfert et distillation entre résolutions",
+    "self-supervised-3d": "Pré-entraînement auto-supervisé et modèles de fondation pour volumes 3D",
+    "label-efficiency": "Labels rares ou bruités : pseudo-labels, auto-entraînement, annotation interactive",
+    "domain-transfer": "Transfert entre scans, rouleaux et protocoles (écart de domaine, harmonisation)",
+    "validation-fp": "Validation, faux positifs, hallucination, incertitude et calibration des cartes d'encre",
+    "papyrology": "Papyrologie, paléographie grecque, reconnaissance de caractères anciens, Herculanum"
+  },
+  "axis_rules": {
+    "virtual-unwrapping": "virtual(?:ly)? (?:unwrap|unroll|flatten)|digital (?:unwrapping|restoration)|unwrapping|En-Gedi|Herculaneum|carboni[sz]ed (?:papyr|scroll)|rolled (?:papyr|parchment|document)",
+    "ink-detection": "ink (?:detection|signal|prediction|labels?)|carbon(?:-based)? ink|(?:detect|reveal)(?:ing)? (?:the )?(?:ink|text|writing)|iron[- ]gall|ink(?:ed)? (?:regions|strokes)",
+    "surface-segmentation": "sheet (?:segmentation|tracing|detection)|surface (?:segmentation|detection|extraction|prediction)|thin (?:structure|layer|sheet)s?|layer (?:separation|segmentation)|nnU-?Net|3D U-?Net|instance segmentation (?:of )?(?:sheets|layers)",
+    "mesh-flattening": "mesh (?:generation|reconstruction|parameteri[sz]ation)|surface (?:parameteri[sz]ation|flattening|reconstruction)|flatten(?:ing)?|\\bSLIM\\b|conformal map|as-rigid-as-possible|\\bARAP\\b|fiber (?:tracking|tracing|orientation)|structure tensor|spiral (?:fit|model)|winding (?:number|field)|level[- ]set",
+    "ct-imaging": "(?:micro-?)?computed tomography|micro-?CT|\\bCT\\b scans?|X-ray (?:tomograph|phase|imaging)|synchrotron|phase[- ]contrast|propagation[- ]based|beam hardening|ring artifacts?|tomographic reconstruction|voxel size|\\bESRF\\b|Diamond Light Source",
+    "super-resolution": "super[- ]resolution|upsampl(?:e|ing)|resolution (?:enhancement|transfer)|cross[- ]resolution|knowledge distillation|(?:teacher|student) (?:model|network)|deblur",
+    "self-supervised-3d": "self-supervised|contrastive (?:learning|pre-?training)|masked (?:autoencoder|image modeling)|\\bDINO(?:v2|v3)?\\b|foundation model|pre-?train(?:ed|ing) (?:on )?(?:3D|volum)",
+    "label-efficiency": "pseudo-?labels?|self-training|semi-supervised|weak(?:ly)? supervis|sparse (?:labels|annotations)|scribbles?|noisy labels|active learning|interactive (?:segmentation|annotation)|label smoothing",
+    "domain-transfer": "domain (?:shift|gap|adaptation|generali[sz]ation)|cross-(?:domain|scanner|dataset)|harmoni[sz]ation|unseen (?:scans|domains|scrolls)|style transfer|\\bDANN\\b|test-time (?:adaptation|augmentation)",
+    "validation-fp": "false positives?|hallucinat|uncertainty (?:estimation|quantification)|calibrat(?:ion|ed)|held-out (?:validation|evaluation)|ground truth|reproducib|ensembl(?:e|ing)|placebo|statistical significance",
+    "papyrology": "papyr(?:us|i|ology)|palaeograph|paleograph|ancient Greek|Philodemus|Epicure|Villa (?:of|dei) (?:the )?Papyri|historical (?:document|manuscript)s?|handwritten (?:character|text) recognition|\\bHTR\\b|manuscript"
+  },
+  "axis_queries": {
+    "surveys": "survey virtual unwrapping damaged documents X-ray tomography",
+    "virtual-unwrapping": "virtual unwrapping Herculaneum scrolls X-ray tomography",
+    "ink-detection": "ink detection carbonized papyrus X-ray CT deep learning",
+    "surface-segmentation": "thin sheet surface segmentation volumetric CT rolled document",
+    "mesh-flattening": "surface parameterization flattening mesh scroll unrolling fiber tracking",
+    "ct-imaging": "synchrotron phase contrast micro-CT papyrus carbon ink",
+    "super-resolution": "volumetric super-resolution micro-CT deep learning paired registration",
+    "self-supervised-3d": "self-supervised pretraining 3D volumetric segmentation foundation model",
+    "label-efficiency": "pseudo-labels sparse annotation 3D segmentation self-training",
+    "domain-transfer": "domain adaptation CT scanner resolution cross-dataset segmentation",
+    "validation-fp": "hallucination false positives deep learning reconstruction scientific imaging validation",
+    "papyrology": "Herculaneum papyri Greek text Philodemus reading"
+  },
+  "tag_rules": [
+    [
+      "Herculaneum",
+      "herculaneum"
+    ],
+    [
+      "Vesuvius Challenge",
+      "vesuvius-challenge"
+    ],
+    [
+      "En-Gedi",
+      "en-gedi"
+    ],
+    [
+      "papyr",
+      "papyrus"
+    ],
+    [
+      "parchment",
+      "parchment"
+    ],
+    [
+      "synchrotron",
+      "synchrotron"
+    ],
+    [
+      "phase[- ]contrast",
+      "phase-contrast"
+    ],
+    [
+      "micro-?CT|computed tomography",
+      "ct"
+    ],
+    [
+      "carbon(?:-based)? ink",
+      "carbon-ink"
+    ],
+    [
+      "infrared|\\bIR\\b (?:photo|imag)",
+      "infrared"
+    ],
+    [
+      "multispectral|hyperspectral",
+      "multispectral"
+    ],
+    [
+      "\\bnnU-?Net\\b",
+      "nnunet"
+    ],
+    [
+      "U-?Net",
+      "unet"
+    ],
+    [
+      "Transformer|\\bViT\\b",
+      "transformer"
+    ],
+    [
+      "TimeSformer",
+      "timesformer"
+    ],
+    [
+      "\\bDINO",
+      "dino"
+    ],
+    [
+      "masked autoencoder|\\bMAE\\b",
+      "mae"
+    ],
+    [
+      "Segment Anything|\\bSAM\\b",
+      "sam"
+    ],
+    [
+      "super[- ]resolution",
+      "super-resolution"
+    ],
+    [
+      "distillation",
+      "distillation"
+    ],
+    [
+      "pseudo-?labels?|self-training",
+      "pseudo-labels"
+    ],
+    [
+      "structure tensor",
+      "structure-tensor"
+    ],
+    [
+      "level[- ]set|winding number",
+      "level-set"
+    ],
+    [
+      "\\bSLIM\\b|as-rigid-as-possible|\\bARAP\\b|conformal",
+      "parameterization"
+    ],
+    [
+      "graph cut|min-cost flow|belief propagation",
+      "graph-opt"
+    ],
+    [
+      "Zarr|OME-Zarr",
+      "zarr"
+    ],
+    [
+      "hallucinat",
+      "hallucination"
+    ],
+    [
+      "ensembl",
+      "ensemble"
+    ]
+  ],
+  "topic_re": "tomograph|micro-?CT|\\bCT\\b|X-ray|synchrotron|volumetric|\\b3D\\b|papyr|scrolls?\\b|Herculaneum|unwrap|unroll|carboni[sz]ed|\\bink\\b|manuscript|palimpsest|cultural heritage",
+  "title_topic_re": "tomograph|micro-?CT|\\bCT\\b|X-ray|synchrotron|volumetric|\\b3D\\b|papyr|scrolls?\\b|Herculaneum|unwrap|unroll|carboni[sz]ed|\\bink\\b|manuscript|palimpsest|cultural heritage"
+}

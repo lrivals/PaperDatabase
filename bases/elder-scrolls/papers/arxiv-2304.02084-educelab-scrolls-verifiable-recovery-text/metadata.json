@@ -1,0 +1,62 @@
+{
+  "id": "arxiv-2304.02084-educelab-scrolls-verifiable-recovery-text",
+  "title": "EduceLab-Scrolls: Verifiable Recovery of Text from Herculaneum Papyri using X-ray CT",
+  "authors": [
+    {
+      "given": "Stephen",
+      "family": "Parsons"
+    },
+    {
+      "given": "C. Seth",
+      "family": "Parker"
+    },
+    {
+      "given": "Christy",
+      "family": "Chapman"
+    },
+    {
+      "given": "Mami",
+      "family": "Hayashida"
+    },
+    {
+      "given": "W. Brent",
+      "family": "Seales"
+    }
+  ],
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2304.02084",
+  "url": "https://arxiv.org/abs/2304.02084",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "ink-detection",
+    "validation-fp",
+    "papyrology",
+    "ct-imaging",
+    "label-efficiency"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "carbon-ink",
+    "dataset",
+    "educelab",
+    "infrared-labels",
+    "cross-validation",
+    "synchrotron"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

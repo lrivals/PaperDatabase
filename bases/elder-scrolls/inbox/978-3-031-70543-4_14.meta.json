@@ -1,0 +1,33 @@
+{
+  "arxiv_id": null,
+  "title": "Fully Automatic Virtual Unwrapping Method for Documents Imaged by X-Ray Tomography",
+  "authors": [
+    {
+      "given": "Kulagin",
+      "family": "Petr"
+    },
+    {
+      "given": "Polevoy",
+      "family": "Dmitry"
+    },
+    {
+      "given": "Marina V.",
+      "family": "Chukalina"
+    },
+    {
+      "given": "Dmitry",
+      "family": "Nikolaev"
+    },
+    {
+      "given": "Vladimir V.",
+      "family": "Arlazarov"
+    }
+  ],
+  "year": 2024,
+  "doi": "10.1007/978-3-031-70543-4_14",
+  "journal_ref": null,
+  "venue_openalex": "Lecture notes in computer science",
+  "type": "journal",
+  "url": "https://doi.org/10.1007/978-3-031-70543-4_14",
+  "abstract": null
+}

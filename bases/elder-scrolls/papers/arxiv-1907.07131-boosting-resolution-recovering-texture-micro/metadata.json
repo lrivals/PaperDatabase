@@ -1,0 +1,51 @@
+{
+  "id": "arxiv-1907.07131-boosting-resolution-recovering-texture-micro",
+  "title": "Boosting Resolution and Recovering Texture of micro-CT Images with Deep Learning",
+  "authors": [
+    {
+      "given": "Ying Da",
+      "family": "Wang"
+    },
+    {
+      "given": "Ryan T.",
+      "family": "Armstrong"
+    },
+    {
+      "given": "Peyman",
+      "family": "Mostaghimi"
+    }
+  ],
+  "year": 2019,
+  "venue": "arXiv preprint",
+  "doi": "10.1029/2019WR026052",
+  "arxiv_id": "1907.07131",
+  "url": "https://arxiv.org/abs/1907.07131",
+  "type": "preprint",
+  "axes": [
+    "super-resolution",
+    "ct-imaging"
+  ],
+  "tags": [
+    "ct",
+    "super-resolution",
+    "gan",
+    "edsr",
+    "micro-ct",
+    "roches"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "ligatures perdues à l'extraction : 29 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 24 fragment(s) non réparé(s) (« classi cation »…)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

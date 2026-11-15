@@ -1,0 +1,60 @@
+{
+  "id": "arxiv-2603.27698-ink-detection-surface-topography-herculaneum",
+  "title": "Ink Detection from Surface Topography of the Herculaneum Papyri",
+  "authors": [
+    {
+      "given": "Giorgio",
+      "family": "Angelotti"
+    },
+    {
+      "given": "Federica",
+      "family": "Nicolardi"
+    },
+    {
+      "given": "Paul",
+      "family": "Henderson"
+    },
+    {
+      "given": "W. Brent",
+      "family": "Seales"
+    }
+  ],
+  "year": 2026,
+  "venue": "Scientific Reports (2026)",
+  "doi": "10.1038/s41598-026-58467-1",
+  "arxiv_id": "2603.27698",
+  "url": "https://arxiv.org/abs/2603.27698",
+  "type": "journal",
+  "axes": [
+    "ink-detection",
+    "ct-imaging",
+    "validation-fp",
+    "papyrology",
+    "domain-transfer"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "carbon-ink",
+    "optical-profilometry",
+    "morphological-hypothesis",
+    "nnU-Net",
+    "resolution-requirement",
+    "PHerc-248",
+    "PHerc-250",
+    "PHerc-500P2"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

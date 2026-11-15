@@ -1,0 +1,112 @@
+{
+  "id": "arxiv-1602.08071-enhanced-x-ray-phase-contrast",
+  "title": "Enhanced X-ray-phase-contrast-tomography brings new clarity to the 2000-year-old 'voice' of Epicurean philosopher Philodemus",
+  "authors": [
+    {
+      "given": "I.",
+      "family": "Bukreeva"
+    },
+    {
+      "given": "A.",
+      "family": "Mittone"
+    },
+    {
+      "given": "A.",
+      "family": "Bravin"
+    },
+    {
+      "given": "G.",
+      "family": "Festa"
+    },
+    {
+      "given": "M.",
+      "family": "Alessandrelli"
+    },
+    {
+      "given": "P.",
+      "family": "Coan"
+    },
+    {
+      "given": "V.",
+      "family": "Formoso"
+    },
+    {
+      "given": "R. G.",
+      "family": "Agostino"
+    },
+    {
+      "given": "M.",
+      "family": "Giocondo"
+    },
+    {
+      "given": "F.",
+      "family": "Ciuchi"
+    },
+    {
+      "given": "M.",
+      "family": "Fratini"
+    },
+    {
+      "given": "L.",
+      "family": "Massimi"
+    },
+    {
+      "given": "A.",
+      "family": "Lamarra"
+    },
+    {
+      "given": "C.",
+      "family": "Andreani"
+    },
+    {
+      "given": "R.",
+      "family": "Bartolino"
+    },
+    {
+      "given": "G.",
+      "family": "Gigli"
+    },
+    {
+      "given": "G.",
+      "family": "Ranocchia"
+    },
+    {
+      "given": "A.",
+      "family": "Cedola"
+    }
+  ],
+  "year": 2016,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1602.08071",
+  "url": "https://arxiv.org/abs/1602.08071",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "phase-contrast",
+    "synchrotron",
+    "philodemus",
+    "PHerc.375",
+    "PHerc.495"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "titre du PDF ≠ titre arXiv : « LETTER TO NATURE_papyri »",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

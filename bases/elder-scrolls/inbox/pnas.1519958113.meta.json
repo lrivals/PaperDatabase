@@ -1,0 +1,49 @@
+{
+  "arxiv_id": null,
+  "title": "Revealing metallic ink in Herculaneum papyri",
+  "authors": [
+    {
+      "given": "Emmanuel",
+      "family": "Brun"
+    },
+    {
+      "given": "Marine",
+      "family": "Cotte"
+    },
+    {
+      "given": "Jonathan Paul",
+      "family": "Wright"
+    },
+    {
+      "given": "Marie",
+      "family": "Ruat"
+    },
+    {
+      "given": "Pieter",
+      "family": "Tack"
+    },
+    {
+      "given": "László",
+      "family": "Vincze"
+    },
+    {
+      "given": "Claudio",
+      "family": "Ferrero"
+    },
+    {
+      "given": "Daniel",
+      "family": "Delattre"
+    },
+    {
+      "given": "Vito",
+      "family": "Mocella"
+    }
+  ],
+  "year": 2016,
+  "doi": "10.1073/pnas.1519958113",
+  "journal_ref": null,
+  "venue_openalex": "Proceedings of the National Academy of Sciences",
+  "type": "journal",
+  "url": "https://doi.org/10.1073/pnas.1519958113",
+  "abstract": null
+}

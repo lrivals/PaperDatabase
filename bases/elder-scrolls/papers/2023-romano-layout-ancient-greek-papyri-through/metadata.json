@@ -1,0 +1,90 @@
+{
+  "id": "2023-romano-layout-ancient-greek-papyri-through",
+  "title": "Layout of ancient Greek papyri through lead-drawn ruling lines revealed by Macro X-Ray Fluorescence Imaging",
+  "authors": [
+    {
+      "given": "Francesco Paolo",
+      "family": "Romano"
+    },
+    {
+      "given": "Enzo",
+      "family": "Puglia"
+    },
+    {
+      "given": "Claudia",
+      "family": "Caliri"
+    },
+    {
+      "given": "Danilo Paolo",
+      "family": "Pavone"
+    },
+    {
+      "given": "Michele",
+      "family": "Alessandrelli"
+    },
+    {
+      "given": "Andrea",
+      "family": "Busacca"
+    },
+    {
+      "given": "C. G.",
+      "family": "Fatuzzo"
+    },
+    {
+      "given": "Kilian Josef",
+      "family": "Fleischer"
+    },
+    {
+      "given": "Carlo",
+      "family": "Pernigotti"
+    },
+    {
+      "given": "Zdeněk",
+      "family": "Preisler"
+    },
+    {
+      "given": "Christian",
+      "family": "Vassallo"
+    },
+    {
+      "given": "Gertjan",
+      "family": "Verhasselt"
+    },
+    {
+      "given": "Costanza",
+      "family": "Miliani"
+    },
+    {
+      "given": "Graziano",
+      "family": "Ranocchia"
+    }
+  ],
+  "year": 2023,
+  "venue": "Scientific Reports",
+  "doi": "10.1038/s41598-023-33242-8",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/s41598-023-33242-8",
+  "type": "journal",
+  "axes": [
+    "papyrology"
+  ],
+  "tags": [
+    "papyrus"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/s41598-023-33242-8) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 3 mot(s) réparé(s) (lib/ligatures.py)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

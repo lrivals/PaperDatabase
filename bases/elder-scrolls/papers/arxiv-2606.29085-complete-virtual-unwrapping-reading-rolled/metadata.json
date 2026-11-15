@@ -1,0 +1,145 @@
+{
+  "id": "arxiv-2606.29085-complete-virtual-unwrapping-reading-rolled",
+  "title": "Complete virtual unwrapping and reading of a rolled Herculaneum papyrus",
+  "authors": [
+    {
+      "given": "Giorgio",
+      "family": "Angelotti"
+    },
+    {
+      "given": "Stephen",
+      "family": "Parsons"
+    },
+    {
+      "given": "Federica",
+      "family": "Nicolardi"
+    },
+    {
+      "given": "Youssef",
+      "family": "Nader"
+    },
+    {
+      "given": "Sean",
+      "family": "Johnson"
+    },
+    {
+      "given": "David",
+      "family": "Josey"
+    },
+    {
+      "given": "Paul",
+      "family": "Henderson"
+    },
+    {
+      "given": "Hendrik",
+      "family": "Schilling"
+    },
+    {
+      "given": "Johannes",
+      "family": "Rudolph"
+    },
+    {
+      "given": "Forrest",
+      "family": "McDonald"
+    },
+    {
+      "given": "Elian Rafael Dal",
+      "family": "Prá"
+    },
+    {
+      "given": "Paul",
+      "family": "Tafforeau"
+    },
+    {
+      "given": "Alessandro",
+      "family": "Mirone"
+    },
+    {
+      "given": "Clifford Seth",
+      "family": "Parker"
+    },
+    {
+      "given": "Jan Paul",
+      "family": "Posma"
+    },
+    {
+      "given": "Benjamin",
+      "family": "Kyles"
+    },
+    {
+      "given": "Claudio",
+      "family": "Vergara"
+    },
+    {
+      "given": "Alessia",
+      "family": "Lavorante"
+    },
+    {
+      "given": "Rossella",
+      "family": "Villa"
+    },
+    {
+      "given": "Maria Chiara",
+      "family": "Robustelli"
+    },
+    {
+      "given": "Marzia",
+      "family": "D'Angelo"
+    },
+    {
+      "given": "Gianluca Del",
+      "family": "Mastro"
+    },
+    {
+      "given": "Michael",
+      "family": "McOsker"
+    },
+    {
+      "given": "Kilian",
+      "family": "Fleischer"
+    },
+    {
+      "given": "Christy",
+      "family": "Chapman"
+    },
+    {
+      "given": "Nat",
+      "family": "Friedman"
+    },
+    {
+      "given": "William Brent",
+      "family": "Seales"
+    }
+  ],
+  "year": 2026,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2606.29085",
+  "url": "https://arxiv.org/abs/2606.29085",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "synchrotron",
+    "phase-contrast"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "arxiv-1706.09883-investigating-herculaneum-papyri-innovative-3d",
+  "title": "Investigating Herculaneum papyri: An innovative 3D approach for the virtual unfolding of the rolls",
+  "authors": [
+    {
+      "given": "Inna",
+      "family": "Bukreeva"
+    },
+    {
+      "given": "Michele",
+      "family": "Alessandrelli"
+    },
+    {
+      "given": "Vincenzo",
+      "family": "Formoso"
+    },
+    {
+      "given": "Graziano",
+      "family": "Ranocchia"
+    },
+    {
+      "given": "Alessia",
+      "family": "Cedola"
+    }
+  ],
+  "year": 2017,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "1706.09883",
+  "url": "https://arxiv.org/abs/1706.09883",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "mesh-flattening",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "phase-contrast",
+    "synchrotron",
+    "ESRF",
+    "PHerc-375",
+    "PHerc-495",
+    "virtual-unfolding"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "sections numérotées non détectées : 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

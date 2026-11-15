@@ -12,6 +12,7 @@ documentation du logiciel. Les données vivent dans des bases, une par dossier :
 | `stage` | [bases/stage/](bases/stage/) | apprentissage continu embarqué sur MCU pour la maintenance prédictive (références du stage ISAE) |
 | `yolo-data` | [bases/yolo-data/](bases/yolo-data/) | préparation des données pour la détection YOLO : datasets, annotation, prétraitement, augmentation |
 | `serre` | [bases/serre/](bases/serre/) | projet SerreIA (serre autonome) : vision des maladies et écart de domaine, calibration, edge RPi/Hailo, IoT, contrôle climatique et hydroponique, prévision, agent LLM, bonnes pratiques de culture sous abri (consignes par espèce et stade) |
+| `elder-scrolls` | [bases/elder-scrolls/](bases/elder-scrolls/) | projet Elder-scrolls (Vesuvius Challenge) : lecture virtuelle des papyrus d'Herculanum en micro-CT — détection d'encre, segmentation de feuillets, aplatissement, super-résolution 9 → 2,4 µm, auto-supervisé 3D, faux positifs, papyrologie |
 
 **Travailler sur une base.** Chaque base a son propre `CLAUDE.md` (mode d'emploi, règles de
 travail, format des réponses) : le lire avant toute question sur le corpus, et de préférence

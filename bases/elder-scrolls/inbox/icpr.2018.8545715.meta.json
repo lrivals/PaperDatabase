@@ -1,0 +1,29 @@
+{
+  "arxiv_id": null,
+  "title": "Layered Surface Detection for Virtual Unrolling",
+  "authors": [
+    {
+      "given": "Vedrana Andersen",
+      "family": "Dahl"
+    },
+    {
+      "given": "Anders Bjorholm",
+      "family": "Dahl"
+    },
+    {
+      "given": "Camilla Himmelstrup",
+      "family": "Trinderup"
+    },
+    {
+      "given": "Carsten",
+      "family": "Gundlach"
+    }
+  ],
+  "year": 2018,
+  "doi": "10.1109/icpr.2018.8545715",
+  "journal_ref": null,
+  "venue_openalex": "Proceedings - International Conference on Pattern Recognition/Proceedings/International Conference on Pattern Recognition",
+  "type": "conference",
+  "url": "https://doi.org/10.1109/icpr.2018.8545715",
+  "abstract": null
+}

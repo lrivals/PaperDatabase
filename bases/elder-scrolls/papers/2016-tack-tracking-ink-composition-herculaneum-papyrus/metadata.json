@@ -1,0 +1,76 @@
+{
+  "id": "2016-tack-tracking-ink-composition-herculaneum-papyrus",
+  "title": "Tracking ink composition on Herculaneum papyrus scrolls: quantification and speciation of lead by X-ray based techniques and Monte Carlo simulations",
+  "authors": [
+    {
+      "given": "Pieter",
+      "family": "Tack"
+    },
+    {
+      "given": "Marine",
+      "family": "Cotte"
+    },
+    {
+      "given": "Stephen",
+      "family": "Bauters"
+    },
+    {
+      "given": "Emmanuel",
+      "family": "Brun"
+    },
+    {
+      "given": "Dipanjan",
+      "family": "Banerjee"
+    },
+    {
+      "given": "Wim",
+      "family": "Bras"
+    },
+    {
+      "given": "Claudio",
+      "family": "Ferrero"
+    },
+    {
+      "given": "Daniel",
+      "family": "Delattre"
+    },
+    {
+      "given": "Vito",
+      "family": "Mocella"
+    },
+    {
+      "given": "László",
+      "family": "Vincze"
+    }
+  ],
+  "year": 2016,
+  "venue": "Scientific Reports",
+  "doi": "10.1038/srep20763",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/srep20763",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/srep20763) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

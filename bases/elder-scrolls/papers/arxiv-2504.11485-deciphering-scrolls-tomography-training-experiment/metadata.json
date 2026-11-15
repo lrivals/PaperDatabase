@@ -1,0 +1,44 @@
+{
+  "id": "arxiv-2504.11485-deciphering-scrolls-tomography-training-experiment",
+  "title": "Deciphering scrolls with tomography: A training experiment",
+  "authors": [
+    {
+      "given": "Sonia",
+      "family": "Foschiatti"
+    },
+    {
+      "given": "Axel",
+      "family": "Kittenberger"
+    },
+    {
+      "given": "Otmar",
+      "family": "Scherzer"
+    }
+  ],
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": null,
+  "arxiv_id": "2504.11485",
+  "url": "https://arxiv.org/abs/2504.11485",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging"
+  ],
+  "tags": [
+    "ct"
+  ],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

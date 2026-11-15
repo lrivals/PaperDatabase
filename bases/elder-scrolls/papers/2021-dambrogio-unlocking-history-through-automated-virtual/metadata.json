@@ -1,0 +1,75 @@
+{
+  "id": "2021-dambrogio-unlocking-history-through-automated-virtual",
+  "title": "Unlocking history through automated virtual unfolding of sealed documents imaged by X-ray microtomography",
+  "authors": [
+    {
+      "given": "Jana",
+      "family": "Dambrogio"
+    },
+    {
+      "given": "Amanda",
+      "family": "Ghassaei"
+    },
+    {
+      "given": "Daniel Starza",
+      "family": "Smith"
+    },
+    {
+      "given": "Holly",
+      "family": "Jackson"
+    },
+    {
+      "given": "Martin L.",
+      "family": "Demaine"
+    },
+    {
+      "given": "Graham Roy",
+      "family": "Davis"
+    },
+    {
+      "given": "David",
+      "family": "Mills"
+    },
+    {
+      "given": "Rebekah",
+      "family": "Ahrendt"
+    },
+    {
+      "given": "Nadine N. W.",
+      "family": "Akkerman"
+    },
+    {
+      "given": "David van der",
+      "family": "Linden"
+    },
+    {
+      "given": "Erik D.",
+      "family": "Demaine"
+    }
+  ],
+  "year": 2021,
+  "venue": "Nature Communications",
+  "doi": "10.1038/s41467-021-21326-w",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1038/s41467-021-21326-w",
+  "type": "journal",
+  "axes": [],
+  "tags": [],
+  "added": "2026-11-15",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Nature Communications, DOI 10.1038/s41467-021-21326-w) : type journal/conference à préciser",
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 35 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 4 fragment(s) non réparé(s) (« classi cation »…)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

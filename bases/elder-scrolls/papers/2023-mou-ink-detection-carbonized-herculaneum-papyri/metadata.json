@@ -18,18 +18,15 @@
   "url": "https://doi.org/10.1109/iccit60459.2023.10441240",
   "type": "conference",
   "axes": [
-    "virtual-unwrapping",
-    "ink-detection",
-    "validation-fp",
-    "papyrology"
+    "ink-detection"
   ],
   "tags": [
     "herculaneum",
-    "papyrus",
-    "parchment",
-    "infrared",
+    "kaggle",
     "unet",
-    "ensemble"
+    "attention-unet",
+    "ensemble",
+    "autoencoder"
   ],
   "added": "2026-11-15",
   "extraction": {

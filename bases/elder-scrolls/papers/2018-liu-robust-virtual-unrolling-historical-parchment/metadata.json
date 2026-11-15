@@ -30,7 +30,13 @@
     "ct-imaging"
   ],
   "tags": [
-    "parchment"
+    "parchment",
+    "xmt",
+    "topological-segmentation",
+    "junction-matching",
+    "dynamic-programming",
+    "ink-projection",
+    "bressingham-scroll"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -39,13 +45,12 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon arXiv (journal_ref : IEEE Transactions on Image Processing 27(4):1914-1926, 2018) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 57 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 10 fragment(s) non réparé(s) (« classi cation »…)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

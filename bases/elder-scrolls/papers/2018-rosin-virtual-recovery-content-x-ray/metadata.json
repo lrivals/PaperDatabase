@@ -37,8 +37,19 @@
   "arxiv_id": null,
   "url": "https://doi.org/10.1038/s41598-018-29037-x",
   "type": "journal",
-  "axes": [],
-  "tags": [],
+  "axes": [
+    "virtual-unwrapping",
+    "surface-segmentation",
+    "mesh-flattening",
+    "ct-imaging"
+  ],
+  "tags": [
+    "parchment",
+    "iron-gall-ink",
+    "lab-micro-CT",
+    "fused-layers",
+    "skeleton-propagation"
+  ],
   "added": "2026-11-15",
   "extraction": {
     "backend": "pymupdf",
@@ -46,12 +57,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/s41598-018-29037-x) : type journal/conference à préciser",
-      "aucun axe détecté : à classer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

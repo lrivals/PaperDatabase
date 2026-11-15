@@ -119,14 +119,23 @@
   "type": "preprint",
   "axes": [
     "virtual-unwrapping",
+    "surface-segmentation",
+    "mesh-flattening",
+    "ink-detection",
     "ct-imaging",
+    "validation-fp",
     "papyrology"
   ],
   "tags": [
     "herculaneum",
     "papyrus",
     "synchrotron",
-    "phase-contrast"
+    "phase-contrast",
+    "PHerc-1667",
+    "PHerc-Paris-4",
+    "PHerc-139",
+    "BM18",
+    "2.4um"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -134,12 +143,11 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

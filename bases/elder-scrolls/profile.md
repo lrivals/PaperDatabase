@@ -82,6 +82,9 @@ Vesuvius Challenge : lecture virtuelle des papyrus carbonisés d'Herculanum par 
 - 2026-11-15 (arxiv-1907.07131-boosting-resolution-recovering-texture-micro) — ajouter « métriques de fidélité de texture / hallucination en super-résolution GAN » aux Inclus (axe super-resolution ou validation-fp) — le papier admet que le PSNR ne mesure pas la texture générée.
 - 2026-11-15 (arxiv-2603.27698-ink-detection-surface-topography-herculaneum) — ajouter la profilométrie optique de surface comme modalité d'étude du signal d'encre (hypothèse morphologique) — papier ink-detection dont la modalité n'est ni CT ni IR/multispectral.
 - 2026-11-15 (/paper-fiche, agent principal) — adapter les colonnes de benchmarks.csv au thème (résolution µm/voxel, source du scan, région tenue à l'écart, type de labels) — l'en-tête FPGA (fps, luts, power…) laisse 10 colonnes sur 20 à n/r.
+- 2026-11-15 (2016-tack-tracking-ink-composition-herculaneum-papyrus) — ajouter un axe « ink-chemistry » (composition de l'encre, XRF/XANES, lien avec le contraste CT) ou l'inclure dans ct-imaging — papier de chimie des matériaux sans axe propre.
+- 2026-11-15 (2025-ceccarelli-pulsed-thermographic-analysis-herculaneum-papyri) — ajouter « imagerie de surface non-CT (thermographie, NIR, SWIR, macro-XRF) de papyrus déroulés » aux Inclus, éventuellement un axe dédié — classé en ink-detection par défaut alors que le papier est hors CT.
+- 2026-11-15 (2026-seiler-model-carbonized-papyrus-scroll-opens) — ajouter un sous-thème « rouleaux modèles / fantômes à vérité terrain » (validation à l'aveugle, dépistage XRF du plomb) — relève de ct-imaging et validation-fp sans axe dédié.
 
 ## Historique
 

@@ -53,8 +53,18 @@
   "arxiv_id": null,
   "url": "https://doi.org/10.1038/s41467-021-21326-w",
   "type": "journal",
-  "axes": [],
-  "tags": [],
+  "axes": [
+    "virtual-unwrapping",
+    "surface-segmentation",
+    "mesh-flattening",
+    "ct-imaging"
+  ],
+  "tags": [
+    "letterlocking",
+    "xmt",
+    "virtual-unfolding",
+    "brienne-collection"
+  ],
   "added": "2026-11-15",
   "extraction": {
     "backend": "pymupdf",
@@ -62,7 +72,6 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Nature Communications, DOI 10.1038/s41467-021-21326-w) : type journal/conference à préciser",
-      "aucun axe détecté : à classer dans /paper-fiche",
       "ligatures perdues à l'extraction : 35 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 4 fragment(s) non réparé(s) (« classi cation »…)",
       "aucune section détectée"
@@ -70,6 +79,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

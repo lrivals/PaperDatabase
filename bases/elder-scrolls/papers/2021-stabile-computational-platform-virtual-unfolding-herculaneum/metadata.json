@@ -39,11 +39,19 @@
   "type": "journal",
   "axes": [
     "virtual-unwrapping",
-    "papyrology"
+    "mesh-flattening",
+    "ct-imaging"
   ],
   "tags": [
     "herculaneum",
-    "papyrus"
+    "papyrus",
+    "scorza",
+    "xpct",
+    "micro-ct",
+    "lscm",
+    "abf",
+    "pherc-1103",
+    "pherc-110"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -52,13 +60,12 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/s41598-020-80458-z) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 1 mot(s) réparé(s) (lib/ligatures.py)",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

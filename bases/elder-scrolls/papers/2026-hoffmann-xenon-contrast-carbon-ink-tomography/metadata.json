@@ -13,8 +13,18 @@
   "arxiv_id": null,
   "url": "https://doi.org/10.5281/zenodo.23164128",
   "type": "report",
-  "axes": [],
-  "tags": [],
+  "axes": [
+    "ct-imaging",
+    "ink-detection"
+  ],
+  "tags": [
+    "xenon",
+    "contrast-agent",
+    "synchrotron",
+    "carbon-ink",
+    "poster",
+    "model-sample"
+  ],
   "added": "2026-11-15",
   "extraction": {
     "backend": "pymupdf",
@@ -22,12 +32,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Zenodo (CERN European Organization for Nuclear Research), DOI 10.5281/zenodo.23164128) : type journal/conference à préciser",
-      "aucun axe détecté : à classer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

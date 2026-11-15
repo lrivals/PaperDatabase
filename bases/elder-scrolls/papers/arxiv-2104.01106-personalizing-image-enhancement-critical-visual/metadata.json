@@ -12,16 +12,21 @@
     }
   ],
   "year": 2021,
-  "venue": "nternational Journal on Document Analysis and Recognition (IJDAR) (2021)",
+  "venue": "International Journal on Document Analysis and Recognition (IJDAR) (2021)",
   "doi": "10.1007/s10032-021-00386-0",
   "arxiv_id": "2104.01106",
   "url": "https://arxiv.org/abs/2104.01106",
-  "type": null,
+  "type": "journal",
   "axes": [
     "papyrology"
   ],
   "tags": [
-    "papyrus"
+    "papyrus",
+    "legibility-enhancement",
+    "color-processing",
+    "visible-light",
+    "user-study",
+    "uncertainty"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -30,13 +35,12 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon arXiv (journal_ref : nternational Journal on Document Analysis and Recognition (IJDAR) (2021)) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

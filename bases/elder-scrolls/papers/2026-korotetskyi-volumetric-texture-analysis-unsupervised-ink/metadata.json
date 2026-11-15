@@ -18,16 +18,21 @@
   "url": "https://doi.org/10.5281/zenodo.20766168",
   "type": "report",
   "axes": [
-    "virtual-unwrapping",
     "ink-detection",
-    "ct-imaging",
-    "papyrology"
+    "label-efficiency",
+    "validation-fp",
+    "ct-imaging"
   ],
   "tags": [
     "herculaneum",
     "papyrus",
     "ct",
-    "carbon-ink"
+    "carbon-ink",
+    "unsupervised",
+    "texture",
+    "scroll-5",
+    "PHerc-172",
+    "training-free"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -36,13 +41,12 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Zenodo (CERN European Organization for Nuclear Research), DOI 10.5281/zenodo.20766168) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 36 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 4 fragment(s) non réparé(s) (« classi cation »…)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -26,26 +26,31 @@
   "url": "https://arxiv.org/abs/2308.05070",
   "type": "preprint",
   "axes": [
-    "virtual-unwrapping",
     "ink-detection",
     "ct-imaging",
-    "papyrology"
+    "virtual-unwrapping"
   ],
   "tags": [
     "herculaneum",
-    "papyrus"
+    "papyrus",
+    "ink-detection",
+    "fast-fourier-convolution",
+    "3d-cnn",
+    "educelab-scrolls",
+    "kaggle",
+    "fragments",
+    "3.2um"
   ],
   "added": "2026-11-15",
   "extraction": {
     "backend": "pymupdf",
     "ok": false,
     "warnings": [
-      "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "métadonnées à vérifier à la main"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

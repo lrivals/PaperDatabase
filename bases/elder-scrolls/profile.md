@@ -79,6 +79,9 @@ Vesuvius Challenge : lecture virtuelle des papyrus carbonisés d'Herculanum par 
 ## Suggestions en attente
 
 <!-- Une ligne par suggestion : - AAAA-MM-JJ (source : paper_id ou /base-profile) — proposition — raison -->
+- 2026-11-15 (arxiv-1907.07131-boosting-resolution-recovering-texture-micro) — ajouter « métriques de fidélité de texture / hallucination en super-résolution GAN » aux Inclus (axe super-resolution ou validation-fp) — le papier admet que le PSNR ne mesure pas la texture générée.
+- 2026-11-15 (arxiv-2603.27698-ink-detection-surface-topography-herculaneum) — ajouter la profilométrie optique de surface comme modalité d'étude du signal d'encre (hypothèse morphologique) — papier ink-detection dont la modalité n'est ni CT ni IR/multispectral.
+- 2026-11-15 (/paper-fiche, agent principal) — adapter les colonnes de benchmarks.csv au thème (résolution µm/voxel, source du scan, région tenue à l'écart, type de labels) — l'en-tête FPGA (fps, luts, power…) laisse 10 colonnes sur 20 à n/r.
 
 ## Historique
 

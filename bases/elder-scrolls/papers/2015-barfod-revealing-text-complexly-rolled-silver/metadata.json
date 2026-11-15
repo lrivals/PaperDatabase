@@ -26,11 +26,15 @@
   "url": "https://doi.org/10.1038/srep17765",
   "type": "journal",
   "axes": [
-    "ink-detection",
+    "virtual-unwrapping",
     "ct-imaging"
   ],
   "tags": [
-    "ct"
+    "ct",
+    "metal-scroll",
+    "manual-segmentation",
+    "VGStudio",
+    "lab-CT"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -39,12 +43,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (Scientific Reports, DOI 10.1038/srep17765) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -23,11 +23,15 @@
   "type": "preprint",
   "axes": [
     "virtual-unwrapping",
-    "mesh-flattening",
-    "papyrology"
+    "mesh-flattening"
   ],
   "tags": [
-    "en-gedi"
+    "en-gedi",
+    "flattening",
+    "distortion",
+    "lscm",
+    "abf",
+    "material-modeling"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -35,13 +39,12 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 33 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 5 fragment(s) non réparé(s) (« classi cation »…)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

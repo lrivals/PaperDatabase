@@ -89,7 +89,11 @@
   "tags": [
     "herculaneum",
     "papyrus",
-    "phase-contrast"
+    "phase-contrast",
+    "synchrotron",
+    "philodemus",
+    "PHerc.375",
+    "PHerc.495"
   ],
   "added": "2026-11-15",
   "extraction": {
@@ -98,12 +102,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "titre du PDF ≠ titre arXiv : « LETTER TO NATURE_papyri »",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

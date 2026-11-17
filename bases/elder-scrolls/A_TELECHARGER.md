@@ -1,19 +1,18 @@
 # Elder-scrolls — articles à télécharger manuellement
 
-État au 2026-11-17 (les 9 PDF reçus le 15 novembre sont ingérés et fichés). Copie de travail
+État au 2026-11-17 (les 17 PDF reçus les 15 et 17 novembre sont ingérés et fichés ; 52 papiers dans la base). Copie de travail
 du doc partagé <https://claude.ai/artifact/WKPXpWQHNtfWwSnFnenRaR>.
 
 ## Mode d'emploi
 
-15 articles restent à récupérer à la main : 3 sous paywall probable, 5 rapports Zenodo
-restreints, 7 trouvés par la deuxième recherche (citations du corpus).
+7 articles restent à récupérer à la main : 2 sous paywall probable et 5 rapports Zenodo
+restreints.
 
 1. Télécharger le PDF depuis le lien DOI (navigateur, accès institutionnel). Aucun
    contournement de paywall.
 2. Le déposer dans `bases/elder-scrolls/inbox/` sous le nom de la colonne « Fichier ».
    Le fichier de métadonnées correspondant (`<même nom>.meta.json`, construit depuis
-   OpenAlex) y est déjà pour les 8 articles des deux premières listes ; pas pour les 7 de
-   la deuxième recherche (à compléter depuis OpenAlex une fois le PDF déposé).
+   OpenAlex) y est déjà pour les 7 articles restants.
 3. `bin/pdb ingest` depuis `bases/elder-scrolls/`, puis `/paper-fiche <paper_id>`.
 
 ## Reste à télécharger
@@ -23,7 +22,6 @@ restreints, 7 trouvés par la deuxième recherche (citations du corpus).
 | Titre | Année | Venue | DOI | Fichier |
 |---|---|---|---|---|
 | Virtual unrolling and information recovery from scanned scrolled historical documents (titre présent dans le texte de 12 papiers de la base) | 2013 | Pattern Recognition | [10.1016/j.patcog.2013.06.015](https://doi.org/10.1016/j.patcog.2013.06.015) | `j.patcog.2013.06.015.pdf` |
-| Revealing hidden text in rolled and folded papyri | 2017 | Applied Physics A | [10.1007/s00339-017-0808-6](https://doi.org/10.1007/s00339-017-0808-6) | `s00339-017-0808-6.pdf` |
 | Fully Automatic Virtual Unwrapping Method for Documents Imaged by X-Ray Tomography (ICDAR 2024, LNCS 14806, chap. 14) | 2024 | LNCS (Springer) | [10.1007/978-3-031-70543-4_14](https://doi.org/10.1007/978-3-031-70543-4_14) | `978-3-031-70543-4_14.pdf` |
 
 Pour le chapitre ICDAR 2024 : le fichier reçu (`978-3-031-70543-4_24`, 1 page) est le
@@ -45,23 +43,29 @@ une seule demande peut suffire.
 | Novel Findings in Ink Detection for Carbonized Herculaneum Papyri Using Machine Learning | Adam Dzieszkowski | 2026-03-16 | restreint | [10.5281/zenodo.19054054](https://doi.org/10.5281/zenodo.19054054) | `zenodo.19054054.pdf` |
 | Cross-Resolution Ink Signal Analysis and Consensus Filtering for Herculaneum Scroll CT Data | Adam Dzieszkowski | 2026-02-23 | restreint | [10.5281/zenodo.18742319](https://doi.org/10.5281/zenodo.18742319) | `zenodo.18742319.pdf` |
 
-### Deuxième recherche : cités par ou citant le corpus
+## Reçus le 2026-11-17 : ingérés et fichés
 
-Ajoutés le 2026-11-15 (recherche par citations sur les 25 papiers d'alors). Aucun n'est
-encore dans la base (vérifié le 2026-11-17).
+Fiche `done` pour les 8. Tous qualitatifs (`benchmarks: none`) sauf Wang 2022 : 2 lignes
+(PSNR 14,05 dB, SSIM 0,387 contre l'image de transmission THz, §4.2). Années corrigées : Wang 2022 et
+Mahnke 2020 (2021 et 2019 = mise en ligne).
 
-| Titre | Auteurs | Année | Venue | DOI | Fichier | Accès |
-|---|---|---|---|---|---|---|
-| Opaque document imaging: building images of inaccessible texts | Yun Lin, W. Brent Seales | 2005 | ICCV | [10.1109/iccv.2005.182](https://doi.org/10.1109/iccv.2005.182) | `iccv.2005.182.pdf` | paywall IEEE |
-| Digital restoration using volumetric scanning | W. Brent Seales, Yun Lin | 2004 | ACM/IEEE JCDL | [10.1145/996350.996380](https://doi.org/10.1145/996350.996380) | `996350.996380.pdf` | paywall ACM |
-| Virtual unfolding of folded papyri | H.-E. Mahnke, T. Arlt, D. Baum et al. | 2019 | J. Cultural Heritage | [10.1016/j.culher.2019.07.007](https://doi.org/10.1016/j.culher.2019.07.007) | `j.culher.2019.07.007.pdf` | Elsevier ; copie possible sur le dépôt du Helmholtz-Zentrum Berlin |
-| Virtual unrolling using X-ray computed tomography | D. Allegra, E. Ciliberto, P. Ciliberto et al. | 2015 | EUSIPCO | [10.1109/eusipco.2015.7362908](https://doi.org/10.1109/eusipco.2015.7362908) | `eusipco.2015.7362908.pdf` | actes EUSIPCO souvent en libre accès (eurasip.org) |
-| Apocalypto: revealing the unreadable | D. Mills, O. Samko, P. L. Rosin et al. | 2012 | Proc. SPIE | [10.1117/12.928917](https://doi.org/10.1117/12.928917) | `12.928917.pdf` | paywall SPIE |
-| Virtual unrolling technology based on terahertz computed tomography | T. Wang, K. Wang, K. Zou et al. | 2021 | Optics and Lasers in Eng. | [10.1016/j.optlaseng.2021.106924](https://doi.org/10.1016/j.optlaseng.2021.106924) | `j.optlaseng.2021.106924.pdf` | paywall Elsevier |
-| Synchrotron X-ray Mapping of Xenon Sorption in Carbon Ink on Papyrus | H. Hoffmann, T. Arlt, A. Hilger et al. | 2025 | ChemRxiv (préprint) | [10.26434/chemrxiv-2025-x4zvc](https://doi.org/10.26434/chemrxiv-2025-x4zvc) | `chemrxiv-2025-x4zvc.pdf` | libre accès, hôte chemrxiv.org non autorisé dans la session cloud |
+| Titre | Auteurs | Année | Venue | DOI | Fichier |
+|---|---|---|---|---|---|
+| Revealing hidden text in rolled and folded papyri | D. Baum, N. Lindow, H.-C. Hege et al. | 2017 | Applied Physics A 123:171 | [10.1007/s00339-017-0808-6](https://doi.org/10.1007/s00339-017-0808-6) | `s00339-017-0808-6.pdf` |
+| Opaque Document Imaging: Building Images of Inaccessible Texts | Y. Lin, W. B. Seales | 2005 | ICCV | [10.1109/iccv.2005.182](https://doi.org/10.1109/iccv.2005.182) | `iccv.2005.182.pdf` |
+| Digital Restoration Using Volumetric Scanning | W. B. Seales, Y. Lin | 2004 | ACM/IEEE JCDL | [10.1145/996350.996380](https://doi.org/10.1145/996350.996380) | `996350.996380.pdf` |
+| Virtual unfolding of folded papyri | H.-E. Mahnke, T. Arlt, D. Baum et al. | 2020 | J. Cultural Heritage 41:264–269 | [10.1016/j.culher.2019.07.007](https://doi.org/10.1016/j.culher.2019.07.007) | `j.culher.2019.07.007.pdf` |
+| Virtual unrolling using X-ray computed tomography | D. Allegra, E. Ciliberto, P. Ciliberto et al. | 2015 | EUSIPCO | [10.1109/eusipco.2015.7362908](https://doi.org/10.1109/eusipco.2015.7362908) | `eusipco.2015.7362908.pdf` |
+| Apocalypto: Revealing the unreadable | D. Mills, O. Samko, P. Rosin et al. | 2012 | Proc. SPIE 8506, 85060A | [10.1117/12.928917](https://doi.org/10.1117/12.928917) | `12.928917.pdf` |
+| Virtual unrolling technology based on terahertz computed tomography | T. Wang, K. Wang, K. Zou et al. | 2022 | Optics and Lasers in Eng. 151:106924 | [10.1016/j.optlaseng.2021.106924](https://doi.org/10.1016/j.optlaseng.2021.106924) | `j.optlaseng.2021.106924.pdf` |
+| Synchrotron X-ray Mapping of Xenon Sorption in Carbon Ink on Papyrus | H. Hoffmann, T. Arlt, A. Hilger et al. | 2025 | ChemRxiv (préprint) | [10.26434/chemrxiv-2025-x4zvc](https://doi.org/10.26434/chemrxiv-2025-x4zvc) | `chemrxiv-2025-x4zvc.pdf` |
 
 Le préprint Hoffmann 2025 est distinct du rapport Zenodo déjà ingéré
 (`2026-hoffmann-xenon-contrast-carbon-ink-tomography`, DOI 10.5281/zenodo.23164128).
+
+Le PDF « Unlocking history through automated virtual unfolding » (Dambrogio 2021) reçu
+le même jour est déjà dans la base (`2021-dambrogio-unlocking-history-through-automated-virtual`,
+même DOI) : non redéposé.
 
 ## Reçus le 2026-11-15 : ingérés et fichés
 

@@ -1,0 +1,390 @@
+---
+id: 2022-wang-virtual-unrolling-technology-terahertz-computed
+title: "Virtual unrolling technology based on terahertz computed tomography"
+year: 2022
+backend: pymupdf
+---
+
+Contents lists available at ScienceDirect
+
+Optics and Lasers in Engineering
+
+journal homepage: www.elsevier.com/locate/optlaseng
+
+Virtual unrolling technology based on terahertz computed tomography
+
+Tianyi Wang a , Kejia Wang a , Kaigang Zou a , Sishi Shen a , Yongqiang Yang a , Mengting Zhang a , Zhengang Yang a , b , Jinsong Liu a , ∗
+
+a Wuhan National Laboratory for Optoelectronics, Huazhong University of Science and Technology, Wuhan 430074, China b School of Optics and Electronic Information(OEI), Huazhong University of Science and Technology, Wuhan 430074, China
+
+a r t i c l e i n f o
+
+Keywords: Virtual unrolling Non-destructive testing Terahertz computed tomography Metal artifact suppression Ridgeline detection
+
+a b s t r a c t
+
+Due to the shape diversity and the occlusion problem, non-invasive inspection of cultural relic with special-shaped structures has always been the bottleneck of the existing imaging technology. We propose a virtual unrolling technique that can extract content from structures similar to folded paper and scroll, exploiting the three-dimensional imaging capability provided by terahertz computed tomography (THz CT). The method performs THz CT imaging on the object and obtains several slice images of its cross section. Considering the morphological properties of the slice image, the cross-sectional proﬁle of the object is obtained by an improved single-pixel ridgeline extraction algorithm after suppressing the severe metal artifact on the slice images with our segmentation and inpaintingbased scheme. And then a match-graft approach based on dynamic exemplar (MGDE) is developed to stitch lines of diﬀerent layers into the ﬁfinal image. To illustrate, the occluding text content is successfully extracted from a mimic oil painting scroll samples with a thickness of sub-wavelength level. The method makes it possible for THz non-destructive inspection of similar structure that widely exist in industry, security, and especially heritage conservation.
+
+## 1. Introduction
+
+The study of cultural relics has always been a popular topic, which is of extraordinary importance to mankind’s understanding of the evolution of its own culture. Among the many cultural relics, there is a category that are preserved in folded letters, books, scrolls, or other more complex forms. Because of their antiquity and great value, some are already badly damaged, direct manual opening is at great risk. Scholars have long attempted to access the information contained therein through non-physical contact means, but the diversity of materials and structures of these cultural relics places high demands on nondestructive testing methods, both in terms of hardware facilities and software algorithms.
+
+In recent years, an interesting technology, also known as "virtual unfolding" [ 1 , 2 , 3 ], to access their contents without physically damaging them has been developed. Thanks to the development of imaging and computer vision techniques, a number of studies in this area have been reported in recent years. X-ray imaging techniques, including computed tomography (X-CT), micro computed tomography (X-MCT), and phasecontrast tomography (X-PCT) techniques, are the main means of detection. With the help of computer vision algorithms, researchers have provided a viable solution for the nondestructive detection of objects with rich morphology, such as books [ 4 , 5 ], scrolls [ 6 , 7 , 8 , 9 ], and folded doc-
+
+∗ Corresponding author.
+
+E-mail address: jsliu4508@vip.sina.com (J. Liu).
+
+uments [10] , even though some objects have undergone severe damage [ 11 , 12 , 13 , 14 ].
+
+Although the impact of X-ray radiation on the material is limited in some scenarios as the dose can be kept to a very low level, such highenergy rays are usually only available through large installations, which becomes a ﬁnancial as well as a logistical burden for conservation institutions [15] . Further, the contrast of X-ray imaging techniques cannot be guaranteed to be fully applicable due to the diversity of materials. And its fatal drawback, most unacceptable for conservators, is that Xray can indeed accelerate the aging and deterioration of some materials, for example cellulose which is the raw material for many paper relics [ 16 , 17 ].
+
+To address all these issues, there is an urgent need for the academic community to explore a new detection tool. Terahertz (THz, in the frequency range of 0.1 ∼10 THz) wave as an alternative can provide substantial material contrast while circumventing ionizing radiation problems [15] . And portable systems are becoming increasingly available. Terahertz imaging technology, which ﬁfinds its application in the ﬁfield of industry [ 18 , 19 ], security [20–23] and culture [ 24 , 25 ], is rapidly maturing and becoming an advanced imaging technique with moderate photon energy. Since it was ﬁfirst used in the ﬁfield of culture heritage conservation in 1998 [26] , its ability to detect ﬂat cultural relics such as murals and paintings has been veriﬁed[24–29] [ 24 , 25 , 27 , 28 , 29 , 30 , 31 , 32 ]. And in 2016, Albert Redo-Sanchez et al. reported the application of ex-
+
+Received 6 September 2021; Received in revised form 22 November 2021; Accepted 13 December 2021 Available online 22 December 2021 ( http://creativecommons.org/licenses/by-nc-nd/4.0/ )
+
+**Fig. 1.** Schematic diagram of the continuous wave (CW) THz CT we used. The sample is ﬁfixed on the xy 𝜃motorized stage, which can perform mechanical raster scanning on the xy plane and rotation around the central axis of the sample. A beam of terahertz wave is transmitted and focused on the sample, and the sinogram of each slice of the sample is collected on the other side.
+
+ploiting THz time-domain spectroscopy (TDS) technology to see through multilayer paper [33] , providing a reference for subsequent studies which aim at extracting content from multilayer structures. But for shaped structures, all of these sample-speciﬁc methods fail without exception.
+
+As we all know, the spatial structure of the object will in turn impose requirements on the detection method. Most of the existing THz detection technologies with transmission or reﬂection measurement geometry are suitable for those relatively ﬂat objects, and the most widely used technologies, THz TDS technology and THz FMCW (Frequency Modulated Continuous Wave) technology [ 34 , 35 , 36 , 37 ]will not be advantageous when faced with such curved objects, because these structures have varying spatial curvatures, which is not friendly to conventional measurement geometry. Not to mention the two constraints these technologies brings: ﬁfirstly, signal-to-noise ratio (SNR) drops with depth (or increasing number of the scroll turns), secondly, the content from deeper layers are occluded by the content from front layers. The other technology, THz CT, with a compact system, is well suited for oddly shaped objects. Moreover, the two constraints mentioned above do not exist.
+
+Although it is an application of CT technology in the terahertz band, it does not mean that the virtual unrolling methods feasible in the xray can be transposed over. Firstly, the immature hardware system has limited the scholars to conduct this research in the THz band to some extent. The optical system is time-consuming and labor-intensive to build manually, and the THz CT system is not comparable to X-ray in terms of scanning speed and scanning resolution. In addition, there is a big diﬀerence in spatial resolution due to the diﬀerence in wavelength between THz and X-ray. THz CT still cannot see tiny structures like X-CT, which inevitably causes blurring of slice images and thus interferes with content extraction. Of course, the resulting artifact problem cannot be ignored, which has hardly been studied yet. Most importantly, the development of virtual unrolling algorithms for THz CT data whose quality needs to be improved is very challenging. The advantages of THz-CT over X-CT, for example, miniaturized equipment, lower ionizing radiation for both operators and objects, etc., make the eﬀort worth being put in to overcome these problems. In fact, we have made a preliminary attempt [38] to perform a virtual unfolding of a monolayer scroll sample. However, the edge detection based approach described in the paper is clearly poorly generalized and fails for multi-layer objects. This motivates us to make a subversive change in later work.
+
+In this paper, a novel virtual unrolling method based on THz CT with safer photon energy and acceptable spatial resolution is developed, to initially solve this non-destructive testing problem in THz band. Firstly, we abstract geometrically the structure of these objects and give a deﬁnition. The basic algorithm idea is based on this model. For metal artifact in CT, mainly due to photon starvation and beam hardening [39] , an improved metal artifact suppression method is proposed. Then we
+
+combine a ridgeline extraction algorithm [ 40 , 41 ] and a skeletal line extraction algorithm, K3M [42] , to obtain a single-pixel width proﬁle line for each slice image. Finally, the multiple proﬁle lines are combined by our Match-Graft approach based on Dynamic Exemplar (MGDE) to form a complete image and complete the content extraction. To demonstrate, the hidden text content is successfully extracted from the mimic painting scroll samples. In addition, the result of the proposed method is quantitatively compared with that of conventional THz transmission imaging. The proposed method provides a capability to inspect samples with curled or folded structure, which are particularly prevalent in the ﬁfield of heritage conservation or security (for example, letters, documents and painting art works). The study also thoroughly discusses the advantages and limitations of this technique.
+
+## 2. Method
+
+### 2.1. Implementation of continuous wave(cw) THz CT system
+
+Computed Tomography (CT), a three-dimensional analytical imaging technology ﬁfirst developed in the ﬁfield of X-ray imaging, is then introduced into the terahertz band [ 43 , 44 ]. The technology has advanced considerably in recent years, both in terms of systems and algorithms [ 45 , 46 , 47 , 48 , 49 ]. There have also been some applications in the ﬁfield of heritage conservation [50] . Continuous wave THz CT system is still one of the easier ones to implement. A schematic diagram of the CW THz CT system for close viewing near the sample is given in the Fig. 1 , a CW THz beam is focused on the object to be imaged (illustrated with a scroll model), and after it penetrates the imaged object, its light intensity is recorded., the collected light intensity data I is transformed into projection data p through the following formula [51] :
+
+𝑝 = ln
+
+( 𝐼 0
+
+𝐼
+
+)
+
+Where, 𝐼 0 is the incident light intensity. The ray passes through the imaged object from diﬀerent positions and angles through translation and rotation. In this way, the sinograms at diﬀerent height are obtained. Then the reconstruction algorithm is used to get the slice images of the object. For details of the reconstruction algorithm, see the Step 1 of the algorithm.
+
+Because it is a focused system, the distribution of light intensity will undoubtedly aﬀect the projection data, and then cause the blurring of the reconstructed image. Some scholars have studied this problem [52] . Considering and eliminating the inﬂuence of the light beam can improve the quality of the reconstructed image, thereby improving the quality of the ﬁfinal image. This issue will be a very important direction for future research. And this is not the focus of this article, so it will not be described in detail here. The existing setup can basically meet the demand.
+
+### 2.2. Algorithm
+
+2.2.1. Algorithm concept For the sake of generality of the study, common objects of heritage examination are thought deeply and we ﬁfind that ﬂat paintings, folded documents, parchment scrolls and some other curled objects share structural commonality that they are all some kind of extruded structures. As Fig. 2 shows, their structure can be geometrically abstracted as: The structure formed by extruding an arbitrary plane proﬁle curve (As indicated by the red lines in Fig. 2 ) along the normal direction of the plane (As indicated by the black arrow in Fig. 2 ). Hereinafter referred to as: Curve Extrude Structure (CES). Taking the width of the plane proﬁle curve into account will undoubtedly make the geometric model more realistic and reliable, but for now, we will consider only the relatively simple case, due to the spatial resolution of THz CT, which will be mentioned later.
+
+Based on the structural abstraction and the characteristics of THz CT technology, we treat the slice image as a “topographic map ” and
+
+**Fig. 2.** Geometric model of objects (Curve Extrude Structure, CES). (a). Geometric model of ﬂat paintings and ﬂat ﬁles, etc. which is extruded by a plane straight line. (b). Geometric model of folded documents, etc. which is extruded by a plane polyline. (c). Geometric model of parchment scrolls, paintings scrolls, etc. which is extruded by a plane curve.
+
+reasonably assume that with the limited resolution of the THz CT image, most of the information in the folded or rolled structure is attached to the ridgelines of the slice image and it is a feasible virtual unrolling scheme to ﬁfind cross-sectional proﬁle(ridgeline) of the object slice by slice, and then stitch these proﬁles(ridgelines) together to form the ﬁfinal image by some method. Based on this concept, we have developed the following 4-step algorithm.
+
+2.2.2. Step1-Reconstruction Reconstruction is the process of restoring sliced images from projection data obtained. At present, reconstruction algorithms can be roughly divided into two categories: one is called analytical algorithm, and the other is called iterative algorithm. Both types of algorithms have their own merits. It is worth mentioning that the proposed virtual unrolling scheme is highly inclusive of CT reconstruction algorithms. And the most representative ones are Filtered Back Projection (FBP) algorithm [53] and Algebra Reconstruction Technique (ART) [54] . Here we brieﬂy introduce the FBP reconstruction algorithm used in this work (actually the ART algorithm has also been tried, see Section 4.1 ).
+
+Filtered back projection is, up until recently the primary method in slice image reconstruction. It is an analytic reconstruction algorithm designed to overcome the limitations of conventional back projection. In this method, the obtained projection function is ﬁfiltered to remove blurring caused by back projection operation.
+
+After FBP reconstruction, the analytical expression at ( 𝑥, 𝑦 ) of the reconstructed image is:
+
+𝑓( 𝑥, 𝑦 ) = ∫
+
+𝜋
+
+𝑔 ( 𝑡, 𝜃) 𝑑𝜃,
+
+Where,
+
+𝑔 ( 𝑡, 𝜃) = ∫
+
++∞
+
+−∞
+
+|𝜔 |𝑃 ( 𝜔, 𝜃) 𝑒 𝑗2 𝜋𝜔𝑡 𝑑𝜔 = ℎ ( 𝑡 ) ∗ 𝑝 ( 𝑡, 𝜃)
+
+represents the projection function after ﬁfiltering. Among them, ℎ ( 𝑡 ) is the inverse Fourier transform of the transfer function 𝐻( 𝜔 ) = |𝜔 |, 𝑝 ( 𝑡, 𝜃) is the inverse Fourier transform of the transfer function 𝑃 ( 𝜔, 𝜃) .
+
+2.2.3. Step2-Metal artifact suppression Once the reconstruction is completed, the area of metal artifact on the slice image will be a major obstacle to ridgeline extraction as the ridgeline extraction algorithm can easily consider those star-like rays to be "mountains" as well, since they tend to have a pixel intensity and geometric structure similar to the object proﬁles. In this case, the ridgeline will be considered to have many branches that are not conducive to accurately extract the actual proﬁle. To cope with this thorny problem, we investigate the removal of metal artifact in THz CT. In fact, studies have been conducted in the ﬁfield of X-ray CT [ 55 , 56 , 57 , 58 ]. The methods for this problem can be broadly classiﬁed into two categories: iterationbased and interpolation-based method. And among them, the latter approach is less computationally expensive. As we know, a “metallic object ” corrupts a strip-like region in the projection domain(sinogram). The interpolation method is reasonable for interpolate the missing corrupted data when there are only a few, small volume “metallic objects ” in the ﬁfield of view(FOV). However, the reliability of interpolation decreases when there are multiple metal objects in the FOV, especially when the interpolation is located near the overlapping region of multiple strips, and this drawback is more obvious when the metal objects are large in size, which even leads to algorithm failure.
+
+Based on this consideration, we propose a feasible scheme based on the Yang Chen’s work [56] , which is built on traditional interpolationbased algorithms but adopt inpainting technology with better sinogram correction accuracy, to suppress the artifact and smooth the way for subsequent ridgeline extraction. The algorithm framework proposed contains 7 steps, in which the most important steps, segmentation and inpainting, are focused on. The method ﬁfirst obtains metal traces by segmentation of reconstructed image and forward-projection of this segmentation. And the next stage consists of removing the metal part from the original sinogram and completing sinogram by inpainting. Finally, the slice image is reconstructed using the sinogram after inpainting. Here we use the k-means ++ algorithm [59] , which requires prior knowledge(number of clusters), for image segmentation, as it is well suited to our application scenario. As an upgraded version of k-means clustering, it no longer needs to manually set the initial points, but only the number of clusters. For the problem of content extraction, because the object
+
+**Fig. 3.** Schematic diagram of inpainting.
+
+can be roughly divided into air, carrier and content, we can roughly set the number of clusters to 3, what is just the prior knowledge k-means ++ requires. As for the inpainting algorithm, an algorithm that takes into account both texture and structure, proposed by Antonio Criminisi [60] , has been improved to match our data. In brief, original method consists of two steps: The ﬁfirst step determines the inpainting priority, and the second step searches for the best exemplar in the image to repair. In this method, the priority plays a decisive role in the repair result. As stated in the original text, given a patch 𝜓 𝑝 centered at the point 𝑝 for some 𝑝 ∈𝛿Ω (see Fig. 3 ), they deﬁne its priority 𝑃 ( 𝑝 ) as the product of two terms:
+
+𝑃 ( 𝑝 ) = 𝐶( 𝑝 ) × 𝐷( 𝑝 ) ,
+
+where,
+
+𝐶 ( 𝑝 ) =
+
+∑
+
+𝑞∈Ψ𝑝 ∩( I−Ω) 𝐶 ( 𝑞)
+
+|||Ψ𝑝 |||
+
+, 𝐷( 𝑝 ) =
+
+|||∇ 𝐼 ⊥
+
+𝑝 ⋅𝑛 𝑝 |||
+
+𝛼
+
+where |Ψ𝑝 | is the area of Ψ𝑝 , 𝛼is a normalization factor (e.g., 𝛼= 255 for a typical gray-level image), 𝑛 𝑝 is a unit vector orthogonal to the front 𝛿Ωin the point 𝑝 and ⊥denotes the orthogonal operator. ∇ 𝐼 ⊥
+
+𝑝 is the isophote (direction and intensity) at point 𝑝 .The priority 𝑃 ( 𝑝 ) is computed for every border patch, with distinct patches for each pixel on the boundary of the target region. The conﬁdence term 𝐶( 𝑝 ) may be thought of as a measure of the amount of reliable information surrounding the pixel 𝑝 . The data term 𝐷( 𝑝 ) is a function of the strength of isophotes hitting the front 𝛿Ωat each iteration. After the inpainting priority is determined, it searches the image to be repaired for the best exemplar 𝜓 𝑞 to repair 𝜓 𝑝 .
+
+However, the priority setup is not so reasonable in our scenario: for incomplete segmentation (that is, the “metal ” part is not completely segmented, this situation is very common due to the noise of actual data and segmentation algorithm), the metal information will remain in the sinogram to be repaired. Points at these “metal areas ” on the front have a large value, which means that they have a greater chance of producing a large 𝐷( 𝑝 ) value, which in turn causes their 𝑃 ( 𝑝 ) value to be large. This gives them a crushing advantage in priority for inpainting, which will cause the “metal ” information to be restored back again, and makes the method meaningless. So, we modify the priority formula to
+
+𝑃 ( 𝑝 ) = 𝐶( 𝑝 )∕ 𝐷( 𝑝 ) .
+
+in order to suppress the regeneration of the metal information in sinogram. The eﬀect of this small change is simply demonstrated in the Appendix 1 .
+
+This can even increase the tolerance of the method to the segmentation algorithm. In addition, merging back the “metal area ” mentioned in the old scheme is not necessary here because we only need to get a clear proﬁle.
+
+2.2.4. Step3-Ridgeline detection In this session, we combine a ridgeline detection algorithm [ 40 , 41 ]with a skeletal line extraction algorithm [42] to obtain singlepixel-width skeletal ridgelines for subsequent stitching.
+
+As an important low-level problem in the ﬁfield of computer vision, there have been many approaches to extract the line structure. Among them, one category of approaches treats the image as a two-dimensional function and uses diﬀerential geometric properties to extract the line structure. Their underlying idea is just to locate the ridges and valleys in the image, which ﬁts with our assumption. Following this idea, Carsten Steger proposed a line structure detector based on an explicit asymmetrical bar-shaped line model that achieves sub-pixel accuracy in 1998 [41] . The detector not only ﬁfinds the position of the line, but also obtains the width of the line. Here the slice image is regarded as a function 𝐼 0 ( 𝑥, 𝑦 ) and lines are pixels with speciﬁc geometric properties, bright lines with values signiﬁcantly higher than background are named ridge lines while the opposite lines, i.e., lines signiﬁcantly lower than background, are named ravine lines. The both types of lines, mathematics says, are sets of local extreme points in the image, where local maximums represent ridge lines and local minimums represent ravine lines.
+
+The objective, ridgelines, can be extracted by locally computing the multi-orders derivatives of the image function. In general, direct computation of the multi-orders derivatives of 𝐼 0 ( 𝑥, 𝑦 ) , which can be an illposed problem, should be avoided since the digital images usually have no derivatives. In scale-space theory this can be solved well by transforming it into the solution of smoothing convolution kernel derivatives, and the optimal option is Gaussian smoothing kernel, which is the only kernel with additivity that can smooth images retaining intrinsic features without creating spurious detail. The Gaussian scale space of an image 𝐼 0 ( 𝑥, 𝑦 ) , can be noted by 𝐼( 𝑥, 𝑦, 𝜎) , where 𝜎is the standard deviation of the 2D Gaussian kernel 𝑔( 𝑥, 𝑦, 𝜎) used in the convolution, moreover it represents the smoothing level.
+
+𝐼( 𝑥, 𝑦, 𝜎) = 𝑔( 𝑥, 𝑦, 𝜎) ∗ 𝐼 0 ( 𝑥, 𝑦 )
+
+Then the derivatives of 𝐼( 𝑥, 𝑦, 𝜎) can be carried out by convolving the derivatives of Gaussian kernel 𝑔( 𝑥, 𝑦, 𝜎) with the 𝐼 0 ( 𝑥, 𝑦 ) itself. The subsequent extraction process can be divided into 2 parts: the ﬁfirst part is to calculate the normal directions of pixels, and the second part is to determine the sub-pixel positions in normal directions of line points. The former part can be solved by calculating the Hessian matrix
+
+𝐻( 𝑥, 𝑦 ) =
+
+( 𝐼 𝑥𝑥 𝐼 𝑥𝑦 𝐼 𝑥𝑦 𝐼 𝑦𝑦
+
+)
+
+For arbitrary pixel ( 𝑥 0 , 𝑦 0 ) in a slice image, its Hessian matrix’s eigenvalues and eigenvectors characterize the geometric structure in the neighborhood: the eigenvalue of maximum absolute value represents the maximum gradient of the neighborhood at this pixel, and the corresponding eigenvector is the local normal direction which also is a unit vector, let it be ( 𝑛 𝑥 , 𝑛 𝑦 ) .
+
+Once the normal direction ( 𝑛 𝑥 , 𝑛 𝑦 ) is obtained, it is necessary to further determine whether this pixel is a line pixel. There is always a corresponding proﬁle function in the normal direction. The line pixel criterion can be set as: When the maximum point of the normal proﬁle function of the pixel lies within its boundary and its value are within a user-deﬁned threshold interval 𝑇 , then it can be regarded as a line pixel. To implement the criterion, the proﬁle function can be approximated as a Taylor polynomial to ﬁt the value of it in the neighborhood since it usually does not have analytic formula. Here only the second-order Taylor polynomial of 𝐼is considered and is given by
+
+𝑃 ( 𝑥, 𝑦 ) = 𝐼 + 𝑥 𝐼 𝑥 + 𝑦 𝐼 𝑦 + 𝑥𝑦 𝐼 𝑥𝑦 + 𝑥 2
+
+2 𝐼 𝑥𝑥 + 𝑦 2
+
+2 𝐼 𝑦𝑦
+
+where the center point coordinates of the pixel are considered to be (0 , 0) . The objective point ( 𝑝 𝑥 , 𝑝 𝑦 ) can be obtained by inserting into the Taylor polynomial in the form of (12).
+
+( 𝑝 𝑥 , 𝑝 𝑦 ) = ( 𝑡 𝑛 𝑥 , 𝑡 𝑛 𝑦 ) ,
+
+where 𝑡 is the scale factor. according to the criterion, the point ( 𝑝 𝑥 , 𝑝 𝑦 ) should meet the following condition:
+
+𝜕𝑃 ( 𝑝 𝑥 , 𝑝 𝑦 )
+
+𝜕( 𝑛 𝑥 , 𝑛 𝑦 ) == 0
+
+the solution of the equation is
+
+𝑡 = −
+
+𝐼 𝑥 𝑛 𝑥 + 𝐼 𝑦 𝑛 𝑦 𝐼 𝑥𝑥 𝑛 2
+
+𝑥 + 2 𝐼 𝑥𝑦 𝑛 𝑥 𝑛 𝑦 + 𝐼 𝑦𝑦 𝑛 2
+
+𝑦
+
+The pixel can be regarded as a line pixel as long as it meets the criterion, mathematically, ( 𝑝 𝑥 , 𝑝 𝑦 ) ∈[ −1∕2 , 1∕2 ] × [ −1∕2 , 1∕2 ] and 𝐼( 𝑥 0 , 𝑦 0 ) ∈ 𝑇 .
+
+In the ideal case, the above approach returns single response and can accurately get the ridgeline with single-pixel width, but for most actual situation, there will be multiple responses so that the extracted ridgeline will have extra pixels which are unexpected to get. The modiﬁed K3M [42] skeleton extraction algorithm, which operates on binary images is implemented to obtain lines with single-pixel width, i.e., lines consisting of pixels with only two neighbors in their eight-neighborhood unless the pixels locate at a junction. According to K3M algorithm, the eightneighborhood conﬁguration should be considered. It can be mapped into a numerical space by assigning diﬀerent binary bit weights to eight neighborhoods of each pixel and calculating the sum of elements in Hadamard product of 𝑁and the neighborhood matrix 𝐵:
+
+𝑣 ( 𝑥, 𝑦 ) =
+
+∑
+
+𝑖 =−1
+
+∑
+
+𝑗=−1
+
+𝑁( 𝑖 + 2 , 𝑗 + 2) ⋅𝐵( 𝑥 + 𝑖, 𝑦 + 𝑗)
+
+where 𝑣 ( 𝑥, 𝑦 ) is the mapped value of pixel ( 𝑥, 𝑦 ) and 𝑁is the binary bit weights matrix given by
+
+𝑁 =
+
+⎡ ⎢ ⎢ ⎣
+
+⎤ ⎥ ⎥ ⎦
+
+As a result, each conﬁguration type corresponds to a speciﬁc mapped value. After obtaining the eight-neighborhood conﬁguration of all line pixels, the selection of single-pixel width line points should be performed. The procedure includes 2 phases: an iteration phase with 5 steps and a modiﬁcation phase with 2 steps. Each iteration consists of the following steps:
+
+• •Step 1: Delete the line pixels that have 3 neighbors sticking each other.
+
+• •Step 2: Delete the line pixels that have 3 or 4 neighbors sticking each other.
+
+• •Step 3: Delete the line pixels that have 3, 4 or 5 neighbors sticking each other.
+
+• •Step 4: Delete the line pixels that have 3, 4, 5 or 6 neighbors sticking each other.
+
+• •Step 5: Delete the line pixels that have 3, 4, 5, 6 or 7 neighbors sticking each other.
+
+For a certain iteration, if the output no longer changes, the iteration is skipped. Once the iteration ends, the following modiﬁcation steps is performed to ensure the result pixels meet the single-pixel condition:
+
+• •Step1: Delete the line pixels that have 2 neighbors sticking each other.
+
+• •Step2: Using length threshold to ﬁfilter out spurious points that are clearly not on the ridgeline.
+
+In addition, a length range threshold is used to ﬁfilter out pixels that are clearly not proﬁle points. Since some of the slice image are too noisy, especially in the region where metal artifact is dominant once, although the parameters of line detection can be manually optimized, the proﬁle lines extracted by the combination of the two methods is hardly guaranteed to be a complete one, but rather multiple independent line segments. This means, on some layers, ridgelines are several line segments which need to be repaired.
+
+2.2.5. Step4-Image stitching A challenge for image stitching is that due to the noise and artifact, it is diﬃcult to ensure that the previous session, that is the skeletal ridgeline extraction, results in a complete proﬁle line and that the extracted
+
+**Fig. 4.** Schematic diagram of the Match-Graft approach based on Dynamic Exemplar (MGDE). 𝑃 denotes the point on the exemplar line, while 𝑝 denotes the point on the target line. When the exemplar line is selected, the target line will move point by point on the exemplar line, and the match is completed when the 𝑘 that minimizes 𝐸 𝑘 is found. Then, the target line is used to replace the sequence starting from point 𝑘 on the exemplar line, which completes the graft. The same is done for other line segments. When all segments of a proﬁle line have completed this process, a new exemplar line is generated and ready for the next iteration.
+
+lines are of the same length at each layer. Most of the time, multiple incomplete line segments are the result of the ridgeline detection. Our match-graft approach base on dynamic exemplar (MGDE) is developed to solve this problem. MGDE is based on the assumption that for a 3dimension object, the adjacent layers in its slice stack have similar morphological features and can be used as a reference for each other. The similar feature here can be thought of as the 2D position of the scroll lines. Once the most complete one is selected, then it will be the ﬁfirst exemplar proﬁle and its inﬂuence will extend to both ends. During the process, the exemplar will be dynamically updated. During one iteration, we search for the section in exemplar that matches the target best. Each segment of the line to be repaired will be matched as an independent target. Formally,
+
+∧ 𝑘 = arg min 𝐸 𝑘
+
+Where
+
+𝐸 𝑘 =
+
+𝑀 ∑
+
+𝑖 =1
+
+√ (
+
+𝑋 𝑘 + 𝑖 −1 − 𝑥 𝑖
+
+)2 + (
+
+𝑌 𝑘 + 𝑖 −1 − 𝑦 𝑖
+
+)2 , ( 𝑘 = 1 , 2 , ..., 𝑁 − 𝑀 + 1 )
+
+is simply deﬁned as the sum of the Euclidean distances. 𝑁 and 𝑀 is the length of the exemplar and the target respectively, 𝑃 ̂𝑘 marks the start pixel of the matching section.
+
+Finally, the grafting is implemented by replacing matching section with the target segment. The result of the grafting is regarded as the updated exemplar of next iteration. Fig. 4 gives a schematic view of the algorithm. For clarity, the match-graft process of a single line segment is shown.
+
+## 3. Experiment setup
+
+### 3.1. Experimental system
+
+The experimental set-up is a modiﬁcation of the THz continuous wave transmission imaging system. A rotating motor is added to the transmission imaging system in confocal geometry to achieve multiangle measurement of the sample. A continuous wave at a frequency of 0.3 THz with an output power of 0.3 mW were delivered by the transmitter, which is a Gunn diode (Spacek Labs Inc.) coupled with a multiplier chain (Virginia Diode Inc.). The THz radiation is emitted into the free space through a WR-3.4 diagonal horn antenna and is modulated by an optical chopper in front of the transmitter. A Schottky-diode (Virginia Diode Inc.) in combination with an identical diagonal horn antenna serves as the THz receiver. To detect the induced photocurrent in the receiver, a lock-in ampliﬁer (SR830, Stanford Research Systems) is utilized. After collimation by lens 1 (150 mm focal length HDPE lens), the THz beam is focused on the sample by lens 2 (50 mm focal length
+
+**Fig. 5.** Measurement geometry and sample schematics. (a). THz Computed Tomography (THz CT) measurement is used. xy 𝜃are the coordinate system that is kept consistent throughout this study. The sample is held on a stage that enables mechanical rotation and raster scanning in xy plane. The terahertz wave is emitted by the light source, passes through a lens group and then focuses on the object, and then passes through a symmetrical lens group to be received by the detector. A red line is used to represent the invisible terahertz wave. (b). Three letters T, H, Z are written on a 300 μm thick ordinary canvas in ultramarine blue, and each letter is about 1 mm thick. (c). The rigid base for holding oil painting canvas made according to Archimedes spiral (The spiral is marked by a yellow line.). (d). The oil painting canvas is glued on the rigid base to form the ﬁfinished sample.
+
+TPX lens), and the beam diameter at the sample plane is about 5 mm. Lens 3 (50 mm focal length TPX lens) and lens 4 (50 mm focal length HDPE lens) play the role of collecting light. (refer to Fig. 5 a) In addition, the sample was mounted on a 𝑥𝑦𝜃-motorized stage, so that the projection data of samples can be acquired by three-axis scanning. Speciﬁcally, the step size of 𝑥𝑦𝜃3 axis is set to 0.5 mm, 2 mm and 2° respectively.
+
+### 3.2. Sample design
+
+For the object, we choose a representative CES, that is scroll structure, to illustrate this method. The sample simulates an oil painting scroll and is made based on the consideration that the cross section of the scroll object approximates the Archimedes spiral named after the 3rd-century BC Greek mathematician Archimedes. Mathematically in polar coordinates ( 𝑟, 𝜃) , it can be described by the equation 𝑟 = 𝑎 + 𝑏𝜃. Three letters, “T ”, “H, ” and “Z ”, (as Fig. 5 b illustrated, the size of characters is referenced to the scale in the lower right corner.) is written by ultramarine pigment on a ∼300 μm thick common oil painting canvas as the content of the scroll sample, which is the target of the extraction. The letters are about 1 mm thick and the canvas only has text on single side. To hold the canvas and maintain a relatively stable scroll shape, a rigid base showed in Fig. 5 c is manufactured by 3D printing technology in accordance with the Archimedes spiral. The spiral is marked by a black line. We let a be equal to 0 here, pick the range of 𝜃∈[3 𝜋, 6 𝜋] and set the spacing between each turn to 8 mm. The reason for the spacing is ﬁfirstly because of the convenience of hand-made, secondly because it avoids the problem of THz CT spatial resolution, which is reasonable when focusing on algorithm, and thirdly, it makes the metal artifact caused by CT technology easy to discuss. The canvas with letters is ﬁfinally bonded to the rigid base to form a scroll, showed in Fig. 5 d, whose content is impossible to observe from the outside with the naked eye. The slight deformation of the canvas is unavoidable, which will cause the crosssectional shape of the scroll on the slice image to be diﬀerent. The animation in the Supplementary Information (Visualization 1-experiment implementation) shows a glimpse of the experimental process. The scan time for this sample is approximately 80 h.
+
+## 4. Result
+
+### 4.1. Content extraction procedure
+
+4.4.1. Reconstruction According to our consideration, the quality of the reconstructed image, which is constrained by both the experimental equipment and the reconstruction algorithm, has a decisive inﬂuence on the ﬁfinal content extraction results. And the importance of the algorithm comes to the fore when the device is determined. In addition to the most widely used ﬁfiltering back projection (FBP) algorithm, the Algebra Reconstruction
+
+Technique (ART) has also been tried. In our experiments, at a reconstructed image size of 141 ×141 pixels, FBP with ramp ﬁfilter showed a crushing advantage over ART, both in terms of reconstructed image quality and computation time. Though both suﬀering from noise and artifact, the proﬁles of the scroll are much clearer in the results of the FBP algorithm as can be seen from second and third row of Fig. 6 . In some areas of the ART results, the proﬁles are almost broken oﬀ. The reconstruction quality of ART is worrisome, mainly because the system matrix 𝐴 , which is very critical in the ART algorithm, is derived from a rough line model that is far from the reality. In addition, we use a moderate parameter setting of the relaxation factor 𝜆, which is equal to 1 [61] . In terms of computation time, just 10 iterations already make the computation time of ART 10 times longer than that of FBP. So we use the result of the FBP algorithm as the input of the subsequent processing to demonstrate.
+
+The slice images obtained from the experiment ( Fig. 6 a–d, second row) show that the proﬁles of the oil painting scroll samples are relatively clear, which veriﬁed the feasibility of THz CT for the detection of such samples. However, it is not that simple to distinguish letters from the canvas area with the naked eye, because the objects on the image have a certain degree of spreading due to the limitations of the THz CT resolution. Actually, letter information is located at the areas where the intensity is relatively higher than the surrounding canvas area. And they almost blend in with the canvas area where they are located. In addition, with the exception of the slices near the top and bottom of the scroll, which do not contain letter information, there are several bright spots surrounded by star-like rays, which are known as "metal artifact" caused by objects areas of very high absorption. Here these artifact areas are at the junction of the paint and the canvas, where strong scattering is most likely to occur (Visualization 2 - 26 slice images). In fact, thanks to the three dimensional reconstruction technology, the reconstructed data cube can be processed into a 3D model. However, as shown in Visualization 3- 3D presentation of the scroll, this is not enough to present the internal information of the scroll sample visually and comprehensively, as occlusion between contents is unavoidable, not to mention the severe artifacts and noise (See Appendix 2 ). This has inspired the development of subsequent algorithms.
+
+4.4.2. Metal artifact suppression The metal artifact caused by the edges of the letters are large and numerous, and have to be dealt with. We process each layer of the slice images according to the proposed 7-step scheme. Processing results is showed in Fig. 7 (take the 19th slice as an example). The original data (sinogram) is reconstructed to obtain a slice image( Fig. 7 a and b); then the "metal part" of the slice image can be extracted by image segmentation( Fig. 7 b and c); the "metal" part is re-projected to form a new sinogram containing only metal information( Fig. 7 c and d); Then a mask obtained by binarization can be used to remove metal parts from the original sinogram( Fig. 7 e and f). After the image is in-painted and
+
+**Fig. 6.** Reconstruction results of the two algorithms (4 representative layers). (a ∼d) show the reconstruction results of slice3,slice8, slice19 and slice23 respectively. The ﬁfirst row of (a–d) shows the sinograms of diﬀerent slice; The second row of (a–d) shows the result of FBP and the third row of (a ∼d)shows the result of ART.
+
+**Fig. 7.** Process scheme of metal artifact suppression. (a) Original sinogram .(b) reconstructed image by FBP. (c) “metal ” part segmentated by k-means ++ .(d) re-projection of segmented “metal ” part by Radon transform. (e) binarization of sinogram of “metal ” part. (f) sinogram without “metal ” part. (g) in-painted sinogram. (h) re-reconstructed image by FBP.
+
+re-reconstructed, a slice image without metal information can be obtained( Fig. 7 g and h). Since we only need to ﬁfind the proﬁle of the scroll, we do not need to fuse back the segmented metal part.
+
+In this scheme, segmentation and image inpainting is the two key issues. The results of these two processes directly aﬀect the quality of rereconstruction, which in turn aﬀects ridgeline extraction. As for segmentation, the k-means ++ clustering method [59] is very suitable for this scenario. It achieved acceptable results in experiment as Fig. 8 shows. As can be seen from the Fig. 8 , the metal artifact in some of the slices are very serious (e.g., layers 19 and 23). the result of the k-means ++ method segmentation can ﬁfind the metal area well, but the area is a little over-segmented. Some unnecessary areas are also segmented out,
+
+which leads to an oversized metal part, which means that the sinogram needs to be repaired in a larger area, which undoubtedly increases the diﬃculty of inpainting.
+
+4.4.3. Ridgeline detection Pressure on ridgeline detection abruptly reduced after metal artifact suppression, since there is less interference between layers, areas that could easily be mistaken for ridgelines no longer have a major impact. Ridgeline detection algorithm was directly applied to our experimental data. Fig. 9 gives the process of ridgeline extraction (taking the 10th layer of the slice image as an example), and the same method is applied to each layer of the slice image. First, The Gaussian scale space of the slice image is generated, the stack of smoothing images are showed in Fig. 9 b; Then the normal direction of the pixels is found under optimal scale( Fig. 9 c); Finally, the pixel points, whose proﬁle in the normal direction that meet the line point criteria, are ﬁfiltered out. Set the line pixels to 1 and background to 0, thereby the binary image of line pixels can be obtained ( Fig. 9 d), which is essential to the next procedure, skeletal line extraction. For extracting our scroll content, the exact location of the line is needed, but the width of the line can be ignored for the time being.
+
+However, solely applying the method is not enough to accomplish the task, because during the line extracting process we note that the ridgeline formed by line points that satisfy the condition is often not single-pixel, which leads to unnecessary data redundancy and creates obstacles for the ﬁfinal image stitching. So, the modiﬁed K3M algorithm is used to overcome the problem.
+
+Part of the result of the ridgeline detection is shown in the Fig. 10 a ∼d. After the above operation, as shown in the 3th row of Fig. 10 a ∼d, the ridgeline segments with a single-pixel width on diﬀerent layers will be ﬁfind out, and their coordinates sequence can be easily obtained. From the Fig. 10 , it can be seen that the skeletal ridgeline consists of several line segments.
+
+4.4.4. Image stitching A general overview of the process before image stitching is given by Appendix 3 , the obtained 26 skeletal lines are used as the input to the MGDE algorithm. A comparative analysis of the ridgelines after the MGDE algorithm is given in Appendix 4 . The ﬁfinal unrolling image is obtained by arranging all the pixel points on the corresponding proﬁle
+
+**Fig. 8.** Image segmentation results by k-means ++ (4 representative layers). (a–d) show the segmentation results of slice3, slice8, slice19 and slice23 respectively. The ﬁfirst row of (a–d) shows the reconstructed slice images; The second row of (a–d) shows the result of kmeans ++ clustering, with 3 clusters marked in three colors and the third row of (a–d) shows the segmented “metal ” part.
+
+**Fig. 9.** the process of ridgeline extraction. (a). The slice image after metal artifact suppression. (b). The Gaussian scale space of the slice image. (c). The normal direction of each pixel (indicated by white arrows) under a certain sigma. (d). The line points after conditional ﬁfilter (indicated by white pixels).
+
+**Fig. 10.** Process of skeletal ridgeline extraction (4 representative layers). The ﬁfirst row shows the reconstructed slice image after MAS; The second row shows the result of “fat ridgelines ” with much information redundancy; The third row shows the result of skeletal ridgelines.
+
+lines of the slice images in order ( Fig. 11 a). As can be seen from the Fig. 11 a, the edge of the letter is brighter than the inside of the letter, this is due to the sharper strokes on the edges of letters, which will make the edges of letters thicker and produce stronger scattering. The result image suﬀers from slight deformation, which is due to the error generated by ridgeline detection and matching the positions of proﬁle
+
+lines. The height of the composite image is determined by the number of slices scanned, which is 26 layers here. The interpolation algorithm can be introduced to obtain a larger number of longitudinal pixels. The lateral resolution of synthetic image is determined by the reconstruction resolution of THz CT. The ﬁfiner the reconstructed image, the ﬁfiner the ﬁfinal image.
+
+**Fig. 11.** Performance evaluation. (a). Result of virtual unrolling technology we proposed. (b). Result of the transmission imaging. Interpolation is used to ensure that the two images are the same size so that they are comparable.
+
+### 4.2. Performance evaluation
+
+The proposed 4 steps work together to extract contents from a manual scroll sample. The three letters in the experimentally obtained virtual unrolled image are clearly outlined and recognizable. Further, to quantitatively evaluate the virtual unrolled images we obtained, the ordinary transmission imaging result of the sample obtained by a same system, shown in the Fig. 11 b, was used as a reference. Fig. 11 a and b both show the normalized Attenuation. Interpolation is employed to make the two images the same size and the peak signal-to-noise ratio (PSNR) and structural similarity index measure(SSIM) [62] of the two images are 14.0524 and 0.3874, respectively. In terms of algorithmic eﬃciency, for each slice, excluding the tuning parameters process (a time-consuming process), the software takes dozens of seconds to run, which is acceptable. The ﬁfinal image stitching takes only a few seconds. In addition, all data processing is done in a normal desktop computer (Intel(R) Core(TM) i7–7700 CPU @ 3.6 GHz 3.6 GHz,16GB RAM) using Matlab.
+
+## 5. Conclusion and discussion
+
+As the ﬁfirst eﬀective solution to this problem, it has the following advantages: The solution idea is intuitive, thanks to the generalized object model. It lays the foundation for a deeper study of the problem in the future. Speciﬁcally, the THz CT system is well suited to be integrated as a portable device, which reduces the cost of implementing the detection. In terms of algorithm, little research has been done on metal artifact suppression in THz CT, which is an inevitable bottleneck in the development of THz CT. The proposed artifact removal scheme is very eﬀective and can be easily extended to other application scenarios of THz CT. In addition, for virtual unrolling, it drastically reduces the workload of parameter adjustment during subsequent ridgeline detection and also undoubtedly improves the accuracy of the obtained line position, which is especially important when the object deformation is severe. Further, the ridge line extraction method, which includes two steps, can accurately obtain the skeletal lines without consuming a lot of computational resources. The parameters of the algorithm are adjustable, making it inherently resistant to noise and artifact. Even if the metal artifact is not suﬃciently suppressed, they do not make the algorithm completely ineﬀective. It is worth mentioning that such a combination can also be applied to other skeletal line extraction scenarios. When it comes to the MGDE algorithm for image stitching, based on a reasonable assumption, it provides good compensation for all the previous processing and allows the task to be completed.
+
+On the other hand, the solution is also restricted: Most importantly, since it is the reconstructed slice image that we extract points from, the resolution of THz CT directly limits the resolution of the ﬁfinal image. It is even trickier when the scroll is tightly rolled. Both physical resolution or scanning resolution is critical, which places higher demands on high-frequency and high power THz sources/detectors, scan speed, and reconstruction algorithms. In addition, the distribution of the beam has a critical impact on the imaging resolution. We will ﬁfirst consider minimizing the beam diameter in our later studies. And there has been a research direction about the application of THz Bessel beams in imaging due to diﬀraction eﬀects in recent years. Compared to Gaussian beams,
+
+Bessel beams can provide a greater depth of ﬁfield. However, when applied to THz CT, although it may show some potential advantages, the imaging mechanism needs to be investigated when faced with complex samples, which involves a more complex problem of beam distribution and object interaction, and this will be one of our important future research direction. Such metal artifact is likely to occur more heavily in real samples, which have more variable patterns. Both broadening and metal artifact have a greater impact when the spacing between the layers of a scroll becomes smaller, that is, they cause layers to stick together and become indistinguishable from each other. In addition, the suppression of metal artifact is greatly aﬀected by the quality of image segmentation. In the real case, there may be no a priori knowledge to refer to, so a more generalized segmentation method needs to be investigated. Moreover, the existing methods are stretched to the limit for the presence of a large number of metal artifact. Since the slice images are relatively independent, and ridgeline detection involves multiple parameters, tuning parameters becomes an obstacle to the robustness of the algorithm when the data size is large. If the relationship between slices can be established and the algorithm ﬂflow is completed automatically, the universality of the algorithm will be greatly improved. And the MGDE algorithm has one prerequisite that a complete proﬁle line (exemplar) can be extracted from the slice image stack which is diﬃcult to satisfy when the proﬁle of each layer of data are not that clear.
+
+Funding
+
+National Natural Science Foundation of China (No. 11,574,105).
+
+Data availability
+
+Data underlying the results presented in this paper are not publicly available at this time but may be obtained from the authors upon reasonable request.
+
+CAS
+
+Tianyi Wang: Conceptualization, Methodology, Software, Formal analysis, Visualization, Writing - Original Draft
+
+Kejia Wang: Conceptualization, Investigation, Resources Kaigang Zou: Investigation, Software, Formal analysis, Validation Sishi Shen: Investigation, Data Curation Yongqiang Yang: Formal analysis, Validation Mengting Zhang: Investigation, Data Curation Zhengang Yang: Investigation, Validation Jinsong Liu: Supervision, Funding acquisition, Writing - Review & Editing
+
+Declaration of Competing Interest
+
+The authors declare that they have no known competing ﬁnancial interests or personal relationships that could have appeared to inﬂuence the work reported in this paper.
+
+Acknowledgments
+
+We thank Dr. Chengwu You for providing technical support for the experimental equipment software, Dr. Feidi Xiang for providing us with inspiration on the algorithm design during the research process.
+
+Supplementary materials
+
+Supplementary material associated with this article can be found, in the online version, at doi:10.1016/j.optlaseng.2021.106924 .
+
+Appendix 1: orCD ´C D ¸
+
+To illustrate the eﬀect of this change, we chose a picture with a similar texture to the sinogram (a picture of the moon, the size of the picture is 251 ×251, the patch size is set to 9 ×9), as shown in the Fig. A.1 (Original Image). For multiple masks, we compared the changes in the average value of the pixels in the mask area before and after the inpainting and found a general rule: as we predicted, the average value of the mask area in the C ÷D case is smaller than the C ×D case, that is, C ÷D tends to suppress the spread of stronger values, which is exactly what we want. The white dashed box in the ﬁfigure marks areas with obvious diﬀerences, which also veriﬁes this.
+
+Appendix 2: 3D reconstruction of the scroll sample
+
+We performed a three-dimensional reconstruction of the reconstructed slice images (using the FBP algorithm), as shown in the Fig. A.2, processed by the AVIZO software. The ﬁfigure shows three perspectives of the three-dimensional reconstruction of the scroll sample, corresponding to the three letters on the scroll, "T", "H" and "Z", as indicated by
+
+the white dotted frame in the ﬁfigure. Because of being in the outermost circle, although "T" and "H" have some deformation, they can still be observed by naked eyes. In comparison, "Z" is not so clear. Due to being in the inner layer, it is partially blocked by "T". Obviously, this occlusion problem becomes more serious as the number of turns increases.
+
+Appendix 3: A general overview of the process before image stitching
+
+A general overview of the process before image stitching is given in Fig. A.3 (the most representative layer 1,3,10,19 is selected among the 26 layers to illustrate). By comparing the reconstruction result (second row in Fig.A. 3 b ∼e, reconstructed by FBP) with the result after metal artifact suppression (third row in Fig. A.3 b ∼e) in the white dashed box it can be seen that the metal artifact are eﬀectively suppressed (no metal suppression step is done for slice 1 because its proﬁle is clear enough). The layer-to-layer interference is clearly improved, which facilitates the extension of the method to the case of true layer spacing. The noise of the images seems to show signs of enhancement. This is mainly due to the large proportion of metal artifact areas: During the artifact suppression process, a large amount of information is removed, including some canvas information as well. Large area to be in-painted, coupled with the fact that the image texture cannot be repaired perfectly, results in reconstruction noise. These noises do not have a signiﬁcant impact on the proﬁle and can be easily coped with by length thresholding during the ridgeline detection phase.
+
+Appendix 4: Comparison of reconstructed ridgelines
+
+For this scroll sample, the ridgeline in the ﬁfirst layer is the most complete. We use this ridgeline (binary image) as a reference to evaluate the
+
+Fig. A.1. Comparison of diﬀerent priority calculation methods. The original image was broken by 5 diﬀerent masks; Two priority calculation methods are used to in-paint the broken images separately.
+
+Fig. A.2. 3D reconstruction of the scroll sample. (a). The letter "T" perspective; (b). The letter "H" perspective; (c). The letter "Z" perspective. The white dashed box marks the position of the letters. "T" and "H" can be observed because they are on the outer layer of the scroll. The occlusion phenomenon is reﬂected in the letter "Z", which is partially obscured by the letter "T". All the three letters have a certain degree of deformation.
+
+Fig. A.3. Workﬂflow of skeletal ridgeline extraction on slice images (4 representative layers). (a). 3-Step data processing ﬂowchart. (b ∼e). Step-by-step results of slice 1,3,10,19. First row, sinograms obtained by THz CT system; Second row, reconstructed slice image by FBP algorithm; Third row, the results of metal artifact suppression of each slice; Fourth row, the results of skeletal ridgelines extracted from slice image with metal artifact suppressed.
+
+Fig. A.4. Comparison of reconstructed ridgelines after MGDE. The ridgeline of the ﬁfirst layer is used as a reference and the SSIMs of other layers over it is calculated separately. Representative ridgelines from slice 1,4,9,14,19 and 24 are shown here.
+
+eﬀect of ridgeline detection by SSIM. As can be seen from the Fig. A.4 (the most representative 5 ridgelines from diﬀerent layers are selected to illustrate), the SSIMs is all above 0.8. And the general trend of the scroll deformation can be observed. However, it can also be seen here that after the MGDE algorithm, those incomplete ridgelines also suﬀer from diﬀerent degrees of distortion.

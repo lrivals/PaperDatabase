@@ -38,7 +38,7 @@ Mesures sur le MacBook Pro M1 Pro, 8 rouleaux sans maillage publié (README §Re
 - Les scores contre maillages d'experts viennent des contrôles de développement ; pas de jeu d'exclusion (« holdout ») pour la géométrie. Les seuils (70 % de paires à ±10 %) ont pu être réglés sur ces mêmes contrôles : risque de sur-ajustement (déduit).
 - Part correcte 0,625 à 0,747 : un quart à plus d'un tiers de la surface n'est ni correcte ni identifiée comme erronée (déduit des deux colonnes ; définition exacte non donnée). « Isométrique » = 81-86 % à ±10 % : distorsion non bornée pour le reste, métrique non comparable à l'erreur d'aplatissement SLIM/ARAP des autres papiers de la base.
 - Encre : Reader v3 utilisé sans réentraînement ; aucune métrique de lisibilité (lettres, CER, validation à l'aveugle) sur les 8 rouleaux ; « 89 % du signal d'encre conservé » est défini vaguement (métrique non précisée). Pas de test placebo ni de contrôle de faux positifs, alors que les cartes d'encre de rouleaux entiers sont montrées en violet.
-- Un tiers du temps annoncé est difficile à comparer : le temps de 2 h exclut peut-être la détection de feuillets pour certains rouleaux (note ¹ du tableau) et le téléchargement de plusieurs centaines de Go de CT est requis (§Get started).
+- Le temps annoncé est difficile à comparer : le temps de 2 h exclut peut-être la détection de feuillets pour certains rouleaux (note ¹ du tableau) et le téléchargement de plusieurs centaines de Go de CT est requis (§Get started).
 - Résolution : détection de feuillets à ~19 µm (scan 9,4 µm sous-échantillonné ×2), donc pas de test à 2,4 µm ni de super-résolution.
 
 ## Pertinence pour la thèse

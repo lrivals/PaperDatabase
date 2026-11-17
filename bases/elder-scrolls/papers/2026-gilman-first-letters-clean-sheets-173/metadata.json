@@ -18,10 +18,20 @@
   "url": "https://github.com/Ahggggg/first-letters-clean-sheets/tree/978e8d5e2e26eb195dd848c57a32830e875435a3",
   "type": "repo",
   "axes": [
-    "virtual-unwrapping"
+    "surface-segmentation",
+    "ink-detection",
+    "validation-fp"
   ],
   "tags": [
-    "herculaneum"
+    "herculaneum",
+    "first-letters",
+    "vesuvius-challenge",
+    "community-repo",
+    "tifxyz",
+    "villa",
+    "reader-v3",
+    "negative-result",
+    "PHerc0826"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -30,12 +40,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

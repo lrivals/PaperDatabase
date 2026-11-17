@@ -1,0 +1,65 @@
+{
+  "id": "2015-allegra-virtual-unrolling-x-ray-computed",
+  "title": "Virtual unrolling using X-ray computed tomography",
+  "authors": [
+    {
+      "given": "D.",
+      "family": "Allegra"
+    },
+    {
+      "given": "E.",
+      "family": "Ciliberto"
+    },
+    {
+      "given": "P.",
+      "family": "Ciliberto"
+    },
+    {
+      "given": "F.L.M.",
+      "family": "Milotta"
+    },
+    {
+      "given": "G.",
+      "family": "Petrillo"
+    },
+    {
+      "given": "F.",
+      "family": "Stanco"
+    },
+    {
+      "given": "C.",
+      "family": "Trombatore"
+    }
+  ],
+  "year": 2015,
+  "venue": "2015 23rd European Signal Processing Conference (EUSIPCO)",
+  "doi": "10.1109/eusipco.2015.7362908",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/eusipco.2015.7362908",
+  "type": "conference",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "papyrus",
+    "ct"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : 2015 23rd European Signal Processing Conference (EUSIPCO)) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 9 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 4 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

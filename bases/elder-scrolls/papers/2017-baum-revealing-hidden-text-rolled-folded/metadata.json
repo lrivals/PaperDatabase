@@ -1,5 +1,5 @@
 {
-  "arxiv_id": null,
+  "id": "2017-baum-revealing-hidden-text-rolled-folded",
   "title": "Revealing hidden text in rolled and folded papyri",
   "authors": [
     {
@@ -36,10 +36,29 @@
     }
   ],
   "year": 2017,
+  "venue": "Applied Physics A",
   "doi": "10.1007/s00339-017-0808-6",
-  "journal_ref": null,
-  "venue_openalex": "Applied Physics A",
-  "type": "journal",
+  "arxiv_id": null,
   "url": "https://doi.org/10.1007/s00339-017-0808-6",
-  "abstract": null
+  "type": "journal",
+  "axes": [
+    "papyrology"
+  ],
+  "tags": [
+    "papyrus"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Applied Physics A, DOI 10.1007/s00339-017-0808-6) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
 }

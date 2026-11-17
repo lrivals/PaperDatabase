@@ -1,0 +1,45 @@
+{
+  "id": "2005-lin-opaque-document-imaging-building-images",
+  "title": "Opaque Document Imaging: Building Images of Inaccessible Texts",
+  "authors": [
+    {
+      "given": "Yun",
+      "family": "Lin"
+    },
+    {
+      "given": "W. Brent",
+      "family": "Seales"
+    }
+  ],
+  "year": 2005,
+  "venue": "Proceedings of the Tenth IEEE International Conference on Computer Vision (ICCV'05)",
+  "doi": "10.1109/iccv.2005.182",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1109/iccv.2005.182",
+  "type": "conference",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging",
+    "papyrology"
+  ],
+  "tags": [
+    "papyrus"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : Proceedings of the Tenth IEEE International Conference on Computer Vision (ICCV'05)) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 20 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 6 fragment(s) non réparé(s) (« classi cation »…)",
+      "sections numérotées non détectées : 1, 2, 3 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

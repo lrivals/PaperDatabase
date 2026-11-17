@@ -1,0 +1,67 @@
+{
+  "id": "2022-wang-virtual-unrolling-technology-terahertz-computed",
+  "title": "Virtual unrolling technology based on terahertz computed tomography",
+  "authors": [
+    {
+      "given": "Tianyi",
+      "family": "Wang"
+    },
+    {
+      "given": "Kejia",
+      "family": "Wang"
+    },
+    {
+      "given": "Kaigang",
+      "family": "Zou"
+    },
+    {
+      "given": "Sishi",
+      "family": "Shen"
+    },
+    {
+      "given": "Yongqiang",
+      "family": "Yang"
+    },
+    {
+      "given": "Mengting",
+      "family": "Zhang"
+    },
+    {
+      "given": "Zhengang",
+      "family": "Yang"
+    },
+    {
+      "given": "Jinsong",
+      "family": "Liu"
+    }
+  ],
+  "year": 2022,
+  "venue": "Optics and Lasers in Engineering 151 (2022) 106924",
+  "doi": "10.1016/j.optlaseng.2021.106924",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1016/j.optlaseng.2021.106924",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging"
+  ],
+  "tags": [
+    "ct"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : Optics and Lasers in Engineering 151 (2022) 106924) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 58 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 10 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

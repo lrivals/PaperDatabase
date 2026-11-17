@@ -1,5 +1,5 @@
 {
-  "arxiv_id": null,
+  "id": "2020-mahnke-virtual-unfolding-folded-papyri",
   "title": "Virtual unfolding of folded papyri",
   "authors": [
     {
@@ -48,10 +48,32 @@
     }
   ],
   "year": 2020,
+  "venue": "Journal of Cultural Heritage 41 (2020) 264-269",
   "doi": "10.1016/j.culher.2019.07.007",
-  "journal_ref": "Journal of Cultural Heritage 41 (2020) 264-269",
-  "venue_openalex": "Journal of Cultural Heritage",
-  "type": "journal",
+  "arxiv_id": null,
   "url": "https://doi.org/10.1016/j.culher.2019.07.007",
-  "abstract": null
+  "type": "journal",
+  "axes": [
+    "papyrology"
+  ],
+  "tags": [
+    "papyrus"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : Journal of Cultural Heritage 41 (2020) 264-269) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 17 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
 }

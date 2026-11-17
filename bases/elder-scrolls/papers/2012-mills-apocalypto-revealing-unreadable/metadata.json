@@ -1,0 +1,56 @@
+{
+  "id": "2012-mills-apocalypto-revealing-unreadable",
+  "title": "Apocalypto: Revealing the unreadable",
+  "authors": [
+    {
+      "given": "David",
+      "family": "Mills"
+    },
+    {
+      "given": "Oksana",
+      "family": "Samko"
+    },
+    {
+      "given": "Paul",
+      "family": "Rosin"
+    },
+    {
+      "given": "Kate",
+      "family": "Thomas"
+    },
+    {
+      "given": "Tim",
+      "family": "Wess"
+    },
+    {
+      "given": "Graham",
+      "family": "Davis"
+    }
+  ],
+  "year": 2012,
+  "venue": "Proc. SPIE 8506, 85060A (2012)",
+  "doi": "10.1117/12.928917",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1117/12.928917",
+  "type": "conference",
+  "axes": [],
+  "tags": [
+    "parchment"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : Proc. SPIE 8506, 85060A (2012)) : type journal/conference à préciser",
+      "aucun axe détecté : à classer dans /paper-fiche",
+      "ligatures perdues à l'extraction : 9 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

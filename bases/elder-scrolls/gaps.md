@@ -24,6 +24,8 @@ Mise à jour du 17/11/2026 (1er passage) : **45 fiches `done` sur 45**, **141 li
 papiers** (109 groupes d'un seul papier) ; aucune comparaison chiffrée entre papiers n'est
 donc valable en l'état.
 
+**Hors de ce passage** : 8 papiers fichés le même jour par une autre session et fusionnés ensuite (2004-seales, 2005-lin, 2012-mills, 2015-allegra, 2017-baum, 2020-mahnke, 2022-wang THz, 2025-hoffmann xénon) ; la base compte 53 fiches. Ils concernent surtout l'historique du déroulage et les modalités (gaps A4, D4, D5) : à intégrer au 2e passage.
+
 Précautions de lecture :
 - **11 papiers sont des dépôts communautaires récents** (10 de type `repo`, plus Rectina,
   `2026-pellerano-rectina-m3-m4-dense-ink`, `preprint` hébergé sur GitHub ; voir

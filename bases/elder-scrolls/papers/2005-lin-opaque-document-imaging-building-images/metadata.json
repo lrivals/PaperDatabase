@@ -19,11 +19,16 @@
   "type": "conference",
   "axes": [
     "virtual-unwrapping",
-    "ct-imaging",
-    "papyrology"
+    "surface-segmentation",
+    "mesh-flattening",
+    "ct-imaging"
   ],
   "tags": [
-    "papyrus"
+    "papyrus",
+    "active-contour",
+    "mass-spring",
+    "conformal-mapping",
+    "micro-CT"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -32,7 +37,6 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon arXiv (journal_ref : Proceedings of the Tenth IEEE International Conference on Computer Vision (ICCV'05)) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 20 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 6 fragment(s) non réparé(s) (« classi cation »…)",
       "sections numérotées non détectées : 1, 2, 3 — leur texte est rattaché à la section précédente"
@@ -40,6 +44,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

@@ -54,10 +54,19 @@
   "url": "https://doi.org/10.1016/j.culher.2019.07.007",
   "type": "journal",
   "axes": [
-    "papyrology"
+    "papyrology",
+    "virtual-unwrapping",
+    "mesh-flattening",
+    "ct-imaging"
   ],
   "tags": [
-    "papyrus"
+    "papyrus",
+    "folded-papyri",
+    "virtual-unfolding",
+    "micro-ct",
+    "as-rigid-as-possible",
+    "coptic",
+    "louvre"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -66,7 +75,6 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon arXiv (journal_ref : Journal of Cultural Heritage 41 (2020) 264-269) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 17 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)",
       "aucune section détectée"
@@ -74,6 +82,6 @@
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

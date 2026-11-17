@@ -46,7 +46,12 @@
     "ct-imaging"
   ],
   "tags": [
-    "ct"
+    "terahertz",
+    "thz-ct",
+    "metal-artifact",
+    "ridgeline",
+    "cultural-heritage",
+    "scroll-model"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -54,14 +59,12 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "publié ailleurs selon arXiv (journal_ref : Optics and Lasers in Engineering 151 (2022) 106924) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 58 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 10 fragment(s) non réparé(s) (« classi cation »…)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

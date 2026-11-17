@@ -40,11 +40,15 @@
   "axes": [
     "virtual-unwrapping",
     "ct-imaging",
-    "papyrology"
+    "papyrology",
+    "surface-segmentation"
   ],
   "tags": [
     "papyrus",
-    "ct"
+    "ct",
+    "morphological-skeleton",
+    "low-resolution",
+    "phantom"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -53,13 +57,12 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon arXiv (journal_ref : 2015 23rd European Signal Processing Conference (EUSIPCO)) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "ligatures perdues à l'extraction : 9 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 4 fragment(s) non réparé(s) (« classi cation »…)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

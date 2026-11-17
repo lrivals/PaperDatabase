@@ -37,7 +37,10 @@
   "tags": [
     "papyrus",
     "synchrotron",
-    "carbon-ink"
+    "carbon-ink",
+    "xenon",
+    "contrast-agent",
+    "BESSY-II"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -46,12 +49,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (ChemRxiv, DOI 10.26434/chemrxiv-2025-x4zvc) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

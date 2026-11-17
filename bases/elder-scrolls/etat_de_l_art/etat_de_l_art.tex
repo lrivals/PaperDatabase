@@ -22,34 +22,43 @@
 \newcommand{\lu}{\textsf{\small[lu]}}
 \newcommand{\deduit}{\textsf{\small[déduit]}}
 \newcommand{\commu}{\textsf{\small[communauté]}}
+\newcommand{\depot}{\textsf{\small[dépôt]}}
 \newcommand{\nr}{\textit{n/r}}
 \newcommand{\pherc}[1]{PHerc.~#1}
 
 \title{État de l'art du Vesuvius Challenge\\[4pt]
 \large Lecture virtuelle des rouleaux d'Herculanum en micro-CT :\\ ce qui a été publié, ce que la communauté a obtenu, ce qui reste ouvert}
 \author{Projet Elder-scrolls — synthèse de la base \texttt{elder-scrolls}}
-\date{15 novembre 2026 (version 3 : 34 articles fichés)}
+\date{17 novembre 2026 (version 4 : 53 articles et sources fichés)}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 \noindent Ce document fait le point sur la lecture virtuelle des papyrus carbonisés d'Herculanum
-au 15 novembre 2026. Il croise deux sources. La première est la littérature scientifique
-réunie dans la base \texttt{elder-scrolls} : 34 articles, tous lus en entier et fichés. La
-seconde est la veille communautaire du dépôt Elder-scrolls (Discord, Substack, dépôt
-\texttt{villa}, août–novembre 2026). Quatre constats ressortent.
-(1) Le contraste de l'encre dépend de sa composition. Une encre métallique (plomb, fer, cuivre)
-se voit directement en CT. Une encre de carbone pur, presque pas : elle ne se détecte que par
-sa morphologie et sa texture, à des échelles fines. Sur profilométrie, ce signal tombe sous
-Dice~0,70 au-delà d'environ 1~µm. La communauté le retrouve pourtant à 8–9~µm, en distillant
-des labels obtenus à 2,4~µm.
-(2) Le déroulage complet d'un rouleau scellé est désormais publié (\pherc{1667}, 2,4~µm,
-preprint 2026). Il reste semi-automatique, et le goulot de la compétition est passé de
-l'encre à la segmentation.
+au 17 novembre 2026. Il croise trois sources. La première est la littérature scientifique
+réunie dans la base \texttt{elder-scrolls} : 42 articles (2004–2026), tous lus en entier et
+fichés. La deuxième, nouvelle dans cette version, est un lot de 11 sources communautaires
+du Vesuvius Challenge ingérées et fichées comme les articles : 10 dépôts GitHub figés à un
+commit et rendus en PDF, plus un article de 17 pages hébergé sur GitHub ; leurs chiffres sont
+auto-déclarés. La troisième est la veille du dépôt Elder-scrolls (Discord, Substack, dépôt
+\texttt{villa}, août–novembre 2026), qui reste distincte de la base. Quatre constats ressortent.
+(1) Le contraste de l'encre dépend de sa composition. Une encre dense (plomb, fer, cuivre,
+ocre) se voit directement en CT : presque tous les déroulages par absorption de 2004 à 2021
+en dépendent. Une encre
+de carbone pur, presque pas : elle ne se détecte que par sa morphologie et sa texture, à des
+échelles fines. Sur profilométrie, ce signal tombe sous Dice~0,70 au-delà d'environ 1~µm. La
+communauté le retrouve pourtant à 8–9~µm, en distillant des labels obtenus à 2,4~µm ; les
+nouveaux lecteurs annoncent des gains de 0,005 à 0,01 d'AUC sur Reader V3, sans intervalle de
+confiance et sur des protocoles non comparables.
+(2) Le déroulage complet d'un rouleau scellé est publié (\pherc{1667}, 2,4~µm, preprint 2026),
+et un dépôt annonce 69\,290~cm² aplatis sur 8 rouleaux en automatique. Mais personne ne sait
+mesurer si une surface est sur la bonne spire hors des 3–4 rouleaux de référence : le goulot
+est la segmentation \emph{vérifiable}.
 (3) La validation reste artisanale. Les articles ne rapportent ni test placebo ni
-calibration ; la communauté a ses propres contrôles (lecture inversée, ensembles, vérification
-de la surface), et plusieurs modalités indépendantes peuvent fournir une vérité terrain.
+calibration. Les dépôts publient des contrôles (ordre de profondeur inversé, face aveugle,
+\emph{liveness gate}, test pré-enregistré), non standardisés, et montrent qu'un même modèle
+change de score selon le code qui le lance.
 (4) Aucun modèle de super-résolution 9~→~2,4~µm n'a été entraîné ni publié.
 \end{abstract}
 
@@ -61,34 +70,65 @@ de la surface), et plusieurs modalités indépendantes peuvent fournir une véri
 
 \paragraph{Sources.}
 \begin{itemize}
-  \item \textbf{Base \texttt{elder-scrolls}} (PaperDatabase) : 34 articles, tous fichés
-  (lecture intégrale, résultats chiffrés dans \texttt{benchmarks.csv}, 72 lignes, 10 articles
-  chiffrés). La liste complète est en annexe~\ref{sec:corpus}.
+  \item \textbf{Base \texttt{elder-scrolls}} (PaperDatabase) : 53 sources, toutes fichées
+  (lecture intégrale, résultats chiffrés dans \texttt{benchmarks.csv} : 143 lignes, 21 sources
+  chiffrées). La liste complète est en annexe~\ref{sec:corpus}. Elles se répartissent en :
+  \begin{itemize}
+    \item 42 articles de la littérature (34 de la version~3, plus 8 ajoutés le 17~nov. :
+    six jalons historiques du déroulage, 2004–2020, la tomographie térahertz et l'étude
+    source sur le xénon) ;
+    \item 11 sources communautaires du Vesuvius Challenge, ingérées le 17~nov. : 10 dépôts
+    GitHub (type \texttt{repo}) et l'article Rectina m3/m4 (17~p., hébergé sur GitHub, type
+    \texttt{preprint}). Chacun est figé à un commit ; le PDF ingéré rend le README et les
+    documents techniques principaux, sans les images. Résumé et réserves :
+    \nolinkurl{veille_communaute.md} de la base.
+  \end{itemize}
   \item \textbf{Dépôt Elder-scrolls} : \nolinkurl{docs/COMMUNITY_BRIEF.md} (veille Discord,
-  Substack et \texttt{villa}, août–15~nov.~2026), \nolinkurl{docs/PRIZES.md},
-  \nolinkurl{research/prior_work_super_resolution.md} (recherche d'antériorité sur la
-  super-résolution, 15~nov.~2026) et \nolinkurl{research/plan_super_resolution.md} (plan
+  Substack et \texttt{villa}, août–15~nov.~2026), \nolinkurl{docs/PRIZES.md}, la recherche
+  d'antériorité sur la super-résolution du 15~nov.~2026
+  (\nolinkurl{research/prior_work_super_resolution.md}) et \nolinkurl{research/plan_super_resolution.md} (plan
   d'expérience, branche \texttt{ccr-beb2d7f4-kz9t2h}, non fusionnée).
 \end{itemize}
 
 \paragraph{Niveau de preuve.} Chaque affirmation porte une étiquette :
-\lu{} pour un fait lu dans un article de la base (section citée) ;
-\commu{} pour un résultat annoncé par un membre de la communauté, non relu par les pairs et
-non reproduit ici ; \deduit{} pour une inférence de ce document. Les preprints et rapports
-Zenodo non relus par les pairs sont signalés. Une valeur non rapportée s'écrit \nr.
+\begin{itemize}
+  \item \lu{} pour un fait lu dans un article de la base (section citée) ;
+  \item \depot{} pour un fait lu dans un \textbf{dépôt communautaire ingéré} (section du
+  README ou du document technique citée). C'est un niveau intermédiaire : la source est
+  dans la base, figée à un commit, lue en entier et fichée, mais elle n'est pas relue par
+  les pairs et ses chiffres sont \textbf{auto-déclarés}, souvent par un seul auteur, sans
+  reproduction tierce. L'extraction (PyMuPDF) a aplati la plupart des tableaux markdown :
+  les chiffres cités ici viennent surtout de la prose (\texttt{confidence: medium} dans
+  \texttt{benchmarks.csv}), et une valeur perdue à l'extraction s'écrit \nr{} ;
+  \item \commu{} pour un résultat annoncé par un membre de la communauté dans la veille du
+  dépôt Elder-scrolls (Discord, Substack), hors base, non relu et non reproduit ici ;
+  \item \deduit{} pour une inférence de ce document.
+\end{itemize}
+Les preprints et rapports Zenodo non relus par les pairs sont signalés. Une valeur non
+rapportée s'écrit \nr. Les identifiants de section des dépôts (\emph{README §…}) renvoient à
+la fiche \nolinkurl{papers/<id>/fiche.md}.
 
 \paragraph{Limites de la base.}
 \begin{itemize}
-  \item 24 des 34 articles n'ont aucune ligne dans \texttt{benchmarks.csv} : leurs résultats
-  sont surtout qualitatifs (figures, lectures expertes) ou sans tâche comparable.
+  \item 32 des 53 sources n'ont aucune ligne dans \texttt{benchmarks.csv} : leurs résultats
+  sont surtout qualitatifs (figures, lectures expertes) ou sans tâche comparable. Les six
+  jalons historiques ajoutés (2004–2020) n'ont aucune métrique.
+  \item \texttt{bin/pdb bench --comparable} ne trouve \textbf{aucun groupe de lignes
+  comparables entre deux sources} (111 groupes d'une seule source) : toute comparaison
+  chiffrée entre papiers ou dépôts de ce document est indicative \deduit.
+  \item Les 11 sources communautaires fournissent 69 des 143 lignes chiffrées et presque
+  toutes les mesures sur rouleaux entiers.
   \item Deux articles sont des revues narratives \cite{damiani2021,perino2024} : elles
   situent le domaine mais n'apportent pas de résultat propre.
   \item Plusieurs fiches signalent des tableaux mal extraits du PDF ; les chiffres
   correspondants ne sont pas cités.
-  \item \texttt{gaps.md} n'est pas encore rempli.
-  \item Aucun article ne traite du pré-entraînement auto-supervisé 3D, de l'adaptation de
-  domaine ou de la calibration. Sur ces sujets, et sur la super-résolution, ce document
-  repose sur la veille communautaire.
+  \item \texttt{gaps.md} a reçu un premier passage le 17~nov., sur 45 fiches : les 8
+  articles de littérature ajoutés le même jour n'y sont pas encore pris en compte.
+  \item Aucun article ni dépôt ne traite du pré-entraînement auto-supervisé 3D ni de la
+  calibration des cartes d'encre. L'adaptation de domaine n'apparaît que sous forme de
+  recettes de dépôts (affinage sur scans natifs, Argus~V2 \cite{ruiconte2026}). Sur ces
+  sujets, et sur la super-résolution, ce document repose surtout sur la veille
+  communautaire.
 \end{itemize}
 
 %======================================================================
@@ -115,8 +155,9 @@ La chaîne de référence de l'équipe du Challenge en 2026 \commu{} est la suiv
   \item rendu \texttt{tifxyz} dans les deux sens de profondeur ;
   \item détection d'encre (Reader V3 par défaut).
 \end{enumerate}
-Le cadre « segmentation, texturation, aplatissement » a été posé pour lire le rouleau
-d'En-Gedi \lu~\cite{seales2016}. Cinq spires de ce rouleau ont été restituées à 18~µm,
+Le cadre « segmentation, texturation, aplatissement » remonte à Seales et Lin, sur des
+répliques scannées à environ 12~µm \lu~\cite{seales2004,lin2005} (§\ref{sec:genealogie}). Il a
+servi à lire le rouleau d'En-Gedi \lu~\cite{seales2016}. Cinq spires de ce rouleau ont été restituées à 18~µm,
 révélant deux colonnes du Lévitique, avec une encre dense, supposée métallique. EduceLab l'a
 ensuite étendu à Herculanum : aplatissement dans Volume Cartographer, puis classifieur d'encre
 \emph{ink-ID} \lu~\cite{parsons2023}, §3.1. La
@@ -167,6 +208,12 @@ encre sans élément lourd ne se voit pas :
   du plomb hors de l'encre : dans des lignes de réglure (environ 8~ng par pixel de 250~µm,
   contre 1~ng ailleurs) et aux bords des lacunes \lu~\cite{romano2023}, Methods. Un signal
   fondé sur le plomb peut donc confondre réglure et encre \deduit.
+  \item \textbf{Encres denses des premiers déroulages.} Les démonstrations de 2004 à 2020
+  emploient des encres que l'absorption voit : réplique peinte \cite{seales2004}, encre à la
+  noix de galle \cite{lin2005}, encre ferro-gallique \cite{mills2012}, ocre \cite{allegra2015},
+  cinabre et minium \cite{baum2017} \lu. Sur des papyrus égyptiens pliés, Mahnke et al.\
+  cherchent d'abord du fer par XRF portable ; ils concluent que l'imagerie par absorption
+  atteint sa limite pour les encres carbonées \lu~\cite{mahnke2020}, Conclusions.
 \end{itemize}
 Conséquence pour le projet : la proportion de plomb dans l'encre pourrait servir à choisir
 les rouleaux les plus lisibles. C'est la piste proposée par Seiler et al.\ ; elle n'est pas
@@ -266,6 +313,19 @@ tombe à 0,757, 0,817 et 0,475 selon le papyrus (Table~2).}
 L'article de 2026 oppose lui-même les deux scans de Paris~4 (7,91 et 2,4~µm). Mais la
 comparaison mêle gain de scan et gain de modèle \lu~\cite{angelotti2026complete}, Fig.~3.
 
+\noindent \textbf{Ce qu'en disent les dépôts ingérés} \depot{} (indices, pas mesures) :
+\begin{itemize}
+  \item Argus~V1, entraîné sur des rendus 2,4~µm ramenés à 9~µm, perd contre Reader~V3 sur
+  le scan natif de \pherc{0841} (AUC 0,869 contre 0,913) ; V2, affiné directement sur des
+  scans natifs 8–9~µm, comble l'écart \cite{ruiconte2026}, README §Argus~V2. Le transfert
+  « rendu poolé → scan natif » n'est donc pas acquis \deduit ;
+  \item à 9,6~µm, les traits d'encre sortent environ deux fois trop larges
+  \cite{devore2026}, Limites ;
+  \item ink-sdk cite une perte d'environ 4~\% de corrélation pour un écart d'échelle
+  8,64 → 9,36~µm, mesurée par un autre projet et non publiée \cite{limegs2026sdk}, design §7.2.
+\end{itemize}
+Aucune de ces sources ne compare un même rouleau aux deux résolutions avec les mêmes labels.
+
 \subsection{Autres modalités et agents de contraste}
 
 \begin{table}[h]
@@ -279,13 +339,25 @@ Thermographie pulsée \cite{ceccarelli2025} & fragments déroulés & lecture am�
 MA-XRF \cite{romano2023,tack2016} & fragments déroulés & cartes de plomb : encre, réglures, mise en page & non \\
 SWIR hyperspectral \cite{tournie2019} & fragments déroulés, 200~µm & texte du verso révélé (une colonne de 15 lignes) ; plus de 150 mots nouveaux au recto par rapport à 950~nm ; trous parfois pris pour de l'encre & non \\
 Radar sub-THz \cite{verde2025} & fragment déroulé & zones collées ou décollées du carton ; un seul cas, qualitatif & non \\
-Xénon sous pression \cite{hoffmann2026} & échantillon modèle, BESSY~II, 3,6~µm & le xénon s'adsorbe dans l'encre et augmente son atténuation ; réversible & futurs scans seulement \\
+THz CT à 0,3~THz \cite{wang2022thz} & maquette en spirale, spires espacées de 8~mm & déroulage par suivi de crête coupe par coupe ; trois lettres peintes reconnaissables ; PSNR 14,05 et SSIM 0,387 contre une image de transmission THz, qui n'est pas une vérité terrain (§4.2) ; scan de 80~h & non (faisceau d'environ 5~mm) \\
+Xénon sous pression \cite{hoffmann2025,hoffmann2026} & échantillon modèle (charbon pur), BESSY~II, pixel 3,6~µm, 33,3 et 34,9~keV & le xénon se fixe dans les particules d'encre et renforce leur atténuation ; particules déjà visibles sans xénon ; aucune mesure de contraste & futurs scans seulement \\
 Traitement couleur \cite{atanasiu2021} & photos de papyrus & image négative utile pour juger si une trace est de l'encre ; étude à 8 participants & sans objet \\
 \bottomrule
 \end{tabularx}
-\caption{Modalités hors CT d'absorption. Hoffmann 2026 est un poster Zenodo, non relu par
-les pairs.}
+\caption{Modalités hors CT d'absorption. Hoffmann 2025 (ChemRxiv) et Hoffmann 2026 (poster
+Zenodo) ne sont pas relus par les pairs ; le poster reprend les mesures du preprint (une
+seule campagne, 11~avril~2024) : ce sont \emph{une} preuve, pas deux.}
 \end{table}
+
+\noindent \textbf{Le xénon en détail} \lu~\cite{hoffmann2025}, §3–4. L'échantillon est un
+papyrus du commerce, une encre de charbon médicinal et de gomme arabique, chauffés jusqu'à
+pyrolyse incomplète. Les scans se font juste sous et juste au-dessus du seuil K du xénon, à
+vide puis à 1, 5 et 10~bar. Les particules d'encre (10–150~µm) se voient déjà sans xénon ; le
+xénon « renforce » leur contraste, sans mesure chiffrée. L'hypothèse centrale (l'encre
+antique concentre plus de carbone que le papyrus carbonisé) n'est pas testée, ni l'innocuité
+de 10~bar pour un rouleau fragile. Le texte se contredit sur la désorption : une part
+importante part après 1~h sous vide (§3), puis aucun xénon résiduel n'est détecté
+(Conclusion) \lu.
 
 \noindent La revue de Perino et al.\ couvre huit familles de techniques. Elle note que la
 tomographie X est la seule à lire un rouleau fermé \lu~\cite{perino2024}, §6. L'intérêt des
@@ -339,9 +411,34 @@ Reader v2 & KLAVIS, 27 sept. & 9~µm natif, 6 rouleaux et fragments. AUC 0,834 (
 \texttt{ink\_9um} & équipe (err), 9 août & Hybride 3D-2D entraîné sur du 2,4~µm ramené à 9,6~µm ; 14 checkpoints écartés jusqu'à 0,14 en précision équilibrée. \\
 v8-in & YoussefNader, 29 sept. & Entraîné seulement sur du 9~µm au signal confirmé ; AUC zéro-shot 0,86 / 0,81 sur 1447. \\
 Hecate & équipe, 15 sept. & 3D-2D distillé du modèle 3D Paris~4 ; bon rappel, beaucoup de faux positifs. \\
-Rectina m1–m4 & evilaliv3 & Entraîné de zéro sur des labels audités de 8 rouleaux ; m2 proche de V3. \\
+Rectina m1–m4 & evilaliv3 (G.~Pellerano) & Entraîné de zéro sur des labels audités de 8 rouleaux ; m2 proche de V3. L'article sur m3/m4 est désormais dans la base (ci-dessous). \\
 \bottomrule
 \end{longtable}
+
+\subsection{Lecteurs d'encre publiés en dépôt (ingérés le 17 novembre)}
+
+\begin{longtable}{@{}p{2.6cm}p{3.6cm}p{8.6cm}@{}}
+\toprule
+Source & Données, protocole & Ce qui est rapporté \depot{} et réserve \\
+\midrule
+\endhead
+Argus V1/V2 \cite{ruiconte2026} & architecture de Reader~V3 ; V1 : soupe de 8 affinages sur rendus 2,4~µm poolés ; V2 : Reader~V3 affiné sur 70 segments natifs (113, 116 et 53~keV) & V2 : AUC 0,928 contre 0,922 pour Reader~V3 sur \pherc{0841} natif (moyenne de 3 fenêtres de profondeur) ; mais V2 est derrière V3 sur 1447~w058 et sur les masques officiels (README §Argus~V2). Écarts minces, sans intervalle de confiance ; seuil « 80~\% de rappel » propre à chaque modèle. Pas de modèle dominant, de l'aveu de l'auteur. \\
+Rectina m3/m4 \cite{pellerano2026} & villa 3D/2D entraîné de zéro sur 87 segments de 8 rouleaux, labels composites denses ; 8 unités « tenues à l'écart » + 6 contrôles & AUC moyenne sur les 8 unités : m4 0,8637, Reader~V3 0,8547, m3 0,8532, Reader~v2 0,8421 (§VII–VIII) ; m4 > V3 sur 10 unités sur 14. Sur les 4 contrôles à labels organisateurs, m4 et V3 sont à égalité (0,8735 et 0,8736). Une graine, aucune ablation ; l'auteur estime le bruit à 0,013 (exactitude équilibrée), au-dessus du gain. Les unités « tenues à l'écart » sont des segments de rouleaux d'entraînement. \\
+ink-bench \cite{nexusai2026} & checkpoint officiel \texttt{ink\_canonical\_2um} réimplémenté, inférence en flux OME-Zarr, 2,4~µm & ROC-AUC 0,9546 et F0.5 0,7903 (seuil 0,5) sur \emph{une} ROI de Paris~4 (report §5) ; F0.5 0,8724 avec un seuil choisi sur les labels d'évaluation (borne haute). 83~M voxels/s sur RTX~5080 ; pic de VRAM 2,5~Gio sur une ROI, mais 3,1~Gio sur la ROI de validation, au-dessus des « moins de 3~Gio » annoncés. Le checkpoint a pu voir Paris~4 à l'entraînement. \\
+ink-sdk \cite{limegs2026sdk} & SDK d'inférence seule, une vingtaine de profils (Reader~v2/V3, Argus~V2, Rectina~m4, Hecate, TRACE~v3B, canonique 2,4~µm…), reçus traçables & Aucune évaluation, de l'aveu de l'auteur. Apport : chaque recette garde son prétraitement, et les deux sens de profondeur sont toujours écrits. Les chiffres de la carte de Rectina~m4 ne sont pas reproduits par une exécution par défaut (une seule fenêtre au lieu de sept) (README). \\
+\bottomrule
+\end{longtable}
+
+\noindent \textbf{Métriques non comparables.} Ces scores ne se comparent ni entre eux, ni
+avec les articles du tableau précédent \deduit : unités, rouleaux, énergies (53 à 116~keV),
+résolutions (2,4 ou 9~µm), labels (organisateurs, équipe, auteur), fenêtres de profondeur et
+seuils diffèrent. Le document de conception d'ink-sdk en donne la preuve la plus nette : le
+\emph{même} checkpoint canonique 2,4~µm donne une carte corrélée à r~=~0,079 avec la carte
+communautaire quand il passe par un runner générique (normalisation \texttt{clip(0,200)/200},
+profondeur rééchantillonnée), contre r~=~0,885 avec son propre runner \depot~\cite{limegs2026sdk},
+design §4. Un écart d'AUC de 0,005–0,01 entre lecteurs mesurés par des codes différents ne
+dit donc rien \deduit. ink-sdk fournit l'outil d'un banc commun, mais aucun dépôt ne l'a
+encore fait tourner.
 
 \paragraph{Recettes d'entraînement qui ont fait leurs preuves} \commu
 \begin{itemize}
@@ -367,6 +464,50 @@ révéler de nouvelles lettres (brak, evilaliv3).
 %======================================================================
 \section{Segmentation de feuillets et déroulage}
 %======================================================================
+
+\subsection{Généalogie : vingt ans de déroulage sur encres denses (2004–2020)}
+\label{sec:genealogie}
+
+Six travaux ajoutés en version~4 retracent la préhistoire du domaine \lu. Tous sont
+qualitatifs : aucun ne rapporte de métrique de segmentation, de distorsion ou de lecture.
+\begin{itemize}
+  \item \textbf{Seales et Lin 2004} (JCDL) posent la chaîne scan volumétrique, segmentation
+  par seuillage, texture prise le long de la normale de chaque triangle (« multi-couches »),
+  puis déroulage par simulation masse-ressort guidée par l'utilisateur
+  \cite{seales2004}, §2–3. Démonstration sur une toile peinte (CT médical, 1–2~mm) et une
+  réplique de papyrus (environ 12~µm) ; validation par superposition visuelle à la photo.
+  La texture le long de la normale est l'ancêtre des sous-volumes de surface des détecteurs
+  d'encre actuels \deduit.
+  \item \textbf{Lin et Seales 2005} (ICCV) formalisent le problème : contour actif 2,5D
+  attiré par les forts gradients, texturage, aplatissement masse-ressort (approximation
+  d'une application conforme), et surface déplacée le long de sa normale pour maximiser la
+  netteté de la texture \cite{lin2005}, §3. Répliques à environ 12~µm, encre à la noix de
+  galle ; le texte des spires internes devient lisible après régularisation.
+  \item \textbf{Mills et al.\ 2012} (SPIE) déroulent un rouleau de parchemin d'environ 1850,
+  encre ferro-gallique, scanné en 36~h à 15~µm sur un scanner de laboratoire à intégration
+  temporelle \cite{mills2012}, §2. La segmentation, en partie manuelle, a pris environ une
+  semaine. Le texte virtuel a ensuite été \textbf{confirmé par déroulage physique}, sans
+  connaissance préalable du contenu.
+  \item \textbf{Allegra et al.\ 2015} (EUSIPCO) déroulent un papyrus modèle (hiéroglyphe à
+  l'ocre) scanné en CT médical à 0,35~mm \cite{allegra2015}, §4–5. Méthode 2D : on choisit
+  la coupe au squelette le plus propre, on y suit la spirale entre deux points donnés par
+  l'opérateur, puis on propage ce chemin aux coupes voisines. Elle suppose des coupes
+  adjacentes presque identiques.
+  \item \textbf{Baum et al.\ 2017} (\emph{Appl. Phys.~A}) déroulent un rouleau maquette et
+  déplient un paquet plié en « magic fold » (micro-CT de laboratoire, 7,5–9,2~µm), par
+  contours dessinés à la main, interpolés, puis relaxation masse-ressort sans intersection
+  \cite{baum2017}, §3–5. Coût : moins de 15~min de travail manuel pour le rouleau, 8–10~h
+  pour le paquet. Les maquettes sont écrites au cinabre et au minium ; le papyrus ancien
+  scanné n'a livré aucun texte.
+  \item \textbf{Mahnke et al.\ 2020} (\emph{J.~Cult. Herit.}) appliquent la même chaîne à
+  trois paquets de papyrus du Louvre \cite{mahnke2020}, Results. Un seul mot est lu : le
+  copte « Seigneur » ; le paquet compact échoue (distorsions trop fortes).
+\end{itemize}
+Ce qu'on en retient \deduit : (1) la décomposition segmentation / texture / aplatissement
+date de 2004 et n'a pas changé ; (2) la segmentation est partout l'étape manuelle et
+coûteuse ; (3) la seule validation forte de cette période, le déroulage physique de Mills
+et al., est impossible pour Herculanum ; (4) aucune de ces méthodes n'a été testée sur une
+encre carbonée.
 
 \subsection{Travaux publiés}
 
@@ -439,6 +580,37 @@ nnU-Net \emph{m7} rate les feuillets inclinés de plus d'environ 30°.
 par la segmentation (segments grands, contigus, corrects) plus que par l'encre. De meilleurs
 modèles de surface viendront de labels dans les zones difficiles.
 
+\subsection{Dépôts de segmentation ingérés (novembre 2026)} \depot
+
+\begin{longtable}{@{}p{2.7cm}p{4.2cm}p{7.9cm}@{}}
+\toprule
+Dépôt & Méthode & Ce qui est rapporté (auto-déclaré) et réserve \\
+\midrule
+\endhead
+HerculeX \cite{betka2026} & CT brut à environ 19~µm ; nœuds de feuillet par tenseur de structure ; numéros d'enroulement entiers par flot de coût minimal (optimum certifié) ; aplatissement sur grille ; Reader~V3 & 8 rouleaux sans maillage publié, 69\,290~cm² aplatis dont 39\,428~cm² en mosaïques $\ge$~4~cm² ; environ 2~h du CT au feuillet sur un MacBook M1~Pro 16~Go (README §Results). Contre maillages d'experts (crops de développement) : part correcte 0,716 (1667), 0,625 (0139), 0,747 (Paris~4). L'auteur l'écrit : rien ne vérifie que chaque pièce est sur la bonne spire ; une mosaïque peut joindre deux enroulements. 69\,290~cm² est une surface produite, pas une surface correcte \deduit. \\
+winding-field \cite{limegs2026winding} & champ continu de coordonnée d'enroulement $W$, solveur linéaire global (gradients des normales × densité de couches, contraintes de fibres) ; banc d'évaluation gelé et haché & Paris~4, grille 19,2~µm : dérive médiane le long d'une fibre de 0,155 feuillet à 0,5–1,5~mm, 0,732 à 10–15~mm, 1,336 à 30–45~mm (README §Fine-grid measurement). Couverture 36,8~\% des paires ; pas de jeu tenu à l'écart. À 30–45~mm, l'erreur médiane dépasse un tour : le décompte des spires n'est pas démontré \deduit. \\
+spiral-tracks \cite{gilman2026spiral} & extracteur de \emph{tracks} de villa sur la prédiction m7 ; spiral fit de 8\,000 pas ; 3 enroulements rendus par rouleau & Entrées publiées pour \pherc{1203}, 1218, 1545 et 0846B ; fits sur RTX~4090 louée, 4,34~USD au total ; part snappée 0,887 à 1,000, décalage médian 1,8–2,9~voxels (README §Results per scroll). Le snap mesure la cohérence avec m7, pas l'exactitude. Cartes Reader~V3 : aucune rangée de lettres. \\
+first-letters-clean-sheets \cite{gilman2026sheets} & 400 traces \texttt{vc\_grow\_seg\_from\_seed} sur portable sans GPU ; audit de maillage ; score « on-sheet » & 173 patchs mono-feuille, 355~cm², 13 rouleaux éligibles (README). Inclinaison médiane des couches 0,97° contre 4,70° pour des surfaces « tourbillonnantes », mais 58~\% des coupes dépassent le seuil fixé à l'avance. Score on-sheet : AUC 0,875 sur 6 surfaces. \textbf{Aucune lettre} : résultat négatif utile à 8,6–9,4~µm. \\
+ply-layers \cite{devore2026} & U-Net 3D sans label humain (feuillet, recto, verso) ; une couche = deux plis de fibres (H puis V) ; l'ordre des plis tranche entre « même couche » et « couches différentes » là où il n'y a pas de vide & Une couche de Paris~4, 6 tuiles à 9,6~µm : 99,6~\% des points sur le papyrus contre 82,0~\% pour le segment officiel ; 0,4~\% contre 18,0~\% dans un vide (WRITEUP §8). Métrique favorable par construction (surface placée sur la crête de brillance, jugée par un seuil de brillance) ; auto-contrôle en partie circulaire ; pire couche encore doublée à 46–55~\%. \\
+scroll-label-snap \cite{snyder2026} & recalage des labels recto sur la face réelle : score de décalage $\pm$4~voxels, coupe de graphe exacte (Ishikawa), CPU seul & Préférence de 90~\% pour les labels recalés (63 contre 7, relectrice indépendante) ; papyrus côté recto 70~→~93~\% sur w052. Mais résultat \textbf{négatif} pré-enregistré sur l'encre (§\ref{sec:validation}). Le test de dérive est circulaire, et une recherche sans graphe fait mieux (94 contre 89~\%). \\
+\bottomrule
+\end{longtable}
+
+\noindent Lecture d'ensemble \deduit :
+\begin{itemize}
+  \item ces dépôts produisent beaucoup de surface sur des rouleaux sans maillage publié, à
+  bas coût (portable, GPU loué, Colab) ; c'est nouveau par rapport aux articles ;
+  \item aucun ne sait mesurer la « bonne spire » hors des 3–4 rouleaux qui ont un maillage
+  d'expert (Paris~4, 1667, 0139) : les métriques rapportées sont de la cohérence interne
+  (snap sur m7, dérive le long des fibres, brillance) ;
+  \item les surfaces automatiques des deux dépôts Gilman (4 et 13 rouleaux) ne montrent
+  aucune lettre ;
+  HerculeX ne rapporte aucune lecture sur ses 8 rouleaux ;
+  \item ply-layers est la seule idée nouvelle pour les zones pressées sans vide : elle
+  exploite la structure physique du papyrus (deux plis orthogonaux). Elle n'est testée que
+  sur une couche d'un rouleau.
+\end{itemize}
+
 %======================================================================
 \section{Aplatissement et distorsion}
 %======================================================================
@@ -457,6 +629,15 @@ modèles de surface viendront de labels dans les zones difficiles.
   isométrique » ; la déformation se concentre aux plis (Fig.~8, non chiffrée).
   \item \textbf{\pherc{1667}} \lu~\cite{angelotti2026complete}. Paramétrisation « quasi
   isométrique à faible distorsion », sans métrique dans le texte extrait.
+  \item \textbf{Ancêtres masse-ressort} \lu~\cite{seales2004,lin2005,baum2017,mahnke2020}.
+  De 2004 à 2020, l'aplatissement se fait par simulation masse-ressort ou relaxation
+  itérative des distances. Baum et al.\ définissent une distorsion (écart moyen des distances
+  voisines 2D/3D) mais ne la rapportent jamais (§4).
+  \item \textbf{Dépôts 2026} \depot. HerculeX déclare « isométriques » ses pièces quand
+  81 à 86~\% des paires voisines sont à $\pm$10~\% du pas \cite{betka2026}, README §Results ;
+  ply-layers aplatit par MDS, avec un étirement de 0,895–1,113 pour 0,90–1,10 exigé
+  \cite{devore2026}, WRITEUP §6. Ces critères ne se comparent pas aux mesures $L^2$/AD/Str
+  des articles \deduit.
   \item \textbf{En pratique} \commu{} : aplatissement Lasagna, SLIM ou \emph{flatboi}. Le
   critère de prix « isométrique » n'a pas de seuil chiffré.
 \end{itemize}
@@ -495,12 +676,18 @@ dégradation synthétique, \texttt{scan\_transfer}, paires au même protocole (0
 
 %======================================================================
 \section{Validation et faux positifs}
+\label{sec:validation}
 %======================================================================
 
-\paragraph{Littérature.} Aucun des 34 articles ne rapporte de test placebo, de lecture inversée
+\paragraph{Littérature.} Aucun des 42 articles ne rapporte de test placebo, de lecture inversée
 ni de calibration. Les protocoles observés :
 \begin{itemize}
-  \item inspection visuelle et lecture experte (2015–2021, et \cite{angelotti2026complete} dans
+  \item \textbf{déroulage physique} après le déroulage virtuel : le texte d'un rouleau de
+  parchemin de 1850 est confirmé sans connaissance préalable \lu~\cite{mills2012}, §2. C'est
+  la seule vérité terrain complète du corpus, et elle est impossible pour Herculanum \deduit ;
+  \item superposition visuelle à une photographie de la réplique avant enroulement
+  \lu~\cite{seales2004}, §4, ou au papyrus modèle déroulé \lu~\cite{allegra2015}, §5 ;
+  \item inspection visuelle et lecture experte (2004–2021, et \cite{angelotti2026complete} dans
   le texte extrait) ;
   \item validation croisée sur moitiés de fragments \cite{parsons2023}, avec un risque de
   fuite entre plis voisins \deduit ;
@@ -521,7 +708,11 @@ en CT (voir les pratiques de la communauté, plus bas).
 \begin{itemize}
   \item rouleaux modèles à encre connue \cite{seiler2026}, données publiques mais à 18~µm ;
   \item fragments imagés en IR, en thermographie ou en XRF \cite{ceccarelli2025,romano2023} ;
-  \item marquage au xénon pour de futurs scans \cite{hoffmann2026} ;
+  \item marquage au xénon pour de futurs scans \cite{hoffmann2025,hoffmann2026}, encore sans
+  mesure de contraste ni test sur papyrus carbonisé ;
+  \item rouleaux et papyrus modèles déjà fabriqués pour le déroulage
+  \cite{seales2004,lin2005,allegra2015,baum2017}, mais à encre dense (ocre, noix de galle,
+  cinabre, minium) : ils testent la géométrie, pas la détection d'une encre carbonée \deduit ;
   \item a priori de mise en page : colonnes inclinées vers la gauche (loi de Maas, jugée
   délibérée), marges et lignes de base tracées au plomb \lu~\cite{romano2023}, Discussion.
   Une colonne prédite incompatible avec ces règles est suspecte \deduit.
@@ -540,6 +731,43 @@ en CT (voir les pratiques de la communauté, plus bas).
   \item \textbf{Outils d'audit} : ink-or-hallucination, ink-placebo-check, le score ScrollGT
   (environ 0,75 d'AUC pour les modèles publiés), la vérité terrain caméra de KLAVIS sur 0343P.
 \end{itemize}
+
+\paragraph{Contrôles documentés dans les dépôts ingérés} \depot. Quatre dépôts décrivent un
+contrôle de faux positifs assez précisément pour qu'on le reprenne :
+\begin{itemize}
+  \item \textbf{Ordre de profondeur inversé} \cite{ruiconte2026}, README §Argus~V1. Si l'on
+  lit la pile de couches à l'envers, un modèle qui voit vraiment l'encre devrait tomber vers
+  une AUC de 0,5. Argus~V1 donne 0,53 sans retournement en profondeur à l'entraînement,
+  mais 0,79 avec ; l'auteur retire donc ce retournement de la recette. Avec cette
+  augmentation, le contrôle ne discrimine plus \deduit. L'auteur admet que les marques supplémentaires
+  restent des « pistes », faute de labels humains.
+  \item \textbf{Face aveugle} \cite{demeij2026}, README §Checks. Reader~V3 est passé sur la
+  face de lecture et sur la face opposée (couches inversées), avec la même règle de paire de
+  profondeurs. La face aveugle montre des taches dispersées mais aucune forme de lettre de la
+  rangée. Une reconstruction indépendante (ScrollFiesta), à 1,4~voxel médian de w040,
+  retrouve les mêmes lettres aux mêmes endroits. Le jugement reste visuel, sans seuil ni
+  métrique, et les labels sont posés par un auteur sur les cartes du modèle.
+  \item \textbf{\emph{Liveness gate}} \cite{limegs2026sdk}, design §11. Une carte est
+  déclarée vide ou dégénérée si l'écart p99~$-$~p50 est sous 0,05, si l'écart-type est sous 0,02, ou si
+  plus de 90~\% des pixels sont à moins de 0,05 de 0,5. La porte teste la forme de la
+  distribution, pas la présence d'encre : Reader~V3 lu dans le mauvais sens, aveugle aux
+  lettres, la passe quand même (README). C'est un garde-fou contre les cartes vides, pas
+  contre les faux positifs \deduit.
+  \item \textbf{Résultat négatif pré-enregistré} \cite{snyder2026}, \texttt{ink\_test.md}.
+  Le recalage des labels améliore la géométrie, mais sur w052 les relecteurs préfèrent la
+  carte d'encre du maillage \emph{original} 75 fois contre 31 (29~\% pour le recalé, IC95~\%
+  21–39~\%, $p$~=~2,3e-5) ; sur \pherc{0841}, aucun écart détectable ($\Delta$AUC~+0,011).
+  L'accord entre relecteurs est faible (kappa 0,12). Contre une référence indépendante (deux
+  scans plus résolus de \pherc{0139}), 18~\% des sommets sont à moins d'un voxel après
+  recalage contre 17~\% avant. C'est le seul test pré-enregistré du corpus, et le seul
+  résultat chiffré qui relie qualité de surface et qualité d'encre.
+\end{itemize}
+ink-sdk rapporte aussi, d'après les auteurs du prix \pherc{306B}, que le produit pixel à
+pixel de deux lecteurs (TRACE~v3B × A-hn) divise par deux le taux de faux positifs sur
+\pherc{0841} : 6,1~\% contre 12,1~\% pour v8-in seul, à AUC voisine (0,874 contre 0,840)
+\depot~\cite{limegs2026sdk}, README. Ces chiffres ne sont pas mesurés par ink-sdk.
+Ces contrôles ne sont pas standardisés : chacun a son modèle, son rouleau et son critère
+\deduit.
 
 %======================================================================
 \section{Résultats obtenus à ce jour}
@@ -573,27 +801,85 @@ Date & Rouleau & Lauréat & Méthode \commu \\
 2,4~µm (le prix du titre reste ouvert ; Paris~4 est en pause depuis le 26~oct.) ; 70~\%
 inférieurs de \pherc{172} déroulés.
 
+\paragraph{Lettres publiées en dépôt : \pherc{0306B}, enroulement w040} \depot. De Meij,
+Brown et Bazaka publient une rangée de cinq lettres sur l'enroulement w040 du bloc inférieur
+de \pherc{0306B} (scan à 8,64~µm), avec segments, labels, prédictions brutes et code
+\cite{demeij2026}, README §The letters :
+\begin{itemize}
+  \item χ et θ « sûres », π, λ et γ « incertaines » ; chaque lettre mesure environ 2,2–2,7 ×
+  2,7–3,2~mm ;
+  \item surface : spiral fit Lasagna accroché à la prédiction m7 ; continuation w041 collée
+  avec un résidu médian d'environ 2~voxels (18~µm) ;
+  \item encre : Reader~V3 seul, à plusieurs profondeurs, sur la face de lecture et sur la face
+  aveugle ; une reconstruction indépendante retrouve les lettres (§\ref{sec:validation}).
+\end{itemize}
+Les auteurs ne revendiquent pas de lecture (« This is not a reading », README §Limits). La
+continuation de droite n'est pas une surface nouvelle : la reconstruction indépendante y a
+trouvé la feuille voisine. Il s'agit du même rouleau que le prix First Letters du 2~nov., mais
+le dépôt ne dit pas si ce sont les mêmes lettres \deduit. Sur les autres surfaces automatiques
+ingérées (4 rouleaux de spiral-tracks, 173 patchs de first-letters, 8 rouleaux d'HerculeX),
+aucune lettre n'est revendiquée \depot.
+
 %======================================================================
 \section{Synthèse : verrous et pistes pour Elder-scrolls}
 %======================================================================
 
 \begin{table}[h]
 \centering\small
-\begin{tabularx}{\linewidth}{@{}p{3.1cm}LL@{}}
+\begin{tabularx}{\linewidth}{@{}p{2.9cm}LL@{}}
 \toprule
 Verrou & État de l'art & Ce qui manque \\
 \midrule
-Signal d'encre à 8–9~µm & Reader V3 (AUC 0,92 sur 0841 tenu à l'écart \commu) ; encre métallique bien visible \lu ; relief perdu au-delà d'environ 1~µm en profilométrie \lu & Mesure en CT réel de la perte de signal ; nature du signal exploité à 9~µm ; teneur en plomb par rouleau \\
-Segmentation & Déroulage complet de 1667, semi-automatique \lu ; spirale + Lasagna ; champs d'enroulement & Zones fusionnées ou compressées, kolleseis, raccords en $z$ ; vérité terrain indépendante \\
-Aplatissement & ABF, SLIM, Lasagna ; métriques Str/AD/$L^2$ & Lien entre distorsion et lisibilité \\
-Résolution & Distillation 2,4→9~µm, \texttt{scan\_transfer} \commu & Aucune super-résolution entraînée ; pas de comparaison SR contre distillation \\
-Transfert entre rouleaux & Pseudo-labels denses \commu ; fragments → rouleaux échoue & Explication des échecs (« encres différentes » : composition ?) \\
-Validation & Lecture inversée, ensembles, modalité indépendante \lu{} & Calibration, incertitude, protocole standard \\
+Signal d'encre à 8–9~µm & Reader V3 (AUC 0,92 sur 0841 tenu à l'écart \commu) ; encre métallique bien visible \lu ; relief perdu au-delà d'environ 1~µm en profilométrie \lu ; Argus~V1 (rendus poolés) perd en natif \depot & Courbe « métrique d'encre selon la résolution » sur un même rouleau scanné à 2,4 et 7,9–9~µm ; nature du signal exploité à 9~µm ; teneur en plomb par rouleau \\
+Comparer les lecteurs & Rectina~m4, Argus~V2, ink-bench : +0,005 à +0,01 d'AUC annoncés \depot & Protocole commun (segments, labels, runner, fenêtres) ; graines et intervalles de confiance ; lisibilité (lettres, CER) comme métrique \\
+Segmentation & Déroulage complet de 1667, semi-automatique \lu ; spirale difféomorphe \lu ; HerculeX, winding-field, ply-layers \depot & Métrique de « bonne spire » sans maillage d'expert ; banc de surface commun ; zones pressées, kolleseis \\
+Surface → encre & Un seul résultat chiffré, négatif (label-snap) \depot & Quel critère géométrique prédit la lisibilité \\
+Aplatissement & ABF, SLIM, Lasagna ; masse-ressort depuis 2004 \lu ; métriques Str/AD/$L^2$ & Métrique commune sur segments 8–9~µm ; lien entre distorsion et lisibilité \\
+Résolution & Distillation 2,4→9~µm, \texttt{scan\_transfer} \commu & Aucune super-résolution entraînée ; pas de comparaison SR contre distillation ; mesure d'hallucination \\
+Transfert entre rouleaux & Pseudo-labels denses \commu ; affinage natif (Argus~V2) \depot ; fragments → rouleaux échoue & Évaluation sur rouleau entièrement tenu à l'écart ; matrice rouleau × énergie × résolution \\
+Validation & Ordre inversé, face aveugle, \emph{liveness gate}, test pré-enregistré \depot ; modalité indépendante \lu & Contrôles standardisés et chiffrés ; calibration ; témoin d'encre connue à 8–9~µm ; faux positifs par type de structure \\
 Auto-supervisé 3D & dinovol \commu & Aucun article dans la base \\
 \bottomrule
 \end{tabularx}
-\caption{Verrous du domaine au 15 novembre 2026.}
+\caption{Verrous du domaine au 17 novembre 2026. La colonne « Ce qui manque » reprend
+les entrées de \nolinkurl{gaps.md} (premier passage, 45 fiches).}
 \end{table}
+
+\paragraph{Ce que dit la carte des gaps.} \nolinkurl{gaps.md} (premier passage du 17~nov., sur
+45 fiches) range les manques en huit familles : signal d'encre et résolution, comparabilité
+des métriques d'encre, faux positifs et contrôles, géométrie, transfert de domaine, labels
+rares et pré-entraînement, reproductibilité, papyrologie. Trois constats structurent les
+autres \deduit :
+\begin{itemize}
+  \item \textbf{rien n'est comparable entre sources} : aucun groupe de \texttt{benchmarks.csv}
+  ne réunit deux papiers, et aucune case « même rouleau, deux résolutions, même métrique »
+  n'est remplie ; la géométrie quantitative se concentre sur Paris~4 ;
+  \item \textbf{les mesures sur rouleaux viennent des dépôts}, donc auto-déclarées et sans
+  reproduction tierce ; plusieurs gaps reposent surtout sur eux ;
+  \item \textbf{les vides de la base} (auto-supervisé 3D, super-résolution sur papyrus,
+  calibration) sont des hypothèses : le corpus est petit et biaisé par sa bibliographie de
+  départ.
+\end{itemize}
+Les 8 articles de littérature ajoutés le même jour n'y figurent pas encore. Ils ne changent
+pas ces constats, mais en étayent deux : l'absence de métrique de distorsion et de
+segmentation date de 2004 (\S\ref{sec:genealogie}), et les rouleaux modèles existants sont
+tous à encre dense, ce qui confirme le manque d'un témoin à encre carbonée connue
+\deduit.
+
+\paragraph{Ce que cela implique pour Elder-scrolls} \deduit.
+\begin{itemize}
+  \item \textbf{Super-résolution 9~→~2,4~µm.} Les dépôts n'apportent aucun modèle de
+  super-résolution. Ils donnent deux indices utiles : un modèle entraîné sur des rendus
+  2,4~µm ramenés à 9~µm perd en scan natif (Argus~V1), et les traits restent environ deux
+  fois trop larges à 9,6~µm (ply-layers). Le gap reste entier ; la phase~0 du plan reste la
+  bonne première mesure.
+  \item \textbf{Encre.} Avant de comparer un lecteur à Reader~V3, figer le runner (ink-sdk),
+  les deux sens de profondeur et les segments ; sinon un écart de 0,01 d'AUC n'a pas de sens.
+  \item \textbf{Segmentation.} Le goulot n'est plus de produire de la surface (HerculeX : des
+  milliers de cm²) mais de prouver qu'elle est sur la bonne spire et sur la bonne face.
+  \item \textbf{Faux positifs.} Quatre contrôles existent et sont réutilisables tels quels :
+  ordre inversé, face aveugle, reconstruction indépendante, test pré-enregistré.
+\end{itemize}
 
 \paragraph{État du dépôt Elder-scrolls.} La documentation de contexte est complète. Le
 dépôt contient des scripts de téléchargement et d'aperçu, une recherche d'antériorité sur la
@@ -634,14 +920,25 @@ un gain limité pour l'étape~B ; le plan le reconnaît \deduit.
   transfert pourraient venir de la teneur en plomb, qui varie d'un fragment à l'autre (16 et
   84~µg/cm²) \cite{tack2016} \deduit. Une carte de « densité claire » par rouleau, croisée
   avec les scores des modèles, le testerait.
+  \item \textbf{Banc commun des lecteurs d'encre.} Faire tourner Reader~V3, Argus~V2 et
+  Rectina~m4 par ink-sdk, dans les deux sens de profondeur, sur les mêmes segments à labels
+  organisateurs (0841, 1447, et les 4 contrôles de Rectina), avec un intervalle de confiance
+  par bootstrap sur les segments \cite{limegs2026sdk,ruiconte2026,pellerano2026} \deduit. Le
+  même banc sert de témoin à la phase~0.
+  \item \textbf{Reprendre les contrôles des dépôts} sur toute carte produite par le projet :
+  AUC en ordre inversé (attendu proche de 0,5) \cite{ruiconte2026}, face aveugle avec la
+  même règle de profondeur \cite{demeij2026}, et un critère de succès pré-enregistré comme
+  chez \cite{snyder2026}.
 \end{enumerate}
 
 \paragraph{Lectures à compléter dans la base.}
 \begin{itemize}
   \item Le volet Methods et Extended Data de \cite{angelotti2026complete}, absent du texte
   extrait : énergie du scan, recette d'encre, éventuels tests à l'aveugle.
-  \item Les 8 articles restants de \nolinkurl{A_TELECHARGER.md}. En priorité Samko et al.\
-  2013 (\emph{Pattern Recognition}, cité par 5 papiers de la base) et la méthode de déroulage
+  \item Les 7 articles restants de \nolinkurl{A_TELECHARGER.md}. En priorité Samko et al.\
+  2013 (\emph{Pattern Recognition}, titre présent dans le texte de 12 papiers de la base,
+  probablement l'article détaillé qu'annonce \cite{mills2012}, dont Samko est co-autrice
+  \deduit) et la méthode de déroulage
   entièrement automatique d'ICDAR 2024 (LNCS 14806). Viennent ensuite les 5 rapports Zenodo
   restreints, dont trois sur la généralisation entre fragments et entre résolutions.
   \item Pré-entraînement auto-supervisé 3D et hallucination en reconstruction tomographique
@@ -657,9 +954,14 @@ un gain limité pour l'étape~B ; le plan le reconnaît \deduit.
 \begin{small}
 \begin{longtable}{@{}p{1.2cm}p{6.1cm}p{2.3cm}p{5cm}@{}}
 \toprule
-Année & Article & Type & Apport principal \\
+Année & Article ou source & Type & Apport principal \\
 \midrule
 \endhead
+\multicolumn{4}{@{}l}{\textit{Littérature (42 articles)}} \\
+2004 & Seales, Lin \cite{seales2004} & conférence & chaîne scan, texture, déroulage masse-ressort \\
+2005 & Lin, Seales \cite{lin2005} & conférence & contour actif 2,5D, aplatissement \\
+2012 & Mills et al. \cite{mills2012} & conférence & parchemin déroulé, confirmé physiquement \\
+2015 & Allegra et al. \cite{allegra2015} & conférence & déroulage 2D en CT médical \\
 2015 & Mocella et al. \cite{mocella2015} & journal & premières lettres en contraste de phase \\
 2015 & Barfod et al. \cite{barfod2015} & journal & rouleau métallique, segmentation manuelle \\
 2016 & Bukreeva et al. \cite{bukreeva2016} & preprint & lignes lues en XPCT, Philodème \\
@@ -667,6 +969,7 @@ Année & Article & Type & Apport principal \\
 2016 & Brun et al. \cite{brun2016} & journal & encre au plomb, ajout intentionnel \\
 2016 & Seales et al. \cite{seales2016} & journal & déroulage et lecture d'En-Gedi \\
 2017 & Bukreeva et al. \cite{bukreeva2017} & preprint & scorzatura virtuelle \\
+2017 & Baum et al. \cite{baum2017} & journal & dépliage de papyrus pliés (maquettes) \\
 2018 & Rosin et al. \cite{rosin2018} & journal & déroulage automatique de parchemins \\
 2018 & Stromer et al. \cite{stromer2018} & journal & contraste de six encres en CT \\
 2018 & Dahl et al. \cite{dahl2018} & conférence & surfaces en couches optimales \\
@@ -675,10 +978,12 @@ Année & Article & Type & Apport principal \\
 2019 & Wang et al. \cite{wang2019} & preprint & super-résolution GAN en micro-CT \\
 2019 & Tournié et al. \cite{tournie2019} & journal & SWIR hyperspectral, texte du verso \\
 2020 & Parker et al. \cite{parker2020} & preprint & mesure de distorsion d'aplatissement \\
+2020 & Mahnke et al. \cite{mahnke2020} & journal & papyrus pliés du Louvre, un mot lu \\
 2021 & Stabile et al. \cite{stabile2021} & journal & plateforme de déroulage, LSCM/ABF \\
 2021 & Dambrogio et al. \cite{dambrogio2021} & journal & dépliage automatique de lettres \\
 2021 & Atanasiu, Marthot-Santaniello \cite{atanasiu2021} & journal & rehaussement couleur pour la lecture \\
 2021 & Damiani \cite{damiani2021} & chapitre & revue : l'encre d'Herculanum \\
+2022 & Wang et al. \cite{wang2022thz} & journal & déroulage en tomographie THz \\
 2023 & Parsons et al. \cite{parsons2023} & preprint & jeu EduceLab-Scrolls, ink-ID \\
 2023 & Quattrini et al. \cite{quattrini2023} & preprint & vFFC pour l'encre \\
 2023 & Klenert et al. \cite{klenert2023} & preprint & extraction de surface orientable \\
@@ -689,11 +994,25 @@ Année & Article & Type & Apport principal \\
 2025 & Ceccarelli et al. \cite{ceccarelli2025} & journal & thermographie pulsée \\
 2025 & Foschiatti et al. \cite{foschiatti2025} & preprint & banc pédagogique en lumière visible \\
 2025 & Verde et al. \cite{verde2025} & conférence & radar sub-THz, adhésion au carton \\
+2025 & Hoffmann et al. \cite{hoffmann2025} & preprint & xénon dans l'encre carbonée (étude source) \\
 2026 & Angelotti et al. \cite{angelotti2026topo} & journal & encre et topographie \\
 2026 & Angelotti et al. \cite{angelotti2026complete} & preprint & déroulage et lecture complets de 1667 \\
 2026 & Seiler et al. \cite{seiler2026} & journal & rouleau modèle au plomb \\
 2026 & Korotetskyi, Haindl \cite{korotetskyi2026} & rapport & texture 3D sans apprentissage \\
-2026 & Hoffmann \cite{hoffmann2026} & poster & contraste au xénon \\
+2026 & Hoffmann \cite{hoffmann2026} & poster & contraste au xénon (reprend 2025) \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Sources communautaires ingérées (11, chiffres auto-déclarés)}} \\
+2026 & ruiconte \cite{ruiconte2026} & dépôt & Argus V1/V2, contrôle d'ordre inversé \\
+2026 & Pellerano \cite{pellerano2026} & preprint (GitHub) & Rectina m3/m4 \\
+2026 & nexusai-kevin \cite{nexusai2026} & dépôt & ink-bench, inférence à faible VRAM \\
+2026 & LimeGS \cite{limegs2026sdk} & dépôt & ink-sdk, reçus, \emph{liveness gate} \\
+2026 & Betka \cite{betka2026} & dépôt & HerculeX, déroulage de 8 rouleaux \\
+2026 & LimeGS \cite{limegs2026winding} & dépôt & winding-field, champ d'enroulement \\
+2026 & Gilman, Gilman \cite{gilman2026spiral} & dépôt & entrées de spiral fit, 4 rouleaux \\
+2026 & Gilman, Gilman \cite{gilman2026sheets} & dépôt & 173 patchs mono-feuille, aucune lettre \\
+2026 & De Vore \cite{devore2026} & dépôt & séparation des couches par les plis \\
+2026 & Snyder \cite{snyder2026} & dépôt & recalage des labels, résultat négatif \\
+2026 & de Meij et al. \cite{demeij2026} & dépôt & lettres de \pherc{0306B} w040 \\
 \bottomrule
 \end{longtable}
 \end{small}
@@ -735,6 +1054,25 @@ Année & Article & Type & Apport principal \\
 \bibitem{mou2023} F.~S.~Mou, T.~Ahmed. \emph{Ink Detection from Carbonized Herculaneum Papyri using Deep Learning}. ICCIT 2023, IEEE. \href{https://doi.org/10.1109/iccit60459.2023.10441240}{doi:10.1109/iccit60459.2023.10441240}.
 \bibitem{perino2024} M.~Perino, L.~Pronti, C.~Moffa, M.~Rosellini, A.~C.~Felici. \emph{New Frontiers in the Digital Restoration of Hidden Texts in Manuscripts: A Review of the Technical Approaches}. Heritage 7:683–696, 2024. \href{https://doi.org/10.3390/heritage7020034}{doi:10.3390/heritage7020034}.
 \bibitem{verde2025} F.~Verde, S.~Ceccarelli, V.~Giliberti, F.~Vitucci, C.~Miliani, G.~Ranocchia, M.~Ortolani. \emph{Sub-terahertz Radar Imaging of Ancient Herculaneum Papyrus Scrolls reveals Adhesion to Substrate after Unrolling}. IRMMW-THz 2025, IEEE. \href{https://doi.org/10.1109/irmmw-thz61557.2025.11319600}{doi:10.1109/irmmw-thz61557.2025.11319600}.
+\bibitem{seales2004} W.~B.~Seales, Y.~Lin. \emph{Digital Restoration Using Volumetric Scanning}. JCDL '04, Tucson, Arizona, USA, June 7-11, 2004. \href{https://doi.org/10.1145/996350.996380}{doi:10.1145/996350.996380}.
+\bibitem{lin2005} Y.~Lin, W.~B.~Seales. \emph{Opaque Document Imaging: Building Images of Inaccessible Texts}. Proceedings of the Tenth IEEE International Conference on Computer Vision (ICCV'05), 2005. \href{https://doi.org/10.1109/iccv.2005.182}{doi:10.1109/iccv.2005.182}.
+\bibitem{mills2012} D.~Mills, O.~Samko, P.~Rosin, K.~Thomas, T.~Wess, G.~Davis. \emph{Apocalypto: Revealing the unreadable}. Proc. SPIE 8506, 85060A (2012). \href{https://doi.org/10.1117/12.928917}{doi:10.1117/12.928917}.
+\bibitem{allegra2015} D.~Allegra, E.~Ciliberto, P.~Ciliberto, F.~L.~M.~Milotta, G.~Petrillo, F.~Stanco, C.~Trombatore. \emph{Virtual unrolling using X-ray computed tomography}. 2015 23rd European Signal Processing Conference (EUSIPCO), 2015. \href{https://doi.org/10.1109/eusipco.2015.7362908}{doi:10.1109/eusipco.2015.7362908}.
+\bibitem{baum2017} D.~Baum, N.~Lindow, H.-C.~Hege, V.~Lepper, T.~Siopi, F.~Kutz, K.~Mahlow, H.-E.~Mahnke. \emph{Revealing hidden text in rolled and folded papyri}. Applied Physics A, 2017. \href{https://doi.org/10.1007/s00339-017-0808-6}{doi:10.1007/s00339-017-0808-6}.
+\bibitem{mahnke2020} H.-E.~Mahnke, T.~Arlt, D.~Baum, H.-C.~Hege, F.~Herter, N.~Lindow, I.~Manke, T.~Siopi, E.~Menei, M.~Etienne, V.~Lepper. \emph{Virtual unfolding of folded papyri}. Journal of Cultural Heritage 41 (2020) 264-269. \href{https://doi.org/10.1016/j.culher.2019.07.007}{doi:10.1016/j.culher.2019.07.007}.
+\bibitem{wang2022thz} T.~Wang, K.~Wang, K.~Zou, S.~Shen, Y.~Yang, M.~Zhang, Z.~Yang, J.~Liu. \emph{Virtual unrolling technology based on terahertz computed tomography}. Optics and Lasers in Engineering 151 (2022) 106924. \href{https://doi.org/10.1016/j.optlaseng.2021.106924}{doi:10.1016/j.optlaseng.2021.106924}.
+\bibitem{hoffmann2025} H.~Hoffmann, T.~Arlt, A.~Hilger, D.~Wallacher, I.~Manke. \emph{Synchrotron X-ray Mapping of Xenon Sorption in Carbon Ink on Papyrus}. ChemRxiv, 2025 (preprint). \href{https://doi.org/10.26434/chemrxiv-2025-x4zvc}{doi:10.26434/chemrxiv-2025-x4zvc}.
+\bibitem{betka2026} A.~Betka. \emph{HerculeX: virtual unwrapping of whole Herculaneum scrolls on Apple silicon}. Dépôt GitHub, 2026, commit eace0b2. \url{https://github.com/adambetka2/HerculeX/tree/eace0b23ac4e9f95d10d185f08be743f0d0af961}.
+\bibitem{demeij2026} D.~de Meij, N.~Brown, N.~Bazaka. \emph{PHerc. 0306B, winding w040: a row of letters, with segments, labels and predictions}. Dépôt GitHub, 2026, commit 9aee0e6. \url{https://github.com/daviddemeij/pherc0306b-partial-letters-w040/tree/9aee0e66f3d7c437329104ec961623c4f0d181a5}.
+\bibitem{devore2026} V.~De Vore. \emph{vesuvius-ply-layers: separating pressed papyrus layers by recto/verso fibre plies in Herculaneum scroll CT}. Dépôt GitHub, 2026, commit 9267573. \url{https://github.com/Victoria-TechNexus/vesuvius-ply-layers/tree/92675735c2f98fbf295a13dc9c85a11bc2e79c7f}.
+\bibitem{gilman2026sheets} J.~Gilman, A.~Gilman. \emph{first-letters-clean-sheets: 173 self-traced clean single-sheet surface patches on 13 First Letters-eligible Herculaneum scrolls}. Dépôt GitHub, 2026, commit 978e8d5. \url{https://github.com/Ahggggg/first-letters-clean-sheets/tree/978e8d5e2e26eb195dd848c57a32830e875435a3}.
+\bibitem{gilman2026spiral} J.~Gilman, A.~Gilman. \emph{Spiral-fit inputs and first windings for PHerc. 1203, 1218, 1545 and 0846B}. Dépôt GitHub, 2026, commit b6062e1. \url{https://github.com/Ahggggg/spiral-tracks-four-scrolls/tree/b6062e13cd6c9a0d8beccb0e946e9afeb120cd7c}.
+\bibitem{limegs2026sdk} LimeGS. \emph{ink-sdk: standalone inference SDK for Vesuvius ink-detection models with receipts and a liveness gate}. Dépôt GitHub, 2026, commit 19d39cb. \url{https://github.com/LimeGS/ink-sdk/tree/19d39cbea85bca74a30e496b0488575f55f6d88d}.
+\bibitem{limegs2026winding} LimeGS. \emph{winding-field: continuous winding-coordinate fields over predicted scroll surfaces and reproducible evaluation}. Dépôt GitHub, 2026, commit 1e27244. \url{https://github.com/LimeGS/winding-field/tree/1e2724412e3df52a8d9cd6ddc2bbafcf4586c465}.
+\bibitem{nexusai2026} nexusai-kevin. \emph{vesuvius-ink-bench: volumetric ink-detection benchmarking and low-VRAM inference for Herculaneum scroll CT}. Dépôt GitHub, 2026, commit 6bd16ff. \url{https://github.com/nexusai-kevin/vesuvius-ink-bench/tree/6bd16ff8936575cfa7db1b4a54b2555d5d2d820a}.
+\bibitem{pellerano2026} G.~Pellerano. \emph{Rectina m3 and m4, dense ink readers for Herculaneum papyri rebuilt on current renders}. GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina), 2026, commit 7cb4e44 (preprint non relu). \url{https://github.com/evilaliv3/vesuvius-challenge-pipeline/tree/7cb4e44/results/db27c806-rectina}.
+\bibitem{ruiconte2026} ruiconte. \emph{ink-swarm: Argus V1 and V2 ink-detection checkpoints for Herculaneum scroll surface volumes}. Dépôt GitHub, 2026, commit d38015a. \url{https://github.com/ruiconte/ink-swarm/tree/d38015a0ba09a009bdf64bc8535877a041a7edda}.
+\bibitem{snyder2026} A.~Q.~Snyder. \emph{scroll-label-snap: snapping approximate recto-surface labels back onto the papyrus surface in Herculaneum scroll CT}. Dépôt GitHub, 2026, commit e03c4c0. \url{https://github.com/aqsnyder/scroll-label-snap/tree/e03c4c088c6f27e6edaf0502015a863f505e772b}.
 \bibitem{brief} Projet Elder-scrolls. \emph{Community brief: Vesuvius Challenge, Aug–Nov 2026} (\nolinkurl{docs/COMMUNITY_BRIEF.md}) et \emph{Prior work: super-resolution from $\sim$9~µm to 2.4~µm scans} (\nolinkurl{research/prior_work_super_resolution.md}) et \emph{Plan: restoring 9~µm scans toward 2.4~µm quality} (\nolinkurl{research/plan_super_resolution.md}), 15~nov.~2026. Sources primaires : Discord du Vesuvius Challenge, \url{https://scrollprize.substack.com}, \url{https://github.com/ScrollPrize/villa}.
 \end{thebibliography}
 

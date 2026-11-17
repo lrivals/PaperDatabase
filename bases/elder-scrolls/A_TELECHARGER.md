@@ -1,12 +1,12 @@
 # Elder-scrolls — articles à télécharger manuellement
 
-État au 2026-11-17 (8 PDF reçus le 17 novembre, dans `inbox/` ; les 9 du 15 novembre sont ingérés et fichés). Copie de travail
+État au 2026-11-17 (les 17 PDF reçus les 15 et 17 novembre sont ingérés et fichés ; 52 papiers dans la base). Copie de travail
 du doc partagé <https://claude.ai/artifact/WKPXpWQHNtfWwSnFnenRaR>.
 
 ## Mode d'emploi
 
 7 articles restent à récupérer à la main : 2 sous paywall probable et 5 rapports Zenodo
-restreints. 8 PDF reçus le 17 novembre attendent l'ingestion.
+restreints.
 
 1. Télécharger le PDF depuis le lien DOI (navigateur, accès institutionnel). Aucun
    contournement de paywall.
@@ -43,10 +43,10 @@ une seule demande peut suffire.
 | Novel Findings in Ink Detection for Carbonized Herculaneum Papyri Using Machine Learning | Adam Dzieszkowski | 2026-03-16 | restreint | [10.5281/zenodo.19054054](https://doi.org/10.5281/zenodo.19054054) | `zenodo.19054054.pdf` |
 | Cross-Resolution Ink Signal Analysis and Consensus Filtering for Herculaneum Scroll CT Data | Adam Dzieszkowski | 2026-02-23 | restreint | [10.5281/zenodo.18742319](https://doi.org/10.5281/zenodo.18742319) | `zenodo.18742319.pdf` |
 
-## Reçus le 2026-11-17, dans `inbox/`, à ingérer
+## Reçus le 2026-11-17 : ingérés et fichés
 
-PDF et `.meta.json` déposés (métadonnées OpenAlex pour Baum 2017, relevées sur la première page pour les autres). Reste
-`bin/pdb ingest`, puis `/paper-fiche` pour chacun. Années corrigées : Wang 2022 et
+Fiche `done` pour les 8. Tous qualitatifs (`benchmarks: none`) sauf Wang 2022 : 2 lignes
+(PSNR 14,05 dB, SSIM 0,387 contre l'image de transmission THz, §4.2). Années corrigées : Wang 2022 et
 Mahnke 2020 (2021 et 2019 = mise en ligne).
 
 | Titre | Auteurs | Année | Venue | DOI | Fichier |

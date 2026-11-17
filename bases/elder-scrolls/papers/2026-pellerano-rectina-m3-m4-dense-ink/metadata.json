@@ -1,0 +1,39 @@
+{
+  "id": "2026-pellerano-rectina-m3-m4-dense-ink",
+  "title": "Rectina m3 and m4, dense ink readers for Herculaneum papyri rebuilt on current renders",
+  "authors": [
+    {
+      "given": "Giovanni",
+      "family": "Pellerano"
+    }
+  ],
+  "year": 2026,
+  "venue": "GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina)",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://github.com/evilaliv3/vesuvius-challenge-pipeline/tree/7cb4e44/results/db27c806-rectina",
+  "type": "preprint",
+  "axes": [
+    "virtual-unwrapping",
+    "papyrology"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina), DOI None) : type journal/conference à préciser",
+      "axes déduits automatiquement, à confirmer dans /paper-fiche",
+      "sections numérotées non détectées : IV, V — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "todo"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "id": "2017-baum-revealing-hidden-text-rolled-folded",
+  "title": "Revealing hidden text in rolled and folded papyri",
+  "authors": [
+    {
+      "given": "Daniel",
+      "family": "Baum"
+    },
+    {
+      "given": "Norbert",
+      "family": "Lindow"
+    },
+    {
+      "given": "Hans‐Christian",
+      "family": "Hege"
+    },
+    {
+      "given": "Verena",
+      "family": "Lepper"
+    },
+    {
+      "given": "Tzulia",
+      "family": "Siopi"
+    },
+    {
+      "given": "Frank",
+      "family": "Kutz"
+    },
+    {
+      "given": "Kristin",
+      "family": "Mahlow"
+    },
+    {
+      "given": "H.‐E.",
+      "family": "Mahnke"
+    }
+  ],
+  "year": 2017,
+  "venue": "Applied Physics A",
+  "doi": "10.1007/s00339-017-0808-6",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1007/s00339-017-0808-6",
+  "type": "journal",
+  "axes": [
+    "virtual-unwrapping",
+    "mesh-flattening",
+    "papyrology"
+  ],
+  "tags": [
+    "papyrus",
+    "virtual-unfolding",
+    "micro-CT",
+    "mass-spring",
+    "moving-least-squares",
+    "mockup",
+    "iron-gall-ink"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (Applied Physics A, DOI 10.1007/s00339-017-0808-6) : type journal/conference à préciser"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

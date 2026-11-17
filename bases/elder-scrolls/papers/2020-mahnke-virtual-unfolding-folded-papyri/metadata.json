@@ -1,0 +1,87 @@
+{
+  "id": "2020-mahnke-virtual-unfolding-folded-papyri",
+  "title": "Virtual unfolding of folded papyri",
+  "authors": [
+    {
+      "given": "Heinz-Eberhard",
+      "family": "Mahnke"
+    },
+    {
+      "given": "Tobias",
+      "family": "Arlt"
+    },
+    {
+      "given": "Daniel",
+      "family": "Baum"
+    },
+    {
+      "given": "Hans-Christian",
+      "family": "Hege"
+    },
+    {
+      "given": "Felix",
+      "family": "Herter"
+    },
+    {
+      "given": "Norbert",
+      "family": "Lindow"
+    },
+    {
+      "given": "Ingo",
+      "family": "Manke"
+    },
+    {
+      "given": "Tzulia",
+      "family": "Siopi"
+    },
+    {
+      "given": "Eve",
+      "family": "Menei"
+    },
+    {
+      "given": "Marc",
+      "family": "Etienne"
+    },
+    {
+      "given": "Verena",
+      "family": "Lepper"
+    }
+  ],
+  "year": 2020,
+  "venue": "Journal of Cultural Heritage 41 (2020) 264-269",
+  "doi": "10.1016/j.culher.2019.07.007",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1016/j.culher.2019.07.007",
+  "type": "journal",
+  "axes": [
+    "papyrology",
+    "virtual-unwrapping",
+    "mesh-flattening",
+    "ct-imaging"
+  ],
+  "tags": [
+    "papyrus",
+    "folded-papyri",
+    "virtual-unfolding",
+    "micro-ct",
+    "as-rigid-as-possible",
+    "coptic",
+    "louvre"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : Journal of Cultural Heritage 41 (2020) 264-269) : type journal/conference à préciser",
+      "ligatures perdues à l'extraction : 17 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

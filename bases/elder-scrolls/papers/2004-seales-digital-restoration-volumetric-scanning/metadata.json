@@ -1,0 +1,48 @@
+{
+  "id": "2004-seales-digital-restoration-volumetric-scanning",
+  "title": "Digital Restoration Using Volumetric Scanning",
+  "authors": [
+    {
+      "given": "W. Brent",
+      "family": "Seales"
+    },
+    {
+      "given": "Yun",
+      "family": "Lin"
+    }
+  ],
+  "year": 2004,
+  "venue": "JCDL '04, Tucson, Arizona, USA, June 7-11, 2004",
+  "doi": "10.1145/996350.996380",
+  "arxiv_id": null,
+  "url": "https://doi.org/10.1145/996350.996380",
+  "type": "conference",
+  "axes": [
+    "virtual-unwrapping",
+    "mesh-flattening",
+    "ct-imaging"
+  ],
+  "tags": [
+    "mass-spring",
+    "papyrus-replica",
+    "ct-scan",
+    "layered-texture",
+    "foundational"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon arXiv (journal_ref : JCDL '04, Tucson, Arizona, USA, June 7-11, 2004) : type journal/conference à préciser",
+      "ligatures perdues à l'extraction : 21 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 4 fragment(s) non réparé(s) (« classi cation »…)",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

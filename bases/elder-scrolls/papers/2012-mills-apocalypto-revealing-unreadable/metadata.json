@@ -33,9 +33,17 @@
   "arxiv_id": null,
   "url": "https://doi.org/10.1117/12.928917",
   "type": "conference",
-  "axes": [],
+  "axes": [
+    "virtual-unwrapping",
+    "ct-imaging",
+    "ink-detection"
+  ],
   "tags": [
-    "parchment"
+    "parchment",
+    "iron-gall-ink",
+    "micro-ct",
+    "TDI",
+    "virtual-unrolling"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -43,14 +51,12 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "publié ailleurs selon arXiv (journal_ref : Proc. SPIE 8506, 85060A (2012)) : type journal/conference à préciser",
-      "aucun axe détecté : à classer dans /paper-fiche",
       "ligatures perdues à l'extraction : 9 mot(s) réparé(s) (lib/ligatures.py)",
       "ligatures perdues : 1 fragment(s) non réparé(s) (« classi cation »…)"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

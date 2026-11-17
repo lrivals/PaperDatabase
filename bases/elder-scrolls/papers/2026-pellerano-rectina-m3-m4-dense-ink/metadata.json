@@ -14,12 +14,20 @@
   "url": "https://github.com/evilaliv3/vesuvius-challenge-pipeline/tree/7cb4e44/results/db27c806-rectina",
   "type": "preprint",
   "axes": [
-    "virtual-unwrapping",
-    "papyrology"
+    "ink-detection",
+    "validation-fp",
+    "label-efficiency",
+    "domain-transfer"
   ],
   "tags": [
     "herculaneum",
-    "papyrus"
+    "papyrus",
+    "ink-reader",
+    "villa",
+    "rectina",
+    "reader-v3",
+    "auc",
+    "preprint-github"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -28,12 +36,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina), DOI None) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "sections numérotées non détectées : IV, V — leur texte est rattaché à la section précédente"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

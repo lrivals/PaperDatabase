@@ -1,108 +1,45 @@
-# Veille communauté — dépôts repérés dans « show and tell » (Discord Vesuvius Challenge)
+# Veille communauté — dépôts du canal « show and tell » (Discord Vesuvius Challenge)
 
-Relevé du 2026-11-17, fait à partir des README GitHub seuls. Ce sont des **dépôts
-communautaires** : non relus par les pairs, sans papier ni DOI, et tous les chiffres
-sont **auto-déclarés** (aucune reproduction indépendante). Ils ne sont pas ingérés dans
-`papers/` et n'ont pas de lignes dans `benchmarks.csv`, faute de PDF et de passage source
-vérifiable (`chunk_id`). Section source de chaque chiffre : le README du dépôt.
+Mis à jour le 2026-11-17. Les dépôts ci-dessous sont **ingérés dans le corpus** (type
+`repo`, sauf Rectina : article de 17 pages hébergé sur GitHub, type `preprint`). Pour
+chaque dépôt, le PDF ingéré est le README et les documents techniques principaux, rendus au
+commit indiqué dans le bandeau du PDF (images omises). Tout est **non relu par les pairs et
+auto-déclaré**. Fiche, chiffres et passages : `papers/<id>/fiche.md`, `bin/pdb bench --paper <id>`,
+`bin/pdb search "…" --paper <id>`.
 
-Non consulté : <https://journal.vesuvius.alive.monster/>, refusé par le réseau de la
-session cloud (proxy 403). À relire quand l'hôte sera autorisé.
+Extraction : PyMuPDF (`ok: false`). Les corps des tableaux markdown sont souvent aplatis,
+donc les lignes de `benchmarks.csv` viennent surtout de la prose (`confidence: medium`).
 
-## Vue d'ensemble
+Non consulté : <https://journal.vesuvius.alive.monster/>, refusé par le réseau de la session
+cloud (proxy 403).
 
-| Dépôt | Étape de la chaîne | Données | Matériel | Résultat principal (auto-déclaré) | Licence | Maturité |
-|---|---|---|---|---|---|---|
-| [nexusai-kevin/vesuvius-ink-bench](https://github.com/nexusai-kevin/vesuvius-ink-bench) | inférence encre volumique, banc de débit | PHerc0332 (L2) ; PHercParis4 seg. 20230702185753 (2,4 µm) | RTX 5080 | AUC 0,9546 ; F0.5 0,7903 à th = 0,5 ; ~2,5 Gio VRAM | MIT | 4 commits, 0 étoile |
-| [Victoria-TechNexus/vesuvius-ply-layers](https://github.com/Victoria-TechNexus/vesuvius-ply-layers) | séparation des couches par plis recto/verso, maillage, aplatissement | PHerc. Paris 4 à 9,6 µm, 6 tuiles 192×416×416 | T4 (Colab) | 99,6 % de surface sur papyrus vs 82,0 % (segment officiel 9971) | MIT | 34 commits, 0 étoile |
-| [ruiconte/ink-swarm](https://github.com/ruiconte/ink-swarm) | détection d'encre 2,5D (`ink_9um`), checkpoints Argus V1/V2 | 70 segments natifs (labels `domenicor046/reader-v2-labels`) ; test PHerc0841 w00 | n/r | V2 AUC 0,924 vs Reader V3 0,913 (PHerc0841 natif) | MIT (code et poids) | 4 commits, 0 étoile |
-| [adambetka2/HerculeX](https://github.com/adambetka2/HerculeX) | chaîne complète : feuillets → enroulement → aplatissement → encre → visionneuse | 8 rouleaux entiers sans maillage publié | MacBook Pro M1 Pro, 16 Go | 69 290 cm² aplatis ; 1,3–4,7 h CT → feuillet par rouleau | MIT | 6 commits, 2 forks |
+## Dépôts
 
-## Fiches courtes
+| paper_id | Dépôt (commit) | Étape | Résultat principal (auto-déclaré) | Réserve majeure |
+|---|---|---|---|---|
+| `2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink` | [nexusai-kevin/vesuvius-ink-bench](https://github.com/nexusai-kevin/vesuvius-ink-bench) (6bd16ff) | encre volumique 2,4 µm, inférence basse VRAM | AUC 0,9546 PHercParis4 ; 83 M voxels/s, ~2,5 Gio (RTX 5080) | seuil optimal choisi sur les labels d'évaluation ; une ROI ; fuite possible |
+| `2026-ruiconte-ink-swarm-argus-v1-v2` | [ruiconte/ink-swarm](https://github.com/ruiconte/ink-swarm) (d38015a) | encre `ink_9um`, Argus V1/V2 | V2 : AUC 0,928 vs 0,922 Reader V3 (PHerc0841 natif, 3 fenêtres) | écarts minces, pas d'IC ; V2 moins bon sur masques officiels |
+| `2026-pellerano-rectina-m3-m4-dense-ink` | [evilaliv3/…/db27c806-rectina](https://github.com/evilaliv3/vesuvius-challenge-pipeline/tree/7cb4e44/results/db27c806-rectina) (7cb4e44) | encre dense, Rectina m3/m4 | m4 : AUC moy. 0,8637 vs 0,8547 Reader v3 (8 unités) ; > v3 sur 10/14 | une graine, pas d'ablation ; gain sous le bruit annoncé (0,013) |
+| `2026-snyder-scroll-label-snap-snapping-approximate` | [aqsnyder/scroll-label-snap](https://github.com/aqsnyder/scroll-label-snap) (e03c4c0) | qualité des labels de surface (snapping) | géométrie : 90 % de préférence ; **encre : original préféré 75 vs 31** (pré-enregistré) | résultat négatif sur l'encre ; test de dérive circulaire |
+| `2026-de-vore-vesuvius-ply-layers-separating-pressed` | [Victoria-TechNexus/vesuvius-ply-layers](https://github.com/Victoria-TechNexus/vesuvius-ply-layers) (9267573) | séparation des couches pressées par plis recto/verso | 99,6 % sur papyrus vs 82,0 % (segment officiel) | métrique de brillance favorable ; une couche, Paris 4 |
+| `2026-betka-herculex-virtual-unwrapping-whole-herculaneum` | [adambetka2/HerculeX](https://github.com/adambetka2/HerculeX) (eace0b2) | chaîne complète, enroulement par optimisation entière | 8 rouleaux, 69 290 cm² ; ~2 h CT → feuillet (M1 Pro) | aucune vérification de spire sur les 8 rouleaux |
+| `2026-limegs-winding-field-continuous-winding-coordinate` | [LimeGS/winding-field](https://github.com/LimeGS/winding-field) (1e27244) | champ continu de numéro d'enroulement + banc gelé | dérive intrafibre 0,155 feuillet (0,5–1,5 mm) → 1,336 (30–45 mm) | couverture 36,8 % ; décompte physique non démontré |
+| `2026-gilman-spiral-fit-inputs-first-windings` | [Ahggggg/spiral-tracks-four-scrolls](https://github.com/Ahggggg/spiral-tracks-four-scrolls) (b6062e1) | entrées de spiral fit pour 4 rouleaux | fit de 8 000 pas sur 1203/1218/1545/0846B, 4,34 USD ; snap 89–100 % | aucune lettre ; snap = cohérence avec m7, pas exactitude |
+| `2026-gilman-first-letters-clean-sheets-173` | [Ahggggg/first-letters-clean-sheets](https://github.com/Ahggggg/first-letters-clean-sheets) (978e8d5) | 173 patchs mono-feuille sur 13 rouleaux | 355 cm², tracés sur portable ; aucune lettre | monocouche non prouvée ; score on-sheet AUC 0,875 |
+| `2026-de-meij-pherc-0306b-winding-w040-row` | [daviddemeij/pherc0306b-partial-letters-w040](https://github.com/daviddemeij/pherc0306b-partial-letters-w040) (9aee0e6) | lettres trouvées, PHerc. 0306B w040 | 5 lettres (χ, θ sûres ; π, λ, γ incertaines), reconstruction ScrollFiesta indépendante | labels posés sur les cartes du modèle ; pas de métrique |
 
-### vesuvius-ink-bench (nexusai-kevin)
+## Lecture transversale (déduit)
 
-- **Problème.** Faire tourner le modèle d'encre volumique canonique sur un GPU grand public
-  en streaming OME-Zarr, sans artefacts de couture entre tuiles.
-- **Méthode.** ResNet3D-152 + décodeur 3D FPN (checkpoint `scrollprize/ink_canonical_2um`,
-  `r152_3ddec_v2_l5_epoch13.ckpt`), bf16 ; fusion séparable 3D avec fenêtre de Hann en Z ;
-  cache LRU de chunks en RAM. CLI `vesuvius-infer`, `vesuvius-bench`.
-- **Chiffres.** 83,2 M voxels/s (79,3 tuiles/s) ; VRAM 2 506 Mio alloués ; PHercParis4 :
-  AUC 0,9546, F0.5 / Dice / IoU = 0,7903 / 0,8271 / 0,7052 à th = 0,50 ; meilleur F0.5 0,8724
-  à th = 0,70 ; réduction de discontinuité de couture « 99,42 % ».
-- **Limites.** Seuil 0,70 choisi sur les données d'évaluation (optimiste) ; le 99,42 % ne
-  colle pas avec ses propres valeurs (1 − 0,3466/122,4066 ≈ 99,72 %) et la métrique n'est
-  pas définie ; un seul GPU, pas de variance. Le segment 20230702185753 est un segment
-  historique très étudié : fuite possible dans l'entraînement du checkpoint, non discutée.
-- **Pertinence.** Recette d'inférence basse VRAM réutilisable ; pas de contribution de
-  modèle.
-
-### vesuvius-ply-layers (Victoria-TechNexus)
-
-- **Problème.** Séparer des couches de papyrus pressées l'une contre l'autre, là où la
-  segmentation saute d'une spire à l'autre.
-- **Méthode.** Tenseur de structure → U-Net 3D (feuillet, recto, verso) → ~50 000 pistes de
-  crête par tuile, regroupées en feuillets → rayons entre feuillets voisins pour étiqueter
-  l'ordre des plis (même couche, couches distinctes, délamination) → numérotation, couture
-  des tuiles (recouvrement 40 voxels) → maillage avec 8 auto-contrôles → aplatissement et
-  21 tranches pour l'encre (modèle externe).
-- **Chiffres** (6 tuiles, vs segment officiel 9971). Sur papyrus 99,6 % vs 82,0 % ; même
-  feuillet 99,5 % vs 97,4 % ; franchissements de couche 0,22 vs 0,19 / 100 paires ; score
-  d'encre +0,73 vs +0,80 (run antérieur, une couche). Maillage : 6/8 contrôles passés ;
-  feuillet aplati 997×615 px (~9,6×5,9 mm). T4 : 13–18 min par tuile, ~9 Go RAM.
-- **Limites.** Couverture non égale (91 % officiel vs 87 %) ; métriques conçues par
-  l'auteur ; encre moins bonne que l'officiel ; réglé sur Paris 4 seul ; doublons de
-  couche résiduels (pire cas 49 %) ; phase 10 dépend de code non fourni.
-- **Pertinence.** Seule approche du lot qui exploite explicitement l'orientation des fibres
-  recto/verso pour lever l'ambiguïté des couches collées : piste à rapprocher des fibres
-  utilisées par le spiral fitting (arxiv-2512.04927).
-
-### ink-swarm / Argus (ruiconte)
-
-- **Problème.** Améliorer Reader V3 (détection d'encre `ink_9um`) sans halluciner de
-  texture.
-- **Méthode.** `vesuvius_unet_3d_stem_2d` (~34,6 M paramètres, fenêtre 17 couches).
-  Argus V1 : soupe de poids de 8 fine-tunings (2 LR × 4 graines) depuis
-  `domenicor046/ink9um-dense`, pseudo-labels denses, BCE lissée + Dice. Argus V2 :
-  fine-tuning de Reader V3 (12 000 it., tuiles 256 px). Évaluation : TTA ×8, seuil à 80 %
-  de rappel propre à chaque modèle ; contrôle « profondeur inversée » (AUC ≈ 0,5 attendue).
-- **Chiffres.** PHerc0841 natif : V2 AUC 0,924 vs Reader V3 0,913 ; PHerc1447 w058 : 0,854 vs
-  0,856 (Reader V3 devant) ; masques de validation officiels : V1 0,926, Reader V3 0,907,
-  V2 0,898 ; profondeur inversée V1 : 0,530.
-- **Limites.** Écarts faibles sans intervalles ni variance ; seuils propres à chaque modèle,
-  donc précision équilibrée non comparable ; recouvrement possible entre volumes
-  d'entraînement (PHerc0139, 0814) et masques de validation, non expliqué.
-- **Pertinence.** Le contrôle par profondeur inversée est une idée simple à reprendre contre
-  les faux positifs ; la soupe de poids est un gain à bas coût.
-
-### HerculeX (Adam Betka)
-
-- **Problème.** Dérouler des rouleaux entiers sur une seule machine, sans GPU NVIDIA.
-- **Méthode.** CT lu à ~19 µm/voxel, cellules de 8 voxels : tenseur de structure et pics
-  d'intensité → nœuds de feuillet (kernels Metal) ; graphe de feuillets (normales à 30°,
-  rayons vers la spire suivante, coupe min pour orienter) ; numéro d'enroulement par
-  optimisation entière L1 (simplexe réseau, 8 solves repondérés, arêtes stables seules) ;
-  aplatissement en grilles tifxyz, comblement harmonique ; encre par Reader V3
-  (Metal + Neural Engine) ; visionneuse WebGL avec annotation.
-- **Chiffres.** 8 rouleaux (PHerc0125, 0175B, 0191, 0358, 0813, 0826, 0846B, 1203) :
-  69 290 cm² aplatis, 39 428 cm² en mosaïques ≥ 4 cm² ; 81–86 % des paires voisines à
-  ±10 % du pas ; PHerc0343 : 91 % des nœuds des *First Letters* atteints, 89 % du signal
-  d'encre conservé vs maillage publié ; 1,3–4,7 h (géométrie) + 1,6–5,0 h (encre) par
-  rouleau ; pic 3–8 Go.
-- **Limites.** Pas de jeu de test géométrique séparé ; sur les 8 rouleaux, rien ne vérifie
-  qu'un morceau est sur la bonne spire (l'auteur le dit) ; mosaïques pouvant joindre deux
-  spires ; « isométrique » et « optimalité prouvée » à prendre avec prudence.
-- **Pertinence.** Le plus ambitieux du lot ; la formulation de l'enroulement en
-  optimisation entière exacte est à comparer à ThaumatoAnakalyptor et au spiral fitting.
-
-## Ce que ça apporte à la base
-
-- **Comparaisons à ne pas faire.** Les AUC d'encre ci-dessus ne sont pas comparables
-  entre dépôts (segments, résolution, seuils et labels différents), ni avec
-  arxiv-2603.27698 ou arxiv-2308.05070.
-- **Gaps confirmés.** Aucune évaluation indépendante commune des modèles d'encre
-  communautaires ; aucune métrique de « bonne spire » sur des rouleaux sans vérité
-  terrain ; séparation des couches collées encore ouverte.
-- **Code cité.** Reader V3 (Domenico Russo), checkpoints Hugging Face
-  `scrollprize/ink_canonical_2um`, `domenicor046/*`, `ruiconte/*`, et le dépôt
-  [ScrollPrize/villa](https://github.com/ScrollPrize/villa).
+- **Encre.** Trois nouveaux lecteurs (Argus, Rectina m3/m4, banc ink-bench) annoncent des
+  gains sur Reader V3 de l'ordre de 0,005–0,01 AUC, sans intervalle de confiance, sur des
+  unités, résolutions et labels différents : **non comparables entre eux** ni avec
+  arxiv-2603.27698 / arxiv-2308.05070. Deux contrôles à reprendre : l'ordre de profondeur
+  inversé (AUC → 0,5 attendu, ink-swarm) et la face aveugle (de Meij).
+- **Résultat négatif utile.** Le snapping améliore la géométrie des labels mais dégrade
+  la lisibilité de l'encre (test pré-enregistré, scroll-label-snap).
+- **Géométrie sans vérité terrain.** HerculeX, winding-field, spiral-tracks et
+  first-letters produisent beaucoup de surface sur des rouleaux sans maillage publié, mais
+  aucun ne sait mesurer la « bonne spire » hors des 3–4 rouleaux de référence : gap à
+  reporter dans `gaps.md`.
+- **Lettres.** Seul le dépôt de Meij revendique des lettres (PHerc. 0306B w040) ; les 12
+  enroulements de spiral-tracks et les 355 cm² de first-letters n'en montrent aucune.

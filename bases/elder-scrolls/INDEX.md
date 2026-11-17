@@ -2,7 +2,7 @@
 
 <!-- GÉNÉRÉ par bin/reindex.py — ne pas éditer à la main -->
 
-**34 papiers, 0 fiches à faire.**
+**44 papiers, 0 fiches à faire.**
 
 Un papier peut apparaître sous plusieurs axes.
 
@@ -17,6 +17,8 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
+| [2026-betka-herculex-virtual-unwrapping-whole-herculaneum](papers/2026-betka-herculex-virtual-unwrapping-whole-herculaneum/fiche.md) | HerculeX: virtual unwrapping of whole Herculaneum scrolls on Apple silicon | Adam Betka | 2026 | GitHub | repo | done |
+| [2026-de-vore-vesuvius-ply-layers-separating-pressed](papers/2026-de-vore-vesuvius-ply-layers-separating-pressed/fiche.md) | vesuvius-ply-layers: separating pressed papyrus layers by recto/verso fibre plies in Herculaneum scroll CT | Victoria De Vore | 2026 | GitHub | repo | done |
 | [2026-seiler-model-carbonized-papyrus-scroll-opens](papers/2026-seiler-model-carbonized-papyrus-scroll-opens/fiche.md) | A model carbonized papyrus scroll opens a novel path to identifying readable scrolls of the Herculaneum Library | Seiler et al. | 2026 | PLoS ONE | journal | done |
 | [arxiv-2606.29085-complete-virtual-unwrapping-reading-rolled](papers/arxiv-2606.29085-complete-virtual-unwrapping-reading-rolled/fiche.md) | Complete virtual unwrapping and reading of a rolled Herculaneum papyrus | Angelotti et al. | 2026 | arXiv preprint | preprint | done |
 | [arxiv-2504.11485-deciphering-scrolls-tomography-training-experiment](papers/arxiv-2504.11485-deciphering-scrolls-tomography-training-experiment/fiche.md) | Deciphering scrolls with tomography: A training experiment | Sonia Foschiatti, Axel Kittenberger, Otmar Scherzer | 2025 | arXiv preprint | preprint | done |
@@ -44,7 +46,15 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
+| [2026-betka-herculex-virtual-unwrapping-whole-herculaneum](papers/2026-betka-herculex-virtual-unwrapping-whole-herculaneum/fiche.md) | HerculeX: virtual unwrapping of whole Herculaneum scrolls on Apple silicon | Adam Betka | 2026 | GitHub | repo | done |
+| [2026-de-meij-pherc-0306b-winding-w040-row](papers/2026-de-meij-pherc-0306b-winding-w040-row/fiche.md) | PHerc. 0306B, winding w040: a row of letters, with segments, labels and predictions | David de Meij, Nicolas Brown, Nataliia Bazaka | 2026 | GitHub | repo | done |
+| [2026-de-vore-vesuvius-ply-layers-separating-pressed](papers/2026-de-vore-vesuvius-ply-layers-separating-pressed/fiche.md) | vesuvius-ply-layers: separating pressed papyrus layers by recto/verso fibre plies in Herculaneum scroll CT | Victoria De Vore | 2026 | GitHub | repo | done |
+| [2026-gilman-first-letters-clean-sheets-173](papers/2026-gilman-first-letters-clean-sheets-173/fiche.md) | first-letters-clean-sheets: 173 self-traced clean single-sheet surface patches on 13 First Letters-eligible Herculaneum scrolls | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
+| [2026-gilman-spiral-fit-inputs-first-windings](papers/2026-gilman-spiral-fit-inputs-first-windings/fiche.md) | Spiral-fit inputs and first windings for PHerc. 1203, 1218, 1545 and 0846B | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
 | [2026-korotetskyi-volumetric-texture-analysis-unsupervised-ink](papers/2026-korotetskyi-volumetric-texture-analysis-unsupervised-ink/fiche.md) | Volumetric Texture Analysis for Unsupervised Ink Detection in Herculaneum Papyri | Oleksandr Korotetskyi, Michal Haindl | 2026 | Zenodo (CERN European Organization for Nuclear Research) | report | done |
+| [2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink](papers/2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink/fiche.md) | vesuvius-ink-bench: volumetric ink-detection benchmarking and low-VRAM inference for Herculaneum scroll CT | nexusai-kevin | 2026 | GitHub | repo | done |
+| [2026-pellerano-rectina-m3-m4-dense-ink](papers/2026-pellerano-rectina-m3-m4-dense-ink/fiche.md) | Rectina m3 and m4, dense ink readers for Herculaneum papyri rebuilt on current renders | Giovanni Pellerano | 2026 | GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina) | preprint | done |
+| [2026-ruiconte-ink-swarm-argus-v1-v2](papers/2026-ruiconte-ink-swarm-argus-v1-v2/fiche.md) | ink-swarm: Argus V1 and V2 ink-detection checkpoints for Herculaneum scroll surface volumes | ruiconte | 2026 | GitHub | repo | done |
 | [2026-seiler-model-carbonized-papyrus-scroll-opens](papers/2026-seiler-model-carbonized-papyrus-scroll-opens/fiche.md) | A model carbonized papyrus scroll opens a novel path to identifying readable scrolls of the Herculaneum Library | Seiler et al. | 2026 | PLoS ONE | journal | done |
 | [arxiv-2603.27698-ink-detection-surface-topography-herculaneum](papers/arxiv-2603.27698-ink-detection-surface-topography-herculaneum/fiche.md) | Ink Detection from Surface Topography of the Herculaneum Papyri | Angelotti et al. | 2026 | Scientific Reports (2026) | journal | done |
 | [2025-ceccarelli-pulsed-thermographic-analysis-herculaneum-papyri](papers/2025-ceccarelli-pulsed-thermographic-analysis-herculaneum-papyri/fiche.md) | Pulsed thermographic analysis of Herculaneum papyri | Ceccarelli et al. | 2025 | Scientific Reports | journal | done |
@@ -61,6 +71,13 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
+| [2026-betka-herculex-virtual-unwrapping-whole-herculaneum](papers/2026-betka-herculex-virtual-unwrapping-whole-herculaneum/fiche.md) | HerculeX: virtual unwrapping of whole Herculaneum scrolls on Apple silicon | Adam Betka | 2026 | GitHub | repo | done |
+| [2026-de-meij-pherc-0306b-winding-w040-row](papers/2026-de-meij-pherc-0306b-winding-w040-row/fiche.md) | PHerc. 0306B, winding w040: a row of letters, with segments, labels and predictions | David de Meij, Nicolas Brown, Nataliia Bazaka | 2026 | GitHub | repo | done |
+| [2026-de-vore-vesuvius-ply-layers-separating-pressed](papers/2026-de-vore-vesuvius-ply-layers-separating-pressed/fiche.md) | vesuvius-ply-layers: separating pressed papyrus layers by recto/verso fibre plies in Herculaneum scroll CT | Victoria De Vore | 2026 | GitHub | repo | done |
+| [2026-gilman-first-letters-clean-sheets-173](papers/2026-gilman-first-letters-clean-sheets-173/fiche.md) | first-letters-clean-sheets: 173 self-traced clean single-sheet surface patches on 13 First Letters-eligible Herculaneum scrolls | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
+| [2026-gilman-spiral-fit-inputs-first-windings](papers/2026-gilman-spiral-fit-inputs-first-windings/fiche.md) | Spiral-fit inputs and first windings for PHerc. 1203, 1218, 1545 and 0846B | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
+| [2026-limegs-winding-field-continuous-winding-coordinate](papers/2026-limegs-winding-field-continuous-winding-coordinate/fiche.md) | winding-field: continuous winding-coordinate fields over predicted scroll surfaces and reproducible evaluation | LimeGS | 2026 | GitHub | repo | done |
+| [2026-snyder-scroll-label-snap-snapping-approximate](papers/2026-snyder-scroll-label-snap-snapping-approximate/fiche.md) | scroll-label-snap: snapping approximate recto-surface labels back onto the papyrus surface in Herculaneum scroll CT | A. Q. Snyder | 2026 | GitHub | repo | done |
 | [arxiv-2512.04927-virtually-unrolling-herculaneum-papyri-diffeomorphic](papers/arxiv-2512.04927-virtually-unrolling-herculaneum-papyri-diffeomorphic/fiche.md) | Virtually Unrolling the Herculaneum Papyri by Diffeomorphic Spiral Fitting | Paul Henderson | 2025 | WACV 2026 | conference | done |
 | [arxiv-2308.07070-local-iterative-extraction-2d-manifolds](papers/arxiv-2308.07070-local-iterative-extraction-2d-manifolds/fiche.md) | A Local Iterative Approach for the Extraction of 2D Manifolds from Strongly Curved and Folded Thin-Layer Structures | Nicolas Klenert, Verena Lepper, Daniel Baum | 2023 | arXiv preprint | preprint | done |
 | [2021-dambrogio-unlocking-history-through-automated-virtual](papers/2021-dambrogio-unlocking-history-through-automated-virtual/fiche.md) | Unlocking history through automated virtual unfolding of sealed documents imaged by X-ray microtomography | Dambrogio et al. | 2021 | Nature Communications | journal | done |
@@ -73,6 +90,10 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
+| [2026-betka-herculex-virtual-unwrapping-whole-herculaneum](papers/2026-betka-herculex-virtual-unwrapping-whole-herculaneum/fiche.md) | HerculeX: virtual unwrapping of whole Herculaneum scrolls on Apple silicon | Adam Betka | 2026 | GitHub | repo | done |
+| [2026-de-vore-vesuvius-ply-layers-separating-pressed](papers/2026-de-vore-vesuvius-ply-layers-separating-pressed/fiche.md) | vesuvius-ply-layers: separating pressed papyrus layers by recto/verso fibre plies in Herculaneum scroll CT | Victoria De Vore | 2026 | GitHub | repo | done |
+| [2026-gilman-spiral-fit-inputs-first-windings](papers/2026-gilman-spiral-fit-inputs-first-windings/fiche.md) | Spiral-fit inputs and first windings for PHerc. 1203, 1218, 1545 and 0846B | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
+| [2026-snyder-scroll-label-snap-snapping-approximate](papers/2026-snyder-scroll-label-snap-snapping-approximate/fiche.md) | scroll-label-snap: snapping approximate recto-surface labels back onto the papyrus surface in Herculaneum scroll CT | A. Q. Snyder | 2026 | GitHub | repo | done |
 | [arxiv-2512.04927-virtually-unrolling-herculaneum-papyri-diffeomorphic](papers/arxiv-2512.04927-virtually-unrolling-herculaneum-papyri-diffeomorphic/fiche.md) | Virtually Unrolling the Herculaneum Papyri by Diffeomorphic Spiral Fitting | Paul Henderson | 2025 | WACV 2026 | conference | done |
 | [2021-dambrogio-unlocking-history-through-automated-virtual](papers/2021-dambrogio-unlocking-history-through-automated-virtual/fiche.md) | Unlocking history through automated virtual unfolding of sealed documents imaged by X-ray microtomography | Dambrogio et al. | 2021 | Nature Communications | journal | done |
 | [2021-stabile-computational-platform-virtual-unfolding-herculaneum](papers/2021-stabile-computational-platform-virtual-unfolding-herculaneum/fiche.md) | A computational platform for the virtual unfolding of Herculaneum Papyri | Stabile et al. | 2021 | Scientific Reports | journal | done |
@@ -115,19 +136,32 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
+| [2026-de-vore-vesuvius-ply-layers-separating-pressed](papers/2026-de-vore-vesuvius-ply-layers-separating-pressed/fiche.md) | vesuvius-ply-layers: separating pressed papyrus layers by recto/verso fibre plies in Herculaneum scroll CT | Victoria De Vore | 2026 | GitHub | repo | done |
 | [2026-korotetskyi-volumetric-texture-analysis-unsupervised-ink](papers/2026-korotetskyi-volumetric-texture-analysis-unsupervised-ink/fiche.md) | Volumetric Texture Analysis for Unsupervised Ink Detection in Herculaneum Papyri | Oleksandr Korotetskyi, Michal Haindl | 2026 | Zenodo (CERN European Organization for Nuclear Research) | report | done |
+| [2026-pellerano-rectina-m3-m4-dense-ink](papers/2026-pellerano-rectina-m3-m4-dense-ink/fiche.md) | Rectina m3 and m4, dense ink readers for Herculaneum papyri rebuilt on current renders | Giovanni Pellerano | 2026 | GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina) | preprint | done |
+| [2026-snyder-scroll-label-snap-snapping-approximate](papers/2026-snyder-scroll-label-snap-snapping-approximate/fiche.md) | scroll-label-snap: snapping approximate recto-surface labels back onto the papyrus surface in Herculaneum scroll CT | A. Q. Snyder | 2026 | GitHub | repo | done |
 | [arxiv-2304.02084-educelab-scrolls-verifiable-recovery-text](papers/arxiv-2304.02084-educelab-scrolls-verifiable-recovery-text/fiche.md) | EduceLab-Scrolls: Verifiable Recovery of Text from Herculaneum Papyri using X-ray CT | Parsons et al. | 2023 | arXiv preprint | preprint | done |
 
 ## Transfert entre scans, rouleaux et protocoles (écart de domaine, harmonisation) (`domain-transfer`)
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
+| [2026-pellerano-rectina-m3-m4-dense-ink](papers/2026-pellerano-rectina-m3-m4-dense-ink/fiche.md) | Rectina m3 and m4, dense ink readers for Herculaneum papyri rebuilt on current renders | Giovanni Pellerano | 2026 | GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina) | preprint | done |
+| [2026-ruiconte-ink-swarm-argus-v1-v2](papers/2026-ruiconte-ink-swarm-argus-v1-v2/fiche.md) | ink-swarm: Argus V1 and V2 ink-detection checkpoints for Herculaneum scroll surface volumes | ruiconte | 2026 | GitHub | repo | done |
 | [arxiv-2603.27698-ink-detection-surface-topography-herculaneum](papers/arxiv-2603.27698-ink-detection-surface-topography-herculaneum/fiche.md) | Ink Detection from Surface Topography of the Herculaneum Papyri | Angelotti et al. | 2026 | Scientific Reports (2026) | journal | done |
 
 ## Validation, faux positifs, hallucination, incertitude et calibration des cartes d'encre (`validation-fp`)
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
+| [2026-de-meij-pherc-0306b-winding-w040-row](papers/2026-de-meij-pherc-0306b-winding-w040-row/fiche.md) | PHerc. 0306B, winding w040: a row of letters, with segments, labels and predictions | David de Meij, Nicolas Brown, Nataliia Bazaka | 2026 | GitHub | repo | done |
+| [2026-gilman-first-letters-clean-sheets-173](papers/2026-gilman-first-letters-clean-sheets-173/fiche.md) | first-letters-clean-sheets: 173 self-traced clean single-sheet surface patches on 13 First Letters-eligible Herculaneum scrolls | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
+| [2026-gilman-spiral-fit-inputs-first-windings](papers/2026-gilman-spiral-fit-inputs-first-windings/fiche.md) | Spiral-fit inputs and first windings for PHerc. 1203, 1218, 1545 and 0846B | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
+| [2026-limegs-winding-field-continuous-winding-coordinate](papers/2026-limegs-winding-field-continuous-winding-coordinate/fiche.md) | winding-field: continuous winding-coordinate fields over predicted scroll surfaces and reproducible evaluation | LimeGS | 2026 | GitHub | repo | done |
+| [2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink](papers/2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink/fiche.md) | vesuvius-ink-bench: volumetric ink-detection benchmarking and low-VRAM inference for Herculaneum scroll CT | nexusai-kevin | 2026 | GitHub | repo | done |
+| [2026-pellerano-rectina-m3-m4-dense-ink](papers/2026-pellerano-rectina-m3-m4-dense-ink/fiche.md) | Rectina m3 and m4, dense ink readers for Herculaneum papyri rebuilt on current renders | Giovanni Pellerano | 2026 | GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina) | preprint | done |
+| [2026-ruiconte-ink-swarm-argus-v1-v2](papers/2026-ruiconte-ink-swarm-argus-v1-v2/fiche.md) | ink-swarm: Argus V1 and V2 ink-detection checkpoints for Herculaneum scroll surface volumes | ruiconte | 2026 | GitHub | repo | done |
+| [2026-snyder-scroll-label-snap-snapping-approximate](papers/2026-snyder-scroll-label-snap-snapping-approximate/fiche.md) | scroll-label-snap: snapping approximate recto-surface labels back onto the papyrus surface in Herculaneum scroll CT | A. Q. Snyder | 2026 | GitHub | repo | done |
 | [arxiv-2603.27698-ink-detection-surface-topography-herculaneum](papers/arxiv-2603.27698-ink-detection-surface-topography-herculaneum/fiche.md) | Ink Detection from Surface Topography of the Herculaneum Papyri | Angelotti et al. | 2026 | Scientific Reports (2026) | journal | done |
 | [arxiv-2304.02084-educelab-scrolls-verifiable-recovery-text](papers/arxiv-2304.02084-educelab-scrolls-verifiable-recovery-text/fiche.md) | EduceLab-Scrolls: Verifiable Recovery of Text from Herculaneum Papyri using X-ray CT | Parsons et al. | 2023 | arXiv preprint | preprint | done |
 

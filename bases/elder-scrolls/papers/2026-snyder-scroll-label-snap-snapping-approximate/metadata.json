@@ -1,0 +1,45 @@
+{
+  "id": "2026-snyder-scroll-label-snap-snapping-approximate",
+  "title": "scroll-label-snap: snapping approximate recto-surface labels back onto the papyrus surface in Herculaneum scroll CT",
+  "authors": [
+    {
+      "given": "A. Q.",
+      "family": "Snyder"
+    }
+  ],
+  "year": 2026,
+  "venue": "GitHub",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://github.com/aqsnyder/scroll-label-snap/tree/e03c4c088c6f27e6edaf0502015a863f505e772b",
+  "type": "repo",
+  "axes": [
+    "surface-segmentation",
+    "label-efficiency",
+    "validation-fp",
+    "mesh-flattening"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "label-snapping",
+    "tifxyz",
+    "blind-review",
+    "pre-registered",
+    "negative-result"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

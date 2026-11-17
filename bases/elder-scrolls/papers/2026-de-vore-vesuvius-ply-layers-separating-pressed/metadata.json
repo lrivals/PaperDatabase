@@ -1,0 +1,46 @@
+{
+  "id": "2026-de-vore-vesuvius-ply-layers-separating-pressed",
+  "title": "vesuvius-ply-layers: separating pressed papyrus layers by recto/verso fibre plies in Herculaneum scroll CT",
+  "authors": [
+    {
+      "given": "Victoria",
+      "family": "De Vore"
+    }
+  ],
+  "year": 2026,
+  "venue": "GitHub",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://github.com/Victoria-TechNexus/vesuvius-ply-layers/tree/92675735c2f98fbf295a13dc9c85a11bc2e79c7f",
+  "type": "repo",
+  "axes": [
+    "surface-segmentation",
+    "virtual-unwrapping",
+    "mesh-flattening",
+    "ink-detection",
+    "label-efficiency"
+  ],
+  "tags": [
+    "herculaneum",
+    "papyrus",
+    "ply-layers",
+    "recto-verso",
+    "structure-tensor",
+    "PHerc-Paris-4",
+    "community-repo",
+    "colab"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

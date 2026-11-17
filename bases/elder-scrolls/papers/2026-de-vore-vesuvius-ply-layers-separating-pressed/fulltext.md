@@ -1,0 +1,1012 @@
+---
+id: 2026-de-vore-vesuvius-ply-layers-separating-pressed
+title: "vesuvius-ply-layers: separating pressed papyrus layers by recto/verso fibre plies in Herculaneum scroll CT"
+year: 2026
+backend: pymupdf
+---
+
+vesuvius-ply-layers: separating pressed papyrus layers by recto/verso fibre plies in Herculaneum scroll CT
+
+Victoria De Vore
+
+GitHub repository https://github.com/Victoria-TechNexus/vesuvius-ply-layers — commit 92675735c2 (2026-11-16). Documents: README.md, WRITEUP.md, MATH.md, TUNING.md. Community code repository (Vesuvius Challenge), not peer reviewed; all figures self-reported by the authors. Images omitted.
+
+File: README.md
+
+Automatic layer separation and meshing for Herculaneum scroll CT
+
+A pipeline for the hard parts: it separates pressed and tangled papyrus layers by reading the recto and verso plies, meshes them without smoothing away the wrinkles, and checks every surface against the raw CT. Built for accuracy, not coverage. Its outputs double as labelled training data at the contacts where automatic segmentation fails most.
+
+From raw CT to a flattened papyrus layer with ink, with no manual tracing. Tested on PHerc. Paris 4 (ESRF 2.4 µm scan, read at level 2 = 9.6 µm).
+
+What you get: run a block of tiles and you get every layer in it, not one. Each tile's layers are numbered automatically (20–25 per tile here), and any layer can be followed across all the tiles and meshed, so one set of tile runs gives a block of about 20 layers to unwrap, each with its own mesh, flat image, ink and self-checks.
+
+Status: research code. Works end to end on a 2 × 3 block of tiles (about 4.8 × 7.6 mm of one layer). Written and run in Google Colab, in a standard session. It runs in small tiles that fit a free session; larger areas are covered by more tiles (see Adjusting and scaling). The full write-up is in WRITEUP.md.
+
+What it does
+
+The pipeline runs in four stages, each with its own runner. config.py says where the data is (scan, scroll centre, tiles); each runner holds the settings for its stage.
+
+runner phases works on gives
+
+run_pipeline.py 1–5 one tile, all of its papyrus tracks, pieces, sheets
+
+run_layers.py 6a–6d one tile, all of its papyrus every sheet numbered by layer
+
+run_mesh.py 7a–7b one layer, followed across tiles its mesh, flattened
+
+run_ink.py 8–10 that one layer flat image and ink
+
+1. Tracks the papyrus (phases 1–5). The CT tile is streamed from the open-data bucket (1). A structure tensor gives the local sheet direction (2) and a 3D U-Net gives sheet, recto and verso probabilities (3). Ridge tracking follows the papyrus and stops where it leaves it or meets a verso ply (4), giving about 50,000 short tracks per tile. Phase 5 groups the tracks into pieces and joins pieces into sheets. 2. Undoes bad joins (6a). phase6a_split_sheets.py returns joined sheets that lie on top of themselves (span two layers) to their pieces. 3. Measures what lies between neighbouring sheets (6b). phase6b_pair_table.py casts rays from each sheet to its neighbours and records whether a dark gap, a pressed contact or
+
+something unclear lies between them. 4. Separates the layers using the papyrus itself (6c). Each papyrus layer has two plies: the recto with fibres running around the scroll and the verso with fibres along its axis.
+
+phase6c_ply_label.py reads the ply order between neighbouring sheets at up to six spots per pair, and labels them same layer / different layers / delaminated / same ply. This resolves pressed spots where a dark-gap rule fails. 5. Numbers the layers (6d). phase6d_stack_layers.py orders all sheets through the stack, with the ply readings overruling the dark-gap rule within 80 voxels of where they were read, and reports every contradiction. 6. Joins tiles (7a). phase7a_combine_tiles.py matches the same layer across overlapping tiles (40-voxel overlap) and stitches it into one set. 7. Meshes and flattens one layer (7b). phase7b_mesh.py builds the surface from the layer's own tracks (folds and wrinkles kept), sets aside points that belong to a neighbouring layer, unrolls it, and runs eight self-checks. 8. Reads ink (8–10). phase8_flat_grid.py turns the mesh into a flat grid, with the writing upright and seen from the scroll centre. phase9_ink_volume_extraction.py samples 21 slices through the sheet. Phase 10 runs an ink model on them. Phase 10 is built to be swapped for another ink model (see phase10_ink.py).
+
+Results (PHerc. Paris 4, layer of the official segment)
+
+Six tiles, each 192 × 416 × 416 voxels (z × y × x, 9.6 µm), each sharing 40 voxels with its neighbours. Each tile was run on its own, then the same layer was matched across them. Tiles 1 and 4 use the original U-Net and tiles 2, 3, 5 and 6 the retrained one, chosen per tile by which breaks fewer ply facts (write-up, section 4).
+
+Position z x U-Net Matching Layer Overlap Points Within 3 Voxels
+
+reference 15534–15726 3895–4311 original reference
+
+beside t1 15534–15726 4271–4687 retrained 12
+
+above t1 15382–15574 3895–4311 retrained 11
+
+below t1 15686–15878 3895–4311 original
+
+above t2 15382–15574 4271–4687 retrained 11
+
+below t2 15686–15878 4271–4687 retrained 11
+
+Each tile numbers its own layers, so the same layer has a different number in each. Side by side, two tiles make 416 + 416 − 40 = 792 voxels wide; three stacked make 192 × 3 − 2 × 40 = 496 voxels tall. The joined layer unrolls to 997 × 615 pixels (about 9.6 × 5.9 mm).
+
+Does the surface follow the papyrus? Ours against the official segment, judged by the raw CT
+
+checks/compare_surfaces.py takes both surfaces where they cover the same area and asks the raw CT, thresholded from the scan itself (Otsu), whether each surface lies on papyrus. Nothing from our pipeline is used as the judge. A result is given only where it holds at the Otsu threshold and at 10% above and below it.
+
+four tiles, earlier run: ours /
+
+final result
+
+on or against papyrus (share of points) 99.3% / 83.3% 99.6% / 82.0% ours better
+
+runs through a dark gap (share of points) 0.7% / 16.7% 0.4% / 18.0% ours better
+
+stays on the same sheet (share of neighbour pairs) 99.7% / 97.8% 99.5% / 97.4% ours better
+
+layer crossings per 100 neighbour pairs about equal
+
+four tiles, earlier run: ours /
+
+final result
+
+share of each surface compared 83% / 65% 87% / 91%
+
+This measures how closely each surface follows a sheet in the CT; it does not score where in the sheet a surface sits, or how well ink reads from it. Where both surfaces lie on the same sheet, the same ink model gives the same ink on both (94% of 100,764 pixels agree).
+
+Does it read the same ink? Scored against the official segment's human labels (earlier run)
+
+Six tiles, original U-Net and earlier layer settings; not repeated on the final surface. The same ink model and reading (shift 5, 21 slices, 9.6 µm) on the official segment's surface and on ours, scored against the same human labels:
+
+surface ink score vs. human
+
+labels*
+
+labelled ink
+
+labelled blank marked as
+
+ink
+
+official segment (humanmade) +0.80
+
+ours (automatic, all six tiles) +0.73
+
+Ours is scored only where the official surface lies within 6 voxels of it (about half of our sheet). The labels were drawn on the official surface.
+
+* Score = share of labelled ink marked as ink minus share of labelled blank marked as ink, on human-checked pixels (0 = guessing, +1 = perfect). Sliding the labels out of place (230 trials) gives about −0.1, and +0.3 at the 95th percentile.
+
+Layer separation per tile
+
+"Broken" = share of ply readings that the final layer numbers contradict. "Doubled" = share of a layer's columns where it shows as two bands instead of one (0 = one unbroken band).
+
+mean
+
+broken, original U-Net on every tile 16% 7% 13% 10.5%
+
+broken, final tiles 12% 7% 12% 9.3%
+
+worst doubled layer, original U-Net on every tile 48% 48% 77% 46% 66% 62% 58%
+
+worst doubled layer, final tiles 48% 46% 48% 46% 53% 55% 49%
+
+The remaining doubling sits in a few layers per tile, mostly near the edges of the stack, where two layers are pressed together with no ply reading nearby.
+
+Mesh (final six-tile layer): 6 of 8 self-checks passed; 96.2% of the mesh lies on papyrus in the CT; the two checks missed are just over their limits (distance from the band middle, and stretch 0.895– 1.113 against 0.90–1.10).
+
+Compute (standard Colab session with a T4 GPU, per 192 × 416 × 416 tile): phases 1–5 about 13– 18 min, peak RAM about 9 GB; phase 6 about 5–10 min. Meshing one layer across six tiles (5.07 million track points) takes about 30 min.
+
+Requirements
+
+Phases 1–9:
+
+pip install -r requirements.txt
+
+A GPU helps for the U-Net (phase 3); everything else runs on CPU. The CT is streamed from the Vesuvius Challenge open-data bucket (s3://vesuvius-challenge-open-data/PHercParis4/volumes/...); nothing has to be downloaded by hand.
+
+Phase 10 (ink) also needs the challenge's own code and model, which this repository does not include: - The vesuvius package from ScrollPrize/villa (MIT), built with apt-get install libblosc-dev and pip install imagecodecs albumentations. - step-075000.pth, the published 9 µm ink model: scrollprize/ink_9um (hybrid_3d2d-seed42/; MIT).
+
+Model files in this repository: - phase3_unet_checkpoint.pt: the U-Net that phase 3 uses by default (retrained: the original training with two fixes; see train_phase3_unet.py). -
+
+phase3_unet_checkpoint_v1.pt: the original U-Net. To use it, set UNET_CHECKPOINT in run_pipeline.py to this file. Each tile's manifest.json records which checkpoint it used. - train_phase3_unet.py: optional; retrains the U-Net (about 6 min on a T4). Not needed to run the pipeline.
+
+How to run
+
+Run everything from the folder holding these scripts. Tiles are listed in TILES in config.py. A ready Colab notebook is in colab_quickstart.ipynb.
+
+Per tile (example: tile t2)
+
+python run_pipeline.py t2 # phases 1-5 -> ckpt_t2/ python run_layers.py t2 # phases 6a-6d -> layers_t2/
+
+Per layer (example: layer 11 of tile 1, across six tiles)
+
+python run_mesh.py --tiles t1 t2 t3 t4 t5 t6 --layer 11 python run_ink.py --name layer11 --id 9611 --ckpt ./mesh_t1-t2-t3-t4-t5-t6_layer11 --wraps ./mesh_t1t2-t3-t4-t5-t6_layer11/wraps
+
+The first tile listed is the reference: its layer number is the one given. With one tile, run_mesh.py skips the combining step.
+
+Checks (optional; in checks/)
+
+python checks/compare_surfaces.py --id 9611 --ckpt ./mesh_t1-t2-t3-t4-t5-t6_layer11 --official 9971 -official_offset 15382 4794 3895 python checks/compare_labels.py --id 9611 --ckpt ./mesh_t1-t2-t3-t4-t5-t6_layer11
+
+Both need the official segment's surface files (and, for compare_labels.py, its ink labels) in the folder given with --official_dir.
+
+Adjusting and scaling
+
+Keep config.py and the four runners open for editing; that is where every adjustment is made. In Colab, open them from the folder pane on the left; changes save straight away.
+
+config.py: where the data is. The scan, the scroll centre and the tiles. Add a tile here (a name and its z, y, x ranges) to process a new area. On another scroll, the scroll centre must be changed. The SETTINGS block at the top of each runner: how each stage runs. run_pipeline.py (phases 1–5), run_layers.py (phase 6), run_mesh.py (phase 7) and run_ink.py (phases 8–10). One step by hand. Every phase script takes its settings as command-line options (python
+
+<script>.py -h). This is the way to try a setting on one tile without changing the defaults, for example re-running phases 6c and 6d with other ply settings into separate folders and comparing the results. To use such a result in the mesh step, write it to the tile's standard folder (layers_<tile>/). What to change, by symptom: TUNING.md.
+
+Another scroll. The U-Net can be retrained on blocks of the scroll being processed, with no human labels (about 6 minutes on a T4). Keep the training set small and even: on PHerc. Paris 4, adding more blocks made layer separation worse. TUNING.md explains how to set it up and how to tell whether it trained well.
+
+Scaling up. Phase 6 numbers every layer in a tile (20–25 per 192 × 416 × 416 tile here; the outermost ones are only small slivers at the tile's edge, and a layer near the edge of the stack may not reach every tile). Any layer can then be followed across the tiles and meshed with run_mesh.py, one run per layer. There are two ways to cover a larger area: - More tiles of the same size. Each tile runs on its own, so the work grows with the number of tiles (about 30 minutes each in a free Colab session), plus meshing, which grows with the layer's area (about 30 minutes for six tiles; much larger layers are untested and will take hours). - Bigger tiles, on a machine with more memory. Memory grows roughly in proportion to the tile's volume (about 9 GB for a 192 × 416 × 416 tile). The seed counts in phase 4 grow with the tile's volume on their own (SEED_CAP_SCALES_WITH_TILE in run_pipeline.py), so a bigger tile keeps the same density of tracks. Only the one tile size has been measured. - Memory peaks in phase 5 (the pair search between tracks), so that is the step to watch on a bigger tile. - Make each side of a tile a multiple of 8 (as 192 × 416 × 416 is). The U-Net halves the volume three times, so other sizes are padded at the edges and trimmed afterwards; that works, but multiples of 8 give exactly the tested behaviour. Tiles need not be cubes.
+
+A larger sheet also helps the parts inside it: tile 1's area scored +0.81 against the human labels when meshed on its own and +0.89 when meshed as part of four or six tiles, because its edges are no longer the sheet's edges.
+
+Outputs
+
+step writes
+
+run_pipeline.py ckpt_<tile>/: tracks, pieces, joined sheets, compact CT and normals, manifest.json (written last)
+
+run_layers.py pairs_<tile>/, plies_<tile>/, layers_<tile>/: layer_id.npy (layer of every track), per-layer files, ply_check.csv, ply_contradictions.csv
+
+run_mesh.py mesh_<tiles>_layerNN/wraps/wrap_layerNN_mesh_final.obj, check picture and report
+
+run_ink.py wrap_<id>_V3.tifxyz, wrap_<id>_ink/prediction.tif, diagnostics/ink_<id>.png
+
+Known limits
+
+Some layers stay partly doubled where two layers are pressed together with no ply reading nearby (worst layer 46–55% on the final tiles, mostly near the edges of the stack). Two U-Net checkpoints are in use: the retrained one separates layers worse than the original on tiles 1 and 4. The model for each tile was chosen on tile-wide checks; for a given layer, the other may do better. The final mesh's unrolling stretches slightly more than the self-check allows (0.895–1.113 at the 5th–95th percentile, against 0.90–1.10). The flat grid is saved as one 3-channel TIFF, not yet as VC3D's tifxyz folder. Ink is read at 9.6 µm; strokes are about twice their real width. Higher resolution ink models can be used on top of the created mesh. Validated against human labels on one layer only (the official segment's), in an earlier run. The ink model's training data includes PHerc. Paris 4 segments, possibly this region; the comparison between our surface and the official one is fair (same model), but absolute scores may be optimistic. Tested on one scroll. The U-Net was trained mostly on PHerc. Paris 4 (one of its five blocks is PHerc. 332), and the settings were tuned there. Whether it does better than hand segmentation in wrinkled or unsegmented regions is a hypothesis, not yet tested.
+
+Related work
+
+Semi-automatic segmentation with Volume Cartographer / VC3D (ScrollPrize/villa), which made the official segment; automatic pipelines such as ThaumatoAnakalyptor, the 2024 automatedsegmentation prize entries, the fibre-winding graph solver in villa and HerculeX, which cover far larger areas. This pipeline focuses on telling pressed layers apart by their plies; see the write-up, section 11.
+
+Licence
+
+MIT (see LICENSE).
+
+File: WRITEUP.md
+
+Separating papyrus layers by their plies: automatic layer meshing for Herculaneum scroll CT
+
+PHerc. Paris 4, ESRF scan 20260411134726 (2.4 µm), processed at level 2 (9.6 µm). Equations and settings for every step: MATH.md.
+
+Summary
+
+A pipeline for the hard parts: it separates pressed and tangled papyrus layers by reading the recto and verso plies, meshes them without smoothing away the wrinkles, and checks every surface against the raw CT. Built for accuracy, not coverage. Its outputs double as labelled training data at the contacts where automatic segmentation fails most.
+
+This pipeline goes from raw CT to a flattened papyrus layer with ink, without manual tracing. Its main idea is to separate neighbouring layers using the structure of the papyrus itself: every layer is two plies, a recto with fibres running around the scroll and a verso with fibres running along its axis. Reading the order of the plies between two sheets tells whether they are the same layer, two layers pressed together, or one layer whose plies have come apart, which is exactly where a rule based on dark gaps fails.
+
+On a block of 2 × 3 overlapping tiles (496 × 416 × 792 voxels), one layer was found, stitched across all six tiles and unrolled into a flat image of 997 × 615 pixels (about 9.6 × 5.9 mm). The layer is matched across every tile overlap, with 95–99% of overlap points within 3 voxels.
+
+Judged by the raw CT alone, our automatic surface follows the papyrus more closely than the official, hand-made segment of the same layer: 99.6% of our surface lies on or against papyrus, against 82.0% of the official one, which runs through a dark gap between sheets at 18.0% of its points. Our surface also stays on the same sheet more often (99.5% against 97.4%). The comparison covers 87% of our surface and 91% of the official one. Where both lie on the same sheet, the same ink model gives the same ink on both (94% of pixels agree).
+
+In an earlier run of the pipeline, read with the same ink model, our surface scored +0.73 against the human ink labels and the official surface, on which the labels were drawn, +0.80 (section 7).
+
+Each tile takes about 15–18 minutes and up to about 9 GB of RAM in a standard Colab session with a T4 GPU, and the six-tile layer meshes in the same session in about 30 minutes; larger areas are covered by more tiles (section 9).
+
+## 1. The problem: telling layers apart where they touch
+
+Tracking papyrus through the CT gives many short tracks that each follow one sheet. The hard part is deciding which tracks belong to the same layer. Where two sheets are separated by a dark gap that is easy; but in about a quarter to a third of all places we sampled, two sheets are pressed together with no gap between them.
+
+We collected about 11,000–15,000 such pressed spots per tile where the answer was known from elsewhere on the same two sheets. A dark-gap rule gets 40–61% of them right, no better than a coin. The best single measurement (the distance between the two sheets) separates them only partly (0.78–0.82 on a 0.5–1 scale).
+
+## 2. Reading the plies
+
+Why 9.6 µm. The scan is 2.4 µm, but the whole pipeline runs on the level-2 volume (9.6 µm) on purpose: it has 64 times fewer voxels. One 192 × 416 × 416 tile at 9.6 µm would be 768 × 1664 × 1664 at 2.4 µm, over 2 billion voxels (about 8.5 GB as float32 before any processing), which does not fit a standard Colab session. At 9.6 µm a tile runs in about 15–18 minutes and up to about 9 GB. The plies are still readable at this resolution; the cost is fine detail, and ink strokes come out about twice their real width (see sections 7 and 12).
+
+At each spot between two neighbouring sheets, phase6c_ply_label.py takes a short window of CT across the sheets and reads the fibre direction at every depth: H (around the scroll, the recto) or V (along the axis, the verso). Several spots are read per pair of sheets (2 or 6; see section 3).
+
+Going outward, one layer reads H then V. So:
+
+reading between the two sheets
+
+V … H (a verso, then the next recto) different layers
+
+H then V inside one band
+
+an H-only band, a gap, then a V-only band, gap ≤ 12 voxels same layer, delaminated
+
+one band, same ply on both sheets, closer than one ply same ply
+
+no verso anywhere in the window
+
+The measured ply thicknesses were the same in all six tiles: a single ply is about 8–9 voxels (≈ 80 µm), a full layer (H + V) about 13–15 voxels (≈ 135 µm).
+
+The flattened sheet at seven depths (left) and the fibre direction at each (right; orange = H, around the scroll; cyan = V, along its axis). Going inward, the sheet switches from mostly V (68% at +4.8 voxels) to mostly H (59% at −2 to −5 voxels): the two plies of one layer, read across the whole sheet.
+
+Most doubled plies turned out to be local thickenings (lumps, overlaps, frayed fibre) rather than folds: genuine fold signatures were rare (2–28 flags per tile).
+
+## 3. From sheets to layers
+
+1. Undoing bad joins. Stage 1 joins pieces into larger sheets. A joined sheet whose points lie on top of themselves (one layer stacked on another, measured as a "stacked" share) spans two layers and glues them together. phase6a_split_sheets.py returns those sheets (stacked ≥ 0.2) to their pieces and keeps every other join. On tile 2 this turned an 83%-double layer into two clean layers (9% and 21% double), kept a thin layer that splitting everything would have lost, and cut the ply facts that the layering breaks from 14% to 9%. 2. Ordering the stack. phase6d_stack_layers.py orders every sheet through the stack using dark gaps, with the ply readings overruling the gap rule near where they were read. It then checks itself: every ply fact the final layering breaks is listed, and every contradiction (two sheets the plies call different layers but a chain of "same layer" facts joins) is traced back to the fact most likely at fault.
+
+How much the ply readings help. A layer is doubled where it shows as two bands in one column instead of one; that is two layers merged. On tile 3, with the retrained U-Net (section 4), the same tile was layered four ways:
+
+ply readings used worst doubled
+
+layer
+
+layers over 30%
+
+doubled
+
+sheet facts that
+
+hold
+
+none (dark-gap rule only) 87.1%
+
+2 spots per pair, used within 40 voxels 89.7%
+
+6 spots per pair, used within 40 voxels 90.7%
+
+6 spots per pair, used within 80 voxels 90.6%
+
+On tile 2 the 6-spot, 80-voxel setting brought the worst doubled layer from 46% to 38% and cut the contradictions from 148 to 60. On tiles 1 and 4 it made little difference either way. It is the default in run_layers.py. Each step helps, but the doubling is not gone: what remains sits where two layers are pressed together with no ply reading nearby, and the gap rule then calls them one layer.
+
+## 4. The U-Net, and why more training data made it worse
+
+A small 3D U-Net gives, for every voxel, the probability of sheet, recto and verso. It is trained without human labels, on targets made from the structure tensor (see MATH.md, phase 3). The tracker stops where the verso probability rises above 0.6, so a track that reaches the verso ply of a layer ends there instead of running on into the next layer.
+
+Retraining fixed two mistakes in the original training: one of the five training blocks (from PHerc. 332) was scaled to its own brightness range while the others were not, and the direction loss mixed the masks of different patches in a batch. The fixed training (v1.1) uses the same five blocks as the original.
+
+Adding more training data, six more blocks from around the scroll, made the pipeline worse, not better. Measured on tile 3, where the verso output is above 0.6:
+
+model training data papyrus where verso > 0.6
+
+original (v1) 5 blocks 1.11%
+
+fixed (v1.1) the same 5 blocks 1.23%
+
+fixed, more data (v1.2) 11 blocks 0.02%
+
+With more data the network learned to hedge: its verso output stays near the middle and almost never passes the tracker's stop. The tracker then runs across layer contacts, and layers merge. A version trained this way (v2, with the extra blocks and random turns of the patches) separated layers worse than the original on three of four tiles (ply facts broken: mean 12.8% against 10.3%). On a held-out block that no model trained on, the extra data did not make the sheet, recto or verso outputs more accurate either; it improved only the fibre direction, which the pipeline does not use.
+
+The fixed model against the original, on all six tiles. The fixed model keeps the original's scale, so the tracker's settings still fit it. It separated the layers better on four tiles and worse on two, tiles 1 and 4 (table in section 5). The difference follows the verso stops: on every tile, the better model is the one whose tracks stop at a verso ply more often.
+
+verso stops, original (v1) 6,805 8,903 6,887 3,222 about 3,500 3,982
+
+verso stops, fixed (v1.1) 4,779 6,255 7,678 15,159 17,218 17,121
+
+better model v1 v1 v1.1 v1.1 v1.1 v1.1
+
+The original model stopped often in the left column of tiles (t1, t3, t4) and rarely in the right (t2, t5, t6), although the CT shows more verso on the right; the fixed model evened this out, which helped
+
+the right column and cut the stops on tiles 1 and 4 by 30%. Why retraining moved the stops this way is not known.
+
+The final layer uses both models, chosen per tile by one rule: keep the model whose layering breaks fewer ply facts. The rule uses only the pipeline's own check, never the official segment, but it was chosen after seeing the per-tile results. Tiles 1 and 4 come from the original model, tiles 2, 3, 5 and 6 from the fixed one. Both checkpoints are in the repository (phase3_unet_checkpoint.pt is the fixed model and the default; phase3_unet_checkpoint_v1.pt is the original), and each tile's manifest.json records which one it used. The choice was made on tile-wide checks, so for any one layer the other model may do better.
+
+Other scrolls. The U-Net is trained without human labels, so it can be retrained on blocks of the scroll being processed. The lesson above sets the rule: keep the training set small and even (about five blocks of the original size, replacing rather than adding), and check the result where it matters, in how the layers separate. The tuning guide lists what to look for: held-out error below the "answer the average" baseline, verso stops in the thousands per tile, and no more broken ply facts than the previous model on the same tile.
+
+## 5. Stitching tiles
+
+Six tiles, each 192 × 416 × 416 voxels, overlap their neighbours by 40 voxels. Each tile is run on its own, and each numbers its own layers. phase7a_combine_tiles.py then follows one layer: in each overlap it finds the layer of the new tile whose tracks lie on the reference layer's tracks.
+
+position z x U-Net, ply
+
+readings
+
+matching
+
+layer
+
+overlap
+
+points matched
+
+within 3
+
+voxels
+
+median / 95th
+
+pct distance
+
+(voxels)
+
+ply facts
+
+broken
+
+reference 15534–
+
+3895– v1; 2 spots, 40 voxels — — — 57 of 619 (9%)
+
+beside t1 15534– 4271–
+
+v1.1; 2 spots, 40 voxels
+
+44 of 599 (7%)
+
+above t1 15382– 3895–
+
+v1.1; 2 spots, 40 voxels
+
+79 of 653 (12%)
+
+below t1 15686– 3895– v1; 2 spots, 40 voxels 42 of 568 (7%)
+
+above t2 15382– 4271–
+
+v1.1; 6 spots, 80 voxels
+
+62 of 706 (9%)
+
+below t2 15686– 4271–
+
+v1.1; 6 spots, 80 voxels
+
+74 of 599 (12%)
+
+In every overlap the runner-up layer had 6% or less, so the matches are unambiguous. Tiles from the two models line up as closely as tiles from one model. The ply settings are those each tile was run with.
+
+Progress in layer separation. Against the first full run, with the original model on every tile:
+
+mean
+
+ply facts broken, original model on every tile 16% 7% 13% 10.5%
+
+ply facts broken, final tiles 12% 7% 12% 9.3%
+
+worst doubled layer, original model on every tile 48% 48% 77% 46% 66% 62% 58%
+
+worst doubled layer, final tiles 48% 46% 48% 46% 53% 55% 49%
+
+The middle layers of every final tile, where the followed layer runs, are the cleanest (layers 8–12 at 4–16% doubled on tiles 5 and 6, for example); the worst doubling sits in a few layers near the edges of the stack.
+
+## 6. Meshing and flattening one layer
+
+phase7b_mesh.py builds the surface from the layer's own tracks, so folds and wrinkles are kept rather than smoothed into a plane. Where the tracks spread wider than one band, points more than 5 voxels from the clean layer's continuation are set aside as a neighbouring layer.
+
+For the six-tile layer: 22,935 tracks (5.07 million points) became a mesh of 124,246 vertices and 244,736 triangles, in 28 minutes in a standard Colab session.
+
+The six-tile layer in 3D. It follows the curve of the scroll; small holes are places where no track was found.
+
+Flattening. To read ink, the curved mesh is unrolled into a flat image. The unrolling keeps the walking distance between nearby points (up to 40 voxels), so distances on the papyrus are kept as closely as possible. phase8_flat_grid.py then samples the surface every voxel, giving a 997 × 615 pixel image (495,272 pixels on the sheet) in which each pixel stores the 3D point of the papyrus it shows. Turned so the reading side faces the viewer and the writing is upright, this image is what the ink model reads.
+
+Half of all pixels are stretched by 1% or less, and 90% lie between 0.88 and 1.12 in both directions. The thin red and blue rings are the edges of small holes; the solid patches are on the sheet's border.
+
+The mesh is checked eight ways: does it run down the middle of the papyrus band, cover the whole sheet, invent no surface, form one clean surface, sit on papyrus in the CT, unroll without stretch, follow one layer, and keep its own shape.
+
+The magenta is a neighbouring layer pressed against ours, most of all on the steep left arm: the one-band check separates it from the layer being meshed.
+
+tiles combined U-Net checks passed on papyrus stretch (5th–95th percentile) set aside
+
+original 5 / 8 93.5% 0.84–1.16 22.9%
+
+t1 + t2 original 6 / 8 95.2% 0.87–1.13 17.5%
+
+t1 – t4 original 5 / 8 94.3% 0.87–1.25 22.5%
+
+t1 – t6 original 6 / 8 96.1% 0.89–1.12 19.9%
+
+t1 – t6, final per tile 6 / 8 96.2% 0.90–1.11 19.6%
+
+The two checks the final mesh misses are near their limits: its 95th-percentile distance from the band middle is 2.5 voxels (limit 2.0), and the unrolling stretch range is 0.895–1.113 (limit 0.90– 1.10). It passes the check that it follows one layer (kept tracks within 8.1 voxels, 0.7% beyond 8), which the four-tile mesh failed.
+
+## 7. Ink
+
+run_ink.py samples 21 slices through the sheet, 5 voxels in from the surface towards the recto, and runs an ink model on them (the published 9 µm model). On the final six-tile layer, 23% of the sheet is marked as ink, and the letters stand out as broad strokes (summary image).
+
+Scored against human labels (earlier run). The official segment of this region is the same layer, so its human labels can score the ink directly (checks/compare_labels.py places the labels on our image wherever the official surface lies within 6 voxels of ours). This was done on an earlier six-tile run, with the original model and the earlier layer settings; it was not repeated on the final surface. To separate the surface from the ink model, the same reading was also run on the official surface itself:
+
+surface (same ink model and
+
+reading) area scored score labelled ink
+
+labelled blank marked
+
+as ink
+
+official segment (hand-made; labels drawn on it)
+
+85.6% of its area +0.80 87%
+
+ours, whole six-tile block 47.1% of our sheet +0.73 78%
+
+ours, tile 1's part only 9.9% of our sheet +0.89 97%
+
+Score = share of labelled ink marked as ink minus share of labelled blank marked as ink (0 = guessing, +1 = perfect). Sliding the labels out of place gives about −0.1, and +0.3 at the 95th percentile.
+
+On the labelled area, our surface found 78% of the labelled ink against 87% for the official surface, and marked 5% of blank papyrus as ink against 6%. Almost all of the ink we missed is in one letter (green in the overlay below); section 8 looks at why.
+
+Checks that the ink belongs to this layer. - Depth. Reading 5 voxels in from the surface (towards the recto) scores +0.81; reading centred on the sheet scores +0.68, because half the window then falls on the verso and beyond. - Neighbouring layers. In tile 1 the layer above ours carries marks of its own; the layer between them is blank at its recto and only picks up its outer neighbour's marks when the reading window reaches it. Comparing ink in 3D showed the outer layer's marks do not sit over ours, so they are not ink transferred from our layer.
+
+A higher-resolution ink model can be used directly. The surface is a set of 3D points, not a 9.6 µm image: multiplying its coordinates by 4 places it in the full 2.4 µm scan. Any ink model, including the challenge's own 2.4 µm model, can therefore read our surface at full resolution with no change to the meshing. Phase 10 is built to be swapped (phase10_ink.py states what a replacement must do). We used the 9.6 µm reading here to fit Colab; reading at 2.4 µm should give strokes at their true width and is the next test.
+
+## 8. Geometry compared with the official segment
+
+In places our tracks follow the papyrus where the official segment crosses between bands. In the example below (red = one of our tracks, cyan = other tracks, yellow = where the official segment cuts this slice), the tracks stay on the bright band while the official surface passes through the dark gap into the next band.
+
+Measured over the whole shared area. checks/compare_surfaces.py takes both surfaces where they cover the same area and lets the raw CT judge them: a point counts as on papyrus if papyrus lies within 2 voxels of it along the surface normal, with papyrus defined by a threshold taken from the scan itself (Otsu). Nothing from our pipeline is used as the judge. A result is given only where it holds at the Otsu threshold and at 10% above and below it.
+
+four tiles, original model:
+
+ours / official
+
+final result
+
+on or against papyrus (share of points) 99.3% / 83.3% 99.6% / 82.0% ours better
+
+runs through a dark gap (share of points) 0.7% / 16.7% 0.4% / 18.0% ours better
+
+stays on the same sheet (share of neighbour pairs) 99.7% / 97.8% 99.5% / 97.4% ours better
+
+layer crossings per 100 neighbour pairs 0.11 / 0.18 about equal
+
+share of each surface compared 83% / 65% 87% / 91%
+
+ink agreement where both lie on the same sheet 90% of 66,144 pixels 94% of 100,764 pixels (reported only)
+
+Moving from four tiles to six, the comparison came to cover almost all of both surfaces, and "stays on the same sheet" went from about equal to ours better at all three thresholds. Layer crossings
+
+are about equal; at the strictest threshold ours are higher (0.46 against 0.23), at the loosest lower (0.12 against 0.16). This test measures how closely each surface follows a sheet in the CT; it does not score where in the sheet a surface sits, or how well ink reads from it.
+
+Our surface is green almost everywhere, with red and yellow only in thin slivers. The official surface leaves the papyrus in whole strips: vertical bands near the middle and about two-thirds across, and a large block on the right. On the CT slice both follow the same sheet, a few voxels apart in places. Where both lie on the same sheet, their ink maps are nearly identical.
+
+This matters for the score in section 7. Where the official surface leaves the papyrus, the human labels there were drawn on a surface that is not on the sheet, so placing them on our image can mark ink where our layer has none, or miss ink it has. Part of the gap between +0.73 and +0.80 may therefore come from the reference, not from our surface. Whether the letter we missed lies where the official surface leaves the papyrus has not been checked yet.
+
+## 9. Compute and scaling
+
+step standard Colab session, T4 GPU
+
+phases 1–5 (CT, structure tensor, U-Net, tracking, pieces, joins), per tile about 13–18 min, peak about 9 GB RAM
+
+phase 6 (split, pair table, ply readings, layers), per tile about 5 min at 2 spots per pair, 10 min at 6
+
+combining tiles (phase 7a) about 2 min
+
+meshing one layer (phase 7b) 23 min for four tiles (3.3 M points); 28 min for six tiles (5.07 M points)
+
+Retraining the U-Net takes about 6 minutes. The tiles were kept small on purpose, so that the whole pipeline runs in a free session. Meshing six tiles first ran out of memory in the 12 GB session while refining the flat layout (65 million local distances); handling that list in chunks, with the same result, brought it within the session.
+
+Scaling up. Phase 6 numbers every layer in a tile, so one run of phases 1–6 per tile gives all of its layers; any of them can then be followed across tiles and meshed. A larger area can be covered in two ways: - More tiles of the same size. Tiles run independently and phase 7a joins them, so the work grows with the number of tiles, plus meshing, which grows with the layer's area. From four tiles to six, meshing took about 7 and 5.5 minutes per million points; much larger layers are untested and will take hours, mostly in the flat layout. Combining already-flattened sections, by matching the 3D points they share, would avoid re-meshing a whole large layer; it is not built yet. - Bigger tiles, on a machine with more memory. Memory grows roughly in proportion to the tile's volume, since phase 5's pair search grows with the number of track points; phase 5 is where memory peaks. The seed counts in phase 4 grow with the tile's volume on their own, so the density of tracks stays the same. Each side of a tile should be a multiple of 8, because the U-Net halves the volume three times (other sizes are padded and trimmed). Only the one tile size has been measured.
+
+A larger sheet also helps the parts inside it. Tile 1's area scored +0.81 against the human labels when meshed on its own, +0.88 within two tiles and +0.89 within four or six, and the share of the mesh on papyrus rose from 93.5% (one tile) to 96.2% (six tiles): a tile's edges stop being the sheet's edges, and the one-band check can follow the clean layer across them. Not every measure improved at every step; the four-tile mesh stretched more than the one- and two-tile meshes (section 6).
+
+Adjusting. Where the data is (scan, scroll centre, tiles) is set in config.py; how each stage runs is set at the top of its runner, and every phase script takes the same settings on the command line, so one step can be rerun on one tile with other settings without changing the defaults. TUNING.md lists what to change, by symptom.
+
+## 10. By-products that others can use
+
+Every run writes labelled data as a by-product, and it characterises the scroll at the places where automatic segmentation struggles most: where layers are pressed together. Each item comes with its position in the scan, so it can be cut from the CT at any resolution and used to train or test other models. Because each run also checks itself, every item comes with a measure of how far it can be trusted, so a user can keep only the most reliable part.
+
+data (files, per tile) how much, per
+
+how far it is checked what it can be used for
+
+Same layer or not, read from the plies (plies_<tile>/pair_spots.csv, one row per spot; pair_labels.csv, one per pair)
+
+1,500–1,700 spots at 2 per pair, 3,400– 3,800 at 6, over 750–860 pairs; about a third
+
+the final layering breaks 7–12% of the pair facts; each contradiction is traced to the fact most likely at fault; spots read in four quarters, which agree at a typical 50–
+
+training data for a model that decides whether two sheets belong together; a test any other segmentation can be scored against (how many ply facts does it break?)
+
+Hard examples: pressed spots with a known answer (pairs_<tile>/pair_samples.npz, with ten measurements per spot)
+
+about 11,000– 15,000
+
+the answer comes from elsewhere on the same two sheets, so it is as good as that pair's label
+
+a test set for telling pressed layers apart. Today's darkgap rule gets 40–61% right; the best single measurement separates them at 0.78–0.82 (0.5 = useless). Samples from one pair resemble each other, so a model must be tested on pairs it never saw
+
+Ply direction (H = recto, V = verso), in the ply readings and the U-Net's recto / verso output
+
+every readable spot, and every voxel of the tile
+
+on one sheet, the V ply lies outside the H ply for most pixels; ply thicknesses agree across all six tiles
+
+teaching a model which side of the papyrus is which, and so which side carries the writing
+
+A layer number for every track (layers_<tile>/layer_id.npy, layers.csv)
+
+about 50,000 tracks and 8–9 million points
+
+89–93% of neighbouring sheet facts hold on the final tiles; each layer's share of doubled columns is reported
+
+dense layer-instance labels across a block of the scroll, for training segmentation models
+
+Meshes, flat images and ink (mesh_<tiles>_layerNN/, wrap_<id>_*)
+
+one per layer meshed
+
+eight self-checks per mesh; one layer compared with the official segment (99.6% against 82.0% on papyrus)
+
+surfaces for ink models; a starting point for manual correction in other tools
+
+A surface check that needs no labels (checks/compare_surfaces.py)
+
+any two surfaces of the
+
+judged by the raw CT only, at three thresholds
+
+quality control for any segmentation, including on scrolls with no human labels
+
+Looking ahead. The anchor for all of this is the one layer checked against the official segment. Where that check agrees, the same pipeline's labels elsewhere in the block become a cheap source of training data that would otherwise take hand tracing: thousands of answered same-layer / different-layer questions per tile, at exactly the pressed contacts that are hardest. A model trained on them, and tested on pairs it never saw, could replace the dark-gap rule at those contacts, which is where the remaining doubled layers come from (section 12).
+
+## 11. Related work
+
+HerculeX, released in November 2026, follows a similar overall route: structure-tensor sheet points, same-sheet links, rays to the next winding, and a solve that gives every patch its winding. Its announcement reports much larger areas than this work. It does not describe a way of telling pressed layers apart, which is the focus here.
+
+## 12. Limits and next steps
+
+Doubled layers. Where two layers are pressed together with no ply reading nearby, the gap rule still joins them (worst layer 46–55% doubled on the final tiles, mostly near the edges of the stack). Next: a rule that two sheets seen stacked in the same columns cannot share a layer unless they are one recto and one verso ply. Two models. The fixed model separates layers worse than the original on tiles 1 and 4, where it stops less often at verso plies. Next: run the fixed model on those tiles with a slightly lower verso threshold (TRACK["tau_verso"] 0.55), together with one right-column tile to check it does not overshoot there; if it works, one model would serve every tile. Model choice per tile, not per layer. The model for each tile was chosen on tile-wide checks; for a given layer, the other model may do better. Only layer 11 is checked against anything outside the pipeline. A weaker tile is only partly absorbed. When tiles are meshed together, the one-band check sets aside a neighbouring layer's tracks (about 20% of points here) and the clean layer continues across tile edges, so some doubling in one tile does not reach the mesh. Where a layer is merged through and through, there is no clean continuation to follow. Wrinkled and unsegmented regions (hypothesis). The mesh keeps folds and wrinkles, and the official surface leaves the papyrus over whole strips, which suggests the pipeline may follow regions that are hard to segment by hand. This has not been tested on a region without an official segment. The self-checks (on papyrus in the CT, one layer, stretch, ply facts) need no human surface, so such a test is possible. Single pieces that span two layers. The split step only undoes joins. One stage-1 piece per tile or so lies on top of itself and still tangles a pair of layers. Next: split such pieces by depth. Resolution. Ink is read at 9.6 µm, so strokes come out about twice their real width. Next: read our surface in the 2.4 µm scan with a 2.4 µm ink model (section 7). Missed ink. Most of the ink we missed against the labels is in one letter. Next: check whether the official surface leaves the papyrus there (section 8), and score the final surface against the labels. Validation. Human labels exist only where the official segment runs; 47% of our six-tile sheet could be scored in the earlier run. Other layers have no labels to score against. One scroll. The U-Net was trained mostly on PHerc. Paris 4 (one of its five blocks is PHerc. 332), and the settings were tuned there. Other scrolls are untested. Format. The flat grid is saved as one 3-channel TIFF; a converter to VC3D's tifxyz folder is planned. Scale. Meshing time grows with area (28 minutes for six tiles); building the flat layout is the slow step. Next: combine flattened sections, or move the flat layout onto the GPU.
+
+Code
+
+Repository: this one. Run order and options are in the README. MIT licence.
+
+File: MATH.md
+
+The pipeline in equations
+
+This page states what each step computes, with the pipeline's current default settings. Coordinates are voxels of the level-2 volume (9.6 µm); arrays are indexed $(z, y, x)$. Every section was checked line by line against the code; file names and defaults are those of the current version.
+
+Notation. $I(\mathbf{x}) \in [0,1]$ is the normalised CT; $B(\mathbf{x}) \in [0,1]$ is CT brightness rescaled between its 20th and 90th percentile after a Gaussian blur ($\sigma = 1$), with $B \ge 0.5$ counted as papyrus. $\mathbf{n}(\mathbf{x})$ is the unit surface normal field, $\mathbf{t}
+
+(\mathbf{x})$ the unit fibre (track) direction. A track is a polyline $\gamma_i$; a piece is a group of tracks from phase 5; a sheet is one piece or several joined pieces; a layer is one turn of papyrus (recto ply + verso ply).
+
+Stage 1: tracks, pieces, sheets (run_pipeline.py, one tile)
+
+## 1. CT (phase1_stream_ct.py)
+
+A tile of $192 \times 416 \times 416$ voxels is read from level 2 (9.6 µm) of the OME-Zarr volume of the 2.4 µm scan (PHercParis4/volumes/20260411134726-2.400um-0.2m-78keV-masked.zarr, public S3 bucket) and scaled to $[0,1]$ by dividing by the type's maximum ($I = v/255$ for 8-bit data, $v/65535$ for 16-bit). No other normalisation is applied; $B$ (see Notation) is the percentile-based rescaling used where brightness thresholds are needed.
+
+## 2. Orientation fields (phase2_structure_tensor.py)
+
+Structure tensor of the smoothed gradient,
+
+J_\rho(\mathbf{x}) = K_\rho * \left(\nabla I_\sigma \, \nabla I_\sigma^{\mathsf T}\right), \qquad \sigma = 1,\ \rho = 6 ,
+
+with eigenvalues $\lambda_1 \ge \lambda_2 \ge \lambda_3$ and eigenvectors $\mathbf{v}_1,
+
+\mathbf{v}_2, \mathbf{v}_3$. The normal is $\mathbf{n} = \mathbf{v}_1$, turned to point from dark to bright ($\mathbf{n}\cdot\nabla I_\sigma \ge 0$); the fibre (track) direction is $\mathbf{t} =
+
+\mathbf{v}_3$, the direction of least change; and the tensor's sheet measure is $(\lambda_1 -
+
+\lambda_2)/(\lambda_1 + \lambda_2 + \lambda_3)$, clipped to $[0,1]$.
+
+## 3. Sheet, recto and verso probabilities (phase3_unet.py)
+
+A small 3D U-Net (three levels, 16–128 channels) predicts four per-voxel probabilities: sheet, recto, verso and polarity. It was trained (train_phase3_unet.py; 60 epochs, 64³ patches from four regions of PHerc. Paris 4 and one of PHerc. 332) on targets made from the structure tensor itself:
+
+p_{\text{verso}}^{\text{target}} = s\,\frac{|t_z|}{|t_z| + \lVert (t_y, t_x)\rVert}, \qquad p_{\text{recto}}^{\text{target}} = s\,\frac{\lVert (t_y, t_x)\rVert}{|t_z| + \lVert (t_y, t_x)\rVert},
+
+with $s$ the tensor's sheet measure: verso where the fibres run along the scroll axis ($z$), recto where they run around it. For these targets the tensor is computed at a finer scale than in phase 2 ($\sigma = 1,\ \rho = 1.2$), so that one ply's fibre direction is not averaged with its neighbour's. The U-Net's input is the CT alone. The field stack holds channels 0–2 $\mathbf{t}$, 3–5 $\mathbf{n}$ (both from the tensor) and 6–8 the U-Net's sheet / recto / verso probabilities; the verso channel is $p_V(\mathbf{x})$.
+
+## 4. Tracking (phase4_tracking.py)
+
+For tracking, channel 6 is replaced by the brightness $B$, so the tracker follows bright papyrus in the CT rather than the U-Net's sheet probability. Seeds are ridge points of $B$: voxels with $B$ above the threshold that are at least as bright as the points 1.5 voxels either side along $\mathbf{n}$, more than 2 voxels from existing tracks, one per 2-voxel cell. Round 0 uses $B > 0.6$ (capped at 45,000, chosen at random), round 1 $B > 0.5$ (capped at 15,000); rounds stop early if fewer than 500 seeds are left.
+
+Integration (RK4). From each seed, a track is integrated in both directions along the fibre field $\mathbf{t}$:
+
+\frac{d\gamma}{ds} = \pm\,\mathbf{t}(\gamma(s)) .
+
+Each step uses the fourth-order Runge–Kutta method (RK4) with step $h = 0.5$ voxels:
+
+\mathbf{k}_1 = \mathbf{t}(\mathbf{x}), \qquad \mathbf{k}_2 = \mathbf{t}\!\left(\mathbf{x} + \tfrac{h}{2}\mathbf{k}_1\right), \qquad
+
+\mathbf{k}_3 = \mathbf{t}\!\left(\mathbf{x} + \tfrac{h}{2}\mathbf{k}_2\right), \qquad \mathbf{k}_4 = \mathbf{t}\!\left(\mathbf{x} + h\,\mathbf{k}_3\right),
+
+\mathbf{x}_{\text{new}} = \mathbf{x} + \frac{h}{6}\left(\mathbf{k}_1 + 2\mathbf{k}_2 + 2\mathbf{k}_3 + \mathbf{k}_4\right).
+
+RK4 samples the field four times per step, so the track follows a curving sheet much more closely than a single straight step (Euler) would, without drifting off the papyrus on bends. The fibre field has no fixed sign ($\mathbf{t}$ and $-\mathbf{t}$ are the same direction), so $\mathbf{k}_1$ is turned to agree with the previous step and $\mathbf{k}_2, \mathbf{k}_3, \mathbf{k}_4$ to agree with $\mathbf{k}_1$; the first step of each direction starts from a fixed reference, $\pm(0, 1, 0)$.
+
+Between voxels, $\mathbf{t}$ is interpolated trilinearly after turning each corner vector to agree with the direction being followed, so the sign never flips mid-step. A direction stops at the tile edge, after 600 voxels, where $B < 0.5$, where $p_V > 0.6$ (verso reached), or where the turn per voxel exceeds $\kappa_{\max} = 0.5$ radians; a direction stopped by anything but the edge or length loses its last 1 voxel. The two directions are joined, and tracks with 30+ points are kept.
+
+## 5. Pieces: affinity graph between tracks (phase5_pieces.py)
+
+Every third track point is used. For point pairs $(i, j)$ on different tracks within $r_{\max} = 3.5$ voxels, with mean normal $\bar{\mathbf{n}} = (\mathbf{n}_i \pm \mathbf{n}_j)/\lVert\cdot\rVert$ (sign made consistent) and offset $\mathbf{d} = \mathbf{p}_j - \mathbf{p}_i$:
+
+d_\perp = |\mathbf{d}\cdot\bar{\mathbf{n}}|, \qquad d_\parallel^2 = \lVert\mathbf{d}\rVert^2 d_\perp^2 .
+
+Pairs with $d_\perp > 1$ are dropped, as are track pairs with fewer than 3 such point pairs. The weight is
+
+w_{ij} = \exp\!\left(-\frac{d_\perp^2}{2\sigma_n^2}\right)\exp\!\left(-\frac{d_\parallel^2} {2\sigma_\parallel^2}\right) |\mathbf{t}_i\cdot\mathbf{t}_j|^{\alpha}\;\exp\!\left(-\frac{\lVert\mathbf{d}\rVert\,\overline{p_V}} {s_V}\right),
+
+with $\sigma_n = 1$, $\sigma_\parallel = 8$, $\alpha = 2.5$, $s_V = 0.15$, and $\overline{p_V}$ the mean verso probability at 9 points along the segment. Pairs with $w_{ij} < 0.005$ are dropped, both before and after the verso factor is applied.
+
+Valley test. Along each segment, with $v_k$ the blurred CT at 9 points and $v_e = \min(v_0, v_8)$,
+
+V_{ij} = \max\!\left(0,\ \frac{v_e - \min_k v_k}{v_e}\right).
+
+Point pairs are grouped per track pair (weight = max, valley = median); a track pair with median valley $> 0.05$ (a dark dip between them) is removed. Tracks are then grouped into pieces by Louvain community detection on the weighted track graph (resolution 3.0).
+
+Joining pieces into sheets
+
+Only pieces with 30+ tracks take part, each represented by every 4th track point. For two pieces $X, Y$ with at least 100 points within 8 voxels of each other, up to 4,000 sampled points $\mathbf{x}\in X$ and their nearest $\mathbf{y}\in Y$ give two measures:
+
+Apart share $a_{XY}$: the fraction of points whose neighbours in the other piece (within 2 voxels sideways) sit at median depth $\ge 2.5$ voxels along the normal, i.e. a layer away. The larger of the two directions is used. Bright share $b_{XY}$: the fraction of segments $\mathbf{x}\to\mathbf{y}$ whose darkest of 9 samples has $B \ge 0.5$.
+
+Pieces are joined, largest overlap first, if $a_{XY} \le 0.20$ and $b_{XY} \ge 0.90$, unless the join would put two pieces with $a \ge 0.5$ into one sheet (union-find with a veto).
+
+Stacked share of a sheet (reported per sheet, used in stage 2): the fraction of 1,500 sampled points that have another point of the same sheet 6–14 voxels away along the normal and within 4 voxels sideways. About 0 for a single layer; high when two layers are stuck together.
+
+Stage 2: layers (run_layers.py, one tile)
+
+6a. Splitting stacked joins (phase6a_split_sheets.py)
+
+Every joined sheet with 2+ pieces and stacked share $\ge 0.2$ is returned to its pieces (new label = piece + offset); all other sheets are kept.
+
+6b. Pair table (phase6b_pair_table.py)
+
+From up to 120,000 start points, walk outward along the local normal to the next sheet within 30 voxels and record the gap, the darkest CT between, the band thickness and the angle between the two sheets. Each sample is classed (separate / far / thin / pressed / ambiguous / edge); pairs of sheets with 20+ samples go to the ply reader.
+
+6c. Reading the plies (phase6c_ply_label.py)
+
+At up to 6 spots per pair (set in run_layers.py; the script's own default is 2), a surface is fitted to the inner sheet $A$ on a $49 \times 49$ grid turned 45° to the scroll axis, and face-on CT slices are cut at depths $k$ from 15 voxels inside $A$ to 15 beyond the outer sheet $B$.
+
+Fibre direction per slice. In each slice $S_k$ (high-passed by subtracting a $\sigma=4$ blur), a 2D structure tensor with gradient scale 1 and integration scale $\rho = 4$, restricted to papyrus pixels, gives at every pixel the orientation $\phi$ and coherence
+
+c = \frac{2\sqrt{\tfrac14 (J_{rr}-J_{cc})^2 + J_{rc}^2}}{J_{rr}+J_{cc}} .
+
+The angle $\theta$ between the stripe direction and the scroll axis is computed. Among coherent pixels ($c \ge 0.3$), with $h = P(\theta \ge 60°) - \tfrac13$ and $v = P(\theta \le 30°) - \tfrac13$, depth $k$ is labelled
+
+\ell_k = \begin{cases} \texttt{.} & \text{if more than half the patch has } B < 0.5\ (\text{gap})\\ \texttt{H} & \text{if } h \ge 0.2 \text{ and } h > v\ (\text{fibres around the scroll: recto})\\ \texttt{V} & \text{if } v \ge 0.2 \text{ and } v > h\ (\text{fibres along the axis: verso})\\ \texttt{?} & \text{otherwise}\end{cases}
+
+where a depth with 30 or fewer coherent pixels is ?; single-slice runs of H or V then become ?. This is done for the central $25\times25$ window and separately for each quarter of the patch (quarter agreement is recorded).
+
+Bands. The letters are split into bands of papyrus: a gap is a run of . and ? holding at least two ..
+
+Rules. Let $A$, $B$ be the plies at the two sheets' depths (searching ±3 slices), and the run sequence between them read from $A$ outward to $B$:
+
+condition (checked in this order)
+
+some V is followed later by an H different layers
+
+no V anywhere in the window
+
+no ply found at $A$ or at $B$
+
+both sheets in one papyrus band, $A=B$, depths $< 7$ voxels apart same ply
+
+both sheets in one band, $A=B$, depths $\ge 7$ voxels apart unreadable (two plies of one direction)
+
+both sheets in one band, $A=\mathrm{H}$, $B=\mathrm{V}$
+
+separate bands; $A$'s band already holds a V outward of $A$, or $B$'s band holds an H inward of $B$ likely different layers
+
+condition (checked in this order)
+
+separate bands, $A=B$, gap $\ge 8$ likely different layers
+
+separate bands, $A=B$, gap $< 8$ unreadable (crack or missing ply)
+
+separate bands, $A=\mathrm{H}$, $B=\mathrm{V}$, gap $\le 12$ same layer, delaminated
+
+separate bands, $A=\mathrm{H}$, $B=\mathrm{V}$, gap $> 12$ possibly delaminated
+
+anything else
+
+Per pair, readings are combined: weak labels (likely different layers, possibly delaminated) give way to strong ones; a mix of "same" and "different" families is a conflict.
+
+6d. Stacking (phase6d_stack_layers.py)
+
+## 1. Direction across the stack: $\mathbf{n}_0$ = leading eigenvector of $\sum
+
+\mathbf{n}\mathbf{n}^{\mathsf T}$ over sampled track points, oriented away from the scroll centre. 2. Columns: the tile is cut into columns 3 voxels wide along $\mathbf{n}_0$. Within each column, the points of one sheet (or track) form a pass, split where they are more than 2.5 voxels apart in depth; passes are ordered by depth $t$. 3. Neighbour facts: for consecutive passes with gap $\le 60$, sample $B$ every 0.5 voxels along the segment and count dark runs ($B < 0.5$) of length $\ge 3$ voxels, $n_{\text{dark}}$. The number of layers between the two passes is $\Delta = 0$ if $n_{\text{dark}} = 0$ and the gap is under 20 voxels, and $\Delta = \max(1, n_{\text{dark}})$ otherwise.
+
+Ply override: for passes of a labelled pair within 30 voxels of each other and within 80 voxels of a spot that gave that answer (set in run_layers.py; the script's own default is 40), "different layers" turns $\Delta = 0$ into 1 (pressed) and "same layer / delaminated / same ply" turns $\Delta = 1$ into 0 (delaminated). 4. Sheet level: per sheet pair, $d$ = rounded median of signed $\Delta$ over shared columns (5+ columns); pairs with $d \ne 0$ where both directions occur in $\ge 20\%$ of columns are dropped as conflicts; weight $w$ = number of columns (×0.3 if mostly more than one layer apart). Integer positions $L_s$ are found by a maximum-weight spanning placement from the largest sheet, then up to 50 rounds in which each sheet takes the position with the largest summed weight of votes $L_{s'} - d_{ss'}$. 5. Track level: each track starts at its sheet's position and, for up to 60 rounds, moves to the position most of its column neighbours vote for ($L_{\text{nb}} \pm \Delta$, weight 0.3 when $\Delta > 1$; its sheet's position counts as one extra vote; half the movers move per round). 6. Self-check: each ply fact the final layers break is listed; each "different layers" fact whose two sheets are joined by a chain of "same" facts is a contradiction, traced to the "same" fact appearing in the most chains.
+
+Stage 3: one layer across tiles (run_mesh.py, phase 7a:
+
+phase7a_combine_tiles.py)
+
+In the overlap between the layer so far and a new tile, for each layer $\lambda$ of the new tile:
+
+m_\lambda = \#\{\text{points of } \lambda \text{ in the overlap within 3 voxels of a reference-layer point}\},
+
+and the layer with the largest $m_\lambda$ is taken (its share of overlap points is reported). Another layer is taken as well if its $m_\lambda$ is at least 30% of the best and at least half of its overlap points are close (a layer the new tile split in two). Tracks are moved into one coordinate frame; the CT, brightness and normals are stitched, each voxel taken from the tile whose edge is furthest away. With a single tile this step is skipped.
+
+Stage 4: mesh, flat grid, ink (one layer)
+
+7b. Mesh and unrolling (run_mesh.py, phase 7b: phase7b_mesh.py)
+
+Settings: --node 2.5 --link 6, the script's defaults.
+
+1. Graph: track points are averaged into nodes on a grid of 2.5 voxels; nodes within 6 voxels are linked if their offset along each node's normal is $\le 4$ voxels (stays within one layer). The largest connected part is kept. 2. First flat layout (landmark MDS): 200 landmarks chosen farthest-first by graph (walking) distance; with $D$ the landmark-to-node walking distances and $D_2$ the landmark-tolandmark squared distances, $B_m = -\tfrac12 J D_2 J$ ($J$ the centring matrix), and nodes are placed by $\mathbf{u} = -\tfrac12\,\Lambda^{-1/2} E^{\mathsf T}\left(D^{\circ 2} -
+
+\overline{D_2}\right)$ using the top two eigenpairs $(E, \Lambda)$ of $B_m$. The third eigenvalue over the first is reported as the share that does not unroll flat. 3. Refinement: walking distances $g_{ij}$ up to 40 voxels from a source every ~8 voxels (plus all links) are kept; 150 rounds of $\mathbf{u}_i \leftarrow \frac{\sum_j w_{ij}\left(\mathbf{u}_j + g_{ij}\,\frac{\mathbf{u}_i-\mathbf{u}_j}{\lVert\mathbf{u}_i-\mathbf{u}_j\rVert}\right)}{\sum_j
+
+w_{ij}}, \qquad w_{ij} = g_{ij}^{-2},$ reduce the median relative error $\big|\lVert\mathbf{u}_i-\mathbf{u}_j\rVert - g_{ij}\big|/g_{ij}$ (typically 7–8% → 5–6%). Each track point gets $(u,v)$ through a local linear map from its node's links. 4. Surface over the flat map: a locally linear (Gaussian-weighted, $\sigma = 5$) fit of $(x,y,z)$ over $(u,v)$. Each point's depth across the sheet is $w = (\mathbf{p} -
+
+S_0(u,v))\cdot\mathbf{N}_0(u,v)$. 5. Clean areas and set-aside: where the local spread of $w$ (standard deviation, Gaussian window 3) is $\le 3$ voxels the layer is clean. The surface is refitted from clean areas only, carried across the rest, and in the rest points with $|w| > 5$ are set aside as a neighbouring layer; a track with more than half its points set aside is set aside whole. 6. Band middle: along $\mathbf{N}_0$ at each pixel (searching $\pm 12$ voxels in steps of 0.5), the bright run ($B \ge 0.5$) nearest the kept tracks' mean depth (within 3 voxels of it) is found, limited to $\pm(2.5\,\mathrm{sd}_w + 2)$ clipped to 4–10 voxels (and to at most 6.5 outside clean areas); the mesh is placed at its middle (median filter 3, Gaussian smoothing 3). A run that reaches the limit is reported as pressed. 7. Grid mesh with vertices every 2 voxels; cells whose 3D/flat length ratio is beyond 2.5 (or below 1/2.5) are cut. 8. Checks: band-middle distance (p50 ≤ 0.5, p95 ≤ 2.0); coverage (one piece ≥ 90%, 97% of points within 6 voxels); bridged area ≤ 25%; no non-manifold edges; 90% of fitted vertices on papyrus; stretch p5 ≥ 0.90, p95 ≤ 1.10, cut ≤ 3%, kept ≥ 95%; kept tracks within width 12 and ≤ 2% beyond 8 voxels, set aside ≤ 20%; departure from the smooth surface reported.
+
+## 8. Flat grid (run_ink.py, phase 8: phase8_flat_grid.py)
+
+The mesh's flat layout is filled in to a 1-voxel grid by bilinear blending of each cell's four corners; holes up to 400 pixels are filled from their rim. Distance per pixel is reported in both directions (limit 0.80–1.25 for p5–p95). The image is mirrored if needed so that it is seen from the scroll centre looking outward (normals outward), then turned by quarter or half turns only (no mirroring) so the scroll axis runs down the image with high $z$ at the top, which keeps the writing upright.
+
+9–10. Ink (run_ink.py, phase 9: phase9_ink_volume_extraction.py, phase 10: phase10_ink.py)
+
+The flat grid's 3D positions are smoothed (Gaussian, $\sigma = 3$, within the sheet) and normals are taken from the grid's central differences, turned to point towards the scroll centre (inward). Snapping: along each normal the CT is sampled from $-6$ to $+6$ voxels in steps of 0.5, smoothed along depth ($\sigma = 1.5$), weighted by a Gaussian prior $e^{-d^2/(2\cdot 3^2)}$, and the surface
+
+is moved to the brightest depth (offsets median-filtered over 9 pixels and smoothed with $\sigma =
+
+4$). Then 21 slices are sampled (trilinear) at
+
+d_k = s + (k - 10)\,\Delta, \qquad k = 0,\dots,20, \qquad s = 5,\ \Delta = 1 ,
+
+i.e. from 5 voxels outward to 15 voxels inward of the snapped surface, with positive $d$ towards the scroll centre (the recto side). Slices are stored as 8-bit; outside the sheet they are filled with the sheet's mean grey. Phase 10 runs a published 9 µm ink model (step-075000.pth) on the 21-slice stack through the challenge's vesuvius.ink_detection inference (tiles overlapping by half, Hann blending), giving one ink probability per pixel.
+
+Scoring against human labels (checks/compare_labels.py)
+
+Each pixel takes the label of the nearest official-surface point within 6 voxels (after moving our grid into the official surface's frame). On human-checked pixels,
+
+\text{score} = P(\hat p > 0.5 \mid \text{ink}) - P(\hat p > 0.5 \mid \text{no ink}).
+
+Chance: the label map is shifted by a random offset of up to 120 pixels in each direction, at least 60 in one (300 draws; about 230 leave enough labelled pixels), and the score recomputed; the result beats chance if it exceeds the 95th percentile of these.
+
+File: TUNING.md
+
+Tuning guide
+
+The defaults were set on PHerc. Paris 4 (level 2, 9.6 µm). On another scroll, another part of this one, or another resolution, some may need changing. This page lists what to look at, by symptom.
+
+Where the data is (scan, scroll centre, tiles) is set in config.py. On another scroll, the scroll centre must be changed there. How each stage runs is set in the SETTINGS block at the top of its runner: run_pipeline.py (phases 1–5), run_layers.py (phase 6), run_mesh.py (phase 7) and run_ink.py (phases 8–10). In Colab, open the file from the folder pane on the left; changes save straight away. Each phase script also takes the same settings as command-line options (python <script>.py -
+
+h lists them), for running one step by hand. Every run writes the settings it used: manifest.json for phases 1–5, and the printed log for the rest.
+
+Change one setting at a time and rerun only the stage it belongs to. A change in phases 1–5 needs every later stage rerun; a change in phase 6 needs phase 6 and the stages after it.
+
+Distances are in voxels. All lengths below assume 9.6 µm voxels. On a scan read at another resolution, scale every distance (radii, gaps, thicknesses, close, reach and so on) by 9.6 / (new voxel size in µm).
+
+Phases 1–5: tracks, pieces, sheets (run_pipeline.py)
+
+Few tracks, or tracks stop short on clear papyrus
+
+brightness threshold too strict for this scan's contrast
+
+lower TRACK["tau_sheet"] (0.5 → 0.4), or widen BRIGHT_PERCENTILES (e.g. (10, 90))
+
+Tracks cross from one layer into the next tracker turns too easily lower TRACK["kappa_max"] (0.5 → 0.35); raise TRACK["tau_verso"] only if tracks stop too early at verso
+
+Verso stops almost disappear (the stop reasons line shows verso
+
+the U-Net's verso output is on a different
+
+keep the original training set (more data compressed the verso output; see the write-up, section 4), or lower TRACK["tau_verso"] until verso stops return
+
+in the hundreds, not thousands, per tile)
+
+scale, e.g. after retraining
+
+Large areas with no tracks at all too few seeds
+
+raise the seed caps in SEED_ROUNDS, or lower the second round's threshold (0.5 → 0.45). Caps already grow with tile volume (SEED_CAP_SCALES_WITH_TILE)
+
+Run is slow or runs out of memory
+
+tile too big for the session
+
+use smaller tiles; keep SAVE_FULL_STACKS = False. A 192 × 416 × 416 tile peaks at about 9 GB, in phase 5 (the pair search); memory grows roughly with the tile's volume
+
+Choosing a new tile size
+
+make each side a multiple of 8 (192 × 416 × 416 is). The U- Net halves the volume three times; other sizes are padded and trimmed, which works but differs slightly at the edges from the tested behaviour. Tiles need not be cubes; neighbouring tiles should share about 40 voxels
+
+Pieces are tiny and many (the log lists thousands of pieces with 30+ tracks)
+
+grouping too strict lower P5["louvain_resolution"] (3.0 → 2.0)
+
+A piece spans two layers (high stacked in sheets.csv)
+
+grouping too loose raise P5["louvain_resolution"] (3.0 → 4.0); lower P5["d_perp_max"] only with care
+
+Joined sheets span two layers (high stacked with parts > 1)
+
+join rule too loose lower JOIN["max_apart"] (0.20 → 0.10), or raise JOIN["min_bright"]; phase 6a also undoes these afterwards
+
+Pieces of one layer are left unjoined (many grey_zone rows in join_pairs.csv)
+
+join rule too strict raise JOIN["max_apart"] a little (0.20 → 0.25), or JOIN["close"] for pieces that meet end to end
+
+Layers separate better with one U-Net on some tiles and with the other on others
+
+the two checkpoints stop at verso plies at different rates in different parts of the scroll
+
+both are in the repository: phase3_unet_checkpoint.pt (retrained, default) and phase3_unet_checkpoint_v1.pt (original). Set UNET_CHECKPOINT, rerun the tile, and keep the one whose phase 6 breaks fewer ply facts; the better one is usually the one with more verso stops on that tile. Tiles from both line up when joined
+
+No U-Net checkpoint warning
+
+UNET_CHECKPOINT not
+
+put phase3_unet_checkpoint.pt in the working folder, or retrain with train_phase3_unet.py
+
+Phase 6: layers (run_layers.py)
+
+A layer is "double" because a joined sheet spans two layers
+
+a stacked joined sheet was kept
+
+SPLIT["stacked"] 0.15 (default 0.2), or list a known sheet in SPLIT["split"]
+
+A layer is "double" where two layers are pressed together
+
+too few ply readings reach that contact
+
+more spots per pair and a longer reach: on tiles 2 and 3, going from 2 to 6 spots (PLIES["per_pair"]) and from 40 to 80 voxels (LAYERS["ply_near"]) cut the worst doubled layer from 46–48% to 35–38%. On tiles 1 and 4 it made little difference either way. More spots make phase 6c slower (about 9 minutes per tile at 6)
+
+Many spots read unreadable in phase 6c
+
+stripes too faint or too few clear pixels
+
+PLIES["coh"] 0.25 (default 0.3) or PLIES["margin"] 0.15 (default 0.2)
+
+Plies read as doubled or the wrong thickness
+
+ply thickness differs on this scroll
+
+read it from the band-thickness table phase 6c prints (an H or a V band is one ply), then set PLIES["ply"] (default 7) and PLIES["wide"] (default 8)
+
+Same layer, delaminated where the layers look separate
+
+delamination gap allowed too wide PLIES["delam_max"] 10 (default 12)
+
+Layers merge across thin dark gaps
+
+gap needed for a layer boundary too long
+
+MIN_DARK 2 (default 3)
+
+Layers split inside one thick band
+
+thick papyrus taken as two LAYERS["max_thick"] 24 (default 20)
+
+Many broken ply facts in ply_check.csv near one sheet
+
+that sheet crosses layers list it in SPLIT["split"], then rerun phase 6
+
+Ply readings ignored far from where they were read, or applied too far away
+
+override range LAYERS["ply_near"] (default 80) and LAYERS["ply_reach"] (default 30)
+
+Joining tiles (run_mesh.py, phase 7a)
+
+"The match is doubtful" warning, or two layers both close
+
+overlap too thin, or layers pressed in the overlap
+
+widen the tile overlap in config.py (40 → 60 voxels); check the table phase 7a prints for each tile
+
+A layer splits in the new tile the new tile numbered it as two layers
+
+expected: both are taken when each is close enough; check the printed table
+
+Too few overlap points match the radius is too tight for this scan COMBINE["radius"] 4 (default 3)
+
+Mesh (run_mesh.py, phase 7b)
+
+(check numbers)
+
+Check 7 fails: kept tracks spread too wide
+
+a neighbouring layer is mixed in lower MESH["keep"] (5 → 4), or fix the layer in phase 6 first
+
+Over 20% of points set aside
+
+layer pressed against a neighbour, or keep too tight
+
+raise MESH["keep"] (5 → 6); look at the magenta in the check picture
+
+Check 6 fails: stretch
+
+the sheet has sharp folds, or links jump between layers
+
+lower MESH["link"] (6 → 5); a smaller MESH["node"] keeps more detail but runs slower
+
+Check 1 fails: mesh off the band middle
+
+band search too wide or too narrow MESH["reach"] (default 12)
+
+Many holes tracks sparse more seeds in phases 1–5, or MESH["bridge"] 8 (default 6) to bridge wider holes (bridged areas are marked)
+
+Meshing is slow too many points; the flat layout is the slow step
+
+keep MESH["node"] 2.5 and MESH["link"] 6 (the defaults); four tiles take about 23 minutes, six about 28
+
+Meshing stops with error code −9
+
+the session ran out of memory, usually while refining the flat layout
+
+restart the session (Runtime → Restart session) and rerun with -from b; if it still stops, lower MESH["local"] (40 → 30), which makes the unrolling slightly less exact over long distances. Six tiles fit a 12 GB session at the defaults
+
+Ink (run_ink.py, phases 8–10)
+
+Ink faint, or ink from the neighbouring layer shows
+
+reading window at the wrong depth
+
+SHIFT (5 is inward, toward the recto); try 3 and 7 and compare
+
+Text is upside down the scroll axis runs the other way in this scan
+
+GRID["up"]: high_z (default, upright on PHerc. Paris 4) or low_z
+
+Text is mirrored surface seen from the wrong side
+
+check the "reading side" line printed by phase 8; FLIP = True reads from the other side
+
+Want a different ink model
+
+set INK_SCRIPT and MODEL; phase10_ink.py states what a replacement must read and write (the 21-slice, 9 µm layout)
+
+Retraining the U-Net for another scroll (train_phase3_unet.py)
+
+The U-Net was trained on four blocks of PHerc. Paris 4 and one of PHerc. 332. A scroll that looks different in the CT (more crushed, darker, another scan setting) may do better with a U-Net trained on blocks of its own. Training needs no human labels and takes about 6 minutes on a T4.
+
+Setting it up. Edit SOURCES at the top of train_phase3_unet.py: each block is a scroll, a scan and z, y, x ranges at level 2. Set VALIDATION to one block of the same scroll that is never trained on, away from the training blocks and from the tiles you will run. Rename the old checkpoint first; the script will not overwrite it.
+
+Keep the training set small and even. On PHerc. Paris 4, adding six blocks to the original five made the pipeline worse: the network learned to hedge, its verso output stayed near the middle, and the tracker's verso stop almost never fired, so tracks ran across layer contacts. Start from about five blocks of the original size (64 × 128 × 128), chosen to cover the kinds of papyrus in the scroll (tight and loose wraps, different heights), and replace blocks rather than add them.
+
+Checking that it trained well. The class loss barely moves during training whatever the data (its floor is about 0.05), so do not judge by it. Check, in this order:
+
+where what to look for a warning sign
+
+python train_phase3_unet.py --check (before training)
+
+every block 100% inside the scan, with plenty of papyrus
+
+a block flagged "little or no papyrus": move it
+
+the held-out lines during training
+
+held-out recto and verso error well below "answering the average", and held-out loss falling with the training loss
+
+held-out error near the average, or rising while the training loss falls (the network memorised its blocks)
+
+phase 3 in run_pipeline.py
+
+mean polarity strength near the previous model's on the same tile (about 0.10–0.12 on PHerc. Paris 4)
+
+a clearly lower value (0.07 for the overtrained version)
+
+phase 4 stop reasons
+
+verso stops in the thousands per tile (about 3,000–15,000 on PHerc. Paris 4)
+
+verso stops in the hundreds: the verso output is compressed; use less data, or lower TRACK["tau_verso"] until they return
+
+phase 6 on the same tile, against the previous model
+
+ply check broken % and doubled layers no worse
+
+more broken facts or more layers over 30% doubled
+
+The last row is the one that counts: the U-Net only matters through how well the layers separate.

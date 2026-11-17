@@ -1,0 +1,52 @@
+{
+  "id": "2026-gilman-spiral-fit-inputs-first-windings",
+  "title": "Spiral-fit inputs and first windings for PHerc. 1203, 1218, 1545 and 0846B",
+  "authors": [
+    {
+      "given": "Jack",
+      "family": "Gilman"
+    },
+    {
+      "given": "Andrew",
+      "family": "Gilman"
+    }
+  ],
+  "year": 2026,
+  "venue": "GitHub",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://github.com/Ahggggg/spiral-tracks-four-scrolls/tree/b6062e13cd6c9a0d8beccb0e946e9afeb120cd7c",
+  "type": "repo",
+  "axes": [
+    "mesh-flattening",
+    "surface-segmentation",
+    "validation-fp",
+    "ink-detection"
+  ],
+  "tags": [
+    "spiral-fit",
+    "tracks",
+    "villa",
+    "umbilicus",
+    "Reader-V3",
+    "community-repo",
+    "PHerc-1203",
+    "PHerc-1218",
+    "PHerc-1545",
+    "PHerc-0846B"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

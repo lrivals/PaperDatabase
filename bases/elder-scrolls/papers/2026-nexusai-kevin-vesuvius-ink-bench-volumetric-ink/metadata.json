@@ -1,0 +1,43 @@
+{
+  "id": "2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink",
+  "title": "vesuvius-ink-bench: volumetric ink-detection benchmarking and low-VRAM inference for Herculaneum scroll CT",
+  "authors": [
+    {
+      "given": null,
+      "family": "nexusai-kevin"
+    }
+  ],
+  "year": 2026,
+  "venue": "GitHub",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://github.com/nexusai-kevin/vesuvius-ink-bench/tree/6bd16ff8936575cfa7db1b4a54b2555d5d2d820a",
+  "type": "repo",
+  "axes": [
+    "ink-detection",
+    "validation-fp"
+  ],
+  "tags": [
+    "benchmark",
+    "community-repo",
+    "herculaneum",
+    "low-vram-inference",
+    "ome-zarr",
+    "resnet3d",
+    "vesuvius-challenge"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
+      "sections numérotées non détectées : 4 — leur texte est rattaché à la section précédente"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

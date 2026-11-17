@@ -1,0 +1,46 @@
+{
+  "id": "2026-betka-herculex-virtual-unwrapping-whole-herculaneum",
+  "title": "HerculeX: virtual unwrapping of whole Herculaneum scrolls on Apple silicon",
+  "authors": [
+    {
+      "given": "Adam",
+      "family": "Betka"
+    }
+  ],
+  "year": 2026,
+  "venue": "GitHub",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://github.com/adambetka2/HerculeX/tree/eace0b23ac4e9f95d10d185f08be743f0d0af961",
+  "type": "repo",
+  "axes": [
+    "virtual-unwrapping",
+    "surface-segmentation",
+    "mesh-flattening",
+    "ink-detection"
+  ],
+  "tags": [
+    "herculaneum",
+    "apple-silicon",
+    "min-cost-flow",
+    "exact-winding",
+    "reader-v3",
+    "github-repo",
+    "not-peer-reviewed",
+    "first-letters"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

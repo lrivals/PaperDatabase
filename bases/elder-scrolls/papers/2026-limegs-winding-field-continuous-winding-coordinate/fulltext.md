@@ -1,0 +1,566 @@
+---
+id: 2026-limegs-winding-field-continuous-winding-coordinate
+title: "winding-field: continuous winding-coordinate fields over predicted scroll surfaces and reproducible evaluation"
+year: 2026
+backend: pymupdf
+---
+
+winding-field: continuous winding-coordinate fields over predicted scroll surfaces and reproducible evaluation
+
+LimeGS
+
+GitHub repository https://github.com/LimeGS/winding-field — commit 1e2724412e (2026-11-16). Documents: README.md, benchmarks/winding/README.md, docs/PERFORMANCE_V3.md, DATASET.md. Community code repository (Vesuvius Challenge), not peer reviewed; all figures self-reported by the authors. Images omitted.
+
+File: README.md
+
+Winding fields and reproducible evaluation
+
+Experimental software for constructing continuous winding-coordinate fields over predicted scroll surfaces, and evaluating saved fields against a frozen case. A useful field should remain nearly constant along a sheet while separating adjacent sheets. Numerical convergence and CT overlays do not certify physical sheet identity.
+
+This repository contains the current implementation, reusable evaluation tools, synthetic examples and regression tests. Research logs, run outputs, experiment reports and prior release snapshots are maintained separately.
+
+The Python distribution is named winding-field (formerly winding-field-experiments). Python module names and solver behavior are unchanged. Use a fresh environment when migrating: the old and new distributions own the same module files and must not be installed together. Keep the original environment for saved runs whose runtime identity is pinned. The separate winding-field-cli package provides the winding-field command.
+
+Paris4 six-surface diagnostics. The continuous flattened surface at W = −120 is unavailable; masked and unmapped areas remain blank. Physical sheet identity is unverified. Image attribution and terms.
+
+Earlier Paris4 CT/winding overlay: CT at 9.6 µm/pixel, the global B2 field at 307.2 µm and a local fine pilot at 19.2 µm. This illustration is separate from the fine-band measurement reported here. Image attribution and terms.
+
+The current method
+
+We approach winding counting as the recovery of a continuous layer coordinate, W(x), over the scroll volume. Within a locally consistent region, this coordinate should vary little when moving along a papyrus layer and increase by approximately one when crossing to the next. Surfaces of constant W are then candidates for following the paper, while differences in W estimate how many layer spacings separate two locations. The absolute zero is a reference choice; the useful information lies in relative ordering and calibrated spacing, rather than in assigning an integer label to every voxel at the outset.
+
+Surface-orientation predictions suggest the direction across layers, and a layer-density estimate supplies the expected rate of change in that direction. Traced fibres provide complementary evidence: samples believed to lie on the same local layer should have similar coordinate values. These observations are noisy and need not form a mutually consistent gradient field, so integrating them independently along different paths can accumulate drift. Our approach instead estimates a field jointly, balancing agreement with the local gradient observations against variation along
+
+fibres. A shared coarse reference carries a common origin and scale into finer regions, helping their local refinements remain mutually consistent.
+
+The open problem is making that coherence preserve the physical winding count. A constant field has no within-layer drift, and a compressed field can improve that metric while losing separation between neighbouring layers. Reliable counting therefore also requires justified orientation and calibration, validation of between-layer separation, and explicit treatment of missing evidence. Folds, breaks and the topology of a rolled sheet can require cuts or linked local coordinate patches rather than one globally smooth numbering. We assess candidates through coverage, intrafibre drift, separation controls and matched CT overlays; smooth contours or numerical convergence alone do not establish that the inferred layers are physically correct.
+
+Fine-grid measurement — AFV v2 (19.2 µm)
+
+Measured on October 20, 2026, using the latest saved Paris4 fine-band checkpoint and a frozen selection from Bruniss's fibers.afv, snapshot 2026-10-13 03:43:29 UTC. See source credits and release posts. No real AFV is bundled or selected by default.
+
+Drift is abs(phi(a)-phi(b))/1.192497988541921, in nominal sheet units; distance is along-fibre arclength. Each fibre contributes at most one pair per distance bin and may appear in several bins. A pair is covered only when all eight interpolation corners at both endpoints contain finite stored fine-grid values, with a one-node domain margin. Unavailable fine samples are not filled from the coarse reference.
+
+792,595 / 2,154,184 selected pairs covered (36.8%). Values are rounded to three decimals.
+
+Along-fibre span (mm) Covered / selected pairs Median p90 p99
+
+0.5–1.5 351,754 / 913,491 0.155 0.538 1.291
+
+1.5–2.5 134,771 / 367,547 0.294 0.897 2.326
+
+2.5–3.5 86,226 / 237,948 0.384 1.139 2.929
+
+3.5–5 65,112 / 182,354 0.452 1.328 3.405
+
+5–7.5 48,300 / 137,923 0.536 1.564 3.830
+
+7.5–10 34,911 / 100,837 0.626 1.827 4.382
+
+10–15 27,019 / 79,017 0.732 2.066 4.538
+
+15–20 17,955 / 53,270 0.879 2.432 5.383
+
+20–25 12,404 / 37,796 1.041 2.737 5.404
+
+25–30 8,384 / 25,978 1.184 3.016 5.723
+
+30–45 5,759 / 18,023 1.336 3.343 6.109
+
+Interpretation: drift grows with along-fibre distance, and substantial long-span errors remain. Statistics describe the covered pairs; unavailable pairs remain in the selected denominator. A constant field also has zero intrafibre drift, so this metric must be considered alongside separation and coverage.
+
+This is a partial checkpoint, retaining an earlier computed fine-band state plus initialized support growth; the restarted campaign stopped before committing a new solved block. These are development consistency measurements that can include fitting fibres, not an independent holdout, physical validation or a final convergence claim.
+
+Fine-grid checkpoint and evaluation identities
+
+Install
+
+Python 3.11 or 3.12 on Linux or macOS. GPU execution requires compatible CUDA.
+
+git clone https://github.com/LimeGS/winding-field.git cd winding-field
+
+python3.11 -m venv .venv source .venv/bin/activate python -m pip install -e ".[test,dev]"
+
+Optional extras: data for Zarr, test for the numerical test suite, dev for development checks, or all for data and tests. Surface extraction, export, flattening and visualization belong to winding-fieldcli.
+
+Minimal example
+
+python -I examples/minimal_field.py
+
+It solves and checks a synthetic ramp:
+
+converged: True field[0,0,:]: [0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+
+The main library interface is field_solver.solve_field. It accepts NumPy arrays or PyTorch tensors and returns a field plus a convergence receipt. Arrays are ZYX; coordinates and gradients are XYZ. See the function docstring for solver options.
+
+Larger fields
+
+The library also provides blockwise solves, resumable field storage, fibre constraints.
+
+For ready-to-run recipes, checkpoint resume, mesh extraction and rendering, see the CLI workflow guide.
+
+Generate and evaluate
+
+Build from a dataset configuration
+
+python examples/build_demo.py --output /tmp/winding-build-demo
+
+This offline example creates synthetic observations and fibres, writes a dataset JSON, invokes the research runner tools/run_coherence.py, and checks the resulting analytic field. It requires no real scan or GPU. Its values are demonstration parameters, not calibration for a real roll.
+
+For your own data, supply an explicit configuration:
+
+python tools/run_coherence.py global \ --config /path/to/my-scroll.json --output /path/to/new-field
+
+The default global method is B2; use --stages for other implemented variants. The JSON selects the AFV, observation sources, coordinate transform, reconstruction grid, fixed calibration and solver settings. Relative data paths resolve from the JSON file. There is no scan-name registry, implicit AFV, machine-directory search or inferred /4 conversion. See the configuration guide and the editable example.
+
+Without declared physical anchors, the generic solver uses a numerical zero gauge. Black pixels on an arbitrary crop boundary are not automatically exterior evidence. Supply a hash-bound fixed cache or explicitly identified exterior faces when that boundary condition is justified.
+
+Try the complete benchmark offline
+
+python examples/benchmark_demo.py --output /tmp/winding-benchmark-demo
+
+Choose a new output directory each time. This creates a tiny synthetic case, an analytic candidate, then runs the real evaluator. No private data, model weights, GPU or network access is needed.
+
+Expected final checks: 6/6 fibre pairs covered, 3/3 synthetic separation pairs correct, and 0/3 for both collapse controls. Open /tmp/winding-benchmark-demo/evaluation/TABLES.md or
+
+SUMMARY.json for the scores. All demo tables are labeled synthetic. These numbers illustrate the interface, not real scroll performance.
+
+Evaluate supplied observations or predictions
+
+The producer and evaluator communicate through saved artifacts:
+
+observations + constraints → producer → field.npy + metadata + optional support ↓ frozen case + evaluator ↓ metrics, controls, hashes
+
+tools/run_coherence.py runs the current coherence methods on synthetic or supplied hashbound data. Start with --help.
+
+benchmarks/winding/evaluate.py scores a saved candidate without importing the solver or PyTorch:
+
+python benchmarks/winding/evaluate.py \ --case "$CASE" --field "$FIELD" --metadata "$METADATA" \ --output "$NEW_RUN"
+
+Use --check-only with a separate new output directory for preflight. Optional matched CT/winding pictures are rendered separately by winding-field ct-visuals in the CLI repository. See the benchmark guide for the case and candidate contracts. New cases declare the frame, physical units and native-to-world transform explicitly. Historical cases lacking that information require an explicit --config coordinate context, leaving their original files unchanged. All/reserved populations, unavailable denominators and separation/collapse controls remain explicit; missing human references are reported as not evaluated.
+
+Layout
+
+src/: solver, constraints, physical grids, bounded storage/block execution, observation preparation, references, topology, data adapters and evaluation helpers.
+
+benchmarks/winding/: artifact evaluator, metrics, independent interpolation and tests.
+
+tools/: field-construction research runners and numerical error auditing.
+
+tests/: synthetic unit, integration and regression tests.
+
+examples/: offline construction/evaluation demos and editable dataset configurations. Prepared workflow examples live in winding-field-cli.
+
+.github/: CI, dependency-update configuration and contribution templates.
+
+Checks
+
+For opt-in throughput measurements (distinct from the scientific quality benchmark), see resultpreserving performance.
+
+For optional CPU float64 spectral PCG, prepared consensus indices, bounded template/gather caches and durable I/O measurements, see solver performance v3, including unsupported geometries and the spatial-index regime that became slower. solve_blocks(...,
+
+prepared_cache_bytes=0) keeps the historical default: no prepared workspace retention between visits. A positive byte budget admits a stable subset of workspaces; observation receipts, static snapshots and live boundary/constraint targets are still validated on every visit. The budget is operational and may change on resume; it is separate from BlockStore cache.
+
+python -m pytest -q --cov=src --cov-report=term-missing ruff format --check .
+
+ruff check . mypy
+
+CI enforces a 90% statement-coverage floor across all src/ modules. Mypy checks annotated functions and a typed solver caller; unannotated research-function bodies and array shapes/ranges still rely on runtime checks and tests.
+
+The Audit badge reports the latest GitHub Actions push on main. The coverage badge is a local snapshot from November 4, 2026: 1297 tests passed, 92.54% statement coverage, on macOS with Python 3.11.13 / NumPy 2.2.6. Refresh it after a measured change; it is not a live coverage feed. The October 27 separated core wheel passed its then-current 1227 tests outside the checkout. Workflow/render tests now run in the CLI repository; see its separation verification.
+
+Data and contribution
+
+Real CT, AFVs, model weights, coordinate annotations and evaluation runs are external inputs/outputs; the two README illustrations are the included CT-derived images. The public tests generate synthetic fixtures. Follow DATA.md for data handling and external terms; the project's MIT license applies to repository-authored code, not external assets.
+
+See CONTRIBUTING.md for development and compatibility rules, and SECURITY.md for vulnerability reporting. Maintenance is best-effort, with no release cadence or support SLA.
+
+File: benchmarks/winding/README.md
+
+Evaluate a saved candidate
+
+evaluate.py evaluates an existing field against a frozen, hash-bound case. It does not import PyTorch, construct constraints, train a model or invoke a winding solver. Its result is PASS_EVALUATED (evaluation completed), not a physical-acceptance claim.
+
+Run from the repository root
+
+The evaluator needs Python 3.11/3.12, NumPy, SciPy and tiffi le. For an evaluation- only environment, python -m pip install numpy scipy tifffile is sufficient; installing the winding library and its Torch dependency is unnecessary.
+
+For a complete numerical first run:
+
+python -m pip install numpy scipy tifffile python examples/benchmark_demo.py --output /tmp/winding-benchmark-demo
+
+This creates all case inputs, a synthetic candidate and analytic separation checks. Its v2 case declares a synthetic frame and physical transform; it contains no real scan data or human annotations. The evaluator's human result key holds those synthetic separation checks in this demo. The generated inputs/case.json is a complete example of the case contract, and evaluation/ contains scores and input/output hashes.
+
+Set CASE, FIELD, METADATA and NEW_RUN to your local case descriptor, candidate NPY, candidate sidecar and a new output directory:
+
+python benchmarks/winding/evaluate.py \ --case "$CASE" --field "$FIELD" --metadata "$METADATA" \ --output "$NEW_RUN-preflight" --check-only
+
+python benchmarks/winding/evaluate.py \ --case "$CASE" --field "$FIELD" --metadata "$METADATA" \ --output "$NEW_RUN"
+
+For a masked candidate, add --support "$SUPPORT". Its expected file SHA-256 must be in metadata (support_sha256) or supplied with --support-sha256 "$SUPPORT_SHA256", taken from a trusted producer receipt. Metadata may alternatively bind C-order array bytes with support_array_sha256. All supplied expectations must agree. A declared mask cannot be omitted.
+
+Use a different output directory for each attempt. Exit 0 means preflight or evaluation completed; exit 2 means an input/verification error. An existing output is never overwritten. ERROR.json records failures in a newly created run.
+
+Case contract, version 2
+
+A case is a JSON document with:
+
+Field Meaning
+
+schema winding-benchmark-case-v2
+
+scope Frozen selection key, e.g. whole_coarse or fine_assembled
+
+frame Nonempty world-frame identifier matching the candidate and references
+
+voxel_um Positive micrometres per world-coordinate unit
+
+native_to_world Positive XYZ scale_xyz and finite offset_xyz for stored AFV coordinates
+
+population all or all_and_reserved; the latter requires a valid supplied split
+
+step Fixed calibration declared by the case publisher
+
+expected_selected Expected population size, including unavailable predictions
+
+expected_human Number of supplied reference pairs; zero when no reference is supplied
+
+human_method Selected method key in the supplied reference file, when present
+
+requires_support Whether a candidate support mask is mandatory
+
+synthetic Optional boolean, default false; marks demonstration tables and receipts
+
+artifacts Required selection, plan, seal, audit, afv; optional split, human. Each entry has path and sha256
+
+Artifact paths are absolute or relative to the case JSON. The seal binds selected pairs to their plan; the plan/audit binds the original AFV. The balanced split is validated against that AFV when supplied. Without a split, an all case checks selected IDs against the AFV database and reports reserved diagnostics as not evaluated. Missing human references are not replaced by predictions or fake labels. The case is supplied by the benchmark curator, independently of candidate scores. Changing its hashes/population creates a different case, not another result on the same benchmark.
+
+Coordinates are converted by world = native * scale_xyz + offset_xyz. The plan's native_voxel_mm (scalar or XYZ vector) must agree with scale_xyz * voxel_um / 1000. There is no implicit /4, scan registry or fixed physical voxel size. The original arclength bins, trilinear interpolation and one candidate-grid-node outer margin remain unchanged. Different resolutions and support may change physical coverage and must be reported alongside errors.
+
+Older winding-benchmark-case-v1 descriptors remain usable when explicit coordinate information is available. If it is absent, pass --config dataset.json to supply the matching frame, AFV and native/world geometry without modifying the original case, plan, selection or seal. That configuration becomes another hashed input. Alternatively, create a new v2 descriptor referencing the original immutable artifacts. A changed coordinate context is not the same benchmark.
+
+Real AFVs, coordinate selections and human source rows are not distributed here. Case descriptors and their full input hashes belong with the external data/run bundle. Acquire the authorized data bundle and adjust paths while preserving those identities; do not recreate a selection after seeing errors.
+
+Candidate contract
+
+The NPY must contain a numeric ZYX scalar volume. The JSON sidecar supplies field_sha256, frame,
+
+origin_xyz, positive spacing_xyz, shape_zyx, voxel_um, and step. Frame/units/calibration must match the case; no score-based rescaling or offset fitting occurs. Nonfinite values are allowed only outside explicit support.
+
+An optional solver receipt is respected: if present, converged must be true. If pilot_gate_status is present, it must be PASS. An absent solver receipt does not claim convergence; it permits evaluating predictions from other kinds of producers. Numerical success never certifies physical sheet identity.
+
+Evidence emitted
+
+PREFLIGHT.json: input and evaluator-source hashes, coordinate transform, physical units, population, counts, environment and declared candidate receipt.
+
+predictions.npz: sampled endpoint values and per-pair errors in frozen selection order; unavailable values remain NaN.
+
+SUMMARY.json / TABLES.md: all-fibre and reserved tables, human separation, constant and 0.1compressed controls, and independent interpolation checks.
+
+MANIFEST.json: output-file hashes. Inputs are rehashed before success.
+
+Optional CT/winding pictures
+
+CT rendering lives in winding-field-cli. The core evaluator ignores the optional visualization block, including during --check-only; unavailable CT archives do not prevent numerical scoring.
+
+With the CLI and its plot extra installed, render the same saved candidate to a separate new output directory:
+
+winding-field ct-visuals --case "$CASE" --field "$FIELD" \ --metadata "$METADATA" --output "$NEW_VIEWS"
+
+The CLI guide documents the unchanged frozen CT archive contract, support masks, visual preflight and image manifests. Numerical scores remain in the benchmark output; images and their receipts belong to the CLI output.
+
+Numerical comparison
+
+The independent NumPy sampler checks coverage and raw values against SciPy. The comparison permits 2e-5 absolute error plus half an output-dtype ULP for SciPy's rounding; the observed raw discrepancy and maximum allowance are reported. Controls retain candidate coverage. Constant/compressed fields may look excellent on intrafibre consistency while failing separation; there is no combined score that hides this trade-off.
+
+Code and producer boundary
+
+metrics.py: deterministic pair sampling, support-aware evaluation and summaries.
+
+interpolation.py: independent NumPy interpolation verification.
+
+test_*.py: synthetic regressions for the public evaluator.
+
+The evaluator reuses solver-free helpers in src/ (common, patch_check, paris_pair_check,
+
+evaluation_split, physical_grid). It accepts saved predictions from any producer that satisfies the case's frame/units contract. The project's current producer runner is tools/run_coherence.py; generating fields and evaluating them remain separate operations.
+
+File: docs/PERFORMANCE_V3.md
+
+Solver performance v3
+
+Contracts and configuration
+
+CPU consensus application prepares ascending active row indices, active groups, weights and clamped group denominators. This preserves multiplication/subtraction and index_add_ accumulation order exactly, including zero-weight and exterior rows. The non-CPU implementation is unchanged. Targets remain live. Prepared workspaces own structural snapshots and reject changed weights, groups, geometry, dtype/device and writable-alias mutations. Accounting includes backing storage.
+
+from field_solver import PreparedField, solve_field
+
+workspace = PreparedField() field, receipt = solve_field( target_xyz, weights, constraints=constraints, fixed=fixed_values, dtype="float64", device="cpu", rtol=1e-8, maxiter=1500, preconditioner="spectral", prepared=workspace, )
+
+preconditioner="jacobi" remains the default. Spectral is explicit, CPU float64 only, and accepts the effective fixed mask after the existing gauge rules:
+
+Exactly one fixed node, including the automatic zero gauge or an interior, nonzero supplied anchor. Length-one axes are allowed. Exactly all six complete exterior faces, with no extra interior anchors. All nodes fixed (no free correction).
+
+Other geometries, precisions and devices fail; a reference-only unanchored system is not supported. No hidden device transfer or precision conversion is added. Point masks use orthonormal DCT-II and idctn(type=2); the zero-mode inverse is exactly zero. Full faces use orthonormal DST-I and idstn(type=1). The uniform coefficient is the float64 mean of weights. Eigenvalues represent differences in index space, without spacing factors. Constraints and reference terms remain in A. Anchor balancing is confined to the preconditioner; original nonzeroanchor RHS elimination, warm start, restarts and final true residual are preserved.
+
+Receipts record the requested/actual policy and spectral kind/coefficient. Prepared spectral reuse compares the full fixed mask, not its anchor count; changed policy/mask requires a new workspace. Fixed values and constraint targets refresh on every solve. The policy may change iterations and final decimals; its guarantee is the same system, anchors and true relative residual criterion.
+
+Blocks, independent caches and STATUS
+
+from constraint_templates import StencilConstraints from block_solver import solve_blocks
+
+rows = StencilConstraints.load( "constraints.npz", cache_bytes=64 * 2**20, spatial_index_bytes=32 * 2**20, template_cache_policy="stable", ) receipt = solve_blocks( root, shape, chunk, identity, load_observations, origin_xyz=origin, spacing_xyz=spacing, order=order, constraints=rows, cache_bytes=64 * 2**20, prepared_cache_bytes=128 * 2**20, preconditioner="jacobi", status_policy="checkpoints", )
+
+The block engine produces partial fixed-face masks; it deliberately accepts only Jacobi and rejects spectral before creating outputs. Jacobi is the invariant policy of the existing v1 block identity
+
+(including identities without an explicit field). It is also recorded in each solver receipt. No alternative policy can be resumed. Caller source/code identity validation remains mandatory and unchanged; these changes do not authorize resuming a checkpoint made by different code.
+
+Budget/policy Meaning Default
+
+cache_bytes on solve_blocks Decoded chunk generations
+
+cache_bytes on StencilConstraints Restriction templates and retained gather plans
+
+spatial_index_bytes Sorted original nonzero-slot spatial postings, independently bounded
+
+prepared_cache_bytes Static solver workspace plus nonadmission metadata
+
+template_cache_policy lru or stable first-fit lru
+
+status_policy all or checkpoints all
+
+These bound retained storage, not peak process memory. Static input snapshots, returned arrays, solver temporaries and FFT scratch are additional memory. Spatial admission reserves a conservative construction-workspace bound before allocating postings. Insufficient budget falls back to the original exact scan. Sorted flat node postings are queried by contiguous X spans; candidates undergo the original exact half-open ZYX filter before complete groups are expanded in original row order. Original nonzero-slot contact survives duplicates and cancellations.
+
+Stable template admission keeps the first fitting entries rather than evicting them on a cyclic scan. For A/B/C repeated three times with room for two templates: LRU gives 0 hits, 9 misses, 7 evictions; stable gives 4 hits, 5 misses, 0 evictions. Gather plans cache only chunk/localindex/order geometry, never values or generations. Both cached and uncached reads consult the current committed chunks. Fortran chunks are gathered without flattening/copying their entire storage.
+
+Prepared admission retains a stable subset. Known nonadmitted keys can consume 4096 bytes each from the same budget, avoiding subsequent snapshot construction. If even that metadata cannot fit, snapshots may be repeated. Denied keys always solve cold: they do not reuse an operator or skip current-input validation. Arbitrary callable constraint providers remain ineligible for prepared retention. All workspaces/decisions are released on success, STOP and exceptions; resume is cold. Every visit still validates observations/receipts and uses live boundaries.
+
+status_policy="checkpoints" publishes the first RUNNING immediately, every checkpoint after commit, and every terminal state. It suppresses only later informational observations/solving notices. STOP/resource checks, ownership/PID, durable commits, atomic replace and fsync are unchanged. STATUS is not a global convergence certificate; local, assembled-field and physical acceptance remain distinct.
+
+Commit validation's decoded payload is admitted to the bounded read cache only after successful durable publication and required cleanup. Failed publication retains fail-closed/poison semantics. Manifest bytes are serialized and validated once for both admission and publication. Anchor error uses the same mean over the whole core while quantizing only anchor positions; no anchors means zero.
+
+Reproduce the measurements
+
+Use one interpreter/dependency installation for both source trees. Baseline and candidate are frozen into a new external output directory with source hashes, revision metadata and an executable copy of the harness:
+
+.venv-perf-v2-cpu/bin/python benchmarks/performance/v3.py \ --baseline /absolute/path/to/archived-current-baseline \ --baseline-commit 82e0496b1ebe75f5b48ff92ca426233e35e61fc4 \ --candidate . --output /absolute/path/to/new-evidence --repetitions 8
+
+Four solver variants isolate baseline, consensus indices only, spectral only, and both. The intermediate variants mix complete module files only in frozen benchmark trees, never production. Each worker imports its assigned tree; all imported project-module paths and source hashes are checked. Only one worker executes a command at a time; other workers are idle. Each variant gets a first call and an explicit warm-up before eight cyclically balanced repetitions. First-call timings are not cold-machine or flushed-filesystem measurements.
+
+The requested 32³ fixtures preserve RNG order, seeds, 20,000 consensus rows in groups of 20, interpolated 32 pair rows, and post-constraint 100:1 weight changes. All use float64, rtol=1e-8,
+
+maxiter=1500 and one Torch/BLAS/OpenMP thread. Tiny 3³, spatial/template, partial A/B/C, gather, commit/read and existing block shapes provide additional regimes. There is no distributable realdata fixture in this checkout; these are synthetic, not scroll/physical-validation results.
+
+Timing excludes fixture generation, hashes, validation and diagnostic wrappers; solver timing includes preconditioner preparation. Constraint construction is recorded separately. Block timings include their required production hashes, receipts and durable I/O, which are part of the operation, not benchmark probes. Memory and instrumentation run separately. Inclusive stage regions nest and must not be added together. Tracemalloc excludes untracked native allocations; RSS is process-lifetime high-water including imports/all passes. Solver timed calls retain no PreparedField; the separately measured hypothetical prepared workspace is explicitly labeled. Template/cache retention is taken from actual diagnostic state.
+
+Raw JSON contains every sample and order, medians/IQR, receipts, max/RMS field differences, anchors, cache counts, setup/iterative-envelope/commit/STATUS/read diagnostics, retention/peak memory and full provenance. Structural comparisons also assert exact constraint digests, chunk hashes, sweep updates and numerical receipts excluding duration/new operational metadata. Store reads validate every generation against independently reconstructed quantized values.
+
+Local results and validation
+
+Measured on Apple M2 Pro (12 logical CPUs), macOS arm64, Python 3.11.13, NumPy 2.2.6, SciPy 1.16.1, Torch 2.12.1. All thread settings were 1. These are local measurements, not the historical Linux timings. Each cell is median / IQR in milliseconds over eight balanced repetitions, with setup included:
+
+Solver fixture Baseline Indices only Spectral only Both
+
+Pairs 32³ 102.997 / 1.445 102.937 / 1.842 14.803 / 0.354 14.897 / 0.464
+
+Consensus20k 32³ 605.846 / 3.208 535.399 / 7.184 109.300 / 2.092 97.818 / 1.166
+
+Weights 100:1 115.318 / 1.232 114.955 / 1.470 50.483 / 0.581 50.581 / 0.540
+
+Six faces 42.366 / 0.902 42.456 / 1.227 24.678 / 0.553 24.361 / 0.113
+
+Tiny 3³ 2.020 / 0.094 1.893 / 0.094 1.622 / 0.041 1.549 / 0.088
+
+Indices alone preserve exact fields, iterations and residuals. Non-consensus rows have no active groups, so no useful index speedup is expected; differences there are noise-scale, including the slightly slower faces median. Spectral-only and combined fields are identical to each other in this run, but not bitwise to Jacobi. All solver cases converged with exact anchors:
+
+Fixture Iterations Jacobi → spectral True residual Jacobi → spectral Max / RMS field difference
+
+Pairs 302 → 12 9.89226609e-9 → 7.81897206e-9 2.50514e-8 / 7.93559e-9
+
+Consensus 162 → 21 8.79348674e-9 → 9.22212233e-9 2.70647e-8 / 3.77629e-9
+
+Jump 332 → 50 9.63971061e-9 → 8.54800280e-9 9.98790e-8 / 1.92498e-8
+
+Faces 115 → 12 9.16315886e-9 → 6.86551619e-9 1.24485e-8 / 3.63912e-9
+
+Tiny 20 → 9 6.31692443e-9 → 5.99213852e-9 9.21100e-10 / 5.43577e-10
+
+Structural/I/O fixture Baseline ms / IQR Candidate ms / IQR
+
+Spatial templates, dense cross-block groups, no template retention 83.045 / 1.095 115.605 / 0.636
+
+A/B/C, capacity two 2.355 / 0.106 1.571 / 0.152
+
+Structural/I/O fixture Baseline ms / IQR Candidate ms / IQR
+
+Three durable commits + reads, 32³ 16.857 / 0.397 15.498 / 0.348
+
+10,000-node gather, cached chunks 0.655 / 0.021 0.100 / 0.012
+
+Blocks, 8×8×16 23.663 / 1.296 20.678 / 0.566
+
+Constrained blocks, 3×4×6 74.249 / 1.067 58.490 / 1.531
+
+Negative result: the spatial index loses about 39% in the dense cross-block group fixture. Nearly every group is selected, leaving little scan work to remove; postings construction/query adds work. It remains optional and off by default. This case includes index construction and nine restrictions. Do not enable it indiscriminately. Stable A/B/C gives the required 4/5/0 hit/miss/eviction counts versus LRU's 0/9/7. Structural arrays, digests and block payload hashes match exactly. Block candidates combine prepared retention, stable/indexed templates where applicable, storage changes and checkpoint-only STATUS; their speedup is not an isolated attribution to any one component.
+
+Memory tradeoffs are explicit. The consensus hypothetical prepared workspace grows from 14,322,490 bytes to 15,402,186 bytes with both numerical optimizations. Timed solver calls retain no workspace. For point 32³ the traced separate-pass peak grows from 145,605 to 1,353,578 bytes; this does not include all Torch-native allocations. Spatial template postings retain 1,284,096 bytes in the losing fixture. The gather plan raises retained cache+plan bytes from 50,688 to 212,512 while reducing traced peak from 644,520 to 135,224 bytes. Full per-case memory, stage timings, first calls and constraint construction costs are in the raw JSON.
+
+Evidence root relative to this checkout: ../../artifacts/perf-v3-20261104/final-balanced/. It contains
+
+provenance.json, summary.json, one raw JSON per case, all measured fields, frozen source variants, and the executed harness. The two harness-smoke* directories are validation smokes and are not pooled into these tables. Baseline is the source archive of 82e0496; candidate provenance records its dirty-source hashes, subsequently committed locally. No measured source changed during the run.
+
+Validation executed locally:
+
+Independent numerical review approved CPU index parity and spectral geometry, elimination, restart, alias invalidation and memory accounting. Core full coverage gate: 1442 passed, 92.78% (90% threshold); the final six harness checks also passed after tightening provenance/metadata assertions. Core Ruff format/lint and mypy passed; wheel and sdist built. Packaging and paired CLI integration are checked with the matching 1.3.0.dev2 package. Both installed wheel and rebuilt-sdist minimal examples passed, as did wheel inventory checks and the offline demo (6/6 fibre pairs, 3/3 separation, 0/3 collapse controls). Installed CLI full suite: 1396 passed, 10 skipped in 425.79 s, without exclusions and with
+
+-o pythonpath=. Installed core and CLI module paths were asserted inside the test environment, not the source checkout. This additional functional environment uses NumPy 2.4.6, SciPy 1.17.1 and Torch 2.15.0; it is not the performance-table environment. Skips are external real/control fixtures or Linux/CUDA-specific checks; names are saved in cli-
+
+skipped.txt. Final matching-wheel pip check passed. After updating packaged core provenance, 89 dependency/field/workflow/example tests passed. Installed examples demonstrated STOP/resume, cold preparation on resume, exact synthetic field error below 1.6e-13, effective threads=1, and zero retained workspaces on exit. Supervised prepared build and resume also passed from outside the checkout. Storage review found and fixed full-chunk Fortran flattening; regressions fail before the fix and pass after it. Block review removed an extra pre-lease manifest read rather than weakening locked identity validation. CLI-wide Ruff reports 1641 findings and 130 files needing format under the available user Ruff configuration (the CLI has no project Ruff configuration). The seven touched Python files account for 89 findings and seven format failures; exact baseline diagnostic comparison
+
+found no additions in those files. Other Python files are unchanged. These gates are not clean; unrelated cleanup was not folded into this performance change. Scoped mypy passes for the four changed production modules.
+
+No CUDA/MPS execution, real-scroll run, remote CI, push, merge or publication is part of this local delivery. The non-CPU consensus path remains compatible; CPU speedups do not imply GPU speedups. Local package version 1.3.0.dev2 distinguishes the added API from older installations; the paired CLI pins that exact version.
+
+File: DATASET.md
+
+Configure your dataset
+
+The software constructs fields from supplied observations and fibres. It does not bundle an AFV, choose a scan, download model weights, infer a centerline or derive a trustworthy calibration from a filename.
+
+Start with the runnable synthetic example:
+
+python examples/build_demo.py --output /tmp/winding-build-demo
+
+Inspect its generated dataset.json and field/. For a real dataset, copy examples/dataset.example.json and replace all paths and physical/calibration values with your dataset's declarations. The example's numbers are schematic, not a recommended real-scroll calibration.
+
+python tools/run_coherence.py global --config /path/to/my-scroll.json --output /path/to/new-field
+
+Keep real data and run directories outside this checkout, and use a new output directory for each attempt. B2 is the default global method; --stages B1 B2 B3 B3-R B4 selects existing variants. --device overrides the configured solver device. Nonconvergence returns a nonzero exit status and keeps failed numerical evidence; it does not publish a valid candidate NPY/sidecar.
+
+Coordinates and calibration
+
+All arrays are ZYX; coordinate vectors and gradient components are XYZ. The grid describes the world position of array node [0,0,0], sample spacing and array shape. Positions may have a nonzero or negative origin.
+
+frame: a nonempty identifier shared by all world-coordinate inputs.
+
+voxel_um: micrometres per world coordinate unit, not solver-grid pitch.
+
+grid.origin_xyz: world position of the first sample.
+
+grid.spacing_xyz: positive world-coordinate increments along XYZ.
+
+grid.shape_zyx: positive integer sample counts in ZYX order, at least two per axis.
+
+sheet_step: positive fixed raw-field increment corresponding to one nominal sheet. The reported winding coordinate is W = phi / sheet_step.
+
+calibration: how that scale was obtained. A description records provenance; it does not certify its physical correctness.
+
+For example, voxel_um=8 and spacing_xyz=[4,4,4] give a 32 µm field grid. Do not silently change calibration to improve an evaluation score.
+
+Fibre input
+
+afv.path identifies a read-only SQLite AFV with fibers and ordered blocks tables; ROI readers also use block_bounds. Stored point blocks contain little-endian float64 XYZ coordinates. Neither the filename nor numeric fibre IDs identify the coordinate system or establish lineage across files.
+
+The explicit axis-aligned transform is:
+
+world_xyz = native_xyz * afv.scale_xyz + afv.offset_xyz native_voxel_um = afv.scale_xyz * voxel_um
+
+Declare afv.native_frame, positive native_voxel_um (scalar or XYZ vector), positive scale_xyz, and finite
+
+offset_xyz. Rotations/reflections and arbitrary file layouts require conversion to the supported XYZ representation first. Available AFV metadata is checked against the declaration, including frame, XYZ voxel coordinates, units and completion. Unrecorded coordinate facts remain caller-declared; they are not guessed. Add afv.sha256 to pin an exact file.
+
+Observations
+
+Each sources entry names a local NPY or a Zarr array path/URI, its world frame, origin_xyz and
+
+spacing_xyz. Choose the array/mip explicitly; there is no URL template or implicit power-of-two conversion. Local paths resolve relative to the configuration file. Arrays must be numeric ZYX volumes. Optional file sha256 expectations are checked. Zarr observations retain hashes of the actual sampled crops rather than pretending to hash a remote dataset.
+
+The raw-observation route uses:
+
+ct: CT for declared exterior anchors and optional visual QC.
+
+surface: foreground mask or surface scores. Weights use the declared
+
+prediction.surface_threshold, material_weight and background_weight.
+
+nx, ny, and (for signed vectors) nz: normal components.
+
+density: nonnegative raw density, multiplied by prediction.density_scale to obtain raw-field increments per world unit along the oriented normal.
+
+prediction.normal_encoding supports:
+
+signed_xyz with orientation.mode="provided": three already oriented channels, normalized before use.
+
+hemisphere_xy with orientation.mode="radial": the existing byte encoding x=(nx-128)/127, y=(ny-
+
+128)/127, positive reconstructed Z, followed by a supplied radial orientation prior.
+
+Radial orientation needs orientation.centerline with path, matching frame and optional sha256. Its JSON contains control_points with x, y, z; the existing model interpolates a centerline along Z. This is an orientation prior, not physical sheet truth. Use supplied signed channels when that model does not fit the volume.
+
+surface_scale converts surface values to probabilities for local topology. The prior-seed visual probe selects positive prior pixels; provide a suitable foreground prior rather than assuming every nonzero soft score is paper.
+
+Anchors and reusable caches
+
+The generic global runner defaults to a numerical node-zero gauge when no physical anchors are declared. It does not infer that black pixels on a crop boundary are outside the roll.
+
+If justified, context.exterior_faces lists selected grid faces (x_min, x_max, y_min, y_max, z_min, z_max) and
+
+context.exterior_authority records the evidence. Only black CT samples on those faces become zero anchors. context.black_value defaults to zero. The dedicated whole_reference and arrival-boundary routes require appropriate exterior evidence; interior air is not automatically an exterior seed.
+
+Alternatively, a cache object supplies four { "path": ..., "sha256": ... } entries: target, weights, fixed,
+
+metadata. Target is ZYX×3; weights and fixed are matching ZYX arrays. Finite fixed values are anchors; NaNs are unpinned. Cache metadata must match the configured frame, voxel_um, step, origin,
+
+spacing and shape. Hashes are mandatory. Global cache-only construction does not need to reopen prediction sources; CT-dependent tools still need CT declarations.
+
+If a cache configuration also declares prediction/orientation settings or non-CT observation sources, those declarations must match the cache metadata's observation_config. Current observation producers write that binding. A legacy cache without it can be used with a cache-only configuration, but cannot silently override contradictory raw-source declarations. No raw-source reopen is needed to validate a bound cache.
+
+Construction settings and artifacts
+
+Supported solver settings are device, positive rtol, and integer maxiter. Constraint settings are
+
+pair_weight, pitch_mm, optional positive trace_target, and local/legacy fiber_limit / pair_limit. A
+
+trace_target normalizes operator strength from geometry before solving; it is not a fitted field scale. Unknown solver/constraint settings fail instead of silently using defaults.
+
+Settings also have to be supported by the selected method. Global/local coherence and continuous pilots accept pair_weight, pitch_mm, and trace_target; uncapped modes reject local/legacy caps. Nodal whole-reference and local nodal producers reject uniform-sampling or trace-matching knobs they cannot apply. A pilot consuming frozen continuous constraints takes its operator parameters from that artifact, rather than silently replacing them. Explicit raw nodal inputs retain their own applicable weight/cap settings.
+
+rtol is a CG relative tolerance. The CPU-only arrival-boundary mode rejects CG rtol and fibreconstraint settings; use context.arrival_tolerance for its absolute residual tolerance and
+
+solver.maxiter for the iteration budget. Local mode applies CG settings to its signed stages and the arrival tolerance to its unsigned stage. An arrival subcrop can use only declared exterior faces that are actually retained in that subcrop.
+
+Optional artifacts entries use path, optional sha256, and optionally a matching world frame. The coherence runner consumes split, reference_field, reference_metadata and evaluation_case as needed by its selected mode. Legacy annotation-driven runs use annotations. A supplied split must bind the selected AFV. Without a split, global construction is an all-input development run with no held-out claim; --production explicitly uses all fibres. The shared local/legacy observation loader also respects a configured split.
+
+External references with support masks must bind them by file/array hash. Both fine and coarse resampling check the actual positive-weight stencils; finite values outside declared support cannot become anchors. Continuous- constraint sidecars must agree on physical units and any declared calibration; nonzero targets require an explicit calibrated step. Automatically evaluated pilot outputs pass their producer-bound support to the full evaluator, including preflight and output manifests.
+
+context.calibration_ids can request lineage/length splitting with explicit calibration antecedents;
+
+split_seed controls its deterministic assignment. No old collection's reserved IDs or inspected regions are inherited.
+
+Other entry points retain their specialized operation arguments:
+
+src/whole_reference.py --config ... --output ...: coarse reference, with explicit exterior faces; optional development receipts must agree with the configured scale.
+
+src/coarse_reference.py --config ... --output ...: bounded refinement; origin/size/step and reference/continuous-constraint flags are explicit overrides.
+
+src/paris_solve.py --config ... --output ... --prediction-only: legacy index-grid method with declared calibration; ridge estimates are diagnostics.
+
+src/sealed_predict.py predict --config ...: sealing workflow, also requiring the chosen geometry manifest and development receipts.
+
+Historical paris_* module filenames remain for import familiarity; they no longer select a scan. The core field_solver.solve_field array API is unchanged.
+
+Evaluation and surfaces
+
+See the benchmark guide for portable frozen cases, optional human controls and explicit native-toworld geometry. Construction and scoring remain separate. A missing split or annotation is not an independent holdout and is not replaced with fabricated references.
+
+Surface probe/export/atlas tools now live exclusively in winding-field-cli. They consume this same dataset configuration; context.surface remains opaque to the core. See the CLI surface tool guide for configured CT/prior sampling, frozen seeds, TIFXYZ geometry and optional patch evaluation.
+
+Migrating older commands
+
+Replace --root, implicit data-directory searches and inferred AFV names with --config. Use a fresh output directory. Pass an explicit AFV path to common.load_fibers; the scroll lookup registry has been removed.
+
+compile_fibres requires explicit physical voxel units. Observation loaders require the validated dataset object. Bounds, source sampling, orientation and scale come from that object. Pair/split tools no longer inherit historical Z windows or reviewed regions. Supply those policies explicitly to reproduce a historical protocol. The audit freezer takes --config with context.holdout containing buffer_world, margin_world, and
+
+alignment_xyz; its domain and working grid come from the configuration. Labels are still copied opaquely with restrictive permissions. Keep original datasets, cases, seals and outputs immutable. A new configuration or coordinate context is new evidence; do not rewrite old hashes to hide it.
+
+Portability is tested with synthetic frames and physical transforms. It does not establish physical correctness for every real roll, prediction model or fibre collection. The README's measured samples retain their original source and artifact identities. Data permissions remain governed by DATA.md.

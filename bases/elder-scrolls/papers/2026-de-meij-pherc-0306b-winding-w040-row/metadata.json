@@ -1,0 +1,52 @@
+{
+  "id": "2026-de-meij-pherc-0306b-winding-w040-row",
+  "title": "PHerc. 0306B, winding w040: a row of letters, with segments, labels and predictions",
+  "authors": [
+    {
+      "given": "David",
+      "family": "de Meij"
+    },
+    {
+      "given": "Nicolas",
+      "family": "Brown"
+    },
+    {
+      "given": "Nataliia",
+      "family": "Bazaka"
+    }
+  ],
+  "year": 2026,
+  "venue": "GitHub",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://github.com/daviddemeij/pherc0306b-partial-letters-w040/tree/9aee0e66f3d7c437329104ec961623c4f0d181a5",
+  "type": "repo",
+  "axes": [
+    "ink-detection",
+    "surface-segmentation",
+    "validation-fp"
+  ],
+  "tags": [
+    "PHerc0306B",
+    "w040",
+    "Reader v3",
+    "ScrollFiesta",
+    "blind-face control",
+    "community repo",
+    "8.64 um"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

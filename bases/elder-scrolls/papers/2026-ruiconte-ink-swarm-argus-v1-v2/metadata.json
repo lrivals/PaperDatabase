@@ -1,0 +1,43 @@
+{
+  "id": "2026-ruiconte-ink-swarm-argus-v1-v2",
+  "title": "ink-swarm: Argus V1 and V2 ink-detection checkpoints for Herculaneum scroll surface volumes",
+  "authors": [
+    {
+      "given": null,
+      "family": "ruiconte"
+    }
+  ],
+  "year": 2026,
+  "venue": "GitHub",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://github.com/ruiconte/ink-swarm/tree/d38015a0ba09a009bdf64bc8535877a041a7edda",
+  "type": "repo",
+  "axes": [
+    "ink-detection",
+    "domain-transfer",
+    "validation-fp"
+  ],
+  "tags": [
+    "herculaneum",
+    "github",
+    "argus",
+    "reader-v3",
+    "weight-soup",
+    "depth-reversal-control"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
+      "aucune section détectée"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

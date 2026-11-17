@@ -2,7 +2,7 @@
 
 <!-- GÉNÉRÉ par bin/reindex.py — ne pas éditer à la main -->
 
-**44 papiers, 0 fiches à faire.**
+**45 papiers, 0 fiches à faire.**
 
 Un papier peut apparaître sous plusieurs axes.
 
@@ -52,6 +52,7 @@ Un papier peut apparaître sous plusieurs axes.
 | [2026-gilman-first-letters-clean-sheets-173](papers/2026-gilman-first-letters-clean-sheets-173/fiche.md) | first-letters-clean-sheets: 173 self-traced clean single-sheet surface patches on 13 First Letters-eligible Herculaneum scrolls | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
 | [2026-gilman-spiral-fit-inputs-first-windings](papers/2026-gilman-spiral-fit-inputs-first-windings/fiche.md) | Spiral-fit inputs and first windings for PHerc. 1203, 1218, 1545 and 0846B | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
 | [2026-korotetskyi-volumetric-texture-analysis-unsupervised-ink](papers/2026-korotetskyi-volumetric-texture-analysis-unsupervised-ink/fiche.md) | Volumetric Texture Analysis for Unsupervised Ink Detection in Herculaneum Papyri | Oleksandr Korotetskyi, Michal Haindl | 2026 | Zenodo (CERN European Organization for Nuclear Research) | report | done |
+| [2026-limegs-ink-sdk-standalone-inference-sdk](papers/2026-limegs-ink-sdk-standalone-inference-sdk/fiche.md) | ink-sdk: standalone inference SDK for Vesuvius ink-detection models with receipts and a liveness gate | LimeGS | 2026 | GitHub | repo | done |
 | [2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink](papers/2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink/fiche.md) | vesuvius-ink-bench: volumetric ink-detection benchmarking and low-VRAM inference for Herculaneum scroll CT | nexusai-kevin | 2026 | GitHub | repo | done |
 | [2026-pellerano-rectina-m3-m4-dense-ink](papers/2026-pellerano-rectina-m3-m4-dense-ink/fiche.md) | Rectina m3 and m4, dense ink readers for Herculaneum papyri rebuilt on current renders | Giovanni Pellerano | 2026 | GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina) | preprint | done |
 | [2026-ruiconte-ink-swarm-argus-v1-v2](papers/2026-ruiconte-ink-swarm-argus-v1-v2/fiche.md) | ink-swarm: Argus V1 and V2 ink-detection checkpoints for Herculaneum scroll surface volumes | ruiconte | 2026 | GitHub | repo | done |
@@ -146,6 +147,7 @@ Un papier peut apparaître sous plusieurs axes.
 
 | id | titre | auteurs | année | venue | type | fiche |
 |---|---|---|---|---|---|---|
+| [2026-limegs-ink-sdk-standalone-inference-sdk](papers/2026-limegs-ink-sdk-standalone-inference-sdk/fiche.md) | ink-sdk: standalone inference SDK for Vesuvius ink-detection models with receipts and a liveness gate | LimeGS | 2026 | GitHub | repo | done |
 | [2026-pellerano-rectina-m3-m4-dense-ink](papers/2026-pellerano-rectina-m3-m4-dense-ink/fiche.md) | Rectina m3 and m4, dense ink readers for Herculaneum papyri rebuilt on current renders | Giovanni Pellerano | 2026 | GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina) | preprint | done |
 | [2026-ruiconte-ink-swarm-argus-v1-v2](papers/2026-ruiconte-ink-swarm-argus-v1-v2/fiche.md) | ink-swarm: Argus V1 and V2 ink-detection checkpoints for Herculaneum scroll surface volumes | ruiconte | 2026 | GitHub | repo | done |
 | [arxiv-2603.27698-ink-detection-surface-topography-herculaneum](papers/arxiv-2603.27698-ink-detection-surface-topography-herculaneum/fiche.md) | Ink Detection from Surface Topography of the Herculaneum Papyri | Angelotti et al. | 2026 | Scientific Reports (2026) | journal | done |
@@ -157,6 +159,7 @@ Un papier peut apparaître sous plusieurs axes.
 | [2026-de-meij-pherc-0306b-winding-w040-row](papers/2026-de-meij-pherc-0306b-winding-w040-row/fiche.md) | PHerc. 0306B, winding w040: a row of letters, with segments, labels and predictions | David de Meij, Nicolas Brown, Nataliia Bazaka | 2026 | GitHub | repo | done |
 | [2026-gilman-first-letters-clean-sheets-173](papers/2026-gilman-first-letters-clean-sheets-173/fiche.md) | first-letters-clean-sheets: 173 self-traced clean single-sheet surface patches on 13 First Letters-eligible Herculaneum scrolls | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
 | [2026-gilman-spiral-fit-inputs-first-windings](papers/2026-gilman-spiral-fit-inputs-first-windings/fiche.md) | Spiral-fit inputs and first windings for PHerc. 1203, 1218, 1545 and 0846B | Jack Gilman, Andrew Gilman | 2026 | GitHub | repo | done |
+| [2026-limegs-ink-sdk-standalone-inference-sdk](papers/2026-limegs-ink-sdk-standalone-inference-sdk/fiche.md) | ink-sdk: standalone inference SDK for Vesuvius ink-detection models with receipts and a liveness gate | LimeGS | 2026 | GitHub | repo | done |
 | [2026-limegs-winding-field-continuous-winding-coordinate](papers/2026-limegs-winding-field-continuous-winding-coordinate/fiche.md) | winding-field: continuous winding-coordinate fields over predicted scroll surfaces and reproducible evaluation | LimeGS | 2026 | GitHub | repo | done |
 | [2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink](papers/2026-nexusai-kevin-vesuvius-ink-bench-volumetric-ink/fiche.md) | vesuvius-ink-bench: volumetric ink-detection benchmarking and low-VRAM inference for Herculaneum scroll CT | nexusai-kevin | 2026 | GitHub | repo | done |
 | [2026-pellerano-rectina-m3-m4-dense-ink](papers/2026-pellerano-rectina-m3-m4-dense-ink/fiche.md) | Rectina m3 and m4, dense ink readers for Herculaneum papyri rebuilt on current renders | Giovanni Pellerano | 2026 | GitHub (evilaliv3/vesuvius-challenge-pipeline, results/db27c806-rectina) | preprint | done |

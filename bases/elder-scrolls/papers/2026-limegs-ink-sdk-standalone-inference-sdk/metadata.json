@@ -1,0 +1,44 @@
+{
+  "id": "2026-limegs-ink-sdk-standalone-inference-sdk",
+  "title": "ink-sdk: standalone inference SDK for Vesuvius ink-detection models with receipts and a liveness gate",
+  "authors": [
+    {
+      "given": null,
+      "family": "LimeGS"
+    }
+  ],
+  "year": 2026,
+  "venue": "GitHub",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://github.com/LimeGS/ink-sdk/tree/19d39cbea85bca74a30e496b0488575f55f6d88d",
+  "type": "repo",
+  "axes": [
+    "ink-detection",
+    "validation-fp",
+    "domain-transfer"
+  ],
+  "tags": [
+    "community-repo",
+    "herculaneum",
+    "inference-sdk",
+    "reproducibility",
+    "liveness-gate",
+    "ink-readers"
+  ],
+  "added": "2026-11-17",
+  "extraction": {
+    "backend": "pymupdf",
+    "ok": false,
+    "warnings": [
+      "métadonnées à vérifier à la main",
+      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
+      "ligatures perdues à l'extraction : 2 mot(s) réparé(s) (lib/ligatures.py)",
+      "ligatures perdues : 3 fragment(s) non réparé(s) (« classi cation »…)"
+    ]
+  },
+  "status": {
+    "extracted": true,
+    "fiche": "done"
+  }
+}

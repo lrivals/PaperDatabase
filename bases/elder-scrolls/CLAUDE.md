@@ -77,7 +77,8 @@ Tout chiffre avancé porte sa section source. Quand `confidence` vaut `low` dans
 `benchmarks.csv`, le signaler.
 
 **Lu vs déduit.** Distinguer ce qui vient du papier de ce qui est une inférence. Signaler les
-preprints non relus par les pairs (`type: preprint`).
+preprints non relus par les pairs (`type: preprint`) et les dépôts communautaires
+(`type: repo`, chiffres auto-déclarés ; liste et réserves : [veille_communaute.md](veille_communaute.md)).
 
 **Esprit critique.** Relever les comparaisons biaisées, les métriques non comparables d'un
 papier à l'autre (conditions de mesure), l'absence de code publié.

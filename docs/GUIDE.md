@@ -223,6 +223,34 @@ Sans fichier de citation, GROBID retrouve seul le titre, les auteurs et l'année
 vérifiez-les dans `metadata.json` et précisez `type` et `venue` si l'avertissement le
 demande.
 
+### 4.6 Dépôts de code et travaux communautaires (GitHub)
+
+Certains domaines avancent surtout hors des revues : dans `elder-scrolls`, les résultats
+du Vesuvius Challenge paraissent d'abord sur GitHub, sans article. Ces travaux entrent dans
+la base comme un papier, avec le type `repo` (DATA_MODEL §2), à condition de figer ce qu'on
+cite :
+
+1. Cloner le dépôt et noter le commit (`git log -1 --format='%H %cs'`).
+2. Rendre en PDF le README et les documents techniques qui portent la méthode et les
+   chiffres (WRITEUP, MATH, rapports de résultats), avec un bandeau en tête : URL, commit,
+   date, « non relu par les pairs, chiffres auto-déclarés ». Les images peuvent être omises.
+   Un article PDF déjà présent dans le dépôt s'ingère tel quel (type `preprint` s'il n'est
+   publié nulle part).
+3. Déposer `inbox/repo-<owner>--<repo>.pdf` et son `.meta.json` : `type: "repo"`,
+   `venue_openalex: "GitHub"`, `url` pointant sur le commit
+   (`https://github.com/<owner>/<repo>/tree/<sha>`), auteurs pris du LICENSE ou du README
+   (un pseudonyme seul va dans `family`). Puis `bin/pdb ingest` et `/paper-fiche`.
+
+À savoir :
+- Sans GROBID, l'extraction passe par PyMuPDF : les tableaux markdown rendus en PDF sont
+  souvent aplatis. Les lignes de `benchmarks.csv` viennent alors de la prose
+  (`confidence: medium`) ; la fiche le dit dans « Statut de lecture ».
+- Deux papiers de même année et même premier auteur (deux dépôts du même compte) rendent
+  ambiguë la forme courte des `chunk_id` (`2026-limegs#005.0`) : utiliser l'identifiant
+  complet dans `benchmarks.csv` et les fiches, et relancer `bin/pdb bench --check`.
+- Un dépôt évolue : pour une mise à jour, comparer le commit au bandeau du PDF ingéré ; s'il
+  a changé, réingérer (`bin/pdb ingest --force`) et relire la fiche.
+
 ---
 
 ## 5. Routine de travail

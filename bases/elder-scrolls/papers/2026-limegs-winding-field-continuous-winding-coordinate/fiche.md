@@ -29,7 +29,7 @@ Mesure à grille fine, Paris 4, 19,2 µm, checkpoint partiel du 20/10/2026, AFV 
 
 Performance du solveur, fixtures synthétiques 32³, médiane en ms (docs/PERFORMANCE_V3.md §Local results) : Consensus20k 605,8 (Jacobi) -> 97,8 (spectral + indices) ; Pairs 103,0 -> 14,9 ; itérations Jacobi -> spectral 302 -> 12 (Pairs), 162 -> 21 (Consensus) ; résidu vrai < 1e-8 dans les deux cas ; champs non identiques bit à bit (écart max 2,5e-8 à 1e-7). Résultat négatif déclaré : l'index spatial perd environ 39 % sur la fixture de groupes denses inter-blocs (115,6 contre 83,0 ms) ; reste optionnel. Démo synthétique du banc : 6/6 paires de fibres couvertes, 3/3 séparations correctes, 0/3 pour les deux contrôles d'effondrement (README §Generate and evaluate), chiffres explicitement illustratifs.
 
-→ reportés dans `benchmarks.csv` (via l'agent principal ; fichier scratchpad `bench/2026-limegs-….csv`) : 7 lignes : dérive médiane aux portées 0,5-1,5, 10-15 et 30-45 mm (chunk 2026-limegs#000.4) ; couverture 36,8 % (#000.4) ; temps Consensus20k et Pairs spectral (#005.0) ; itérations Consensus 162 -> 21 (#005.1).
+→ reportés dans `benchmarks.csv` (via l'agent principal ; fichier scratchpad `bench/2026-limegs-….csv`) : 7 lignes : dérive médiane aux portées 0,5-1,5, 10-15 et 30-45 mm (chunk 2026-limegs-winding-field-continuous-winding-coordinate#000.4) ; couverture 36,8 % (#000.4) ; temps Consensus20k et Pairs spectral (#005.0) ; itérations Consensus 162 -> 21 (#005.1).
 
 ## Limites et critique
 

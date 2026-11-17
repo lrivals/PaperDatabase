@@ -808,8 +808,23 @@ utilisable) ; 6 et 7 supposent au moins une fiche remplie. L'avancement se coche
 
 ## 9. État actuel et tâches à faire
 
-Point au 03/11/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
+Point au 17/11/2026. À mettre à jour à chaque étape franchie (cocher, dater, déplacer dans
 « En place »).
+
+**Bilan du 17/11/2026 (base elder-scrolls : travaux communautaires du Vesuvius Challenge).**
+- 11 sources communautaires ingérées et fichées : 10 dépôts GitHub (type `repo`, premier
+  usage de ce type dans une base) et un article de 17 pages hébergé sur GitHub (Rectina
+  m3/m4, `preprint`). Procédure : README et documents techniques rendus en PDF au commit
+  cité, `.meta.json` construit à la main ([GUIDE §4.6](docs/GUIDE.md#46-dépôts-de-code-et-travaux-communautaires-github)).
+  69 lignes de `benchmarks.csv`, surtout `medium` (tableaux aplatis par PyMuPDF).
+- `bases/elder-scrolls/veille_communaute.md` : tableau des dépôts (commit, résultat,
+  réserve) et lecture transversale.
+- `gaps.md` d'elder-scrolls, premier passage : 20 gaps sur 45 fiches.
+- État de l'art LaTeX d'elder-scrolls, version 4 (53 papiers). Compilation : `lualatex`
+  (fontspec) ; dans un conteneur neuf, installer `texlive-luatex`, `fonts-lmodern` puis
+  `luaotfload-tool --update --force`.
+- Point ouvert : la forme courte des `chunk_id` devient ambiguë quand deux papiers partagent
+  année et premier auteur (`2026-limegs#…`) ; corrigé à la main par l'identifiant complet.
 
 **Bilan du 03/11/2026 (base fpga : axe `timing-analysis`, références du draft ARCYS, 10ᵉ passage des gaps).**
 - 10 articles ajoutés et fichés : 6 sur `timing-analysis` (WCET multi-DPU Zhang 2025, TPDS ;

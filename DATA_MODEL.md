@@ -80,7 +80,7 @@ Un fichier par article, à la racine de `papers/<paper_id>/`.
 | `doi` | string \| null | sans préfixe URL |
 | `arxiv_id` | string \| null | |
 | `url` | string \| null | lien canonique |
-| `type` | enum | `preprint` \| `journal` \| `conference` \| `thesis` \| `repo` \| `report` (rapport d'autorité ou d'institution : EASA, NIST…, ni relu par les pairs ni preprint) |
+| `type` | enum | `preprint` \| `journal` \| `conference` \| `thesis` \| `repo` (dépôt de code figé à un commit, `url` vers `…/tree/<sha>` ; GUIDE §4.6) \| `report` (rapport d'autorité ou d'institution : EASA, NIST…, ni relu par les pairs ni preprint) |
 | `axes` | array | voir §3 ; plusieurs valeurs possibles |
 | `tags` | array | libre : modèles, plateformes, toolflows cités |
 | `added` | date ISO | date d'ingestion |

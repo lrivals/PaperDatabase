@@ -86,7 +86,9 @@ Vesuvius Challenge : lecture virtuelle des papyrus carbonisés d'Herculanum par 
 - 2026-11-15 (/paper-fiche, agent principal) — adapter les colonnes de benchmarks.csv au thème (résolution µm/voxel, source du scan, région tenue à l'écart, type de labels) — l'en-tête FPGA (fps, luts, power…) laisse 10 colonnes sur 20 à n/r.
 - 2026-11-15 (2019-tournie-ancient-greek-text-concealed-back, 2025-verde-sub-terahertz-radar-imaging-ancient) — ajouter aux Inclus l'imagerie non CT des papyrus déjà déroulés (SWIR hyperspectral, radar sub-THz) ou un axe dédié — ces deux papiers ne relèvent que de `papyrology`, tous les axes d'imagerie étant centrés sur la CT.
 - 2026-11-15 (2016-brun-revealing-metallic-ink-herculaneum-papyri) — ajouter aux Inclus l'analyse élémentaire de l'encre (XRF/XRD synchrotron sur fragments : Pb, composition), rattachée à `ink-detection` ou `papyrology` — conditionne le contraste attendu de l'encre en micro-CT.
+- 2026-11-17 (veille_communaute.md, 11 dépôts ingérés) — ajouter aux Inclus « travaux communautaires du Vesuvius Challenge publiés sur GitHub (dépôts figés à un commit, type `repo`) », avec la règle : chiffres auto-déclarés, jamais comparés sans contrôle commun — ils portent l'essentiel des mesures sur rouleaux entiers.
 
 ## Historique
 
 - 2026-11-15 — base créée (`pdb base new`) ; profil, 12 axes et règles rédigés à partir des docs du dépôt Elder-scrolls (PRIZES, COMMUNITY_BRIEF, research/).
+- 2026-11-17 — 11 sources communautaires (dépôts GitHub du canal « show and tell » et Rectina) ingérées et fichées ; premier passage de `gaps.md` ; état de l'art v4 (53 papiers).

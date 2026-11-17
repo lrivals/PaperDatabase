@@ -21,8 +21,20 @@
   "arxiv_id": null,
   "url": "https://github.com/daviddemeij/pherc0306b-partial-letters-w040/tree/9aee0e66f3d7c437329104ec961623c4f0d181a5",
   "type": "repo",
-  "axes": [],
-  "tags": [],
+  "axes": [
+    "ink-detection",
+    "surface-segmentation",
+    "validation-fp"
+  ],
+  "tags": [
+    "PHerc0306B",
+    "w040",
+    "Reader v3",
+    "ScrollFiesta",
+    "blind-face control",
+    "community repo",
+    "8.64 um"
+  ],
   "added": "2026-11-17",
   "extraction": {
     "backend": "pymupdf",
@@ -30,12 +42,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
-      "aucun axe détecté : à classer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

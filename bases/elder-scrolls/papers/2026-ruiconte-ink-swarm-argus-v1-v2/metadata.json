@@ -14,10 +14,17 @@
   "url": "https://github.com/ruiconte/ink-swarm/tree/d38015a0ba09a009bdf64bc8535877a041a7edda",
   "type": "repo",
   "axes": [
-    "virtual-unwrapping"
+    "ink-detection",
+    "domain-transfer",
+    "validation-fp"
   ],
   "tags": [
-    "herculaneum"
+    "herculaneum",
+    "github",
+    "argus",
+    "reader-v3",
+    "weight-soup",
+    "depth-reversal-control"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -26,12 +33,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

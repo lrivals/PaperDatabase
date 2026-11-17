@@ -17,8 +17,24 @@
   "arxiv_id": null,
   "url": "https://github.com/Ahggggg/spiral-tracks-four-scrolls/tree/b6062e13cd6c9a0d8beccb0e946e9afeb120cd7c",
   "type": "repo",
-  "axes": [],
-  "tags": [],
+  "axes": [
+    "mesh-flattening",
+    "surface-segmentation",
+    "validation-fp",
+    "ink-detection"
+  ],
+  "tags": [
+    "spiral-fit",
+    "tracks",
+    "villa",
+    "umbilicus",
+    "Reader-V3",
+    "community-repo",
+    "PHerc-1203",
+    "PHerc-1218",
+    "PHerc-1545",
+    "PHerc-0846B"
+  ],
   "added": "2026-11-17",
   "extraction": {
     "backend": "pymupdf",
@@ -26,12 +42,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
-      "aucun axe détecté : à classer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

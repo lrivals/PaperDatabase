@@ -14,10 +14,20 @@
   "url": "https://github.com/adambetka2/HerculeX/tree/eace0b23ac4e9f95d10d185f08be743f0d0af961",
   "type": "repo",
   "axes": [
-    "virtual-unwrapping"
+    "virtual-unwrapping",
+    "surface-segmentation",
+    "mesh-flattening",
+    "ink-detection"
   ],
   "tags": [
-    "herculaneum"
+    "herculaneum",
+    "apple-silicon",
+    "min-cost-flow",
+    "exact-winding",
+    "reader-v3",
+    "github-repo",
+    "not-peer-reviewed",
+    "first-letters"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -26,12 +36,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

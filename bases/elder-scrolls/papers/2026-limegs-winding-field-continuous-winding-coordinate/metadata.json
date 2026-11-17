@@ -14,9 +14,17 @@
   "url": "https://github.com/LimeGS/winding-field/tree/1e2724412e3df52a8d9cd6ddc2bbafcf4586c465",
   "type": "repo",
   "axes": [
+    "surface-segmentation",
     "validation-fp"
   ],
-  "tags": [],
+  "tags": [
+    "winding-number",
+    "winding-field",
+    "Paris4",
+    "fibres",
+    "evaluation-benchmark",
+    "repo"
+  ],
   "added": "2026-11-17",
   "extraction": {
     "backend": "pymupdf",
@@ -24,12 +32,11 @@
     "warnings": [
       "métadonnées à vérifier à la main",
       "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche",
       "aucune section détectée"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }

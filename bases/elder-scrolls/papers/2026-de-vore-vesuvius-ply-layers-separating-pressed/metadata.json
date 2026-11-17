@@ -14,12 +14,21 @@
   "url": "https://github.com/Victoria-TechNexus/vesuvius-ply-layers/tree/92675735c2f98fbf295a13dc9c85a11bc2e79c7f",
   "type": "repo",
   "axes": [
+    "surface-segmentation",
     "virtual-unwrapping",
-    "papyrology"
+    "mesh-flattening",
+    "ink-detection",
+    "label-efficiency"
   ],
   "tags": [
     "herculaneum",
-    "papyrus"
+    "papyrus",
+    "ply-layers",
+    "recto-verso",
+    "structure-tensor",
+    "PHerc-Paris-4",
+    "community-repo",
+    "colab"
   ],
   "added": "2026-11-17",
   "extraction": {
@@ -27,12 +36,11 @@
     "ok": false,
     "warnings": [
       "métadonnées à vérifier à la main",
-      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser",
-      "axes déduits automatiquement, à confirmer dans /paper-fiche"
+      "publié ailleurs selon OpenAlex (GitHub, DOI None) : type journal/conference à préciser"
     ]
   },
   "status": {
     "extracted": true,
-    "fiche": "todo"
+    "fiche": "done"
   }
 }
